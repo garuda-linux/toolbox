@@ -2,13 +2,14 @@
 //! one port so the parity test can answer from memory.
 
 use tokio::runtime::Runtime;
-use toolbox_cli::output::ColorMode;
 use toolbox_plan::UnitScope;
 use toolbox_plan::sdboot::SdBootMenu;
 use toolbox_services::programs::Programs;
 use toolbox_services::units::{Systemd, UnitList, UnitLister as _};
 use toolbox_state::kernels::DkmsEntry;
 use toolbox_system::{Dkms, DkmsSource as _, ProbeError};
+
+use crate::out::Settings;
 
 pub trait SystemReads {
     /// The units of `scope`, for the lookup a service change starts from.
@@ -31,7 +32,7 @@ pub trait SystemReads {
 pub struct LiveReads<'a> {
     pub runtime: &'a Runtime,
     /// For the helper's password prompt.
-    pub color: ColorMode,
+    pub settings: Settings,
 }
 
 impl SystemReads for LiveReads<'_> {
@@ -48,6 +49,6 @@ impl SystemReads for LiveReads<'_> {
     }
 
     fn boot_menu(&self) -> Option<SdBootMenu> {
-        crate::boot::sdboot::read_menu(self.color)
+        crate::boot::sdboot::read_menu(self.settings)
     }
 }

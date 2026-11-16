@@ -18,6 +18,7 @@ use toolbox_gui_kit::widgets::{
 use toolbox_gui_kit::{icons, tokens};
 
 use crate::i18n;
+use crate::i18n::Arg;
 
 /// The window's size, which fits the state with room around it.
 pub const WINDOW: [f32; 2] = [720.0, 420.0];
@@ -121,7 +122,7 @@ fn state(ui: &mut Ui, dir: &Path) {
 
     ui.add_space(gap);
     let copy = |label: &str| {
-        i18n::text_with(&ctx, "missing-catalog-copy", &[("label", label)]).into_owned()
+        i18n::text_with(&ctx, "missing-catalog-copy", &[("label", Arg::from(label))]).into_owned()
     };
 
     let copied = text("missing-catalog-copied");

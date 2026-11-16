@@ -17,11 +17,9 @@ const TTL: u64 = 10;
 
 /// The folder the lists live in, `None` without a home.
 pub fn dir() -> Option<PathBuf> {
-    let base = std::env::var_os("XDG_CACHE_HOME")
-        .map(PathBuf::from)
-        .or_else(|| std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".cache")))?;
-
-    Some(base.join("garuda-toolbox").join("completion"))
+    toolbox_config::Paths::from_process()
+        .own_cache_dir()
+        .map(|cache| cache.join("completion"))
 }
 
 pub fn lookup(names: Names, now: u64) -> Option<Vec<String>> {

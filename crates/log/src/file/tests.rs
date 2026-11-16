@@ -1,3 +1,5 @@
+mod rotation;
+
 use super::*;
 
 impl FileLogger {
@@ -270,51 +272,6 @@ fn a_line_that_cannot_be_written_starts_a_streak() {
     let state = logger.state.lock();
     assert!(state.streak.failing);
     assert_eq!(state.sink.as_ref().map(|sink| sink.size), Some(0));
-}
-
-#[test]
-fn a_rotation_failure_is_reported_not_lost() {
-    let dir = tempfile::tempdir().unwrap();
-    let path = dir.path().join("app.log");
-
-    // Non-empty folders nowhere renames onto: every rename fails instead
-    // of moving history over history.
-    for number in 1..=3_u32 {
-        let numbered = dir.path().join(format!("app.log.{number}"));
-        fs::create_dir_all(&numbered).unwrap();
-        fs::write(numbered.join("kept"), "").unwrap();
-    }
-
-    rotate(&path);
-
-    for number in 1..=3_u32 {
-        assert!(
-            dir.path().join(format!("app.log.{number}")).is_dir(),
-            "history was renamed over history"
-        );
-    }
-
-    fs::write(&path, "current").unwrap();
-    rotate(&path);
-
-    assert_eq!(fs::read_to_string(&path).unwrap(), "current");
-}
-
-#[test]
-fn rotation_keeps_a_bounded_history() {
-    let dir = tempfile::tempdir().unwrap();
-    let path = dir.path().join("app.log");
-
-    for round in 0..5_u32 {
-        fs::write(&path, format!("{round}")).unwrap();
-        rotate(&path);
-    }
-
-    let read = |name: &str| fs::read_to_string(dir.path().join(name)).unwrap_or_default();
-    assert_eq!(read("app.log.1"), "4");
-    assert_eq!(read("app.log.3"), "2");
-    assert!(!dir.path().join("app.log.4").exists());
-    assert!(!path.exists());
 }
 
 #[test]

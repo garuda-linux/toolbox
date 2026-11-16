@@ -1,6 +1,6 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use toolbox_aur::{AurError, AurSource};
+use toolbox_aur::{AurError, AurSource, DownloadError, RequestError};
 use toolbox_core::features::packages::aur::{AurIndex, AurPackage};
 use toolbox_plan::PackageName;
 
@@ -52,7 +52,7 @@ fn package(name: &str) -> AurPackage {
     AurPackage {
         name: PackageName::new(name).unwrap(),
         version: "1.0-1".to_owned(),
-        description: String::new(),
+        description: toolbox_text::plain(""),
         url: None,
         votes: 0,
         popularity: 0.0,
@@ -83,8 +83,13 @@ fn the_names_come_from_the_stored_copy() {
 fn no_copy_gives_no_names() {
     for error in [
         AurError::Waiting { next: 1 },
-        AurError::Download("offline".to_owned()),
-        AurError::Storage("full".to_owned()),
+        AurError::Download(DownloadError::Request(RequestError::NoAnswer(
+            "offline".to_owned(),
+        ))),
+        AurError::Storage {
+            path: "index.json".into(),
+            error: std::sync::Arc::new(std::io::Error::other("full")),
+        },
     ] {
         assert_eq!(names(&Copy::new(Some(error))), Vec::<String>::new());
     }

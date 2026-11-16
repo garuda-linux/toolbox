@@ -17,7 +17,7 @@ fn text_is_cut_by_characters() {
 fn a_blank_optional_value_is_none() {
     assert_eq!(optional(Some(" \u{1b} "), 10), None);
     assert_eq!(optional(None, 10), None);
-    assert_eq!(optional(Some("ada"), 10), Some("ada".to_owned()));
+    assert_eq!(optional(Some("ada"), 10), Some(toolbox_text::plain("ada")));
 }
 
 #[test]

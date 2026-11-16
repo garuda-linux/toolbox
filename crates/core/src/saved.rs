@@ -48,6 +48,7 @@ impl SavedChanges {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct SavedChange {
     pub domain: String,
     pub item: Value,
@@ -88,11 +89,18 @@ impl PartialEq for RestoreProblem {
 
 impl Eq for RestoreProblem {}
 
-/// Two domains with one id: the saved changes of one would come back as
-/// the other's.
+/// Two domains the registry cannot keep apart. A shared id would send the
+/// saved changes of one back as the other's, and the planner orders by
+/// stage alone.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
-#[error("two domains share the id `{0}`")]
-pub struct DuplicateDomain(pub &'static str);
+pub enum RegistryError {
+    #[error("two domains share the id `{0}`")]
+    DuplicateDomain(&'static str),
+    #[error("two domains run at the stage of rank {0}")]
+    SharedStage(u16),
+    #[error("two domains give the change code `{0:?}`")]
+    SharedCode(SummaryCode),
+}
 
 type Restore = fn(&mut ChangeSet, &SavedChange, &Snapshot) -> Result<(), RestoreProblem>;
 
@@ -100,6 +108,7 @@ type Restore = fn(&mut ChangeSet, &SavedChange, &Snapshot) -> Result<(), Restore
 struct Entry {
     restore: Restore,
     codes: &'static [SummaryCode],
+    #[cfg(test)]
     one_off: bool,
     stage: Stage,
 }
@@ -112,22 +121,38 @@ pub struct Domains {
 impl Domains {
     /// # Errors
     ///
-    /// When a domain with the same [`Domain::ID`] is registered already.
-    pub fn with<D>(mut self) -> Result<Self, DuplicateDomain>
+    /// When a registered domain has the same [`Domain::ID`] or
+    /// [`Domain::STAGE`], or gives one of its [`Domain::CODES`].
+    pub fn with<D>(mut self) -> Result<Self, RegistryError>
     where
         D: Domain,
     {
+        if self.entries.contains_key(D::ID) {
+            return Err(RegistryError::DuplicateDomain(D::ID));
+        }
+
+        if self
+            .entries
+            .values()
+            .any(|entry| entry.stage.rank() == D::STAGE.rank())
+        {
+            return Err(RegistryError::SharedStage(D::STAGE.rank()));
+        }
+
+        if let Some(code) = D::CODES.iter().find(|code| self.covers(**code)) {
+            return Err(RegistryError::SharedCode(*code));
+        }
+
         let entry = Entry {
             restore: restore::<D>,
             codes: D::CODES,
+            #[cfg(test)]
             one_off: D::ONE_OFF,
             stage: D::STAGE,
         };
 
-        match self.entries.insert(D::ID, entry) {
-            None => Ok(self),
-            Some(_) => Err(DuplicateDomain(D::ID)),
-        }
+        self.entries.insert(D::ID, entry);
+        Ok(self)
     }
 
     /// The ids of the domains, sorted, so a list can be checked against
@@ -138,29 +163,17 @@ impl Domains {
         ids
     }
 
-    /// The ids of the [`Domain::ONE_OFF`] domains, sorted.
-    pub fn one_offs(&self) -> Vec<&'static str> {
-        let mut ids: Vec<&'static str> = self
-            .entries
-            .iter()
-            .filter(|(_id, entry)| entry.one_off)
-            .map(|(id, _entry)| *id)
-            .collect();
-
-        ids.sort_unstable();
-        ids
+    /// Whether the domain with `id` is a [`Domain::ONE_OFF`] one.
+    #[cfg(test)]
+    pub(crate) fn is_one_off(&self, id: &str) -> bool {
+        self.entries.get(id).is_some_and(|entry| entry.one_off)
     }
 
-    /// Every domain's [`Domain::STAGE`], with its id.
-    pub fn stages(&self) -> impl Iterator<Item = (&'static str, Stage)> + '_ {
-        self.entries.iter().map(|(id, entry)| (*id, entry.stage))
-    }
-
-    /// Every domain's [`Domain::CODES`], each code with its domain's id.
-    pub fn codes(&self) -> impl Iterator<Item = (&'static str, SummaryCode)> + '_ {
+    /// Whether a registered domain gives `code`.
+    pub fn covers(&self, code: SummaryCode) -> bool {
         self.entries
-            .iter()
-            .flat_map(|(id, entry)| entry.codes.iter().map(|code| (*id, *code)))
+            .values()
+            .any(|entry| entry.codes.contains(&code))
     }
 
     /// Queues every saved change again, compared with `snapshot` like a new

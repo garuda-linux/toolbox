@@ -15,7 +15,6 @@ about-website = Website
 about-copy = { $label } kopieren
 about-copied = In die Zwischenablage kopiert.
 
-about-help = Hilfe
 about-help-wiki = Garuda-Linux-Wiki
 about-help-arch-wiki = Arch-Linux-Wiki
 about-help-status = Dienststatus

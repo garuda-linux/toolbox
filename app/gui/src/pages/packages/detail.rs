@@ -27,6 +27,7 @@ use super::row::{self, Act, PackageRow, Row};
 use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::packages::{Details, Packages, Read};
 use crate::pages::rows::{Initial, Look, package_picture};
 use crate::pages::{PageContext, plan_running};
@@ -157,7 +158,7 @@ fn back(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
             )
         },
         |(previous, _)| {
-            let to = [("package", previous.as_str())];
+            let to = [("package", Arg::from(previous.as_str()))];
             (
                 i18n::text_with(&ctx, "packages-back-to", &to),
                 i18n::text_with(&ctx, "packages-back-to-name", &to),
@@ -314,12 +315,18 @@ fn loading(ui: &mut Ui) {
 /// A database no longer has the package, such as after a removal.
 fn gone(ui: &mut Ui, package: &PackageName) {
     let ctx = ui.ctx().clone();
-    let title = i18n::text_with(&ctx, "packages-gone", &[("package", package.as_str())]);
+    let title = i18n::text_with(
+        &ctx,
+        "packages-gone",
+        &[("package", Arg::from(package.as_str()))],
+    );
+
     empty_state(
         ui,
         icons::REPOSITORY,
         &title,
         &i18n::text(&ctx, "packages-gone-detail"),
     );
+
     ui.add_space(ui.tokens().sizes.card_gap);
 }

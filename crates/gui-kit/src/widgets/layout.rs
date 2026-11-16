@@ -47,8 +47,18 @@ impl Measure for Vec2 {
 /// them, `None` when that leaves it less than [`MIN_TEXT_WIDTH`] and the
 /// controls go below.
 pub(super) fn text_width(full: f32, controls: f32, gap: f32) -> Option<f32> {
+    if controls <= 0.0 {
+        return Some((full - controls - gap).max(0.0));
+    }
+
+    beside(full, controls, gap)
+}
+
+/// [`text_width`] that holds to [`MIN_TEXT_WIDTH`] even for no controls,
+/// as an action row whose actions were not measured yet.
+pub(super) fn beside(full: f32, controls: f32, gap: f32) -> Option<f32> {
     let text = (full - controls - gap).max(0.0);
-    (controls <= 0.0 || text >= MIN_TEXT_WIDTH).then_some(text)
+    (text >= MIN_TEXT_WIDTH).then_some(text)
 }
 
 pub(super) fn moved(was: f32, now: f32) -> bool {

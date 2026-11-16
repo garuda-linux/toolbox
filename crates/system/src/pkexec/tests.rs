@@ -61,67 +61,17 @@ fn a_missing_helper_and_a_cancel_are_told_apart() {
     );
 }
 
+/// Rows without program text, so only the exit code decides. The rows with
+/// pkexec's words are the fixtures below.
 #[test]
-fn the_exit_code_and_pkexecs_words_tell_the_refusals_apart() {
-    for (code, stderr, expected) in [
-        (Some(0_i32), "", None),
-        (Some(1_i32), "garuda-toolbox-helper: cannot answer", None),
-        (
-            Some(1_i32),
-            "Error executing command as another user: Not authorized",
-            None,
-        ),
-        (None, "", None),
-        (Some(126_i32), "", Some(Refusal::Dismissed)),
-        (
-            Some(126_i32),
-            "Error executing command as another user: Request dismissed",
-            Some(Refusal::Dismissed),
-        ),
-        (Some(127_i32), "", Some(Refusal::Denied)),
-        (
-            Some(127_i32),
-            "Error executing command as another user: Not authorized\n\nThis incident has been reported.",
-            Some(Refusal::Denied),
-        ),
-        (Some(127_i32), "words nobody knows", Some(Refusal::Broken)),
-        (
-            Some(127_i32),
-            "pkexec must be setuid root",
-            Some(Refusal::Broken),
-        ),
-        (
-            Some(127_i32),
-            "Error executing command as another user: No authentication agent found.",
-            Some(Refusal::NoAgent),
-        ),
-        (
-            Some(127_i32),
-            "Error creating textual authentication agent: No controlling terminal",
-            Some(Refusal::NoAgent),
-        ),
-        (
-            Some(127_i32),
-            "Error getting authority: Could not connect: No such file or directory",
-            Some(Refusal::NoAgent),
-        ),
-        (
-            Some(127_i32),
-            "Error checking for authorization org.garudalinux.toolbox.read: boom",
-            Some(Refusal::NoAgent),
-        ),
-        (
-            Some(127_i32),
-            "ERROR: NO SESSION FOR PID 4242",
-            Some(Refusal::NoAgent),
-        ),
-        (
-            Some(127_i32),
-            "Cannot run program /usr/lib/garuda-toolbox/garuda-toolbox-helper: No such file or directory",
-            Some(Refusal::HelperMissing),
-        ),
+fn the_exit_code_alone_decides_without_words() {
+    for (code, expected) in [
+        (Some(0_i32), None),
+        (None, None),
+        (Some(126_i32), Some(Refusal::Dismissed)),
+        (Some(127_i32), Some(Refusal::Denied)),
     ] {
-        assert_eq!(refusal(code, stderr), expected, "{code:?} {stderr}");
+        assert_eq!(refusal(code, ""), expected, "{code:?}");
     }
 }
 

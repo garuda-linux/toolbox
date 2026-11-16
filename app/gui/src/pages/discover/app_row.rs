@@ -17,6 +17,7 @@ use toolbox_plan::PackageName;
 
 use super::category_title;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::rows::actions::{CopyName, Named, OpenWebsite, RowKind, Section, Website};
 use crate::pages::toggles::control as row_control;
 
@@ -123,7 +124,8 @@ impl AppRow {
             on: shown.state.shown_on(),
             url: entry.url().map(str::to_owned),
             package: package(entry).cloned(),
-            menu: i18n::text_with(ctx, "discover-actions", &[("name", &title)]).into_owned(),
+            menu: i18n::text_with(ctx, "discover-actions", &[("name", Arg::from(&title))])
+                .into_owned(),
             title,
         }
     }

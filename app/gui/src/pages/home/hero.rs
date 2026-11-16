@@ -11,6 +11,7 @@ use toolbox_system::Host;
 use super::logo;
 use super::status::attention_rows;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 const LOGO_SIZE: f32 = 64.0;
@@ -26,7 +27,7 @@ pub fn show(
     let live = host.is_some_and(|host| host.live_iso);
     let greeting = host.and_then(|host| host.user.as_ref()).map_or_else(
         || i18n::text(&ctx, "home-welcome"),
-        |user| i18n::text_with(&ctx, "home-hello", &[("user", user.as_str())]),
+        |user| i18n::text_with(&ctx, "home-hello", &[("user", Arg::from(user.as_str()))]),
     );
 
     ui.horizontal(|ui| {
@@ -86,8 +87,12 @@ fn summary(
     let (text, tone) = if count == 0 {
         (i18n::text(&ctx, "home-summary-fine"), Tone::Success)
     } else {
-        let count = count.to_string();
-        let text = i18n::text_with(&ctx, "home-summary-attention", &[("count", &count)]);
+        let text = i18n::text_with(
+            &ctx,
+            "home-summary-attention",
+            &[("count", Arg::from(count))],
+        );
+
         (text, Tone::Warning)
     };
 
@@ -104,8 +109,7 @@ fn summary(
                 "home-summary-updated"
             };
 
-            let days = days.to_string();
-            let updated = i18n::text_with(&ctx, id, &[("days", &days)]);
+            let updated = i18n::text_with(&ctx, id, &[("days", Arg::from(days))]);
             ui.label(rich(ui, &updated, Weight::Regular, SMALL, tokens.secondary));
         }
     });

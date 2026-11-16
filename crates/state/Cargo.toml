@@ -20,6 +20,7 @@ serde_json.workspace = true
 strum.workspace = true
 thiserror.workspace = true
 toolbox-plan.workspace = true
+toolbox-text.workspace = true
 
 [dev-dependencies]
 toolbox-plan = { workspace = true, features = ["testing"] }

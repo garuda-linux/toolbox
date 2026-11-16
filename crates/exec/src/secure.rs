@@ -10,7 +10,7 @@ mod tests;
 use std::fs::File;
 use std::io::{self, Read as _};
 use std::os::fd::OwnedFd;
-use std::path::{Component, Path};
+use std::path::{Component, Path, PathBuf};
 
 use rustix::fs::{AtFlags, FileType, Mode, OFlags, ResolveFlags};
 use rustix::io::Errno;
@@ -89,6 +89,16 @@ impl From<Errno> for Unreadable {
     }
 }
 
+#[derive(Debug, thiserror::Error)]
+enum PathError {
+    #[error("{}: not a plain relative path", .0.display())]
+    NotPlain(PathBuf),
+    #[error("{0:?}: not a plain file name")]
+    NotPlainName(String),
+    #[error("{0} has no folder")]
+    NoFolder(&'static str),
+}
+
 /// Opens `dir` (relative, plain components only) below `root` without
 /// following a symlink on the way. `root` itself is trusted: `/` in the
 /// helper, a temporary directory in tests.
@@ -153,7 +163,7 @@ fn plain(dir: &Path) -> io::Result<()> {
 
     Err(io::Error::new(
         io::ErrorKind::InvalidInput,
-        format!("{}: not a plain relative path", dir.display()),
+        PathError::NotPlain(dir.to_path_buf()),
     ))
 }
 
@@ -166,7 +176,7 @@ fn plain_name(name: &str) -> io::Result<()> {
 
     Err(io::Error::new(
         io::ErrorKind::InvalidInput,
-        format!("{name:?}: not a plain file name"),
+        PathError::NotPlainName(name.to_owned()),
     ))
 }
 
@@ -213,7 +223,7 @@ pub fn split(path: &'static str) -> io::Result<(&'static Path, &'static str)> {
         target.parent(),
         target.file_name().and_then(|name| name.to_str()),
     ) else {
-        return Err(io::Error::other(format!("{path} has no folder")));
+        return Err(io::Error::other(PathError::NoFolder(path)));
     };
 
     Ok((folder, name))

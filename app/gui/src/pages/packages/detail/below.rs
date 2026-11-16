@@ -19,9 +19,11 @@ use toolbox_gui_kit::widgets::{
     padded_card, pill_button, property_list, rich, search_field,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
+use toolbox_text::OutsideText;
 
 use super::super::PackagesPage;
 use crate::command::AppCommand;
+use crate::i18n::Arg;
 use crate::packages::{Details, Read};
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
@@ -113,8 +115,14 @@ pub fn files(
     ui.add_space(ui.tokens().sizes.control_gap);
     if places.is_empty() {
         let tokens = tokens::current(&ctx);
-        let none = i18n::text_with(&ctx, "packages-files-none", &[("filter", filter.trim())]);
+        let none = i18n::text_with(
+            &ctx,
+            "packages-files-none",
+            &[("filter", Arg::from(filter.trim()))],
+        );
+
         ui.add(Label::new(rich(ui, &none, Weight::Regular, BODY, tokens.secondary)).wrap());
+
         return;
     }
 
@@ -122,7 +130,7 @@ pub fn files(
 }
 
 /// The lines of `places` in `files`, in a box that scrolls on its own.
-fn file_lines(ui: &mut Ui, files: &[String], places: &[usize]) {
+fn file_lines(ui: &mut Ui, files: &[OutsideText], places: &[usize]) {
     let tokens = tokens::current(ui.ctx());
     let font = TextStyle::Monospace.resolve(ui.style());
     let height = ui.fonts_mut(|fonts| fonts.row_height(&font));
@@ -146,7 +154,10 @@ fn file_lines(ui: &mut Ui, files: &[String], places: &[usize]) {
                     .filter_map(|&place| files.get(place));
 
                 for file in lines {
-                    let text = RichText::new(file).font(font.clone()).color(tokens.text);
+                    let text = RichText::new(file.as_str())
+                        .font(font.clone())
+                        .color(tokens.text);
+
                     ui.add(Label::new(text).truncate());
                 }
             });

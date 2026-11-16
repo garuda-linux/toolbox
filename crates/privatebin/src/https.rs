@@ -7,7 +7,7 @@ use std::time::Duration;
 
 use toolbox_https::http::HeaderName;
 use toolbox_https::http::header::CONTENT_TYPE;
-use toolbox_https::{RequestError, Rules};
+use toolbox_https::{RequestError, Rules, USER_AGENT};
 
 use crate::client::Transport;
 
@@ -36,8 +36,7 @@ impl Https {
                 host: HOST,
                 timeout: TIMEOUT,
                 max_body_bytes: MAX_ANSWER_BYTES,
-                // ureq's own: the paste server was never told the program.
-                user_agent: None,
+                user_agent: Some(USER_AGENT),
             }),
         }
     }

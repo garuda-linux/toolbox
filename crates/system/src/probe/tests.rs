@@ -6,9 +6,7 @@ mod modules;
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use fakes::{
-    FakeHost, FakeKernels, FakeLocales, FakePackages, FakeSettings, FakeSync, FakeUnits, sources,
-};
+use fakes::{FakeHost, FakeKernels, FakeLocales, FakePackages, FakeSettings, FakeUnits, sources};
 use toolbox_plan::{
     ConfigWord, GroupName, HomePath, PackageName, UnitName, UserConfigEdit, UserName, WifiBackend,
 };
@@ -24,6 +22,7 @@ use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig
 
 use super::{Host, Probe, ProbeIssue, Sources, probe_snapshot};
 use crate::ProbeError;
+use crate::units::{SystemUnitFiles, UserUnitFiles};
 
 fn nico() -> UserName {
     UserName::new("nico").unwrap()
@@ -55,10 +54,14 @@ fn masked_user() -> MaskedUserUnits {
 
 fn units() -> FakeUnits {
     FakeUnits {
-        system: Ok(enabled()),
-        user: Ok(enabled_user()),
-        masked: Ok(masked()),
-        masked_user: Ok(masked_user()),
+        system: Ok(SystemUnitFiles {
+            enabled: enabled(),
+            masked: masked(),
+        }),
+        user: Ok(UserUnitFiles {
+            enabled: enabled_user(),
+            masked: masked_user(),
+        }),
     }
 }
 
@@ -68,7 +71,7 @@ fn accounts() -> Accounts {
             name: nico(),
             uid: 1000,
             gid: 1000,
-            gecos: "Nico".to_owned(),
+            gecos: toolbox_text::plain("Nico"),
             home: "/home/nico".to_owned(),
             shell: "/usr/bin/fish".to_owned(),
         }],
@@ -99,14 +102,13 @@ fn booted() -> RunningKernel {
 
 fn kernels() -> FakeKernels {
     FakeKernels {
-        linux: Ok(LinuxPackages::default()),
         running: Ok(booted()),
     }
 }
 
 #[test]
 fn every_part_is_filled_when_all_probes_answer() {
-    let (snapshot, issues) = probe_snapshot(&sources(FakePackages(Ok(installed())), host()));
+    let (snapshot, issues) = probe_snapshot(&sources(FakePackages::new(Ok(installed())), host()));
 
     assert_eq!(issues, Vec::new());
     assert_eq!(snapshot.part::<InstalledPackages>(), Some(&installed()));
@@ -131,8 +133,10 @@ fn every_part_is_filled_when_all_probes_answer() {
 
 #[test]
 fn a_missing_package_manager_leaves_only_its_parts_out() {
-    let (snapshot, issues) =
-        probe_snapshot(&sources(FakePackages(Err(ProbeError::Unavailable)), host()));
+    let (snapshot, issues) = probe_snapshot(&sources(
+        FakePackages::new(Err(ProbeError::Unavailable)),
+        host(),
+    ));
 
     assert_eq!(
         issues,
@@ -158,10 +162,13 @@ fn a_missing_package_manager_leaves_only_its_parts_out() {
 /// sync part out.
 #[test]
 fn unsynced_databases_leave_only_the_sync_part_out() {
-    let sources = Sources {
-        sync: Arc::new(FakeSync(Err(ProbeError::Unavailable))),
-        ..sources(FakePackages(Ok(installed())), host())
-    };
+    let sources = sources(
+        FakePackages {
+            offered: Err(ProbeError::Unavailable),
+            ..FakePackages::new(Ok(installed()))
+        },
+        host(),
+    );
 
     let (snapshot, issues) = probe_snapshot(&sources);
 
@@ -180,7 +187,7 @@ fn unsynced_databases_leave_only_the_sync_part_out() {
 fn without_a_user_only_the_current_user_part_is_missing() {
     let failed = ProbeError::fake("USER is not a valid name");
     let (snapshot, issues) = probe_snapshot(&sources(
-        FakePackages(Ok(installed())),
+        FakePackages::new(Ok(installed())),
         FakeHost {
             user: Err(failed.clone()),
             ..host()
@@ -206,7 +213,7 @@ fn without_a_user_only_the_current_user_part_is_missing() {
 fn failed_host_facts_fall_back_and_are_reported() {
     let broken = || ProbeError::fake("broken");
     let (snapshot, issues) = probe_snapshot(&sources(
-        FakePackages(Ok(installed())),
+        FakePackages::new(Ok(installed())),
         FakeHost {
             user: Ok(nico()),
             live_iso: Err(broken()),
@@ -236,16 +243,17 @@ fn failed_host_facts_fall_back_and_are_reported() {
     );
 }
 
+/// One listing per scope feeds both its enabled and its masked part, so a
+/// failed scope leaves out both, and the other scope stays.
 #[test]
-fn failing_mask_probes_leave_only_their_parts_out() {
+fn a_failing_scope_leaves_its_two_parts_out() {
     let broken = || ProbeError::fake("no user manager");
     let sources = Sources {
         units: Arc::new(FakeUnits {
-            masked: Err(ProbeError::Unavailable),
-            masked_user: Err(broken()),
+            user: Err(broken()),
             ..units()
         }),
-        ..sources(FakePackages(Ok(installed())), host())
+        ..sources(FakePackages::new(Ok(installed())), host())
     };
 
     let (snapshot, issues) = probe_snapshot(&sources);
@@ -254,8 +262,8 @@ fn failing_mask_probes_leave_only_their_parts_out() {
         issues,
         vec![
             ProbeIssue {
-                probe: Probe::MaskedUnits,
-                error: ProbeError::Unavailable,
+                probe: Probe::UserUnits,
+                error: broken(),
             },
             ProbeIssue {
                 probe: Probe::MaskedUserUnits,
@@ -263,9 +271,10 @@ fn failing_mask_probes_leave_only_their_parts_out() {
             }
         ]
     );
-    assert_eq!(snapshot.part::<MaskedUnits>(), None);
+    assert_eq!(snapshot.part::<EnabledUserUnits>(), None);
     assert_eq!(snapshot.part::<MaskedUserUnits>(), None);
     assert_eq!(snapshot.part::<EnabledUnits>(), Some(&enabled()));
+    assert_eq!(snapshot.part::<MaskedUnits>(), Some(&masked()));
 }
 
 #[test]
@@ -275,7 +284,7 @@ fn settings_parts_are_filled_or_reported_one_by_one() {
             dns: Err(ProbeError::Unavailable),
             garuda_update: Ok(GarudaUpdateConfig::default()),
         }),
-        ..sources(FakePackages(Ok(installed())), host())
+        ..sources(FakePackages::new(Ok(installed())), host())
     };
 
     let (snapshot, issues) = probe_snapshot(&sources);
@@ -315,7 +324,7 @@ fn the_config_edits_of_the_catalogs_are_probed() {
     };
 
     let sources =
-        sources(FakePackages(Ok(installed())), host()).with_config_edits(vec![edit.clone()]);
+        sources(FakePackages::new(Ok(installed())), host()).with_config_edits(vec![edit.clone()]);
 
     let (snapshot, issues) = probe_snapshot(&sources);
 
@@ -328,7 +337,7 @@ fn the_config_edits_of_the_catalogs_are_probed() {
 
 #[test]
 fn the_kernel_and_locale_parts_are_filled() {
-    let (snapshot, issues) = probe_snapshot(&sources(FakePackages(Ok(installed())), host()));
+    let (snapshot, issues) = probe_snapshot(&sources(FakePackages::new(Ok(installed())), host()));
 
     assert_eq!(issues, Vec::new());
     assert_eq!(
@@ -359,12 +368,14 @@ fn the_kernel_and_locale_parts_are_filled() {
 #[test]
 fn missing_kernel_packages_and_locales_leave_only_their_parts_out() {
     let sources = Sources {
-        linux: Arc::new(FakeKernels {
-            linux: Err(ProbeError::Unavailable),
-            running: Ok(booted()),
-        }),
         locales: Arc::new(FakeLocales(Err(ProbeError::Unavailable))),
-        ..sources(FakePackages(Ok(installed())), host())
+        ..sources(
+            FakePackages {
+                linux: Err(ProbeError::Unavailable),
+                ..FakePackages::new(Ok(installed()))
+            },
+            host(),
+        )
     };
 
     let (snapshot, issues) = probe_snapshot(&sources);

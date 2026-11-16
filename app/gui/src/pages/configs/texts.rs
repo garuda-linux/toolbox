@@ -7,9 +7,10 @@ use toolbox_core::features::configs::session::{
 };
 
 use crate::i18n;
+use crate::i18n::Arg;
 
 pub fn problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
-    i18n::text_with(ctx, &code.text_id(), &[("path", path)]).into_owned()
+    i18n::text_with(ctx, &code.text_id(), &[("path", Arg::from(path))]).into_owned()
 }
 
 /// The viewer shows a file instead of editing it, so a few problems read
@@ -39,15 +40,18 @@ pub fn view_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
         | ProblemCode::Failed => return problem(ctx, code, path),
     };
 
-    i18n::text_with(ctx, id, &[("path", path)]).into_owned()
+    i18n::text_with(ctx, id, &[("path", Arg::from(path))]).into_owned()
 }
 
 /// The review keeps the edit after a failed write, which its text says.
 pub fn review_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
     match code {
-        ProblemCode::WriteFailed => {
-            i18n::text_with(ctx, "configs-review-write-failed", &[("path", path)]).into_owned()
-        }
+        ProblemCode::WriteFailed => i18n::text_with(
+            ctx,
+            "configs-review-write-failed",
+            &[("path", Arg::from(path))],
+        )
+        .into_owned(),
         ProblemCode::Dismissed
         | ProblemCode::Denied
         | ProblemCode::NoAgent
@@ -133,9 +137,9 @@ pub fn status(ctx: &Context, session: &Session) -> Option<String> {
 
     let backup = session.backup().unwrap_or_default();
     let words = [
-        ("path", path.as_str()),
-        ("editor", editor),
-        ("backup", backup.as_str()),
+        ("path", Arg::from(path.as_str())),
+        ("editor", Arg::from(editor)),
+        ("backup", Arg::from(backup.as_str())),
     ];
 
     Some(i18n::text_with(ctx, id, &words).into_owned())
@@ -164,7 +168,7 @@ pub fn row_status(ctx: &Context, row: &Row) -> String {
 }
 
 pub fn link(ctx: &Context, row: &Row) -> String {
-    i18n::text_with(ctx, "configs-link", &[("target", &row.target)]).into_owned()
+    i18n::text_with(ctx, "configs-link", &[("target", Arg::from(&row.target))]).into_owned()
 }
 
 pub fn unreadable(ctx: &Context, problem: &LoadProblem) -> (String, String) {

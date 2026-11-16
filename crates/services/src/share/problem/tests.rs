@@ -32,7 +32,7 @@ fn each_upload_error_has_its_code_and_the_words_behind_it() {
             ),
         ),
         (
-            UploadError::Refused("Paste is limited to 10 MiB".to_owned()),
+            UploadError::Refused(toolbox_text::plain("Paste is limited to 10 MiB")),
             problem(UploadFailure::Refused, "Paste is limited to 10 MiB"),
         ),
         (

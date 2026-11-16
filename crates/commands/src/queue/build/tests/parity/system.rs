@@ -47,7 +47,7 @@ fn user(name: &str, uid: u32) -> User {
         name: UserName::new(name).unwrap(),
         uid,
         gid: uid,
-        gecos: String::new(),
+        gecos: toolbox_text::plain(""),
         home: format!("/home/{name}"),
         shell: "/usr/bin/bash".parse().unwrap(),
     }
@@ -71,7 +71,7 @@ fn package(name: &str) -> PackageName {
 fn unit(name: &str) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: String::new(),
+        description: toolbox_text::plain(""),
         active: ActiveState::Inactive,
         sub_state: "dead".to_owned(),
         file_state: FileState::Disabled,
@@ -108,7 +108,7 @@ fn linux_packages() -> LinuxPackages {
                 repo: "core".to_owned(),
                 name: package(name),
                 version: "1-1".to_owned(),
-                description: String::new(),
+                description: toolbox_text::plain(""),
             })
             .collect(),
         local: names
@@ -116,7 +116,7 @@ fn linux_packages() -> LinuxPackages {
             .map(|name| LocalPackage {
                 name: package(name),
                 version: "1-1".to_owned(),
-                description: String::new(),
+                description: toolbox_text::plain(""),
             })
             .collect(),
     }

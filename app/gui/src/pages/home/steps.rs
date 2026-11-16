@@ -12,6 +12,7 @@ use super::HomeProblem;
 use super::status::run_row;
 use crate::command::HomeCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// The installer and the repair shell, each where its program exists. With
@@ -36,7 +37,8 @@ pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
     ui.add_space(ui.tokens().sizes.card_gap);
 
     if let Some(reason) = failed_start {
-        let text = i18n::text_with(&ctx, "home-install-failed", &[("reason", reason)]);
+        let why = [("reason", Arg::from(reason))];
+        let text = i18n::text_with(&ctx, "home-install-failed", &why);
         banner(ui, Tone::Error, &text, &[]);
         ui.add_space(ui.tokens().sizes.card_gap);
     }

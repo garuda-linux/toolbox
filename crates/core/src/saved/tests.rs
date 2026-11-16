@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 
 use serde_json::json;
 
-use super::{Domains, DuplicateDomain, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges};
+use super::{Domains, RegistryError, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges};
 use crate::domain::Toggle;
 use crate::domains::{Groups, InstalledPackages, NewGroups, Packages};
 use crate::test_support::{membership, package};
@@ -120,7 +120,7 @@ fn a_file_of_another_version_restores_nothing() {
 fn a_second_domain_with_the_same_id_is_refused() {
     let refused = domains().with::<Packages>().err();
 
-    assert_eq!(refused, Some(DuplicateDomain("packages")));
+    assert_eq!(refused, Some(RegistryError::DuplicateDomain("packages")));
     assert_eq!(
         refused.map(|problem| problem.to_string()),
         Some("two domains share the id `packages`".to_owned())
@@ -179,6 +179,22 @@ fn a_change_saved_without_an_outcome_is_untried() {
     .unwrap();
 
     assert_eq!(saved.changes[0].outcome, Outcome::Untried);
+}
+
+/// A field the app does not know is refused, so a change with a value the
+/// app would drop is never read as a change without it.
+#[test]
+fn a_saved_change_with_an_unknown_field_is_refused() {
+    let text = json!({
+        "version": SAVED_VERSION,
+        "changes": [{ "domain": "packages", "item": "mpv", "wish": "on", "run": "now" }],
+    })
+    .to_string();
+
+    assert!(matches!(
+        SavedChanges::parse(&text),
+        Err(RestoreProblem::Unreadable(_))
+    ));
 }
 
 /// Another version may have changed the shape, the version is still the

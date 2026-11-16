@@ -169,7 +169,7 @@ fn a_long_list_shows_twelve_names_and_the_rest_in_place() {
 fn an_optional_dependency_names_what_it_adds() {
     let optional = vec![OptionalDependency {
         name: toolbox_plan::PackageName::new("gegl").unwrap(),
-        reason: "for filters".to_owned(),
+        reason: toolbox_text::plain("for filters"),
     }];
 
     let harness = showing(gimp_with(|info| info.optional = optional));

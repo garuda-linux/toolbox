@@ -1,6 +1,7 @@
 use super::Leftover;
+use crate::EspPlace;
 use crate::protocol::{Failure, Outcome, decode, encode};
-use crate::repair::{EspPlace, RepairMount};
+use crate::repair::RepairMount;
 
 #[test]
 fn a_failed_step_names_what_its_cleanup_left() {

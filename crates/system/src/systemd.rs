@@ -76,7 +76,7 @@ pub fn unit_infos(units: Vec<ListUnitsRow>, files: Vec<UnitFileRow>) -> Vec<Unit
                     .get(name.as_str())
                     .map_or(FileState::Unknown, |state| FileState::parse(state)),
                 name,
-                description: toolbox_plan::text::plain(&description),
+                description: toolbox_text::plain(&description),
                 active: ActiveState::parse(&active),
                 sub_state: sub,
             });
@@ -90,7 +90,7 @@ pub fn unit_infos(units: Vec<ListUnitsRow>, files: Vec<UnitFileRow>) -> Vec<Unit
 
         infos.entry(name.clone()).or_insert_with(|| UnitInfo {
             name,
-            description: String::new(),
+            description: toolbox_text::plain(""),
             active: ActiveState::Inactive,
             sub_state: DEAD.to_owned(),
             file_state: FileState::parse(state),

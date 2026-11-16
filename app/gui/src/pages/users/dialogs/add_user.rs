@@ -28,6 +28,7 @@ use super::shell::{ShellDefault, shell_choice};
 use super::{Next, check_with_note, dialog_why, field, note};
 use crate::command::UsersCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::users::texts;
 
@@ -270,7 +271,12 @@ impl AddUser {
 
         if let Some(group) = view::admin_group(context.snapshot, context.changes) {
             let label = text("users-admin");
-            let detail = i18n::text_with(ctx, "users-admin-detail", &[("group", group.as_str())]);
+            let detail = i18n::text_with(
+                ctx,
+                "users-admin-detail",
+                &[("group", Arg::from(group.as_str()))],
+            );
+
             if check_with_note(ui, self.admin, &label, &detail) {
                 self.admin = !self.admin;
             }

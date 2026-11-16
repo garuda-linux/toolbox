@@ -58,17 +58,20 @@ pub trait Transport: Send + Sync {
 /// no equality of its own.
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum NewsError {
-    /// No copy yet and the download failed now.
+    /// The download failed now. Returned only without a copy, with one the
+    /// cache logs it as a warning and answers with the copy.
     #[error("the forum's news could not be downloaded: {0}")]
     Request(#[source] RequestError),
-    /// No copy yet and the feed that came now is no valid XML.
-    #[error("the forum's news could not be downloaded: {0}")]
+    /// The download worked, but the feed that came is no valid feed. Like
+    /// [`NewsError::Request`], returned only without a copy.
+    #[error("the forum's news is no valid feed: {0}")]
     Feed(#[source] FeedError),
-    /// No feed answered and none named why.
+    /// No feed is configured at all. With at least one feed, its own
+    /// error is returned instead.
     #[error("the forum's news could not be downloaded: no feed")]
     NoFeed,
     /// No copy yet, and the last attempt was too recent to try again.
-    #[error("the forum's news is not downloaded again before {next}")]
+    #[error("the forum's news is not downloaded again before {}", moment(*next))]
     Waiting {
         /// Seconds since the epoch when the next attempt is allowed.
         next: i64,
@@ -109,3 +112,11 @@ impl PartialEq for NewsError {
 }
 
 impl Eq for NewsError {}
+
+/// `2026-11-17 08:00`, in UTC, the way the CLI shows the wait.
+fn moment(seconds: i64) -> String {
+    jiff::Timestamp::from_second(seconds).map_or_else(
+        |_out_of_range| seconds.to_string(),
+        |time| time.strftime("%Y-%m-%d %H:%M").to_string(),
+    )
+}

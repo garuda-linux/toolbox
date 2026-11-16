@@ -11,6 +11,7 @@ use std::collections::BTreeSet;
 
 use toolbox_plan::PackageName;
 pub use toolbox_state::aur::{AurIndex, AurPackage};
+use toolbox_text::OutsideText;
 
 use super::list::RowState;
 use super::queue::Refusal;
@@ -66,7 +67,7 @@ impl AurCatalog {
                     "{}\n{}\n{}",
                     folded(package.name.as_str()),
                     folded(&package.description),
-                    folded(&package.keywords.join("\n"))
+                    folded(&keywords(&package.keywords))
                 )
             })
             .collect();
@@ -155,6 +156,14 @@ impl AurCatalog {
 }
 
 impl toolbox_state::Part for AurNames {}
+
+fn keywords(keywords: &[OutsideText]) -> String {
+    keywords
+        .iter()
+        .map(OutsideText::as_str)
+        .collect::<Vec<_>>()
+        .join("\n")
+}
 
 fn rank(name: &str, wanted: &str) -> Rank {
     if wanted.is_empty() {

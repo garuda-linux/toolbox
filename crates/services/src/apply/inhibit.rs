@@ -4,12 +4,16 @@
 #[cfg(test)]
 mod tests;
 
+use fluent_templates::LanguageIdentifier;
 use toolbox_plan::protocol::Mode;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+use crate::i18n;
+
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Inhibitor {
     /// Asks logind for a `block` lock, as the app and the command line do.
-    Logind,
+    /// The reason logind shows is in `language`.
+    Logind { language: LanguageIdentifier },
     /// Takes no lock, for tests.
     Off,
 }
@@ -24,11 +28,16 @@ impl Inhibitor {
     /// lock is logged and the plan runs anyway: losing the apply would be
     /// worse than an unguarded one.
     pub async fn hold(self, mode: Mode) -> Hold {
-        if self == Self::Off || mode == Mode::DryRun {
+        if mode == Mode::DryRun {
             return Hold { _lock: None };
         }
 
-        match toolbox_system::inhibit_shutdown("Changes are being applied").await {
+        let Self::Logind { language } = self else {
+            return Hold { _lock: None };
+        };
+
+        let why = i18n::text_in(language, "changes-inhibit-why");
+        match toolbox_system::inhibit_shutdown(&why).await {
             Ok(lock) => Hold { _lock: Some(lock) },
             Err(error) => {
                 tracing::warn!("cannot hold shutdown back during the apply: {error}");

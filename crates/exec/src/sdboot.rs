@@ -6,14 +6,11 @@ use std::io::{self, Read as _, Seek as _, SeekFrom};
 use std::path::{Path, PathBuf};
 
 use toolbox_plan::sdboot::{
-    ENTRIES_FOLDER, HEADER_BYTES, LOADER_CONF, LoaderEntry, LoaderSettings, MAX_ENTRIES,
+    ENTRIES_FOLDER, EspPlace, HEADER_BYTES, LOADER_CONF, LoaderEntry, LoaderSettings, MAX_ENTRIES,
     SdBootMenu, UKI_FOLDER, esp_place, sections,
 };
 
 const MOUNTINFO: &str = "proc/self/mountinfo";
-
-/// An automount shows the ESP only once something opens it.
-const ESP_CANDIDATES: [&str; 3] = ["efi", "boot", "boot/efi"];
 
 const MAX_TEXT_BYTES: u64 = 64 << 10;
 
@@ -32,12 +29,20 @@ struct Listing {
     cut: usize,
 }
 
+#[derive(Debug, thiserror::Error)]
+enum SdBootError {
+    #[error("no ESP is mounted")]
+    NoEsp,
+    #[error("the file is no text")]
+    NotText,
+}
+
 /// # Errors
 ///
 /// When no ESP is mounted, or the mount table or `loader.conf` cannot be
 /// read. A file that is no entry is left out instead.
 pub fn sdboot_menu(root: &Path) -> io::Result<SdBootMenu> {
-    let esp = root.join(esp(root)?);
+    let esp = root.join(esp(root)?.inside());
     let settings = match text(&esp.join(LOADER_CONF)) {
         Ok(conf) => LoaderSettings::parse(&conf),
         Err(error) if error.kind() == io::ErrorKind::NotFound => LoaderSettings::default(),
@@ -71,7 +76,7 @@ pub fn sdboot_menu(root: &Path) -> io::Result<SdBootMenu> {
     Ok(menu)
 }
 
-pub fn esp(root: &Path) -> io::Result<&'static str> {
+pub fn esp(root: &Path) -> io::Result<EspPlace> {
     let place = || {
         text_up_to(&root.join(MOUNTINFO), MAX_MOUNTINFO_BYTES)
             .map(|mountinfo| esp_place(&mountinfo))
@@ -81,12 +86,13 @@ pub fn esp(root: &Path) -> io::Result<&'static str> {
         return Ok(place);
     }
 
-    for candidate in ESP_CANDIDATES {
-        // The lookup alone mounts it, whatever it answers.
-        drop(fs::metadata(root.join(candidate).join("EFI")));
+    // An automount shows the ESP only once something opens it. The lookup
+    // alone mounts it, whatever it answers.
+    for candidate in EspPlace::ALL {
+        drop(fs::metadata(root.join(candidate.inside()).join("EFI")));
     }
 
-    place()?.ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, "no ESP is mounted"))
+    place()?.ok_or_else(|| io::Error::new(io::ErrorKind::NotFound, SdBootError::NoEsp))
 }
 
 /// The ESP is FAT, which has no links, so a plain listing is all there is.
@@ -177,5 +183,5 @@ fn text_up_to(path: &Path, max: u64) -> io::Result<String> {
     File::open(path)?.take(max).read_to_end(&mut content)?;
 
     String::from_utf8(content)
-        .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, "the file is no text"))
+        .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, SdBootError::NotText))
 }

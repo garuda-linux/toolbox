@@ -64,5 +64,12 @@ fn the_batch_holds_every_one_off_domain() {
     let mut covered = vec![AccountLocks::ID, DkmsBuilds::ID, Operations::ID];
     covered.sort_unstable();
 
-    assert_eq!(crate::domains::all().unwrap().one_offs(), covered);
+    let domains = crate::domains::all().unwrap();
+    let one_offs: Vec<&str> = domains
+        .ids()
+        .into_iter()
+        .filter(|id| domains.is_one_off(id))
+        .collect();
+
+    assert_eq!(one_offs, covered);
 }

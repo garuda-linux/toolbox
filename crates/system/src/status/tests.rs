@@ -95,15 +95,15 @@ fn at(seconds: u64) -> SystemTime {
 fn update(name: &str) -> PendingUpdate {
     PendingUpdate {
         name: PackageName::new(name).unwrap(),
-        from: "1-1".to_owned(),
-        to: "2-1".to_owned(),
+        from: toolbox_text::plain("1-1"),
+        to: toolbox_text::plain("2-1"),
     }
 }
 
 fn warning() -> HealthIssue {
     HealthIssue {
         level: HealthLevel::Low,
-        message: "careful".to_owned(),
+        message: toolbox_text::plain("careful"),
         fix_available: false,
     }
 }

@@ -26,8 +26,6 @@ pub use changes::ChangeSet;
 pub use domain::{ChangeView, Domain, Queued, Single, Stage, Staged, Summary, Toggle};
 pub use outcome::{Outcome, Owners};
 pub use planner::{plan, planned};
-pub use saved::{
-    Domains, DuplicateDomain, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges,
-};
+pub use saved::{Domains, RegistryError, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges};
 pub use summary_code::SummaryCode;
 pub use toolbox_state::Snapshot;

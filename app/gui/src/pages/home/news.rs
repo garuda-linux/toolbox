@@ -9,6 +9,7 @@ use toolbox_gui_kit::widgets::{Tone, card, card_row, rich, split_row, tag, text_
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_news::{News, Post, Source};
 
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::{dates, i18n, links};
 
@@ -102,12 +103,17 @@ fn row(ui: &mut Ui, post: &Post) {
             .filter(|link| link.starts_with(post.source.post_prefix()));
 
         if let Some(link) = link {
-            let name = i18n::text_with(&ctx, "home-news-open", &[("title", &post.title)]);
-            if text_link(ui, &post.title, &name).clicked() {
+            let name = i18n::text_with(
+                &ctx,
+                "home-news-open",
+                &[("title", Arg::from(post.title.as_str()))],
+            );
+
+            if text_link(ui, post.title.as_str(), &name).clicked() {
                 links::open(&ctx, link);
             }
         } else {
-            let title = rich(ui, &post.title, Weight::Medium, BODY, tokens.text);
+            let title = rich(ui, post.title.as_str(), Weight::Medium, BODY, tokens.text);
             ui.add(Label::new(title).wrap());
         }
 

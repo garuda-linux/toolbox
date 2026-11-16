@@ -23,6 +23,9 @@ const ENABLED: &str = "enabled";
 /// Only `masked`, not `masked-runtime`, for the same reason as [`ENABLED`].
 const MASKED: &str = "masked";
 
+/// One listing per scope answers both states.
+const LISTED_STATES: &str = "--state=enabled,masked";
+
 const USER: [&str; 1] = ["--user"];
 
 const FAILED_ARGS: [&str; 5] = [
@@ -35,34 +38,42 @@ const FAILED_ARGS: [&str; 5] = [
 
 /// Answers which units start on their own and which can never start.
 pub trait UnitSource: Send + Sync {
-    /// Units enabled for the whole system.
+    /// Enabled and masked units of the whole system.
     ///
     /// # Errors
     ///
     /// [`ProbeError::Unavailable`] without systemd,
     /// A failed [`ProbeError`] when the manager gives no answer.
-    fn enabled_units(&self) -> Result<EnabledUnits, ProbeError>;
+    fn system_unit_files(&self) -> Result<SystemUnitFiles, ProbeError>;
 
-    /// Units enabled in the user's own service manager.
+    /// Enabled and masked units of the user's own service manager.
     ///
     /// # Errors
     ///
-    /// As for [`UnitSource::enabled_units`].
-    fn enabled_user_units(&self) -> Result<EnabledUserUnits, ProbeError>;
+    /// As for [`UnitSource::system_unit_files`].
+    fn user_unit_files(&self) -> Result<UserUnitFiles, ProbeError>;
+}
 
-    /// Units masked for the whole system.
-    ///
-    /// # Errors
-    ///
-    /// As for [`UnitSource::enabled_units`].
-    fn masked_units(&self) -> Result<MaskedUnits, ProbeError>;
+/// The enabled and masked units of the whole system, from one listing.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct SystemUnitFiles {
+    pub enabled: EnabledUnits,
+    pub masked: MaskedUnits,
+}
 
-    /// Units masked in the user's own service manager.
-    ///
-    /// # Errors
-    ///
-    /// As for [`UnitSource::enabled_units`].
-    fn masked_user_units(&self) -> Result<MaskedUserUnits, ProbeError>;
+/// The enabled and masked units of the user's own service manager, from one
+/// listing.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct UserUnitFiles {
+    pub enabled: EnabledUserUnits,
+    pub masked: MaskedUserUnits,
+}
+
+/// Both states of one `list-unit-files` run.
+#[derive(Debug, Default, PartialEq, Eq)]
+struct UnitFileStates {
+    enabled: BTreeSet<UnitName>,
+    masked: BTreeSet<UnitName>,
 }
 
 /// Answers which system units stopped with an error.
@@ -71,7 +82,7 @@ pub trait FailedUnitSource: Send + Sync {
     ///
     /// # Errors
     ///
-    /// As for [`UnitSource::enabled_units`].
+    /// As for [`UnitSource::system_unit_files`].
     fn failed_units(&self) -> Result<Vec<UnitName>, ProbeError>;
 }
 
@@ -95,13 +106,12 @@ impl Systemctl {
         }
     }
 
-    fn list(&self, scope: &[&str], state: &str) -> Result<BTreeSet<UnitName>, ProbeError> {
-        let state_flag = format!("--state={state}");
-        let args = list_args(scope, &state_flag);
+    fn list(&self, scope: &[&str]) -> Result<UnitFileStates, ProbeError> {
+        let args = list_args(scope);
         let finished = command::run(&self.program, &args)?;
 
         if finished.status.success() || nothing_listed(&finished) {
-            return Ok(parse_listed(&finished.stdout, state));
+            return Ok(parse_listed(&finished.stdout));
         }
 
         Err(finished.failure())
@@ -115,20 +125,18 @@ impl Default for Systemctl {
 }
 
 impl UnitSource for Systemctl {
-    fn enabled_units(&self) -> Result<EnabledUnits, ProbeError> {
-        self.list(&[], ENABLED).map(EnabledUnits)
+    fn system_unit_files(&self) -> Result<SystemUnitFiles, ProbeError> {
+        self.list(&[]).map(|states| SystemUnitFiles {
+            enabled: EnabledUnits(states.enabled),
+            masked: MaskedUnits(states.masked),
+        })
     }
 
-    fn enabled_user_units(&self) -> Result<EnabledUserUnits, ProbeError> {
-        self.list(&USER, ENABLED).map(EnabledUserUnits)
-    }
-
-    fn masked_units(&self) -> Result<MaskedUnits, ProbeError> {
-        self.list(&[], MASKED).map(MaskedUnits)
-    }
-
-    fn masked_user_units(&self) -> Result<MaskedUserUnits, ProbeError> {
-        self.list(&USER, MASKED).map(MaskedUserUnits)
+    fn user_unit_files(&self) -> Result<UserUnitFiles, ProbeError> {
+        self.list(&USER).map(|states| UserUnitFiles {
+            enabled: EnabledUserUnits(states.enabled),
+            masked: MaskedUserUnits(states.masked),
+        })
     }
 }
 
@@ -145,14 +153,14 @@ fn parse_failed(output: &str) -> BTreeSet<UnitName> {
     units_in_state(output, 1, "failed")
 }
 
-/// The arguments of one listing. `state_flag` is `--state=<state>`.
-fn list_args<'a>(scope: &[&'a str], state_flag: &'a str) -> Vec<&'a str> {
+/// The arguments of the one listing per scope that answers both states.
+fn list_args<'a>(scope: &[&'a str]) -> Vec<&'a str> {
     scope
         .iter()
         .copied()
         .chain([
             "list-unit-files",
-            state_flag,
+            LISTED_STATES,
             "--no-legend",
             "--no-pager",
             "--plain",
@@ -169,10 +177,14 @@ fn nothing_listed(finished: &command::Finished) -> bool {
         && finished.stderr.trim().is_empty()
 }
 
-/// Lines of `UNIT STATE [PRESET]`. The state is checked again, so a legend
-/// or summary line that slips through does not count as a unit.
-fn parse_listed(output: &str, state: &str) -> BTreeSet<UnitName> {
-    units_in_state(output, 0, state)
+/// Lines of `UNIT STATE [PRESET]`, split by state. The state is checked
+/// again, so a legend or summary line that slips through does not count as
+/// a unit, and a runtime state such as `enabled-runtime` matches neither.
+fn parse_listed(output: &str) -> UnitFileStates {
+    UnitFileStates {
+        enabled: units_in_state(output, 0, ENABLED),
+        masked: units_in_state(output, 0, MASKED),
+    }
 }
 
 fn units_in_state(output: &str, state_offset: usize, state: &str) -> BTreeSet<UnitName> {

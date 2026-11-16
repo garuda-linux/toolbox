@@ -9,6 +9,7 @@ publish.workspace = true
 [dependencies]
 log.workspace = true
 toolbox-calendar.workspace = true
+toolbox-text.workspace = true
 parking_lot.workspace = true
 rustix = { workspace = true, features = ["fs"] }
 tracing.workspace = true

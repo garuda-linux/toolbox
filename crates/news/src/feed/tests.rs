@@ -15,7 +15,7 @@ fn titles(feed: &str, source: Source) -> Vec<String> {
     parse(feed.as_bytes(), source)
         .unwrap()
         .into_iter()
-        .map(|post| post.title)
+        .map(|post| post.title.into_string())
         .collect()
 }
 

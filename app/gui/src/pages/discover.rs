@@ -26,6 +26,7 @@ use super::toggles::refusal_text;
 use super::{PageContext, PageView, plan_running};
 use crate::command::AppCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::toggle_pages::TogglePages;
 
@@ -185,11 +186,21 @@ impl DiscoverPage {
         let ctx = ui.ctx().clone();
         let search = self.search.trim().to_owned();
         if let Some((category, matches)) = elsewhere.filter(|_| !search.is_empty()) {
-            let count = matches.to_string();
-            let named = [("category", category.as_str()), ("search", search.as_str())];
+            let count = matches;
+            let named = [
+                ("category", Arg::from(category.as_str())),
+                ("search", Arg::from(search.as_str())),
+            ];
+
             let title = i18n::text_with(&ctx, "discover-nothing-in-category", &named);
+
             let detail = i18n::text(&ctx, "discover-nothing-in-category-detail");
-            let all = i18n::text_with(&ctx, "discover-show-all-matches", &[("count", &count)]);
+            let all = i18n::text_with(
+                &ctx,
+                "discover-show-all-matches",
+                &[("count", Arg::from(count))],
+            );
+
             if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &all).clicked() {
                 self.category = None;
             }
@@ -220,8 +231,14 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>
     let ctx = ui.ctx().clone();
     if let Some(problem) = problem {
         let reason = i18n::text(&ctx, &format!("toggles-problem-{}", problem.code));
-        let text = format!("{} {reason}", i18n::text(&ctx, "discover-problem"));
+        let text = i18n::text_with(
+            &ctx,
+            "discover-problem-reason",
+            &[("reason", Arg::from(&reason))],
+        );
+
         banner(ui, Tone::Warning, &text, &[]);
+
         ui.add_space(ui.tokens().sizes.card_gap);
     }
 

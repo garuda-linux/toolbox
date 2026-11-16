@@ -170,7 +170,7 @@ pub fn targets(facts: &RepairFacts) -> Vec<TargetChoice> {
             .filter(|esp| !esp.in_use)
             .map(|esp| TargetChoice {
                 target: Target::Esp(esp.device.clone()),
-                label: esp.label.clone(),
+                label: esp.label.clone().into_string(),
                 size: esp.size,
                 disk: esp.disk.clone(),
             })
@@ -181,7 +181,7 @@ pub fn targets(facts: &RepairFacts) -> Vec<TargetChoice> {
             .filter(|disk| !disk.in_use)
             .map(|disk| TargetChoice {
                 target: Target::Disk(disk.device.clone()),
-                label: disk.model.clone(),
+                label: disk.model.clone().into_string(),
                 size: disk.size,
                 disk: disk.device.clone(),
             })

@@ -10,8 +10,8 @@ use toolbox_cli::args::{
     AppsCommand, BootCommand, BootSet, Command, DkmsBuild, DkmsCommand, DriversCommand, EditUser,
     EntryArgs, Group, GroupArgs, GroupsCommand, KernelArgs, KernelsCommand, LocaleArgs,
     LocalesCommand, MaintenanceCommand, ModuleArgs, NetworkCommand, PackageArgs, PackageInstall,
-    PackagesCommand, ParamArgs, ParamCommand, RemoveUser, TaskArgs, ToggleCommand, TweaksCommand,
-    UnitArgs, UnitChange, UserArgs, UsersCommand,
+    PackagesCommand, ParamArgs, ParamCommand, RemoveUser, ServicesRead, TaskArgs, ToggleCommand,
+    TweaksCommand, UnitArgs, UnitChange, UserArgs, UsersCommand,
 };
 use toolbox_core::Toggle;
 use toolbox_core::features::maintenance::page::OPERATION_KEYS;
@@ -135,7 +135,11 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
                 | UnitChange::Unmask),
                 args,
             )) => Ok(Queueable::Unit(change, args)),
-            Ok(_) | Err(_) => Err(NotQueued::AtOnce),
+            Ok((
+                UnitChange::Start | UnitChange::Stop | UnitChange::Restart | UnitChange::Reload,
+                _,
+            ))
+            | Err(ServicesRead::List(_) | ServicesRead::Show(_)) => Err(NotQueued::AtOnce),
         },
         Command::Kernels(KernelsCommand::Install(args)) => {
             Ok(Queueable::Kernel(args, KernelChange::Install))

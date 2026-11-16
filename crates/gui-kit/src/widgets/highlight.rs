@@ -48,24 +48,24 @@ pub fn highlighted(ui: &Ui, text: &str, query: &str, font: FontId, color: Color3
 /// never overlapping. Lowercase can change a character's length, so the
 /// search runs on the lowercase text and maps each hit back.
 pub fn matches(text: &str, query: &str) -> Vec<Range<usize>> {
-    let needle = query.trim().to_lowercase();
+    let needle: String = query.trim().chars().flat_map(lower).collect();
     if needle.is_empty() {
         return Vec::new();
     }
 
-    let mut lower = String::with_capacity(text.len());
+    let mut lower_text = String::with_capacity(text.len());
     let mut origin: Vec<Range<usize>> = Vec::with_capacity(text.len());
     for (start, character) in text.char_indices() {
         let end = start + character.len_utf8();
-        for folded in character.to_lowercase() {
-            lower.push(folded);
+        for folded in lower(character) {
+            lower_text.push(folded);
             origin.extend(std::iter::repeat_n(start..end, folded.len_utf8()));
         }
     }
 
     let mut found = Vec::new();
     let mut from = 0;
-    while let Some(offset) = lower.get(from..).and_then(|rest| rest.find(&needle)) {
+    while let Some(offset) = lower_text.get(from..).and_then(|rest| rest.find(&needle)) {
         let hit = from + offset;
         let last = hit + needle.len() - 1;
         if let (Some(first), Some(end)) = (origin.get(hit), origin.get(last)) {
@@ -76,4 +76,12 @@ pub fn matches(text: &str, query: &str) -> Vec<Range<usize>> {
     }
 
     found
+}
+
+/// `character` in lower case as `toolbox_core`'s `Needle` compares it: the
+/// final sigma counts as the plain one, so a hit it finds is marked.
+fn lower(character: char) -> impl Iterator<Item = char> {
+    character
+        .to_lowercase()
+        .map(|letter| if letter == 'ς' { 'σ' } else { letter })
 }

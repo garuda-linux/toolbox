@@ -17,6 +17,7 @@ toolbox-core.workspace = true
 toolbox-guide.workspace = true
 toolbox-instance.workspace = true
 toolbox-plan.workspace = true
+toolbox-text.workspace = true
 toolbox-privatebin.workspace = true
 toolbox-services.workspace = true
 toolbox-state.workspace = true

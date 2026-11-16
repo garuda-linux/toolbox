@@ -25,6 +25,7 @@ thiserror.workspace = true
 toolbox-exec.workspace = true
 toolbox-catalog.workspace = true
 toolbox-plan.workspace = true
+toolbox-text.workspace = true
 toolbox-state.workspace = true
 toolbox-calendar.workspace = true
 toolbox-pty.workspace = true

@@ -11,9 +11,10 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{menu_button, menu_item};
 
 use crate::i18n;
+use crate::i18n::Arg;
 
 pub fn more(ui: &mut Ui, row: &str, items: impl FnOnce(&mut Ui)) -> Response {
-    let alt = i18n::text_with(ui.ctx(), "row-more", &[("name", row)]);
+    let alt = i18n::text_with(ui.ctx(), "row-more", &[("name", Arg::from(row))]);
     let button = menu_button(ui, &alt, items);
     return_focus(ui, &button);
     button

@@ -161,8 +161,8 @@ fn the_updates_chip_counts_the_aur_updates_home_counts() {
     let mut fixture = fixture(None);
     let update = |text: &str| PendingUpdate {
         name: PackageName::new(text).unwrap(),
-        from: "1".to_owned(),
-        to: "2".to_owned(),
+        from: toolbox_text::plain("1"),
+        to: toolbox_text::plain("2"),
     };
 
     fixture.status = Some(Loadable::Loaded(Arc::new(Status {

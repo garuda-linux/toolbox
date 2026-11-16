@@ -1,4 +1,5 @@
 use super::{files, write_or_check};
+use crate::Failure;
 
 #[test]
 fn every_shell_and_the_man_page_get_a_file() {
@@ -265,4 +266,32 @@ fn a_page_names_the_other_names_of_its_command() {
     }
 
     assert!(!page("garuda-toolbox-services-list.1").contains(".SH ALIASES"));
+}
+
+#[test]
+fn check_reports_a_file_that_no_command_makes_any_more() {
+    let dir = tempfile::tempdir().unwrap();
+    write_or_check(dir.path(), false).unwrap();
+    std::fs::write(dir.path().join("garuda-toolbox-removed.1"), "old").unwrap();
+
+    let Err(Failure::Problems(problems)) = write_or_check(dir.path(), true) else {
+        panic!("check passed a stale file")
+    };
+
+    assert_eq!(problems.len(), 1);
+
+    assert!(problems[0].contains("garuda-toolbox-removed.1"));
+}
+
+#[test]
+fn write_deletes_a_file_that_no_command_makes_any_more() {
+    let dir = tempfile::tempdir().unwrap();
+    write_or_check(dir.path(), false).unwrap();
+    let stale = dir.path().join("garuda-toolbox-removed.1");
+    std::fs::write(&stale, "old").unwrap();
+
+    write_or_check(dir.path(), false).unwrap();
+
+    assert!(!stale.exists());
+    write_or_check(dir.path(), true).unwrap();
 }

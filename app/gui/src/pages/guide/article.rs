@@ -9,6 +9,7 @@ use super::markdown::{self, Reader};
 use super::{GuidePage, Jump};
 use crate::command::{AppCommand, UiCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::pages::PageContext;
 
@@ -102,7 +103,7 @@ fn top_line(ui: &mut Ui, page: &Page, context: &PageContext<'_>) {
         if let Some(target) = PageId::of_guide_file(&page.file) {
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 let name = i18n::text(&ctx, target.text_id());
-                let label = i18n::text_with(&ctx, "guide-open-page", &[("page", &name)]);
+                let label = i18n::text_with(&ctx, "guide-open-page", &[("page", Arg::from(&name))]);
                 if named_pill_button(ui, &label, ButtonKind::Soft, &label).clicked() {
                     context.commands.send(UiCommand::Navigate(target));
                 }
@@ -118,7 +119,12 @@ fn neighbours(ui: &mut Ui, guide: &Guide, page: &Page, reader: &mut Reader<'_>) 
     ui.separator();
     ui.horizontal(|ui| {
         if let Some(before) = guide.previous(&page.file) {
-            let text = i18n::text_with(&ctx, "guide-previous", &[("page", &before.title)]);
+            let text = i18n::text_with(
+                &ctx,
+                "guide-previous",
+                &[("page", Arg::from(&before.title))],
+            );
+
             if text_link(ui, &text, &text).clicked() {
                 reader.jump = Some(Jump::Page {
                     file: before.file.clone(),
@@ -129,7 +135,9 @@ fn neighbours(ui: &mut Ui, guide: &Guide, page: &Page, reader: &mut Reader<'_>) 
 
         if let Some(after) = guide.next(&page.file) {
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                let text = i18n::text_with(&ctx, "guide-next", &[("page", &after.title)]);
+                let text =
+                    i18n::text_with(&ctx, "guide-next", &[("page", Arg::from(&after.title))]);
+
                 if text_link(ui, &text, &text).clicked() {
                     reader.jump = Some(Jump::Page {
                         file: after.file.clone(),

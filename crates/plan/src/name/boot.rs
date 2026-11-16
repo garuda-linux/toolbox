@@ -9,7 +9,6 @@ mod tests;
 use super::rules::{check_characters, check_shape, check_word};
 use super::{Name, NameKind, Reason, Rule};
 use crate::component::has_plain_components;
-use crate::text;
 
 const SHELL_ACTIVE: &str = "\"\\$`";
 
@@ -24,10 +23,22 @@ const PARAMETER_MARKS: &str = "_-.,:=/@+%!~^[]";
 
 /// Parameters that open a root shell at boot or switch a security layer
 /// off. One ending in `=` matches every value, one with a value only that
-/// value, a bare one itself with or without a value.
-pub const RISKY_PARAMETERS: [&str; 8] = [
+/// value, a bare one itself with or without a value. The name is compared
+/// with `_` read as `-`, the value never.
+pub const RISKY_PARAMETERS: [&str; 19] = [
     "init=",
     "rd.break",
+    "rdinit=",
+    "rd.shell",
+    "rd.emergency",
+    "rd.rescue",
+    "rd.systemd.unit=",
+    "rescue",
+    "single",
+    "emergency",
+    "s",
+    "S",
+    "1",
     "systemd.unit=",
     "systemd.debug-shell",
     "lockdown=",
@@ -67,19 +78,20 @@ impl KernelParameter {
     /// One of [`RISKY_PARAMETERS`], which the page adds only after a
     /// confirm.
     pub fn is_risky(&self) -> bool {
-        let value = self.as_str();
+        let (name, value) = match self.as_str().split_once('=') {
+            Some((name, value)) => (fold_name(name), Some(value)),
+            None => (fold_name(self.as_str()), None),
+        };
 
-        RISKY_PARAMETERS.iter().any(|risky| {
-            if risky.ends_with('=') {
-                value.starts_with(risky)
-            } else if risky.contains('=') {
-                value == *risky
-            } else {
-                value
-                    .strip_prefix(risky)
-                    .is_some_and(|rest| rest.is_empty() || rest.starts_with('='))
-            }
-        })
+        RISKY_PARAMETERS
+            .iter()
+            .any(|risky| match risky.split_once('=') {
+                Some((risky_name, "")) => value.is_some() && name == fold_name(risky_name),
+                Some((risky_name, risky_value)) => {
+                    name == fold_name(risky_name) && value == Some(risky_value)
+                }
+                None => name == fold_name(risky),
+            })
     }
 }
 
@@ -123,7 +135,7 @@ impl Rule for MenuEntryRule {
     fn check(value: &str) -> Result<(), Reason> {
         check_shape(value, MAX_MENU_ENTRY_CHARS, |first| first != '-')?;
         check_quotable(value)?;
-        check_characters(value, |character| !text::is_hidden(character))
+        check_characters(value, |character| !toolbox_text::is_hidden(character))
     }
 }
 
@@ -175,4 +187,10 @@ fn check_file(value: &str, types: &[&str]) -> Result<(), Reason> {
     } else {
         Err(Reason::WrongFileType)
     }
+}
+
+/// The kernel and systemd take `_` and `-` alike in a parameter name, so
+/// `systemd.debug_shell` is `systemd.debug-shell`.
+fn fold_name(name: &str) -> String {
+    name.replace('_', "-")
 }

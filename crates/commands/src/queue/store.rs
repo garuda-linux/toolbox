@@ -5,18 +5,17 @@
 #[cfg(test)]
 mod tests;
 
-use std::io::Write as _;
 use std::path::PathBuf;
 
 use rustix::fs::{FlockOperation, flock};
 use tokio::runtime::Handle;
-use toolbox_cli::output::Paint;
 use toolbox_core::{ChangeSet, RestoreProblem, SAVED_VERSION, SavedChanges, Snapshot, domains};
 use toolbox_instance::bus::queue::{Refusal, Window};
 use toolbox_services::queue::edit::QueueEdit;
 use toolbox_services::queue::{Restored, keep_aside, read, store};
 
 use super::said::changes;
+use crate::out::{Settings, warn};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Problem {
@@ -41,8 +40,9 @@ pub trait Store {
 
 pub struct File {
     pub path: PathBuf,
-    /// For the warning about changes that could not be restored.
-    pub paint: Paint,
+    /// For the warning about changes that could not be restored, in the
+    /// form of the command's `--json`.
+    pub settings: Settings,
 }
 
 pub struct InWindow {
@@ -90,7 +90,7 @@ impl File {
     fn restored(&self) -> (ChangeSet, Restored) {
         let (changes, problems) = read(&self.path, &Snapshot::default());
         if let Some(line) = lost(&problems) {
-            writeln!(std::io::stderr(), "{}", self.paint.warning(&line)).ok();
+            warn(self.settings, &line);
         }
 
         (changes, Restored::of(&problems))
@@ -156,13 +156,17 @@ impl Store for InWindow {
 ///
 /// [`Problem::Window`] when the bus cannot say whether a window runs: the
 /// file is then left alone, as the window might be writing it.
-pub fn open(runtime: &Handle, path: PathBuf, paint: Paint) -> Result<Box<dyn Store>, Problem> {
+pub fn open(
+    runtime: &Handle,
+    path: PathBuf,
+    settings: Settings,
+) -> Result<Box<dyn Store>, Problem> {
     match runtime.block_on(Window::find()) {
         Ok(Some(window)) => Ok(Box::new(InWindow {
             window,
             runtime: runtime.clone(),
         })),
-        Ok(None) => Ok(Box::new(File { path, paint })),
+        Ok(None) => Ok(Box::new(File { path, settings })),
         Err(error) => {
             tracing::warn!("cannot tell whether the window runs: {error}");
             Err(Problem::Window(Refusal::NoAnswer))

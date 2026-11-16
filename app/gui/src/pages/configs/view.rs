@@ -12,6 +12,7 @@ use toolbox_gui_kit::widgets::{
 use super::texts;
 use crate::command::ConfigsCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// The frame `text_box` draws above and below its scrolled room.
@@ -19,7 +20,7 @@ const BOX_PADDING: f32 = 20.0;
 
 pub fn show(ctx: &Context, context: &PageContext<'_>, viewing: &Viewing) {
     let path = viewing.path().map(ToString::to_string).unwrap_or_default();
-    let title = i18n::text_with(ctx, "configs-view-title", &[("path", &path)]);
+    let title = i18n::text_with(ctx, "configs-view-title", &[("path", Arg::from(&path))]);
     let close = i18n::text(ctx, "dialog-close");
 
     // Only a read text needs the width, a line saying it is read or why
@@ -50,7 +51,9 @@ fn body(ui: &mut Ui, viewing: &Viewing, path: &str) {
     match viewing.phase() {
         Phase::Idle => {}
         Phase::Reading => {
-            let text = i18n::text_with(&ctx, "configs-status-reading", &[("path", path)]);
+            let text =
+                i18n::text_with(&ctx, "configs-status-reading", &[("path", Arg::from(path))]);
+
             loading_label(ui, &text);
         }
         Phase::Failed => {
@@ -74,19 +77,28 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
         let text = i18n::text_with(
             &ctx,
             "configs-view-link",
-            &[("path", path), ("target", &target)],
+            &[("path", Arg::from(path)), ("target", Arg::from(&target))],
         );
 
         ui.add(Label::new(text).wrap());
     }
 
-    let note = i18n::text_with(&ctx, "configs-problem-read-only", &[("path", path)]);
+    let note = i18n::text_with(
+        &ctx,
+        "configs-problem-read-only",
+        &[("path", Arg::from(path))],
+    );
+
     ui.add(Label::new(note).wrap());
+
     ui.add_space(ui.tokens().sizes.card_gap);
 
     let mut text = read.content.as_str();
-    let name = i18n::text_with(&ctx, "configs-view-title", &[("path", path)]).into_owned();
+    let name =
+        i18n::text_with(&ctx, "configs-view-title", &[("path", Arg::from(path))]).into_owned();
+
     let room = (super::text_room(ui) - BOX_PADDING).max(super::MIN_TEXT_HEIGHT);
+
     text_box(
         ui,
         (&name, &name),

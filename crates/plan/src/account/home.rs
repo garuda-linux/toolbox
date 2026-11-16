@@ -5,10 +5,12 @@
 #[cfg(test)]
 mod tests;
 
+use std::ops::RangeInclusive;
+
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::component::has_plain_components;
-use crate::text;
+use crate::procedure::FIRST_USER_ID;
 
 /// `PATH_MAX` is far larger, but no home folder lives that deep.
 pub const MAX_HOME_BYTES: usize = 255;
@@ -22,6 +24,9 @@ pub const HOME_ROOTS: [&str; 4] = ["/home/", "/srv/", "/var/lib/", "/opt/"];
 /// below the first, accounts of people at the second.
 pub const LAST_SYSTEM_USER_ID: u32 = 999;
 pub const LAST_USER_ID: u32 = 60_000;
+
+/// The accounts of people. Root, system accounts and `nobody` lie outside.
+pub const PEOPLE: RangeInclusive<u32> = FIRST_USER_ID..=LAST_USER_ID;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
 pub enum InvalidHomeDirectory {
@@ -89,7 +94,7 @@ impl HomeDirectory {
 
         if let Some(character) = value
             .chars()
-            .find(|character| text::is_hidden(*character) || *character == ':')
+            .find(|character| toolbox_text::is_hidden(*character) || *character == ':')
         {
             return Err(InvalidHomeDirectory::InvalidCharacter(character));
         }

@@ -109,7 +109,7 @@ impl SummaryCode {
     }
 
     /// The names of the sentence's values, in their order. One value is
-    /// called `name`.
+    /// called `name`, or `count` when the sentence picks its plural by it.
     #[expect(
         clippy::too_many_lines,
         reason = "one arm per code, a new code fails to compile until it names its values"
@@ -121,6 +121,7 @@ impl SummaryCode {
             Self::HomeFolder => &["user", "folder"],
             Self::LoginShell => &["user", "shell"],
             Self::DkmsBuild => &["module", "kernel"],
+            Self::GrubTimeout | Self::LoaderTimeout => &["count"],
             Self::AccountLock
             | Self::AccountUnlock
             | Self::AurInstall
@@ -147,7 +148,6 @@ impl SummaryCode {
             | Self::GrubSubmenusOn
             | Self::GrubTheme
             | Self::GrubThemeNone
-            | Self::GrubTimeout
             | Self::HblockOff
             | Self::HblockOn
             | Self::LoaderAutoEntriesOff
@@ -162,7 +162,6 @@ impl SummaryCode {
             | Self::LoaderEditorOff
             | Self::LoaderEditorOn
             | Self::LoaderEditorUnset
-            | Self::LoaderTimeout
             | Self::LoaderTimeoutMenu
             | Self::LoaderTimeoutUnset
             | Self::LocaleDisable

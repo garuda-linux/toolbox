@@ -15,6 +15,7 @@ use toolbox_gui_kit::widgets::{ButtonKind, Select, pill_button, rich};
 use super::{SetupPage, Stage};
 use crate::command::UiCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::toggles::Steps;
 
@@ -27,11 +28,11 @@ const BAR_RADIUS: u8 = 2;
 
 pub fn stages(ctx: &egui::Context, steps: &Steps) -> Vec<(Stage, String)> {
     let numbered = steps.pairs().enumerate().map(|(index, (id, title))| {
-        let number = (index + 1).to_string();
+        let number = index + 1;
         let name = i18n::text_with(
             ctx,
             "setup-step-item",
-            &[("number", &number), ("title", title)],
+            &[("number", Arg::from(number)), ("title", Arg::from(title))],
         );
 
         (Stage::Step(id.to_owned()), name.into_owned())
@@ -115,11 +116,11 @@ fn progress(ui: &mut Ui, page: &SetupPage, stages: &[(Stage, String)], at: usize
     let steps = stages.len().saturating_sub(2);
     let words = match page.stage {
         Stage::Step(_) => {
-            let (number, count) = (at.to_string(), steps.to_string());
+            let (number, count) = (at, steps);
             i18n::text_with(
                 &ctx,
                 "setup-progress",
-                &[("number", &number), ("count", &count)],
+                &[("number", Arg::from(number)), ("count", Arg::from(count))],
             )
             .into_owned()
         }

@@ -7,7 +7,7 @@ mod tests;
 use std::time::Duration;
 
 use toolbox_https::http::{HeaderMap, StatusCode, header};
-use toolbox_https::{RequestError, Rules};
+use toolbox_https::{RequestError, Rules, USER_AGENT};
 
 use crate::transport::{Answer, Transport, Validators};
 
@@ -17,9 +17,6 @@ const TIMEOUT: Duration = Duration::from_mins(5);
 
 /// The dump is about 14 MB gzipped. Far more is no dump of the AUR.
 const MAX_GZIPPED_BYTES: u64 = 64 << 20;
-
-/// Plain and generic: the AUR learns the program, nothing of the user.
-const USER_AGENT: &str = concat!("garuda-toolbox/", env!("CARGO_PKG_VERSION"));
 
 pub const HOST: &str = "aur.archlinux.org";
 

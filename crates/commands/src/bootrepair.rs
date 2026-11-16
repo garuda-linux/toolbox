@@ -34,7 +34,7 @@ pub struct SystemRow {
     #[serde(rename = "id")]
     pub device: String,
     #[serde(rename = "name")]
-    pub label: String,
+    pub label: toolbox_text::OutsideText,
     pub encryption: &'static str,
     pub in_use: bool,
 }
@@ -94,7 +94,7 @@ pub fn command(command: BootRepairCommand, runtime: &Runtime, out: &mut Out<'_>)
 /// # Errors
 ///
 /// [`Refused`] for an unknown system or target, a locked system without
-/// its passphrase, or what the page refuses.
+/// its passphrase, Ctrl+C at its question, or what the page refuses.
 pub fn repair(
     facts: &RepairFacts,
     args: &RepairArgs,
@@ -180,7 +180,7 @@ fn passphrase(args: &RepairArgs, prompt: &mut dyn Prompt) -> Result<Password, Re
     let text = if args.passphrase_stdin {
         prompt.line()
     } else {
-        prompt.secret(&format!("Passphrase of {}: ", args.system))
+        prompt.secret(&format!("Passphrase of {}: ", args.system))?
     };
 
     let text = text.ok_or_else(|| {
@@ -274,7 +274,7 @@ pub fn system_listing(rows: &[SystemRow]) -> Listing<'_> {
                 let state = if row.in_use { "in use" } else { row.encryption };
                 Row::plain(vec![
                     row.device.clone(),
-                    row.label.clone(),
+                    row.label.to_string(),
                     state.to_owned(),
                 ])
             })

@@ -10,6 +10,7 @@ use toolbox_core::features::packages::{InstallReason, PackageDetails};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{PropertyTexts, property_list, text_link};
 
+use crate::i18n::Arg;
 use crate::packages::Details;
 use crate::pages::packages::row::repository;
 use crate::pages::rows::Look;
@@ -35,8 +36,9 @@ pub enum Value {
 
 pub fn grid(ui: &mut Ui, facts: &[Fact]) {
     let ctx = ui.ctx().clone();
-    let copy =
-        |label: &str| i18n::text_with(&ctx, "packages-copy", &[("label", label)]).into_owned();
+    let copy = |label: &str| {
+        i18n::text_with(&ctx, "packages-copy", &[("label", Arg::from(label))]).into_owned()
+    };
 
     let copied = i18n::text(&ctx, "packages-copied");
 
@@ -86,12 +88,10 @@ pub fn facts(ctx: &Context, info: &PackageDetails) -> Vec<Fact> {
 
     facts.push(fact("packages-info-size", Value::Plain(size(info.size))));
 
-    let listed = |id: &str, values: &[String]| {
-        (!values.is_empty()).then(|| fact(id, Value::Plain(values.join(", "))))
-    };
+    let listed = |id: &str, joined: Option<String>| joined.map(|text| fact(id, Value::Plain(text)));
 
-    facts.extend(listed("packages-info-licenses", &info.licenses));
-    facts.extend(listed("packages-info-groups", &info.groups));
+    facts.extend(listed("packages-info-licenses", joined(&info.licenses)));
+    facts.extend(listed("packages-info-groups", joined(&info.groups)));
 
     facts.extend(installed(ctx, info));
 
@@ -99,10 +99,24 @@ pub fn facts(ctx: &Context, info: &PackageDetails) -> Vec<Fact> {
         facts.push(fact("packages-info-url", web(url)));
     }
 
-    facts.extend(listed("packages-info-provides", &info.provides));
-    facts.extend(listed("packages-info-conflicts", &info.conflicts));
-    facts.extend(listed("packages-info-replaces", &info.replaces));
+    facts.extend(listed("packages-info-provides", joined(&info.provides)));
+    facts.extend(listed("packages-info-conflicts", joined(&info.conflicts)));
+    facts.extend(listed("packages-info-replaces", joined(&info.replaces)));
     facts
+}
+
+/// The values joined with commas, `None` for an empty list.
+pub fn joined<T>(values: &[T]) -> Option<String>
+where
+    T: AsRef<str>,
+{
+    (!values.is_empty()).then(|| {
+        values
+            .iter()
+            .map(AsRef::as_ref)
+            .collect::<Vec<&str>>()
+            .join(", ")
+    })
 }
 
 /// A web address the database names opens only when it is an `http` or

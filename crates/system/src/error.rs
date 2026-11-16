@@ -60,11 +60,8 @@ pub enum ProbeError {
         what: String,
         raw: OsString,
     },
-    /// A source that exists names nothing where it should, said as a
-    /// whole sentence such as "no boot time in /proc/stat".
-    Missing {
-        what: String,
-    },
+    /// A source that exists names nothing where it should.
+    Missing(MissingFact),
     NotAFile {
         path: PathBuf,
     },
@@ -86,6 +83,31 @@ pub enum ProbeError {
 pub enum Stop {
     Cancelled,
     TooLarge,
+}
+
+/// What a source that exists lacks.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MissingFact {
+    /// The effective user id is not in the process status file.
+    UserId { path: PathBuf },
+    /// The mount table lists no root filesystem.
+    Root { path: PathBuf },
+    /// The kernel statistics have no boot time.
+    BootTime,
+    /// The OS release file names no kernel release.
+    KernelRelease,
+}
+
+impl MissingFact {
+    /// The reason in words, a whole sentence.
+    fn reason(&self) -> String {
+        match self {
+            Self::UserId { path } => format!("{} names no user id", path.display()),
+            Self::Root { path } => format!("{} lists no root", path.display()),
+            Self::BootTime => "no boot time in /proc/stat".to_owned(),
+            Self::KernelRelease => "the kernel names no release".to_owned(),
+        }
+    }
 }
 
 /// A value the source printed that the workspace's parsers refuse.
@@ -120,7 +142,7 @@ impl ProbeError {
             Self::Alpm { what, error } => format!("{what}: {error}"),
             Self::Syscall { what, error } => format!("{what}: {error}"),
             Self::NotUtf8 { what, raw } => format!("{what} is not UTF-8: {}", raw.display()),
-            Self::Missing { what } => what.clone(),
+            Self::Missing(fact) => fact.reason(),
             Self::NotAFile { path } => format!("{} is no file", path.display()),
             Self::NulInPath { path } => format!("{}: NUL in the path", path.display()),
             Self::Panicked => "the probe panicked".to_owned(),
@@ -134,11 +156,12 @@ impl ProbeError {
         !matches!(self, Self::Unavailable)
     }
 
-    /// A failure that reads `reason`, for fakes that stand in for a source.
+    /// A failed read of `what`, for fakes that stand in for a source.
     #[cfg(any(test, feature = "testing"))]
-    pub fn fake(reason: impl Into<String>) -> Self {
-        Self::Missing {
-            what: reason.into(),
+    pub fn fake(what: impl Into<String>) -> Self {
+        Self::Io {
+            what: what.into(),
+            error: Arc::new(io::Error::other("fake source")),
         }
     }
 }
@@ -175,7 +198,7 @@ impl std::error::Error for ProbeError {
                 why: _,
             }
             | Self::NotUtf8 { what: _, raw: _ }
-            | Self::Missing { what: _ }
+            | Self::Missing(_)
             | Self::NotAFile { path: _ }
             | Self::NulInPath { path: _ }
             | Self::Panicked => None,

@@ -72,7 +72,7 @@ fn the_index_holds_every_offered_and_every_installed_package_by_name() {
         index.entries[1],
         IndexEntry {
             name: name("gimp"),
-            description: "About gimp".to_owned(),
+            description: toolbox_text::plain("About gimp"),
             version: "3.2.6-2".to_owned(),
             origin: Origin::Repository("core".to_owned()),
             size: 158_547_676,
@@ -89,7 +89,9 @@ fn the_index_holds_every_offered_and_every_installed_package_by_name() {
         index.entries[3],
         IndexEntry {
             name: name("mpv"),
-            description: "a free, open source, and cross-platform media player".to_owned(),
+            description: toolbox_text::plain(
+                "a free, open source, and cross-platform media player"
+            ),
             version: "1:0.41.0-7".to_owned(),
             origin: Origin::Foreign,
             size: 6_656_527,
@@ -148,23 +150,23 @@ fn the_details_of_an_installed_package_come_from_the_local_database() {
     assert_eq!(details.description, "GNU Image Manipulation Program");
     assert_eq!(details.url.as_deref(), Some("https://www.gimp.org/"));
     assert_eq!(details.licenses, ["GPL-3.0-or-later"]);
-    assert_eq!(details.groups, Vec::<String>::new());
+    assert_eq!(details.groups, Vec::<toolbox_text::OutsideText>::new());
     assert_eq!(details.depends, block(GIMP_DESC, "DEPENDS"));
     assert_eq!(details.optional.len(), 7);
     assert_eq!(
         details.optional[6],
         OptionalDependency {
             name: PackageName::new("gvfs").unwrap(),
-            reason: "for HTTP/S support (and many other schemes)".to_owned(),
+            reason: toolbox_text::plain("for HTTP/S support (and many other schemes)"),
         }
     );
     assert_eq!(details.provides, Vec::<String>::new());
     assert_eq!(details.size, 158_547_676);
 
     let installed = details.installed.unwrap();
-    let files: Vec<String> = block(GIMP_FILES, "FILES")
+    let files: Vec<toolbox_text::OutsideText> = block(GIMP_FILES, "FILES")
         .iter()
-        .map(|file| format!("/{file}"))
+        .map(|file| toolbox_text::plain(&format!("/{file}")))
         .collect();
 
     assert_eq!(installed.reason, InstallReason::Explicit);

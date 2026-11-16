@@ -20,6 +20,7 @@ use toolbox_gui_kit::toasts::ToastKind;
 
 use self::stderr::StderrFile;
 use crate::command::{AppCommand, CommandSender};
+use crate::i18n::Arg;
 use crate::spawn::spawn_logged;
 use crate::{i18n, log_folder};
 
@@ -126,7 +127,7 @@ impl Start {
                 let reason = error.to_string();
                 self.toast(
                     "toast-tool-not-started",
-                    &[("name", &short), ("reason", &reason)],
+                    &[("name", Arg::from(&short)), ("reason", Arg::from(&reason))],
                 );
                 return;
             }
@@ -153,7 +154,7 @@ impl Start {
             "{name} ended with {status}, its last lines: {}",
             last.join("\n")
         );
-        self.toast("toast-tool-failed", &[("name", &short)]);
+        self.toast("toast-tool-failed", &[("name", Arg::from(&short))]);
     }
 
     /// The file `short`'s stderr goes to, and its handle for the child. The
@@ -178,7 +179,7 @@ impl Start {
         }
     }
 
-    fn toast(&self, id: &str, args: &[(&'static str, &str)]) {
+    fn toast(&self, id: &str, args: &[(&'static str, Arg<'_>)]) {
         let text = i18n::text_with(&self.ctx, id, args);
         self.commands.send(AppCommand::Toast {
             kind: ToastKind::Error,

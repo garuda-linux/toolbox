@@ -1,9 +1,6 @@
-//! The local copy of the posts and the six-hour rule.
-//!
-//! The time of an attempt is stored before the request goes out, so a
-//! request that fails, hangs or crashes the app still counts, and the next
-//! one waits its full time. The lock covers the check and the download, so
-//! two readers at once never ask twice.
+//! The local copy of the posts and the six-hour rule. The lock covers the
+//! check and the download, so two readers of this process at once never
+//! ask twice.
 
 #[cfg(test)]
 mod tests;
@@ -15,6 +12,7 @@ use std::sync::Arc;
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 use toolbox_fs::{Permissions, Replace};
+use toolbox_https::{Attempt, due, next_attempt};
 
 use crate::feed::parse;
 use crate::https::Https;
@@ -70,26 +68,19 @@ impl Cache {
         )
     }
 
-    /// Downloads when the last attempt is old enough. Returns why the
-    /// download failed, `None` when none was due or it worked.
+    /// Downloads when the attempt is due. Returns why the download failed,
+    /// `None` when none was due or it worked.
     fn refresh(&self, stored: &mut Stored, now: i64) -> Result<Option<NewsError>, NewsError> {
-        // A clock once set far ahead would block downloads until that time
-        // passed, so the attempt counts as now.
-        if stored.last_attempt.is_some_and(|last| last > now) {
-            stored.last_attempt = Some(now);
-            self.write(stored)?;
-            return Ok(None);
+        match due(stored.last_attempt, now, REFRESH_EVERY) {
+            Attempt::ClockAhead => {
+                stored.last_attempt = Some(now);
+                self.write(stored)?;
+                return Ok(None);
+            }
+            Attempt::NotDue => return Ok(None),
+            Attempt::Due => {}
         }
 
-        if stored
-            .last_attempt
-            .is_some_and(|last| now < next_attempt(last))
-        {
-            return Ok(None);
-        }
-
-        // Stored first: an attempt that cannot be stored is not made, else
-        // nothing would hold the next one back.
         stored.last_attempt = Some(now);
         self.write(stored)?;
 
@@ -151,15 +142,12 @@ impl NewsSource for Cache {
 
         stored.news.ok_or_else(|| {
             failure.unwrap_or_else(|| NewsError::Waiting {
-                next: stored.last_attempt.map_or(now, next_attempt),
+                next: stored
+                    .last_attempt
+                    .map_or(now, |last| next_attempt(last, REFRESH_EVERY)),
             })
         })
     }
-}
-
-fn next_attempt(last: i64) -> i64 {
-    let wait = i64::try_from(REFRESH_EVERY.as_secs()).unwrap_or(i64::MAX);
-    last.saturating_add(wait)
 }
 
 fn storage(step: StorageStep) -> impl Fn(io::Error) -> NewsError {

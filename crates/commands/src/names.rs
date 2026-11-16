@@ -29,7 +29,7 @@ use toolbox_core::features::discover::Apps;
 use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{ConfigFilePath, GRUB_CONFIG, GrubMenu, GrubPlatform, PackageName, UnitScope};
-use toolbox_services::catalogs::{Catalogs, catalog_dir};
+use toolbox_services::catalogs::catalog_dir_from_env;
 use toolbox_services::configs::specs;
 use toolbox_services::page::PageId;
 use toolbox_services::units::{Systemd, UnitLister as _};
@@ -39,8 +39,9 @@ use toolbox_system::{
     PackageSource as _, ProbeError, SyncSource as _, SystemBoot, SystemConfigFiles, SystemModules,
 };
 
+use super::act::toggle_pages;
 use super::locales::{PackRow, pack_rows};
-use super::{guide, lists};
+use super::{catalogs, guide, lists};
 
 /// A completion that waits longer than this for systemd gives no names.
 const SYSTEMD_WAIT: Duration = Duration::from_secs(2);
@@ -75,7 +76,7 @@ pub fn of(names: Names) -> Vec<String> {
 fn read(names: Names) -> Vec<String> {
     match names {
         Names::Services { user } => services(UnitScope::from_user(user)),
-        Names::Switches => switch_ids(&toggle_catalogs(&catalogs())),
+        Names::Switches => switch_ids(&toggle_pages(&catalogs())),
         Names::Apps => app_ids(&catalogs().apps.apps),
         Names::Kernels => kernel_names(&with(Libalpm::system().linux_packages())),
         Names::Locales => locale_names(&with(EtcLocales::system().supported())),
@@ -296,18 +297,6 @@ pub fn page_names() -> Vec<String> {
         .collect()
 }
 
-fn toggle_catalogs(catalogs: &Catalogs) -> Vec<&ToggleCatalog> {
-    [
-        &catalogs.components,
-        &catalogs.settings,
-        &catalogs.gaming,
-        &catalogs.setup,
-    ]
-    .into_iter()
-    .filter_map(|toggles| toggles.catalog.as_ref().ok())
-    .collect()
-}
-
 /// A snapshot of the one part that was read, else an empty one.
 fn with<T>(found: Result<T, ProbeError>) -> Snapshot
 where
@@ -319,10 +308,6 @@ where
     }
 
     snapshot
-}
-
-fn catalogs() -> Catalogs {
-    Catalogs::load(&catalog_dir(|key| std::env::var_os(key)))
 }
 
 fn services(scope: UnitScope) -> Vec<String> {
@@ -346,7 +331,7 @@ fn services(scope: UnitScope) -> Vec<String> {
 }
 
 pub fn config_keys() -> Vec<String> {
-    let Ok(catalog) = ConfigFileCatalog::load(&catalog_dir(|key| std::env::var_os(key))) else {
+    let Ok(catalog) = ConfigFileCatalog::load(&catalog_dir_from_env()) else {
         return Vec::new();
     };
 

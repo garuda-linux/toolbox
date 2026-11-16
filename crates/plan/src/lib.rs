@@ -33,18 +33,17 @@ mod shell;
 mod shown;
 #[cfg(any(test, feature = "testing"))]
 pub mod testing;
-pub mod text;
 mod toggle;
 mod user_config;
 
 pub use account::{
     AccountLock, Caller, FullName, HomeChange, HomeDirectory, HomeFolder, InvalidFullName,
     InvalidHomeDirectory, InvalidNewUser, InvalidUserId, LAST_USER_ID, NewHome, NewUser,
-    NewUserParts, PasswdEntry, SHADOW, ShadowLocks, UserId, passwd_entries,
+    NewUserParts, PEOPLE, PasswdEntry, SHADOW, ShadowLocks, UserId, passwd_entries,
 };
 pub use action::{
-    EmptyTargetList, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope, Upgrader,
-    UserAction, boot_loader_steps,
+    EmptyTargetList, LoaderRefusal, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope,
+    Upgrader, UserAction, boot_loader_steps,
 };
 pub use bounded::{Bounded, OutOfRange};
 pub use config_file::{
@@ -65,7 +64,7 @@ pub use locale::{
     LOCALE_CONF, LOCALE_GEN, LocaleEntry, is_builtin_locale, same_locale, set_system_lang,
     system_lang,
 };
-pub use mirrorlist::{InvalidMirrorlist, Mirrorlist};
+pub use mirrorlist::{InvalidMirrorlist, Mirrorlist, SAMPLE_MIRRORS};
 pub use name::{
     ADMIN_GROUPS, BootloaderId, Charset, DiskDevice, DkmsModuleName, DkmsVersion, GroupName,
     GrubPicture, GrubThemeFile, HostName, InvalidName, KernelModule, KernelParameter,
@@ -82,10 +81,11 @@ pub use page_name::{InvalidPageName, MAX_PAGE_NAME_BYTES, PageName};
 pub use plan::{Plan, PlannedAction, Segment, Step, StepId};
 pub use protected::{PROTECTED, Protection, protection};
 pub use repair::{
-    ESP_FOLDER, EspPlace, InstalledLoader, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed,
-    RepairRoot, RepairWork, RootLayout,
+    ESP_FOLDER, InstalledLoader, InstalledSystem, REPAIR_ROOT, RepairMount, RepairNeed, RepairRoot,
+    RepairWork, RootLayout,
 };
 pub use scheme::{InvalidRgb, InvalidSchemeId, MAX_SCHEME_ID_BYTES, Rgb, SchemeId};
+pub use sdboot::EspPlace;
 pub use secret::{
     InvalidPassword, InvalidSecretLine, MAX_PASSWORD_BYTES, Password, SecretInput,
     parse_secret_line,

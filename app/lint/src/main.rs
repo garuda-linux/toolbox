@@ -47,10 +47,11 @@ fn run(roots: &[PathBuf]) -> Result<usize, String> {
 
     files.sort();
 
-    // Missing when the linter runs outside the repository root.
-    let domains = fs::read_to_string(rules::domain_registered::REGISTRY)
-        .ok()
-        .map(|text| rules::domain_registered::registered(&text));
+    let registry = rules::domain_registered::REGISTRY;
+    let registry_text =
+        fs::read_to_string(registry).map_err(|err| format!("cannot read {registry}: {err}"))?;
+
+    let domains = rules::domain_registered::registered(&registry_text)?;
 
     let mut out = std::io::stdout().lock();
     let mut count = 0;
@@ -59,7 +60,7 @@ fn run(roots: &[PathBuf]) -> Result<usize, String> {
         let text = fs::read_to_string(path)
             .map_err(|err| format!("cannot read {}: {err}", path.display()))?;
 
-        for finding in rules::lint_file_in(path, &text, domains.as_ref()) {
+        for finding in rules::lint_file_in(path, &text, &domains) {
             writeln!(
                 out,
                 "{}\n",

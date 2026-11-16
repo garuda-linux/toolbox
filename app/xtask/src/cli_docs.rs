@@ -9,8 +9,9 @@ mod man;
 #[cfg(test)]
 mod tests;
 
-use std::fs;
-use std::path::Path;
+use std::ffi::OsStr;
+use std::path::{Path, PathBuf};
+use std::{fs, io};
 
 use clap::CommandFactory as _;
 use clap_complete::Shell;
@@ -30,20 +31,31 @@ pub fn cli_docs(args: &[String]) -> Result<String, Failure> {
 /// Writes the files below `dir`, or with `check` only compares them.
 fn write_or_check(dir: &Path, check: bool) -> Result<String, Failure> {
     let made = files();
+    let extra = extra_files(dir, &made)?;
 
     if check {
-        let stale: Vec<String> = made
+        let mut stale: Vec<String> = extra
             .iter()
-            .filter(|(name, text)| {
-                fs::read(dir.join(name)).ok().as_deref() != Some(text.as_slice())
-            })
-            .map(|(name, _)| {
+            .map(|path| {
                 format!(
-                    "{}/{name} is out of date, run `cargo xtask cli-docs`",
-                    dir.display()
+                    "{} is made by no command any more, run `cargo xtask cli-docs`",
+                    path.display()
                 )
             })
             .collect();
+
+        stale.extend(
+            made.iter()
+                .filter(|(name, text)| {
+                    fs::read(dir.join(name)).ok().as_deref() != Some(text.as_slice())
+                })
+                .map(|(name, _)| {
+                    format!(
+                        "{}/{name} is out of date, run `cargo xtask cli-docs`",
+                        dir.display()
+                    )
+                }),
+        );
 
         return if stale.is_empty() {
             Ok(format!("{} command line files are up to date", made.len()))
@@ -59,11 +71,42 @@ fn write_or_check(dir: &Path, check: bool) -> Result<String, Failure> {
         })?;
     }
 
+    for path in &extra {
+        fs::remove_file(path)
+            .map_err(|error| Failure::Problems(vec![format!("{}: {error}", path.display())]))?;
+    }
+
     Ok(format!(
         "wrote {} command line files to {}",
         made.len(),
         dir.display()
     ))
+}
+
+/// Without this, a file of a removed command would stay in the folder unseen.
+fn extra_files(dir: &Path, made: &[(String, Vec<u8>)]) -> Result<Vec<PathBuf>, Failure> {
+    let problem = |error: io::Error| Failure::Problems(vec![format!("{}: {error}", dir.display())]);
+    let entries = match fs::read_dir(dir) {
+        Ok(entries) => entries,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(Vec::new()),
+        Err(error) => return Err(problem(error)),
+    };
+
+    let mut extra = Vec::new();
+    for entry in entries {
+        let entry = entry.map_err(problem)?;
+        let name = entry.file_name();
+
+        if !made
+            .iter()
+            .any(|(made_name, _)| OsStr::new(made_name) == name)
+        {
+            extra.push(entry.path());
+        }
+    }
+
+    extra.sort();
+    Ok(extra)
 }
 
 /// Every file with its name: the completion hooks of bash, fish and zsh,

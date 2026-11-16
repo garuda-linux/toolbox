@@ -17,6 +17,7 @@ use toolbox_plan::{PackageName, RemoteAction};
 use super::{heading, row};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// The task whose question is open. Common tasks and repairs share the
@@ -92,9 +93,14 @@ fn missing_banner(ui: &mut Ui, context: &PageContext<'_>, rows: &[RepairRow]) {
 
     let names: Vec<&str> = wanted.into_iter().map(PackageName::as_str).collect();
     let packages = names.join(", ");
-    let count = names.len().to_string();
-    let args = [("packages", packages.as_str()), ("count", count.as_str())];
+    let count = names.len();
+    let args = [
+        ("packages", Arg::from(packages.as_str())),
+        ("count", Arg::from(count)),
+    ];
+
     let text = i18n::text_with(ui.ctx(), "maintenance-repairs-missing", &args);
+
     let install = i18n::text_with(ui.ctx(), "maintenance-install-missing", &args);
     let action = (!context.busy).then_some(&*install);
     if banner(ui, Tone::Neutral, &text, action.as_slice()).value == Some(0) {
@@ -117,7 +123,7 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
                 let needs = i18n::text_with(
                     ui.ctx(),
                     "maintenance-repair-needs",
-                    &[("package", repair.needs.as_str())],
+                    &[("package", Arg::from(repair.needs.as_str()))],
                 );
 
                 let sizes = ui.tokens().sizes;
@@ -153,8 +159,14 @@ pub(super) fn ask(
     let id = asked.text_id();
 
     let name = i18n::text(ctx, &id);
-    let title = i18n::text_with(ctx, "maintenance-repair-question", &[("repair", &name)]);
+    let title = i18n::text_with(
+        ctx,
+        "maintenance-repair-question",
+        &[("repair", Arg::from(&name))],
+    );
+
     let close = i18n::text(ctx, "dialog-close");
+
     let body = i18n::text(ctx, &format!("{id}-question"));
     let cancel = i18n::text(ctx, "maintenance-repair-cancel");
     let texts = Question {

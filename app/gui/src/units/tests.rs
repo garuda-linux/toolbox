@@ -28,7 +28,7 @@ impl UnitLister for Recorded {
 fn unit(name: &str) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: String::new(),
+        description: toolbox_text::plain(""),
         active: ActiveState::Active,
         sub_state: "running".to_owned(),
         file_state: FileState::Enabled,

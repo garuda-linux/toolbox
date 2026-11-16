@@ -43,6 +43,19 @@ impl LocaleRow {
     pub fn is_on(&self) -> bool {
         self.queued.map_or(self.enabled, Toggle::is_on)
     }
+
+    /// The character set when the code does not name it after its dot,
+    /// as `de_DE` for ISO-8859-1 does not and `en_US.UTF-8` does.
+    pub fn unnamed_charset(&self) -> Option<&str> {
+        let locale = self.entry.locale.as_str();
+        let code = locale.split_once('@').map_or(locale, |(code, _)| code);
+        let charset = self.entry.charset.as_str();
+        let named = code
+            .split_once('.')
+            .is_some_and(|(_, named)| named == charset);
+
+        (!named).then_some(charset)
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]

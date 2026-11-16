@@ -5,11 +5,12 @@ use toolbox_core::features::users::run::PageRun;
 use toolbox_services::locks::Locks;
 
 use crate::i18n;
+use crate::i18n::Arg;
 
 /// Why a change or a typed value was refused. `name` names the account
 /// or group a refusal is about.
 pub fn problem(ctx: &Context, problem: InputProblem, name: &str) -> String {
-    i18n::text_with(ctx, &problem.text_id(), &[("name", name)]).into_owned()
+    i18n::text_with(ctx, &problem.text_id(), &[("name", Arg::from(name))]).into_owned()
 }
 
 pub fn full_name_problem(ctx: &Context, code: &str) -> String {
@@ -41,7 +42,7 @@ pub fn run(ctx: &Context, run: &PageRun) -> Option<String> {
     }
 
     let id = format!("users-run-{}-{state}", run.kind());
-    Some(i18n::text_with(ctx, &id, &[("user", run.user())]).into_owned())
+    Some(i18n::text_with(ctx, &id, &[("user", Arg::from(run.user()))]).into_owned())
 }
 
 pub fn list(ctx: &Context, names: impl IntoIterator<Item = impl AsRef<str>>) -> String {

@@ -19,6 +19,8 @@ pub struct Paths {
     /// The environment named the state folder or a home, so `state` is
     /// not the `/root` fallback.
     state_named: bool,
+    /// As `state_named`, for the cache folder.
+    cache_named: bool,
 }
 
 impl Paths {
@@ -49,12 +51,14 @@ impl Paths {
             |variable: &str, fallback: &str| named(variable).unwrap_or_else(|| home.join(fallback));
 
         let named_state = named("XDG_STATE_HOME");
+        let named_cache = named("XDG_CACHE_HOME");
 
         Self {
             config: base("XDG_CONFIG_HOME", ".config"),
             state_named: home_named || named_state.is_some(),
             state: named_state.unwrap_or_else(|| home.join(".local/state")),
-            cache: base("XDG_CACHE_HOME", ".cache"),
+            cache_named: home_named || named_cache.is_some(),
+            cache: named_cache.unwrap_or_else(|| home.join(".cache")),
             home,
         }
     }
@@ -94,6 +98,13 @@ impl Paths {
     #[must_use = "the path is only computed, nothing is created"]
     pub fn cache_dir(&self) -> PathBuf {
         self.cache.join(APP_DIR)
+    }
+
+    /// The app's cache folder when the environment names a home or a cache
+    /// folder. `None` when it would only be the `/root` fallback.
+    #[must_use = "the path is only computed, nothing is created"]
+    pub fn own_cache_dir(&self) -> Option<PathBuf> {
+        self.cache_named.then(|| self.cache_dir())
     }
 
     #[must_use = "the path is only computed, nothing is created"]

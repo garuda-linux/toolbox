@@ -11,7 +11,8 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-pub use self::esp::{EspPlace, InstalledLoader};
+pub use self::esp::InstalledLoader;
+use crate::sdboot::EspPlace;
 use crate::{BootloaderId, DiskDevice, PartitionDevice, VolumeDevice};
 
 /// Where the helper mounts the installed system, relative to `/`. It lies

@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
 
 use tokio::runtime::Runtime;
-use toolbox_aur::{AurError, AurSource};
+use toolbox_aur::{AurError, AurSource, DownloadError, RequestError};
 use toolbox_core::features::packages::aur::AurIndex;
 use toolbox_core::features::packages::history::HistoryAction;
 use toolbox_core::features::packages::{
@@ -54,7 +54,7 @@ impl PackageIndexSource for Machine {
         Ok(PackageIndex {
             entries: vec![IndexEntry {
                 name: name("gimp"),
-                description: "GNU Image Manipulation Program".to_owned(),
+                description: toolbox_text::plain("GNU Image Manipulation Program"),
                 version: "3.2.6-2".to_owned(),
                 origin: Origin::Repository("extra".to_owned()),
                 size: 1,
@@ -74,7 +74,7 @@ impl PackageIndexSource for Machine {
 
         Ok(Some(PackageDetails {
             name: package.clone(),
-            description: String::new(),
+            description: toolbox_text::plain(""),
             version: "3.2.6-2".to_owned(),
             origin: Origin::Repository("extra".to_owned()),
             size: 1,
@@ -236,7 +236,12 @@ fn an_aur_copy_that_waits_for_its_day_is_unavailable_and_a_failed_download_faile
 
     for (answer, wanted) in [
         (AurError::Waiting { next: 1 }, Read::Unavailable),
-        (AurError::Download("no network".to_owned()), Read::Failed),
+        (
+            AurError::Download(DownloadError::Request(RequestError::NoAnswer(
+                "no network".to_owned(),
+            ))),
+            Read::Failed,
+        ),
     ] {
         let aur = Arc::new(Aur {
             reads: AtomicUsize::new(0),

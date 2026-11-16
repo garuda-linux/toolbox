@@ -45,6 +45,11 @@
       "automerge": false
     },
     {
+      "matchManagers": ["dockerfile"],
+      "matchFileNames": ["ci/arch/Containerfile"],
+      "pinDigests": true
+    },
+    {
       "matchDatasources": ["crate"],
       "minimumReleaseAge": "7 days"
     }

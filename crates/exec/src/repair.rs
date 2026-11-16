@@ -36,6 +36,12 @@ use crate::secure;
 /// The kernels Arch packages install into `/boot`.
 const KERNEL_PREFIX: &str = "vmlinuz";
 
+#[derive(Debug, thiserror::Error)]
+enum MountError {
+    #[error("the mount point has no folder")]
+    NoFolder,
+}
+
 /// What the mounted file system lacks to be repaired.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Lacking {
@@ -87,7 +93,7 @@ pub fn prepare_mount(root: &Path) -> io::Result<()> {
     let target = Path::new(REPAIR_ROOT);
     let folder = target
         .parent()
-        .ok_or_else(|| io::Error::other("the mount point has no folder"))?;
+        .ok_or_else(|| io::Error::other(MountError::NoFolder))?;
 
     let private = secure::create_dirs(root, folder)?;
 

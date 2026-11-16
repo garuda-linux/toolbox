@@ -7,6 +7,7 @@ mod tests;
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 
+use fluent_templates::LanguageIdentifier;
 use tokio::process::Command;
 use toolbox_plan::ConfigFilePath;
 use toolbox_plan::protocol::{Mode, ReadKind};
@@ -66,7 +67,15 @@ pub trait Launcher: Send + Sync {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum HelperLauncher {
+pub struct HelperLauncher {
+    way: Way,
+    /// The one the app or the command line shows, for the words logind
+    /// shows while a plan runs.
+    language: LanguageIdentifier,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum Way {
     Pkexec {
         helper: PathBuf,
         pkexec: PathBuf,
@@ -84,17 +93,20 @@ pub enum HelperLauncher {
 }
 
 impl HelperLauncher {
-    pub fn from_process() -> Self {
-        Self::from_lookup(|key| std::env::var_os(key))
+    pub fn from_process(language: LanguageIdentifier) -> Self {
+        Self::from_lookup(|key| std::env::var_os(key), language)
     }
 
     /// `GARUDA_TOOLBOX_HELPER=dry-run` selects the dry run. Development
     /// builds use the helper built next to the app.
-    pub fn from_lookup(lookup: impl Fn(&str) -> Option<OsString>) -> Self {
+    pub fn from_lookup(
+        lookup: impl Fn(&str) -> Option<OsString>,
+        language: LanguageIdentifier,
+    ) -> Self {
         let helper = helper_path();
 
-        if lookup("GARUDA_TOOLBOX_HELPER").is_some_and(|value| value == "dry-run") {
-            Self::DryRun { helper }
+        let way = if lookup("GARUDA_TOOLBOX_HELPER").is_some_and(|value| value == "dry-run") {
+            Way::DryRun { helper }
         } else {
             let path = lookup("PATH");
             let pkexec = root_tool(
@@ -105,8 +117,10 @@ impl HelperLauncher {
                 is_setuid_root,
             );
 
-            Self::Pkexec { helper, pkexec }
-        }
+            Way::Pkexec { helper, pkexec }
+        };
+
+        Self { way, language }
     }
 
     /// The same helper through sudo, for the command line on a terminal.
@@ -127,31 +141,32 @@ impl HelperLauncher {
     }
 
     fn with_sudo(&self, sudo: PathBuf) -> Option<Self> {
-        match self {
-            Self::Pkexec { helper, pkexec: _ } | Self::Sudo { helper, sudo: _ } => {
-                Some(Self::Sudo {
+        match &self.way {
+            Way::Pkexec { helper, pkexec: _ } | Way::Sudo { helper, sudo: _ } => Some(Self {
+                way: Way::Sudo {
                     helper: helper.clone(),
                     sudo,
-                })
-            }
-            Self::DryRun { helper: _ } => None,
+                },
+                language: self.language.clone(),
+            }),
+            Way::DryRun { helper: _ } => None,
         }
     }
 
     /// Whether pkexec can raise at all: setuid root. Checked before a run,
     /// so a broken one is never tried first.
     pub fn pkexec_usable(&self) -> bool {
-        match self {
-            Self::Pkexec { helper: _, pkexec } => is_setuid_root(pkexec),
-            Self::Sudo { helper: _, sudo: _ } | Self::DryRun { helper: _ } => true,
+        match &self.way {
+            Way::Pkexec { helper: _, pkexec } => is_setuid_root(pkexec),
+            Way::Sudo { helper: _, sudo: _ } | Way::DryRun { helper: _ } => true,
         }
     }
 
     /// The helper with `arguments`, through pkexec or sudo unless in a dry
     /// run.
     fn helper(&self, arguments: &[&str]) -> std::process::Command {
-        let mut command = match self {
-            Self::Pkexec { helper, pkexec } => {
+        let mut command = match &self.way {
+            Way::Pkexec { helper, pkexec } => {
                 let mut command = std::process::Command::new(pkexec);
 
                 // `pkexec::refusal` tells refusals apart by pkexec's English
@@ -159,14 +174,14 @@ impl HelperLauncher {
                 command.env("LC_ALL", "C").arg(helper);
                 command
             }
-            Self::Sudo { helper, sudo } => {
+            Way::Sudo { helper, sudo } => {
                 let mut command = std::process::Command::new(sudo);
 
                 // `sudo_refusal` reads sudo's English words.
                 command.env("LC_ALL", "C").arg("--").arg(helper);
                 command
             }
-            Self::DryRun { helper } => std::process::Command::new(helper),
+            Way::DryRun { helper } => std::process::Command::new(helper),
         };
 
         command.args(arguments);
@@ -180,39 +195,41 @@ impl Launcher for HelperLauncher {
     }
 
     fn mode(&self) -> Mode {
-        match self {
-            Self::Pkexec {
+        match &self.way {
+            Way::Pkexec {
                 helper: _,
                 pkexec: _,
             }
-            | Self::Sudo { helper: _, sudo: _ } => Mode::Run,
-            Self::DryRun { helper: _ } => Mode::DryRun,
+            | Way::Sudo { helper: _, sudo: _ } => Mode::Run,
+            Way::DryRun { helper: _ } => Mode::DryRun,
         }
     }
 
     fn inhibitor(&self) -> Inhibitor {
-        Inhibitor::Logind
+        Inhibitor::Logind {
+            language: self.language.clone(),
+        }
     }
 
     fn may_refuse(&self, code: Option<i32>) -> bool {
-        match self {
-            Self::Pkexec {
+        match &self.way {
+            Way::Pkexec {
                 helper: _,
                 pkexec: _,
             } => pkexec::refusal(code, "").is_some(),
-            Self::Sudo { helper: _, sudo: _ } => code == Some(1_i32),
-            Self::DryRun { helper: _ } => false,
+            Way::Sudo { helper: _, sudo: _ } => code == Some(1_i32),
+            Way::DryRun { helper: _ } => false,
         }
     }
 
     fn refusal(&self, code: Option<i32>, stderr: &str) -> Option<Refusal> {
-        match self {
-            Self::Pkexec {
+        match &self.way {
+            Way::Pkexec {
                 helper: _,
                 pkexec: _,
             } => pkexec::refusal(code, stderr),
-            Self::Sudo { helper: _, sudo: _ } => sudo_refusal(code, stderr),
-            Self::DryRun { helper: _ } => None,
+            Way::Sudo { helper: _, sudo: _ } => sudo_refusal(code, stderr),
+            Way::DryRun { helper: _ } => None,
         }
     }
 }

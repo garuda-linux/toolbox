@@ -3,6 +3,7 @@
 
 mod initramfs;
 mod invocation;
+mod notes;
 mod program;
 #[cfg(test)]
 mod tests;
@@ -12,6 +13,7 @@ use std::fmt;
 
 pub use initramfs::{InitramfsRoot, initramfs_rebuilds};
 pub use invocation::Invocation;
+pub(crate) use notes::Shown;
 pub use program::Program;
 pub use uki::{in_root, relaxed, uki_rebuilds};
 
@@ -157,7 +159,9 @@ pub enum Builtin {
     /// Fails when the folder exists. `usermod -d <new> -m` writes the new
     /// home into `/etc/passwd` before it refuses a folder that exists, so a
     /// move onto one would leave the account pointing at a foreign folder.
-    RequireFreeHome(HomeDirectory),
+    /// A folder on the way may belong to the account of the user, once it
+    /// is listed.
+    RequireFreeHome(UserName, HomeDirectory),
     /// Fails below a folder everyone may write, where `useradd -m` makes the home.
     RequireSafeHome(HomeDirectory),
     /// Fails for a group with an id outside [`FIRST_USER_ID`] to
@@ -211,72 +215,76 @@ pub enum Builtin {
 }
 
 impl fmt::Display for Builtin {
-    #[expect(
-        clippy::too_many_lines,
-        reason = "one arm per builtin, a new builtin fails to compile until it says what it does"
-    )]
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.write_command(f, Shown::WithNotes)?;
+        self.why().map_or(Ok(()), |why| write!(f, "  # {why}"))
+    }
+}
+
+impl Builtin {
+    /// The part's command as the Console shows it, without its note.
+    pub fn command(&self) -> String {
+        fmt::from_fn(|out| self.write_command(out, Shown::Commands)).to_string()
+    }
+
+    fn write_command(&self, out: &mut fmt::Formatter<'_>, shown: Shown) -> fmt::Result {
         match self {
-            Self::RemoveDatabaseLock => {
-                write!(f, "rm /{DATABASE_LOCK}  # only while pacman is not running")
-            }
+            Self::RemoveDatabaseLock => write!(out, "rm /{DATABASE_LOCK}"),
             Self::InstallMirrorlist(mirrorlist) => {
                 let servers = mirrorlist.servers();
                 let plural = if servers == 1 { "" } else { "s" };
 
                 write!(
-                    f,
+                    out,
                     "write /{CHAOTIC_MIRRORLIST} ({servers} server{plural}), the old one kept as chaotic-mirrorlist.bak"
                 )
             }
             Self::RequireListedShell(shell) => {
-                write!(f, "check that {shell} is listed in /{SHELLS}")
+                write!(out, "check that {shell} is listed in /{SHELLS}")
             }
-            Self::WriteDnsConfig(provider) => dns_config(f, *provider),
-            Self::WriteWifiBackend(backend) => wifi_backend(f, *backend),
+            Self::WriteDnsConfig(provider) => dns_config(out, *provider),
+            Self::WriteWifiBackend(backend) => wifi_backend(out, *backend),
             Self::SetGarudaUpdateFlag { flag, on } => {
                 let name = flag.key();
 
                 if *on {
-                    write!(f, "set {name}=1 in /{GARUDA_UPDATE_CONFIG}")
+                    write!(out, "set {name}=1 in /{GARUDA_UPDATE_CONFIG}")
                 } else {
-                    write!(f, "comment out {name} in /{GARUDA_UPDATE_CONFIG}")
+                    write!(out, "comment out {name} in /{GARUDA_UPDATE_CONFIG}")
                 }
             }
-            Self::EditUserConfig { edit, on } => f.write_str(&edit.describe(Toggle::from_on(*on))),
+            Self::EditUserConfig { edit, on } => {
+                out.write_str(&edit.describe(Toggle::from_on(*on)))
+            }
             Self::EditLocaleGen { entry, on } => {
                 let verb = if *on { "enable" } else { "comment out" };
-                write!(f, "{verb} `{entry}` in /{LOCALE_GEN}")
+                write!(out, "{verb} `{entry}` in /{LOCALE_GEN}")
             }
-            Self::RequireOrdinaryUser(user) => ordinary_user_check(f, user),
-            Self::RequireFreeHome(home) => write!(f, "check that {home} does not exist yet"),
-            Self::RequireSafeHome(home) => write!(f, "check the folders above {home}"),
-            Self::RequireUserGroup(group) => write!(f, "check that {group} is not a system group"),
-            Self::WriteConfigFile(write) => write.fmt(f),
-            Self::WriteHomeFile(write) => write.fmt(f),
+            Self::RequireOrdinaryUser(user) => ordinary_user_check(out, user),
+            Self::RequireFreeHome(_, home) => write!(out, "check that {home} does not exist yet"),
+            Self::RequireSafeHome(home) => write!(out, "check the folders above {home}"),
+            Self::RequireUserGroup(group) => {
+                write!(out, "check that {group} is not a system group")
+            }
+            Self::WriteConfigFile(write) => out.write_str(&write.command()),
+            Self::WriteHomeFile(write) => out.write_str(&write.command()),
             Self::EditModprobeBlacklist { module, on } => {
                 let verb = if *on { "add" } else { "remove" };
-                write!(f, "{verb} `blacklist {module}` in /{MODPROBE_BLACKLIST}")
+                write!(out, "{verb} `blacklist {module}` in /{MODPROBE_BLACKLIST}")
             }
-            Self::EditGrubDefaults(settings) => write!(f, "set {settings} in /{GRUB_DEFAULTS}"),
-            Self::EditLoaderConf(change) => loader_conf(f, change),
-            Self::WriteKernelCmdline(parameters) => kernel_cmdline(f, parameters),
-            Self::PrepareRepairMount => write!(
-                f,
-                "mkdir -p /{REPAIR_ROOT}  # for root alone, nothing may be mounted there"
-            ),
-            Self::RequireInstalledSystem(need) => installed_system(f, *need),
+            Self::EditGrubDefaults(settings) => write!(out, "set {settings} in /{GRUB_DEFAULTS}"),
+            Self::EditLoaderConf(change) => loader_conf(out, change),
+            Self::WriteKernelCmdline(parameters) => kernel_cmdline(out, parameters),
+            Self::PrepareRepairMount => write!(out, "mkdir -p /{REPAIR_ROOT}"),
+            Self::RequireInstalledSystem(need) => installed_system(out, *need),
             Self::RecheckRepairDevices { system: _, work: _ } => {
-                f.write_str("check the devices of the repair again")
+                out.write_str("check the devices of the repair again")
             }
-            Self::SetSystemLocale(locale) => write!(
-                f,
-                "set LANG={locale} in /{LOCALE_CONF}  # only when /{LOCALE_GEN} has it enabled"
-            ),
-            Self::RebuildInitramfs { root } => initramfs::describe(f, *root),
-            Self::RebuildUkis { root } => uki::describe(f, *root),
+            Self::SetSystemLocale(locale) => write!(out, "set LANG={locale} in /{LOCALE_CONF}"),
+            Self::RebuildInitramfs { root } => initramfs::describe(out, *root),
+            Self::RebuildUkis { root } => uki::describe(out, *root),
             Self::RepairBootLoader { system, work } => {
-                crate::action::describe_loader(f, system, work)
+                crate::action::describe_loader(out, system, work, shown)
             }
         }
     }

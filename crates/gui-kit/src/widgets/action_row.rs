@@ -1,7 +1,7 @@
 use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, vec2};
 
 use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
-use super::layout::{MIN_TEXT_WIDTH, last_descent, raised_column, remember_width};
+use super::layout::{self, last_descent, raised_column, remember_width};
 use super::list::memory::{self, RowMemory};
 use super::{Tone, queued_tag, rich, status_dot};
 use crate::fonts::{self, BODY, SMALL, Weight};
@@ -106,9 +106,9 @@ impl<'text> ActionRow<'text> {
         let sizes = tokens::current(ui.ctx()).sizes;
         let (tile_gap, actions_gap) = (sizes.picture_gap, sizes.text_to_control);
         let edge = TileSize::Row.edge(ui);
-        let words_room = ui.available_width() - edge - tile_gap - actions_width - actions_gap;
-
-        let beside = actions.is_some() && words_room >= MIN_TEXT_WIDTH;
+        let full = ui.available_width() - edge - tile_gap;
+        let fits = layout::beside(full, actions_width, actions_gap);
+        let words_room = fits.filter(|_| actions.is_some());
 
         // The row is as tall as the tile, last frame's words or last frame's
         // actions. Tile, words and actions all centre on it.
@@ -121,7 +121,7 @@ impl<'text> ActionRow<'text> {
         let drop = words_was.map_or(0.0, |words| (words - edge).clamp(0.0, last_descent(ui)));
         let rise = capitals_top(ui) - drop;
         let raised_id = row.with("raised");
-        let actions_height = height_was.filter(|_| beside).unwrap_or_default();
+        let actions_height = words_room.and(height_was).unwrap_or_default();
 
         let words_height = words_was.unwrap_or_default() + drop;
         let line = edge.max(actions_height).max(words_height);
@@ -130,7 +130,7 @@ impl<'text> ActionRow<'text> {
         // line of words sits level with the tile and the actions alike.
         // Only they come down: the actions centre on the line by themselves.
         let block = edge.max(words_height);
-        let lower = if beside {
+        let lower = if words_room.is_some() {
             ((line - block) / 2.0).max(0.0)
         } else {
             0.0
@@ -140,13 +140,13 @@ impl<'text> ActionRow<'text> {
             ui.spacing_mut().item_spacing.x = tile_gap;
             let (slot, _) = ui.allocate_exact_size(Vec2::splat(edge), Sense::hover());
             ui.spacing_mut().item_spacing.x = actions_gap;
-            if !beside {
+            let Some(words_room) = words_room else {
                 let width = ui.available_width();
                 raised(ui, (rise, width), raised_id, |ui| {
                     self.stacked(ui, (actions, body), (row, known));
                 });
                 return slot;
-            }
+            };
 
             let words = raised(ui, (rise - lower, words_room), raised_id, |ui| {
                 ui.set_width(words_room);

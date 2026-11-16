@@ -58,7 +58,7 @@ use toolbox_plan::Plan;
 use toolbox_plan::protocol::Mode;
 use toolbox_privatebin::{Https, Transport};
 use toolbox_services::apply::Launcher as _;
-use toolbox_services::catalogs::{Catalogs, catalog_dir};
+use toolbox_services::catalogs::Catalogs;
 use toolbox_services::diagnostics::DryRunTransport;
 use toolbox_services::i18n;
 use toolbox_services::page::PageId;
@@ -290,7 +290,7 @@ fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         return Exit::Usage;
     }
 
-    let launcher = Arc::new(root::helper(out.settings().color));
+    let launcher = Arc::new(root::helper(out.settings()));
     let transport: Arc<dyn Transport> = if launcher.mode() == Mode::DryRun {
         Arc::new(DryRunTransport)
     } else {
@@ -333,7 +333,7 @@ fn update(args: &Update, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         args.confirm,
         None,
         runtime.handle(),
-        root::launcher(out.settings().color),
+        root::launcher(out.settings()),
         &mut Terminal {
             color: out.settings().color,
         },
@@ -342,7 +342,7 @@ fn update(args: &Update, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
 }
 
 fn catalogs() -> Catalogs {
-    Catalogs::load(&catalog_dir(|key| std::env::var_os(key)))
+    Catalogs::from_env()
 }
 
 fn snapshot(catalogs: &Catalogs) -> Snapshot {

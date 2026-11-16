@@ -10,6 +10,7 @@ use toolbox_plan::{InvalidPassword, MAX_PASSWORD_BYTES, Password, UserName};
 use super::{Next, busy_why, dialog_why, note, password_field};
 use crate::command::UsersCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::users::texts;
 
@@ -40,7 +41,7 @@ impl PasswordForm {
 
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>) -> Next {
         let user = self.user.as_str();
-        let title = i18n::text_with(ctx, "users-password-title", &[("user", user)]);
+        let title = i18n::text_with(ctx, "users-password-title", &[("user", Arg::from(user))]);
         let confirm = i18n::text(ctx, "users-password-confirm");
         let ready = self.pair.agreed() && !context.busy;
         let why = busy_why(ctx, context);

@@ -12,7 +12,7 @@ mod planned;
 mod show;
 mod typing;
 
-use std::io::{IsTerminal as _, Write as _};
+use std::io::Write as _;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -21,7 +21,6 @@ use tokio::runtime::Handle;
 use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_cli::confirm::{Prompt, consent};
-use toolbox_cli::output::{ColorMode, Paint};
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{Plan, StepId};
@@ -30,7 +29,7 @@ use toolbox_services::waking::Wake;
 use toolbox_system::pkexec::Refusal;
 
 use self::events::Events;
-pub use self::events::{error as error_line, nothing as nothing_lines};
+pub use self::events::{error as error_line, nothing as nothing_lines, warning as warning_line};
 use self::gate::Gate;
 pub(super) use self::planned::planned;
 use self::planned::planned_out;
@@ -57,26 +56,22 @@ struct Attempt<'a> {
 
 enum Look {
     Text(Show),
-    /// With the paint of notes on standard error.
-    Json(Events, Paint),
+    Json(Events),
 }
 
 impl Look {
     fn report(&mut self, report: &Report) -> String {
         match self {
             Self::Text(show) => show.report(report),
-            Self::Json(events, _) => events.report(report),
+            Self::Json(events) => events.report(report),
         }
     }
 
-    /// A note of the command line. JSON Lines keep it on standard error.
+    /// A note of the command line, a `warning` line under JSON Lines.
     fn note(&mut self, text: &str) -> String {
         match self {
             Self::Text(show) => show.note(text),
-            Self::Json(_, warned) => {
-                writeln!(std::io::stderr(), "{}", warned.warning(text)).ok();
-                String::new()
-            }
+            Self::Json(_) => warning_line(text),
         }
     }
 }
@@ -171,12 +166,7 @@ pub fn carry_out_steps(
     match fallback {
         Some(sudo) if first_run.asked_not => {
             if json {
-                writeln!(
-                    std::io::stderr(),
-                    "{}",
-                    warned(out.settings().color).warning(super::root::SUDO_NOTE)
-                )
-                .ok();
+                write!(out, "{}", warning_line(super::root::SUDO_NOTE)).ok();
             } else {
                 writeln!(out, "\n{}", paint.warning(super::root::SUDO_NOTE)).ok();
             }
@@ -210,7 +200,7 @@ pub fn carry_out_steps(
 /// `--json` without `--yes` or `--dry-run`: nothing on standard output, the
 /// reason on standard error.
 pub fn cannot_ask(settings: Settings) -> Exit {
-    let paint = warned(settings.color);
+    let paint = super::out::stderr_paint(settings.color);
     let error = paint.error("--json cannot ask before a change");
     let hint = paint.hint("pass --yes to carry it out, or --dry-run to see the plan");
     writeln!(std::io::stderr(), "{error}\n{hint}").ok();
@@ -225,10 +215,6 @@ pub fn set_apart(prompt: &dyn Prompt, yes: bool, out: &mut Out<'_>) {
     }
 }
 
-fn warned(color: ColorMode) -> Paint {
-    Paint::new(super::out::style_on(color, std::io::stderr().is_terminal()))
-}
-
 fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut Out<'_>) -> Ended {
     let Attempt {
         runtime,
@@ -238,10 +224,7 @@ fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut Out<'_>) -> Ended {
     } = attempt;
 
     let look = if json {
-        Look::Json(
-            Events::new(Box::new(Instant::now)),
-            warned(out.settings().color),
-        )
+        Look::Json(Events::new(Box::new(Instant::now)))
     } else {
         let dry_run = launcher.mode() == Mode::DryRun;
         Look::Text(

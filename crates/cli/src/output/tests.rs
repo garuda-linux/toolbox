@@ -132,7 +132,10 @@ fn errors_warnings_and_hints_say_so_first() {
 
 #[test]
 fn a_detail_is_indented_under_its_line() {
-    assert_eq!(PLAIN.detail("one\ntwo\n"), "    one\n    two\n");
+    assert_eq!(
+        PLAIN.detail(&toolbox_text::OutsideText::keep_lines("one\ntwo\n")),
+        "    one\n    two\n"
+    );
 }
 
 #[test]

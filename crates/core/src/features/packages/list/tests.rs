@@ -16,7 +16,7 @@ fn name(text: &str) -> PackageName {
 fn offered(text: &str, description: &str) -> IndexEntry {
     IndexEntry {
         name: name(text),
-        description: description.to_owned(),
+        description: toolbox_text::plain(description),
         version: "1.0-1".to_owned(),
         origin: Origin::Repository("extra".to_owned()),
         size: 1024,

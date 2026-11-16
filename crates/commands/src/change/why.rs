@@ -14,7 +14,7 @@ use toolbox_core::features::locales::Refusal as LocaleRefusal;
 use toolbox_core::features::network::{Refusal as DriverRefusal, SwitchRefusal};
 use toolbox_core::features::users::Refusal as AccountRefusal;
 use toolbox_plan::Reason;
-use toolbox_services::i18n::{FALLBACK, text_in, text_with_in};
+use toolbox_services::i18n::{Arg, FALLBACK, text_in, text_with_in};
 
 /// A switch the catalog lacks. The commands check the id first, so this
 /// stays a fallback.
@@ -36,6 +36,11 @@ pub fn account(refusal: AccountRefusal) -> Cow<'static, str> {
 
 pub fn no_admin_group() -> Cow<'static, str> {
     text_in(FALLBACK, "cli-account-no-admin-group")
+}
+
+/// The second password question was closed, so there is nothing to compare.
+pub fn password_not_repeated() -> Cow<'static, str> {
+    text_in(FALLBACK, "cli-password-not-repeated")
 }
 
 pub fn locale(refusal: LocaleRefusal) -> Cow<'static, str> {
@@ -72,7 +77,12 @@ pub fn driver_switch(refusal: SwitchRefusal) -> Cow<'static, str> {
 
 /// `value` is the value as the user gave it, which the page's text names.
 pub fn boot_edit(problem: EditProblem, value: &str) -> String {
-    text_with_in(&FALLBACK, boot_edit_id(problem), &[("value", value)]).into_owned()
+    text_with_in(
+        &FALLBACK,
+        boot_edit_id(problem),
+        &[("value", Arg::from(value))],
+    )
+    .into_owned()
 }
 
 /// `name` is the account or the group the Users page's text names.
@@ -81,7 +91,7 @@ pub fn membership(refusal: AccountRefusal, name: &str) -> String {
     text_with_in(
         &FALLBACK,
         "cli-membership",
-        &[("name", name), ("why", &why)],
+        &[("name", Arg::from(name)), ("why", Arg::from(&why))],
     )
     .into_owned()
 }

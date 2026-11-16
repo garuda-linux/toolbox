@@ -61,7 +61,7 @@ fn messages_keep_no_control_characters() {
         UNIX_EPOCH,
         log::Level::Info,
         "apply",
-        "step said \u{1b}[2Kdone\u{7}",
+        "step said \u{1b}[2Kdone\u{7}\u{202e}\u{200b}",
         Style::Plain,
     );
 

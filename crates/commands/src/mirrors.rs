@@ -13,7 +13,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_core::features::maintenance::RATE_MIRRORS_PACKAGE;
 use toolbox_core::features::maintenance::page::{RATE_MIRRORS_PROGRAM, install};
-use toolbox_plan::{Plan, RootAction};
+use toolbox_plan::{Mirrorlist, Plan, RootAction, SAMPLE_MIRRORS};
 use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
 
 use crate::act::run;
@@ -52,18 +52,22 @@ fn steps(
         }
     }
 
-    let quiet = confirm.json || out.quiet();
-    match spinner::while_working(quiet, RANKING, || ranking.rank(&std::sync::Arc::default())) {
+    // The plan tests keep the sample valid, so its error arm is the ranking's.
+    let ranked = if confirm.dry_run {
+        Mirrorlist::new(SAMPLE_MIRRORS).map_err(|problem| problem.to_string())
+    } else {
+        let quiet = confirm.json || out.quiet();
+        spinner::while_working(quiet, RANKING, || ranking.rank(&std::sync::Arc::default()))
+            .map_err(|problem| problem.to_string())
+    };
+
+    match ranked {
         Ok(mirrorlist) => carry_out(
             Plan::root(RootAction::InstallMirrorlist { mirrorlist }),
             out,
         ),
         Err(problem) => {
-            failure(
-                out,
-                "the Chaotic-AUR mirrors could not be ranked",
-                &problem.to_string(),
-            );
+            failure(out, "the Chaotic-AUR mirrors could not be ranked", &problem);
             Exit::Failure
         }
     }

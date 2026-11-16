@@ -10,6 +10,7 @@ use toolbox_system::Host;
 use super::steps::heading;
 use crate::command::UiCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::page_ui::{self, PageLook as _};
 use crate::pages::PageContext;
@@ -39,11 +40,11 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
 
     let steps = [
         (queued > 0).then(|| {
-            let count = queued.to_string();
+            let count = queued;
             (
                 icons::VIEW_PIM_TASKS,
                 i18n::text(&ctx, "command-review-changes"),
-                i18n::text_with(&ctx, "home-next-review", &[("count", &count)]),
+                i18n::text_with(&ctx, "home-next-review", &[("count", Arg::from(count))]),
                 UiCommand::ReviewChanges,
             )
         }),

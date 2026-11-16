@@ -8,6 +8,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
+use crate::procedure::Invocation;
 use crate::{RootAction, UserAction};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -48,12 +49,20 @@ impl PlannedAction {
     /// The step's command lines as the Review page shows them: the text of
     /// each part of the procedure the runner executes, in order.
     pub fn command_lines(&self) -> Vec<String> {
-        let procedure = match self {
+        self.procedure().iter().map(ToString::to_string).collect()
+    }
+
+    /// The commands of the step's procedure in order, without the notes
+    /// `command_lines` adds after `#`: the Console shows these.
+    pub fn commands(&self) -> Vec<String> {
+        self.procedure().iter().map(Invocation::command).collect()
+    }
+
+    fn procedure(&self) -> Vec<Invocation> {
+        match self {
             Self::Root(action) => action.procedure(),
             Self::User(action) => action.procedure(),
-        };
-
-        procedure.iter().map(ToString::to_string).collect()
+        }
     }
 }
 

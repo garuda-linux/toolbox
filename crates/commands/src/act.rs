@@ -226,12 +226,13 @@ pub fn run(
             confirm,
             typed,
             runtime.handle(),
-            super::root::launcher(out.settings().color),
+            super::root::launcher(out.settings()),
             &mut Terminal {
                 color: out.settings().color,
             },
             out,
         ),
+        Err(refused @ Refused::Interrupted) => refused.exit(),
         Err(Refused::NothingToDo(_)) if confirm.json => {
             write!(out, "{}", apply::nothing_lines()).ok();
             Exit::Success

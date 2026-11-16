@@ -30,8 +30,8 @@ fn code(captured: &str) -> u8 {
 fn update(name: &str, from: &str, to: &str) -> PendingUpdate {
     PendingUpdate {
         name: PackageName::new(name).unwrap(),
-        from: from.to_owned(),
-        to: to.to_owned(),
+        from: toolbox_text::plain(from),
+        to: toolbox_text::plain(to),
     }
 }
 

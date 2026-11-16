@@ -31,7 +31,7 @@ const fn level_color(level: log::Level) -> &'static str {
 /// One record: `2026-10-04T09:30:29.123Z INFO  target: message`. Continuation
 /// lines of multi-line messages are indented.
 ///
-/// Control characters are dropped: a message that quotes program output
+/// Hidden characters are dropped: a message that quotes program output
 /// could otherwise drive the terminal of whoever reads the log. A carriage
 /// return goes too, or the text after it could hide the start of its line.
 pub fn format_record(
@@ -41,10 +41,7 @@ pub fn format_record(
     message: &str,
     style: Style,
 ) -> String {
-    let printable: String = message
-        .chars()
-        .filter(|ch| !ch.is_control() || matches!(ch, '\t' | '\n'))
-        .collect();
+    let printable = toolbox_text::OutsideText::keep_lines(message);
 
     let mut lines = printable.trim_end().lines();
     let mut out = format!(

@@ -16,7 +16,7 @@ serde_json.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 toolbox-fs.workspace = true
-toolbox-plan.workspace = true
+toolbox-text.workspace = true
 toolbox-https.workspace = true
 
 [dev-dependencies]

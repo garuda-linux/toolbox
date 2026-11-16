@@ -15,6 +15,7 @@ use toolbox_gui_kit::widgets::{
 use super::unit_row::{UnitRow, UnitRows};
 use crate::command::ServiceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::{MENU_AND_SWITCH, SWITCH_WIDTH, actions, row_switch};
 
@@ -95,7 +96,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
             let name = i18n::text_with(
                 ui.ctx(),
                 "services-start-at-boot",
-                &[("unit", row.unit.as_str())],
+                &[("unit", Arg::from(row.unit.as_str()))],
             );
 
             // The list waits in a disabled Ui while a plan runs.

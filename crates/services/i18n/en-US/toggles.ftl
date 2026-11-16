@@ -39,3 +39,4 @@ toggles-problem = The list could not be loaded.
 toggles-problem-unreadable = A catalog file could not be read.
 toggles-problem-syntax = A catalog file is damaged.
 toggles-problem-invalid = An entry of a catalog file breaks a rule.
+toggles-problem-reason = The list could not be loaded. { $reason }

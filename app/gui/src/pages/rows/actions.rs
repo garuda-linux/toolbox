@@ -13,6 +13,7 @@ use toolbox_gui_kit::widgets::{menu_action, menu_heading};
 
 use crate::command::{AppCommand, CommandSender};
 use crate::i18n;
+use crate::i18n::Arg;
 
 #[derive(Clone, Copy)]
 pub struct Run<'a> {
@@ -97,7 +98,7 @@ impl<T: Named + ?Sized> RowAction<T> for CopyName {
     fn run(&self, item: &T, run: Run<'_>) {
         let name = item.copied_name();
         run.ctx.copy_text(name.to_owned());
-        let text = i18n::text_with(run.ctx, "toast-copied", &[("name", name)]);
+        let text = i18n::text_with(run.ctx, "toast-copied", &[("name", Arg::from(name))]);
         run.commands.send(AppCommand::Toast {
             kind: ToastKind::Info,
             text: text.into_owned(),

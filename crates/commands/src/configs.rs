@@ -24,9 +24,10 @@ use toolbox_core::features::configs::{
     Diff, Listing, RowKind, Target, choose_editor, rows, target, view_target, write_plan,
 };
 use toolbox_plan::{ConfigText, EditCopy, Editor};
-use toolbox_services::catalogs::catalog_dir;
+use toolbox_services::catalogs::catalog_dir_from_env;
 use toolbox_services::configs::specs;
 use toolbox_system::{ConfigFileSource, EditFolder, ReadProblem, SystemConfigFiles};
+use toolbox_text::OutsideText;
 
 use super::act::run;
 use super::out::{self, Listing as Shown};
@@ -62,11 +63,11 @@ impl Drop for Removed<'_> {
 }
 
 pub fn command(command: ConfigsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
-    let Ok(catalog) = ConfigFileCatalog::load(&catalog_dir(|key| std::env::var_os(key))) else {
+    let Ok(catalog) = ConfigFileCatalog::load(&catalog_dir_from_env()) else {
         return unavailable("the config files catalog could not be read", out);
     };
 
-    let source = SystemConfigFiles::system(Arc::new(super::root::helper(out.settings().color)));
+    let source = SystemConfigFiles::system(Arc::new(super::root::helper(out.settings())));
     let listing = source.listing(&specs(&catalog));
 
     match command {
@@ -183,7 +184,7 @@ fn show(
 
     match text {
         Ok(text) => {
-            write!(out, "{text}").ok();
+            write!(out, "{}", OutsideText::keep_lines(&text)).ok();
             Exit::Success
         }
         Err((what, raw)) => {
@@ -327,7 +328,7 @@ fn review(
         }
     };
 
-    let shown = Diff::new(original.as_str(), edited.as_str()).plain();
+    let shown = OutsideText::keep_lines(&Diff::new(original.as_str(), edited.as_str()).plain());
     let Some(plan) = write_back(file, original, edited) else {
         writeln!(out, "Nothing to do, the file is unchanged").ok();
         return Exit::Success;

@@ -21,6 +21,7 @@ use toolbox_system::{CallError, HealthLevel, Host, Status};
 use super::{HomePage, HomeProblem};
 use crate::command::HomeCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// One thing to act on, in the order the rows show.
@@ -182,8 +183,8 @@ fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overvie
     }
 
     let ctx = ui.ctx().clone();
-    let count = overview.failed.len().to_string();
-    let text = i18n::text_with(&ctx, "home-failed", &[("count", &count)]);
+    let count = overview.failed.len();
+    let text = i18n::text_with(&ctx, "home-failed", &[("count", Arg::from(count))]);
     let action = i18n::text(
         &ctx,
         if page.details {
@@ -204,7 +205,7 @@ fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overvie
         let tokens = tokens::current(&ctx);
         for (check, reason) in &overview.failed {
             let id = format!("home-failed-{}", check.as_str());
-            let line = i18n::text_with(&ctx, &id, &[("reason", reason)]);
+            let line = i18n::text_with(&ctx, &id, &[("reason", Arg::from(reason))]);
             ui.add(Label::new(rich(ui, &line, Weight::Regular, SMALL, tokens.secondary)).wrap());
         }
     }

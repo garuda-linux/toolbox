@@ -72,6 +72,12 @@ optdepends=(
   'pace: repository editor'
   'meld: merging pacdiff files'
   'archlinux-appstream-data: icons of packages'
+  'garuda-dracut-support: dracut-rebuild, the initramfs of boot repair and boot options'
+  'mkinitcpio: the initramfs of boot repair and boot options'
+  'garuda-systemd-boot: kernel-install-uki, unified kernel images for systemd-boot'
+  'garuda-health: the system health report and its fixes'
+  'garuda-tools-base-git: garuda-chroot, a root shell inside the installed system from the live ISO'
+  'garuda-common-settings: garuda-inxi, the system information report'
 )
 # LTO comes from the Cargo profile. No debug package for a test build.
 options=(!lto !debug)

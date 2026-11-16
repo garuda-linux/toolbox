@@ -16,6 +16,7 @@ use toolbox_services::diagnostics::view::{self, Row};
 use super::DiagnosticsPage;
 use crate::diagnostics::Diagnostics;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::share::rows::{character_count, layout};
 
@@ -141,11 +142,15 @@ impl DiagnosticsPage {
 
 /// "· 14:05 UTC · 312 lines", the time left out while unknown.
 fn meta(ctx: &egui::Context, collected: Option<u64>, line_count: usize) -> String {
-    let count = line_count.to_string();
-    let lines = i18n::text_with(ctx, "diagnostics-lines", &[("count", &count)]);
+    let count = line_count;
+    let lines = i18n::text_with(ctx, "diagnostics-lines", &[("count", Arg::from(count))]);
     let Some(seconds) = collected else {
-        return i18n::text_with(ctx, "diagnostics-collected-unknown", &[("lines", &lines)])
-            .into_owned();
+        return i18n::text_with(
+            ctx,
+            "diagnostics-collected-unknown",
+            &[("lines", Arg::from(&lines))],
+        )
+        .into_owned();
     };
 
     let time = Utc::from_unix(seconds);
@@ -153,7 +158,7 @@ fn meta(ctx: &egui::Context, collected: Option<u64>, line_count: usize) -> Strin
     i18n::text_with(
         ctx,
         "diagnostics-collected",
-        &[("time", &clock), ("lines", &lines)],
+        &[("time", Arg::from(&clock)), ("lines", Arg::from(&lines))],
     )
     .into_owned()
 }

@@ -5,24 +5,23 @@
 #[cfg(test)]
 mod tests;
 
-use std::ops::RangeInclusive;
-use std::os::unix::fs::PermissionsExt as _;
+use std::os::unix::fs::{MetadataExt as _, PermissionsExt as _};
 use std::path::Path;
 use std::{fs, io};
 
 use toolbox_plan::lines::{entries, lossy};
 use toolbox_plan::procedure::{FIRST_USER_ID, GROUP, PASSWD};
 use toolbox_plan::protocol::Outcome;
-use toolbox_plan::{GroupName, HomeDirectory, LAST_USER_ID, StepId, UserName, passwd_entries};
+use toolbox_plan::{
+    GroupName, HomeDirectory, LAST_USER_ID, PEOPLE, StepId, UserName, passwd_entries,
+};
 
 use crate::apply::EventSink;
 use crate::report::{failure, note};
 
-/// Root, system accounts and `nobody` (65534) lie outside, and files on
-/// disk refer to them.
-const ORDINARY_IDS: RangeInclusive<u32> = FIRST_USER_ID..=LAST_USER_ID;
-
 const WORLD_WRITABLE: u32 = 0o002;
+const GROUP_WRITABLE: u32 = 0o020;
+const ROOT_UID: u32 = 0;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Listed {
@@ -56,7 +55,7 @@ pub fn require_ordinary_user(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     match user_id(root, user) {
-        Ok(Listed::Id(id)) if !ORDINARY_IDS.contains(&id) => failure(
+        Ok(Listed::Id(id)) if !PEOPLE.contains(&id) => failure(
             step,
             sink,
             &format!(
@@ -80,12 +79,20 @@ pub fn require_ordinary_user(
 pub fn require_free_home(
     root: &Path,
     step: StepId,
+    user: &UserName,
     home: &HomeDirectory,
     sink: &mut dyn EventSink,
 ) -> Outcome {
     let path = root.join(home.as_str().trim_start_matches('/'));
 
-    if let Some(refusal) = shared_ancestor(root, &path, home) {
+    // A user that is not listed (or cannot be read) leaves only root's
+    // folders on the way.
+    let account = match user_id(root, user) {
+        Ok(Listed::Id(id)) => Some(id),
+        Ok(Listed::Missing) | Err(_) => None,
+    };
+
+    if let Some(refusal) = shared_ancestor(root, &path, home, account) {
         return failure(step, sink, &refusal);
     }
 
@@ -112,27 +119,58 @@ pub fn require_safe_home(
 ) -> Outcome {
     let path = root.join(home.as_str().trim_start_matches('/'));
 
-    shared_ancestor(root, &path, home)
+    shared_ancestor(root, &path, home, None)
         .map_or(Outcome::Succeeded, |refusal| failure(step, sink, &refusal))
 }
 
-/// Below a folder anyone may write, another user can put a link on the
-/// way to `path` between this check and the program that makes or moves
-/// the home. Every folder up to `root` that exists counts, followed as the
-/// program follows it.
-fn shared_ancestor(root: &Path, path: &Path, home: &HomeDirectory) -> Option<String> {
+/// Below a folder another user may write, a link can land on the way to
+/// `path` between this check and the program that makes or moves the home.
+/// Every folder up to `root` that exists counts, followed as the program
+/// follows it. Besides root only `account`, the uid of the home's account
+/// (`None` before it exists), and the owner of `root` may own one: whoever
+/// owns `root` can replace anything below it. In the helper `root` is `/`.
+fn shared_ancestor(
+    root: &Path,
+    path: &Path,
+    home: &HomeDirectory,
+    account: Option<u32>,
+) -> Option<String> {
+    let owner_of_root = match fs::metadata(root) {
+        Ok(folder) => folder.uid(),
+        Err(error) => return Some(format!("cannot check the folders above {home}: {error}")),
+    };
+
+    let trusted =
+        |owner: u32| owner == ROOT_UID || owner == owner_of_root || Some(owner) == account;
+
     for ancestor in path
         .ancestors()
         .skip(1)
         .take_while(|folder| folder.starts_with(root))
     {
         match fs::metadata(ancestor) {
-            Ok(folder) if folder.permissions().mode() & WORLD_WRITABLE != 0 => {
-                return Some(format!(
-                    "a folder above {home} is writable for everyone, so it is not used"
-                ));
+            Ok(folder) => {
+                let mode = folder.permissions().mode();
+                let owner = folder.uid();
+
+                if mode & WORLD_WRITABLE != 0 {
+                    return Some(format!(
+                        "a folder above {home} is writable for everyone, so it is not used"
+                    ));
+                }
+
+                if mode & GROUP_WRITABLE != 0 {
+                    return Some(format!(
+                        "a folder above {home} is writable for its group, so it is not used"
+                    ));
+                }
+
+                if !trusted(owner) {
+                    return Some(format!(
+                        "a folder above {home} belongs to user id {owner}, so it is not used"
+                    ));
+                }
             }
-            Ok(_) => {}
             Err(error) if error.kind() == io::ErrorKind::NotFound => {}
             Err(error) => return Some(format!("cannot check the folders above {home}: {error}")),
         }
@@ -148,7 +186,7 @@ pub fn require_user_group(
     sink: &mut dyn EventSink,
 ) -> Outcome {
     match group_id(root, group) {
-        Ok(Listed::Id(id)) if !ORDINARY_IDS.contains(&id) => failure(
+        Ok(Listed::Id(id)) if !PEOPLE.contains(&id) => failure(
             step,
             sink,
             &format!(

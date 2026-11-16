@@ -16,6 +16,7 @@ use toolbox_services::share::{Upload, UploadProblem};
 
 use super::preview;
 use crate::command::{AppCommand, Command, CommandSender};
+use crate::i18n::Arg;
 use crate::{i18n, links};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -52,7 +53,7 @@ impl Subject {
 
 impl ShareView<'_> {
     pub(super) fn text(&self, ctx: &egui::Context, id: &str) -> String {
-        i18n::text_with(ctx, id, &[("subject", self.subject.as_str())]).into_owned()
+        i18n::text_with(ctx, id, &[("subject", Arg::from(self.subject.as_str()))]).into_owned()
     }
 }
 
@@ -143,7 +144,10 @@ fn failure(ctx: &egui::Context, view: &ShareView<'_>, problem: &UploadProblem) -
     i18n::text_with(
         ctx,
         "share-upload-detail",
-        &[("problem", &words), ("detail", detail)],
+        &[
+            ("problem", Arg::from(&words)),
+            ("detail", Arg::from(detail)),
+        ],
     )
     .into_owned()
 }

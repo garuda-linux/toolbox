@@ -58,5 +58,28 @@ fn a_netdev_file_is_never_read_or_written() {
     let network = ConfigFilePath::new("/etc/systemd/network").unwrap();
 
     network.join("wg0.netdev").unwrap_err();
+}
+
+/// An editor or package copy keeps the keys under another name, and a
+/// folder named like the file holds it, so every part counts.
+#[test]
+fn a_copy_of_a_netdev_file_or_a_folder_named_so_is_withheld() {
+    for text in [
+        "/etc/systemd/network/wg0.netdev.bak",
+        "/etc/systemd/network/wg0.netdev.pacsave",
+        "/etc/systemd/network/wg0.netdev~",
+        "/etc/systemd/network/wg0.netdev.d/keys.network",
+        "/etc/systemd/network/wg0.netdev.d",
+    ] {
+        assert_eq!(
+            ConfigFilePath::new(text).unwrap_err(),
+            InvalidConfigFilePath::Withheld(text.to_owned()),
+            "{text}"
+        );
+    }
+
+    let network = ConfigFilePath::new("/etc/systemd/network").unwrap();
+
+    network.join("wg0.netdev.bak").unwrap_err();
     assert!(network.join("wg0.network").unwrap().is_writable());
 }

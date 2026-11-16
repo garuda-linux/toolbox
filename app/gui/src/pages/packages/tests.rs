@@ -37,7 +37,7 @@ pub(super) fn name(text: &str) -> PackageName {
 fn entry(text: &str, installed: Option<InstallReason>, origin: Origin) -> IndexEntry {
     IndexEntry {
         name: name(text),
-        description: format!("About {text}"),
+        description: toolbox_text::plain(&format!("About {text}")),
         version: "1.0-1".to_owned(),
         origin,
         size: 4 * 1024 * 1024,
@@ -83,12 +83,12 @@ pub(super) fn gimp_details() -> Details {
         package: name("gimp"),
         info: Read::Known(Some(PackageDetails {
             name: name("gimp"),
-            description: "About gimp".to_owned(),
+            description: toolbox_text::plain("About gimp"),
             version: "1.0-1".to_owned(),
             origin: Origin::Repository("extra".to_owned()),
             size: 4 * 1024 * 1024,
-            url: Some("https://www.gimp.org/".to_owned()),
-            licenses: vec!["GPL-3.0-or-later".to_owned()],
+            url: Some(toolbox_text::plain("https://www.gimp.org/")),
+            licenses: vec![toolbox_text::plain("GPL-3.0-or-later")],
             groups: Vec::new(),
             depends: vec!["gegl>=0.4".to_owned()],
             optional: Vec::new(),
@@ -100,7 +100,7 @@ pub(super) fn gimp_details() -> Details {
                 version: "1.0-1".to_owned(),
                 reason: InstallReason::Explicit,
                 date: Some(1_700_000_000),
-                files: vec!["/usr/bin/gimp".to_owned()],
+                files: vec![toolbox_text::plain("/usr/bin/gimp")],
             }),
         })),
         history: Read::Known(Vec::new()),

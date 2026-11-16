@@ -18,7 +18,7 @@ gitHooksLib.${pkgs.stdenv.hostPlatform.system}.run {
 
     clippy-workspace = {
       enable = true;
-      entry = "cargo clippy --workspace --all-targets";
+      entry = "cargo clippy --workspace --all-targets --features toolbox-gui/testing -- -D warnings";
       files = "\\.rs$";
       pass_filenames = false;
     };

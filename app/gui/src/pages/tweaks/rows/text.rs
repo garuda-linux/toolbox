@@ -3,6 +3,7 @@
 //! title and its description.
 
 use egui::{Context, Label, Ui};
+use toolbox_core::features::search::Needle;
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::tokens;
@@ -16,7 +17,7 @@ use crate::pages::toggles::{control, paint_glyph};
 pub(super) fn lead(
     ui: &mut Ui,
     (glyph, dim): (Icon, bool),
-    (id, query): (&str, &str),
+    (id, query): (&str, &Needle),
     queued: Option<&str>,
 ) {
     ui.horizontal_top(|ui| {
@@ -26,13 +27,13 @@ pub(super) fn lead(
     });
 }
 
-fn text(ui: &mut Ui, (id, query): (&str, &str), queued: Option<&str>) {
+fn text(ui: &mut Ui, (id, query): (&str, &Needle), queued: Option<&str>) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     toolbox_gui_kit::widgets::title_line(ui, true, |ui| {
         let title = i18n::text(&ctx, id);
         let strong = fonts::font(ui.style(), Weight::SemiBold, BODY);
-        ui.label(highlighted(ui, &title, query, strong, tokens.text));
+        ui.label(highlighted(ui, &title, query.as_str(), strong, tokens.text));
         if let Some(queued) = queued {
             status_dot(ui, &i18n::text(&ctx, queued), Tone::Accent);
         }
@@ -41,18 +42,25 @@ fn text(ui: &mut Ui, (id, query): (&str, &str), queued: Option<&str>) {
     // The cut is the catalog rows' own, and the tooltip keeps the whole.
     let whole = i18n::text(&ctx, &format!("{id}-description")).into_owned();
     let small = fonts::font(ui.style(), Weight::Regular, SMALL);
-    let cut = control::cut(highlighted(ui, &whole, query, small, tokens.secondary));
+    let cut = control::cut(highlighted(
+        ui,
+        &whole,
+        query.as_str(),
+        small,
+        tokens.secondary,
+    ));
+
     ui.add(Label::new(cut).wrap()).on_hover_text(whole);
 }
 
-/// Whether `query` (trimmed, lower case, empty for all) is in the title
-/// or description of `id`, as the user reads them.
-pub(in crate::pages::tweaks) fn matches(ctx: &Context, id: &str, query: &str) -> bool {
+/// Whether `query` is in the title or description of `id`, as the user
+/// reads them.
+pub(in crate::pages::tweaks) fn matches(ctx: &Context, id: &str, query: &Needle) -> bool {
     query.is_empty()
         || [
             i18n::text(ctx, id),
             i18n::text(ctx, &format!("{id}-description")),
         ]
         .iter()
-        .any(|text| text.to_lowercase().contains(query))
+        .any(|text| query.is_in(text))
 }

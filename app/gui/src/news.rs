@@ -38,7 +38,7 @@ impl NewsSource for SampleNews {
         ]
         .into_iter()
         .map(|(title, days_ago, source, manual)| Post {
-            title: title.to_owned(),
+            title: toolbox_text::plain(title),
             link: Some(source.page().to_owned()),
             published: Some(DAY - days_ago * SECONDS_PER_DAY),
             source,

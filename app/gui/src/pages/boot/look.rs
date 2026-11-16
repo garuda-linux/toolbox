@@ -16,6 +16,7 @@ use super::{heading, queued, send};
 use crate::boot::{Boot, FileKind};
 use crate::command::BootCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row, wide_control};
 
@@ -157,7 +158,11 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
     let gap = ui.spacing().item_spacing.x;
     let width = pill_width(ui, &choose) + gap + icon_button_width(ui);
     row(ui, first, &words, width, |ui| {
-        let choose_name = i18n::text_with(&ctx, "boot-file-choose-name", &[("name", &title)]);
+        let choose_name = i18n::text_with(
+            &ctx,
+            "boot-file-choose-name",
+            &[("name", Arg::from(&title))],
+        );
 
         let chosen = pill_button(ui, &choose, ButtonKind::Soft);
         let label = choose_name.into_owned();
@@ -175,7 +180,7 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
         // It stays in place while there is nothing to clear, so the
         // Choose buttons of both rows keep one edge.
         let clearable = !field.path.is_empty() && field.note.is_none();
-        let clear = i18n::text_with(&ctx, "boot-file-clear", &[("name", &title)]);
+        let clear = i18n::text_with(&ctx, "boot-file-clear", &[("name", Arg::from(&title))]);
         let cleared = ui
             .enabled_ui(clearable, |ui| icon_button(ui, icons::WINDOW_CLOSE, &clear))
             .inner

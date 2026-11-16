@@ -7,13 +7,14 @@ mod tests;
 use std::collections::BTreeSet;
 
 pub use home::{
-    HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID, NewHome, UserId,
+    HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID, NewHome, PEOPLE,
+    UserId,
 };
 pub use passwd::{PasswdEntry, passwd_entries};
 use serde::{Deserialize, Serialize};
 pub use shadow::Caller;
 
-use crate::{GroupName, ShellPath, UserName, text};
+use crate::{GroupName, ShellPath, UserName};
 
 /// Far above any real name, far below what `/etc/passwd` lines may hold.
 pub const MAX_FULL_NAME_BYTES: usize = 128;
@@ -48,7 +49,7 @@ impl InvalidFullName {
 ///
 /// It ends up in `/etc/passwd` and in the argv of `useradd` and `chfn`, so it
 /// holds no `:` (the file's separator), no `,` or `=` (GECOS separators), no
-/// `"` (chfn refuses it) and no [hidden](text::is_hidden) character.
+/// `"` (chfn refuses it) and no [hidden](toolbox_text::is_hidden) character.
 #[derive(Clone, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FullName(String);
 
@@ -70,7 +71,7 @@ impl FullName {
 
         if let Some(character) = value
             .chars()
-            .find(|character| text::is_hidden(*character) || ":,=\"".contains(*character))
+            .find(|character| toolbox_text::is_hidden(*character) || ":,=\"".contains(*character))
         {
             return Err(InvalidFullName::InvalidCharacter(character));
         }

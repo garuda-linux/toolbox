@@ -16,8 +16,9 @@ use toolbox_gui_kit::icons::{ALL, ThemeIcons};
 
 pub use self::names::{IconNames, Indexed};
 
-/// A glyph is a few KiB. The frame rasterizes the file, so a larger one
-/// from a broken or hostile theme would stall it.
+/// A glyph is a few KiB. gui-kit's loader (`icons/loader.rs`) renders
+/// every theme file on one worker thread, so a larger one from a broken or
+/// hostile theme would hold back every other icon and fill memory.
 pub const MAX_SVG_BYTES: usize = 256 * 1024;
 
 /// Where an icon of a theme is on disk. A port, so tests need no icon

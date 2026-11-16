@@ -28,15 +28,15 @@ pub(super) fn quiet() -> Status {
 fn update(name: &str, from: &str, to: &str) -> PendingUpdate {
     PendingUpdate {
         name: PackageName::new(name).unwrap(),
-        from: from.to_owned(),
-        to: to.to_owned(),
+        from: toolbox_text::plain(from),
+        to: toolbox_text::plain(to),
     }
 }
 
 fn issue(level: HealthLevel, message: &str, fix_available: bool) -> HealthIssue {
     HealthIssue {
         level,
-        message: message.to_owned(),
+        message: toolbox_text::plain(message),
         fix_available,
     }
 }
@@ -89,8 +89,8 @@ fn only_a_failed_check_is_listed_with_its_reason() {
     assert_eq!(
         overview.failed,
         [
-            (Check::Updates, "no database".into()),
-            (Check::Health, "no garuda-health".into()),
+            (Check::Updates, "no database: fake source".into()),
+            (Check::Health, "no garuda-health: fake source".into()),
         ]
     );
     assert_eq!(Overview::of(&quiet(), now()).failed, []);

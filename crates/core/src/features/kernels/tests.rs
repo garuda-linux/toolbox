@@ -21,7 +21,7 @@ fn local(name: &str, version: &str) -> LocalPackage {
     LocalPackage {
         name: package(name),
         version: version.to_owned(),
-        description: format!("Installed {name}"),
+        description: toolbox_text::plain(&format!("Installed {name}")),
     }
 }
 

@@ -35,7 +35,7 @@ impl BootSource for UnreadableLoader {
 
 #[test]
 fn the_boot_parts_are_in_the_snapshot() {
-    let (snapshot, issues) = probe_snapshot(&sources(FakePackages(Ok(installed())), host()));
+    let (snapshot, issues) = probe_snapshot(&sources(FakePackages::new(Ok(installed())), host()));
 
     assert_eq!(issues, []);
     assert_eq!(
@@ -59,12 +59,16 @@ fn the_boot_parts_are_in_the_snapshot() {
 #[test]
 fn only_failed_probes_are_named_in_the_snapshot() {
     let (failed, _) = probe_snapshot(&sources(
-        FakePackages(Err(ProbeError::fake("locked"))),
+        FakePackages::new(Err(ProbeError::fake("locked"))),
         host(),
     ));
 
-    let (lacking, _) = probe_snapshot(&sources(FakePackages(Err(ProbeError::Unavailable)), host()));
-    let (whole, _) = probe_snapshot(&sources(FakePackages(Ok(installed())), host()));
+    let (lacking, _) = probe_snapshot(&sources(
+        FakePackages::new(Err(ProbeError::Unavailable)),
+        host(),
+    ));
+
+    let (whole, _) = probe_snapshot(&sources(FakePackages::new(Ok(installed())), host()));
 
     assert!(
         failed
@@ -81,7 +85,7 @@ fn only_failed_probes_are_named_in_the_snapshot() {
 
 #[test]
 fn an_unreadable_loader_is_unknown_and_named() {
-    let mut sources = sources(FakePackages(Ok(installed())), host());
+    let mut sources = sources(FakePackages::new(Ok(installed())), host());
     sources.boot = Arc::new(UnreadableLoader);
 
     let (snapshot, issues) = probe_snapshot(&sources);

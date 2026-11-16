@@ -208,3 +208,52 @@ fn the_engine_size_reports_lines_and_columns() {
     assert_eq!(dims.screen_lines(), 1);
     assert_eq!(dims.columns(), 2);
 }
+
+/// Without the cut the parser keeps the string and drops the text after it.
+#[test]
+fn an_osc_string_that_never_ends_is_cut_off_before_the_text_after_it() {
+    let mut terminal = Terminal::new(size(40, 3));
+    let chunk = [b'x'; 1024];
+
+    terminal.feed(b"\x1b]0;");
+    for _ in 0..=super::osc::MAX_OSC_BYTES / chunk.len() {
+        terminal.feed(&chunk);
+    }
+
+    terminal.feed(b"after");
+
+    assert!(terminal.to_plain_text().contains("after"));
+}
+
+/// "Ü" is C3 9C in UTF-8. The 9C is no string terminator to the parser,
+/// so it must not reset the count either.
+#[test]
+fn an_osc_string_of_c1_lookalike_bytes_is_cut_off_too() {
+    let mut terminal = Terminal::new(size(40, 3));
+    let chunk = "Ü".repeat(512);
+
+    terminal.feed(b"\x1b]0;");
+    for _ in 0..=super::osc::MAX_OSC_BYTES / chunk.len() {
+        terminal.feed(chunk.as_bytes());
+    }
+
+    terminal.feed(b"after");
+
+    assert!(terminal.to_plain_text().contains("after"));
+}
+
+/// The count goes on across calls, and a bell just under the limit still
+/// ends the string without a cut.
+#[test]
+fn an_osc_string_just_under_the_limit_ends_at_its_bell_across_feeds() {
+    let mut terminal = Terminal::new(size(40, 3));
+    let body = vec![b'x'; super::osc::MAX_OSC_BYTES - 2];
+
+    terminal.feed(b"\x1b]0;");
+    terminal.feed(&body);
+    terminal.feed(b"\x07done");
+
+    let plain = terminal.to_plain_text();
+    assert!(plain.contains("done"), "{plain}");
+    assert!(!plain.contains('x'), "{plain}");
+}

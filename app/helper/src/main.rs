@@ -19,8 +19,6 @@ mod io;
 mod logger;
 mod read;
 #[cfg(test)]
-mod testing;
-#[cfg(test)]
 mod tests;
 
 use std::ffi::OsString;

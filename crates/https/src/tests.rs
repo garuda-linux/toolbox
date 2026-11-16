@@ -6,7 +6,7 @@ use std::time::Duration;
 use ureq::Body;
 use ureq::http::Response;
 
-use crate::{Clock as _, Https, RequestError, Rules, SystemClock};
+use crate::{Attempt, Clock as _, Https, RequestError, Rules, SystemClock, due, next_attempt};
 
 const CAP: u64 = 16;
 
@@ -145,5 +145,23 @@ fn port_443_said_aloud_is_the_same_server() {
     assert!(
         !matches!(refused, Err(RequestError::OtherHost(_))),
         "{refused:?}"
+    );
+}
+
+#[test]
+fn a_stored_attempt_allows_the_next_one_after_the_period() {
+    let every = Duration::from_secs(100);
+
+    assert_eq!(due(None, 1_000, every), Attempt::Due);
+    assert_eq!(due(Some(1_000), 1_099, every), Attempt::NotDue);
+    assert_eq!(due(Some(1_000), 1_100, every), Attempt::Due);
+    assert_eq!(next_attempt(1_000, every), 1_100);
+}
+
+#[test]
+fn an_attempt_stored_in_the_future_counts_as_now() {
+    assert_eq!(
+        due(Some(2_000), 1_000, Duration::from_secs(100)),
+        Attempt::ClockAhead
     );
 }

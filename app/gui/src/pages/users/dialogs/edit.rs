@@ -19,6 +19,7 @@ use super::shell::{ShellDefault, shell_choice};
 use super::{Next, dialog_why, field, note, title};
 use crate::command::UserEdit;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::users::texts;
 
@@ -71,7 +72,7 @@ impl Edit {
 
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>) -> Next {
         let user = self.user.as_str();
-        let title = i18n::text_with(ctx, "users-edit-title", &[("user", user)]);
+        let title = i18n::text_with(ctx, "users-edit-title", &[("user", Arg::from(user))]);
         let confirm = i18n::text(ctx, "users-queue-changes");
         let changes = self.changes();
         let edit = self.account(&changes);
@@ -203,9 +204,9 @@ impl Edit {
         };
 
         let words = [
-            ("old", self.current_home.as_str()),
-            ("new", self.fields.home.as_str()),
-            ("user", self.user.as_str()),
+            ("old", Arg::from(self.current_home.as_str())),
+            ("new", Arg::from(self.fields.home.as_str())),
+            ("user", Arg::from(self.user.as_str())),
         ];
 
         note(ui, &i18n::text_with(ctx, id, &words));

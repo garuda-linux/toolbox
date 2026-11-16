@@ -12,7 +12,7 @@ use toolbox_plan::UnitScope;
 use toolbox_services::apply::launcher::{
     PKEXEC, SUDO, SUDO_NAME, helper_path, is_setuid_root, root_tool,
 };
-use toolbox_services::catalogs::{Catalogs, catalog_dir};
+use toolbox_services::catalogs::{Catalogs, catalog_dir_from_env};
 use toolbox_services::log_folder::log_dir;
 use toolbox_system::{CallError, Method, call, connect};
 
@@ -233,7 +233,7 @@ fn repositories(sync: &Path) -> usize {
 }
 
 fn catalogs() -> CatalogFacts {
-    let dir = catalog_dir(|key| std::env::var_os(key));
+    let dir = catalog_dir_from_env();
     let loaded = Catalogs::load(&dir);
     let toggles = [
         &loaded.components,

@@ -315,7 +315,7 @@ async fn run_plan(id: PlanId, plan: Plan, run: &mut Run<'_>, launcher: &dyn Laun
     let listed = plan
         .steps()
         .iter()
-        .map(|step| (step.id, step.action.command_lines()))
+        .map(|step| (step.id, step.action.commands()))
         .collect();
 
     run.reporter.report(Report::PlanStarted {

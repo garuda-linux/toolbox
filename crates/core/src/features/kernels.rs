@@ -109,7 +109,7 @@ pub fn kernels(packages: &LinuxPackages, releases: &KernelReleases) -> Vec<Kerne
                 headers,
                 repo: String::new(),
                 version: package.version.clone(),
-                description: package.description.clone(),
+                description: package.description.clone().into_string(),
                 installed: None,
                 headers_installed: false,
             });
@@ -360,7 +360,7 @@ fn offered(sync: &[RepoPackage]) -> Vec<Kernel> {
                 headers,
                 repo: package.repo.clone(),
                 version: package.version.clone(),
-                description: package.description.clone(),
+                description: package.description.clone().into_string(),
                 installed: None,
                 headers_installed: false,
             })

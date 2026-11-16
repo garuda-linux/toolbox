@@ -113,22 +113,20 @@ impl Lists {
     pub fn without_commands_of(mut self) -> Self {
         for (category, apps) in &mut self.lists {
             apps.retain(|(_, app)| {
-                let Some(package) = app.packages.first() else {
+                let protected = app.packages.iter().find(|&package| {
+                    PackageName::new(package).is_ok_and(|name| protection(&name).is_some())
+                        && app.title.to_lowercase() != *package
+                });
+
+                let Some(package) = protected else {
                     return true;
                 };
 
-                let command = PackageName::new(package)
-                    .is_ok_and(|name| protection(&name).is_some())
-                    && app.title.to_lowercase() != *package;
-
-                if command {
-                    self.dropped.push(format!(
-                        "{}: {:?} is a command of the protected {package}",
-                        category.id, app.title
-                    ));
-                }
-
-                !command
+                self.dropped.push(format!(
+                    "{}: {:?} is a command of the protected {package}",
+                    category.id, app.title
+                ));
+                false
             });
         }
 

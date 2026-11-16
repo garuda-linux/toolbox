@@ -7,7 +7,7 @@ mod tests;
 use std::net::IpAddr;
 use std::time::Duration;
 
-use toolbox_https::{Https, RequestError, Rules};
+use toolbox_https::{Https, RequestError, Rules, USER_AGENT};
 use toolbox_state::network::{ADDRESS_SERVICE, public_address};
 
 /// A lookup answers a few lines. Whoever clicked waits for it.
@@ -15,7 +15,8 @@ const ADDRESS_TIMEOUT: Duration = Duration::from_secs(20);
 
 const ADDRESS_HOST: &str = "geoip.kde.org";
 
-/// The service's answer is one short JSON object.
+/// The answer is a short XML document of a few hundred bytes. The cap keeps
+/// a long answer from the service from filling memory before it is read.
 const MAX_ADDRESS_BYTES: u64 = 64 << 10;
 
 /// Blocks, so call it off the GUI thread.
@@ -43,8 +44,7 @@ impl KdeGeoIp {
             host: ADDRESS_HOST,
             timeout: ADDRESS_TIMEOUT,
             max_body_bytes: MAX_ADDRESS_BYTES,
-            // ureq's own: the service was never told the program.
-            user_agent: None,
+            user_agent: Some(USER_AGENT),
         }))
     }
 }

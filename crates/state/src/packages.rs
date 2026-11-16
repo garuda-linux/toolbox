@@ -2,6 +2,7 @@
 //! light index of every package, and the details of one.
 
 use toolbox_plan::PackageName;
+use toolbox_text::OutsideText;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum Origin {
@@ -30,7 +31,7 @@ pub struct Installed {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct IndexEntry {
     pub name: PackageName,
-    pub description: String,
+    pub description: OutsideText,
     /// The repository's version, the installed one for a foreign package.
     pub version: String,
     pub origin: Origin,
@@ -62,7 +63,7 @@ pub struct PackageIndex {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OptionalDependency {
     pub name: PackageName,
-    pub reason: String,
+    pub reason: OutsideText,
 }
 
 /// The installed side of [`PackageDetails`].
@@ -73,23 +74,23 @@ pub struct InstalledDetails {
     /// Seconds since the epoch.
     pub date: Option<i64>,
     /// Absolute paths, folders ending in `/`.
-    pub files: Vec<String>,
+    pub files: Vec<OutsideText>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PackageDetails {
     pub name: PackageName,
-    pub description: String,
+    pub description: OutsideText,
     pub version: String,
     pub origin: Origin,
     pub size: u64,
-    pub url: Option<String>,
-    pub licenses: Vec<String>,
-    pub groups: Vec<String>,
+    pub url: Option<OutsideText>,
+    pub licenses: Vec<OutsideText>,
+    pub groups: Vec<OutsideText>,
     pub depends: Vec<String>,
     pub optional: Vec<OptionalDependency>,
     /// The installed packages that depend on it.
-    pub required_by: Vec<String>,
+    pub required_by: Vec<OutsideText>,
     pub provides: Vec<String>,
     pub conflicts: Vec<String>,
     pub replaces: Vec<String>,

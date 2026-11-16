@@ -19,6 +19,7 @@ use toolbox_system::{CallError, Facts, Host, Status};
 use super::{PageContext, PageView};
 use crate::command::HomeCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::programs::Programs;
 
@@ -94,7 +95,7 @@ fn notice(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let text = match context.home.problem {
         Some(HomeProblem::QueueLost(count)) => {
-            i18n::text_with(&ctx, "home-queue-lost", &[("count", &count.to_string())])
+            i18n::text_with(&ctx, "home-queue-lost", &[("count", Arg::from(count))])
         }
         Some(HomeProblem::Busy) => i18n::text(&ctx, "home-busy"),
         Some(HomeProblem::Restart(_) | HomeProblem::Installer(_)) | None => return,

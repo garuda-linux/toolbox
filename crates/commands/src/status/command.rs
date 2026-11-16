@@ -59,7 +59,7 @@ fn watched(args: StatusArgs, runtime: &Handle, out: &mut Out<'_>) -> Exit {
         Watch::new(shape),
         || read(quiet),
         || waited(&mut stopper, interval),
-        || jiff::Zoned::now().strftime("%H:%M").to_string(),
+        || jiff::ZonedDateTime::now().strftime("%H:%M").to_string(),
         out,
     )
 }

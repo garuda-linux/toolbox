@@ -7,6 +7,7 @@ use toolbox_plan::{UnitName, UnitOperation, UnitScope};
 
 use crate::command::{CommandSender, ServiceCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 
 /// What waits for the answer.
 #[derive(Clone)]
@@ -70,12 +71,12 @@ pub fn show(ctx: &Context, commands: &CommandSender) {
     let title = i18n::text_with(
         ctx,
         "services-ask-title",
-        &[("verb", &verb), ("unit", &unit)],
+        &[("verb", Arg::from(&verb)), ("unit", Arg::from(&unit))],
     );
 
     let close = i18n::text(ctx, "dialog-close");
 
-    let why = i18n::text_with(ctx, "services-ask-why", &[("unit", &unit)]);
+    let why = i18n::text_with(ctx, "services-ask-why", &[("unit", Arg::from(&unit))]);
     let cancel = i18n::text(ctx, "services-ask-cancel");
     let texts = Question {
         title: &title,

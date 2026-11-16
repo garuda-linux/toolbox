@@ -4,7 +4,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use crate::capture::{
-    CaptureError, Exited, MAX_ERROR_BYTES, MAX_INPUT_BYTES, Policy, run_captured,
+    CaptureError, Exited, MAX_ERROR_BYTES, MAX_STDIN_BYTES, Policy, run_captured,
 };
 use crate::pty_runner::Environment;
 use crate::test_support::gone;
@@ -34,19 +34,32 @@ fn locking(lock: &Path) -> String {
     )
 }
 
-#[test]
-fn past_the_deadline_the_program_and_its_group_are_killed() {
+/// A child of the program holds the output pipe open. `tail` is what the
+/// program does after starting it.
+fn child_outlives_the_deadline(tail: &str) {
     let folder = tempfile::tempdir().unwrap();
     let noted = folder.path().join("pid");
     let started = Instant::now();
     let result = shell(
-        &format!("sleep 60 & echo $! > {}; wait", noted.display()),
+        &format!("sleep 60 & echo $! > {}; {tail}", noted.display()),
         &Policy::whole().within(SHORT),
     );
 
     assert!(matches!(result, Err(CaptureError::TimedOut)), "{result:?}");
     assert!(started.elapsed() < SOON, "the program was waited for");
     assert!(gone(&noted), "the child outlived the deadline");
+}
+
+#[test]
+fn past_the_deadline_the_program_and_its_group_are_killed() {
+    child_outlives_the_deadline("wait");
+}
+
+/// The program ends at once, so the group is signalled while its leader
+/// waits unreaped, and the pipe is read to the deadline.
+#[test]
+fn a_child_of_an_ended_program_is_killed_at_the_deadline() {
+    child_outlives_the_deadline("exit 0");
 }
 
 #[test]
@@ -171,7 +184,7 @@ fn a_program_that_never_reads_its_input_still_reports_its_exit() {
 fn input_longer_than_a_pipe_holds_is_refused_before_the_start() {
     let folder = tempfile::tempdir().unwrap();
     let marker = folder.path().join("ran");
-    let input = vec![b'x'; MAX_INPUT_BYTES + 1];
+    let input = vec![b'x'; MAX_STDIN_BYTES + 1];
     let result = shell(
         &format!("touch {}", marker.display()),
         &Policy::whole().fed(&input),

@@ -1,6 +1,10 @@
+mod root_action_programs;
+mod root_actions;
+
 use std::path::Path;
 
-use super::{Builtin, Command, Invocation, Program};
+use super::notes::SET_LOCALE_WHY;
+use super::{Builtin, Command, DATABASE_LOCK, Invocation, Program};
 use crate::{HomePath, UserConfigEdit};
 
 #[test]
@@ -57,4 +61,23 @@ fn an_edit_user_config_describes_itself() {
     let builtin = Builtin::EditUserConfig { edit, on: true };
 
     assert!(builtin.to_string().contains("app.conf"));
+}
+
+#[test]
+fn the_locale_note_names_the_locale_gen_file() {
+    assert_eq!(
+        SET_LOCALE_WHY,
+        format!("only when /{} has it enabled", crate::locale::LOCALE_GEN)
+    );
+}
+
+#[test]
+fn a_command_leaves_out_the_note_its_display_keeps() {
+    let step = Invocation::Builtin(Builtin::RemoveDatabaseLock);
+
+    assert_eq!(step.command(), format!("rm /{DATABASE_LOCK}"));
+    assert_eq!(
+        step.to_string(),
+        format!("rm /{DATABASE_LOCK}  # only while pacman is not running")
+    );
 }

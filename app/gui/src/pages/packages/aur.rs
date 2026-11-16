@@ -20,6 +20,7 @@ use toolbox_gui_kit::{UiExt as _, tokens};
 use self::row::AurRow;
 use super::PackagesPage;
 use crate::command::{PackagesCommand, UiCommand};
+use crate::i18n::Arg;
 use crate::packages::{Packages, Read};
 use crate::page::PageId;
 use crate::pages::PageContext;
@@ -132,7 +133,7 @@ pub fn note(ui: &mut Ui, context: &PageContext<'_>) {
     let text = i18n::text_with(
         &ctx,
         "packages-aur-note",
-        &[("date", &dates::day(&ctx, catalog.downloaded()))],
+        &[("date", Arg::from(&dates::day(&ctx, catalog.downloaded())))],
     );
 
     let stale = catalog

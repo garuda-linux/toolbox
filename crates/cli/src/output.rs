@@ -13,6 +13,7 @@ use std::ffi::OsString;
 use std::fmt::Write as _;
 
 use anstyle::{AnsiColor, Color};
+use toolbox_text::OutsideText;
 use unicode_width::{UnicodeWidthChar as _, UnicodeWidthStr as _};
 
 pub use self::json::{SCHEMA, json, json_line, with_schema};
@@ -128,7 +129,7 @@ impl Paint {
     }
 
     /// A program's own words under the line they explain, dimmed.
-    pub fn detail(self, text: &str) -> String {
+    pub fn detail(self, text: &OutsideText) -> String {
         text.lines().fold(String::new(), |mut lines, line| {
             writeln!(lines, "    {}", self.painted(DIM, line)).ok();
             lines
@@ -198,7 +199,7 @@ impl Paint {
 
         let mut text = format!("{}\n\n", self.title(title, None));
         for (name, value) in facts {
-            let value = toolbox_plan::text::plain(value);
+            let value = toolbox_text::plain(value);
             let room = width - name.chars().count() + GAP;
             let line = format!("{}{:room$}{value}", self.painted(DIM, name), "");
             writeln!(text, "{}", self.item(line.trim_end())).ok();

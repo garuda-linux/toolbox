@@ -7,6 +7,11 @@ mod tests;
 
 use crate::exit::Exit;
 
+/// Ctrl+C was pressed at a question. The command ends with
+/// [`Exit::Interrupted`] and nothing is carried out.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Interrupted;
+
 /// The terminal the question is asked on. A port, so the tests need none.
 pub trait Prompt {
     fn is_terminal(&self) -> bool;
@@ -16,8 +21,12 @@ pub trait Prompt {
 
     /// A secret typed after `question` without echo. `None` when it
     /// cannot be read so, never an echoed fallback.
-    fn secret(&mut self, _question: &str) -> Option<String> {
-        None
+    ///
+    /// # Errors
+    ///
+    /// [`Interrupted`] when the user pressed Ctrl+C.
+    fn secret(&mut self, _question: &str) -> Result<Option<String>, Interrupted> {
+        Ok(None)
     }
 
     /// The first line of standard input, for `--password-stdin`.

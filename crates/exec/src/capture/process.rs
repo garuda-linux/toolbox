@@ -2,7 +2,7 @@
 mod tests;
 
 use std::io::{self, Read, Write as _};
-use std::process::{Child, ExitStatus};
+use std::process::Child;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver, RecvTimeoutError};
@@ -11,6 +11,7 @@ use std::time::{Duration, Instant};
 
 use rustix::io::Errno;
 use rustix::process::{Pid, Signal, kill_process_group};
+use toolbox_pty::has_ended;
 
 use super::{CaptureError, Exited, Policy, Tail};
 
@@ -25,6 +26,7 @@ struct Watch<'flags> {
     overflow: &'flags AtomicBool,
     end: Option<Instant>,
     grace: Option<Duration>,
+    group: Pid,
 }
 
 pub fn finish(
@@ -38,46 +40,40 @@ pub fn finish(
     let output = read_tail(child.stdout.take(), policy.limit, cancel, watched);
     let errors = read_tail(child.stderr.take(), policy.error_limit, cancel, None);
 
-    // The input fits a pipe (`MAX_INPUT_BYTES`), so this write cannot
+    // The input fits a pipe (`MAX_STDIN_BYTES`), so this write cannot
     // block on a program that prints before it reads.
     let written = match (child.stdin.take(), policy.stdin) {
         (Some(mut stdin), Some(input)) => stdin.write_all(input),
         _ => Ok(()),
     };
 
-    let group = Pid::from_child(&child);
-    let end = policy.end(started);
     let watch = Watch {
         cancel,
         overflow: &overflow,
-        end,
+        end: policy.end(started),
         grace: policy.term_grace,
+        group: Pid::from_child(&child),
     };
 
-    let status = wait(child, &watch)?;
+    if let Err(stopped) = wait(&child, &watch) {
+        let grace = watch
+            .grace
+            .filter(|_| matches!(stopped, CaptureError::TimedOut));
 
-    // A program that exits without reading closes the pipe. Its exit code
-    // and its message say why, the broken pipe adds nothing.
-    match written {
-        Err(error) if error.kind() != io::ErrorKind::BrokenPipe => {
-            return Err(CaptureError::Failed(error));
-        }
-        Ok(()) | Err(_) => {}
+        stop(child, grace);
+        return Err(stopped);
     }
 
-    let output = whole(receive(&output, group, cancel, end)?)?;
-    let errors = whole(receive(&errors, group, cancel, end)?)?;
-    let (output, truncated) = output.into_bytes();
-    let (errors, _) = errors.into_bytes();
-
-    if truncated && policy.cap_is_error {
-        return Err(CaptureError::TooLarge);
-    }
+    // The leader is a zombie now, so the group gets its signals before
+    // it is reaped below.
+    let collected = collect([&output, &errors], written, policy, &watch);
+    let status = child.wait();
+    let (printed, complained, truncated) = collected?;
 
     Ok(Exited {
-        status,
-        output,
-        errors,
+        status: status.map_err(CaptureError::Failed)?,
+        output: printed,
+        errors: complained,
         truncated,
     })
 }
@@ -136,39 +132,64 @@ where
     receiver
 }
 
-/// The exit status. A status already there wins over a cancel, so a
-/// program that ended is never reported as cancelled.
-fn wait(mut child: Child, watch: &Watch<'_>) -> Result<ExitStatus, CaptureError> {
+/// Returns once the program ended, leaving it unreaped. A program that
+/// ended wins over a cancel, so it is never reported as cancelled.
+fn wait(child: &Child, watch: &Watch<'_>) -> Result<(), CaptureError> {
     let mut pause = Duration::from_millis(1);
 
     loop {
-        let stopped = match child.try_wait() {
-            Ok(Some(status)) => return Ok(status),
+        let stopped = match has_ended(child) {
+            Ok(true) => return Ok(()),
             Err(error) => CaptureError::Failed(error),
-            Ok(None) if watch.cancel.load(Ordering::Relaxed) => CaptureError::Cancelled,
-            Ok(None) if watch.overflow.load(Ordering::Relaxed) => CaptureError::TooLarge,
-            Ok(None) if passed(watch.end) => CaptureError::TimedOut,
-            Ok(None) => {
+            Ok(false) if watch.cancel.load(Ordering::Relaxed) => CaptureError::Cancelled,
+            Ok(false) if watch.overflow.load(Ordering::Relaxed) => CaptureError::TooLarge,
+            Ok(false) if passed(watch.end) => CaptureError::TimedOut,
+            Ok(false) => {
                 thread::sleep(pause);
                 pause = pause.saturating_mul(2).min(LONGEST_PAUSE);
                 continue;
             }
         };
 
-        // Only the deadline gives the program time: a cancel and an
-        // overflow end what nobody waits for anymore.
-        let grace = watch
-            .grace
-            .filter(|_| matches!(stopped, CaptureError::TimedOut));
-
-        stop(child, grace);
         return Err(stopped);
     }
 }
 
+/// The checks on the output once the program ended. The group is signalled
+/// before the leader is reaped, so no id is reused in between.
+fn collect(
+    [output, errors]: [&Receiver<Tail>; 2],
+    written: io::Result<()>,
+    policy: &Policy<'_>,
+    watch: &Watch<'_>,
+) -> Result<(Vec<u8>, Vec<u8>, bool), CaptureError> {
+    let (group, cancel, end) = (watch.group, watch.cancel, watch.end);
+
+    // A program that exits without reading closes the pipe. Its exit code
+    // and its message say why, the broken pipe adds nothing.
+    match written {
+        Err(error) if error.kind() != io::ErrorKind::BrokenPipe => {
+            return Err(CaptureError::Failed(error));
+        }
+        Ok(()) | Err(_) => {}
+    }
+
+    let output = whole(receive(output, group, cancel, end)?)?;
+    let errors = whole(receive(errors, group, cancel, end)?)?;
+    let (output, truncated) = output.into_bytes();
+    let (errors, _) = errors.into_bytes();
+
+    if truncated && policy.cap_is_error {
+        return Err(CaptureError::TooLarge);
+    }
+
+    Ok((output, errors, truncated))
+}
+
 /// Asks the group to end when there is a `grace`, then kills what is
-/// left. The exit status is collected whenever the program ends, so no
-/// zombie stays behind and no caller waits for it.
+/// left. The leader is still unreaped here, so its group id is reserved
+/// while the signals go out. The exit status is collected whenever the
+/// program ends, so no zombie stays behind and no caller waits for it.
 fn stop(mut child: Child, grace: Option<Duration>) {
     let group = Pid::from_child(&child);
 
@@ -177,7 +198,7 @@ fn stop(mut child: Child, grace: Option<Duration>) {
 
         let until = Instant::now().checked_add(grace);
 
-        while matches!(child.try_wait(), Ok(None)) && !passed(until) {
+        while matches!(has_ended(&child), Ok(false)) && !passed(until) {
             thread::sleep(LONGEST_PAUSE);
         }
     }
@@ -214,8 +235,8 @@ fn receive(
             Err(RecvTimeoutError::Timeout) => continue,
         };
 
-        // The group id stays reserved while a member lives, so this
-        // reaches only the leftovers.
+        // The leader is not reaped yet, so the group id is still reserved
+        // and this reaches only the leftovers.
         signal(group, Signal::KILL);
         return Err(stopped);
     }

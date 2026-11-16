@@ -7,6 +7,7 @@ use toolbox_plan::{GroupName, HomeFolder, UserName};
 use super::{Next, dialog, note};
 use crate::command::UserEdit;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::users::texts;
 
@@ -26,7 +27,7 @@ pub struct RemoveGroup(pub GroupName);
 impl RemoveUser {
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>) -> Next {
         let user = self.user.as_str();
-        let title = i18n::text_with(ctx, "users-remove-title", &[("user", user)]);
+        let title = i18n::text_with(ctx, "users-remove-title", &[("user", Arg::from(user))]);
         let confirm = i18n::text(ctx, "users-remove-confirm");
         let (next, confirmed) = dialog(
             ctx,
@@ -58,7 +59,7 @@ impl RemoveUser {
         let user = self.user.as_str();
         let home = self.home.as_str();
         let with = |id: &str, key: &'static str, value: &str| {
-            i18n::text_with(ctx, id, &[(key, value)]).into_owned()
+            i18n::text_with(ctx, id, &[(key, Arg::from(value))]).into_owned()
         };
 
         ui.add(Label::new(i18n::text(ctx, "users-remove-goes")).wrap());
@@ -82,7 +83,7 @@ impl RemoveUser {
         if !self.delete_home {
             note(
                 ui,
-                &i18n::text_with(ctx, "users-remove-home-stays", &[("home", home)]),
+                &i18n::text_with(ctx, "users-remove-home-stays", &[("home", Arg::from(home))]),
             );
         }
     }
@@ -91,7 +92,7 @@ impl RemoveUser {
 impl RemoveGroup {
     pub fn show(&self, ctx: &Context, context: &PageContext<'_>) -> Next {
         let group = self.0.as_str();
-        let title = i18n::text_with(ctx, "groups-remove-title", &[("group", group)]);
+        let title = i18n::text_with(ctx, "groups-remove-title", &[("group", Arg::from(group))]);
         let confirm = i18n::text(ctx, "groups-remove-confirm");
         let (next, confirmed) = dialog(
             ctx,

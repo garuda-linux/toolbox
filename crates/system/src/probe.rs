@@ -20,7 +20,7 @@ use crate::host::{Host, HostSource, SystemHost};
 use crate::kernels::{KernelSource, SystemKernels};
 use crate::locales::{EtcLocales, LocaleSource};
 use crate::network::{ModuleSource, SystemModules};
-use crate::packages::{Libalpm, LinuxPackageSource, PackageSource, SyncSource};
+use crate::packages::{Libalpm, PackageScan, PackageSource};
 use crate::settings::{EtcSettings, SettingsSource};
 use crate::units::{Systemctl, UnitSource};
 use crate::user_configs::{HomeConfigs, UserConfigSource};
@@ -30,8 +30,6 @@ use crate::user_configs::{HomeConfigs, UserConfigSource};
 #[derive(Clone)]
 pub struct Sources {
     pub packages: Arc<dyn PackageSource>,
-    pub sync: Arc<dyn SyncSource>,
-    pub linux: Arc<dyn LinuxPackageSource>,
     pub kernels: Arc<dyn KernelSource>,
     pub locales: Arc<dyn LocaleSource>,
     pub units: Arc<dyn UnitSource>,
@@ -56,14 +54,8 @@ pub struct ProbeIssue {
 impl Sources {
     #[must_use = "the sources do nothing until probed"]
     pub fn system() -> Self {
-        // One adapter for all three, so they share its read of the sync
-        // databases.
-        let alpm = Arc::new(Libalpm::system());
-
         Self {
-            packages: Arc::<Libalpm>::clone(&alpm),
-            sync: Arc::<Libalpm>::clone(&alpm),
-            linux: alpm,
+            packages: Arc::new(Libalpm::system()),
             kernels: Arc::new(SystemKernels::system()),
             locales: Arc::new(EtcLocales::system()),
             units: Arc::new(Systemctl::new()),
@@ -101,50 +93,27 @@ pub fn probe_snapshot(sources: &Sources) -> (Snapshot, Vec<ProbeIssue>) {
     let mut snapshot = Snapshot::default();
     let mut issues = Vec::new();
     let host = probe_host(sources.host.as_ref(), &mut issues);
+    let packages = sources.packages.scan();
 
     insert(
         &mut snapshot,
         &mut issues,
         Probe::Packages,
-        sources.packages.installed(),
+        packages.installed(),
     );
     insert(
         &mut snapshot,
         &mut issues,
         Probe::PackageGraph,
-        sources.packages.graph(),
+        packages.graph(),
     );
     insert(
         &mut snapshot,
         &mut issues,
         Probe::SyncPackages,
-        sources.sync.offered(),
+        packages.offered(),
     );
-    insert(
-        &mut snapshot,
-        &mut issues,
-        Probe::Units,
-        sources.units.enabled_units(),
-    );
-    insert(
-        &mut snapshot,
-        &mut issues,
-        Probe::UserUnits,
-        sources.units.enabled_user_units(),
-    );
-    insert(
-        &mut snapshot,
-        &mut issues,
-        Probe::MaskedUnits,
-        sources.units.masked_units(),
-    );
-    insert(
-        &mut snapshot,
-        &mut issues,
-        Probe::MaskedUserUnits,
-        sources.units.masked_user_units(),
-    );
-
+    probe_units(sources, &mut snapshot, &mut issues);
     insert(
         &mut snapshot,
         &mut issues,
@@ -157,12 +126,42 @@ pub fn probe_snapshot(sources: &Sources) -> (Snapshot, Vec<ProbeIssue>) {
     }
 
     probe_settings(sources, &mut snapshot, &mut issues);
-    probe_kernels_and_locales(sources, &mut snapshot, &mut issues);
+    probe_kernels_and_locales(sources, packages.as_ref(), &mut snapshot, &mut issues);
     probe_boot(sources.boot.as_ref(), &mut snapshot, &mut issues);
     snapshot.insert(host);
     snapshot.insert(failed_probes(&issues));
 
     (snapshot, issues)
+}
+
+fn probe_units(sources: &Sources, snapshot: &mut Snapshot, issues: &mut Vec<ProbeIssue>) {
+    let system = sources.units.system_unit_files();
+    insert(
+        snapshot,
+        issues,
+        Probe::Units,
+        system.clone().map(|files| files.enabled),
+    );
+    insert(
+        snapshot,
+        issues,
+        Probe::MaskedUnits,
+        system.map(|files| files.masked),
+    );
+
+    let user = sources.units.user_unit_files();
+    insert(
+        snapshot,
+        issues,
+        Probe::UserUnits,
+        user.clone().map(|files| files.enabled),
+    );
+    insert(
+        snapshot,
+        issues,
+        Probe::MaskedUserUnits,
+        user.map(|files| files.masked),
+    );
 }
 
 fn probe_settings(sources: &Sources, snapshot: &mut Snapshot, issues: &mut Vec<ProbeIssue>) {
@@ -220,6 +219,7 @@ fn probe_settings(sources: &Sources, snapshot: &mut Snapshot, issues: &mut Vec<P
 /// asks it on its own.
 fn probe_kernels_and_locales(
     sources: &Sources,
+    packages: &dyn PackageScan,
     snapshot: &mut Snapshot,
     issues: &mut Vec<ProbeIssue>,
 ) {
@@ -230,7 +230,7 @@ fn probe_kernels_and_locales(
         snapshot,
         issues,
         Probe::LinuxPackages,
-        sources.linux.linux_packages(),
+        packages.linux_packages(),
     );
     insert(snapshot, issues, Probe::RunningKernel, kernels.running());
     insert(snapshot, issues, Probe::KernelReleases, kernels.releases());

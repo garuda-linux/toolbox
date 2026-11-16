@@ -17,13 +17,13 @@ mod tests;
 use std::fmt;
 
 use super::run;
-use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program, relaxed};
+use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program, Shown, relaxed};
 use crate::protocol::Leftover;
 use crate::repair::{
-    ESP_FOLDER, EspPlace, InstalledLoader, REPAIR_MAPPER, REPAIR_VOLUME, ROOT_SUBVOLUME,
-    RepairMount, RepairRoot, RootLayout,
+    ESP_FOLDER, InstalledLoader, REPAIR_MAPPER, REPAIR_VOLUME, ROOT_SUBVOLUME, RepairMount,
+    RepairRoot, RootLayout,
 };
-use crate::{GRUB_CONFIG, InstalledSystem, PartitionDevice, Password, RepairWork};
+use crate::{EspPlace, GRUB_CONFIG, InstalledSystem, PartitionDevice, Password, RepairWork};
 
 /// What the firmware of a 64 bit PC loads. Arch has no other.
 const EFI_TARGET: &str = "x86_64-efi";
@@ -34,6 +34,19 @@ const BIOS_TARGET: &str = "i386-pc";
 /// The chosen disk may hold device nodes or setuid programs of anyone's
 /// making. The binds of the live system's `/dev` keep their own options.
 const UNTRUSTED: &str = "nodev,nosuid";
+
+/// Why the work does not fit the boot loader of the mounted system.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
+pub enum LoaderRefusal {
+    #[error("the system's /etc/fstab mounts no EFI system partition at /efi, /boot or /boot/efi")]
+    NoEspInFstab,
+    #[error(
+        "systemd-boot builds its images onto the EFI system partition, and the repair names none"
+    )]
+    NoEspNamed,
+    #[error("systemd-boot starts only through UEFI")]
+    NotUefi,
+}
 
 pub fn repair_boot(
     system: &InstalledSystem,
@@ -87,19 +100,16 @@ pub fn repair_boot(
 ///
 /// # Errors
 ///
-/// The reason, in words for the Console, when the work does not fit the
-/// system's boot loader.
+/// The reason when the work does not fit the system's boot loader.
 pub fn boot_loader_steps(
     system: &InstalledSystem,
     work: &RepairWork,
     loader: InstalledLoader,
-) -> Result<Vec<Invocation>, &'static str> {
+) -> Result<Vec<Invocation>, LoaderRefusal> {
     match loader {
         InstalledLoader::Grub => Ok(grub_steps(system, work)),
         InstalledLoader::SystemdBoot { esp: Some(place) } => sdboot_steps(system, work, place),
-        InstalledLoader::SystemdBoot { esp: None } => Err(
-            "the system's /etc/fstab mounts no EFI system partition at /efi, /boot or /boot/efi",
-        ),
+        InstalledLoader::SystemdBoot { esp: None } => Err(LoaderRefusal::NoEspInFstab),
     }
 }
 
@@ -137,7 +147,7 @@ pub fn sdboot_steps(
     system: &InstalledSystem,
     work: &RepairWork,
     place: EspPlace,
-) -> Result<Vec<Invocation>, &'static str> {
+) -> Result<Vec<Invocation>, LoaderRefusal> {
     let mut steps = Vec::new();
 
     match work {
@@ -146,9 +156,7 @@ pub fn sdboot_steps(
             steps.push(recheck(system, work));
         }
         RepairWork::RegenerateConfig { esp: None } => {
-            return Err(
-                "systemd-boot builds its images onto the EFI system partition, and the repair names none",
-            );
+            return Err(LoaderRefusal::NoEspNamed);
         }
         RepairWork::InstallUefi { esp, id: _ } => {
             steps.extend(esp_mounts(esp, place, true));
@@ -159,7 +167,7 @@ pub fn sdboot_steps(
             ]))));
         }
         RepairWork::InstallBios { disk: _ } => {
-            return Err("systemd-boot starts only through UEFI");
+            return Err(LoaderRefusal::NotUefi);
         }
     }
 
@@ -203,11 +211,18 @@ pub fn describe_loader(
     out: &mut fmt::Formatter<'_>,
     system: &InstalledSystem,
     work: &RepairWork,
+    shown: Shown,
 ) -> fmt::Result {
     let joined = |steps: &[Invocation]| {
         steps
             .iter()
-            .map(ToString::to_string)
+            .map(|step| {
+                if shown == Shown::WithNotes {
+                    step.to_string()
+                } else {
+                    step.command()
+                }
+            })
             .collect::<Vec<_>>()
             .join(", then ")
     };
@@ -215,13 +230,16 @@ pub fn describe_loader(
     write!(out, "on GRUB: {}", joined(&grub_steps(system, work)))?;
 
     match sdboot_steps(system, work, EspPlace::Efi) {
-        Ok(steps) => write!(
-            out,
-            ", on systemd-boot: {}  # the ESP goes where the system's /etc/fstab mounts it",
-            joined(&steps)
-        ),
+        Ok(steps) => write!(out, ", on systemd-boot: {}", joined(&steps)),
         Err(reason) => write!(out, ", on systemd-boot: nothing, {reason}"),
     }
+}
+
+/// The note of the systemd-boot part, when that part has steps.
+pub fn loader_why(system: &InstalledSystem, work: &RepairWork) -> Option<&'static str> {
+    sdboot_steps(system, work, EspPlace::Efi)
+        .ok()
+        .map(|_| "the ESP goes where the system's /etc/fstab mounts it")
 }
 
 /// grub-mkconfig writes an initrd line only for an initramfs it finds, so

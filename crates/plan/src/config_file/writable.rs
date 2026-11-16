@@ -1,9 +1,11 @@
 //! The root-owned files the helper replaces: exactly the root-owned
 //! entries of `data/catalog/config-files.toml` without `read_only`. The
 //! `read_only` entries (accounts, sudoers, PAM, cron, system units, udev
-//! rules, pacman hooks) hand out root by themselves, so they are shown and
-//! never written. A fetch takes what the catalog names and nothing else,
-//! as `/etc` holds secrets no deny list can know in advance.
+//! rules, pacman hooks) are shown and never written. Writable entries, such
+//! as `/etc/pacman.conf`, `/etc/modprobe.d` and `/etc/default/grub`, reach
+//! root too, and are trusted because the user confirms each write through
+//! polkit. A fetch takes what the catalog names and nothing else, as `/etc`
+//! holds secrets no deny list can know in advance.
 //!
 //! The tables are written out here because the helper links no TOML.
 //! `toolbox-catalog` refuses a writable root-owned entry missing from them

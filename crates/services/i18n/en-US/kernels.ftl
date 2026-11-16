@@ -64,3 +64,4 @@ kernels-dismiss = Dismiss
 # The link that opens Boot options with a kernel offered as the default.
 kernels-set-default = Set as default…
 kernels-set-default-name = Set { $kernel } as the default boot entry
+kernels-version-note = { $version } · { $note }

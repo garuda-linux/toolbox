@@ -13,7 +13,7 @@ fn name(text: &str) -> PackageName {
 fn entry(text: &str, installed: bool) -> IndexEntry {
     IndexEntry {
         name: name(text),
-        description: String::new(),
+        description: toolbox_text::plain(""),
         version: "1.0-1".to_owned(),
         origin: Origin::Repository("core".to_owned()),
         size: 1,
@@ -105,7 +105,7 @@ fn the_copied_file_list_has_one_path_per_line() {
     let files = ["/usr/".to_owned(), "/usr/bin/gimp".to_owned()];
 
     assert_eq!(file_list(&files), "/usr/\n/usr/bin/gimp\n");
-    assert_eq!(file_list(&[]), "");
+    assert_eq!(file_list::<String>(&[]), "");
 }
 
 #[test]

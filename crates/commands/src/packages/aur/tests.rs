@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use toolbox_aur::{AurError, AurSource};
+use toolbox_aur::{AurError, AurSource, DownloadError, RequestError};
 use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::packages::aur::{AurIndex, AurPackage};
 use toolbox_core::{ChangeSet, Snapshot};
@@ -38,12 +38,12 @@ fn package(text: &str, popularity: f64) -> AurPackage {
     AurPackage {
         name: name(text),
         version: "1.0-1".to_owned(),
-        description: format!("About {text}"),
-        url: Some("https://example.org".to_owned()),
+        description: toolbox_text::plain(&format!("About {text}")),
+        url: Some(toolbox_text::plain("https://example.org")),
         votes: 7,
         popularity,
         out_of_date: None,
-        maintainer: Some("someone".to_owned()),
+        maintainer: Some(toolbox_text::plain("someone")),
         first_submitted: 1_736_467_200,
         last_modified: 1_736_467_200,
         depends: vec!["glibc".to_owned()],
@@ -51,7 +51,7 @@ fn package(text: &str, popularity: f64) -> AurPackage {
         opt_depends: Vec::new(),
         provides: Vec::new(),
         conflicts: Vec::new(),
-        licenses: vec!["MIT".to_owned()],
+        licenses: vec![toolbox_text::plain("MIT")],
         keywords: Vec::new(),
     }
 }
@@ -142,7 +142,9 @@ fn an_aur_install_refuses_an_unknown_and_an_installed_package() {
     assert!(matches!(
         install(
             &[name("paru")],
-            &Aur(Some(AurError::Download("offline".to_owned()))),
+            &Aur(Some(AurError::Download(DownloadError::Request(
+                RequestError::NoAnswer("offline".to_owned()),
+            )))),
             &snapshot()
         ),
         Err(Refused::Unavailable(_))

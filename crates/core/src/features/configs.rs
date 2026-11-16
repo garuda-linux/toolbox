@@ -57,6 +57,15 @@ pub enum RowKind {
     Child,
 }
 
+/// What a row's button does. A row without one has no button.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Action {
+    /// Shows the text read only.
+    View,
+    /// Opens the text in the Console editor.
+    Edit,
+}
+
 #[expect(
     clippy::struct_excessive_bools,
     reason = "each flag is an independent state of the row"
@@ -72,9 +81,7 @@ pub struct Row {
     pub description: String,
     pub url: String,
     pub icon: String,
-    /// `open` (default app), `edit` (Console), `view` (the text, read
-    /// only) or empty for none.
-    pub action: &'static str,
+    pub action: Option<Action>,
     /// The file belongs to root: saving an edit needs an administrator.
     pub admin: bool,
     /// Shown but never edited here: the file hands out root or the
@@ -331,10 +338,10 @@ fn file_row(base: Row, link: Option<&Link>) -> Row {
 /// A root-owned file is edited, or viewed when it is read-only, unless
 /// it is a link the helper refuses. A file of the user is always edited:
 /// its write follows links as the user, so no link is refused.
-const fn action(admin: bool, read_only: bool, refused: bool) -> &'static str {
+const fn action(admin: bool, read_only: bool, refused: bool) -> Option<Action> {
     match (admin, read_only, refused) {
-        (true, _, true) => "",
-        (true, true, false) => "view",
-        (true, false, false) | (false, _, _) => "edit",
+        (true, _, true) => None,
+        (true, true, false) => Some(Action::View),
+        (true, false, false) | (false, _, _) => Some(Action::Edit),
     }
 }

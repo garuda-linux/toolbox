@@ -48,8 +48,8 @@ mod tests;
 ///
 /// # Errors
 ///
-/// When two of them share an id.
-pub fn all() -> Result<crate::Domains, crate::DuplicateDomain> {
+/// When two of them share an id, a stage or a change code.
+pub fn all() -> Result<crate::Domains, crate::RegistryError> {
     crate::Domains::default()
         .with::<Packages>()?
         .with::<AurPackages>()?

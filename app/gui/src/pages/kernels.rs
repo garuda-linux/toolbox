@@ -28,6 +28,7 @@ use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, KernelCommand, KernelEdit};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::kernels::Kernels;
 use crate::page::PageId;
 
@@ -154,8 +155,14 @@ fn header(ui: &mut Ui, context: &PageContext<'_>) {
     let release = view::release(context.snapshot);
     if !release.is_empty() {
         let tokens = tokens::current(&ctx);
-        let text = i18n::text_with(&ctx, "kernels-running-release", &[("release", release)]);
+        let text = i18n::text_with(
+            &ctx,
+            "kernels-running-release",
+            &[("release", Arg::from(release))],
+        );
+
         ui.add_space(ui.tokens().sizes.caption_gap);
+
         ui.label(rich(ui, &text, Weight::Medium, SMALL, tokens.secondary));
     }
 }
@@ -225,7 +232,7 @@ fn notices(ui: &mut Ui, context: &PageContext<'_>, built: &Built) {
             continue;
         }
 
-        let text = i18n::text_with(&ctx, text, &[("count", &count.to_string())]);
+        let text = i18n::text_with(&ctx, text, &[("count", Arg::from(count))]);
         let action = i18n::text(&ctx, action);
         if banner(ui, Tone::Warning, &text, &[&action]).value == Some(0) {
             context.commands.send(command);
@@ -243,7 +250,7 @@ fn section(ui: &mut Ui, context: &PageContext<'_>, (id, glyph): (&str, Icon), ro
     }
 
     let ctx = ui.ctx().clone();
-    let count = i18n::text_with(&ctx, "kernels-count", &[("count", &rows.len().to_string())]);
+    let count = i18n::text_with(&ctx, "kernels-count", &[("count", Arg::from(rows.len()))]);
     let title = i18n::text(&ctx, id);
     section_heading(ui, glyph, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);

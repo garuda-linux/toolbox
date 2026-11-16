@@ -64,3 +64,4 @@ kernels-dismiss = Ausblenden
 # The link that opens Boot options with a kernel offered as the default.
 kernels-set-default = Als Standard festlegen…
 kernels-set-default-name = { $kernel } als Standardeintrag im Bootmenü festlegen
+kernels-version-note = { $version } · { $note }

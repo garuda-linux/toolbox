@@ -16,7 +16,7 @@ use toolbox_cli::Cli;
 use toolbox_commands::window::{Opening, opening};
 use toolbox_config::{Paths, Settings};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_gui::catalogs::{Catalogs, catalog_dir};
+use toolbox_gui::catalogs::{Catalogs, catalog_dir_from_env};
 use toolbox_gui::desktop::files::DesktopFiles;
 use toolbox_gui::desktop::follow::CatalogApps;
 use toolbox_gui::desktop::icon_files::{Indexed, SystemIcons, app_index};
@@ -163,7 +163,7 @@ fn run(
         return Ok(());
     };
 
-    let catalog = catalog_dir(|key| std::env::var_os(key));
+    let catalog = catalog_dir_from_env();
 
     if !catalog.is_dir() {
         tracing::error!("the catalog folder {} is missing", catalog.display());
@@ -171,6 +171,11 @@ fn run(
     }
 
     let handle = runtime.handle().clone();
+
+    // The guide is parsed here, so its first open does not stall a frame.
+    drop(handle.spawn_blocking(|| {
+        toolbox_guide::embedded();
+    }));
     let current_desktop = std::env::var("XDG_CURRENT_DESKTOP").unwrap_or_default();
 
     // Restored before the system is known. The queue meets the first
@@ -240,6 +245,10 @@ fn system_snapshot(
     not(feature = "selftest"),
     expect(clippy::unnecessary_wraps, reason = "only the self-test can fail here")
 )]
+#[expect(
+    clippy::too_many_lines,
+    reason = "one line per service the window starts with"
+)]
 fn create(cc: &CreationContext<'_>, start: Start) -> Created {
     let Start {
         handle,
@@ -257,7 +266,9 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         instance,
     } = start;
 
-    let helper = helper_services(&handle, &cc.egui_ctx);
+    let system_language = i18n::language_from_env(|key| std::env::var_os(key));
+    let shown = i18n::shown(settings.general.language.as_ref(), &system_language);
+    let helper = helper_services(&handle, &cc.egui_ctx, shown);
     let mode = Mode::of_dry_run(helper.dry_run);
 
     let readers = readers(&handle, &cc.egui_ctx, &settings);
@@ -266,7 +277,7 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
     let (desktop_look, app_pictures) = look(&handle, &cc.egui_ctx, family, &catalogs);
     let setup = Setup {
         look: Some(desktop_look),
-        system_language: i18n::language_from_env(|key| std::env::var_os(key)),
+        system_language,
         queue: kept_queue((changes, restored), changes_file, &handle, &cc.egui_ctx),
         queue_lost: lost,
         apply: Some(helper.apply),

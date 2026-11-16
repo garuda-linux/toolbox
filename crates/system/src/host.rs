@@ -9,7 +9,7 @@ use std::time::{Duration, SystemTime};
 
 use toolbox_plan::UserName;
 
-use crate::error::ProbeError;
+use crate::error::{MissingFact, ProbeError};
 use crate::{accounts, files};
 
 /// Filesystems an ISO mounts as its root, the writable layer over the
@@ -169,9 +169,8 @@ where
 {
     fn user(&self) -> Result<UserName, ProbeError> {
         let path = self.roots.proc.join("self/status");
-        let uid = effective_uid(&files::read(&path)?).ok_or_else(|| ProbeError::Missing {
-            what: format!("{} names no user id", path.display()),
-        })?;
+        let uid = effective_uid(&files::read(&path)?)
+            .ok_or_else(|| ProbeError::Missing(MissingFact::UserId { path: path.clone() }))?;
 
         let passwd = files::read(&self.roots.etc.join("passwd"))?;
 
@@ -182,9 +181,8 @@ where
         let path = self.roots.proc.join("self/mounts");
         let mounts = files::read(&path)?;
 
-        let live = root_is_live(&mounts).ok_or_else(|| ProbeError::Missing {
-            what: format!("{} lists no root", path.display()),
-        })?;
+        let live = root_is_live(&mounts)
+            .ok_or_else(|| ProbeError::Missing(MissingFact::Root { path: path.clone() }))?;
 
         Ok(live && !self.in_container()?)
     }
@@ -267,9 +265,7 @@ fn parse_boot_time(stat: &str) -> Option<u64> {
 pub fn boot_time(stat: &str) -> Result<SystemTime, ProbeError> {
     parse_boot_time(stat)
         .and_then(|seconds| SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(seconds)))
-        .ok_or_else(|| ProbeError::Missing {
-            what: "no boot time in /proc/stat".to_owned(),
-        })
+        .ok_or(ProbeError::Missing(MissingFact::BootTime))
 }
 
 fn parse_desktops(value: &str) -> Vec<String> {

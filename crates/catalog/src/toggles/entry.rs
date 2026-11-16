@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use toolbox_plan::{ConfigReload, GroupName, PackageName, UnitName, text};
+use toolbox_plan::{ConfigReload, GroupName, PackageName, UnitName};
 
 use super::{Check, RawCheck, RawEntry, Requires, ToggleEntry, conflicts, extras, user_config};
 use crate::{EntryProblem, Problem, source};
@@ -180,7 +180,11 @@ fn texts(title: &str, description: &str) -> Result<(), Problem> {
     // A text may run over lines, nothing else hidden passes.
     [title, description]
         .into_iter()
-        .find(|shown| shown.chars().any(|ch| ch != '\n' && text::is_hidden(ch)))
+        .find(|shown| {
+            shown
+                .chars()
+                .any(|ch| ch != '\n' && toolbox_text::is_hidden(ch))
+        })
         .map_or(Ok(()), |shown| {
             Err(Problem::HiddenCharacter(shown.to_owned()))
         })

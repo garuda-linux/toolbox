@@ -29,6 +29,7 @@ use self::place::{Fit, place};
 use super::PANE_TITLE;
 use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::i18n::changes::sentence;
 
 /// Under the dialogs' layer, so a dialog's scrim covers the pill as it
@@ -54,14 +55,14 @@ pub struct Queued<'view> {
     pub console_open: bool,
 }
 
-fn pill_words(ctx: &Context, count: &str, running: bool) -> String {
+fn pill_words(ctx: &Context, count: usize, running: bool) -> String {
     let id = if running {
         "changes-running"
     } else {
         "changes-pill"
     };
 
-    i18n::text_with(ctx, id, &[("count", count)]).into_owned()
+    i18n::text_with(ctx, id, &[("count", Arg::from(count))]).into_owned()
 }
 
 /// In `band`, the room below the page, while the Console is closed.
@@ -106,7 +107,7 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     let count = queued.changes.len().to_string();
     let removes = queued.changes.iter().any(ChangeView::removes);
     let badge = badge(ui, &count);
-    let words = pill_words(&ctx, &count, queued.running);
+    let words = pill_words(&ctx, queued.changes.len(), queued.running);
     let label = format!("{count} {words}");
     badge.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Label, true, &label));
 
@@ -162,8 +163,7 @@ fn overlays(
     }
 
     if state.confirming == Some(UiCommand::ClearChanges) {
-        let count = list.len().to_string();
-        ask_to_clear(ctx, &count, &mut state.confirming, commands);
+        ask_to_clear(ctx, list.len(), &mut state.confirming, commands);
     }
 }
 
@@ -184,7 +184,7 @@ fn pill(
         ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
             ui.add_space(tokens.sizes.inset);
             badge(ui, &count_text);
-            let text = pill_words(&ctx, &count_text, queued.running);
+            let text = pill_words(&ctx, count, queued.running);
             ui.label(rich(ui, &text, Weight::SemiBold, BODY, tokens.text));
             ui.add_space(tokens.sizes.tight_gap);
             if queued.running && !queued.console_open {
@@ -272,7 +272,6 @@ fn popover(
 ) -> (f32, f32) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let count = changes.len().to_string();
 
     ui.set_width(tokens.sizes.popover_width);
     ui.name_pane(&i18n::text(&ctx, "pane-changes"));
@@ -318,12 +317,12 @@ fn popover(
     );
     ui.add_space(tokens.sizes.card_gap);
 
-    footer(ui, &count, held, commands);
+    footer(ui, changes.len(), held, commands);
     (scrolled.inner_rect.height(), scrolled.content_size.y)
 }
 
 /// Remove all at the left, Apply at the right.
-fn footer(ui: &mut Ui, count: &str, held: Option<&'static str>, commands: &CommandSender) {
+fn footer(ui: &mut Ui, count: usize, held: Option<&'static str>, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     ui.horizontal(|ui| {
         let remove_all = i18n::text(&ctx, "changes-remove-all-ask");
@@ -332,7 +331,7 @@ fn footer(ui: &mut Ui, count: &str, held: Option<&'static str>, commands: &Comma
         }
 
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-            let text = i18n::text_with(&ctx, "changes-apply-all", &[("count", count)]);
+            let text = i18n::text_with(&ctx, "changes-apply-all", &[("count", Arg::from(count))]);
             if apply_pill(ui, &text, held).clicked() {
                 commands.send(UiCommand::Apply);
             }
@@ -344,7 +343,7 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     let words = sentence(&ctx, &change.summary);
-    let remove = i18n::text_with(&ctx, "changes-remove", &[("change", &words)]);
+    let remove = i18n::text_with(&ctx, "changes-remove", &[("change", Arg::from(&words))]);
 
     split_row(
         ui,

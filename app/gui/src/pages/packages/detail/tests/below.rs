@@ -20,7 +20,7 @@ fn unfolded_files() -> Harness<'static, PageState<PackagesPage>> {
     let mut harness = showing(gimp_with(|info| {
         if let Some(installed) = &mut info.installed {
             installed.files = ["/usr/bin/gimp", "/usr/share/gimp/", "/usr/share/man/gimp.1"]
-                .map(str::to_owned)
+                .map(toolbox_text::plain)
                 .to_vec();
         }
     }));

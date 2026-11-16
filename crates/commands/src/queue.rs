@@ -61,7 +61,7 @@ pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut Out<'_>) -> E
     let system = spinner::while_reading(quiet || out.quiet(), || snapshot(&catalogs));
     let path = Paths::from_process().staged_changes_file();
 
-    let store = match store::open(runtime.handle(), path, out.paint()) {
+    let store = match store::open(runtime.handle(), path, out.settings()) {
         Ok(store) => store,
         Err(problem) => return Failed::Store(problem).say(out),
     };
@@ -262,7 +262,7 @@ fn add(args: &QueueAdd, context: &Context<'_>, out: &mut Out<'_>) -> Exit {
             catalogs,
             system: &build::LiveReads {
                 runtime,
-                color: out.settings().color,
+                settings: out.settings(),
             },
             aur,
         };
@@ -344,7 +344,7 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out<'_>) -> Ex
     };
 
     let reads = ready::HelperReads {
-        color: out.settings().color,
+        settings: out.settings(),
         aur,
     };
 
@@ -359,7 +359,7 @@ fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out<'_>) -> Ex
         confirm,
         None,
         runtime.handle(),
-        root::launcher(out.settings().color),
+        root::launcher(out.settings()),
         &mut Terminal {
             color: out.settings().color,
         },

@@ -5,7 +5,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-use super::ConfigFilePath;
+use super::{ConfigFilePath, UNCHANGED_WHY};
 use crate::procedure::{Builtin, Invocation};
 use crate::shown::Shown;
 
@@ -89,17 +89,21 @@ impl ConfigWrite {
     pub fn invocation(&self) -> Invocation {
         Invocation::Builtin(Builtin::WriteConfigFile(self.clone()))
     }
-}
 
-impl fmt::Display for ConfigWrite {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "write {} ({} bytes), the old one kept as /{}  # only when it did not change meanwhile",
+    /// The write as the Console shows it, without its note.
+    pub fn command(&self) -> String {
+        format!(
+            "write {} ({} bytes), the old one kept as /{}",
             self.path,
             self.content.as_str().len(),
             self.path.backup()
         )
+    }
+}
+
+impl fmt::Display for ConfigWrite {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}  # {UNCHANGED_WHY}", self.command())
     }
 }
 

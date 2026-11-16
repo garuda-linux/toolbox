@@ -13,6 +13,7 @@ use toolbox_guide::Image;
 
 use super::markdown::Reader;
 use crate::i18n;
+use crate::i18n::Arg;
 
 const OUTLINE: f32 = 1.0;
 const PLACEHOLDER_HEIGHT: f32 = 120.0;
@@ -32,7 +33,7 @@ pub(super) fn show(ui: &mut Ui, image: &Image, reader: &mut Reader<'_>) {
     if let Some(bytes) = shown {
         let width = OUTLINE.mul_add(-2.0, ui.available_width()).max(0.0);
         let size = shown_size(bytes, vec2(width, f32::INFINITY));
-        let name = i18n::text_with(ui.ctx(), "guide-enlarge", &[("alt", &image.alt)]);
+        let name = i18n::text_with(ui.ctx(), "guide-enlarge", &[("alt", Arg::from(&image.alt))]);
         let response = framed(ui, picture_key(&image.src, dark), bytes, size, &image.alt);
         response.widget_info(|| egui::WidgetInfo::labeled(Role::Button, true, &*name));
 

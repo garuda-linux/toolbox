@@ -92,7 +92,7 @@ fn package(text: &str) -> AurPackage {
     AurPackage {
         name: name(text),
         version: "1-1".to_owned(),
-        description: String::new(),
+        description: toolbox_text::plain(""),
         url: None,
         votes: 0,
         popularity: 0.0,

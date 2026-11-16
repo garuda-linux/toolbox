@@ -15,6 +15,7 @@ use toolbox_system::Probe;
 
 use crate::command::{AppCommand, CommandSender};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::snapshot::{FailedRead, Reading};
 
 /// Keeps the bar's room at the window's bottom while there is a dry run
@@ -173,7 +174,7 @@ fn failed_text(ctx: &Context, failed: &[FailedRead]) -> String {
         .collect::<Vec<_>>()
         .join(", ");
 
-    i18n::text_with(ctx, "status-probes-failed", &[("parts", &parts)]).into_owned()
+    i18n::text_with(ctx, "status-probes-failed", &[("parts", Arg::from(&parts))]).into_owned()
 }
 
 /// The reasons are system messages, too long for the bar. The button's
@@ -187,7 +188,12 @@ fn reasons_button(ui: &mut Ui, failed: &[FailedRead]) {
         .collect::<Vec<_>>()
         .join("\n");
 
-    let alt = i18n::text_with(&ctx, "status-probes-reasons", &[("reasons", &reasons)]);
+    let alt = i18n::text_with(
+        &ctx,
+        "status-probes-reasons",
+        &[("reasons", Arg::from(&reasons))],
+    );
+
     let button = icon_button(ui, icons::HELP_ABOUT, &alt);
 
     if button.has_focus() {

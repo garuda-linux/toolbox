@@ -16,6 +16,7 @@ use serde::Deserialize;
 use serde_json::{Map, Value};
 use toolbox_exec::{Environment, locate_program};
 use toolbox_plan::procedure::Program;
+use toolbox_text::OutsideText;
 
 use crate::command;
 use crate::error::ProbeError;
@@ -41,7 +42,7 @@ pub struct HealthIssue {
     pub level: HealthLevel,
     /// garuda-health's own text, English. Shown as program output, not
     /// translated.
-    pub message: String,
+    pub message: OutsideText,
     pub fix_available: bool,
 }
 
@@ -121,9 +122,9 @@ fn parse_health(report: &str) -> Result<Vec<HealthIssue>, ProbeError> {
         let entries: Vec<Entry> = serde_json::from_value(list).map_err(invalid)?;
 
         issues.extend(entries.into_iter().filter_map(|entry| {
-            let message = entry.description?.trim().to_owned();
+            let message = toolbox_text::plain(entry.description?.trim());
 
-            (!message.is_empty()).then(|| HealthIssue {
+            (!message.trim().is_empty()).then(|| HealthIssue {
                 level,
                 message,
                 fix_available: entry.fix_available.unwrap_or_default(),

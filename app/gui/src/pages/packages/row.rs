@@ -17,6 +17,7 @@ use super::{PackagesPage, remove};
 use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::{Initial, package_picture, picture_height, picture_slot};
 
@@ -224,7 +225,10 @@ where
     let name = i18n::text_with(
         ui.ctx(),
         "packages-action-name",
-        &[("action", text), ("name", row.package().as_str())],
+        &[
+            ("action", Arg::from(text)),
+            ("name", Arg::from(row.package().as_str())),
+        ],
     );
 
     ui.enabled_ui(!context.busy, |ui| named_pill_button(ui, text, kind, &name))

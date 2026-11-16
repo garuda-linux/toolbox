@@ -13,6 +13,7 @@ use toolbox_plan::LocaleName;
 
 use crate::command::LocaleCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::pages::setting_row::{Words, row, wide_control};
@@ -101,14 +102,14 @@ pub fn choice(ctx: &egui::Context, code: &str, language: &str, territory: &str) 
         return code.to_owned();
     }
 
-    let mut args = vec![("language", language)];
+    let mut args = vec![("language", Arg::from(language))];
     let id = if territory.is_empty() {
         "locales-system-choice"
     } else {
-        args.push(("territory", territory));
+        args.push(("territory", Arg::from(territory)));
         "locales-system-choice-territory"
     };
 
-    args.push(("code", code));
+    args.push(("code", Arg::from(code)));
     i18n::text_with(ctx, id, &args).into_owned()
 }

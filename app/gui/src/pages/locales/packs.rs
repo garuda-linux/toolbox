@@ -13,6 +13,7 @@ use toolbox_plan::PackageName;
 use super::list::{Line, line_row};
 use crate::command::LocaleCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::pages::toggles::control::{self, Setting};
@@ -80,7 +81,10 @@ pub fn rows(
                 let detail = i18n::text_with(
                     ctx,
                     "locales-pack-detail",
-                    &[("base", &shown.base), ("locale", &locale)],
+                    &[
+                        ("base", Arg::from(&shown.base)),
+                        ("locale", Arg::from(&locale)),
+                    ],
                 );
 
                 PackItem {
@@ -88,7 +92,7 @@ pub fn rows(
                     detail: detail.into_owned(),
                     installed: shown.installed,
                     on: shown.on,
-                    queued: !shown.queued.is_empty(),
+                    queued: shown.queued.is_some(),
                     package: row.pack.package.clone(),
                 }
             })

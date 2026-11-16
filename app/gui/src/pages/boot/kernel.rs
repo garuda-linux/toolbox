@@ -12,6 +12,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use super::menu::flipped;
 use super::{heading, queued, send};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row};
 
@@ -34,7 +35,7 @@ pub fn show(
             "boot-parameters-custom"
         };
 
-        let text = i18n::text_with(&ctx, id, &[("line", &line)]);
+        let text = i18n::text_with(&ctx, id, &[("line", Arg::from(&line))]);
         card(ui, |ui| {
             card_row(ui, true, |ui| {
                 let secondary = ui.tokens().secondary;
@@ -142,13 +143,22 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
 
     for item in items {
         if !page.removable(item) {
-            let kept = i18n::text_with(&ctx, "boot-parameter-kept", &[("parameter", item)]);
+            let kept = i18n::text_with(
+                &ctx,
+                "boot-parameter-kept",
+                &[("parameter", Arg::from(item))],
+            );
 
             kept_tag(ui, item, &kept);
             continue;
         }
 
-        let remove = i18n::text_with(&ctx, "boot-parameter-remove", &[("parameter", item)]);
+        let remove = i18n::text_with(
+            &ctx,
+            "boot-parameter-remove",
+            &[("parameter", Arg::from(item))],
+        );
+
         if removable_tag(ui, item, &remove).clicked() {
             send(context, Edit::RemoveParameter(item.clone()));
         }

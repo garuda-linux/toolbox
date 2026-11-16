@@ -262,3 +262,36 @@ fn a_clone_is_a_copy_the_queue_does_not_share() {
     assert_eq!(copy.len(), 2);
     assert_eq!(changes.len(), 1);
 }
+
+/// The planner orders changes by stage alone, so a second domain on a
+/// stage would fall back to an order nobody chose.
+#[test]
+fn the_registry_refuses_a_second_domain_at_the_same_stage() {
+    let refused = crate::Domains::default()
+        .with::<Chores>()
+        .and_then(crate::Domains::with::<BadSave>)
+        .err();
+
+    assert_eq!(
+        refused,
+        Some(crate::RegistryError::SharedStage(
+            Stage::REPOSITORIES.rank()
+        ))
+    );
+}
+
+/// Two domains giving one code would word two kinds of change alike.
+#[test]
+fn the_registry_refuses_a_second_domain_with_the_same_code() {
+    let refused = crate::Domains::default()
+        .with::<Packages>()
+        .and_then(crate::Domains::with::<BadSave>)
+        .err();
+
+    assert_eq!(
+        refused,
+        Some(crate::RegistryError::SharedCode(
+            SummaryCode::PackageInstall
+        ))
+    );
+}

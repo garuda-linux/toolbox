@@ -8,7 +8,7 @@ use crate::{ChangeSet, Snapshot, Toggle};
 fn unit(name: &str, active: ActiveState, file_state: FileState) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: format!("About {name}"),
+        description: toolbox_text::plain(&format!("About {name}")),
         active,
         sub_state: String::new(),
         file_state,

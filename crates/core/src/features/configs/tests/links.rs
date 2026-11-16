@@ -5,7 +5,7 @@ use std::collections::BTreeSet;
 
 use toolbox_plan::{ConfigFilePath, FetchRefusal};
 
-use super::super::{Found, Link, Listing, Row, Target, rows, target};
+use super::super::{Action, Found, Link, Listing, Row, Target, rows, target};
 use super::catalog;
 
 fn row(found: Found, id: &str) -> Row {
@@ -31,7 +31,7 @@ fn a_link_to_an_editable_file_is_edited_and_names_its_target() {
 
     assert_eq!(
         (linked.action, linked.admin, linked.link, linked.refusal),
-        ("edit", true, true, "")
+        (Some(Action::Edit), true, true, "")
     );
     assert_eq!(linked.path, "/etc/default/grub");
     assert_eq!(linked.target, "/etc/default/grub.real");
@@ -53,7 +53,7 @@ fn a_refused_link_offers_nothing_and_carries_the_reason() {
 
         assert_eq!(
             (linked.action, linked.admin, linked.link, linked.refusal),
-            ("", true, true, code)
+            (None, true, true, code)
         );
         assert_eq!(linked.target, "/usr/lib/os-release");
     }
@@ -70,7 +70,7 @@ fn a_plain_file_has_no_target() {
             plain.target.as_str(),
             plain.refusal
         ),
-        ("edit", false, "", "")
+        (Some(Action::Edit), false, "", "")
     );
 }
 

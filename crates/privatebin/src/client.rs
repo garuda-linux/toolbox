@@ -7,6 +7,7 @@ use std::fmt;
 
 use serde::Deserialize;
 pub use toolbox_https::RequestError;
+use toolbox_text::OutsideText;
 
 use crate::paste::{SealError, Secrets, seal};
 
@@ -56,7 +57,7 @@ pub enum UploadError {
     Transport(RequestError),
     /// The server said no, for example to a paste that is too large.
     #[error("the server refused the paste: {0}")]
-    Refused(String),
+    Refused(OutsideText),
     #[error("the server's answer is not understood")]
     BadAnswer,
 }
@@ -93,7 +94,9 @@ fn upload_with(
     let answer = transport
         .post(&format!("{SERVER}/"), &body)
         .map_err(|error| match error {
-            RequestError::Status(status) => UploadError::Refused(format!("status {status}")),
+            RequestError::Status(status) => {
+                UploadError::Refused(toolbox_text::plain(&format!("status {status}")))
+            }
             other @ (RequestError::NoAnswer(_)
             | RequestError::OtherHost(_)
             | RequestError::Unreadable(_)) => UploadError::Transport(other),
@@ -103,7 +106,10 @@ fn upload_with(
         serde_json::from_str(&answer).map_err(|_no_json| UploadError::BadAnswer)?;
 
     if answer.status != 0 {
-        return Err(UploadError::Refused(plain(&answer.message)));
+        return Err(UploadError::Refused(toolbox_text::plain_up_to(
+            &answer.message,
+            MAX_MESSAGE_CHARS,
+        )));
     }
 
     if !is_token(&answer.id, MAX_ID_CHARS) || !is_token(&answer.deletetoken, MAX_TOKEN_CHARS) {
@@ -127,14 +133,4 @@ fn is_token(text: &str, max: usize) -> bool {
         && text
             .chars()
             .all(|character| character.is_ascii_alphanumeric())
-}
-
-/// Drops hidden characters, such as bidi overrides that reorder the display,
-/// and cuts the message to one short line.
-fn plain(message: &str) -> String {
-    message
-        .chars()
-        .filter(|character| !toolbox_plan::text::is_hidden(*character))
-        .take(MAX_MESSAGE_CHARS)
-        .collect()
 }

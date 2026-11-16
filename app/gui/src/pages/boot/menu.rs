@@ -21,6 +21,7 @@ use super::{heading, queued, send};
 use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::pages::setting_row::{Words, row, switch_row, wide_control};
@@ -93,7 +94,9 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
             .collect();
 
         if !value.is_empty() && !listed {
-            let unlisted = i18n::text_with(&ctx, "boot-entry-unlisted", &[("entry", &value)]);
+            let unlisted =
+                i18n::text_with(&ctx, "boot-entry-unlisted", &[("entry", Arg::from(&value))]);
+
             rows.insert(0, (value.clone(), unlisted.into_owned()));
         }
 
@@ -307,7 +310,10 @@ fn label(ctx: &egui::Context, row: &EntryRow) -> String {
     i18n::text_with(
         ctx,
         "boot-entry-in",
-        &[("title", &row.title), ("parent", &row.parent)],
+        &[
+            ("title", Arg::from(&row.title)),
+            ("parent", Arg::from(&row.parent)),
+        ],
     )
     .into_owned()
 }

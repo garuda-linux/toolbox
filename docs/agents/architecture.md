@@ -59,7 +59,7 @@
 toolbox-gui (bin garuda-toolbox)
   ├─ toolbox-commands (the CLI) ─ toolbox-services, toolbox-cli, toolbox-guide, toolbox-aur
   ├─ toolbox-services ─ toolbox-core, toolbox-system, toolbox-exec, ...
-  ├─ toolbox-core ─ toolbox-catalog ─ toolbox-state ─ toolbox-plan
+  ├─ toolbox-core ─ toolbox-catalog ─ toolbox-state ─ toolbox-plan ─ toolbox-text
   ├─ toolbox-system ─ toolbox-exec ─ toolbox-pty, toolbox-fs
   ├─ toolbox-gui-kit ─ toolbox-terminal ─ toolbox-pty
   ├─ toolbox-privatebin, toolbox-news, toolbox-aur ─ toolbox-https
@@ -73,9 +73,11 @@ Link rules (check with `cargo tree -p <crate> --edges normal`):
 - Only `toolbox-gui` and `toolbox-gui-kit` link egui, so
   `cargo nextest run -p toolbox-commands` builds without it.
 - `toolbox-helper` links `toolbox-plan` and `toolbox-exec` only.
-- `toolbox-pty`, `toolbox-fs`, `toolbox-https` and `toolbox-calendar`
-  link nothing of the workspace. Every outside request goes through
-  `toolbox-https`, so the HTTPS rules live in one place.
+- `toolbox-pty`, `toolbox-fs`, `toolbox-https`, `toolbox-calendar` and
+  `toolbox-text` link nothing of the workspace. Every outside request goes
+  through `toolbox-https`, so the HTTPS rules live in one place.
+- `toolbox-text` sits below `toolbox-plan`, so every crate that keeps
+  outside text can hold it as `OutsideText`.
 - `toolbox-system` links neither `toolbox-https`, `toolbox-privatebin` nor
   `toolbox-log`. The upload, the public address and the pages' states are
   `toolbox-services`'s.
@@ -83,11 +85,12 @@ Link rules (check with `cargo tree -p <crate> --edges normal`):
 | Crate                | Holds                                                                                                 | Must not                                                   |
 | -------------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | `toolbox-plan`       | value objects, `RootAction`, `UserAction`, `Plan`, helper protocol, validation                        | do I/O                                                     |
+| `toolbox-text`       | `OutsideText`, made only by `plain`, `plain_up_to` and `keep_lines`, `is_hidden`                      | link anything but serde, do I/O                            |
 | `toolbox-state`      | snapshot parts, lsblk and dkms parsing, reports                                                       | do I/O, be linked by the helper                            |
 | `toolbox-pty`        | programs in a PTY, process group cancel, `strip_ansi`, `styled_lines`                                 | know actions or egui                                       |
 | `toolbox-terminal`   | the Console's emulator: bytes in, styled rows and cursor out, keys to bytes                           | know egui or the helper                                    |
 | `toolbox-guide`      | `docs/src` built in by `build.rs`, search, link and picture tests                                     | link egui, read files at run time                          |
-| `toolbox-exec`       | plan steps in PTYs, `capture`, `secure` (`openat2`), `preflight`, builtins                            | link a derive crate                                        |
+| `toolbox-exec`       | plan steps in PTYs, `capture`, `secure` (`openat2`), `preflight`, builtins                            | link a derive crate other than `thiserror`                 |
 | `toolbox-fs`         | atomic replace (`replace_at`, `replace`)                                                              | link anything but rustix                                   |
 | `toolbox-helper`     | `apply`, `read <kind>`, `logs <kind>`, `fetch <path>`                                                 | run free-form commands                                     |
 | `toolbox-system`     | ports to the running system as traits plus adapters, status probes                                    | decide, hold UI state, send a request outside the machine  |

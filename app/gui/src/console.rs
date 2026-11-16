@@ -98,7 +98,7 @@ impl Console {
                     .into_iter()
                     .map(|(id, lines)| StepRow {
                         id,
-                        command: without_comment(&lines.join(" ")).to_owned(),
+                        command: lines.join(" "),
                         state: StepState::Waiting,
                     })
                     .collect();
@@ -304,25 +304,4 @@ const fn finished(outcome: &protocol::Outcome) -> StepState {
             cleanup_failed: _,
         } => StepState::Failed(*cause),
     }
-}
-
-/// `command` without a trailing shell comment. Plans note why a step runs
-/// after `#`, which is for the log, not for the step's line.
-fn without_comment(command: &str) -> &str {
-    let mut quote = None;
-    let mut previous = ' ';
-    for (at, character) in command.char_indices() {
-        match (quote, character) {
-            (None, '\'' | '"') => quote = Some(character),
-            (Some(open), _) if open == character => quote = None,
-            (None, '#') if previous.is_whitespace() => {
-                return command.get(..at).map_or(command, str::trim_end);
-            }
-            _ => {}
-        }
-
-        previous = character;
-    }
-
-    command
 }

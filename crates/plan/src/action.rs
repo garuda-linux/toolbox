@@ -16,7 +16,7 @@ mod unit;
 mod update;
 mod user;
 
-pub use repair::{boot_loader_steps, describe_loader};
+pub use repair::{LoaderRefusal, boot_loader_steps, describe_loader, loader_why};
 use serde::{Deserialize, Serialize};
 pub use targets::{EmptyTargetList, TargetList};
 pub use unit::{UnitOperation, UnitScope};
@@ -365,5 +365,5 @@ fn on_units<const N: usize>(verbs: [&str; N], units: &TargetList<UnitName>) -> V
 }
 
 fn gpasswd(flag: &str, user: &UserName, group: &GroupName) -> Command {
-    Command::new(Program::Gpasswd).args([flag, user.as_str(), group.as_str()])
+    Command::new(Program::Gpasswd).args([flag, user.as_str(), "--", group.as_str()])
 }

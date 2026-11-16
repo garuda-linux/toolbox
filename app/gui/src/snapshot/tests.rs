@@ -80,7 +80,7 @@ async fn only_failed_probes_are_kept() {
         first_read(handle).await.failed,
         vec![FailedRead {
             probe: Probe::Units,
-            reason: "no bus".to_owned(),
+            reason: "no bus: fake source".to_owned(),
         }]
     );
 }

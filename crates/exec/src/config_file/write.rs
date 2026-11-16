@@ -50,25 +50,6 @@ impl From<io::Error> for WriteError {
     }
 }
 
-/// Replaces `path` below `root`, or the file its symlinks lead to, with
-/// `content`. The link itself stays as it is.
-///
-/// # Errors
-///
-/// Like [`write_real`], and [`WriteError::Refused`] for a symlink that
-/// leads to nothing the toolbox edits.
-#[cfg(test)]
-pub fn write_config_file(
-    root: &Path,
-    path: &ConfigFilePath,
-    content: &ConfigText,
-    original: Fingerprint,
-) -> Result<FileChange, WriteError> {
-    let real = resolve(root, path).map_err(ReadError::from)?;
-
-    write_real(root, &real.path, content, original)
-}
-
 /// Replaces the real path `path` below `root` with `content`. No symlink
 /// is followed, neither as the file nor as a folder on the way.
 ///

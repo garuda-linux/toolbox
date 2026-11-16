@@ -24,6 +24,20 @@ pub const MAX_QUERY_BYTES: usize = 8 << 20;
 /// waits for a lock or a device would hold the helper without an end.
 pub const QUERY_DEADLINE: Duration = Duration::from_mins(2);
 
+#[derive(Debug, thiserror::Error)]
+enum QueryError {
+    #[error("{command} printed more than {limit} bytes")]
+    TooLarge { command: Command, limit: usize },
+    #[error("{command} did not end within {seconds} seconds")]
+    TimedOut { command: Command, seconds: u64 },
+    #[error("{command} ended with {ended}: {errors}")]
+    Ended {
+        command: Command,
+        ended: String,
+        errors: String,
+    },
+}
+
 /// Runs `command` with `program` in place of its own (a parameter so
 /// tests can run a stand-in) and returns its output lines. A failure
 /// counts as nothing found only where [`empty_miss`] says so, otherwise
@@ -55,15 +69,16 @@ pub fn run(
 
     let captured = capture(&mut query, environment, &variables, &policy, cancel).map_err(
         |error| match error {
-            CaptureError::TooLarge => io::Error::other(format!(
-                "{command} printed more than {MAX_QUERY_BYTES} bytes"
-            )),
+            CaptureError::TooLarge => io::Error::other(QueryError::TooLarge {
+                command: command.clone(),
+                limit: MAX_QUERY_BYTES,
+            }),
             CaptureError::TimedOut => io::Error::new(
                 io::ErrorKind::TimedOut,
-                format!(
-                    "{command} did not end within {} seconds",
-                    QUERY_DEADLINE.as_secs()
-                ),
+                QueryError::TimedOut {
+                    command: command.clone(),
+                    seconds: QUERY_DEADLINE.as_secs(),
+                },
             ),
             other @ (CaptureError::Failed(_) | CaptureError::Missing | CaptureError::Cancelled) => {
                 other.into()
@@ -87,10 +102,11 @@ pub fn run(
         .code
         .map_or_else(|| "a signal".to_owned(), |code| format!("exit code {code}"));
 
-    Err(io::Error::other(format!(
-        "{command} ended with {ended}: {}",
-        captured.errors.trim()
-    )))
+    Err(io::Error::other(QueryError::Ended {
+        command: command.clone(),
+        ended,
+        errors: captured.errors.trim().to_owned(),
+    }))
 }
 
 /// Only exit code 1 with no output and no error text is a miss: pacman

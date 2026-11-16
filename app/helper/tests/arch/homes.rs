@@ -288,3 +288,60 @@ fn the_home_folder_of_root_stays() -> TestResult {
     assert!(Path::new("/root").is_dir());
     Ok(())
 }
+
+/// A folder of another user on the way to the new home could take a link
+/// before usermod moves the files, so it is refused. The account's own
+/// folder is fine. Only root can give a folder to another user, so this
+/// runs here and not in the unit tests.
+#[test]
+fn a_move_below_a_folder_of_another_user_fails_and_below_its_own_succeeds() -> TestResult {
+    if !in_test_image() {
+        return Ok(());
+    }
+
+    let name = "toolbox-test-user-owner";
+    forget(&[name], &[]);
+    fresh_homes()?;
+
+    assert_eq!(apply(vec![new_user(name, &[])?])?, [Outcome::Succeeded]);
+
+    let foreign = Path::new(HOMES).join("foreign");
+
+    fs::create_dir_all(&foreign)?;
+    std::os::unix::fs::chown(&foreign, Some(4713), None)?;
+
+    let run = helper(
+        &["apply"],
+        &request(Mode::Run, vec![moved(name, "foreign/moved", true)?])?,
+    )?;
+
+    assert!(
+        matches!(
+            outcomes(&run)?.as_slice(),
+            [Outcome::Failed {
+                cause: _,
+                cleanup_failed: _
+            }]
+        ),
+        "{}",
+        run.stdout
+    );
+    assert!(
+        printed(&run)?.contains("belongs to user id 4713"),
+        "{}",
+        printed(&run)?
+    );
+    assert_eq!(home_of(name)?, format!("/home/{name}"));
+
+    std::os::unix::fs::chown(&foreign, Some(uid_of(name)?), None)?;
+
+    assert_eq!(
+        apply(vec![moved(name, "foreign/moved", true)?])?,
+        [Outcome::Succeeded]
+    );
+    assert_eq!(home_of(name)?, format!("{HOMES}/foreign/moved"));
+
+    forget(&[name], &[]);
+    fs::remove_dir_all(HOMES).ok();
+    Ok(())
+}

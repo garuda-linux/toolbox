@@ -4,6 +4,7 @@
 
 use serde::{Deserialize, Serialize};
 use toolbox_plan::PackageName;
+use toolbox_text::OutsideText;
 
 /// One package of the AUR. Every text came from the AUR and was stripped
 /// of control characters and cut to a bounded length before it got here.
@@ -11,16 +12,16 @@ use toolbox_plan::PackageName;
 pub struct AurPackage {
     pub name: PackageName,
     pub version: String,
-    pub description: String,
+    pub description: OutsideText,
     /// The upstream website as the PKGBUILD names it, not checked.
-    pub url: Option<String>,
+    pub url: Option<OutsideText>,
     pub votes: u32,
     /// The AUR's own weighting of recent votes.
     pub popularity: f64,
     /// Seconds since the epoch when someone flagged it out of date.
     pub out_of_date: Option<i64>,
     /// `None` for an orphaned package.
-    pub maintainer: Option<String>,
+    pub maintainer: Option<OutsideText>,
     /// Seconds since the epoch.
     pub first_submitted: i64,
     /// Seconds since the epoch.
@@ -31,8 +32,8 @@ pub struct AurPackage {
     pub opt_depends: Vec<String>,
     pub provides: Vec<String>,
     pub conflicts: Vec<String>,
-    pub licenses: Vec<String>,
-    pub keywords: Vec<String>,
+    pub licenses: Vec<OutsideText>,
+    pub keywords: Vec<OutsideText>,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]

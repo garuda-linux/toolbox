@@ -27,6 +27,7 @@ use super::{PageContext, PageView, QueueShown};
 use crate::bootrepair::BootRepair;
 use crate::command::{AppCommand, BootRepairCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::refused::Shown as _;
 
@@ -98,8 +99,11 @@ impl PageView for BootRepairPage {
                         })
                         .unwrap_or_default();
 
-                    let detail =
-                        i18n::text_with(&ctx, "repair-missing-detail", &[("tools", &tools)]);
+                    let detail = i18n::text_with(
+                        &ctx,
+                        "repair-missing-detail",
+                        &[("tools", Arg::from(&tools))],
+                    );
 
                     empty_state(ui, icon, &text("repair-missing"), &detail)
                 }

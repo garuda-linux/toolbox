@@ -15,6 +15,7 @@ use toolbox_plan::LocaleEntry;
 
 use crate::command::LocaleCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::pages::toggles::control::{self, Setting};
@@ -67,33 +68,33 @@ pub fn rows(
     );
 
     cache.get(&[&filter.search], rest, || {
-        let (rows, shown) = locales(context.snapshot, context.changes);
+        let rows = locales(context.snapshot, context.changes);
         pick(&rows, filter)
             .into_iter()
-            .filter_map(|at| rows.get(at).zip(shown.get(at)))
-            .map(|(row, shown)| {
-                let title = if shown.language.is_empty() {
-                    shown.locale_code.clone()
-                } else if shown.territory.is_empty() {
-                    shown.language.clone()
+            .filter_map(|at| rows.get(at))
+            .map(|row| {
+                let code = row.entry.locale.as_str();
+                let language = row.name.as_ref().map_or("", |name| name.language.as_str());
+                let territory = row.name.as_ref().map_or("", |name| name.territory.as_str());
+                let title = if language.is_empty() {
+                    code.to_owned()
+                } else if territory.is_empty() {
+                    language.to_owned()
                 } else {
-                    i18n::text_with(
-                        ctx,
-                        "locales-title-territory",
-                        &[
-                            ("language", &shown.language),
-                            ("territory", &shown.territory),
-                        ],
-                    )
-                    .into_owned()
+                    let names = [
+                        ("language", Arg::from(language)),
+                        ("territory", Arg::from(territory)),
+                    ];
+
+                    i18n::text_with(ctx, "locales-title-territory", &names).into_owned()
                 };
 
                 // A code such as en_US.UTF-8 already names its charset.
-                let charset = shown
+                let charset = row
                     .unnamed_charset()
-                    .filter(|charset| !shown.locale_code.contains(charset));
+                    .filter(|charset| !code.contains(charset));
 
-                let detail_id = match (charset.is_some(), shown.system) {
+                let detail_id = match (charset.is_some(), row.system) {
                     (true, true) => "locales-detail-system",
                     (true, false) => "locales-detail",
                     (false, true) => "locales-detail-code-system",
@@ -104,8 +105,8 @@ pub fn rows(
                     ctx,
                     detail_id,
                     &[
-                        ("code", &shown.locale_code),
-                        ("charset", charset.unwrap_or_default()),
+                        ("code", Arg::from(code)),
+                        ("charset", Arg::from(charset.unwrap_or_default())),
                     ],
                 );
 
@@ -113,9 +114,9 @@ pub fn rows(
                     key: row.text.clone(),
                     title,
                     detail: detail.into_owned(),
-                    enabled: shown.enabled_now,
-                    on: shown.on,
-                    queued: !shown.queued.is_empty(),
+                    enabled: row.enabled,
+                    on: row.is_on(),
+                    queued: row.queued.is_some(),
                     entry: row.entry.clone(),
                 }
             })

@@ -17,6 +17,7 @@ close_fds.workspace = true
 log.workspace = true
 rustix = { workspace = true, features = ["process", "fs", "net", "termios", "stdio", "thread"] }
 signal-hook.workspace = true
+thiserror.workspace = true
 
 [dev-dependencies]
 toolbox-plan = { workspace = true, features = ["testing"] }

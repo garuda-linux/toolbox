@@ -63,6 +63,20 @@ fn an_unknown_page_or_action_is_refused_before_the_window_opens() {
     assert!(action.contains("inxi"), "{action}");
 }
 
+#[test]
+fn an_action_needs_a_page_and_a_selection_of_diagnostics() {
+    let no_page = opening(&window(None, Some("inxi")))
+        .unwrap_err()
+        .to_string();
+
+    let unknown = opening(&window(Some("diagnostics"), Some("nothing-here")))
+        .unwrap_err()
+        .to_string();
+
+    assert!(no_page.contains("inxi"), "{no_page}");
+    assert!(unknown.contains("nothing-here"), "{unknown}");
+}
+
 /// The second line is the hint, as `error_text` prints it.
 #[test]
 fn an_unknown_page_hints_at_the_list_on_a_line_of_its_own() {

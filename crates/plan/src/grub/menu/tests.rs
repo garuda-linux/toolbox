@@ -22,7 +22,13 @@ fn line(position: &str, title: &str, submenu: bool) -> (String, String, bool) {
 fn brief(menu: &GrubMenu) -> Vec<(String, String, bool)> {
     menu.entries
         .iter()
-        .map(|entry| (entry.position.clone(), entry.title.clone(), entry.submenu))
+        .map(|entry| {
+            (
+                entry.position.clone(),
+                entry.title.clone().into_string(),
+                entry.submenu,
+            )
+        })
         .collect()
 }
 
@@ -34,7 +40,8 @@ fn entry<'menu>(menu: &'menu GrubMenu, title: &str) -> &'menu MenuEntry {
 }
 
 fn found(menu: &GrubMenu, default: &str) -> Option<String> {
-    menu.find(default).map(|entry| entry.title.clone())
+    menu.find(default)
+        .map(|entry| entry.title.clone().into_string())
 }
 
 fn memtests(menu: &GrubMenu) -> usize {

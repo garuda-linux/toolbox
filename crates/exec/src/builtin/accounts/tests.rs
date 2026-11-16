@@ -184,8 +184,13 @@ fn missing_account_files_fail_the_guard() {
 #[test]
 fn a_home_move_needs_a_folder_that_does_not_exist_yet() {
     let dir = tempfile::tempdir().unwrap();
-    let free = Builtin::RequireFreeHome(HomeDirectory::new("/srv/people/ada").unwrap());
-    let taken = Builtin::RequireFreeHome(HomeDirectory::new("/srv/people/taken").unwrap());
+    let free =
+        Builtin::RequireFreeHome(user("ada"), HomeDirectory::new("/srv/people/ada").unwrap());
+
+    let taken = Builtin::RequireFreeHome(
+        user("ada"),
+        HomeDirectory::new("/srv/people/taken").unwrap(),
+    );
 
     fs::create_dir_all(dir.path().join("srv/people/taken")).unwrap();
 
@@ -202,26 +207,29 @@ fn a_home_move_needs_a_folder_that_does_not_exist_yet() {
 #[test]
 fn a_home_move_below_a_folder_everyone_may_write_is_refused() {
     let dir = tempfile::tempdir().unwrap();
-    let home = Builtin::RequireFreeHome(HomeDirectory::new("/srv/shared/ada").unwrap());
+    let home =
+        Builtin::RequireFreeHome(user("ada"), HomeDirectory::new("/srv/shared/ada").unwrap());
+
     let shared = dir.path().join("srv/shared");
 
     fs::create_dir_all(&shared).unwrap();
 
-    for (mode, refused) in [
-        (0o755, false),
-        (0o775, false),
-        (0o777, true),
-        (0o1777, true),
+    for (mode, refusal) in [
+        (0o755, None),
+        (0o775, Some("writable for its group")),
+        (0o777, Some("writable for everyone")),
+        (0o1777, Some("writable for everyone")),
     ] {
         fs::set_permissions(&shared, fs::Permissions::from_mode(mode)).unwrap();
 
         let (outcome, text) = run(dir.path(), &home);
 
-        if refused {
-            assert_failed(outcome);
-            assert!(text.contains("writable for everyone"), "{mode:o}: {text}");
-        } else {
-            assert_eq!(outcome, Outcome::Succeeded, "{mode:o}: {text}");
+        match refusal {
+            Some(said) => {
+                assert_failed(outcome);
+                assert!(text.contains(said), "{mode:o}: {text}");
+            }
+            None => assert_eq!(outcome, Outcome::Succeeded, "{mode:o}: {text}"),
         }
     }
 }

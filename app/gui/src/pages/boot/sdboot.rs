@@ -14,6 +14,7 @@ use super::{heading, note};
 use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row};
 
@@ -45,22 +46,22 @@ fn counts(ui: &mut Ui, menu: &SdBootMenu) {
     }
 
     let ctx = ui.ctx().clone();
-    let limit = MAX_ENTRIES.to_string();
+    let limit = MAX_ENTRIES;
     let mut sentences = Vec::new();
 
     if menu.skipped > 0 {
-        let count = menu.skipped.to_string();
+        let count = menu.skipped;
 
         sentences.push(i18n::text_with(
             &ctx,
             "boot-sdboot-skipped",
-            &[("count", &count)],
+            &[("count", Arg::from(count))],
         ));
     }
 
     if menu.cut > 0 {
-        let count = menu.cut.to_string();
-        let args = [("count", count.as_str()), ("limit", limit.as_str())];
+        let count = menu.cut;
+        let args = [("count", Arg::from(count)), ("limit", Arg::from(limit))];
 
         sentences.push(i18n::text_with(&ctx, "boot-sdboot-cut", &args));
     }

@@ -40,9 +40,6 @@
     "about-copied": {
       "string": "Copied to the clipboard."
     },
-    "about-help": {
-      "string": "Help"
-    },
     "about-help-wiki": {
       "string": "Garuda Linux wiki"
     },
@@ -4307,7 +4304,7 @@
       "string": "Remove the boot menu theme"
     },
     "change-grub-timeout": {
-      "string": "{name, plural, one {Show the boot menu for {name} second} other {Show the boot menu for {name} seconds}}"
+      "string": "{count, plural, one {Show the boot menu for {count} second} other {Show the boot menu for {count} seconds}}"
     },
     "change-hblock-on": {
       "string": "Turn on ad and tracker blocking (hBlock)"
@@ -4319,7 +4316,7 @@
       "string": "Move the home folder of {user} to {folder}"
     },
     "change-loader-timeout": {
-      "string": "{name, plural, one {Show the systemd-boot menu for {name} second} other {Show the systemd-boot menu for {name} seconds}}"
+      "string": "{count, plural, one {Show the systemd-boot menu for {count} second} other {Show the systemd-boot menu for {count} seconds}}"
     },
     "change-loader-timeout-menu": {
       "menu-force": {
@@ -4444,6 +4441,9 @@
     },
     "change-wifi-backend": {
       "string": "Run Wi-Fi through {name}"
+    },
+    "changes-inhibit-why": {
+      "string": "Changes are being applied"
     }
   },
   "cli": {
@@ -4609,6 +4609,9 @@
     },
     "cli-boot-not-usable": {
       "string": "`{value}` cannot be used here"
+    },
+    "cli-password-not-repeated": {
+      "string": "the password was not repeated"
     }
   },
   "common": {
@@ -5371,6 +5374,9 @@
     },
     "discover-category-utilities": {
       "string": "Utilities"
+    },
+    "discover-problem-reason": {
+      "string": "Some categories could not be loaded. The others are shown. {reason}"
     }
   },
   "guide": {
@@ -5893,6 +5899,9 @@
     },
     "kernels-set-default-name": {
       "string": "Set {kernel} as the default boot entry"
+    },
+    "kernels-version-note": {
+      "string": "{version} · {note}"
     }
   },
   "locales": {
@@ -6417,9 +6426,6 @@
     "network-none": {
       "string": "None"
     },
-    "network-not-available": {
-      "string": "Not available"
-    },
     "network-not-known": {
       "string": "Not known"
     },
@@ -6651,9 +6657,6 @@
     },
     "network-hardware-copy-line": {
       "string": "Copy this line"
-    },
-    "network-hardware-list": {
-      "string": "Network devices"
     },
     "network-hardware-reading": {
       "string": "Reading the devices…"
@@ -8256,6 +8259,9 @@
     },
     "toggles-problem-invalid": {
       "string": "An entry of a catalog file breaks a rule."
+    },
+    "toggles-problem-reason": {
+      "string": "The list could not be loaded. {reason}"
     }
   },
   "tweaks": {

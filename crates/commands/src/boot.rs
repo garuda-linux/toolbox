@@ -17,7 +17,6 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{
     BootCommand, BootKey, BootSet, DkmsBuild, DkmsCommand, KernelArgs, ParamCommand,
 };
-use toolbox_cli::output::ColorMode;
 use toolbox_core::features::boot::edit::{Edit, EditProblem, edit};
 use toolbox_core::features::boot::{Flag, shown};
 use toolbox_core::features::kernels::view::Listing;
@@ -35,7 +34,7 @@ use super::filter::print_all;
 use super::names::kernel_names;
 use super::out::failure;
 use super::{system, unavailable};
-use crate::out::Out;
+use crate::out::{Out, Settings};
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct BootView {
@@ -97,7 +96,7 @@ pub fn kernel_default(args: &KernelArgs, runtime: &Runtime, out: &mut Out<'_>) -
         return sdboot::kernel_default(args, &snapshot, runtime, out);
     }
 
-    let Some(menu) = read_menu(out.settings().color) else {
+    let Some(menu) = read_menu(out.settings()) else {
         return unavailable("the boot menu could not be read", out);
     };
 
@@ -314,8 +313,8 @@ fn path_or_none(value: &str) -> String {
     }
 }
 
-pub(super) fn read_menu(color: ColorMode) -> Option<GrubMenu> {
-    let source = SystemBootMenu::system(Arc::new(super::root::helper(color)));
+pub(super) fn read_menu(settings: Settings) -> Option<GrubMenu> {
+    let source = SystemBootMenu::system(Arc::new(super::root::helper(settings)));
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::Known(menu) => Some(menu),
         other @ (MenuRead::SdBoot(_)

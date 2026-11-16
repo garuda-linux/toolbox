@@ -1,5 +1,3 @@
-mod charset;
-
 use std::collections::{BTreeMap, BTreeSet};
 
 use super::{
@@ -20,12 +18,11 @@ use crate::test_support::{locale, locale_entry, package, packages};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 fn locales(snapshot: &Snapshot, changes: &ChangeSet, filter: &Filter) -> Vec<LocaleRow> {
-    let (rows, shown) = all_locales(snapshot, changes);
-    let mut kept: Vec<Option<LocaleRow>> = shown.into_iter().map(Some).collect();
+    let rows = all_locales(snapshot, changes);
 
     pick(&rows, filter)
         .into_iter()
-        .filter_map(|at| kept.get_mut(at)?.take())
+        .filter_map(|at| rows.get(at).cloned())
         .collect()
 }
 
@@ -101,7 +98,7 @@ fn rows_show_the_state_and_the_queued_wish() {
 
     assert!(locales_known(&snapshot));
     let rows = locales(&snapshot, &changes, &Filter::default());
-    let codes: Vec<&str> = rows.iter().map(|row| row.locale_code.as_str()).collect();
+    let codes: Vec<&str> = rows.iter().map(|row| row.entry.locale.as_str()).collect();
 
     assert_eq!(
         codes,
@@ -113,31 +110,26 @@ fn rows_show_the_state_and_the_queued_wish() {
             "sr_RS@latin"
         ]
     );
+
+    let english = &rows[0];
+    assert_eq!(english.entry.charset.as_str(), "UTF-8");
     assert_eq!(
-        rows.get(..2).unwrap(),
-        [
-            LocaleRow {
-                locale_code: "en_US.UTF-8".to_owned(),
-                charset: "UTF-8".to_owned(),
-                language: "American English".to_owned(),
-                territory: "United States".to_owned(),
-                enabled_now: true,
-                on: true,
-                queued: "",
-                system: true,
-            },
-            LocaleRow {
-                locale_code: "de_DE.UTF-8".to_owned(),
-                charset: "UTF-8".to_owned(),
-                language: String::new(),
-                territory: String::new(),
-                enabled_now: false,
-                on: true,
-                queued: "on",
-                system: false,
-            },
-        ]
+        english.name.as_ref().map(|name| name.language.as_str()),
+        Some("American English")
     );
+    assert_eq!(
+        (english.enabled, english.is_on(), english.system),
+        (true, true, true)
+    );
+    assert_eq!(english.queued, None);
+
+    let german = &rows[1];
+    assert_eq!(german.name, None);
+    assert_eq!(
+        (german.enabled, german.is_on(), german.system),
+        (false, true, false)
+    );
+    assert_eq!(german.queued, Some(Toggle::On));
 }
 
 #[test]
@@ -183,7 +175,7 @@ fn packs_follow_the_enabled_locales_and_count_what_is_missing() {
                 territory: "United States".to_owned(),
                 installed: false,
                 on: false,
-                queued: "",
+                queued: None,
             },
             LanguagePackRow {
                 pack: "hunspell-en_us".to_owned(),
@@ -193,7 +185,7 @@ fn packs_follow_the_enabled_locales_and_count_what_is_missing() {
                 territory: "United States".to_owned(),
                 installed: true,
                 on: true,
-                queued: "",
+                queued: None,
             },
         ]
     );
@@ -206,7 +198,7 @@ fn packs_follow_the_enabled_locales_and_count_what_is_missing() {
 
     assert_eq!(packs_missing(&snapshot, &queued), 1);
     assert_eq!(listed[0].pack, "firefox-i18n-de");
-    assert_eq!(listed[1].queued, "on");
+    assert_eq!(listed[1].queued, Some(Toggle::On));
     assert!(listed[1].on);
 }
 
@@ -230,7 +222,7 @@ fn the_search_finds_a_locale_by_its_language_name() {
     let listed = locales(&snapshot(), &ChangeSet::default(), &filter);
 
     assert_eq!(listed.len(), 1);
-    assert_eq!(listed[0].locale_code, "en_US.UTF-8");
+    assert_eq!(listed[0].entry.locale.as_str(), "en_US.UTF-8");
 }
 
 #[test]

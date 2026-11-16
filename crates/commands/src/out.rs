@@ -13,7 +13,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::Read;
 use toolbox_cli::output::{ColorEnv, ColorMode, Paint, Row, Style, json, style};
 
-pub use self::text::{Said, error_object, failure_text};
+pub use self::text::{Said, error_object, failure_text, warning_object};
 use self::text::{Sink, failed_text, lost_sink, said, sink};
 
 pub struct Listing<'a> {
@@ -219,11 +219,35 @@ pub fn say_error(out: &mut Out<'_>, text: &str) {
     }
 }
 
+/// A note the command goes on after, in the form `settings` asks for.
+/// A change's `--json` gets a JSON Lines `warning` on standard output, a
+/// read's `--json` an object on standard error, else a `warning:` line on
+/// standard error.
+pub fn warn(settings: Settings, text: &str) {
+    match settings.json {
+        Json::Lines => {
+            write!(io::stdout(), "{}", crate::apply::warning_line(text)).ok();
+        }
+        Json::Read => {
+            write!(io::stderr(), "{}", warning_object(text)).ok();
+        }
+        Json::Off => {
+            let paint = stderr_paint(settings.color);
+            writeln!(io::stderr(), "{}", paint.warning(text)).ok();
+        }
+    }
+}
+
+/// Painted by whether standard error is a terminal, which standard output
+/// may not be.
+pub fn stderr_paint(color: ColorMode) -> Paint {
+    Paint::new(style_on(color, io::stderr().is_terminal()))
+}
+
 /// `error: …` and its `hint: …` line, painted for standard error, as a
 /// start problem prints it before any command runs.
 pub fn error_text(text: &str) -> String {
-    let paint = Paint::new(style_on(ColorMode::Auto, io::stderr().is_terminal()));
-    said(paint, text, false)
+    said(stderr_paint(ColorMode::Auto), text, false)
 }
 
 /// `what` went wrong, as one line. A program's own words in `raw` follow

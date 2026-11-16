@@ -19,7 +19,7 @@ use toolbox_config::{
     Paths, RefreshInterval, Settings,
 };
 use toolbox_plan::SchemeId;
-use toolbox_services::catalogs::catalog_dir;
+use toolbox_services::catalogs::catalog_dir_from_env;
 
 use super::out::Listing;
 use crate::out::Out;
@@ -261,7 +261,7 @@ fn log_level(value: &str) -> Result<LogLevel, String> {
 }
 
 fn schemes() -> ColourSchemeCatalog {
-    let dir = catalog_dir(|key| std::env::var_os(key));
+    let dir = catalog_dir_from_env();
     ColourSchemeCatalog::load(&dir).unwrap_or_else(|error| {
         tracing::warn!("the colour schemes are unavailable: {error}");
         ColourSchemeCatalog::default()

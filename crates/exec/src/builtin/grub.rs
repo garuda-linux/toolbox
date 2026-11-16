@@ -14,6 +14,12 @@ use toolbox_plan::{GRUB_DEFAULTS, GRUB_DEFAULTS_BACKUP, GrubSettings};
 use super::FileChange;
 use crate::secure;
 
+#[derive(Debug, thiserror::Error)]
+enum GrubError {
+    #[error("the file does not exist, so GRUB is not the boot loader of this system")]
+    Missing,
+}
+
 /// Sets `settings` in `/etc/default/grub` below `root` and keeps the
 /// file as it was as `grub.bak` beside it.
 ///
@@ -25,10 +31,7 @@ use crate::secure;
 pub fn edit_grub_defaults(root: &Path, settings: &GrubSettings) -> io::Result<FileChange> {
     let (dir, name) = secure::open_parent(root, GRUB_DEFAULTS)?;
     let Some(current) = secure::read_text(&dir, name)? else {
-        return Err(io::Error::new(
-            io::ErrorKind::NotFound,
-            "the file does not exist, so GRUB is not the boot loader of this system",
-        ));
+        return Err(io::Error::new(io::ErrorKind::NotFound, GrubError::Missing));
     };
 
     let wanted = settings.apply(&current);

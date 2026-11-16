@@ -33,6 +33,7 @@ toolbox-services = { path = "crates/services" }
 toolbox-state = { path = "crates/state" }
 toolbox-system = { path = "crates/system" }
 toolbox-terminal = { path = "crates/terminal" }
+toolbox-text = { path = "crates/text" }
 
 alacritty_terminal = { version = "0.26", default-features = false }
 # Each alpm major targets one libalpm major (5: libalpm 16).
@@ -94,7 +95,7 @@ tracy-client-sys = { version = "=0.28.0", default-features = false }
 criterion = "0.8"
 futures-lite = { version = "2", default-features = false }
 log = { version = "0.4", features = ["std"] }
-jiff = { version = "0.2", default-features = false, features = ["std", "tz-system", "tzdb-zoneinfo"] }
+jiff = { version = "1.0", default-features = false, features = ["std", "tz-system", "tzdb-zoneinfo"] }
 # rustix has no stable signal disposition API.
 libc = "0.2"
 # `log`: the root helper has no tracing subscriber, only a `log` logger.

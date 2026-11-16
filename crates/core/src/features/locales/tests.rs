@@ -1,3 +1,4 @@
+mod charset;
 mod names;
 mod packs;
 mod restored;

@@ -4286,7 +4286,7 @@
       "string": "GRUB-Theme entfernen"
     },
     "change-grub-timeout": {
-      "string": "{name, plural, one {Bootmenü {name} Sekunde lang anzeigen} other {Bootmenü {name} Sekunden lang anzeigen}}"
+      "string": "{count, plural, one {Bootmenü {count} Sekunde lang anzeigen} other {Bootmenü {count} Sekunden lang anzeigen}}"
     },
     "change-hblock-on": {
       "string": "Werbe- und Trackerblocker einschalten (hBlock)"
@@ -4298,7 +4298,7 @@
       "string": "Home-Verzeichnis von {user} nach {folder} verschieben"
     },
     "change-loader-timeout": {
-      "string": "{name, plural, one {systemd-boot-Menü {name} Sekunde lang anzeigen} other {systemd-boot-Menü {name} Sekunden lang anzeigen}}"
+      "string": "{count, plural, one {systemd-boot-Menü {count} Sekunde lang anzeigen} other {systemd-boot-Menü {count} Sekunden lang anzeigen}}"
     },
     "change-loader-timeout-menu": {
       "menu-force": {

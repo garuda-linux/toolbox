@@ -211,7 +211,7 @@ fn a_refused_click_says_why_until_dismissed() {
             name: "nico".parse().unwrap(),
             uid: 1000,
             gid: 1000,
-            gecos: String::new(),
+            gecos: toolbox_text::plain(""),
             home: "/home/nico".to_owned(),
             shell: "/usr/bin/bash".to_owned(),
         }],

@@ -1,18 +1,12 @@
-//! The Chaotic-AUR mirrors of a self-test build's dry run. Release builds
-//! leave them out.
+//! The Chaotic-AUR mirrors of a dry run: `toolbox_plan::SAMPLE_MIRRORS`.
 
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
-use toolbox_plan::Mirrorlist;
+use toolbox_plan::{Mirrorlist, SAMPLE_MIRRORS};
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
-/// The self-test's Chaotic-AUR list. It never reaches a mirror.
-const SAMPLE_MIRRORS: &str = "# Chaotic-AUR mirrors of the self-test, never ranked\n\
-    Server = https://cdn-mirror.chaotic.cx/$repo/$arch\n\
-    Server = https://geo-mirror.chaotic.cx/$repo/$arch\n";
-
-/// Answers a fixed list at once, for the self-test:
+/// Answers the placeholder list at once, for a dry run:
 /// `rate-mirrors` would run for minutes and ask every mirror.
 #[derive(Clone, Copy, Debug)]
 pub struct SampleMirrors;

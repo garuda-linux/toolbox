@@ -197,6 +197,19 @@ impl AppCatalogs {
     }
 }
 
+impl Catalogs {
+    /// The catalogs of the folder [`catalog_dir_from_env`] finds.
+    pub fn from_env() -> Self {
+        Self::load(&catalog_dir_from_env())
+    }
+}
+
+/// The folder [`catalog_dir`] finds with the process environment as its
+/// lookup.
+pub fn catalog_dir_from_env() -> PathBuf {
+    catalog_dir(|key| std::env::var_os(key))
+}
+
 /// The folder with the catalogs, as [`catalog_dir_in`] finds it for this
 /// build.
 pub fn catalog_dir(lookup: impl Fn(&str) -> Option<OsString>) -> PathBuf {

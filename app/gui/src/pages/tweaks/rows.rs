@@ -4,6 +4,7 @@ mod text;
 use std::borrow::Cow;
 
 use egui::{Context, Ui};
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::Tally;
 use toolbox_core::features::tweaks::view::{Choices, Flip, Pick, Read};
 use toolbox_gui_kit::fonts::{BODY, Weight};
@@ -95,7 +96,7 @@ fn heights(ui: &Ui) -> RowHeights {
 /// What is on of the "Shell and network" switches `query` matches, and
 /// whether their state was read. Only ad blocking is one, a picker is
 /// never on and so counts for nothing.
-pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &str) -> (Tally, bool) {
+pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &Needle) -> (Tally, bool) {
     let shown = matches(ctx, Choice::Hblock.text_id(), query);
     let tally = Tally {
         on: usize::from(shown && choices.hblock.on),
@@ -110,7 +111,7 @@ pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &str) -> (Ta
 pub fn garuda_update_tally(
     ctx: &Context,
     flags: &[(GarudaUpdateFlag, Flip)],
-    query: &str,
+    query: &Needle,
 ) -> (Tally, bool) {
     let matching = flags
         .iter()
@@ -144,7 +145,7 @@ pub fn shell_network(
     ui: &mut Ui,
     context: &PageContext<'_>,
     choices: &Choices,
-    query: &str,
+    query: &Needle,
 ) -> bool {
     let ctx = ui.ctx().clone();
     let matching: Vec<Choice> = Choice::ALL
@@ -216,7 +217,7 @@ pub fn garuda_update(
     ui: &mut Ui,
     context: &PageContext<'_>,
     choices: &Choices,
-    query: &str,
+    query: &Needle,
 ) -> bool {
     let ctx = ui.ctx().clone();
     let Some(flags) = &choices.flags else {
@@ -288,7 +289,7 @@ fn named<T>(pick: &Pick<T>, entry: impl Fn(&T) -> (String, TweakCommand)) -> Vec
 fn pick_row<T>(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (glyph, id, query): (Icon, &str, &str),
+    (glyph, id, query): (Icon, &str, &Needle),
     pick: &Pick<T>,
     entries: &[Entry],
 ) {
@@ -348,7 +349,7 @@ fn pick_row<T>(
 fn flip_row(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (glyph, id, state, query): (Icon, &str, &RowState, &str),
+    (glyph, id, state, query): (Icon, &str, &RowState, &Needle),
     flip: Flip,
     command: impl Fn(bool) -> TweakCommand,
 ) {

@@ -17,6 +17,16 @@ use toolbox_plan::lines::lossy;
 /// up: LVM on LUKS on RAID on partitions is four.
 const MAX_STACK: usize = 8;
 
+#[derive(Debug, thiserror::Error)]
+enum DiskError {
+    #[error("a device folder without a name")]
+    NoName,
+    #[error("a partition without a disk")]
+    NoDisk,
+    #[error("the devices are stacked too deep")]
+    TooDeep,
+}
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct DeviceNumber {
     pub major: u32,
@@ -120,7 +130,7 @@ fn collect_disks(folder: &Path, depth: usize, found: &mut BTreeSet<String>) -> i
             .file_name()
             .and_then(|name| name.to_str())
             .map(str::to_owned)
-            .ok_or_else(|| io::Error::other("a device folder without a name"))
+            .ok_or_else(|| io::Error::other(DiskError::NoName))
     };
 
     match kind_of(folder)? {
@@ -130,13 +140,13 @@ fn collect_disks(folder: &Path, depth: usize, found: &mut BTreeSet<String>) -> i
         Kind::Partition => {
             let disk = folder
                 .parent()
-                .ok_or_else(|| io::Error::other("a partition without a disk"))?;
+                .ok_or_else(|| io::Error::other(DiskError::NoDisk))?;
 
             found.insert(name_of(disk)?);
         }
         Kind::Stacked => {
             let Some(depth) = depth.checked_sub(1) else {
-                return Err(io::Error::other("the devices are stacked too deep"));
+                return Err(io::Error::other(DiskError::TooDeep));
             };
 
             for below in slaves(folder)? {

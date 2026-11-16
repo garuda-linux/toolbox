@@ -151,3 +151,18 @@ fn a_relative_home_counts_as_none() {
     assert_eq!(paths.home(), PathBuf::from("/root"));
     assert_eq!(paths.own_state_dir(), None);
 }
+
+#[test]
+fn a_cache_folder_counts_as_own_only_when_named() {
+    let cached = Paths::from_env(env(&[("XDG_CACHE_HOME", "/cache")]));
+
+    assert_eq!(
+        cached.own_cache_dir(),
+        Some(PathBuf::from("/cache/garuda-toolbox"))
+    );
+    assert_eq!(
+        Paths::from_env(env(&[("XDG_CACHE_HOME", "cache")])).own_cache_dir(),
+        None
+    );
+    assert_eq!(Paths::from_env(env(&[])).own_cache_dir(), None);
+}

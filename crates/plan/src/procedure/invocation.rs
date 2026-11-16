@@ -2,7 +2,7 @@
 
 use std::fmt;
 
-use super::{Builtin, Command};
+use super::{Builtin, Command, Shown};
 use crate::SecretInput;
 use crate::protocol::Leftover;
 
@@ -45,25 +45,54 @@ pub enum Invocation {
 
 impl fmt::Display for Invocation {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.write_command(f, Shown::WithNotes)?;
+        self.why().map_or(Ok(()), |why| write!(f, "  # {why}"))
+    }
+}
+
+impl Invocation {
+    /// The part's command as the Console shows it, without its note.
+    pub fn command(&self) -> String {
+        fmt::from_fn(|out| self.write_command(out, Shown::Commands)).to_string()
+    }
+
+    /// Why the part runs, after `#` in the log and on the Review page.
+    pub const fn why(&self) -> Option<&'static str> {
+        match self {
+            Self::RunWithTargetsFrom { query: _, run: _ } => Some("again until it prints nothing"),
+            Self::Always(_)
+            | Self::Cleanup {
+                command: _,
+                leftover: _,
+            } => Some("always, even after a failure"),
+            Self::Feed {
+                command: _,
+                input: _,
+            } => Some("the secret arrives on its standard input"),
+            Self::Run(_)
+            | Self::RunUnlessItRemovesProtected { preview: _, run: _ }
+            | Self::Builtin(_) => None,
+        }
+    }
+
+    /// A builtin's own note stays only with [`Shown::WithNotes`].
+    fn write_command(&self, out: &mut fmt::Formatter<'_>, shown: Shown) -> fmt::Result {
         match self {
             // The preview changes nothing, so the command shown is what runs.
             Self::Run(command)
             | Self::RunUnlessItRemovesProtected {
                 preview: _,
                 run: command,
-            } => command.fmt(f),
-            Self::RunWithTargetsFrom { query, run } => {
-                write!(f, "{run} $({query})  # again until it prints nothing")
             }
-            Self::Builtin(builtin) => builtin.fmt(f),
-            Self::Always(command)
+            | Self::Always(command)
             | Self::Cleanup {
                 command,
                 leftover: _,
-            } => write!(f, "{command}  # always, even after a failure"),
-            Self::Feed { command, input: _ } => {
-                write!(f, "{command}  # the secret arrives on its standard input")
             }
+            | Self::Feed { command, input: _ } => fmt::Display::fmt(command, out),
+            Self::RunWithTargetsFrom { query, run } => write!(out, "{run} $({query})"),
+            Self::Builtin(builtin) if shown == Shown::WithNotes => fmt::Display::fmt(builtin, out),
+            Self::Builtin(builtin) => builtin.write_command(out, shown),
         }
     }
 }

@@ -69,7 +69,7 @@ pub fn user(name: &str, uid: u32, gid: u32) -> User {
         name: user_name(name),
         uid,
         gid,
-        gecos: String::new(),
+        gecos: toolbox_text::plain(""),
         home: format!("/home/{name}"),
         shell: "/usr/bin/bash".to_owned(),
     }

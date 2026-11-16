@@ -3,8 +3,7 @@ use std::collections::BTreeSet;
 use toolbox_plan::UnitName;
 
 use super::{
-    ENABLED, FailedUnitSource as _, MASKED, Systemctl, UnitSource as _, list_args, parse_failed,
-    parse_listed,
+    FailedUnitSource as _, Systemctl, UnitSource as _, list_args, parse_failed, parse_listed,
 };
 use crate::ProbeError;
 use crate::test_support::{fake_program, on_path};
@@ -41,16 +40,16 @@ fn user_enabled() -> BTreeSet<UnitName> {
 
 #[test]
 fn the_first_column_names_the_unit() {
-    let enabled = parse_listed(LISTED_ENABLED, ENABLED);
+    let listed = parse_listed(LISTED_ENABLED);
 
-    assert_eq!(enabled.len(), 51);
-    assert!(enabled.is_superset(&units(&[
+    assert_eq!(listed.enabled.len(), 51);
+    assert!(listed.enabled.is_superset(&units(&[
         "getty@.service",
         "sshd.service",
         "systemd-userdbd.socket",
         "remote-fs.target",
     ])));
-    assert_eq!(parse_listed(LISTED_USER_ENABLED, ENABLED), user_enabled());
+    assert_eq!(parse_listed(LISTED_USER_ENABLED).enabled, user_enabled());
 }
 
 /// The Lima `enabled-runtime` listing and made-up broken lines in front of
@@ -67,15 +66,31 @@ fn odd_lines_are_skipped() {
          {LISTED_USER_ENABLED}"
     );
 
-    assert_eq!(parse_listed(&output, ENABLED), user_enabled());
+    assert_eq!(parse_listed(&output).enabled, user_enabled());
+}
+
+/// Two real listings stacked, and each row keeps its own state.
+#[test]
+fn one_listing_splits_enabled_from_masked() {
+    let output = format!("{LISTED_ENABLED}{LISTED_MASKED}");
+    let listed = parse_listed(&output);
+
+    assert_eq!(listed.enabled, parse_listed(LISTED_ENABLED).enabled);
+    assert_eq!(
+        listed.masked,
+        units(&[
+            "systemd-firstboot.service",
+            "toolbox-fixture-masked.service"
+        ])
+    );
 }
 
 #[test]
 fn a_missing_program_is_unavailable() {
     let systemctl = Systemctl::with_program("toolbox-system-no-such-program");
 
-    assert_eq!(systemctl.enabled_units(), Err(ProbeError::Unavailable));
-    assert_eq!(systemctl.enabled_user_units(), Err(ProbeError::Unavailable));
+    assert_eq!(systemctl.system_unit_files(), Err(ProbeError::Unavailable));
+    assert_eq!(systemctl.user_unit_files(), Err(ProbeError::Unavailable));
 }
 
 #[test]
@@ -84,11 +99,11 @@ fn a_failing_program_is_a_failure() {
     let systemctl = Systemctl::with_program(program);
 
     assert!(matches!(
-        systemctl.enabled_units(),
+        systemctl.system_unit_files(),
         Err(error) if error.is_failure()
     ));
     assert!(matches!(
-        systemctl.enabled_user_units(),
+        systemctl.user_unit_files(),
         Err(error) if error.is_failure()
     ));
 }
@@ -98,8 +113,8 @@ fn a_failing_program_is_a_failure() {
 #[test]
 fn real_systemctl_answers_or_is_unavailable() {
     let systemctl = Systemctl::new();
-    let system = systemctl.enabled_units();
-    let user = systemctl.enabled_user_units();
+    let system = systemctl.system_unit_files();
+    let user = systemctl.user_unit_files();
 
     if on_path("systemctl") {
         assert_ne!(system, Err(ProbeError::Unavailable));
@@ -120,67 +135,68 @@ fn masked_units_are_read_the_same_way() {
     );
 
     assert_eq!(
-        parse_listed(&output, MASKED),
+        parse_listed(&output).masked,
         units(&[
             "systemd-firstboot.service",
             "toolbox-fixture-masked.service"
         ])
     );
     assert_eq!(
-        parse_listed(LISTED_USER_MASKED, MASKED),
+        parse_listed(LISTED_USER_MASKED).masked,
         units(&["toolbox-fixture-user.service"])
     );
 }
 
 #[test]
-fn masks_need_a_working_systemctl_too() {
+fn unit_files_need_a_working_systemctl_too() {
     let (_folder, program) = fake_program("", "Failed to connect to bus", 1);
     let missing = Systemctl::with_program("toolbox-system-no-such-program");
     let failing = Systemctl::with_program(program);
 
-    assert_eq!(missing.masked_units(), Err(ProbeError::Unavailable));
-    assert_eq!(missing.masked_user_units(), Err(ProbeError::Unavailable));
-    assert!(matches!(failing.masked_units(), Err(error) if error.is_failure()));
+    assert_eq!(missing.system_unit_files(), Err(ProbeError::Unavailable));
+    assert_eq!(missing.user_unit_files(), Err(ProbeError::Unavailable));
+    assert!(matches!(failing.system_unit_files(), Err(error) if error.is_failure()));
     assert!(matches!(
-        failing.masked_user_units(),
+        failing.user_unit_files(),
         Err(error) if error.is_failure()
     ));
 }
 
 #[test]
-fn a_fake_systemctl_is_asked_for_masked_units() {
+fn a_fake_systemctl_gives_both_states_per_scope() {
     let (_folder, program) = fake_program(LISTED_USER_MASKED, "", 0);
     let systemctl = Systemctl::with_program(program);
-    let masked = units(&["toolbox-fixture-user.service"]);
 
-    assert_eq!(
-        systemctl.masked_units().map(|listed| listed.0),
-        Ok(masked.clone())
-    );
-    assert_eq!(
-        systemctl.masked_user_units().map(|listed| listed.0),
-        Ok(masked)
-    );
+    let system = systemctl.system_unit_files().unwrap();
+    assert_eq!(system.masked.0, units(&["toolbox-fixture-user.service"]));
+    assert!(system.enabled.0.is_empty());
+
+    let user = systemctl.user_unit_files().unwrap();
+    assert_eq!(user.masked.0, units(&["toolbox-fixture-user.service"]));
 }
 
 #[test]
-fn the_listing_asks_systemctl_for_one_state_only() {
+fn the_listing_asks_systemctl_once_per_scope_for_both_states() {
     assert_eq!(
-        list_args(&["--user"], &format!("--state={MASKED}")),
+        list_args(&[]),
         [
-            "--user",
             "list-unit-files",
-            "--state=masked",
+            "--state=enabled,masked",
             "--no-legend",
             "--no-pager",
             "--plain"
         ]
     );
     assert_eq!(
-        list_args(&[], &format!("--state={ENABLED}"))
-            .first()
-            .copied(),
-        Some("list-unit-files")
+        list_args(&["--user"]),
+        [
+            "--user",
+            "list-unit-files",
+            "--state=enabled,masked",
+            "--no-legend",
+            "--no-pager",
+            "--plain"
+        ]
     );
 }
 
@@ -208,19 +224,17 @@ fn the_failed_units_come_from_systemctl() {
     );
 }
 
-/// The Lima masked listing with its lines removed. systemctl prints nothing
-/// and exits 1 when no unit has the state (systemd 261.3 for
-/// `--state=masked-runtime`), which is an empty list and not a failure.
+/// systemctl prints nothing and exits 1 when no unit has either state (systemd
+/// 261.3 for `--state=masked-runtime`), which is an empty listing and not a
+/// failure.
 #[test]
 fn a_listing_without_a_matching_unit_is_empty() {
     let (_folder, program) = fake_program("", "", 1);
+    let systemctl = Systemctl::with_program(program);
 
-    assert_eq!(
-        Systemctl::with_program(program)
-            .masked_units()
-            .map(|masked| masked.0),
-        Ok(BTreeSet::new())
-    );
+    let system = systemctl.system_unit_files().unwrap();
+    assert!(system.enabled.0.is_empty());
+    assert!(system.masked.0.is_empty());
 }
 
 /// The user scope without its bus exits 1 and says why on stderr.
@@ -229,7 +243,7 @@ fn a_failure_that_names_its_reason_stays_one() {
     let (_folder, program) = fake_program("", "Failed to connect to user scope bus", 1);
 
     assert!(matches!(
-        Systemctl::with_program(program).masked_user_units(),
+        Systemctl::with_program(program).user_unit_files(),
         Err(error) if error.is_failure()
     ));
 }

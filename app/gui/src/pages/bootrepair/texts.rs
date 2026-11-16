@@ -12,7 +12,7 @@ use crate::i18n;
 pub fn system_line(system: &System) -> String {
     line([
         Some(system.device().to_owned()),
-        Some(system.label.clone()),
+        Some(system.label.to_string()),
         (system.size > 0).then(|| size(system.size)),
         Some(system.file_system.clone()),
     ])

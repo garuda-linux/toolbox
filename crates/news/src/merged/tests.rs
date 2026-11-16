@@ -13,7 +13,7 @@ impl NewsSource for Fixed {
 
 fn post(title: &str, published: Option<i64>, source: Source) -> Post {
     Post {
-        title: title.to_owned(),
+        title: toolbox_text::plain(title),
         link: None,
         published,
         source,

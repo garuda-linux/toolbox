@@ -3,10 +3,21 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
 
-use super::{ProbeError, Stop, from_io};
+use super::{MissingFact, ProbeError, Stop, from_io};
 
 fn json() -> Arc<serde_json::Error> {
     Arc::new(serde_json::from_str::<u8>("x").unwrap_err())
+}
+
+#[test]
+fn a_missing_fact_names_its_source() {
+    assert_eq!(
+        ProbeError::Missing(MissingFact::UserId {
+            path: PathBuf::from("/proc/self/status"),
+        })
+        .reason(),
+        Some("/proc/self/status names no user id".to_owned())
+    );
 }
 
 #[test]
@@ -69,7 +80,10 @@ fn failures_are_equal_when_of_one_kind_and_text() {
     assert_eq!(parse("ip"), parse("ip"));
     assert_ne!(parse("ip"), parse("health"));
     assert_ne!(
-        ProbeError::fake("ip: expected value at line 1 column 1"),
+        ProbeError::Io {
+            what: "ip".to_owned(),
+            error: Arc::new(io::Error::other(json().to_string())),
+        },
         parse("ip"),
         "the same words of another kind"
     );

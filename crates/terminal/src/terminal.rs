@@ -3,6 +3,7 @@
 #[cfg(test)]
 mod tests;
 
+mod osc;
 mod scroll;
 mod select;
 
@@ -98,6 +99,7 @@ impl Timeout for Unsynchronized {
 pub struct Terminal {
     term: Term<Outbox>,
     parser: Processor<Unsynchronized>,
+    osc: osc::Tracker,
     outbox: Outbox,
     size: TerminalSize,
 }
@@ -118,19 +120,33 @@ impl Terminal {
         Self {
             term,
             parser: Processor::new(),
+            osc: osc::Tracker::default(),
             outbox,
             size,
         }
     }
 
     /// Parses output of the program. Split escape sequences and UTF-8
-    /// characters across calls are fine.
+    /// characters across calls are fine. An operating system command string
+    /// past its limit is cancelled, as the parser keeps it otherwise without
+    /// end.
     pub fn feed(&mut self, bytes: &[u8]) {
         if bytes.is_empty() {
             return;
         }
 
-        self.parser.advance(&mut self.term, bytes);
+        let mut kept_from = 0;
+        for (index, &byte) in bytes.iter().enumerate() {
+            if self.osc.step(byte) == osc::Step::Overlong {
+                let kept = bytes.get(kept_from..=index).unwrap_or_default();
+                self.parser.advance(&mut self.term, kept);
+                self.parser.advance(&mut self.term, &[osc::CAN]);
+                kept_from = index + 1;
+            }
+        }
+
+        let rest = bytes.get(kept_from..).unwrap_or_default();
+        self.parser.advance(&mut self.term, rest);
     }
 
     /// [`Self::feed`] for output that arrived as text, such as the

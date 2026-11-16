@@ -1,3 +1,5 @@
+mod failed;
+mod files;
 mod stale;
 mod stored;
 
@@ -12,7 +14,7 @@ use parking_lot::Mutex;
 use super::{Cache, Clock};
 use crate::dump::tests::{DUMP, gzipped, unpacked};
 use crate::transport::{Answer, Transport, Validators};
-use crate::{AurError, AurSource as _, DUMP_URL, RequestError};
+use crate::{AurError, AurSource as _, DUMP_URL, DownloadError, DumpError, RequestError};
 
 const DAY: i64 = 24 * 60 * 60;
 const START: i64 = 1_700_000_000;
@@ -187,7 +189,12 @@ fn a_failure_also_waits_a_day() {
     let clock = FakeClock::at(START);
     let cache = cache(folder.path(), &transport, &clock);
 
-    assert_eq!(cache.index(), Err(AurError::Download("offline".to_owned())));
+    assert_eq!(
+        cache.index(),
+        Err(AurError::Download(DownloadError::Request(
+            RequestError::NoAnswer("offline".to_owned())
+        )))
+    );
 
     clock.set(START + DAY - 1);
     assert_eq!(cache.index(), Err(AurError::Waiting { next: START + DAY }));
@@ -275,7 +282,12 @@ fn an_unreadable_dump_is_a_failed_attempt() {
     let clock = FakeClock::at(START);
     let cache = cache(folder.path(), &transport, &clock);
 
-    assert!(matches!(cache.index(), Err(AurError::Download(_))));
+    assert!(matches!(
+        cache.index(),
+        Err(AurError::Download(DownloadError::Dump(
+            DumpError::Malformed(_)
+        )))
+    ));
     assert_eq!(cache.index(), Err(AurError::Waiting { next: START + DAY }));
     assert_eq!(transport.sent().len(), 1);
 }
@@ -373,23 +385,4 @@ fn two_callers_at_once_make_one_request() {
     });
 
     assert_eq!(transport.sent().len(), 1);
-}
-
-#[test]
-fn the_files_are_private() {
-    use std::os::unix::fs::PermissionsExt as _;
-
-    let folder = tempfile::tempdir().unwrap();
-    let transport = Fake::new([Scripted::Fresh(one(), Validators::default())]);
-    let clock = FakeClock::at(START);
-    cache(folder.path(), &transport, &clock).index().unwrap();
-
-    for name in ["index.json", "meta.json"] {
-        let mode = std::fs::metadata(folder.path().join(name))
-            .unwrap()
-            .permissions()
-            .mode();
-
-        assert_eq!(mode & 0o777, 0o600, "{name}");
-    }
 }

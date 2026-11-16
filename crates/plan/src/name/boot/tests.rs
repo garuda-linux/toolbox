@@ -152,6 +152,19 @@ fn risky_kernel_parameters_are_known_by_their_key() {
         "module.sig_enforce=0",
         "selinux=0",
         "apparmor=0",
+        "rdinit=/bin/sh",
+        "rd.shell",
+        "rd.emergency",
+        "rd.rescue",
+        "rd.systemd.unit=emergency.target",
+        "rescue",
+        "single",
+        "emergency",
+        "s",
+        "S",
+        "1",
+        "systemd.debug_shell=1",
+        "module.sig-enforce=0",
     ] {
         assert!(KernelParameter::new(risky).unwrap().is_risky(), "{risky}");
     }
@@ -169,6 +182,11 @@ fn risky_kernel_parameters_are_known_by_their_key() {
         "selinux=1",
         "apparmor=1",
         "security=apparmor",
+        "single_user",
+        "rd.shellx",
+        "rd_shell",
+        "root=/dev/s",
+        "quiet=s",
     ] {
         assert!(!KernelParameter::new(plain).unwrap().is_risky(), "{plain}");
     }

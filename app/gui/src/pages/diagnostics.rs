@@ -24,6 +24,7 @@ use super::{PageContext, PageView};
 use crate::command::DiagnosticsCommand;
 use crate::diagnostics::Diagnostics;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::share::view::{self as share, Question, ShareView, Subject};
 
 #[derive(Debug, Default)]
@@ -139,7 +140,8 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let page = context.service::<Diagnostics>().page();
     let selection = name(&ctx, &page.selection);
-    let named = |id: &str| i18n::text_with(&ctx, id, &[("name", &selection)]).into_owned();
+    let named =
+        |id: &str| i18n::text_with(&ctx, id, &[("name", Arg::from(&selection))]).into_owned();
 
     match page.state {
         State::Idle => {}
@@ -148,11 +150,15 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
                 named("diagnostics-collecting")
             } else {
                 let part = name(&ctx, &page.part);
-                let (step, count) = (page.step.to_string(), Collector::ALL.len().to_string());
+                let (step, count) = (page.step, Collector::ALL.len());
                 i18n::text_with(
                     &ctx,
                     "diagnostics-collecting-step",
-                    &[("name", &part), ("step", &step), ("count", &count)],
+                    &[
+                        ("name", Arg::from(&part)),
+                        ("step", Arg::from(step)),
+                        ("count", Arg::from(count)),
+                    ],
                 )
                 .into_owned()
             };
@@ -183,7 +189,10 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
             let text = i18n::text_with(
                 &ctx,
                 "diagnostics-failed",
-                &[("name", &selection), ("reason", &page.problem)],
+                &[
+                    ("name", Arg::from(&selection)),
+                    ("reason", Arg::from(&page.problem)),
+                ],
             );
 
             banner(ui, Tone::Error, &text, &[]);

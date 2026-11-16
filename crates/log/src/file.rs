@@ -138,8 +138,14 @@ impl FileLogger {
         match state.sink.as_ref().map(|sink| sink.size >= MAX_SIZE) {
             Some(true) => {
                 state.sink = None;
-                rotate(&path);
-                state.reopen(&path);
+
+                // A failed rotation leaves the full file in place, so it
+                // waits like a failed open instead of trying on every line.
+                if rotate(&path) {
+                    state.reopen(&path);
+                } else {
+                    state.failed = Some(Instant::now());
+                }
             }
             Some(false) => {}
             None => {
@@ -238,8 +244,9 @@ fn open_sink(path: &Path) -> io::Result<Sink> {
 /// `x.log` → `x.log.1` → … → `x.log.KEEP` (the oldest is dropped).
 /// A logger has no channel for its own failures, so rename errors go to
 /// stderr instead of vanishing. Missing older files are normal until the
-/// history fills up.
-fn rotate(path: &Path) {
+/// history fills up. `false` when the current file stayed in place. A
+/// failed older rename only costs history, the path is free all the same.
+fn rotate(path: &Path) -> bool {
     let numbered = |n: u32| {
         let mut name = path.as_os_str().to_owned();
         name.push(format!(".{n}"));
@@ -250,14 +257,17 @@ fn rotate(path: &Path) {
         rename_history(&numbered(n), &numbered(n + 1));
     }
 
-    rename_history(path, &numbered(1));
+    rename_history(path, &numbered(1))
 }
 
-fn rename_history(from: &Path, to: &Path) {
-    if let Err(error) = fs::rename(from, to)
-        && error.kind() != io::ErrorKind::NotFound
-    {
-        report(&format!("cannot rotate {}: {error}", from.display()));
+fn rename_history(from: &Path, to: &Path) -> bool {
+    match fs::rename(from, to) {
+        Ok(()) => true,
+        Err(error) if error.kind() == io::ErrorKind::NotFound => true,
+        Err(error) => {
+            report(&format!("cannot rotate {}: {error}", from.display()));
+            false
+        }
     }
 }
 

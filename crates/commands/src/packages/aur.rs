@@ -14,6 +14,7 @@ use toolbox_core::features::packages::aur::{AurCatalog, AurPackage, row_state, t
 use toolbox_core::features::packages::queue::Refusal;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::PackageName;
+use toolbox_text::OutsideText;
 
 use super::super::change::Refused;
 use super::super::out::Listing;
@@ -23,7 +24,7 @@ use super::{facts_text, listed};
 pub struct AurRow {
     #[serde(rename = "id")]
     pub name: String,
-    pub description: String,
+    pub description: OutsideText,
     pub version: String,
     pub votes: u32,
     pub popularity: f64,
@@ -38,12 +39,12 @@ pub struct AurInfo {
     #[serde(rename = "id")]
     pub name: String,
     pub version: String,
-    pub description: String,
-    pub url: Option<String>,
+    pub description: OutsideText,
+    pub url: Option<OutsideText>,
     pub votes: u32,
     pub popularity: f64,
     pub out_of_date: Option<i64>,
-    pub maintainer: Option<String>,
+    pub maintainer: Option<OutsideText>,
     /// Seconds since the epoch.
     pub first_submitted: i64,
     /// Seconds since the epoch.
@@ -53,8 +54,8 @@ pub struct AurInfo {
     pub opt_depends: Vec<String>,
     pub provides: Vec<String>,
     pub conflicts: Vec<String>,
-    pub licenses: Vec<String>,
-    pub keywords: Vec<String>,
+    pub licenses: Vec<OutsideText>,
+    pub keywords: Vec<OutsideText>,
     pub aur_page: String,
     pub installed: bool,
 }
@@ -234,13 +235,18 @@ pub fn aur_listing(rows: &[AurRow]) -> Listing<'_> {
 pub fn aur_info_text(paint: Paint, info: &AurInfo) -> String {
     let none = || "none".to_owned();
     let facts: Vec<(&str, String)> = vec![
-        ("description", info.description.clone()),
+        ("description", info.description.to_string()),
         ("version", info.version.clone()),
         (
             "installed",
             if info.installed { "yes" } else { "no" }.to_owned(),
         ),
-        ("maintainer", info.maintainer.clone().unwrap_or_else(none)),
+        (
+            "maintainer",
+            info.maintainer
+                .as_ref()
+                .map_or_else(none, ToString::to_string),
+        ),
         ("votes", info.votes.to_string()),
         ("popularity", format!("{:.2}", info.popularity)),
         ("first submitted", day(info.first_submitted)),
@@ -250,7 +256,10 @@ pub fn aur_info_text(paint: Paint, info: &AurInfo) -> String {
             info.out_of_date.map_or_else(|| "no".to_owned(), day),
         ),
         ("licenses", listed(&info.licenses)),
-        ("website", info.url.clone().unwrap_or_else(none)),
+        (
+            "website",
+            info.url.as_ref().map_or_else(none, ToString::to_string),
+        ),
         ("aur page", info.aur_page.clone()),
         ("depends on", listed(&info.depends)),
         ("make dependencies", listed(&info.make_depends)),

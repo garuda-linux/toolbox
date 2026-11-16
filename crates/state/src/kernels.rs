@@ -4,20 +4,21 @@ use std::collections::BTreeMap;
 
 pub use dkms::{DkmsEntry, DkmsState, ModuleState, ModuleStatus, builds, modules, parse_status};
 use toolbox_plan::{KernelRelease, PackageName};
+use toolbox_text::OutsideText;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RepoPackage {
     pub repo: String,
     pub name: PackageName,
     pub version: String,
-    pub description: String,
+    pub description: OutsideText,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LocalPackage {
     pub name: PackageName,
     pub version: String,
-    pub description: String,
+    pub description: OutsideText,
 }
 
 /// Every package whose name starts with `linux`: `sync` in the order

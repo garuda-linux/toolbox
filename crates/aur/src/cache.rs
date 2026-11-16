@@ -1,9 +1,7 @@
 //! The local copy of the dump and the once-a-day rule.
 //!
-//! The time of an attempt is stored before the request goes out, so a
-//! request that fails, hangs or crashes the app still counts, and the
-//! next one waits a full day. The lock covers the check and the download,
-//! so two readers at once never ask twice.
+//! The lock covers the check and the download, so two readers of this
+//! process at once never ask twice. Another process asks on its own.
 
 #[cfg(test)]
 mod tests;
@@ -16,13 +14,13 @@ use std::time::UNIX_EPOCH;
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 use toolbox_fs::{Permissions, Replace};
-use toolbox_https::{Clock, SystemClock};
+use toolbox_https::{Attempt, Clock, SystemClock, due, next_attempt};
 use toolbox_state::aur::AurIndex;
 
 use crate::dump::parse;
 use crate::https::Https;
 use crate::transport::{Answer, Transport, Validators};
-use crate::{AurError, AurSource, DUMP_URL, REFRESH_EVERY};
+use crate::{AurError, AurSource, DUMP_URL, DownloadError, REFRESH_EVERY};
 
 const INDEX_FILE: &str = "index.json";
 const META_FILE: &str = "meta.json";
@@ -50,7 +48,8 @@ struct Meta {
     validators: Validators,
     /// Seconds since the epoch.
     last_attempt: Option<i64>,
-    /// The last attempt failed, so the copy is older than it should be.
+    /// The copy is older than it should be: an attempt failed and no
+    /// later one stored the new copy.
     failed: bool,
 }
 
@@ -58,7 +57,7 @@ enum Refreshed {
     Fresh(AurIndex),
     /// Not due, or the server had nothing newer.
     Unchanged,
-    Failed(String),
+    Failed(DownloadError),
 }
 
 impl Cache {
@@ -104,7 +103,9 @@ impl Cache {
                     ..index
                 })
                 .ok_or_else(|| AurError::Waiting {
-                    next: meta.last_attempt.map_or(now, next_attempt),
+                    next: meta
+                        .last_attempt
+                        .map_or(now, |last| next_attempt(last, REFRESH_EVERY)),
                 })
             }
             Refreshed::Failed(why) => {
@@ -118,26 +119,25 @@ impl Cache {
         }
     }
 
-    /// Downloads when the last attempt is a day old. Validators go along
-    /// only `with_copy`, else a "not modified" would leave nothing to show.
+    /// Downloads when the attempt is due. Validators go along only
+    /// `with_copy`, else a "not modified" would leave nothing to show.
     fn refresh(&self, now: i64, with_copy: bool) -> Result<Refreshed, AurError> {
         let mut meta = self.meta();
 
-        // A clock once set far ahead would block downloads until that time
-        // passed, so the attempt counts as now.
-        if meta.last_attempt.is_some_and(|last| last > now) {
-            meta.last_attempt = Some(now);
-            self.write(META_FILE, &meta)?;
-            return Ok(Refreshed::Unchanged);
+        match due(meta.last_attempt, now, REFRESH_EVERY) {
+            Attempt::ClockAhead => {
+                meta.last_attempt = Some(now);
+                self.write(META_FILE, &meta)?;
+                return Ok(Refreshed::Unchanged);
+            }
+            Attempt::NotDue => return Ok(Refreshed::Unchanged),
+            Attempt::Due => {}
         }
 
-        if meta.last_attempt.is_some_and(|last| !is_due(last, now)) {
-            return Ok(Refreshed::Unchanged);
-        }
-
-        // Stored first: an attempt that cannot be stored is not made, else
-        // nothing would hold the next one back.
+        // Failed until a copy is stored, so a copy that cannot be written
+        // leaves the flag set.
         meta.last_attempt = Some(now);
+        meta.failed = true;
         self.write(META_FILE, &meta)?;
 
         let sent = if with_copy {
@@ -149,15 +149,13 @@ impl Cache {
         let fetched = self
             .transport
             .get(DUMP_URL, &sent)
-            .map_err(|error| error.to_string())
+            .map_err(DownloadError::Request)
             .and_then(|answer| match answer {
                 Answer::Fresh { body, validators } => parse(body, MAX_UNPACKED_BYTES)
                     .map(|packages| Some((packages, validators)))
-                    .map_err(|error| error.to_string()),
+                    .map_err(DownloadError::Dump),
                 Answer::NotModified => Ok(None),
             });
-
-        meta.failed = fetched.is_err();
 
         let refreshed = match fetched {
             Ok(Some((packages, validators))) => {
@@ -169,9 +167,13 @@ impl Cache {
 
                 self.write(INDEX_FILE, &index)?;
                 meta.validators = validators;
+                meta.failed = false;
                 Refreshed::Fresh(index)
             }
-            Ok(None) => Refreshed::Unchanged,
+            Ok(None) => {
+                meta.failed = false;
+                Refreshed::Unchanged
+            }
             Err(why) => Refreshed::Failed(why),
         };
 
@@ -195,7 +197,7 @@ impl Cache {
         let bytes = match std::fs::read(&file) {
             Ok(bytes) => bytes,
             Err(error) if error.kind() == ErrorKind::NotFound => return Ok(None),
-            Err(error) => return Err(storage(&file, &error)),
+            Err(error) => return Err(storage(&file, error)),
         };
 
         match serde_json::from_slice::<AurIndex>(&bytes) {
@@ -205,7 +207,7 @@ impl Cache {
             })),
             Err(error) => {
                 tracing::warn!("the stored AUR list is unreadable and is read again: {error}");
-                std::fs::remove_file(&file).map_err(|removing| storage(&file, &removing))?;
+                std::fs::remove_file(&file).map_err(|removing| storage(&file, removing))?;
                 self.write(META_FILE, &Meta::default())?;
                 Ok(None)
             }
@@ -214,10 +216,10 @@ impl Cache {
 
     fn write(&self, name: &str, value: &impl Serialize) -> Result<(), AurError> {
         let file = self.folder.join(name);
-        let bytes = serde_json::to_vec(value).map_err(|error| storage(&file, &error))?;
+        let bytes = serde_json::to_vec(value).map_err(|error| storage(&file, error.into()))?;
         toolbox_fs::replace(&file, &bytes, &Replace::new(PRIVATE))
             .map(drop)
-            .map_err(|error: io::Error| storage(&file, &error))
+            .map_err(|error| storage(&file, error))
     }
 }
 
@@ -233,15 +235,9 @@ impl AurSource for Cache {
     }
 }
 
-fn is_due(last: i64, now: i64) -> bool {
-    now >= next_attempt(last)
-}
-
-fn next_attempt(last: i64) -> i64 {
-    let day = i64::try_from(REFRESH_EVERY.as_secs()).unwrap_or(i64::MAX);
-    last.saturating_add(day)
-}
-
-fn storage(file: &Path, error: &dyn std::fmt::Display) -> AurError {
-    AurError::Storage(format!("{}: {error}", file.display()))
+fn storage(file: &Path, error: io::Error) -> AurError {
+    AurError::Storage {
+        path: file.to_path_buf(),
+        error: Arc::new(error),
+    }
 }

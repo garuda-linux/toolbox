@@ -140,7 +140,9 @@ fn status_bar_with_failed_probes() {
 
     assert!(
         harness
-            .query_by_label_contains("system services: no bus\nusers and groups: no bus")
+            .query_by_label_contains(
+                "system services: no bus: fake source\nusers and groups: no bus: fake source"
+            )
             .is_some()
     );
 
@@ -212,7 +214,7 @@ pub fn behind_home() -> toolbox_system::Status {
     status.last_update = Ok(Some(SystemTime::now() - Duration::from_hours(24 * 16)));
     status.health = Ok(vec![HealthIssue {
         level: HealthLevel::Low,
-        message: "The keyring is older than three months.".to_owned(),
+        message: toolbox_text::plain("The keyring is older than three months."),
         fix_available: true,
     }]);
     status
@@ -349,7 +351,7 @@ pub fn read_in_full(mut system: Snapshot) -> Snapshot {
             name: tester.clone(),
             uid: 1000,
             gid: 1000,
-            gecos: String::new(),
+            gecos: toolbox_text::plain(""),
             home: "/home/tester".to_owned(),
             shell: "/usr/bin/bash".to_owned(),
         }],

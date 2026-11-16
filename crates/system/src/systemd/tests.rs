@@ -48,7 +48,7 @@ fn info(
 ) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: description.to_owned(),
+        description: toolbox_text::plain(description),
         active,
         sub_state: sub.to_owned(),
         file_state: file,

@@ -21,7 +21,7 @@ pub fn repo(repo: &str, name: &str, version: &str) -> RepoPackage {
         repo: repo.to_owned(),
         name: package(name),
         version: version.to_owned(),
-        description: format!("About {name}"),
+        description: toolbox_text::plain(&format!("About {name}")),
     }
 }
 
@@ -29,7 +29,7 @@ fn local(name: &str, version: &str) -> LocalPackage {
     LocalPackage {
         name: package(name),
         version: version.to_owned(),
-        description: String::new(),
+        description: toolbox_text::plain(""),
     }
 }
 

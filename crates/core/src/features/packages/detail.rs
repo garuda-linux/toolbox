@@ -69,9 +69,12 @@ pub fn shown<T>(items: &[T], limit: usize, all: bool) -> Shown<'_, T> {
     }
 }
 
-pub fn file_list(files: &[String]) -> String {
+pub fn file_list<T>(files: &[T]) -> String
+where
+    T: AsRef<str>,
+{
     files.iter().fold(String::new(), |mut text, file| {
-        text.push_str(file);
+        text.push_str(file.as_ref());
         text.push('\n');
         text
     })
@@ -79,12 +82,15 @@ pub fn file_list(files: &[String]) -> String {
 
 /// The places in `files` of the paths that hold `filter`, in either case.
 /// An empty filter keeps every path.
-pub fn matching_files(files: &[String], filter: &str) -> Vec<usize> {
+pub fn matching_files<T>(files: &[T], filter: &str) -> Vec<usize>
+where
+    T: AsRef<str>,
+{
     let needle = Needle::new(filter);
     files
         .iter()
         .enumerate()
-        .filter(|(_, file)| needle.is_in(file))
+        .filter(|(_, file)| needle.is_in(file.as_ref()))
         .map(|(place, _)| place)
         .collect()
 }

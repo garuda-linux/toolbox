@@ -6,9 +6,12 @@ use std::os::unix::fs::{PermissionsExt as _, symlink};
 use std::path::Path;
 
 use tempfile::TempDir;
-use toolbox_plan::{ConfigFilePath, ConfigText, FetchRefusal, MAX_CONFIG_BYTES};
+use toolbox_plan::{ConfigFilePath, ConfigText, FetchRefusal, Fingerprint, MAX_CONFIG_BYTES};
 
+use super::resolve::resolve;
+use super::write::{WriteError, write_real};
 use super::{ConfigRead, Found, ReadError, inspect, look, read_config_file};
+use crate::builtin::FileChange;
 use crate::secure::Unreadable;
 
 pub(super) const BACKUPS: &str = "var/lib/garuda-toolbox/backups";
@@ -28,6 +31,19 @@ pub(super) fn path(text: &str) -> ConfigFilePath {
 
 pub(super) fn text(content: &str) -> ConfigText {
     ConfigText::new(content).unwrap()
+}
+
+/// What a write of a config file does, with the link followed the way
+/// the app's own write follows it.
+pub(super) fn write_config_file(
+    root: &Path,
+    path: &ConfigFilePath,
+    content: &ConfigText,
+    original: Fingerprint,
+) -> Result<FileChange, WriteError> {
+    let real = resolve(root, path).map_err(ReadError::from)?;
+
+    write_real(root, &real.path, content, original)
 }
 
 fn refused<T>(result: Result<T, ReadError>) -> FetchRefusal

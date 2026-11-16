@@ -6,10 +6,12 @@
 mod index;
 mod orphans;
 mod pacman_conf;
+mod scan;
 mod sync;
 #[cfg(test)]
 mod tests;
 
+use std::borrow::Borrow;
 use std::os::unix::ffi::OsStrExt as _;
 use std::path::{Path, PathBuf};
 
@@ -17,20 +19,46 @@ use alpm::Alpm;
 pub use index::PackageIndexSource;
 pub use orphans::OrphanSource;
 use pacman_conf::PacmanConf;
+use scan::LibalpmScan;
 use sync::SyncCache;
-use toolbox_plan::PackageName;
-use toolbox_state::kernels::{LinuxPackages, LocalPackage};
+use toolbox_state::kernels::LinuxPackages;
 use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
+use toolbox_text::OutsideText;
 
 use crate::error::ProbeError;
-use crate::names;
 
 const SYSTEM_CONFIG: &str = "/etc/pacman.conf";
 
 const LINUX: &str = "linux";
 
 pub trait PackageSource: Send + Sync {
+    /// The reads of one snapshot. The scan reads the configuration and
+    /// opens the package manager once, however many of its reads are asked.
+    fn scan(&self) -> Box<dyn PackageScan + '_>;
+
+    /// [`PackageScan::installed`] of a scan of its own.
+    ///
+    /// # Errors
+    ///
+    /// As [`PackageScan::installed`].
+    fn installed(&self) -> Result<InstalledPackages, ProbeError> {
+        self.scan().installed()
+    }
+
+    /// [`PackageScan::graph`] of a scan of its own.
+    ///
+    /// # Errors
+    ///
+    /// As [`PackageScan::installed`].
+    fn graph(&self) -> Result<PackageGraph, ProbeError> {
+        self.scan().graph()
+    }
+}
+
+/// The package reads of one snapshot, each answered from the same
+/// configuration and the same handle.
+pub trait PackageScan {
     /// Every installed package, repository or foreign.
     ///
     /// # Errors
@@ -43,8 +71,25 @@ pub trait PackageSource: Send + Sync {
     ///
     /// # Errors
     ///
-    /// As [`PackageSource::installed`].
+    /// As [`PackageScan::installed`].
     fn graph(&self) -> Result<PackageGraph, ProbeError>;
+
+    /// Every package of the configured sync databases.
+    ///
+    /// # Errors
+    ///
+    /// [`ProbeError::Unavailable`] without a package manager or without
+    /// any synced database, a failed [`ProbeError`] when one cannot be read.
+    fn offered(&self) -> Result<SyncPackages, ProbeError>;
+
+    /// Every offered and every installed package whose name starts with
+    /// `linux`. Without a synced database only the installed ones.
+    ///
+    /// # Errors
+    ///
+    /// [`ProbeError::Unavailable`] without a package manager,
+    /// A failed [`ProbeError`] when a database cannot be read.
+    fn linux_packages(&self) -> Result<LinuxPackages, ProbeError>;
 }
 
 pub trait SyncSource: Send + Sync {
@@ -58,13 +103,11 @@ pub trait SyncSource: Send + Sync {
 }
 
 pub trait LinuxPackageSource: Send + Sync {
-    /// Every offered and every installed package whose name starts with
-    /// `linux`. Without a synced database only the installed ones.
+    /// As [`PackageScan::linux_packages`].
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Unavailable`] without a package manager,
-    /// A failed [`ProbeError`] when a database cannot be read.
+    /// As [`PackageScan::linux_packages`].
     fn linux_packages(&self) -> Result<LinuxPackages, ProbeError>;
 }
 
@@ -114,72 +157,46 @@ impl Libalpm {
 }
 
 impl PackageSource for Libalpm {
-    fn installed(&self) -> Result<InstalledPackages, ProbeError> {
-        let handle = open_local(&self.conf()?)?;
-
-        Ok(InstalledPackages(names::valid(
-            handle.localdb().pkgs().iter().map(|package| package.name()),
-        )))
-    }
-
-    fn graph(&self) -> Result<PackageGraph, ProbeError> {
-        let handle = open_local(&self.conf()?)?;
-
-        Ok(PackageGraph(
-            handle
-                .localdb()
-                .pkgs()
-                .iter()
-                .filter_map(|package| index::local_node(package))
-                .collect(),
-        ))
+    fn scan(&self) -> Box<dyn PackageScan + '_> {
+        Box::new(LibalpmScan::open(&self.config, &self.sync))
     }
 }
 
 impl SyncSource for Libalpm {
     fn offered(&self) -> Result<SyncPackages, ProbeError> {
-        Ok(self.sync.read(&self.conf()?)?.offered.clone())
+        self.scan().offered()
     }
 }
 
 impl LinuxPackageSource for Libalpm {
     fn linux_packages(&self) -> Result<LinuxPackages, ProbeError> {
-        let conf = self.conf()?;
-        let handle = open_local(&conf)?;
-        let local = handle
-            .localdb()
-            .pkgs()
-            .iter()
-            .filter(|package| package.name().starts_with(LINUX))
-            .filter_map(|package| {
-                Some(LocalPackage {
-                    name: PackageName::new(package.name()).ok()?,
-                    version: package.version().to_string(),
-                    description: description(package),
-                })
-            })
-            .collect();
-
-        let sync = match self.sync.read(&conf) {
-            Ok(read) => read.linux.clone(),
-            Err(ProbeError::Unavailable) => Vec::new(),
-            Err(error) => return Err(error),
-        };
-
-        Ok(LinuxPackages { sync, local })
+        self.scan().linux_packages()
     }
 }
 
 fn open_local(conf: &PacmanConf) -> Result<Alpm, ProbeError> {
+    checked_local(conf, || open(conf))
+}
+
+/// The handle `handle` gives, once the local database is there and reads.
+/// `handle` is not called without the database folder.
+fn checked_local<H>(
+    conf: &PacmanConf,
+    handle: impl FnOnce() -> Result<H, ProbeError>,
+) -> Result<H, ProbeError>
+where
+    H: Borrow<Alpm>,
+{
     if !conf.db_path.join("local").is_dir() {
         return Err(ProbeError::Unavailable);
     }
 
-    let handle = open(conf)?;
+    let handle = handle()?;
 
     // An unreadable database lists no packages, which would read as
     // "nothing installed".
     handle
+        .borrow()
         .localdb()
         .is_valid()
         .map_err(failed("the local database"))?;
@@ -212,8 +229,8 @@ fn failed(what: &str) -> impl Fn(alpm::Error) -> ProbeError + '_ {
 }
 
 /// Whoever built the package wrote it, so it is outside text.
-fn description(package: &alpm::Pkg) -> String {
-    toolbox_plan::text::plain(package.desc().unwrap_or_default())
+fn description(package: &alpm::Pkg) -> OutsideText {
+    toolbox_text::plain(package.desc().unwrap_or_default())
 }
 
 fn size(package: &alpm::Pkg) -> u64 {

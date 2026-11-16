@@ -22,6 +22,7 @@ use super::rows::{refused_banner, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, LocaleCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::locales::Locales;
 use crate::page::PageId;
 
@@ -216,7 +217,7 @@ impl LocalesPage {
             i18n::text_with(
                 &ctx,
                 "locales-packs-intro",
-                &[("count", &missing.to_string())],
+                &[("count", Arg::from(missing))],
             )
         } else {
             i18n::text(&ctx, "locales-packs-intro-plain")

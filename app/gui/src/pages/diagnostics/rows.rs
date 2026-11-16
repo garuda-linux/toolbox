@@ -17,6 +17,7 @@ use toolbox_services::diagnostics::page::State;
 use crate::command::DiagnosticsCommand;
 use crate::diagnostics::Diagnostics;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// In the order the card lists them, the full report last.
@@ -85,8 +86,14 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, choice: Selection) {
             // Each Collect names its report, so a screen reader tells the
             // rows' buttons apart.
             let collect = i18n::text(&ctx, "diagnostics-collect");
-            let spoken = i18n::text_with(&ctx, "diagnostics-collect-name", &[("name", &name)]);
+            let spoken = i18n::text_with(
+                &ctx,
+                "diagnostics-collect-name",
+                &[("name", Arg::from(&name))],
+            );
+
             let pressed = pill_button(ui, &collect, ButtonKind::Soft);
+
             let label = spoken.into_owned();
             ui.ctx()
                 .accesskit_node_builder(pressed.id, |node| node.set_label(label));

@@ -24,6 +24,6 @@ pub use cancel::Signal;
 pub use command::PtyCommand;
 pub use reader::Chunk;
 pub use runs::styled_lines;
-pub use session::{Exit, Session};
+pub use session::{Exit, Session, has_ended};
 pub use size::{DEFAULT_SIZE, TerminalSize, clamped};
 pub use style::{Color, Run, Style};

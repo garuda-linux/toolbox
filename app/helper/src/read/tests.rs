@@ -2,10 +2,11 @@ use std::fs;
 use std::path::Path;
 
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind, decode};
+use toolbox_plan::testing::account::SHADOW;
+use toolbox_plan::testing::accounts::PASSWD;
 use toolbox_plan::{Caller, ShadowLocks, UserName};
 
 use super::{answer, caller_of};
-use crate::testing::{PASSWD, SHADOW};
 
 /// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
 const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;

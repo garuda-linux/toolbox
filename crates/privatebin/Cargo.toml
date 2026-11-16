@@ -18,7 +18,7 @@ serde_json.workspace = true
 sha2.workspace = true
 thiserror.workspace = true
 toolbox-https.workspace = true
-toolbox-plan.workspace = true
+toolbox-text.workspace = true
 
 [dev-dependencies]
 parking_lot.workspace = true

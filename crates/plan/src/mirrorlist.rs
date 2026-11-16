@@ -13,6 +13,12 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 /// for it. Anything near this is not one.
 pub const MAX_MIRRORLIST_BYTES: usize = 64 * 1024;
 
+/// The placeholder a dry run plans in place of a ranked list. It is never
+/// ranked and never reaches a mirror.
+pub const SAMPLE_MIRRORS: &str = "# Chaotic-AUR mirrors of a dry run, never ranked\n\
+    Server = https://cdn-mirror.chaotic.cx/$repo/$arch\n\
+    Server = https://geo-mirror.chaotic.cx/$repo/$arch\n";
+
 const SERVER_PREFIX: &str = "Server = https://";
 
 /// The only variables pacman expands in a server URL.

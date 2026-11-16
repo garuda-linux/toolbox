@@ -11,8 +11,8 @@ fn view(updates: usize) -> StatusView {
     let packages = (0..updates)
         .map(|at| Package {
             name: format!("package-{at}"),
-            from: "1".to_owned(),
-            to: "2".to_owned(),
+            from: toolbox_text::plain("1"),
+            to: toolbox_text::plain("2"),
         })
         .collect();
 

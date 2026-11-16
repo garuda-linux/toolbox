@@ -13,23 +13,11 @@ use crate::domains::{
 };
 use crate::features::Refused;
 use crate::features::locales::{
-    LanguageName, LanguagePack, LocaleNames, LocaleRow as Row, PackRow, Refusal, SupportedLocales,
+    LanguageName, LanguagePack, LocaleNames, LocaleRow, PackRow, Refusal, SupportedLocales,
     all_rows, language_packs, system_choices as offered, wanted_enabled,
 };
 use crate::features::packages::queue;
 use crate::{ChangeSet, Single, Snapshot, Toggle};
-
-#[derive(Debug, PartialEq, Eq)]
-pub struct LocaleRow {
-    pub locale_code: String,
-    pub charset: String,
-    pub language: String,
-    pub territory: String,
-    pub enabled_now: bool,
-    pub on: bool,
-    pub queued: &'static str,
-    pub system: bool,
-}
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct LanguagePackRow {
@@ -40,49 +28,21 @@ pub struct LanguagePackRow {
     pub territory: String,
     pub installed: bool,
     pub on: bool,
-    pub queued: &'static str,
-}
-
-impl LocaleRow {
-    /// The character set when the code does not name it after its dot,
-    /// as `de_DE` for ISO-8859-1 does not and `en_US.UTF-8` does.
-    pub fn unnamed_charset(&self) -> Option<&str> {
-        let code = self.locale_code.split('@').next().unwrap_or_default();
-        let named = code
-            .split_once('.')
-            .is_some_and(|(_, charset)| charset == self.charset);
-
-        (!named).then_some(self.charset.as_str())
-    }
+    pub queued: Option<Toggle>,
 }
 
 pub fn locales_known(snapshot: &Snapshot) -> bool {
     snapshot.part::<SupportedLocales>().is_some() && snapshot.part::<EnabledLocales>().is_some()
 }
 
-/// Every locale row, as `features::locales::all_rows` orders them, and the
-/// row the UI shows for each. Empty until the locales are known.
-pub fn locales(snapshot: &Snapshot, changes: &ChangeSet) -> (Vec<Row>, Vec<LocaleRow>) {
+/// Every locale row, as `features::locales::all_rows` orders them. Empty
+/// until the locales are known.
+pub fn locales(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<LocaleRow> {
     if !locales_known(snapshot) {
-        return (Vec::new(), Vec::new());
+        return Vec::new();
     }
 
-    let rows = all_rows(snapshot, changes);
-    let shown = rows
-        .iter()
-        .map(|row| LocaleRow {
-            locale_code: row.entry.locale.as_str().to_owned(),
-            charset: row.entry.charset.as_str().to_owned(),
-            language: language(row.name.as_ref()),
-            territory: territory(row.name.as_ref()),
-            enabled_now: row.enabled,
-            on: row.is_on(),
-            queued: word(row.queued.as_ref()),
-            system: row.system,
-        })
-        .collect();
-
-    (rows, shown)
+    all_rows(snapshot, changes)
 }
 
 pub fn system_current(snapshot: &Snapshot) -> String {
@@ -259,7 +219,7 @@ fn pack_row(row: &PackRow) -> LanguagePackRow {
         territory: territory(row.name.as_ref()),
         installed: row.installed,
         on: row.is_on(),
-        queued: word(row.queued.as_ref()),
+        queued: row.queued,
     }
 }
 
@@ -269,12 +229,4 @@ fn language(name: Option<&LanguageName>) -> String {
 
 fn territory(name: Option<&LanguageName>) -> String {
     name.map_or("", |name| name.territory.as_str()).to_owned()
-}
-
-const fn word(wish: Option<&Toggle>) -> &'static str {
-    match wish {
-        Some(Toggle::On) => "on",
-        Some(Toggle::Off) => "off",
-        None => "",
-    }
 }

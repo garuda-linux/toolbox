@@ -5,7 +5,15 @@ use toolbox_plan::ConfigFilePath;
 use toolbox_plan::protocol::{Mode, ReadKind};
 use toolbox_system::{HelperFetch as _, HelperReads as _};
 
-use super::{HelperLauncher, Launcher as _};
+use super::{HelperLauncher, Launcher as _, Way};
+use crate::i18n::FALLBACK;
+
+fn launcher(way: Way) -> HelperLauncher {
+    HelperLauncher {
+        way,
+        language: FALLBACK,
+    }
+}
 
 fn argv(launcher: &HelperLauncher) -> (String, Vec<String>) {
     let command = launcher.command();
@@ -27,10 +35,10 @@ fn argv(launcher: &HelperLauncher) -> (String, Vec<String>) {
 
 #[test]
 fn a_real_run_goes_through_pkexec_with_the_helper_path_and_apply() {
-    let launcher = HelperLauncher::Pkexec {
+    let launcher = launcher(Way::Pkexec {
         helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
         pkexec: PathBuf::from("/usr/bin/pkexec"),
-    };
+    });
 
     let (program, arguments) = argv(&launcher);
 
@@ -44,9 +52,9 @@ fn a_real_run_goes_through_pkexec_with_the_helper_path_and_apply() {
 
 #[test]
 fn a_dry_run_starts_the_helper_itself() {
-    let launcher = HelperLauncher::DryRun {
+    let launcher = launcher(Way::DryRun {
         helper: PathBuf::from("/tmp/garuda-toolbox-helper"),
-    };
+    });
 
     let (program, arguments) = argv(&launcher);
 
@@ -57,11 +65,12 @@ fn a_dry_run_starts_the_helper_itself() {
 
 #[test]
 fn the_environment_variable_picks_the_dry_run() {
-    let dry = HelperLauncher::from_lookup(|key| {
-        (key == "GARUDA_TOOLBOX_HELPER").then(|| "dry-run".into())
-    });
+    let dry = HelperLauncher::from_lookup(
+        |key| (key == "GARUDA_TOOLBOX_HELPER").then(|| "dry-run".into()),
+        FALLBACK,
+    );
 
-    let real = HelperLauncher::from_lookup(|_| None);
+    let real = HelperLauncher::from_lookup(|_| None, FALLBACK);
 
     assert_eq!(dry.mode(), Mode::DryRun);
     assert_eq!(real.mode(), Mode::Run);
@@ -69,10 +78,10 @@ fn the_environment_variable_picks_the_dry_run() {
 
 #[test]
 fn a_log_read_asks_pkexec_for_the_helper_and_its_logs_action() {
-    let pkexec = HelperLauncher::Pkexec {
+    let pkexec = launcher(Way::Pkexec {
         helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
         pkexec: PathBuf::from("/usr/bin/pkexec"),
-    };
+    });
 
     let command = pkexec.read_command(ReadKind::Journal);
     let arguments: Vec<&OsStr> = command.get_args().collect();
@@ -87,9 +96,9 @@ fn a_log_read_asks_pkexec_for_the_helper_and_its_logs_action() {
         ]
     );
 
-    let dry = HelperLauncher::DryRun {
+    let dry = launcher(Way::DryRun {
         helper: PathBuf::from("/tmp/garuda-toolbox-helper"),
-    };
+    });
 
     let dry_command = dry.read_command(ReadKind::Dmesg);
     let dry_arguments: Vec<&OsStr> = dry_command.get_args().collect();
@@ -123,10 +132,10 @@ fn a_release_build_never_searches_the_path_for_pkexec() {
 
 #[test]
 fn a_launcher_runs_the_pkexec_it_was_given() {
-    let launcher = HelperLauncher::Pkexec {
+    let launcher = launcher(Way::Pkexec {
         helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
         pkexec: PathBuf::from("/run/wrappers/bin/pkexec"),
-    };
+    });
 
     let (program, _) = argv(&launcher);
 
@@ -163,19 +172,19 @@ fn sudo_runs_the_same_helper_after_its_option_end() {
 
 #[test]
 fn a_dry_run_has_no_sudo_way() {
-    let dry = HelperLauncher::DryRun {
+    let dry = launcher(Way::DryRun {
         helper: PathBuf::from("/tmp/garuda-toolbox-helper"),
-    };
+    });
 
     assert_eq!(dry.with_sudo(PathBuf::from("/usr/bin/sudo")), None);
 }
 
 #[test]
 fn every_pkexec_command_asks_for_untranslated_words() {
-    let launcher = HelperLauncher::Pkexec {
+    let launcher = launcher(Way::Pkexec {
         helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
         pkexec: PathBuf::from("/usr/bin/pkexec"),
-    };
+    });
 
     let path = ConfigFilePath::new("/etc/pacman.conf").unwrap();
     let apply = launcher.command();
@@ -193,10 +202,10 @@ fn every_pkexec_command_asks_for_untranslated_words() {
 }
 
 fn through_sudo() -> HelperLauncher {
-    HelperLauncher::Sudo {
+    launcher(Way::Sudo {
         helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
         sudo: PathBuf::from("/usr/bin/sudo"),
-    }
+    })
 }
 
 /// pkexec's 126 and 127 mean nothing to sudo, whose refusals end with 1.
@@ -218,9 +227,9 @@ fn sudo_without_its_words_refused_nothing() {
 
 #[test]
 fn a_dry_run_is_never_refused() {
-    let dry = HelperLauncher::DryRun {
+    let dry = launcher(Way::DryRun {
         helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
-    };
+    });
 
     assert!(!dry.may_refuse(Some(127_i32)));
     assert_eq!(dry.refusal(Some(127_i32), ""), None);
@@ -236,4 +245,20 @@ fn sudo_reads_its_words_in_the_c_locale() {
         .and_then(|(_, value)| value);
 
     assert_eq!(locale, Some(OsStr::new("C")));
+}
+
+/// logind shows the reason in the language the launcher was built with,
+/// not the one of the environment.
+#[test]
+fn the_inhibitor_speaks_the_language_it_was_given() {
+    let german: fluent_templates::LanguageIdentifier = "de-DE".parse().unwrap();
+    let built = HelperLauncher::from_lookup(
+        |key| (key == "LANG").then(|| "en_US.UTF-8".into()),
+        german.clone(),
+    );
+
+    assert_eq!(
+        built.inhibitor(),
+        super::Inhibitor::Logind { language: german }
+    );
 }

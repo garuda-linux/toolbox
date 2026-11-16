@@ -250,7 +250,7 @@ pub fn entries(menu: Option<&GrubMenu>) -> Vec<EntryRow> {
             .filter(|entry| !entry.submenu)
             .map(|entry| EntryRow {
                 entry: entry.id.as_str().to_owned(),
-                title: entry.title.clone(),
+                title: entry.title.clone().into_string(),
                 parent: entry.parent.clone().unwrap_or_default(),
             })
             .collect()

@@ -41,12 +41,12 @@ pub fn pacman_moment(ctx: &Context, text: &str) -> Option<String> {
         text.parse::<Timestamp>()
             .ok()
             .or_else(|| zone_with_colon(text)?.parse::<Timestamp>().ok())?
-            .to_zoned(TimeZone::system())
+            .to_zoned_datetime(TimeZone::system())
     } else {
         text.replace(' ', "T")
             .parse::<civil::DateTime>()
             .ok()?
-            .to_zoned(TimeZone::system())
+            .to_zoned_datetime(TimeZone::system())
             .ok()?
     };
 
@@ -85,11 +85,11 @@ fn moment_of(ctx: &Context, time: &civil::DateTime) -> Option<String> {
     Some(formatter.format(&moment).to_string())
 }
 
-fn local(seconds: i64) -> Option<jiff::Zoned> {
+fn local(seconds: i64) -> Option<jiff::ZonedDateTime> {
     Some(
         Timestamp::from_second(seconds)
             .ok()?
-            .to_zoned(TimeZone::system()),
+            .to_zoned_datetime(TimeZone::system()),
     )
 }
 

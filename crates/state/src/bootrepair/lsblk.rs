@@ -9,6 +9,7 @@ mod tests;
 
 use serde::Deserialize;
 use toolbox_plan::{DiskDevice, PartitionDevice, RepairRoot, VolumeDevice};
+use toolbox_text::{OutsideText, plain};
 
 use super::{Disk, Encryption, Esp, Inventory, System};
 
@@ -66,8 +67,8 @@ struct Node {
 }
 
 impl Node {
-    fn text(field: Option<&String>) -> String {
-        field.map(|text| text.trim().to_owned()).unwrap_or_default()
+    fn text(field: Option<&String>) -> OutsideText {
+        plain(field.map_or("", |text| text.trim()))
     }
 
     fn file_system(&self) -> &str {

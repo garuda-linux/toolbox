@@ -163,7 +163,7 @@ fn local(details: &PackageDetails) -> LocalNode {
 fn entry(text: &str, description: &str, installed: Option<InstallReason>) -> IndexEntry {
     IndexEntry {
         name: name(text),
-        description: description.to_owned(),
+        description: toolbox_text::plain(description),
         version: "3.0.4-1".to_owned(),
         origin: if text == "paru" {
             Origin::Foreign

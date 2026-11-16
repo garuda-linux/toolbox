@@ -48,7 +48,7 @@ fn loaded(units: Vec<UnitInfo>) -> PageFixture {
 fn unit(name: &str, description: &str, file_state: FileState) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: description.to_owned(),
+        description: toolbox_text::plain(description),
         active: ActiveState::Inactive,
         sub_state: "dead".to_owned(),
         file_state,
@@ -180,7 +180,7 @@ fn a_focused_switch_stays_with_its_unit_when_the_row_above_goes() {
 fn two_listed() -> PageFixture {
     let avahi = UnitInfo {
         name: UnitName::new("avahi-daemon.service").unwrap(),
-        description: "Avahi".to_owned(),
+        description: toolbox_text::plain("Avahi"),
         ..sshd()
     };
 

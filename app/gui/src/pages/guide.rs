@@ -22,6 +22,7 @@ use toolbox_guide::Hit;
 use super::header::{search, title_header};
 use super::{PageContext, PageView};
 use crate::command::AppCommand;
+use crate::i18n::Arg;
 use crate::{i18n, links};
 
 /// The widest the three panes get together.
@@ -129,10 +130,10 @@ impl PageView for GuidePage {
         let _ui = tracing::trace_span!("guide ui").entered();
         let guide = toolbox_guide::embedded();
         if let Some(file) = self.missing.take() {
+            let page = [("page", Arg::from(&file))];
             context.commands.send(AppCommand::Toast {
                 kind: ToastKind::Error,
-                text: i18n::text_with(ui.ctx(), "guide-page-missing", &[("page", &file)])
-                    .into_owned(),
+                text: i18n::text_with(ui.ctx(), "guide-page-missing", &page).into_owned(),
             });
         }
 

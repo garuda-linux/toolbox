@@ -7,12 +7,14 @@
 //! [`Clock`] lives here too, so every cache of a download reads the time
 //! the same way.
 
+mod attempt;
 #[cfg(test)]
 mod tests;
 
 use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+pub use attempt::{Attempt, due, next_attempt};
 /// The client's own error, the source of [`RequestError::Unreadable`].
 pub use ureq::Error as ClientError;
 use ureq::config::Config;
@@ -23,6 +25,10 @@ pub use ureq::{Body, BodyReader, http};
 
 /// The only port an agent reaches.
 const HTTPS_PORT: u16 = 443;
+
+/// Plain and generic: a server learns the program, nothing of the user.
+/// The crates share the workspace version, so this one is the app's.
+pub const USER_AGENT: &str = concat!("garuda-toolbox/", env!("CARGO_PKG_VERSION"));
 
 /// What sets one caller's agent apart from another's.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

@@ -5,7 +5,7 @@ use crate::test_support::{NOBODY_ID, group, group_name, user, user_name};
 
 fn accounts() -> Accounts {
     let mut nico = user("nico", 1000, 1000);
-    nico.gecos = "Nico Jensch,Room 1,555".to_owned();
+    nico.gecos = toolbox_text::plain("Nico Jensch,Room 1,555");
 
     Accounts {
         users: vec![

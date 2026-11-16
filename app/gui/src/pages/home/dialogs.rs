@@ -12,6 +12,7 @@ use toolbox_services::home::{Overview, Pending};
 use super::HomePage;
 use crate::command::HomeCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 const LIST_HEIGHT: f32 = 380.0;
@@ -80,7 +81,10 @@ fn row(ui: &mut Ui, update: &Pending<'_>) {
             let versions = i18n::text_with(
                 &ctx,
                 "home-pending-versions",
-                &[("from", update.from), ("to", update.to)],
+                &[
+                    ("from", Arg::from(update.from)),
+                    ("to", Arg::from(update.to)),
+                ],
             );
 
             let versions = rich(ui, &versions, Weight::Regular, SMALL, tokens.secondary)

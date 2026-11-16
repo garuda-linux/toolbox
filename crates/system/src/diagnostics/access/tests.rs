@@ -1,6 +1,6 @@
 use toolbox_state::diagnostics::{Access, Attempt, Collector, Outcome, Ran};
 
-use super::{access, pacman_log};
+use super::{access, pacman_log, read_tail};
 use crate::diagnostics::testing::{Machine, report};
 use crate::diagnostics::tests::DMESG_RESTRICT;
 
@@ -95,4 +95,32 @@ fn of_a_huge_pacman_log_only_the_end_is_read() {
             truncated: false,
         })
     );
+}
+
+/// The window starts on the `s` of the second line, one byte after the
+/// break. That break belongs to the first line, so the second line stays.
+#[test]
+fn a_cut_on_a_line_start_keeps_that_line() {
+    let machine = Machine::new();
+    let text = "first line\nsecond line\nthird line\n";
+    machine.file("var/log/pacman.log", text);
+
+    let kept = read_tail(&machine.root().join("var/log/pacman.log"), 23).unwrap();
+
+    assert_eq!(kept, ("second line\nthird line\n".to_owned(), true));
+}
+
+/// The window starts inside the second line, so that line is dropped and
+/// the third one is kept whole.
+#[test]
+fn a_cut_inside_a_line_drops_that_line() {
+    let machine = Machine::new();
+    machine.file(
+        "var/log/pacman.log",
+        "first line\nsecond line\nthird line\n",
+    );
+
+    let kept = read_tail(&machine.root().join("var/log/pacman.log"), 20).unwrap();
+
+    assert_eq!(kept, ("third line\n".to_owned(), true));
 }

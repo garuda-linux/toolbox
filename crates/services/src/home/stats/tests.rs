@@ -62,14 +62,14 @@ fn updates_a_low_disk_health_findings_and_a_stale_system_need_attention() {
     let mut status = quiet();
     status.updates = Ok(vec![PendingUpdate {
         name: PackageName::new("firefox").unwrap(),
-        from: "144.0-1".to_owned(),
-        to: "145.0-1".to_owned(),
+        from: toolbox_text::plain("144.0-1"),
+        to: toolbox_text::plain("145.0-1"),
     }]);
     status.aur_updates = Ok(Vec::new());
     status.last_update = Ok(Some(now() - DAY * 30));
     status.health = Ok(vec![HealthIssue {
         level: HealthLevel::High,
-        message: "old keyring".to_owned(),
+        message: toolbox_text::plain("old keyring"),
         fix_available: true,
     }]);
 

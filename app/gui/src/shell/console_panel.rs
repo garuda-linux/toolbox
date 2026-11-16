@@ -29,6 +29,7 @@ use crate::apply::Problem;
 use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::console::{Console, Status, StepRow, StepState};
 use crate::i18n;
+use crate::i18n::Arg;
 
 const STEPS_HEIGHT: f32 = tokens::Sizes::DEFAULT.steps_height;
 const SHEET_RADIUS: u8 = toolbox_gui_kit::theme::POPOVER_RADIUS;
@@ -104,7 +105,7 @@ fn ending_word(ctx: &Context, ending: Ending) -> (String, Tone) {
             i18n::text_with(
                 ctx,
                 "console-status-partly",
-                &[("count", &skipped.to_string())],
+                &[("count", Arg::from(skipped))],
             )
             .into_owned(),
             Tone::Success,
@@ -199,7 +200,7 @@ fn notices(ui: &mut Ui, console: &Console) {
     if let Some(reason) = console.rejected() {
         notice(
             Tone::Error,
-            &i18n::text_with(&ctx, "console-rejected", &[("reason", reason)]),
+            &i18n::text_with(&ctx, "console-rejected", &[("reason", Arg::from(reason))]),
         );
     }
 
@@ -214,7 +215,7 @@ fn notices(ui: &mut Ui, console: &Console) {
             let id = format!("helper-{}", kind.as_str());
             notice(
                 Tone::Error,
-                &i18n::text_with(&ctx, &id, &[("detail", detail)]),
+                &i18n::text_with(&ctx, &id, &[("detail", Arg::from(detail))]),
             );
         }
         None => {}
@@ -302,16 +303,12 @@ fn step_words(ctx: &Context, state: StepState, dry_run: bool) -> (String, Color3
         StepState::Skipped => (text("step-nothing-to-do"), tokens.secondary),
         StepState::Cancelled => (text("step-cancelled"), tokens.warning),
         StepState::Failed(Failure::ExitCode { code }) => (
-            i18n::text_with(ctx, "step-failed-exit", &[("code", &code.to_string())]).into_owned(),
+            i18n::text_with(ctx, "step-failed-exit", &[("code", Arg::from(code))]).into_owned(),
             tokens.error,
         ),
         StepState::Failed(Failure::Signal { signal }) => (
-            i18n::text_with(
-                ctx,
-                "step-failed-signal",
-                &[("signal", &signal.to_string())],
-            )
-            .into_owned(),
+            i18n::text_with(ctx, "step-failed-signal", &[("signal", Arg::from(signal))])
+                .into_owned(),
             tokens.error,
         ),
         StepState::Failed(Failure::Unknown) => (text("step-failed-unknown"), tokens.error),

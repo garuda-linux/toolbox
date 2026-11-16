@@ -9,16 +9,16 @@ use crate::{ChangeSet, Snapshot};
 /// Four accounts whose fields each sort another way.
 fn snapshot() -> Snapshot {
     let mut ada = user("ada", 1002, 1002);
-    ada.gecos = "Zoe Adams,Room 4".to_owned();
+    ada.gecos = toolbox_text::plain("Zoe Adams,Room 4");
     ada.home = "/srv/people/ada".to_owned();
     ada.shell = "/usr/bin/zsh".to_owned();
 
     let mut bob = user("bob", 1001, 1001);
-    bob.gecos = "anna Bobson".to_owned();
+    bob.gecos = toolbox_text::plain("anna Bobson");
     bob.shell = String::new();
 
     let mut cy = user("cy", 1000, 1000);
-    cy.gecos = String::new();
+    cy.gecos = toolbox_text::plain("");
     cy.shell = "/usr/bin/Fish".to_owned();
 
     let mut snapshot = Snapshot::default();

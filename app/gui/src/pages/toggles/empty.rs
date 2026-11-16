@@ -9,6 +9,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use super::LeadChip;
 use super::listed::SectionChip;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::search_empty::search_empty_state;
 
 /// The section a chip picked, while it hides `matches` entries of other
@@ -66,17 +67,26 @@ pub fn show(ui: &mut Ui, search: &str, hidden: Option<&Picked>) -> Option<Clear>
         let detail = i18n::text_with(
             &ctx,
             "toggles-nothing-matches-detail",
-            &[("search", search)],
+            &[("search", Arg::from(search))],
         );
 
         return search_empty_state(ui, search, &detail).then_some(Clear::Search);
     };
 
-    let count = picked.matches.to_string();
-    let named = [("section", picked.title.as_str()), ("search", search)];
+    let count = picked.matches;
+    let named = [
+        ("section", Arg::from(picked.title.as_str())),
+        ("search", Arg::from(search)),
+    ];
+
     let title = i18n::text_with(&ctx, "toggles-nothing-in-section", &named);
+
     let detail = i18n::text_with(&ctx, "toggles-nothing-in-section-detail", &named);
-    let button = i18n::text_with(&ctx, "toggles-show-all-matches", &[("count", &count)]);
+    let button = i18n::text_with(
+        &ctx,
+        "toggles-show-all-matches",
+        &[("count", Arg::from(count))],
+    );
 
     empty_state(ui, icons::SYSTEM_SEARCH, &title, &detail);
     ui.add_space(ui.tokens().sizes.card_gap);

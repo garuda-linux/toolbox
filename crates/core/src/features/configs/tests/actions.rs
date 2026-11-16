@@ -5,7 +5,7 @@ use std::collections::BTreeSet;
 
 use toolbox_catalog::ConfigFileCatalog;
 
-use super::super::{Found, Link, Listing, RowKind, rows, view_target};
+use super::super::{Action, Found, Link, Listing, RowKind, rows, view_target};
 use super::{CATALOG, shown};
 
 const READ_ONLY: &str = r#"
@@ -37,7 +37,7 @@ fn rows_say_how_a_file_opens_and_who_owns_it() {
 
     assert_eq!(
         (grub.action, grub.admin, grub.link, grub.path.as_str()),
-        ("edit", true, false, "/etc/default/grub")
+        (Some(Action::Edit), true, false, "/etc/default/grub")
     );
     assert_eq!(grub.name, "GRUB default");
     assert_eq!(grub.description, "GRUB configuration variables");
@@ -48,12 +48,15 @@ fn rows_say_how_a_file_opens_and_who_owns_it() {
 
     assert_eq!(
         (bash.action, bash.admin, bash.path.as_str()),
-        ("edit", false, "~/.bashrc")
+        (Some(Action::Edit), false, "~/.bashrc")
     );
 
     let linked = row("os-release");
 
-    assert_eq!((linked.action, linked.admin, linked.link), ("", true, true));
+    assert_eq!(
+        (linked.action, linked.admin, linked.link),
+        (None, true, true)
+    );
 
     let section = row("boot");
 
@@ -66,7 +69,7 @@ fn rows_say_how_a_file_opens_and_who_owns_it() {
 
     assert_eq!(
         (folder.action, folder.count, folder.expanded),
-        ("", 2, false)
+        (None, 2, false)
     );
 }
 
@@ -97,11 +100,11 @@ fn a_read_only_file_and_the_files_of_a_read_only_folder_are_viewed() {
     assert_eq!(
         shown,
         [
-            ("grub", "edit", true, false),
-            ("bash", "edit", false, false),
-            ("passwd", "view", true, true),
-            ("pam", "", true, true),
-            ("pam/su", "view", true, true),
+            ("grub", Some(Action::Edit), true, false),
+            ("bash", Some(Action::Edit), false, false),
+            ("passwd", Some(Action::View), true, true),
+            ("pam", None, true, true),
+            ("pam/su", Some(Action::View), true, true),
         ]
     );
 }
@@ -144,6 +147,6 @@ fn only_a_read_only_file_the_page_shows_is_viewed() {
     assert_eq!(view(&listing, "passwd"), None);
     assert_eq!(
         rows.iter().find(|row| row.key == "passwd").unwrap().action,
-        ""
+        None
     );
 }

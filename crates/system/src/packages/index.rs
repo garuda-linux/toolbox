@@ -9,8 +9,9 @@ use toolbox_state::packages::{
     IndexEntry, InstallReason, Installed, InstalledDetails, LocalNode, OptionalDependency, Origin,
     PackageDetails, PackageIndex,
 };
+use toolbox_text::OutsideText;
 
-use super::{Libalpm, description, failed, open_local, size};
+use super::{Libalpm, description, failed, open, open_local, size};
 use crate::error::ProbeError;
 
 pub trait PackageIndexSource: Send + Sync {
@@ -37,7 +38,7 @@ pub trait PackageIndexSource: Send + Sync {
 /// against the offered ones.
 struct LocalFacts {
     installed: Installed,
-    description: String,
+    description: OutsideText,
     size: u64,
 }
 
@@ -45,7 +46,7 @@ impl PackageIndexSource for Libalpm {
     fn index(&self) -> Result<PackageIndex, ProbeError> {
         let conf = self.conf()?;
         let handle = open_local(&conf)?;
-        let sync = self.sync.read(&conf)?;
+        let sync = self.sync.read(&conf, || open(&conf))?;
         let mut local = Vec::new();
         let mut facts = BTreeMap::new();
 
@@ -101,7 +102,7 @@ impl PackageIndexSource for Libalpm {
     fn details(&self, package: &PackageName) -> Result<Option<PackageDetails>, ProbeError> {
         let conf = self.conf()?;
         let handle = open_local(&conf)?;
-        let sync = match self.sync.read(&conf) {
+        let sync = match self.sync.read(&conf, || open(&conf)) {
             Ok(sync) => Some(sync),
             Err(ProbeError::Unavailable) => None,
             Err(error) => return Err(error),
@@ -137,9 +138,9 @@ impl PackageIndexSource for Libalpm {
             version,
             origin,
             size: size(shown),
-            url: shown.url().map(str::to_owned),
-            licenses: shown.licenses().iter().map(str::to_owned).collect(),
-            groups: shown.groups().iter().map(str::to_owned).collect(),
+            url: shown.url().map(toolbox_text::plain),
+            licenses: shown.licenses().iter().map(toolbox_text::plain).collect(),
+            groups: shown.groups().iter().map(toolbox_text::plain).collect(),
             depends: strings(shown.depends()),
             optional: shown
                 .optdepends()
@@ -148,12 +149,18 @@ impl PackageIndexSource for Libalpm {
                 .filter_map(|dep| {
                     Some(OptionalDependency {
                         name: PackageName::new(dep.name()).ok()?,
-                        reason: toolbox_plan::text::plain(dep.desc().unwrap_or_default()),
+                        reason: toolbox_text::plain(dep.desc().unwrap_or_default()),
                     })
                 })
                 .collect(),
             required_by: local
-                .map(|installed| installed.required_by().iter().map(str::to_owned).collect())
+                .map(|installed| {
+                    installed
+                        .required_by()
+                        .iter()
+                        .map(toolbox_text::plain)
+                        .collect()
+                })
                 .unwrap_or_default(),
             provides: strings(shown.provides()),
             conflicts: strings(shown.conflicts()),
@@ -172,7 +179,7 @@ fn installed_details(package: &Pkg) -> InstalledDetails {
             .files()
             .files()
             .iter()
-            .map(|file| format!("/{}", String::from_utf8_lossy(file.name())))
+            .map(|file| toolbox_text::plain(&format!("/{}", String::from_utf8_lossy(file.name()))))
             .collect(),
     }
 }

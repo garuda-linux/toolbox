@@ -77,8 +77,8 @@ fn checkupdates_reports_the_test_package() -> TestResult {
     let result = Checkupdates::new().pending();
     let expected = PendingUpdate {
         name: PackageName::new("toolbox-test-up")?,
-        from: "1.0-1".to_owned(),
-        to: "1.1-1".to_owned(),
+        from: toolbox_text::plain("1.0-1"),
+        to: toolbox_text::plain("1.1-1"),
     };
 
     if result != Ok(vec![expected.clone()]) {

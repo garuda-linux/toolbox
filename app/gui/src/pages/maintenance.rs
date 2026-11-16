@@ -26,6 +26,7 @@ use super::rows::refusal_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::maintenance::{Maintenance, MaintenanceProblem};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -138,7 +139,11 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
             };
 
             let name = i18n::text(&ctx, &format!("maintenance-tool-{tool}"));
-            i18n::text_with(&ctx, id, &[("tool", &name), ("reason", reason)])
+            i18n::text_with(
+                &ctx,
+                id,
+                &[("tool", Arg::from(&name)), ("reason", Arg::from(reason))],
+            )
         }
         MaintenanceProblem::Mirrors(problem) => {
             let id = match problem {
@@ -153,7 +158,7 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
                 }
             };
 
-            i18n::text_with(&ctx, id, &[("reason", problem.reason())])
+            i18n::text_with(&ctx, id, &[("reason", Arg::from(problem.reason()))])
         }
         MaintenanceProblem::Busy => i18n::text(&ctx, "maintenance-problem-busy"),
     };

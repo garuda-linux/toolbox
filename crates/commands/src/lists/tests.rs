@@ -30,7 +30,7 @@ check = { package = "podman" }
 fn unit(name: &str, active: ActiveState, file: FileState) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: format!("About {name}"),
+        description: toolbox_text::plain(&format!("About {name}")),
         active,
         sub_state: "running".to_owned(),
         file_state: file,
@@ -44,7 +44,7 @@ fn accounts() -> Snapshot {
             name: UserName::new("ada").unwrap(),
             uid: 1001,
             gid: 1001,
-            gecos: "Ada Lovelace,Room 1".to_owned(),
+            gecos: toolbox_text::plain("Ada Lovelace,Room 1"),
             home: "/home/ada".to_owned(),
             shell: "/usr/bin/fish".to_owned(),
         }],

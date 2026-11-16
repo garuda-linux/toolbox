@@ -9,6 +9,7 @@ publish.workspace = true
 
 [dependencies]
 toolbox-plan.workspace = true
+toolbox-text.workspace = true
 toolbox-state.workspace = true
 anstyle.workspace = true
 clap.workspace = true

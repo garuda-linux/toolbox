@@ -12,6 +12,7 @@ use super::dialogs::{Dialog, Edit, Membership, PasswordForm, RemoveUser};
 use super::texts;
 use crate::command::{UserEdit, UsersCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::more::text_item;
 use crate::users::Users;
@@ -79,8 +80,7 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow) {
 
         let queued = row.queued.count();
         if queued > 0 {
-            let count =
-                i18n::text_with(&ctx, "users-tag-queued", &[("count", &queued.to_string())]);
+            let count = i18n::text_with(&ctx, "users-tag-queued", &[("count", Arg::from(queued))]);
 
             status_dot(ui, &count, Tone::Accent);
         }
@@ -88,17 +88,17 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow) {
 
     let not_set = text("users-not-set");
     let shell = Some(row.shown_shell()).filter(|shell| !shell.is_empty());
-    let uid = row.user.uid.to_string();
+    let uid = row.user.uid;
     let words = [
-        ("uid", uid.as_str()),
-        ("home", row.shown_home()),
-        ("shell", shell.unwrap_or(&not_set)),
+        ("uid", Arg::from(uid)),
+        ("home", Arg::from(row.shown_home())),
+        ("shell", Arg::from(shell.unwrap_or(&not_set))),
     ];
 
     let detail = i18n::text_with(&ctx, "users-detail", &words);
     super::detail_line(ui, &detail);
     let groups = texts::list(&ctx, row.groups.iter().map(toolbox_plan::Name::as_str));
-    let groups = i18n::text_with(&ctx, "users-groups-line", &[("groups", &groups)]);
+    let groups = i18n::text_with(&ctx, "users-groups-line", &[("groups", Arg::from(&groups))]);
     super::detail_line(ui, &groups);
 }
 
@@ -128,8 +128,14 @@ fn controls(
         return;
     }
 
-    let more = i18n::text_with(&ctx, "users-more", &[("user", row.user.name.as_str())]);
+    let more = i18n::text_with(
+        &ctx,
+        "users-more",
+        &[("user", Arg::from(row.user.name.as_str()))],
+    );
+
     let name = &row.user.name;
+
     if row.queued.removal.is_some() {
         if pill_button(ui, &text("users-keep"), ButtonKind::Soft).clicked() {
             context.commands.send(UsersCommand::Keep(name.clone()));
@@ -137,7 +143,7 @@ fn controls(
     } else {
         // Every row shows the same word, so each button names its account
         // for a screen reader.
-        let user = [("user", name.as_str())];
+        let user = [("user", Arg::from(name.as_str()))];
         let edit_name = i18n::text_with(&ctx, "users-edit-named", &user);
         let edit = named_pill_button(ui, &text("users-edit"), ButtonKind::Soft, &edit_name);
         if edit.clicked() {

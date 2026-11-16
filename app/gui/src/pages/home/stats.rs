@@ -14,6 +14,7 @@ use toolbox_system::HealthLevel;
 
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::maintenance::Tab;
 
@@ -130,11 +131,13 @@ fn figure(ctx: &egui::Context, tile: &Tile) -> String {
         Figure::Updates(count) => i18n::text_with(
             ctx,
             "home-stat-updates-count",
-            &[("count", &count.to_string())],
+            &[("count", Arg::from(count))],
         ),
-        Figure::Free(bytes) => {
-            i18n::text_with(ctx, "home-stat-disk-free", &[("free", &size(bytes))])
-        }
+        Figure::Free(bytes) => i18n::text_with(
+            ctx,
+            "home-stat-disk-free",
+            &[("free", Arg::from(&size(bytes)))],
+        ),
         Figure::Health(None) => i18n::text(ctx, "home-stat-health-fine"),
         Figure::Health(Some(level)) if level >= HealthLevel::High => {
             i18n::text(ctx, "home-stat-health-errors")
@@ -144,7 +147,7 @@ fn figure(ctx: &egui::Context, tile: &Tile) -> String {
         Figure::Days(days) => i18n::text_with(
             ctx,
             "home-stat-last-update-days",
-            &[("days", &days.to_string())],
+            &[("days", Arg::from(days))],
         ),
     };
 

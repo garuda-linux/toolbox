@@ -24,7 +24,7 @@ fn radio(kind: Option<RadioKind>, soft: bool, hard: bool) -> Radio {
 fn unit(name: &str, active: ActiveState, file_state: FileState) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: String::new(),
+        description: toolbox_text::plain(""),
         active,
         sub_state: String::new(),
         file_state,

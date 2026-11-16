@@ -8,7 +8,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-use super::{ConfigText, Fingerprint};
+use super::{ConfigText, Fingerprint, UNCHANGED_WHY};
 use crate::HomePath;
 use crate::procedure::{Builtin, Invocation};
 
@@ -34,17 +34,21 @@ impl HomeWrite {
     pub fn backup(&self) -> String {
         format!("{HOME_CONFIG_BACKUPS}/{}", self.path.as_str())
     }
-}
 
-/// What the Review page and the Console show for the write.
-impl fmt::Display for HomeWrite {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "write ~/{} ({} bytes), the old one kept as ~/.local/state/{}  # only when it did not change meanwhile",
+    /// The write as the Console shows it, without its note.
+    pub fn command(&self) -> String {
+        format!(
+            "write ~/{} ({} bytes), the old one kept as ~/.local/state/{}",
             self.path.as_str(),
             self.content.as_str().len(),
             self.backup()
         )
+    }
+}
+
+/// What the Review page and the log show for the write.
+impl fmt::Display for HomeWrite {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}  # {UNCHANGED_WHY}", self.command())
     }
 }

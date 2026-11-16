@@ -132,7 +132,7 @@ fn a_step_that_asks_while_it_runs_is_refused() {
 }
 
 #[test]
-fn the_sudo_note_stays_off_standard_output() {
+fn the_sudo_note_is_a_warning_line_of_the_stream() {
     let launcher = Arc::new(Refusing {
         words: "Error executing command as another user: No authentication agent found.",
         then: helper(Outcome::Succeeded),
@@ -143,7 +143,7 @@ fn the_sudo_note_stays_off_standard_output() {
     assert_eq!(exit, Exit::Success, "{lines:?}");
     assert_eq!(
         events(&lines),
-        ["plan", "started", "output", "finished", "done"],
+        ["plan", "warning", "started", "output", "finished", "done"],
         "{lines:?}"
     );
 }

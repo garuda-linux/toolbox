@@ -97,6 +97,24 @@ pub fn error_object(said: &Said, exit: Exit) -> String {
     })
 }
 
+/// `{"schema": 1, "warning": {"message": ...}}`, a note of a read's
+/// `--json` on standard error beside the kept errors.
+pub fn warning_object(message: &str) -> String {
+    #[derive(Serialize)]
+    struct Note<'a> {
+        message: &'a str,
+    }
+
+    #[derive(Serialize)]
+    struct Object<'a> {
+        warning: Note<'a>,
+    }
+
+    json_line(&Object {
+        warning: Note { message },
+    })
+}
+
 pub fn failed_text(paint: Paint, what: &str, raw: &str, verbose: bool, json: bool) -> String {
     if json {
         return crate::apply::error_line(what, Some(raw));
@@ -112,7 +130,7 @@ pub fn failure_text(paint: Paint, what: &str, raw: &str, verbose: bool) -> Strin
     }
 
     if verbose {
-        text.push_str(&paint.detail(raw));
+        text.push_str(&paint.detail(&toolbox_text::OutsideText::keep_lines(raw)));
     } else {
         let hint = paint.hint("add --verbose to see the program's own words");
         if !hint.is_empty() {

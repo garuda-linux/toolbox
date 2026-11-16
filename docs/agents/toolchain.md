@@ -64,7 +64,8 @@
   process-wide state (signal handlers, caches, a folder) fail now and
   then. Tests still stay independent, so both runners pass.
 - Every program the app or the helper starts is in `depends` or
-  `optdepends`, with a comment naming the reason. The release PKGBUILD in
+  `optdepends`, with a comment naming the reason. The exception is the
+  editor `ne`, which no repository packages. The release PKGBUILD in
   `garuda-linux/pkgbuilds` copies these lists, `package()` and `options`.
 
 ## Arch integration tests

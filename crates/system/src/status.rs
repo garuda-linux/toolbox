@@ -8,7 +8,7 @@
 
 mod health;
 mod pacdiff;
-mod pacman_log;
+pub mod pacman_log;
 #[cfg(test)]
 mod tests;
 mod timestamp;

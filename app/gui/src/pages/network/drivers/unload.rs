@@ -8,6 +8,7 @@ use toolbox_plan::KernelModule;
 
 use crate::command::NetworkCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 fn asking() -> Pending<KernelModule> {
@@ -29,10 +30,22 @@ pub fn question(ctx: &Context, context: &PageContext<'_>) {
     };
 
     let name = module.as_str();
-    let title = i18n::text_with(ctx, "network-driver-unload-title", &[("module", name)]);
+    let title = i18n::text_with(
+        ctx,
+        "network-driver-unload-title",
+        &[("module", Arg::from(name))],
+    );
+
     let close = i18n::text(ctx, "dialog-close");
-    let body = i18n::text_with(ctx, "network-driver-unload-question", &[("module", name)]);
+
+    let body = i18n::text_with(
+        ctx,
+        "network-driver-unload-question",
+        &[("module", Arg::from(name))],
+    );
+
     let cancel = i18n::text(ctx, "network-driver-unload-keep");
+
     let confirm = i18n::text(ctx, "network-driver-unload");
     let texts = Question {
         title: &title,

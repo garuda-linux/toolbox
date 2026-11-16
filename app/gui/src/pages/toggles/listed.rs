@@ -8,6 +8,7 @@ use std::sync::Arc;
 
 use egui::Ui;
 use egui::text::LayoutJob;
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::{self, Control, Entry, Section, Tally};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
@@ -17,6 +18,7 @@ use toolbox_gui_kit::widgets::{ListItem, Tone, highlighted};
 use super::{catalog_text, control, count_text, entry, section_title};
 use crate::catalogs::CatalogId;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::actions::{
     CopyName, Named, OpenWebsite, RowKind, Section as Actions, Website,
@@ -98,7 +100,7 @@ impl Listed {
         context: &PageContext<'_>,
         catalog: CatalogId,
         sections: &[Section<'_>],
-        query: &str,
+        query: &Needle,
     ) -> Self {
         let ctx = ui.ctx();
         let chips = sections
@@ -137,7 +139,7 @@ impl SectionRows {
         context: &PageContext<'_>,
         catalog: CatalogId,
         section: &Section<'_>,
-        query: &str,
+        query: &Needle,
     ) -> Option<Self> {
         let ctx = ui.ctx();
         let entries: Vec<EntryRow> = section
@@ -168,7 +170,7 @@ impl EntryRow {
         context: &PageContext<'_>,
         catalog: CatalogId,
         entry: &Entry<'_>,
-        query: &str,
+        query: &Needle,
     ) -> Self {
         let ctx = ui.ctx();
         let tokens = tokens::current(ctx);
@@ -180,11 +182,19 @@ impl EntryRow {
         };
 
         let strong = fonts::font(ui.style(), Weight::SemiBold, BODY);
-        let title_job = highlighted(ui, &title, query, strong, ink);
+        let title_job = highlighted(ui, &title, query.as_str(), strong, ink);
         let small = fonts::font(ui.style(), Weight::Regular, SMALL);
         let words = entry::description(ctx, catalog, entry);
-        let description = control::cut(highlighted(ui, &words, query, small, tokens.secondary));
+        let description = control::cut(highlighted(
+            ui,
+            &words,
+            query.as_str(),
+            small,
+            tokens.secondary,
+        ));
+
         let control = control::of(catalog, entry);
+
         let note = entry::note(ctx, catalog, entry, control);
         let installed = (control == Control::Remove).then(|| i18n::text(ctx, "packages-installed"));
 
@@ -210,7 +220,7 @@ impl EntryRow {
             picture: entry::picture_file(context, catalog, entry)
                 .map(|file| icons::picture_uri(&file)),
             tile_package: entry::tile_package(entry.entry).to_owned(),
-            menu: i18n::text_with(ctx, "row-menu", &[("name", &title)]).into_owned(),
+            menu: i18n::text_with(ctx, "row-menu", &[("name", Arg::from(&title))]).into_owned(),
             url,
             title,
         }

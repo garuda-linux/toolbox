@@ -32,3 +32,4 @@ discover-category-other = Sonstiges
 discover-category-science = Wissenschaft
 discover-category-security = Sicherheit
 discover-category-utilities = Werkzeuge
+discover-problem-reason = Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt. { $reason }

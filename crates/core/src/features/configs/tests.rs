@@ -11,7 +11,7 @@ use toolbox_plan::{
 
 use super::session::EditWrite;
 use super::{
-    Found, Link, Listing, Row, Target, choose_editor, edit_plan, rows, target, write_plan,
+    Action, Found, Link, Listing, Row, Target, choose_editor, edit_plan, rows, target, write_plan,
 };
 
 const CATALOG: &str = r#"
@@ -188,7 +188,12 @@ fn an_expanded_folder_lists_its_files() {
             child.action,
             child.admin
         ),
-        ("nvidia.conf", "/etc/modprobe.d/nvidia.conf", "edit", true)
+        (
+            "nvidia.conf",
+            "/etc/modprobe.d/nvidia.conf",
+            Some(Action::Edit),
+            true
+        )
     );
 
     // Each file of a folder repeats the folder's description and link.
@@ -207,7 +212,11 @@ fn an_expanded_folder_lists_its_files() {
 
     assert_eq!(
         (unit.path.as_str(), unit.action, unit.admin),
-        ("~/.config/systemd/user/sync.service", "edit", false)
+        (
+            "~/.config/systemd/user/sync.service",
+            Some(Action::Edit),
+            false
+        )
     );
 }
 

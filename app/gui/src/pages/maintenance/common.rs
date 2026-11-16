@@ -12,6 +12,7 @@ use super::repairs::Asked;
 use super::{heading, plan_button};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
 
@@ -148,10 +149,11 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
                     .as_secs();
 
                 let time = format!("{}:{:02}", elapsed / 60, elapsed % 60);
+                let time = [("time", Arg::from(&time))];
 
                 loading_label(
                     ui,
-                    &i18n::text_with(&ctx, "maintenance-ranking-progress", &[("time", &time)]),
+                    &i18n::text_with(&ctx, "maintenance-ranking-progress", &time),
                 );
                 let stop = i18n::text(&ctx, "maintenance-ranking-cancel");
                 if pill_button(ui, &stop, ButtonKind::Soft).clicked() {

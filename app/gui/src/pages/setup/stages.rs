@@ -13,6 +13,7 @@ use super::{SetupPage, Stage};
 use crate::catalogs::CatalogId;
 use crate::command::{HomeCommand, UiCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::pages::toggles::catalog_text;
 use crate::pages::{PageContext, about};
@@ -76,8 +77,8 @@ impl Picks {
         card(ui, |ui| {
             let shown = groups.iter().filter(|(_, listed)| !listed.is_empty());
             for (index, (id, listed)) in shown.enumerate() {
-                let count = listed.len().to_string();
-                let heading = i18n::text_with(&ctx, id, &[("count", &count)]);
+                let count = listed.len();
+                let heading = i18n::text_with(&ctx, id, &[("count", Arg::from(count))]);
                 let listing = listed.join(", ");
                 card_row(ui, index == 0, |ui| {
                     ActionRow::new(icons::CHECKMARK, Tone::Neutral, &heading)
@@ -108,21 +109,20 @@ pub fn welcome(ui: &mut Ui, steps: usize) {
     let ctx = ui.ctx().clone();
     title(ui, &i18n::text(&ctx, "setup-welcome-title"));
     paragraph(ui, &i18n::text(&ctx, "setup-welcome-text"));
-    let count = steps.to_string();
+    let count = steps;
     paragraph(
         ui,
-        &i18n::text_with(&ctx, "setup-welcome-steps", &[("count", &count)]),
+        &i18n::text_with(&ctx, "setup-welcome-steps", &[("count", Arg::from(count))]),
     );
     paragraph(ui, &i18n::text(&ctx, "setup-welcome-installed"));
 }
 
 pub fn step_heading(ui: &mut Ui, (number, count): (usize, usize), name: &str) {
     let ctx = ui.ctx().clone();
-    let (number, count) = (number.to_string(), count.to_string());
     let words = [
-        ("number", number.as_str()),
-        ("count", count.as_str()),
-        ("title", name),
+        ("number", Arg::from(number)),
+        ("count", Arg::from(count)),
+        ("title", Arg::from(name)),
     ];
 
     title(ui, &i18n::text_with(&ctx, "setup-step", &words));

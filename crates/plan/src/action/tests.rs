@@ -208,10 +208,10 @@ fn group_membership_uses_gpasswd() {
         group: group.clone(),
     };
 
-    assert_eq!(shown(&add), ["gpasswd -a nico docker"]);
+    assert_eq!(shown(&add), ["gpasswd -a nico -- docker"]);
     assert_eq!(
         shown(&RootAction::RemoveFromGroup { user, group }),
-        ["gpasswd -d nico docker"]
+        ["gpasswd -d nico -- docker"]
     );
 }
 

@@ -60,9 +60,32 @@ pub fn opening(window: &Window) -> Result<Opening, OpeningError> {
     let action = window
         .action
         .as_ref()
-        .map(|id| match (page, Selection::from_id(id.as_ref())) {
-            (Some(PageId::Diagnostics), Some(selection)) => Ok(PageAction::Collect(selection)),
-            _ => Err(OpeningError::NoAction(id.clone())),
+        .map(|id| match page {
+            Some(PageId::Diagnostics) => Selection::from_id(id.as_ref())
+                .map(PageAction::Collect)
+                .ok_or_else(|| OpeningError::NoAction(id.clone())),
+            Some(
+                PageId::Home
+                | PageId::Setup
+                | PageId::Components
+                | PageId::Gaming
+                | PageId::Discover
+                | PageId::Packages
+                | PageId::Services
+                | PageId::SystemSettings
+                | PageId::Kernels
+                | PageId::Locales
+                | PageId::Users
+                | PageId::Configs
+                | PageId::Network
+                | PageId::Boot
+                | PageId::Maintenance
+                | PageId::BootRepair
+                | PageId::Settings
+                | PageId::Guide
+                | PageId::About,
+            )
+            | None => Err(OpeningError::NoAction(id.clone())),
         })
         .transpose()?;
 

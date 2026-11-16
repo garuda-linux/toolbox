@@ -5,16 +5,17 @@
 mod tests;
 
 use std::fs::File;
-use std::io::{self, Read as _, Seek as _, SeekFrom};
+use std::io::{self, Read as _};
 use std::path::Path;
 
 use toolbox_state::diagnostics::{Access, Attempt, Ran, since_last_pacman_run};
+
+use crate::status::pacman_log::{PACMAN_LOG, whole_lines};
 
 const DMESG_RESTRICT: &str = "proc/sys/kernel/dmesg_restrict";
 const MACHINE_ID: &str = "etc/machine-id";
 /// Persistent first, then the journal of systems that keep it in memory.
 const JOURNAL_FOLDERS: [&str; 2] = ["var/log/journal", "run/log/journal"];
-const PACMAN_LOG: &str = "var/log/pacman.log";
 
 /// What the user may read below `root` without the helper.
 ///
@@ -83,21 +84,9 @@ fn read_tail(path: &Path, limit: usize) -> io::Result<(String, bool)> {
     let length = file.metadata()?.len();
     let limit = u64::try_from(limit).unwrap_or(u64::MAX);
     let cut = length > limit;
-
-    if cut {
-        file.seek(SeekFrom::Start(length.saturating_sub(limit)))?;
-    }
-
     let mut bytes = Vec::new();
 
-    file.take(limit).read_to_end(&mut bytes)?;
+    whole_lines(&mut file, length, length.saturating_sub(limit))?.read_to_end(&mut bytes)?;
 
-    let whole_lines = bytes
-        .iter()
-        .position(|byte| *byte == b'\n')
-        .filter(|_| cut)
-        .and_then(|end| bytes.get(end.saturating_add(1)..))
-        .unwrap_or(&bytes);
-
-    Ok((String::from_utf8_lossy(whole_lines).into_owned(), cut))
+    Ok((String::from_utf8_lossy(&bytes).into_owned(), cut))
 }

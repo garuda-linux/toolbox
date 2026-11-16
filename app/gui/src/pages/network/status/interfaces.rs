@@ -8,6 +8,7 @@ use toolbox_gui_kit::widgets::{PropertyTexts, SectionHeading, card, property_lis
 use toolbox_gui_kit::{UiExt as _, icons};
 
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::network::Network;
 use crate::pages::PageContext;
 
@@ -43,8 +44,9 @@ fn interface_card(ui: &mut Ui, interface: &InterfaceCard) {
     SectionHeading::new(icon, &interface.connection, "").show(ui);
     ui.add_space(ui.tokens().sizes.heading_gap);
 
-    let copy =
-        |label: &str| i18n::text_with(&ctx, "network-copy", &[("label", label)]).into_owned();
+    let copy = |label: &str| {
+        i18n::text_with(&ctx, "network-copy", &[("label", Arg::from(label))]).into_owned()
+    };
 
     let copied = text("network-copied");
     let texts = PropertyTexts {
@@ -106,7 +108,7 @@ fn link_rows(ctx: &egui::Context, link: &Link) -> Vec<(String, String, bool)> {
     match link {
         Link::Wired { speed: Some(speed) } => vec![(
             text("network-card-speed"),
-            i18n::text_with(ctx, "network-speed", &[("mbps", &speed.to_string())]).into_owned(),
+            i18n::text_with(ctx, "network-speed", &[("mbps", Arg::from(speed))]).into_owned(),
             false,
         )],
         Link::Wired { speed: None } => Vec::new(),
@@ -132,12 +134,12 @@ fn link_rows(ctx: &egui::Context, link: &Link) -> Vec<(String, String, bool)> {
 /// The signal as its word and the percent, such as "Good (57 %)".
 fn signal_text(ctx: &egui::Context, signal: Signal) -> String {
     let word = i18n::text(ctx, quality_id(signal.quality())).into_owned();
-    let percent = signal.percent.to_string();
+    let percent = signal.percent;
 
     i18n::text_with(
         ctx,
         "network-signal",
-        &[("word", &word), ("percent", &percent)],
+        &[("word", Arg::from(&word)), ("percent", Arg::from(percent))],
     )
     .into_owned()
 }

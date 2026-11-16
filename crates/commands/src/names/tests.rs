@@ -33,7 +33,7 @@ fn user(name: &str, uid: u32) -> User {
         name: UserName::new(name).unwrap(),
         uid,
         gid: uid,
-        gecos: String::new(),
+        gecos: toolbox_text::plain(""),
         home: format!("/home/{name}"),
         shell: "/usr/bin/fish".to_owned(),
     }

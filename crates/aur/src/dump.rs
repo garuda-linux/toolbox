@@ -5,6 +5,7 @@
 #[cfg(test)]
 pub mod tests;
 
+use std::cell::Cell;
 use std::collections::BTreeMap;
 use std::fmt;
 use std::io::{BufReader, Read};
@@ -14,6 +15,7 @@ use serde::Deserialize;
 use serde::de::{Deserializer as _, Error as _, SeqAccess, Visitor};
 use toolbox_plan::PackageName;
 use toolbox_state::aur::AurPackage;
+use toolbox_text::OutsideText;
 
 use crate::clean::{
     DESCRIPTION_CHARS, MAINTAINER_CHARS, URL_CHARS, VERSION_CHARS, list, optional, plain,
@@ -21,10 +23,6 @@ use crate::clean::{
 
 /// The AUR holds about 100k packages. Far more is no dump of it.
 const MAX_ENTRIES: usize = 400_000;
-
-/// The visitor's words for [`DumpError::TooMany`], told apart after the
-/// JSON reader wrapped them.
-const TOO_MANY: &str = "too many packages";
 
 /// Packages by name, each name once, the first copy kept as pacman
 /// would take it.
@@ -65,11 +63,14 @@ struct Raw {
     keywords: Option<Vec<String>>,
 }
 
-struct PackagesVisitor {
+struct PackagesVisitor<'a> {
     max_entries: usize,
+    /// The JSON reader wraps the text of the error, so only this flag tells
+    /// the case apart.
+    too_many: &'a Cell<bool>,
 }
 
-impl<'de> Visitor<'de> for PackagesVisitor {
+impl<'de> Visitor<'de> for PackagesVisitor<'_> {
     type Value = Packages;
 
     fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -92,7 +93,8 @@ impl<'de> Visitor<'de> for PackagesVisitor {
             }
 
             if packages.len() == self.max_entries {
-                return Err(A::Error::custom(TOO_MANY));
+                self.too_many.set(true);
+                return Err(A::Error::custom("the package list holds too many packages"));
             }
 
             packages.insert(package.name.clone(), package);
@@ -118,8 +120,12 @@ pub fn parse_capped(
     // One byte over the limit tells a dump of exactly the limit from a
     // larger one.
     let mut unpacked = MultiGzDecoder::new(gzipped).take(max_bytes.saturating_add(1));
+    let too_many = Cell::new(false);
     let mut reader = serde_json::Deserializer::from_reader(BufReader::new(&mut unpacked));
-    let read = reader.deserialize_seq(PackagesVisitor { max_entries });
+    let read = reader.deserialize_seq(PackagesVisitor {
+        max_entries,
+        too_many: &too_many,
+    });
 
     if unpacked.limit() == 0 {
         return Err(DumpError::TooLarge(max_bytes));
@@ -127,9 +133,7 @@ pub fn parse_capped(
 
     match read {
         Ok(packages) => Ok(packages.into_values().collect()),
-        Err(error) if error.to_string().starts_with(TOO_MANY) => {
-            Err(DumpError::TooMany(max_entries))
-        }
+        Err(_) if too_many.get() => Err(DumpError::TooMany(max_entries)),
         Err(error) => Err(DumpError::Malformed(error.to_string())),
     }
 }
@@ -137,10 +141,16 @@ pub fn parse_capped(
 fn cleaned(raw: Raw) -> Option<AurPackage> {
     let name = PackageName::new(raw.name?).ok()?;
     let texts = |values: Option<Vec<String>>| list(&values.unwrap_or_default());
+    let names = |values: Option<Vec<String>>| {
+        texts(values)
+            .into_iter()
+            .map(OutsideText::into_string)
+            .collect()
+    };
 
     Some(AurPackage {
         name,
-        version: plain(raw.version.as_deref().unwrap_or_default(), VERSION_CHARS),
+        version: plain(raw.version.as_deref().unwrap_or_default(), VERSION_CHARS).into_string(),
         description: plain(
             raw.description.as_deref().unwrap_or_default(),
             DESCRIPTION_CHARS,
@@ -157,11 +167,11 @@ fn cleaned(raw: Raw) -> Option<AurPackage> {
         maintainer: optional(raw.maintainer.as_deref(), MAINTAINER_CHARS),
         first_submitted: raw.first_submitted.unwrap_or_default(),
         last_modified: raw.last_modified.unwrap_or_default(),
-        depends: texts(raw.depends),
-        make_depends: texts(raw.make_depends),
-        opt_depends: texts(raw.opt_depends),
-        provides: texts(raw.provides),
-        conflicts: texts(raw.conflicts),
+        depends: names(raw.depends),
+        make_depends: names(raw.make_depends),
+        opt_depends: names(raw.opt_depends),
+        provides: names(raw.provides),
+        conflicts: names(raw.conflicts),
         licenses: texts(raw.license),
         keywords: texts(raw.keywords),
     })

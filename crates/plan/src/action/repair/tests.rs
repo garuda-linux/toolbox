@@ -3,6 +3,7 @@ mod sdboot;
 mod secrets;
 mod trust;
 
+use super::LoaderRefusal;
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
 use crate::{
     BootloaderId, DiskDevice, InstalledLoader, InstalledSystem, PartitionDevice, Password,
@@ -354,7 +355,7 @@ fn every_repair_builds_the_initramfs_right_before_the_menu() {
 
 /// What the helper runs once it has seen `loader`: the
 /// [`Builtin::RepairBootLoader`] step replaced by its steps.
-fn as_run(action: &RootAction, loader: InstalledLoader) -> Result<Vec<Invocation>, &'static str> {
+fn as_run(action: &RootAction, loader: InstalledLoader) -> Result<Vec<Invocation>, LoaderRefusal> {
     let RootAction::RepairBoot {
         system,
         work,

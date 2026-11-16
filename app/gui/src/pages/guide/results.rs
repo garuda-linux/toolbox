@@ -8,19 +8,20 @@ use toolbox_guide::Hit;
 
 use super::Jump;
 use crate::i18n;
+use crate::i18n::Arg;
 
 pub(super) fn show(ui: &mut Ui, hits: &[Hit], query: &str) -> Option<Jump> {
     let ctx = ui.ctx().clone();
     if hits.is_empty() {
-        let title = i18n::text_with(&ctx, "guide-no-hits", &[("search", query)]);
+        let title = i18n::text_with(&ctx, "guide-no-hits", &[("search", Arg::from(query))]);
         let body = i18n::text(&ctx, "guide-no-hits-body");
         _ = empty_state(ui, icons::SYSTEM_SEARCH, &title, &body);
         return None;
     }
 
     let tokens = ui.tokens();
-    let count = hits.len().to_string();
-    let found = i18n::text_with(&ctx, "guide-hits", &[("count", &count)]);
+    let count = hits.len();
+    let found = i18n::text_with(&ctx, "guide-hits", &[("count", Arg::from(count))]);
     ui.label(rich(ui, &found, Weight::Regular, SMALL, tokens.secondary));
     ui.add_space(tokens.sizes.tight_gap);
 

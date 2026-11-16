@@ -17,6 +17,7 @@ use toolbox_plan::PackageName;
 use super::PackagesPage;
 use crate::command::PackagesCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 const LIST_HEIGHT: f32 = 240.0;
@@ -50,15 +51,16 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
 
     let tokens = tokens::current(ctx);
     let name = removal.package.as_str();
-    let title = i18n::text_with(ctx, "packages-remove-title", &[("package", name)]);
+    let package = [("package", Arg::from(name))];
+    let title = i18n::text_with(ctx, "packages-remove-title", &package);
     let close = i18n::text(ctx, "dialog-close");
     let modal = ModalWrapper::new(Id::unique("toolbox_gui::packages::remove"), &title)
         .title_bar(&close)
         .width(DialogWidth::Small)
         .show(ctx, |ui| {
             if !removal.required.is_empty() {
-                let count = removal.required.len().to_string();
-                let intro = i18n::text_with(ctx, "packages-remove-required", &[("count", &count)]);
+                let count = [("count", Arg::from(removal.required.len()))];
+                let intro = i18n::text_with(ctx, "packages-remove-required", &count);
                 names(
                     ui,
                     &intro,
@@ -72,8 +74,10 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
                 let alone = i18n::text(ctx, "packages-remove-alone");
                 ui.add(Label::new(rich(ui, &alone, Weight::Regular, BODY, tokens.text)).wrap());
             } else {
-                let count = removal.along.len().to_string();
-                let intro = i18n::text_with(ctx, "packages-remove-along", &[("count", &count)]);
+                let count = removal.along.len();
+                let intro =
+                    i18n::text_with(ctx, "packages-remove-along", &[("count", Arg::from(count))]);
+
                 names(ui, &intro, &removal.along, "packages-remove-along-list");
             }
 

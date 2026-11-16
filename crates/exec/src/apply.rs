@@ -285,7 +285,7 @@ fn run_once(
         Invocation::Builtin(Builtin::RepairBootLoader { system, work }) => {
             match repair::boot_loader_steps(Path::new(SYSTEM_ROOT), system, work) {
                 Ok(steps) => run_procedure(step, &steps, runner, sink),
-                Err(reason) => failure(step, sink, &reason),
+                Err(error) => failure(step, sink, &error.to_string()),
             }
         }
         Invocation::Builtin(builtin) => runner.builtin(step, builtin, sink),

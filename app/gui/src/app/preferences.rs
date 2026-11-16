@@ -112,17 +112,11 @@ impl App {
     }
 
     pub(super) fn apply_language(&self, ctx: &Context) {
-        let chosen = self
-            .prefs
-            .setup
-            .settings
-            .general
-            .language
-            .as_ref()
-            .and_then(|code| code.as_str().parse::<LanguageIdentifier>().ok())
-            .filter(|language| i18n::available().contains(language));
+        let language = i18n::shown(
+            self.prefs.setup.settings.general.language.as_ref(),
+            &self.prefs.system_language,
+        );
 
-        let language = chosen.unwrap_or_else(|| self.prefs.system_language.clone());
         i18n::set_language(ctx, &language);
     }
 

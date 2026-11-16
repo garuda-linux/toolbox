@@ -6,16 +6,13 @@
 mod tests;
 
 use std::collections::BTreeSet;
-use std::ops::RangeInclusive;
 
-use super::{LAST_USER_ID, ShadowLocks, passwd_entries};
+use super::{PEOPLE, ShadowLocks, passwd_entries};
 use crate::UserName;
 use crate::procedure::FIRST_USER_ID;
 
 /// `nobody`, which no person logs in as.
 const NOBODY: u32 = 0xFFFE;
-
-const PEOPLE: RangeInclusive<u32> = FIRST_USER_ID..=LAST_USER_ID;
 
 /// The account that asks, by the uid the kernel names for its socket.
 /// Root and the system accounts never ask through the app.

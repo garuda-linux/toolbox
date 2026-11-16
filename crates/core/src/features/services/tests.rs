@@ -24,7 +24,7 @@ fn listed<'units>(
 fn info(name: &str, description: &str, active: ActiveState, file_state: FileState) -> UnitInfo {
     UnitInfo {
         name: unit(name),
-        description: description.to_owned(),
+        description: toolbox_text::plain(description),
         active,
         sub_state: "running".to_owned(),
         file_state,

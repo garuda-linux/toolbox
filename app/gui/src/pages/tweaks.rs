@@ -6,6 +6,7 @@ mod rows;
 mod tests;
 
 use egui::{Context, Ui};
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::tweaks::view::Choices;
 use toolbox_system::Host;
 
@@ -52,7 +53,7 @@ impl LeadSections for SystemChoices {
         Choices::of(context.snapshot, context.changes, user)
     }
 
-    fn chips(&self, ctx: &Context, data: &Choices, query: &str) -> Vec<LeadChip> {
+    fn chips(&self, ctx: &Context, data: &Choices, query: &Needle) -> Vec<LeadChip> {
         let shell_network = LeadChip::new(
             ctx,
             SHELL_NETWORK,
@@ -79,7 +80,13 @@ impl LeadSections for SystemChoices {
         rows::unread(data)
     }
 
-    fn show(&self, ui: &mut Ui, on: (&PageContext<'_>, &Choices), id: &str, query: &str) -> bool {
+    fn show(
+        &self,
+        ui: &mut Ui,
+        on: (&PageContext<'_>, &Choices),
+        id: &str,
+        query: &Needle,
+    ) -> bool {
         let (context, choices) = on;
         match id {
             SHELL_NETWORK => rows::shell_network(ui, context, choices, query),

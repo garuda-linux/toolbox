@@ -20,6 +20,7 @@ use super::ask::Pending;
 use super::texts;
 use crate::command::ServiceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::rows::actions::{CopyName, Named, RowAction, RowKind, Run, Section};
 
 #[derive(Debug)]
@@ -68,8 +69,12 @@ impl UnitRow {
             masked: row.masked,
             active: unit.active,
             switchable: !row.masked && unit.file_state != FileState::Static,
-            menu: i18n::text_with(ctx, "services-actions", &[("name", unit.name.as_str())])
-                .into_owned(),
+            menu: i18n::text_with(
+                ctx,
+                "services-actions",
+                &[("name", Arg::from(unit.name.as_str()))],
+            )
+            .into_owned(),
         }
     }
 }

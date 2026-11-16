@@ -69,7 +69,7 @@ pub(super) fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
 }
 
 pub(super) fn entries(read: Read, out: &mut Out<'_>) -> Exit {
-    match read_menu(out.settings().color) {
+    match read_menu(out.settings()) {
         Some(menu) => print(
             read,
             &toolbox_core::features::boot::view::entries(Some(&menu)),

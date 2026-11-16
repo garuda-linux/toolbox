@@ -25,6 +25,7 @@ type Key = (String, SizeHint);
 
 enum Slot {
     Rendering,
+    /// The error is a `String` because egui's `LoadError::Loading` takes one.
     Done {
         result: Result<Arc<ColorImage>, String>,
         used: u64,

@@ -14,6 +14,7 @@ use toolbox_plan::{GroupName, UserName};
 use super::{Next, dialog, group_search, note};
 use crate::command::UserEdit;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 #[derive(Debug)]
@@ -41,7 +42,7 @@ impl Membership {
 
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>) -> Next {
         let user = self.user.as_str();
-        let title = i18n::text_with(ctx, "users-groups-title", &[("user", user)]);
+        let title = i18n::text_with(ctx, "users-groups-title", &[("user", Arg::from(user))]);
         let confirm = i18n::text(ctx, "users-queue-changes");
         let choices = view::choices(&self.user, context.snapshot, context.changes);
         let picks = self.picks.get_or_insert_with(|| {
@@ -88,9 +89,9 @@ impl Membership {
 fn tick(ui: &mut Ui, choice: &GroupChoice, chosen: &mut BTreeSet<GroupName>) {
     let ctx = ui.ctx().clone();
     let group = choice.group.as_str();
-    let members = choice.members.to_string();
+    let members = choice.members;
     let label = choice.gid.map_or_else(
-        || i18n::text_with(&ctx, "users-choice-new", &[("group", group)]).into_owned(),
+        || i18n::text_with(&ctx, "users-choice-new", &[("group", Arg::from(group))]).into_owned(),
         |gid| {
             let id = if choice.primary {
                 "users-choice-primary"
@@ -98,11 +99,10 @@ fn tick(ui: &mut Ui, choice: &GroupChoice, chosen: &mut BTreeSet<GroupName>) {
                 "users-choice-detail"
             };
 
-            let gid = gid.to_string();
             let words = [
-                ("group", group),
-                ("gid", gid.as_str()),
-                ("members", members.as_str()),
+                ("group", Arg::from(group)),
+                ("gid", Arg::from(gid)),
+                ("members", Arg::from(members)),
             ];
 
             i18n::text_with(&ctx, id, &words).into_owned()

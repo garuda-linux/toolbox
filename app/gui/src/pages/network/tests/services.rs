@@ -14,7 +14,7 @@ use crate::units::{UnitListing, UnitLists, Units};
 fn network_manager() -> UnitInfo {
     UnitInfo {
         name: UnitName::new("NetworkManager.service").unwrap(),
-        description: "Network Manager".to_owned(),
+        description: toolbox_text::plain("Network Manager"),
         active: ActiveState::Active,
         sub_state: "running".to_owned(),
         file_state: FileState::Enabled,

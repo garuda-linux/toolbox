@@ -62,7 +62,10 @@ fn accounts_and_homes_are_checked_as_steps() {
 
     assert_eq!(outcome_of(root.path(), &member), Outcome::Succeeded);
 
-    let free = Builtin::RequireFreeHome(HomeDirectory::new("/home/fresh").unwrap());
+    let free = Builtin::RequireFreeHome(
+        UserName::new("user").unwrap(),
+        HomeDirectory::new("/home/fresh").unwrap(),
+    );
 
     assert_eq!(outcome_of(root.path(), &free), Outcome::Succeeded);
 }
@@ -207,7 +210,10 @@ fn a_held_lock_fails_its_step_with_the_holder() {
 fn an_uncheckable_home_fails_its_step() {
     let root = tempfile::tempdir().unwrap();
     fs::write(root.path().join("srv"), "").unwrap();
-    let builtin = Builtin::RequireFreeHome(HomeDirectory::new("/srv/taken").unwrap());
+    let builtin = Builtin::RequireFreeHome(
+        UserName::new("user").unwrap(),
+        HomeDirectory::new("/srv/taken").unwrap(),
+    );
 
     assert_failed(outcome_of(root.path(), &builtin));
 }

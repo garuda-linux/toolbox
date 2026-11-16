@@ -10,14 +10,14 @@ use crate::{ProbeError, probe_snapshot};
 
 #[test]
 fn the_package_graph_lands_in_the_snapshot() {
-    let (snapshot, _issues) = probe_snapshot(&sources(FakePackages(Ok(installed())), host()));
+    let (snapshot, _issues) = probe_snapshot(&sources(FakePackages::new(Ok(installed())), host()));
 
     assert!(snapshot.part::<PackageGraph>().is_some());
 }
 
 #[test]
 fn a_failed_graph_read_is_reported_and_left_out() {
-    let failed = FakePackages(Err(ProbeError::fake("database locked")));
+    let failed = FakePackages::new(Err(ProbeError::fake("database locked")));
 
     let (snapshot, issues) = probe_snapshot(&sources(failed, host()));
 

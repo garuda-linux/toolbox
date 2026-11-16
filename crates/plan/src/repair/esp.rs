@@ -5,15 +5,7 @@
 #[cfg(test)]
 mod tests;
 
-use super::ESP_FOLDER;
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum EspPlace {
-    Efi,
-    Boot,
-    BootEfi,
-}
+use crate::sdboot::EspPlace;
 
 /// What the mounted system starts with, seen from its own files.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -26,14 +18,6 @@ pub enum InstalledLoader {
 }
 
 impl EspPlace {
-    pub const fn inside(self) -> &'static str {
-        match self {
-            Self::Efi => "efi",
-            Self::Boot => "boot",
-            Self::BootEfi => ESP_FOLDER,
-        }
-    }
-
     pub fn from_fstab(fstab: &str) -> Option<Self> {
         fstab
             .lines()

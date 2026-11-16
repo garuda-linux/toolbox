@@ -15,6 +15,7 @@ use super::dialogs::{AddGroup, Dialog, RemoveGroup};
 use super::{accounts_ready, texts};
 use crate::command::UserEdit;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::sort_select;
 use crate::pages::search_empty::search_empty_state;
@@ -142,16 +143,16 @@ fn detail(ctx: &egui::Context, group: &GroupRow) -> String {
         return i18n::text(ctx, "groups-detail-new").into_owned();
     };
 
-    let gid = gid.to_string();
     if group.members.is_empty() {
-        return i18n::text_with(ctx, "groups-detail-empty", &[("gid", &gid)]).into_owned();
+        return i18n::text_with(ctx, "groups-detail-empty", &[("gid", Arg::from(gid))])
+            .into_owned();
     }
 
     let members = texts::list(ctx, group.members.iter().map(toolbox_plan::Name::as_str));
     i18n::text_with(
         ctx,
         "groups-detail",
-        &[("gid", &gid), ("members", &members)],
+        &[("gid", Arg::from(gid)), ("members", Arg::from(&members))],
     )
     .into_owned()
 }
@@ -173,7 +174,7 @@ fn button(ui: &mut Ui, context: &PageContext<'_>, group: &GroupRow, dialog: &mut
     let name = i18n::text_with(
         &ctx,
         &format!("{id}-named"),
-        &[("group", group.name.as_str())],
+        &[("group", Arg::from(group.name.as_str()))],
     );
 
     if !named_pill_button(ui, &label, ButtonKind::Soft, &name).clicked() {

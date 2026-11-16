@@ -1,14 +1,13 @@
-use super::super::LocaleRow;
+use crate::features::locales::LocaleRow;
+use crate::test_support::locale_entry;
 
 fn row(code: &str, charset: &str) -> LocaleRow {
     LocaleRow {
-        locale_code: code.to_owned(),
-        charset: charset.to_owned(),
-        language: String::new(),
-        territory: String::new(),
-        enabled_now: false,
-        on: false,
-        queued: "",
+        entry: locale_entry(&format!("{code} {charset}")),
+        text: String::new(),
+        enabled: false,
+        queued: None,
+        name: None,
         system: false,
     }
 }

@@ -25,7 +25,7 @@ rm -rf "$work"
 mkdir -p "$work"
 tar -C "$checkout" \
   --exclude=./target --exclude=./.git --exclude=./reference \
-  --exclude=./.direnv --exclude=./.cargo-home --exclude="./result*" \
+  --exclude=./.direnv --exclude=./.cargo-home --exclude=./.claude --exclude="./result*" \
   -cf - . | tar -C "$work" -xf -
 
 cache=()

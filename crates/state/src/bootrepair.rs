@@ -7,6 +7,7 @@ pub mod sample;
 
 pub use lsblk::{InvalidListing, LSBLK_ARGUMENTS, parse_lsblk};
 use toolbox_plan::{DiskDevice, PartitionDevice, RepairRoot, RootLayout};
+use toolbox_text::OutsideText;
 
 const BTRFS: &str = "btrfs";
 
@@ -61,7 +62,7 @@ impl Encryption {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct System {
     pub root: RepairRoot,
-    pub label: String,
+    pub label: OutsideText,
     /// In bytes, 0 when lsblk did not say.
     pub size: u64,
     /// Empty for a locked root: what is inside shows only once it is open.
@@ -103,7 +104,7 @@ impl System {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Esp {
     pub device: PartitionDevice,
-    pub label: String,
+    pub label: OutsideText,
     /// In bytes, 0 when lsblk did not say.
     pub size: u64,
     pub disk: DiskDevice,
@@ -113,7 +114,7 @@ pub struct Esp {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Disk {
     pub device: DiskDevice,
-    pub model: String,
+    pub model: OutsideText,
     /// In bytes, 0 when lsblk did not say.
     pub size: u64,
     pub in_use: bool,

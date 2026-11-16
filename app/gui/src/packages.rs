@@ -256,7 +256,9 @@ impl Packages {
                     tracing::warn!("{error}");
                     let read = match error {
                         AurError::Waiting { next: _ } => Read::Unavailable,
-                        AurError::Download(_) | AurError::Storage(_) => Read::Failed,
+                        AurError::Download(_) | AurError::Storage { path: _, error: _ } => {
+                            Read::Failed
+                        }
                     };
 
                     Landed::Aur(read, None)

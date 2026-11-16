@@ -241,6 +241,7 @@ now`. A second `Ctrl+c` stops the running step at once. Its cleanup still
 runs, such as an unmount. Either way the command waits for the helper,
 shows the steps that did not run as cancelled, ends with `Cancelled` and
 exit code 130. After `queue apply`, what did not run stays in the queue.
+Under `--json` the note is a `warning` line.
 
 `queue apply` checks a queue an earlier run left as the pages do. For a
 queued lock, account removal or group change it reads the lock state of
@@ -721,6 +722,19 @@ program's own words. The last two are left out when there are none.
 [Exit codes](#exit-codes)). A change under `--json` prints its errors as
 JSON Lines on standard output instead, as the next section describes.
 
+A note that does not stop a read, such as the sudo fallback of a root
+read, goes to standard error as one object per note. It is printed when
+it happens, not with the errors at the end:
+
+```json
+{
+  "schema": 1,
+  "warning": {
+    "message": "pkexec is not available, asking through sudo"
+  }
+}
+```
+
 The same object stands for an error that comes before any command runs,
 when `--json` is among the arguments: a wrong option or argument (`code`
 2, `reason` `usage`, clap's tip as the `hint`) or a wrong start option of
@@ -743,6 +757,7 @@ error. Each line has `"schema": 1` and an `event`:
 | `output`   | `step`, `line`                                    | A line of the program's output, without its line break.      |
 | `finished` | `step`, `outcome`, `seconds`                      | A step ended.                                                |
 | `error`    | `message`, `hint` and `detail` when there are any | Something went wrong, such as a closed password dialog.      |
+| `warning`  | `message`                                         | A note that does not stop the change, any time, even first.  |
 | `done`     | `ok`: `true` when every step ended well           | Last.                                                        |
 
 `step` counts from 1 in the order of the plan, `of` is the number of
@@ -770,6 +785,16 @@ For example, a restart of `sshd.service`:
 {"schema":1,"event":"started","step":1,"of":1,"command":["systemctl restart -- sshd.service"]}
 {"schema":1,"event":"finished","step":1,"outcome":"done","seconds":0.412}
 {"schema":1,"event":"done","ok":true}
+```
+
+For example, a note that pkexec is not available and sudo asks instead:
+
+```json
+{
+  "schema": 1,
+  "event": "warning",
+  "message": "pkexec is not available, asking through sudo"
+}
 ```
 
 `status --watch --json` prints JSON Lines too: each line is one object of

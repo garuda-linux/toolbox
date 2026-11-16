@@ -20,6 +20,7 @@ use self::lines::{Covered, Kind, Row};
 use super::texts;
 use crate::command::ConfigsCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// Room above and below a diff line, so the tints of neighbouring rows
@@ -48,7 +49,7 @@ pub fn show(ctx: &Context, context: &PageContext<'_>, session: &Session) -> bool
     };
 
     let path = texts::path(session.path());
-    let title = i18n::text_with(ctx, "configs-review-title", &[("path", &path)]);
+    let title = i18n::text_with(ctx, "configs-review-title", &[("path", Arg::from(&path))]);
     let close = i18n::text(ctx, "configs-review-close");
     let outcome = ModalWrapper::new(Id::unique("toolbox_gui::configs::review"), &title)
         .title_bar(&close)
@@ -88,8 +89,14 @@ pub fn forget(ctx: &Context) {
 fn ask_discard(ctx: &Context, context: &PageContext<'_>, path: &str) {
     let title = i18n::text(ctx, "configs-discard-title");
     let close = i18n::text(ctx, "dialog-close");
-    let body = i18n::text_with(ctx, "configs-discard-question", &[("path", path)]);
+    let body = i18n::text_with(
+        ctx,
+        "configs-discard-question",
+        &[("path", Arg::from(path))],
+    );
+
     let cancel = i18n::text(ctx, "configs-discard-keep");
+
     let confirm = i18n::text(ctx, "configs-discard");
     let texts = Question {
         title: &title,
@@ -118,7 +125,7 @@ fn words(ui: &mut Ui, session: &Session, changes: &Changes, path: &str) {
         let text = i18n::text_with(
             &ctx,
             "configs-review-link",
-            &[("path", path), ("target", &target)],
+            &[("path", Arg::from(path)), ("target", Arg::from(&target))],
         );
 
         ui.add(Label::new(text).wrap());
@@ -126,11 +133,11 @@ fn words(ui: &mut Ui, session: &Session, changes: &Changes, path: &str) {
     }
 
     let backup = session.backup().unwrap_or_default();
-    let (added, removed) = (changes.added.to_string(), changes.removed.to_string());
+    let (added, removed) = (changes.added, changes.removed);
     let words = [
-        ("added", added.as_str()),
-        ("removed", removed.as_str()),
-        ("backup", backup.as_str()),
+        ("added", Arg::from(added)),
+        ("removed", Arg::from(removed)),
+        ("backup", Arg::from(backup.as_str())),
     ];
 
     // A file of the user is written as the user, without a password.
@@ -284,12 +291,16 @@ fn paint_numbers(painter: &Painter, rect: Rect, row: &Row, look: &Look, tokens: 
 }
 
 fn lines_in_words(ctx: &Context, covered: Covered) -> String {
-    let count = (covered.last - covered.first + 1).to_string();
-    let (first, last) = (covered.first.to_string(), covered.last.to_string());
+    let count = covered.last - covered.first + 1;
+    let (first, last) = (covered.first, covered.last);
     i18n::text_with(
         ctx,
         "configs-review-lines",
-        &[("first", &first), ("last", &last), ("count", &count)],
+        &[
+            ("first", Arg::from(first)),
+            ("last", Arg::from(last)),
+            ("count", Arg::from(count)),
+        ],
     )
     .into_owned()
 }

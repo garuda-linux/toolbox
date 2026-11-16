@@ -17,6 +17,7 @@ use toolbox_gui_kit::widgets::{
 
 use super::header::title_header;
 use super::{PageContext, PageView};
+use crate::i18n::Arg;
 use crate::pages::heading;
 use crate::{i18n, links};
 
@@ -163,8 +164,12 @@ impl PageView for AboutPage {
 fn facts(ui: &mut Ui) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id);
-    let copy = |label: &str| i18n::text_with(&ctx, "about-copy", &[("label", label)]).into_owned();
+    let copy = |label: &str| {
+        i18n::text_with(&ctx, "about-copy", &[("label", Arg::from(label))]).into_owned()
+    };
+
     let copied = text("about-copied");
+
     let texts = PropertyTexts {
         copy: &copy,
         copied: &copied,

@@ -39,3 +39,4 @@ toggles-problem = Die Liste konnte nicht geladen werden.
 toggles-problem-unreadable = Eine Katalogdatei konnte nicht gelesen werden.
 toggles-problem-syntax = Eine Katalogdatei ist beschädigt.
 toggles-problem-invalid = Eine Katalogdatei enthält einen ungültigen Eintrag.
+toggles-problem-reason = Die Liste konnte nicht geladen werden. { $reason }

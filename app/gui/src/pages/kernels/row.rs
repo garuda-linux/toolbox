@@ -14,6 +14,7 @@ use toolbox_gui_kit::{UiExt as _, tokens};
 
 use crate::command::{BootCommand, KernelEdit};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::toggles::control::{self, Setting};
 
@@ -138,13 +139,16 @@ fn text(ui: &mut Ui, row: &Row) {
         i18n::text_with(
             &ctx,
             "kernels-version-local",
-            &[("version", &kernel.version)],
+            &[("version", Arg::from(&kernel.version))],
         )
     } else {
         i18n::text_with(
             &ctx,
             "kernels-version",
-            &[("version", &kernel.version), ("repo", &kernel.repo)],
+            &[
+                ("version", Arg::from(&kernel.version)),
+                ("repo", Arg::from(&kernel.repo)),
+            ],
         )
     };
 
@@ -156,10 +160,16 @@ fn text(ui: &mut Ui, row: &Row) {
         let note = i18n::text_with(
             &ctx,
             "kernels-version-installed",
-            &[("installed", installed)],
+            &[("installed", Arg::from(installed))],
         );
 
-        version = format!("{version} · {note}").into();
+        version = i18n::text_with(
+            &ctx,
+            "kernels-version-note",
+            &[("version", Arg::from(&version)), ("note", Arg::from(&note))],
+        )
+        .into_owned()
+        .into();
     }
 
     ui.add(Label::new(rich(ui, &version, Weight::Regular, SMALL, tokens.secondary)).wrap());
@@ -246,8 +256,8 @@ fn modules(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
                 &ctx,
                 text_id,
                 &[
-                    ("module", module.status.module.as_str()),
-                    ("version", module.status.version.as_str()),
+                    ("module", Arg::from(module.status.module.as_str())),
+                    ("version", Arg::from(module.status.version.as_str())),
                 ],
             );
 
@@ -316,7 +326,12 @@ fn default_link(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
     let ctx = ui.ctx().clone();
     let name = row.kernel.name.as_str();
     let text = i18n::text(&ctx, "kernels-set-default");
-    let label = i18n::text_with(&ctx, "kernels-set-default-name", &[("kernel", name)]);
+    let label = i18n::text_with(
+        &ctx,
+        "kernels-set-default-name",
+        &[("kernel", Arg::from(name))],
+    );
+
     let response = named_pill_button(ui, &text, ButtonKind::Soft, &label);
 
     if response.clicked() {

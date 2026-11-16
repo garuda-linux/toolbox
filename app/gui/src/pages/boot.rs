@@ -28,6 +28,7 @@ use super::{PageContext, PageView, plan_running};
 use crate::boot::Boot;
 use crate::command::{AppCommand, BootCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::pages::heading;
 
@@ -204,7 +205,7 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) -> bool {
 /// The question before a parameter that opens a root shell at boot or
 /// switches a security layer off. Returns whether it was confirmed.
 fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) -> bool {
-    let title = i18n::text_with(ctx, "boot-risky-title", &[("value", value)]);
+    let title = i18n::text_with(ctx, "boot-risky-title", &[("value", Arg::from(value))]);
     let body = i18n::text(ctx, "boot-risky-body");
     let close = i18n::text(ctx, "dialog-close");
     let cancel = i18n::text(ctx, "boot-risky-cancel");
@@ -275,7 +276,7 @@ fn note(
     let text = i18n::text_with(
         &ctx,
         &format!("boot-proposal-{state}"),
-        &[("kernel", kernel.as_str())],
+        &[("kernel", Arg::from(kernel.as_str()))],
     );
 
     let offer = state == "offer";

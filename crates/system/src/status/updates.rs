@@ -9,6 +9,7 @@ use std::ffi::OsString;
 use toolbox_exec::{Environment, locate_program};
 use toolbox_plan::PackageName;
 use toolbox_plan::procedure::Program;
+use toolbox_text::OutsideText;
 
 use crate::command;
 use crate::error::ProbeError;
@@ -22,8 +23,8 @@ const IGNORED: &str = "[ignored]";
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PendingUpdate {
     pub name: PackageName,
-    pub from: String,
-    pub to: String,
+    pub from: OutsideText,
+    pub to: OutsideText,
 }
 
 pub trait UpdateSource: Send + Sync {
@@ -181,8 +182,8 @@ fn parse_update(line: &str) -> Option<PendingUpdate> {
     match PackageName::new(name) {
         Ok(name) => Some(PendingUpdate {
             name,
-            from: from.to_owned(),
-            to: to.to_owned(),
+            from: toolbox_text::plain(from),
+            to: toolbox_text::plain(to),
         }),
         Err(error) => {
             tracing::debug!("skipped: {error}");

@@ -32,12 +32,12 @@ impl AurSource for SampleAur {
             Some(AurPackage {
                 name: PackageName::new(name).ok()?,
                 version: "1.0-1".to_owned(),
-                description: description.to_owned(),
-                url: Some("https://example.org/".to_owned()),
+                description: toolbox_text::plain(description),
+                url: Some(toolbox_text::plain("https://example.org/")),
                 votes: 42,
                 popularity,
                 out_of_date,
-                maintainer: Some("sample".to_owned()),
+                maintainer: Some(toolbox_text::plain("sample")),
                 first_submitted: DAY,
                 last_modified: DAY,
                 depends: vec!["glibc".to_owned()],
@@ -45,8 +45,8 @@ impl AurSource for SampleAur {
                 opt_depends: vec!["git: for -git packages".to_owned()],
                 provides: Vec::new(),
                 conflicts: Vec::new(),
-                licenses: vec!["GPL-3.0-or-later".to_owned()],
-                keywords: vec!["helper".to_owned()],
+                licenses: vec![toolbox_text::plain("GPL-3.0-or-later")],
+                keywords: vec![toolbox_text::plain("helper")],
             })
         })
         .collect();

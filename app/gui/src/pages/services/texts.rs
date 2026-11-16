@@ -10,6 +10,7 @@ use toolbox_gui_kit::widgets::Tone;
 use toolbox_plan::UnitOperation;
 
 use crate::i18n;
+use crate::i18n::Arg;
 
 pub fn state(ctx: &Context, unit: &UnitInfo) -> (Cow<'static, str>, Tone) {
     let tone = match unit.active {
@@ -40,7 +41,7 @@ pub fn state(ctx: &Context, unit: &UnitInfo) -> (Cow<'static, str>, Tone) {
         i18n::text_with(
             ctx,
             "services-state-detail",
-            &[("state", &state), ("detail", &detail)],
+            &[("state", Arg::from(&state)), ("detail", Arg::from(&detail))],
         )
     };
 

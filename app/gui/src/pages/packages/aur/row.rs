@@ -12,6 +12,7 @@ use super::super::row::{Act, PackageRow, undone};
 use super::super::{PackagesPage, remove};
 use crate::command::PackagesCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 /// One shown package of the AUR's copy, with the repositories' index for
@@ -88,7 +89,7 @@ pub fn version_line(ctx: &Context, entry: &AurPackage) -> String {
     let votes = i18n::text_with(
         ctx,
         "packages-aur-votes",
-        &[("count", &entry.votes.to_string())],
+        &[("count", Arg::from(entry.votes))],
     );
 
     format!("{} · {votes}", entry.version)

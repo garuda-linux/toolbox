@@ -36,7 +36,7 @@ fn only_lts() -> Snapshot {
             .map(|name| LocalPackage {
                 name: package(name),
                 version: "6.12.9-1".to_owned(),
-                description: String::new(),
+                description: toolbox_text::plain(""),
             })
             .collect(),
     });

@@ -2,7 +2,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{
     AddUser, Confirm, EditUser, GroupArgs, PasswordSource, RemoveUser, UserArgs,
 };
-use toolbox_cli::confirm::Prompt;
+use toolbox_cli::confirm::{Interrupted, Prompt};
 use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User};
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_plan::{GroupName, PlannedAction, RootAction, ShellPath, UserName};
@@ -18,6 +18,23 @@ struct Answers {
     stdin: Option<&'static str>,
 }
 
+/// Ctrl+C at the password question.
+struct CtrlC;
+
+impl Prompt for CtrlC {
+    fn is_terminal(&self) -> bool {
+        true
+    }
+
+    fn ask(&mut self, _question: &str) -> Option<String> {
+        None
+    }
+
+    fn secret(&mut self, _question: &str) -> Result<Option<String>, Interrupted> {
+        Err(Interrupted)
+    }
+}
+
 impl Prompt for Answers {
     fn is_terminal(&self) -> bool {
         self.terminal
@@ -27,8 +44,8 @@ impl Prompt for Answers {
         None
     }
 
-    fn secret(&mut self, _question: &str) -> Option<String> {
-        (!self.secrets.is_empty()).then(|| self.secrets.remove(0).to_owned())
+    fn secret(&mut self, _question: &str) -> Result<Option<String>, Interrupted> {
+        Ok((!self.secrets.is_empty()).then(|| self.secrets.remove(0).to_owned()))
     }
 
     fn line(&mut self) -> Option<String> {
@@ -41,7 +58,7 @@ fn user(name: &str, uid: u32) -> User {
         name: UserName::new(name).unwrap(),
         uid,
         gid: uid,
-        gecos: String::new(),
+        gecos: toolbox_text::plain(""),
         home: format!("/home/{name}"),
         shell: "/usr/bin/bash".parse().unwrap(),
     }
@@ -128,6 +145,32 @@ fn two_different_passwords_create_nothing() {
 
     let refused = add(&add_args("grace"), &snapshot(), &mut prompt).unwrap_err();
     assert!(refused.message().contains("do not match"));
+}
+
+/// A closed second question is no mismatch, so it says so.
+#[test]
+fn a_closed_second_password_question_says_it_was_not_repeated() {
+    let mut prompt = Answers {
+        terminal: true,
+        secrets: vec!["one\n"],
+        stdin: None,
+    };
+
+    let refused = add(&add_args("grace"), &snapshot(), &mut prompt).unwrap_err();
+    assert!(
+        refused.message().contains("was not repeated"),
+        "{}",
+        refused.message()
+    );
+}
+
+#[test]
+fn ctrl_c_at_the_password_question_ends_with_the_interrupt_and_says_nothing() {
+    let refused = add(&add_args("grace"), &snapshot(), &mut CtrlC).unwrap_err();
+
+    assert_eq!(refused, Refused::Interrupted);
+    assert_eq!(refused.exit(), Exit::Interrupted);
+    assert_eq!(refused.message(), "");
 }
 
 #[test]

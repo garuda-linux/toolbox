@@ -8,7 +8,6 @@
 mod checks;
 mod jobs;
 mod mirrorlist;
-#[cfg(any(test, feature = "selftest", feature = "testing"))]
 mod sample;
 #[cfg(test)]
 mod tests;
@@ -19,7 +18,6 @@ use std::sync::Arc;
 use jobs::Jobs;
 pub use jobs::MaintenanceSetup;
 use mirrorlist::Install;
-#[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub use sample::SampleMirrors;
 use toolbox_catalog::SkelCatalog;
 use toolbox_core::features::maintenance::opening::{Next, Opening};

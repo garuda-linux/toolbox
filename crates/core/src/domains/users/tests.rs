@@ -11,7 +11,7 @@ use crate::{ChangeSet, Snapshot, SummaryCode, plan};
 
 fn snapshot() -> Snapshot {
     let mut nico = user("nico", 1000, 1000);
-    nico.gecos = "Nico,Room 1".to_owned();
+    nico.gecos = toolbox_text::plain("Nico,Room 1");
 
     let mut snapshot = Snapshot::default();
     snapshot.insert(Accounts {
@@ -77,8 +77,8 @@ fn account_changes_run_in_an_order_that_works() {
         shown(&changes),
         [
             "groupadd -- crafts",
-            "gpasswd -d ada makers",
-            "gpasswd -a nico crafts",
+            "gpasswd -d ada -- makers",
+            "gpasswd -a nico -- crafts",
             "chsh -s /usr/bin/fish -- ada",
             "chfn -f 'N. J.' -- nico",
             "usermod -d /srv/people/nico -m -- nico",

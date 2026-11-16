@@ -15,7 +15,7 @@ fn shown_for(level: HealthLevel) -> (bool, bool) {
     let mut status = quiet();
     status.health = Ok(vec![HealthIssue {
         level,
-        message: "Important garuda linux packages are missing".to_owned(),
+        message: toolbox_text::plain("Important garuda linux packages are missing"),
         fix_available: true,
     }]);
     let (harness, _runtime, _power) = home(host(false, false), status);

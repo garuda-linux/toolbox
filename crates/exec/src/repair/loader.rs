@@ -3,12 +3,37 @@
 
 use std::io;
 use std::path::Path;
+use std::string::FromUtf8Error;
 
 use toolbox_plan::procedure::{Invocation, Program, uki_rebuilds};
-use toolbox_plan::{InstalledLoader, InstalledSystem, MAX_CONFIG_BYTES, REPAIR_ROOT, RepairWork};
+use toolbox_plan::{
+    InstalledLoader, InstalledSystem, LoaderRefusal, MAX_CONFIG_BYTES, REPAIR_ROOT, RepairWork,
+};
 
 use super::absent_as_none;
 use crate::secure::{self, Unreadable};
+
+/// Why the steps of the boot loader cannot be made.
+#[derive(Debug, thiserror::Error)]
+pub enum LoaderStepsError {
+    #[error("cannot tell the boot loader of the mounted system: {0}")]
+    Unknown(#[source] io::Error),
+    #[error(transparent)]
+    Refused(#[from] LoaderRefusal),
+}
+
+/// A file of the mounted system the boot loader is read from, refused.
+#[derive(Debug, thiserror::Error)]
+enum RefusedFile {
+    #[error("{name} is not UTF-8 text: {error}")]
+    NotUtf8 { name: String, error: FromUtf8Error },
+    #[error("{name} is a symlink")]
+    Link { name: String },
+    #[error("{name} is not a regular file")]
+    NotRegular { name: String },
+    #[error("{name} is larger than {max} bytes")]
+    TooLarge { name: String, max: usize },
+}
 
 /// # Errors
 ///
@@ -26,17 +51,16 @@ pub fn installed_loader(root: &Path) -> io::Result<InstalledLoader> {
 
 /// # Errors
 ///
-/// The reason, in words for the Console, when the boot loader cannot be
-/// told or the work does not fit it.
+/// [`LoaderStepsError::Unknown`] when the boot loader cannot be told,
+/// [`LoaderStepsError::Refused`] when the work does not fit it.
 pub fn boot_loader_steps(
     root: &Path,
     system: &InstalledSystem,
     work: &RepairWork,
-) -> Result<Vec<Invocation>, String> {
-    let loader = installed_loader(root)
-        .map_err(|error| format!("cannot tell the boot loader of the mounted system: {error}"))?;
+) -> Result<Vec<Invocation>, LoaderStepsError> {
+    let loader = installed_loader(root).map_err(LoaderStepsError::Unknown)?;
 
-    toolbox_plan::boot_loader_steps(system, work, loader).map_err(str::to_owned)
+    Ok(toolbox_plan::boot_loader_steps(system, work, loader)?)
 }
 
 /// Whether the mounted system has `program` at its path, not through a
@@ -80,18 +104,23 @@ fn text(root: &Path, folder: &str, name: &str) -> io::Result<Option<String>> {
         return Ok(None);
     };
 
-    let refused = |why: String| io::Error::new(io::ErrorKind::InvalidData, format!("{name} {why}"));
+    let refused = |reason: RefusedFile| io::Error::new(io::ErrorKind::InvalidData, reason);
+    let name_of = || name.to_owned();
 
     match secure::read_regular(&dir, name, MAX_CONFIG_BYTES) {
-        Ok(file) => String::from_utf8(file.content)
-            .map(Some)
-            .map_err(|error| refused(format!("is not UTF-8 text: {error}"))),
+        Ok(file) => String::from_utf8(file.content).map(Some).map_err(|error| {
+            refused(RefusedFile::NotUtf8 {
+                name: name_of(),
+                error,
+            })
+        }),
         Err(Unreadable::Missing) => Ok(None),
-        Err(Unreadable::Link) => Err(refused("is a symlink".to_owned())),
-        Err(Unreadable::NotRegular) => Err(refused("is not a regular file".to_owned())),
-        Err(Unreadable::TooLarge) => {
-            Err(refused(format!("is larger than {MAX_CONFIG_BYTES} bytes")))
-        }
+        Err(Unreadable::Link) => Err(refused(RefusedFile::Link { name: name_of() })),
+        Err(Unreadable::NotRegular) => Err(refused(RefusedFile::NotRegular { name: name_of() })),
+        Err(Unreadable::TooLarge) => Err(refused(RefusedFile::TooLarge {
+            name: name_of(),
+            max: MAX_CONFIG_BYTES,
+        })),
         Err(Unreadable::Failed(error)) => Err(error),
     }
 }

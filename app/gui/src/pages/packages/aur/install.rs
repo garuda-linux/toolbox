@@ -9,6 +9,7 @@ use toolbox_gui_kit::widgets::{ButtonKind, DialogWidth, Question, question};
 use super::super::PackagesPage;
 use crate::command::PackagesCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>) {
@@ -19,7 +20,7 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
     let title = i18n::text_with(
         ctx,
         "packages-aur-install-title",
-        &[("package", package.as_str())],
+        &[("package", Arg::from(package.as_str()))],
     );
 
     let close = i18n::text(ctx, "dialog-close");

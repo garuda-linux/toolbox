@@ -19,6 +19,7 @@ use self::found::Found;
 use super::rows::{character_count, piece_text, row_top};
 use super::view::{ShareView, Subject};
 use crate::i18n;
+use crate::i18n::Arg;
 
 /// The box's least height, for a small window.
 const LEAST_HEIGHT: f32 = 160.0;
@@ -50,7 +51,7 @@ pub(super) fn show(ui: &mut Ui, view: &ShareView<'_>, shareable: &Redacted) {
         count => i18n::text_with(
             &ctx,
             "share-upload-replaced",
-            &[("count", &count.to_string())],
+            &[("count", Arg::from(count))],
         ),
     };
 
@@ -177,10 +178,7 @@ fn search_row(ui: &mut Ui, search: &mut Search) -> bool {
             let counted = i18n::text_with(
                 &ctx,
                 "share-upload-search-count",
-                &[
-                    ("current", &place.to_string()),
-                    ("count", &found.to_string()),
-                ],
+                &[("current", Arg::from(place)), ("count", Arg::from(found))],
             );
 
             ui.label(counted);

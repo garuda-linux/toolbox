@@ -24,7 +24,7 @@ impl From<UploadError> for UploadProblem {
     fn from(error: UploadError) -> Self {
         let (kind, detail) = match error {
             UploadError::Transport(reason) => (UploadFailure::Network, reason.to_string()),
-            UploadError::Refused(message) => (UploadFailure::Refused, message),
+            UploadError::Refused(message) => (UploadFailure::Refused, message.into_string()),
             UploadError::BadAnswer => (UploadFailure::BadAnswer, String::new()),
             UploadError::Seal(reason) => (UploadFailure::Seal, reason.to_string()),
         };

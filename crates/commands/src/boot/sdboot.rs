@@ -10,7 +10,6 @@ use serde::Serialize;
 use tokio::runtime::Runtime;
 use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, KernelArgs, Read};
-use toolbox_cli::output::ColorMode;
 use toolbox_core::domains::{CurrentLoader, SdBootKernel};
 use toolbox_core::features::boot::view::EntryRow;
 use toolbox_core::features::boot::{self as boot, kernel, set_loader};
@@ -22,7 +21,7 @@ use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 use super::{entry_listing, unknown_kernel};
 use crate::act::run;
 use crate::change::{Refused, fresh};
-use crate::out::Out;
+use crate::out::{Out, Settings};
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
 
@@ -81,7 +80,7 @@ pub fn rows(menu: &SdBootMenu) -> Vec<EntryRow> {
 }
 
 pub fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
-    let Some(menu) = read_menu(out.settings().color) else {
+    let Some(menu) = read_menu(out.settings()) else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 
@@ -118,14 +117,14 @@ pub fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
 }
 
 pub fn entries(read: Read, out: &mut Out<'_>) -> Exit {
-    match read_menu(out.settings().color) {
+    match read_menu(out.settings()) {
         Some(menu) => print(read, &rows(&menu), out, entry_listing),
         None => unavailable("the systemd-boot menu could not be read", out),
     }
 }
 
-pub fn read_menu(color: ColorMode) -> Option<SdBootMenu> {
-    let source = SystemBootMenu::system(Arc::new(crate::root::helper(color)));
+pub fn read_menu(settings: Settings) -> Option<SdBootMenu> {
+    let source = SystemBootMenu::system(Arc::new(crate::root::helper(settings)));
 
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::SdBoot(menu) => Some(menu),
@@ -147,7 +146,7 @@ pub fn set(args: &BootSet, snapshot: &Snapshot, runtime: &Runtime, out: &mut Out
         return run(super::set(args, snapshot), args.confirm, None, runtime, out);
     }
 
-    let Some(menu) = read_menu(out.settings().color) else {
+    let Some(menu) = read_menu(out.settings()) else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 
@@ -163,7 +162,7 @@ pub fn kernel_default(
     runtime: &Runtime,
     out: &mut Out<'_>,
 ) -> Exit {
-    let Some(menu) = read_menu(out.settings().color) else {
+    let Some(menu) = read_menu(out.settings()) else {
         return unavailable("the systemd-boot menu could not be read", out);
     };
 

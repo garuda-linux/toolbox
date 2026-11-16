@@ -49,6 +49,7 @@ toolbox-pty.workspace = true
 toolbox-services.workspace = true
 toolbox-system.workspace = true
 toolbox-terminal.workspace = true
+toolbox-text.workspace = true
 ashpd.workspace = true
 crossbeam-channel.workspace = true
 eframe.workspace = true

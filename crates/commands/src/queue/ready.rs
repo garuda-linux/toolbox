@@ -10,7 +10,6 @@ use std::sync::Arc;
 
 use toolbox_aur::AurSource;
 use toolbox_cli::Exit;
-use toolbox_cli::output::ColorMode;
 use toolbox_core::domains::{AccountLockFlags, CurrentLoader};
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
 use toolbox_core::features::{Guard, Refusal, Unchecked};
@@ -19,18 +18,18 @@ use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::{HelperLocks, LockSource as _};
 
 use super::said::say;
-use crate::out::Out;
+use crate::out::{Out, Settings};
 
 /// The helper's answers and the AUR's copy.
 pub struct HelperReads<'a> {
     /// For the note when the helper goes through sudo.
-    pub color: ColorMode,
+    pub settings: Settings,
     pub aur: &'a dyn AurSource,
 }
 
 impl UnprobedReads for HelperReads<'_> {
     fn locks(&self) -> Option<AccountLockFlags> {
-        HelperLocks(Arc::new(crate::root::helper(self.color)))
+        HelperLocks(Arc::new(crate::root::helper(self.settings)))
             .locks()
             .inspect_err(|problem| {
                 tracing::warn!("the lock state of accounts is unknown: {problem:?}");
@@ -48,7 +47,7 @@ impl UnprobedReads for HelperReads<'_> {
     }
 
     fn loader(&self) -> Option<CurrentLoader> {
-        crate::boot::sdboot::read_menu(self.color).map(|menu| CurrentLoader(menu.settings))
+        crate::boot::sdboot::read_menu(self.settings).map(|menu| CurrentLoader(menu.settings))
     }
 }
 

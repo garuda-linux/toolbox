@@ -46,7 +46,7 @@ impl Row {
     pub fn new(mark: Mark, cells: Vec<String>) -> Self {
         let cells = cells
             .into_iter()
-            .map(|cell| toolbox_plan::text::plain(&cell))
+            .map(|cell| toolbox_text::plain(&cell).into_string())
             .collect();
 
         Self { mark, cells }

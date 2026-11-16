@@ -11,7 +11,7 @@ use toolbox_core::features::packages::{OptionalDependency, PackageDetails};
 use toolbox_plan::PackageName;
 
 use super::super::super::Unfolded;
-use super::super::facts::{Fact, Value, grid, installed, web};
+use super::super::facts::{Fact, Value, grid, installed, joined, web};
 use super::super::relations::{dependencies, gap, names, optional};
 use crate::dates::day;
 use crate::i18n;
@@ -31,10 +31,10 @@ fn facts(ctx: &Context, entry: &AurPackage, local: Option<&PackageDetails>) -> V
 
     let plain = |id: &str, value: String| fact(id, Value::Plain(value));
 
-    let maintainer = entry
-        .maintainer
-        .clone()
-        .unwrap_or_else(|| i18n::text(ctx, "packages-aur-orphaned").into_owned());
+    let maintainer = entry.maintainer.as_ref().map_or_else(
+        || i18n::text(ctx, "packages-aur-orphaned").into_owned(),
+        ToString::to_string,
+    );
 
     let mut facts = vec![
         plain("packages-aur-maintainer", maintainer),
@@ -51,8 +51,8 @@ fn facts(ctx: &Context, entry: &AurPackage, local: Option<&PackageDetails>) -> V
         facts.push(plain("packages-aur-out-of-date-since", day(ctx, flagged)));
     }
 
-    if !entry.licenses.is_empty() {
-        facts.push(plain("packages-info-licenses", entry.licenses.join(", ")));
+    if let Some(licenses) = joined(&entry.licenses) {
+        facts.push(plain("packages-info-licenses", licenses));
     }
 
     if let Some(url) = &entry.url {
@@ -146,6 +146,6 @@ fn split(line: &str) -> Option<OptionalDependency> {
     let (name, reason) = line.split_once(':').unwrap_or((line, ""));
     Some(OptionalDependency {
         name: PackageName::new(name.trim()).ok()?,
-        reason: reason.trim().to_owned(),
+        reason: toolbox_text::plain(reason.trim()),
     })
 }

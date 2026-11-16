@@ -8,6 +8,7 @@ pub(crate) mod why;
 
 use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::Exit;
+use toolbox_cli::confirm::Interrupted;
 use toolbox_core::features::discover::Apps;
 use toolbox_core::features::kernels::{
     self, Kernel, Listed, RunningKernel, lacks_headers, running,
@@ -26,6 +27,15 @@ pub enum Refused {
     Rule(String),
     NothingToDo(String),
     Unavailable(String),
+    /// Ctrl+C at a question. The terminal already showed it, so nothing
+    /// is printed.
+    Interrupted,
+}
+
+impl From<Interrupted> for Refused {
+    fn from(Interrupted: Interrupted) -> Self {
+        Self::Interrupted
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -41,11 +51,13 @@ impl Refused {
             Self::Unknown(_) | Self::Unavailable(_) => Exit::Unavailable,
             Self::Rule(_) => Exit::PageRule,
             Self::NothingToDo(_) => Exit::Success,
+            Self::Interrupted => Exit::Interrupted,
         }
     }
 
     pub fn line(&self, paint: toolbox_cli::output::Paint) -> String {
         match self {
+            Self::Interrupted => String::new(),
             Self::NothingToDo(message) => message.clone(),
             Self::Unknown(message) | Self::Rule(message) | Self::Unavailable(message) => {
                 match message.split_once('\n') {
@@ -65,7 +77,7 @@ impl Refused {
         match self {
             Self::Unknown(message) => Self::Unknown(format!("{message}\n{hint}")),
             Self::Rule(message) => Self::Rule(format!("{message}\n{hint}")),
-            other @ (Self::NothingToDo(_) | Self::Unavailable(_)) => other,
+            other @ (Self::NothingToDo(_) | Self::Unavailable(_) | Self::Interrupted) => other,
         }
     }
 
@@ -79,6 +91,7 @@ impl Refused {
             | Self::Rule(message)
             | Self::NothingToDo(message)
             | Self::Unavailable(message) => message,
+            Self::Interrupted => "",
         }
     }
 }

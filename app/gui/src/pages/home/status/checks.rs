@@ -7,11 +7,12 @@ use toolbox_gui_kit::widgets::{ActionRow, Tone, card, card_row};
 use toolbox_services::home::Overview;
 
 use crate::i18n;
+use crate::i18n::Arg;
 
 pub(super) fn all_clear(ui: &mut Ui, overview: &Overview<'_>) {
     let ctx = ui.ctx().clone();
-    let count = overview.ran.len().to_string();
-    let title = i18n::text_with(&ctx, "home-all-clear", &[("count", &count)]);
+    let count = overview.ran.len();
+    let title = i18n::text_with(&ctx, "home-all-clear", &[("count", Arg::from(count))]);
     let names: Vec<String> = overview
         .ran
         .iter()

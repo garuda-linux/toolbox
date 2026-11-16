@@ -22,7 +22,7 @@ use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{FullName, GroupName, HomeChange, HomeFolder, Password, Plan, UserName};
 
 use super::act::run;
-use super::change::{Refused, fresh, page_edit, why};
+use super::change::{Refused, fresh, why};
 use super::terminal::{Terminal, wipe, without_line_end};
 use super::{groups, system, users};
 use crate::out::Out;
@@ -103,7 +103,7 @@ pub fn groups_command(command: GroupsCommand, runtime: &Runtime, out: &mut Out<'
 /// # Errors
 ///
 /// [`Refused`] for a bad or taken name, an unlisted shell, an unknown
-/// group or no password.
+/// group, no password or Ctrl+C at a password question.
 pub fn add(args: &AddUser, snapshot: &Snapshot, prompt: &mut dyn Prompt) -> Result<Plan, Refused> {
     let name = args.user.clone();
     let full_name = match &args.full_name {
@@ -157,18 +157,18 @@ pub fn edit_onto(
         }),
     };
 
-    page_edit(changes, snapshot, why::account, |changes, snapshot| {
-        set_account(user, account, changes, snapshot)?;
-        wanted.map_or(Ok(()), |wanted| {
-            set_groups(user, &wanted, changes, snapshot)
+    set_account(user, account, changes, snapshot)
+        .and_then(|()| {
+            wanted.map_or(Ok(()), |wanted| {
+                set_groups(user, &wanted, changes, snapshot)
+            })
         })
-    })
-    .map_err(|refused| known_user(refused, user, snapshot))
+        .map_err(|refusal| known_user(refusal, user, snapshot))
 }
 
 /// # Errors
 ///
-/// [`Refused`] for root, an unknown user or no password.
+/// [`Refused`] for root, an unknown user, no password or Ctrl+C.
 pub fn password(
     args: &PasswordArgs,
     snapshot: &Snapshot,
@@ -179,7 +179,7 @@ pub fn password(
     let password = read_password(args.password, args.user.as_str(), prompt)?;
 
     plan_set_password(&args.user, password, snapshot)
-        .map_err(|refusal| known_user(rule(refusal), &args.user, snapshot))
+        .map_err(|refusal| known_user(refusal, &args.user, snapshot))
 }
 
 /// # Errors
@@ -198,10 +198,8 @@ pub fn lock_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    page_edit(changes, snapshot, why::account, |changes, snapshot| {
-        set_locked(&args.user, locked, None, changes, snapshot)
-    })
-    .map_err(|refused| known_user(refused, &args.user, snapshot))
+    set_locked(&args.user, locked, None, changes, snapshot)
+        .map_err(|refusal| known_user(refusal, &args.user, snapshot))
 }
 
 /// # Errors
@@ -225,10 +223,8 @@ pub fn remove_onto(
         HomeFolder::Keep
     };
 
-    page_edit(changes, snapshot, why::account, |changes, snapshot| {
-        remove_user(&args.user, home, changes, snapshot)
-    })
-    .map_err(|refused| known_user(refused, &args.user, snapshot))
+    remove_user(&args.user, home, changes, snapshot)
+        .map_err(|refusal| known_user(refusal, &args.user, snapshot))
 }
 
 /// # Errors
@@ -247,14 +243,13 @@ pub fn group_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    page_edit(changes, snapshot, why::account, |changes, snapshot| {
-        if wanted == Toggle::On {
-            add_group(&args.group, changes, snapshot)
-        } else {
-            remove_group(&args.group, changes, snapshot)
-        }
-    })
-    .map_err(|refused| known_group(refused, &args.group, snapshot))
+    let edited = if wanted == Toggle::On {
+        add_group(&args.group, changes, snapshot)
+    } else {
+        remove_group(&args.group, changes, snapshot)
+    };
+
+    edited.map_err(|refusal| known_group(refusal, &args.group, snapshot))
 }
 
 /// The user's groups after `add` and `remove`, `None` when neither asks
@@ -293,20 +288,28 @@ fn read_password(
             .line()
             .ok_or_else(|| Refused::Rule("no password was given".to_owned()))?
     } else {
-        let no_terminal = || {
-            Refused::Rule("no terminal to ask the password on, pass --password-stdin".to_owned())
+        let first = prompt
+            .secret(&format!("New password for {user}: "))?
+            .ok_or_else(|| {
+                Refused::Rule(
+                    "no terminal to ask the password on, pass --password-stdin".to_owned(),
+                )
+            })?;
+
+        let again = match prompt.secret("Repeat the password: ") {
+            Ok(Some(again)) => again,
+            Ok(None) => {
+                wipe(first);
+                return Err(Refused::Rule(why::password_not_repeated().into_owned()));
+            }
+            Err(interrupted) => {
+                wipe(first);
+                return Err(interrupted.into());
+            }
         };
 
-        let first = prompt
-            .secret(&format!("New password for {user}: "))
-            .ok_or_else(no_terminal)?;
-
-        let again = prompt
-            .secret("Repeat the password: ")
-            .ok_or_else(no_terminal);
-
-        let matches = again.as_ref().is_ok_and(|again| *again == first);
-        again.map(wipe).ok();
+        let matches = again == first;
+        wipe(again);
 
         if !matches {
             wipe(first);
@@ -329,18 +332,23 @@ fn rule(refusal: Refusal) -> Refused {
     Refused::page_rule(why::account(refusal))
 }
 
-fn known_user(refused: Refused, user: &UserName, snapshot: &Snapshot) -> Refused {
+fn known_user(refusal: Refusal, user: &UserName, snapshot: &Snapshot) -> Refused {
+    let unknown = matches!(refusal, Refusal::UnknownUser);
     let known = super::names::user_names(snapshot);
-    closest(refused, Refusal::UnknownUser, user.as_str(), &known)
+
+    hinted_if(rule(refusal), unknown, user.as_str(), &known)
 }
 
-fn known_group(refused: Refused, group: &GroupName, snapshot: &Snapshot) -> Refused {
+fn known_group(refusal: Refusal, group: &GroupName, snapshot: &Snapshot) -> Refused {
+    let unknown = matches!(refusal, Refusal::UnknownGroup);
     let known = super::names::group_names(snapshot);
-    closest(refused, Refusal::UnknownGroup, group.as_str(), &known)
+
+    hinted_if(rule(refusal), unknown, group.as_str(), &known)
 }
 
-fn closest(refused: Refused, unknown: Refusal, wanted: &str, known: &[String]) -> Refused {
-    if refused.message() == why::account(unknown) {
+/// A name that is no account or group gets the closest known one as a hint.
+fn hinted_if(refused: Refused, unknown: bool, wanted: &str, known: &[String]) -> Refused {
+    if unknown {
         refused.hinted(wanted, known.iter().map(String::as_str))
     } else {
         refused

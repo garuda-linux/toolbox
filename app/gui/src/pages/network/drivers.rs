@@ -18,6 +18,7 @@ pub(super) use unload::forget;
 
 use crate::command::NetworkCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::more::{item, more};
 
@@ -89,8 +90,8 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter, r
         &ctx,
         "network-drivers-count",
         &[
-            ("shown", &shown.len().to_string()),
-            ("count", &total.to_string()),
+            ("shown", Arg::from(shown.len())),
+            ("count", Arg::from(total)),
         ],
     );
 
@@ -307,7 +308,7 @@ fn detail(ctx: &egui::Context, driver: &DriverRow) -> String {
         None if !driver.other_files.is_empty() => i18n::text_with(
             ctx,
             "network-driver-other-files",
-            &[("files", &driver.other_files.join(", "))],
+            &[("files", Arg::from(&driver.other_files.join(", ")))],
         )
         .into_owned(),
         None => String::new(),

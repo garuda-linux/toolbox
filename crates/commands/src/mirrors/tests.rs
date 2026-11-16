@@ -1,6 +1,6 @@
 use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
-use toolbox_plan::{Mirrorlist, Plan, PlannedAction, RootAction};
+use toolbox_plan::{Mirrorlist, Plan, PlannedAction, RootAction, SAMPLE_MIRRORS};
 use toolbox_system::mirrors::{MirrorRanking, RankProblem};
 
 use super::steps;
@@ -92,6 +92,31 @@ fn a_dry_run_without_the_tool_stops_after_its_install() {
     let (_, plans) = ranked_with(false, confirm, &Ranked);
 
     assert_eq!(kinds(&plans), ["install-packages"]);
+}
+
+/// A dry run plans the placeholder list and never asks the ranking, here one
+/// that would fail.
+#[test]
+fn a_dry_run_plans_the_placeholder_without_ranking() {
+    let confirm = Confirm {
+        dry_run: true,
+        ..Confirm::default()
+    };
+
+    let (exit, plans) = ranked_with(true, confirm, &Offline);
+    let planned = plans
+        .iter()
+        .flat_map(Plan::steps)
+        .find_map(|step| match &step.action {
+            PlannedAction::Root(RootAction::InstallMirrorlist { mirrorlist }) => {
+                Some(mirrorlist.as_str().to_owned())
+            }
+            PlannedAction::Root(_) | PlannedAction::User(_) => None,
+        });
+
+    assert_eq!(exit, Exit::Success);
+    assert_eq!(kinds(&plans), ["install-mirrorlist"]);
+    assert_eq!(planned.as_deref(), Some(SAMPLE_MIRRORS));
 }
 
 #[test]

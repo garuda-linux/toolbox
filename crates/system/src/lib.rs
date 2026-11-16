@@ -68,7 +68,8 @@ pub use network::{
 };
 pub use notify::{NOTIFY, Notification, NotifyBody, notify_body};
 pub use packages::{
-    Libalpm, LinuxPackageSource, OrphanSource, PackageIndexSource, PackageSource, SyncSource,
+    Libalpm, LinuxPackageSource, OrphanSource, PackageIndexSource, PackageScan, PackageSource,
+    SyncSource,
 };
 pub use power::{
     INHIBIT, InhibitBody, REBOOT, RebootBody, ShutdownLock, inhibit_body, inhibit_shutdown,

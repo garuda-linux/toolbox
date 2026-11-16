@@ -114,9 +114,9 @@ fn a_refusal_carries_the_servers_message_as_plain_text() {
 
     assert_eq!(
         upload_with(&fake, "report", &secrets()),
-        Err(UploadError::Refused(
-            "Paste is limited to 10 MiB of <b>encrypted</b> data.".to_owned()
-        ))
+        Err(UploadError::Refused(toolbox_text::plain(
+            "Paste is limited to 10 MiB of <b>encrypted</b> data."
+        )))
     );
 
     let long = format!(r#"{{"status":1,"message":"{}"}}"#, "x".repeat(5000));
@@ -134,7 +134,7 @@ fn an_error_status_is_a_refusal() {
 
     assert_eq!(
         upload_with(&rejecting, "report", &secrets()),
-        Err(UploadError::Refused("status 413".to_owned()))
+        Err(UploadError::Refused(toolbox_text::plain("status 413")))
     );
 }
 
@@ -233,6 +233,6 @@ fn a_refusal_strips_escapes_and_bidi_overrides() {
 
     assert_eq!(
         upload_with(&fake, "report", &secrets()),
-        Err(UploadError::Refused("a[31m b c d e f".to_owned()))
+        Err(UploadError::Refused(toolbox_text::plain("a[31m b c d e f")))
     );
 }

@@ -11,12 +11,12 @@ use tempfile::TempDir;
 use toolbox_plan::protocol::{Failure, Outcome};
 use toolbox_plan::{ConfigFilePath, ConfigWrite, FetchRefusal, Fingerprint, StepId};
 
-use super::super::write::{write_config_file, write_real};
+use super::super::write::write_real;
 use super::super::{
     ConfigRead, Found, ReadError, WriteError, execute, inspect, read_config_file, read_real,
     resolve,
 };
-use super::{BACKUPS, fifo, path, refused, text};
+use super::{BACKUPS, fifo, path, refused, text, write_config_file};
 use crate::builtin::FileChange;
 use crate::test_support::printed;
 

@@ -9,6 +9,7 @@ use std::ffi::OsString;
 use std::path::PathBuf;
 use std::sync::Arc;
 
+use fluent_templates::LanguageIdentifier;
 use tokio::runtime::Handle;
 use toolbox_aur::Cache;
 use toolbox_catalog::{ConfigFileCatalog, LoadProblem, SKEL_ROOT};
@@ -18,13 +19,13 @@ use toolbox_gui::apply::{self, ApplyHandle, HelperLauncher, Launcher as _};
 use toolbox_gui::boot::BootSetup;
 use toolbox_gui::boot::portal::PortalChooser;
 use toolbox_gui::bootrepair::BootRepairSetup;
-use toolbox_gui::catalogs::{DEVELOPMENT, catalog_dir};
+use toolbox_gui::catalogs::{DEVELOPMENT, catalog_dir_from_env};
 use toolbox_gui::command::CommandSender;
 use toolbox_gui::configs::ConfigsSetup;
 use toolbox_gui::desktop::icon_files::{Indexed, SystemIcons};
 use toolbox_gui::diagnostics::{DiagnosticsLink, DryRunTransport};
 use toolbox_gui::launch::{DryRunLauncher, Launcher, SystemLauncher};
-use toolbox_gui::maintenance::MaintenanceSetup;
+use toolbox_gui::maintenance::{MaintenanceSetup, SampleMirrors};
 use toolbox_gui::network::{DryRunActions, DryRunAddress, NetworkSetup};
 use toolbox_gui::packages::PackagesSetup;
 use toolbox_gui::pictures::{FALLBACK_THEME, Pictures, SystemPictures};
@@ -39,7 +40,7 @@ use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_privatebin::{Https, Transport};
 use toolbox_services::address::{AddressSource, KdeGeoIp};
-use toolbox_system::mirrors::RateMirrors;
+use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
 use toolbox_system::{
     ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing, HelperLocks,
     Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions, SystemBootMenu,
@@ -78,14 +79,13 @@ pub fn machine(
     )
 }
 
-/// A self-test build's dry run ranks a fixed list, so its self-test asks
-/// no mirror. Ranking writes nothing, so a release's dry run ranks too.
+/// A dry run plans the placeholder list, so no mirror is asked.
 pub fn maintenance(handle: &Handle, mode: Mode) -> MaintenanceSetup {
-    let dry_run = mode.is_dry_run();
-    let mirrors = dry_run
-        .then(samples::mirrors)
-        .flatten()
-        .unwrap_or_else(|| Arc::new(RateMirrors::system()));
+    let mirrors: Arc<dyn MirrorRanking> = if mode.is_dry_run() {
+        Arc::new(SampleMirrors)
+    } else {
+        Arc::new(RateMirrors::system())
+    };
 
     MaintenanceSetup {
         runtime: handle.clone(),
@@ -95,8 +95,14 @@ pub fn maintenance(handle: &Handle, mode: Mode) -> MaintenanceSetup {
     }
 }
 
-pub fn helper_services(handle: &Handle, ctx: &egui::Context) -> HelperServices {
-    let launcher = Arc::new(HelperLauncher::from_process());
+/// `language` is the one the window shows, for the reason logind gives while a
+/// plan runs.
+pub fn helper_services(
+    handle: &Handle,
+    ctx: &egui::Context,
+    language: LanguageIdentifier,
+) -> HelperServices {
+    let launcher = Arc::new(HelperLauncher::from_process(language));
     let dry_run = launcher.mode() == Mode::DryRun;
     let apply_launcher: Arc<dyn apply::Launcher> = Arc::<HelperLauncher>::clone(&launcher);
     let wake = toolbox_gui::waking::repaint(ctx.clone());
@@ -192,7 +198,7 @@ fn configs(handle: &Handle, launcher: Arc<HelperLauncher>, dry_run: bool) -> Con
             }
             None => (
                 Arc::new(SystemConfigFiles::system(launcher)),
-                catalog_dir(|key| std::env::var_os(key)),
+                catalog_dir_from_env(),
             ),
         };
 

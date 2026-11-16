@@ -33,6 +33,7 @@ use toolbox_plan::{
 };
 pub use user_config::edit_user_config;
 
+use self::accounts::require_free_home;
 use crate::apply::EventSink;
 use crate::report::{failure, note};
 use crate::{config_file, repair, secure};
@@ -95,7 +96,7 @@ pub fn execute(
         Builtin::SetSystemLocale(locale) => system_locale(root, step, locale, sink),
         Builtin::RequireOrdinaryUser(who) => accounts::require_ordinary_user(root, step, who, sink),
         Builtin::RequireUserGroup(group) => accounts::require_user_group(root, step, group, sink),
-        Builtin::RequireFreeHome(folder) => accounts::require_free_home(root, step, folder, sink),
+        Builtin::RequireFreeHome(who, folder) => require_free_home(root, step, who, folder, sink),
         Builtin::RequireSafeHome(folder) => accounts::require_safe_home(root, step, folder, sink),
         Builtin::WriteConfigFile(write) => config_file::execute(root, step, write, sink),
         Builtin::WriteHomeFile(write) => home_write(home, step, write, sink),

@@ -9,9 +9,9 @@ use tempfile::TempDir;
 use toolbox_plan::protocol::{Failure, Outcome};
 use toolbox_plan::{ConfigWrite, FetchRefusal, Fingerprint, StepId};
 
-use super::{WriteError, execute, write_config_file, write_real};
+use super::{WriteError, execute, write_real};
 use crate::builtin::FileChange;
-use crate::config_file::tests::{BACKUPS, path, text};
+use crate::config_file::tests::{BACKUPS, path, text, write_config_file};
 use crate::test_support::printed;
 
 /// A root folder with `etc/fstab` (mode 0640).

@@ -30,6 +30,20 @@ fn a_match_maps_back_across_letters_whose_lowercase_is_longer() {
     assert_eq!(text.get(found[0].clone()), Some("Steam"));
 }
 
+/// The search fields compare both lower case sigmas as one letter
+/// (`toolbox_core::features::search::Needle`), so the wash must too.
+#[test]
+fn the_two_lower_case_sigmas_match_each_other() {
+    let text = "Λόγος λόγοσ";
+
+    let marked: Vec<&str> = matches(text, "ΛΌΓΟΣ")
+        .into_iter()
+        .filter_map(|range| text.get(range))
+        .collect();
+
+    assert_eq!(marked, ["Λόγος", "λόγοσ"]);
+}
+
 #[test]
 fn the_matched_parts_get_the_accent_wash() {
     let mut harness = harness(200.0, 100.0).build_ui(|ui| {

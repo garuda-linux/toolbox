@@ -1,8 +1,8 @@
 //! A change as JSON Lines for `--json`, one object per line: `plan`, then
 //! `started`, `output` and `finished` for each step, `error` for a problem
-//! and `done` at the end. The names are part of the interface, as the
-//! exit codes are. Each line starts with `"schema": 1`, the version of
-//! these names.
+//! and `done` at the end. A `warning` for a note may come anywhere, even
+//! before `plan`. The names are part of the interface, as the exit codes
+//! are. Each line starts with `"schema": 1`, the version of these names.
 
 #[cfg(test)]
 mod tests;
@@ -44,6 +44,10 @@ enum Line<'a> {
         detail: Option<&'a str>,
         #[serde(skip_serializing_if = "Option::is_none")]
         hint: Option<&'a str>,
+    },
+    /// A note beside the run, such as the sudo fallback.
+    Warning {
+        message: &'a str,
     },
     Done {
         ok: bool,
@@ -221,6 +225,11 @@ pub fn error_with(message: &str, hint: Option<&str>, detail: Option<&str>) -> St
         detail: detail.filter(|detail| !detail.trim().is_empty()),
         hint,
     })
+}
+
+/// A `warning` line for a note the change goes on after.
+pub fn warning(message: &str) -> String {
+    json_line(&Line::Warning { message })
 }
 
 pub fn done(ok: bool) -> String {

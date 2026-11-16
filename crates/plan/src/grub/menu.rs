@@ -8,9 +8,10 @@ mod tests;
 use branch::Branches;
 pub use branch::GrubPlatform;
 use serde::{Deserialize, Serialize};
+use toolbox_text::OutsideText;
 
 use crate::protocol::{DecodeError, decode};
-use crate::{MenuEntryId, PackageName, text};
+use crate::{MenuEntryId, PackageName};
 
 /// Between a submenu and an entry in it, in ids and positions.
 const INSIDE: char = '>';
@@ -32,7 +33,7 @@ pub struct MenuEntry {
     /// submenus around it (`gnulinux-advanced-…>gnulinux-linux-zen-…`).
     pub id: MenuEntryId,
     /// What the menu shows, without hidden characters.
-    pub title: String,
+    pub title: OutsideText,
     /// The numbers `GRUB_DEFAULT` also takes: `0`, or `1>2` in a submenu.
     pub position: String,
     pub submenu: bool,
@@ -57,7 +58,7 @@ struct Open {
     /// `None` when its id is no [`MenuEntryId`]: nothing in it can be
     /// named then.
     id: Option<String>,
-    title: String,
+    title: OutsideText,
     position: String,
     /// How many braces were open before its own.
     depth: usize,
@@ -179,7 +180,7 @@ impl Walk {
                 number,
                 submenu.id.as_ref().map(|id| format!("{id}{INSIDE}")),
                 format!("{}{INSIDE}", submenu.position),
-                Some(submenu.title.clone()),
+                Some(submenu.title.clone().into_string()),
             )
         } else {
             let number = self.top;
@@ -254,8 +255,8 @@ fn header(line: &str) -> Option<Header> {
 
 /// A title as the page shows it: one line of bounded length. os-prober
 /// writes titles of other disks, so they are outside text.
-fn shown(title: &str) -> String {
-    text::plain(title).chars().take(MAX_TITLE_CHARS).collect()
+fn shown(title: &str) -> OutsideText {
+    toolbox_text::plain_up_to(title, MAX_TITLE_CHARS)
 }
 
 /// Splits a line the way GRUB's script reader does: blanks part the

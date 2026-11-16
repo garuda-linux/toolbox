@@ -59,12 +59,11 @@ const ELLIPSIS: &str = "...";
 /// Every finding in `text`, the file at `path`, after allow directives.
 #[cfg(test)]
 pub fn lint_file(path: &Path, text: &str) -> Vec<Finding> {
-    lint_file_in(path, text, None)
+    lint_file_in(path, text, &BTreeSet::new())
 }
 
-/// [`lint_file`] in a tree whose `domains::all()` registers `domains`,
-/// `None` when the tree has no registry.
-pub fn lint_file_in(path: &Path, text: &str, domains: Option<&BTreeSet<String>>) -> Vec<Finding> {
+/// [`lint_file`] in a tree whose `domains::all()` registers `domains`.
+pub fn lint_file_in(path: &Path, text: &str, domains: &BTreeSet<String>) -> Vec<Finding> {
     lint_tree(&Place::new(path), text, parse(text).as_ref(), domains)
 }
 
@@ -78,7 +77,7 @@ fn lint_tree(
     place: &Place<'_>,
     text: &str,
     tree: Option<&Tree>,
-    domains: Option<&BTreeSet<String>>,
+    domains: &BTreeSet<String>,
 ) -> Vec<Finding> {
     let Some(tree) = tree else {
         return vec![unparsed::missing()];

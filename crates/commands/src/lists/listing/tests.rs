@@ -9,7 +9,7 @@ fn service(name: &str, active: &'static str, at_boot: bool) -> ServiceRow {
         active,
         state: "running".to_owned(),
         at_boot,
-        description: String::new(),
+        description: toolbox_text::plain(""),
     }
 }
 

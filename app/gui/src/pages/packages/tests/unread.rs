@@ -106,8 +106,8 @@ fn a_read_status_counts_its_updates_on_the_chip() {
     let mut fixture = fixture(None);
     let update = PendingUpdate {
         name: PackageName::new("gimp").unwrap(),
-        from: "1".to_owned(),
-        to: "2".to_owned(),
+        from: toolbox_text::plain("1"),
+        to: toolbox_text::plain("2"),
     };
 
     fixture.status = Some(Loadable::Loaded(Arc::new(status(Ok(vec![update])))));

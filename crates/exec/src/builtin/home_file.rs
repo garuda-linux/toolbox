@@ -22,6 +22,12 @@ const BACKUP_FOLDER_MODE: u32 = 0o700;
 /// Below the home, as `$XDG_STATE_HOME` has it by default.
 const STATE: &str = ".local/state";
 
+#[derive(Debug, thiserror::Error)]
+enum HomeFileError {
+    #[error("the file changed since it was read, so nothing was written")]
+    Changed,
+}
+
 /// Replaces the file `write` names below `home` and keeps its old text in
 /// the backup folder.
 ///
@@ -34,9 +40,7 @@ pub fn write_home_file(home: &Path, write: &HomeWrite) -> io::Result<()> {
     let current = fs::read(&target)?;
 
     if Fingerprint::of(&current) != write.original {
-        return Err(io::Error::other(
-            "the file changed since it was read, so nothing was written",
-        ));
+        return Err(io::Error::other(HomeFileError::Changed));
     }
 
     let backup = home.join(STATE).join(write.backup());

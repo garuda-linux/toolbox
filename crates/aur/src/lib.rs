@@ -12,9 +12,13 @@ mod dump;
 mod https;
 mod transport;
 
+use std::io;
+use std::path::PathBuf;
+use std::sync::Arc;
 use std::time::Duration;
 
 pub use cache::Cache;
+pub use dump::DumpError;
 pub use https::Https;
 pub use toolbox_https::{Clock, RequestError, SystemClock};
 use toolbox_plan::PackageName;
@@ -48,11 +52,21 @@ pub trait AurSource: Send + Sync {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+pub enum DownloadError {
+    #[error(transparent)]
+    Request(RequestError),
+    #[error(transparent)]
+    Dump(DumpError),
+}
+
+/// Equal when of one kind and read the same, as an I/O error has no
+/// equality of its own.
+#[derive(Clone, Debug, thiserror::Error)]
 pub enum AurError {
     /// No copy yet and the download failed now. Words for the log and a
     /// banner's details.
     #[error("the AUR's package list could not be downloaded: {0}")]
-    Download(String),
+    Download(#[source] DownloadError),
     /// No copy yet, and the last attempt was less than a day ago.
     #[error("the AUR's package list is not downloaded again before {next}")]
     Waiting {
@@ -60,9 +74,22 @@ pub enum AurError {
         next: i64,
     },
     /// The cached copy or the cache folder could not be read or written.
-    #[error("the AUR's package list could not be stored: {0}")]
-    Storage(String),
+    #[error("the AUR's package list could not be stored at {}: {error}", path.display())]
+    Storage {
+        path: PathBuf,
+        #[source]
+        error: Arc<io::Error>,
+    },
 }
+
+impl PartialEq for AurError {
+    fn eq(&self, other: &Self) -> bool {
+        std::mem::discriminant(self) == std::mem::discriminant(other)
+            && self.to_string() == other.to_string()
+    }
+}
+
+impl Eq for AurError {}
 
 /// `https://aur.archlinux.org/packages/<name>`. A [`PackageName`] holds
 /// no `/`, `?` or `#`, so the link stays on that page.

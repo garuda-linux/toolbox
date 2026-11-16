@@ -79,17 +79,17 @@ change-grub-submenus-off = List every kernel in the main boot menu
 change-grub-theme = Use the boot menu theme { $name }
 change-grub-theme-none = Remove the boot menu theme
 change-grub-timeout =
-    { $name ->
-        [one] Show the boot menu for { $name } second
-       *[other] Show the boot menu for { $name } seconds
+    { $count ->
+        [one] Show the boot menu for { $count } second
+       *[other] Show the boot menu for { $count } seconds
     }
 change-hblock-on = Turn on ad and tracker blocking (hBlock)
 change-hblock-off = Turn off ad and tracker blocking (hBlock)
 change-home-folder = Move the home folder of { $user } to { $folder }
 change-loader-timeout =
-    { $name ->
-        [one] Show the systemd-boot menu for { $name } second
-       *[other] Show the systemd-boot menu for { $name } seconds
+    { $count ->
+        [one] Show the systemd-boot menu for { $count } second
+       *[other] Show the systemd-boot menu for { $count } seconds
     }
 change-loader-timeout-menu =
     { $name ->
@@ -134,3 +134,4 @@ change-user-unit-disable = Stop starting { $name } at login
 change-user-unit-mask = Keep the user service { $name } from starting
 change-user-unit-unmask = Let the user service { $name } start again
 change-wifi-backend = Run Wi-Fi through { $name }
+changes-inhibit-why = Changes are being applied

@@ -1,13 +1,11 @@
 use tempfile::TempDir;
-use toolbox_cli::output::{Paint, Style};
 use toolbox_core::domains::Packages;
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_services::queue::edit::QueueEdit;
 
 use super::{File, Store as _};
-
-const PLAIN: Paint = Paint::new(Style::Plain);
+use crate::out::Settings;
 
 fn firefox() -> ChangeSet {
     let mut changes = ChangeSet::default();
@@ -20,7 +18,7 @@ fn without_a_file_the_queue_is_empty() {
     let folder = TempDir::new().unwrap();
     let file = File {
         path: folder.path().join("changes.json"),
-        paint: PLAIN,
+        settings: Settings::default(),
     };
 
     assert_eq!(file.saved().unwrap().changes, []);
@@ -32,7 +30,7 @@ fn an_edit_lands_in_the_file_and_its_folder_is_made() {
     let folder = TempDir::new().unwrap();
     let file = File {
         path: folder.path().join("state").join("changes.json"),
-        paint: PLAIN,
+        settings: Settings::default(),
     };
 
     file.edit(&QueueEdit::between(&ChangeSet::default(), &firefox()))
@@ -65,9 +63,12 @@ fn an_edit_waits_for_the_lock_of_another_command() {
             let path = path.clone();
 
             move || {
-                File { path, paint: PLAIN }
-                    .edit(&QueueEdit::between(&ChangeSet::default(), &firefox()))
-                    .unwrap();
+                File {
+                    path,
+                    settings: Settings::default(),
+                }
+                .edit(&QueueEdit::between(&ChangeSet::default(), &firefox()))
+                .unwrap();
             }
         })
         .unwrap();
@@ -79,7 +80,12 @@ fn an_edit_waits_for_the_lock_of_another_command() {
     waiting.join().unwrap();
 
     assert_eq!(
-        File { path, paint: PLAIN }.saved().unwrap(),
+        File {
+            path,
+            settings: Settings::default()
+        }
+        .saved()
+        .unwrap(),
         firefox().to_saved()
     );
 }

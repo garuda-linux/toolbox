@@ -100,7 +100,7 @@ fn the_systems_list_counts_the_ones_in_use() {
 
     let row = |device: &str, in_use| SystemRow {
         device: device.to_owned(),
-        label: "Garuda Linux".to_owned(),
+        label: toolbox_text::plain("Garuda Linux"),
         encryption: "none",
         in_use,
     };

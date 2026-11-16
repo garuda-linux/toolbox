@@ -12,6 +12,7 @@ use super::super::HomePage;
 use super::{run_button, run_row};
 use crate::command::{HomeCommand, MaintenanceCommand, UiCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::pages::PageContext;
 
@@ -22,8 +23,8 @@ pub(super) fn updates(
     overview: &Overview<'_>,
 ) {
     let ctx = ui.ctx().clone();
-    let count = overview.updates.to_string();
-    let title = i18n::text_with(&ctx, "home-updates", &[("count", &count)]);
+    let count = overview.updates;
+    let title = i18n::text_with(&ctx, "home-updates", &[("count", Arg::from(count))]);
     let detail = i18n::text(&ctx, "home-updates-detail");
 
     let queued = upgrade_queued(context.changes);
@@ -66,8 +67,8 @@ pub(super) fn aur(
     overview: &Overview<'_>,
 ) {
     let ctx = ui.ctx().clone();
-    let count = overview.aur_updates.to_string();
-    let title = i18n::text_with(&ctx, "home-aur-updates", &[("count", &count)]);
+    let count = overview.aur_updates;
+    let title = i18n::text_with(&ctx, "home-aur-updates", &[("count", Arg::from(count))]);
     let detail = i18n::text(&ctx, "home-aur-detail");
     ActionRow::new(icons::PACKAGE, Tone::Neutral, &title)
         .detail(&detail)
@@ -187,8 +188,8 @@ pub(super) fn disk(ui: &mut Ui, context: &PageContext<'_>) {
 /// The units' names are systemd's words, shown as they are.
 pub(super) fn services(ui: &mut Ui, context: &PageContext<'_>, overview: &Overview<'_>) {
     let ctx = ui.ctx().clone();
-    let count = overview.machine.failed_units.len().to_string();
-    let title = i18n::text_with(&ctx, "home-services", &[("count", &count)]);
+    let count = overview.machine.failed_units.len();
+    let title = i18n::text_with(&ctx, "home-services", &[("count", Arg::from(count))]);
     let units: Vec<&str> = overview
         .machine
         .failed_units
@@ -211,7 +212,7 @@ pub(super) fn services(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvi
 pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overview<'_>) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "home-cleanup");
-    let orphans = overview.machine.orphans.to_string();
+    let orphans = overview.machine.orphans;
     let cache = size(overview.machine.package_cache);
     let detail = i18n::text_with(
         &ctx,
@@ -220,7 +221,10 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
         } else {
             "home-cleanup-detail"
         },
-        &[("orphans", &orphans), ("cache", &cache)],
+        &[
+            ("orphans", Arg::from(orphans)),
+            ("cache", Arg::from(&cache)),
+        ],
     );
 
     let cleanup = [Operation::RemoveOrphans, Operation::CleanPackageCache];

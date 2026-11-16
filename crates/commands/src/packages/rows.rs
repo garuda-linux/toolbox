@@ -7,6 +7,7 @@ use toolbox_cli::output::{Mark, Paint, Row, size};
 use toolbox_core::features::packages::{
     IndexEntry, InstallReason, OptionalDependency, Origin, PackageDetails,
 };
+use toolbox_text::OutsideText;
 
 use super::super::out::Listing;
 use super::{facts_text, listed};
@@ -15,7 +16,7 @@ use super::{facts_text, listed};
 pub struct PackageRow {
     #[serde(rename = "id")]
     pub name: String,
-    pub description: String,
+    pub description: OutsideText,
     /// The repository's version, the installed one for a foreign package.
     pub version: String,
     /// `None` for a package no configured repository offers.
@@ -36,16 +37,16 @@ pub struct InstalledRow {
 pub struct PackageInfo {
     #[serde(rename = "id")]
     pub name: String,
-    pub description: String,
+    pub description: OutsideText,
     pub version: String,
     pub repository: Option<String>,
     pub size: u64,
-    pub url: Option<String>,
-    pub licenses: Vec<String>,
-    pub groups: Vec<String>,
+    pub url: Option<OutsideText>,
+    pub licenses: Vec<OutsideText>,
+    pub groups: Vec<OutsideText>,
     pub depends: Vec<String>,
     pub optional: Vec<OptionalRow>,
-    pub required_by: Vec<String>,
+    pub required_by: Vec<OutsideText>,
     pub provides: Vec<String>,
     pub conflicts: Vec<String>,
     pub replaces: Vec<String>,
@@ -56,7 +57,7 @@ pub struct PackageInfo {
 pub struct OptionalRow {
     #[serde(rename = "id")]
     pub name: String,
-    pub reason: String,
+    pub reason: OutsideText,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
@@ -65,7 +66,7 @@ pub struct InstalledInfo {
     pub reason: &'static str,
     /// Seconds since the epoch.
     pub date: Option<i64>,
-    pub files: Vec<String>,
+    pub files: Vec<OutsideText>,
 }
 
 impl PackageRow {
@@ -164,7 +165,7 @@ pub fn info_text(paint: Paint, info: &PackageInfo) -> String {
 
     let installed = info.installed.as_ref();
     let facts: Vec<(&str, String)> = vec![
-        ("description", info.description.clone()),
+        ("description", info.description.to_string()),
         (
             "repository",
             info.repository.clone().unwrap_or_else(|| "none".to_owned()),
@@ -180,7 +181,9 @@ pub fn info_text(paint: Paint, info: &PackageInfo) -> String {
         ("size", size(info.size)),
         (
             "website",
-            info.url.clone().unwrap_or_else(|| "none".to_owned()),
+            info.url
+                .as_ref()
+                .map_or_else(|| "none".to_owned(), ToString::to_string),
         ),
         ("licenses", listed(&info.licenses)),
         ("groups", listed(&info.groups)),

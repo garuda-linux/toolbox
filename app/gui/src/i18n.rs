@@ -9,8 +9,9 @@ use std::borrow::Cow;
 
 use egui::{Context, Id};
 use fluent_templates::LanguageIdentifier;
+use toolbox_config::Language;
 pub use toolbox_services::i18n::{
-    FALLBACK, available, language_from_env, name_of, text_in, text_or_in, text_with_in,
+    Arg, FALLBACK, available, language_from_env, name_of, text_in, text_or_in, text_with_in,
 };
 
 /// Makes `language` the one every following [`text`] call uses.
@@ -28,7 +29,7 @@ pub fn text_or(ctx: &Context, id: &str, fallback: &str) -> Cow<'static, str> {
     text_or_in(&language(ctx), id, fallback)
 }
 
-pub fn text_with(ctx: &Context, id: &str, args: &[(&'static str, &str)]) -> Cow<'static, str> {
+pub fn text_with(ctx: &Context, id: &str, args: &[(&'static str, Arg<'_>)]) -> Cow<'static, str> {
     text_with_in(&language(ctx), id, args)
 }
 
@@ -39,4 +40,13 @@ pub fn language(ctx: &Context) -> LanguageIdentifier {
 
 fn language_id() -> Id {
     Id::unique("toolbox_gui::i18n::language")
+}
+
+/// The language the window shows: the one the settings choose when there
+/// are texts for it, else the `system` one.
+pub fn shown(chosen: Option<&Language>, system: &LanguageIdentifier) -> LanguageIdentifier {
+    chosen
+        .and_then(|code| code.as_str().parse::<LanguageIdentifier>().ok())
+        .filter(|language| available().contains(language))
+        .unwrap_or_else(|| system.clone())
 }

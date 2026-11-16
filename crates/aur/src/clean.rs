@@ -5,6 +5,8 @@
 #[cfg(test)]
 mod tests;
 
+use toolbox_text::OutsideText;
+
 /// The longest kept version, `epoch:pkgver-pkgrel` with room to spare.
 pub const VERSION_CHARS: usize = 128;
 pub const DESCRIPTION_CHARS: usize = 512;
@@ -15,19 +17,16 @@ pub const URL_CHARS: usize = 2048;
 pub const ENTRY_CHARS: usize = 256;
 pub const LIST_ENTRIES: usize = 256;
 
-pub fn plain(text: &str, max: usize) -> String {
-    text.chars()
-        .filter(|character| !toolbox_plan::text::is_hidden(*character))
-        .take(max)
-        .collect()
+pub fn plain(text: &str, max: usize) -> OutsideText {
+    toolbox_text::plain_up_to(text, max)
 }
 
-pub fn optional(text: Option<&str>, max: usize) -> Option<String> {
+pub fn optional(text: Option<&str>, max: usize) -> Option<OutsideText> {
     text.map(|text| plain(text, max))
         .filter(|text| !text.trim().is_empty())
 }
 
-pub fn list(entries: &[String]) -> Vec<String> {
+pub fn list(entries: &[String]) -> Vec<OutsideText> {
     entries
         .iter()
         .map(|entry| plain(entry, ENTRY_CHARS))

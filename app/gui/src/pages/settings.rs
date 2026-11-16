@@ -17,6 +17,7 @@ use super::header::title_header;
 use super::setting_row::{Words, row, switch_row};
 use super::{PageContext, PageView};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::settings::{MotionChoice, SettingsCommand, SettingsView, ThemeChoice};
 
 const NARROW_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_control_narrow;
@@ -95,7 +96,7 @@ impl SettingsPage {
             i18n::text_with(
                 &ctx,
                 "settings-refresh-clamped",
-                &[("minutes", &kept.to_string())],
+                &[("minutes", Arg::from(kept))],
             )
         });
 

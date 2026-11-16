@@ -9,14 +9,6 @@ use toolbox_plan::sdboot::LoaderChange;
 use super::FileChange;
 use crate::secure;
 
-/// `secure` opens fixed paths only, so each place `esp_place` can name has
-/// its own.
-const LOADER_CONFS: [(&str, &str); 3] = [
-    ("efi", "efi/loader/loader.conf"),
-    ("boot", "boot/loader/loader.conf"),
-    ("boot/efi", "boot/efi/loader/loader.conf"),
-];
-
 const BACKUP: &str = "loader.conf.bak";
 
 /// # Errors
@@ -24,11 +16,7 @@ const BACKUP: &str = "loader.conf.bak";
 /// When no ESP is mounted, a folder on the way is a symlink, the file is
 /// a symlink or not UTF-8, or the write fails.
 pub fn edit_loader_conf(root: &Path, change: &LoaderChange) -> io::Result<FileChange> {
-    let place = crate::sdboot::esp(root)?;
-    let path = LOADER_CONFS
-        .into_iter()
-        .find_map(|(known, path)| (known == place).then_some(path))
-        .ok_or_else(|| io::Error::other("the ESP is mounted at no known place"))?;
+    let path = crate::sdboot::esp(root)?.loader_conf();
 
     let (dir, name) = secure::open_parent(root, path)?;
     let current = secure::read_text(&dir, name)?;

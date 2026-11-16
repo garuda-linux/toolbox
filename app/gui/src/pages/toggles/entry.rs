@@ -4,6 +4,7 @@ use std::sync::Arc;
 use egui::{CornerRadius, Label, Rect, Ui, Vec2};
 use toolbox_catalog::{Check, ToggleEntry};
 use toolbox_core::Toggle;
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::{Control, Entry};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
@@ -19,6 +20,7 @@ use crate::artwork::Artwork;
 use crate::catalogs::{self, CatalogId};
 use crate::command::AppCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::{
     Initial, PICTURE_RADIUS, actions, picture_height, picture_or_initial, picture_slot,
@@ -142,16 +144,15 @@ fn text(ui: &mut Ui, row: &EntryRow) {
     ui.add(Label::new(Arc::clone(&row.description)));
 }
 
-/// Whether `query` (trimmed, lower case, empty for all) is in the entry's
-/// title or description, as the user reads them.
-pub fn matches(ctx: &egui::Context, id: CatalogId, entry: &Entry<'_>, query: &str) -> bool {
+/// Whether `query` is in the entry's title or description, as the user
+/// reads them.
+pub fn matches(ctx: &egui::Context, id: CatalogId, entry: &Entry<'_>, query: &Needle) -> bool {
     if query.is_empty() {
         return true;
     }
 
     let title = catalog_text(ctx, id, entry.entry.id(), entry.entry.title());
-    title.to_lowercase().contains(query)
-        || description(ctx, id, entry).to_lowercase().contains(query)
+    query.is_in(&title) || query.is_in(&description(ctx, id, entry))
 }
 
 pub fn description(ctx: &egui::Context, id: CatalogId, entry: &Entry<'_>) -> String {
@@ -200,7 +201,7 @@ pub fn note(
     };
 
     Some((
-        i18n::text_with(ctx, text, &[("names", &names)]),
+        i18n::text_with(ctx, text, &[("names", Arg::from(&names))]),
         Tone::Neutral,
     ))
 }

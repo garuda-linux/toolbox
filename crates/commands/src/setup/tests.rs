@@ -1,16 +1,12 @@
 use toolbox_cli::Exit;
 use toolbox_core::Snapshot;
-use toolbox_services::catalogs::{Catalogs, catalog_dir};
+use toolbox_services::catalogs::Catalogs;
 
 use super::apply;
 
-fn catalogs() -> Catalogs {
-    Catalogs::load(&catalog_dir(|key| std::env::var_os(key)))
-}
-
 #[test]
 fn an_id_the_assistant_lacks_is_not_available() {
-    let catalogs = catalogs();
+    let catalogs = Catalogs::from_env();
     let catalog = catalogs.setup.catalog.as_ref().unwrap();
 
     let refused = apply(
@@ -25,7 +21,7 @@ fn an_id_the_assistant_lacks_is_not_available() {
 
 #[test]
 fn several_choices_land_in_one_plan() {
-    let catalogs = catalogs();
+    let catalogs = Catalogs::from_env();
 
     let catalog = catalogs.setup.catalog.as_ref().unwrap();
     let ids: Vec<String> = catalog

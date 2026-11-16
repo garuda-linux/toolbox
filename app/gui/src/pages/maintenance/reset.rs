@@ -11,6 +11,7 @@ use toolbox_system::skel::shelf::SkelRow;
 use super::heading;
 use crate::command::MaintenanceCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
 
@@ -78,7 +79,7 @@ fn entry_row(ui: &mut Ui, context: &PageContext<'_>, entry: &SkelRow, resetting:
     let line = i18n::text_with(
         ui.ctx(),
         "maintenance-reset-replaces",
-        &[("files", &entry.targets.join(", "))],
+        &[("files", Arg::from(&entry.targets.join(", ")))],
     );
 
     let texts = CheckRowTexts {
@@ -109,7 +110,12 @@ fn outcome(ui: &mut Ui, context: &PageContext<'_>) {
         banner(ui, Tone::Success, &text, &[]);
     } else {
         let names = outcome.failed.join(", ");
-        let text = i18n::text_with(&ctx, "maintenance-reset-failed", &[("names", &names)]);
+        let text = i18n::text_with(
+            &ctx,
+            "maintenance-reset-failed",
+            &[("names", Arg::from(&names))],
+        );
+
         banner(ui, Tone::Warning, &text, &[]);
     }
 
@@ -118,9 +124,15 @@ fn outcome(ui: &mut Ui, context: &PageContext<'_>) {
 
 fn ask(ctx: &egui::Context, context: &PageContext<'_>, confirming: &mut bool) {
     let shelf = context.service::<Maintenance>().shelf();
-    let count = shelf.chosen_count().to_string();
-    let title = i18n::text_with(ctx, "maintenance-reset-question", &[("count", &count)]);
+    let count = shelf.chosen_count();
+    let title = i18n::text_with(
+        ctx,
+        "maintenance-reset-question",
+        &[("count", Arg::from(count))],
+    );
+
     let close = i18n::text(ctx, "dialog-close");
+
     let outcome = ModalWrapper::new(Id::unique("toolbox_gui::maintenance::reset"), &title)
         .title_bar(&close)
         .show(ctx, |ui| {

@@ -14,7 +14,9 @@ pub use recent::RecentLogSource;
 use super::timestamp::parse_timestamp;
 use crate::error::{ProbeError, from_io};
 
-const SYSTEM_LOG: &str = "/var/log/pacman.log";
+/// Relative to the root, so every reader of the log joins it to the root
+/// it was given, and a test root holds its own copy.
+pub const PACMAN_LOG: &str = "var/log/pacman.log";
 
 /// The last transaction is nearly always this close to the end. The
 /// log of an old system has tens of megabytes.
@@ -45,7 +47,7 @@ pub struct PacmanLog {
 impl PacmanLog {
     #[must_use = "the adapter does nothing until asked"]
     pub fn system() -> Self {
-        Self::new(SYSTEM_LOG)
+        Self::new(Path::new("/").join(PACMAN_LOG))
     }
 
     /// Another log file, for tests.
@@ -83,7 +85,11 @@ fn open_log(path: &Path) -> Result<File, ProbeError> {
 
 /// The reader of the whole lines in the last bytes of a log `length` bytes
 /// long, from the line that holds `start` on.
-fn whole_lines<L>(log: &mut L, length: u64, start: u64) -> io::Result<BufReader<io::Take<&mut L>>>
+pub fn whole_lines<L>(
+    log: &mut L,
+    length: u64,
+    start: u64,
+) -> io::Result<BufReader<io::Take<&mut L>>>
 where
     L: Read + Seek,
 {

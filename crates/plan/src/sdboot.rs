@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 pub use self::change::{InvalidLoaderChange, LoaderChange, LoaderKey, LoaderSetting};
 pub use self::entry::{EntryKind, LoaderEntry};
-pub use self::esp::esp_place;
+pub use self::esp::{EspPlace, esp_place};
 pub use self::pe::{HEADER_BYTES, Section, sections};
 pub use self::settings::{LoaderSettings, LoaderTimeout};
 use crate::KernelRelease;

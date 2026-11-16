@@ -13,6 +13,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use super::dialogs::Dialog;
 use super::{accounts_ready, row};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::sort_select;
 use crate::pages::search_empty::search_empty_state;
@@ -80,12 +81,12 @@ pub fn show(
             .collect()
     });
 
-    let total = view::users_total(context.snapshot).to_string();
-    let count = i18n::text_with(
-        &ctx,
-        "users-count",
-        &[("shown", &rows.len().to_string()), ("count", &total)],
-    );
+    let counts = [
+        ("shown", Arg::from(rows.len())),
+        ("count", Arg::from(view::users_total(context.snapshot))),
+    ];
+
+    let count = i18n::text_with(&ctx, "users-count", &counts);
 
     ui.label(rich(
         ui,

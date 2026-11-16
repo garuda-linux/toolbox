@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 
 use egui::{Key, Label, Ui};
-use toolbox_core::features::configs::{Row, RowKind, rows};
+use toolbox_core::features::configs::{Action, Row, RowKind, rows};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::widgets::{
@@ -14,6 +14,7 @@ use super::texts;
 use crate::command::ConfigsCommand;
 use crate::configs::Configs;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 use crate::pages::rows::more::{item, more};
@@ -95,7 +96,12 @@ pub fn show(
         let icon = section_icon(&section.icon);
         SectionHeading::new(icon, &section.title, "").show(ui);
         ui.add_space(ui.tokens().sizes.heading_gap);
-        let name = i18n::text_with(&ctx, "configs-list", &[("section", &section.title)]);
+        let name = i18n::text_with(
+            &ctx,
+            "configs-list",
+            &[("section", Arg::from(&section.title))],
+        );
+
         let heights = RowHeights::Measured {
             estimate: row_height(ui, text_block_height(ui, 2)),
         };
@@ -199,8 +205,7 @@ fn lines(ui: &mut Ui, item: &Item) {
         }
 
         if row.kind == RowKind::Folder {
-            let count =
-                i18n::text_with(&ctx, "configs-files", &[("count", &row.count.to_string())]);
+            let count = i18n::text_with(&ctx, "configs-files", &[("count", Arg::from(row.count))]);
 
             // A count is no state, so it takes no dot.
             let count = rich(ui, &count, Weight::Medium, SMALL, tokens.secondary);
@@ -277,8 +282,8 @@ fn controls(
 
             return;
         }
-        (_, "edit") if editable(context) => ConfigsCommand::Edit(key),
-        (_, "view") => ConfigsCommand::View(key),
+        (_, Some(Action::Edit)) if editable(context) => ConfigsCommand::Edit(key),
+        (_, Some(Action::View)) => ConfigsCommand::View(key),
         _ => return,
     };
 
@@ -287,9 +292,9 @@ fn controls(
 
 fn action(ui: &mut Ui, context: &PageContext<'_>, row: &Row) -> bool {
     let (id, enabled) = match row.action {
-        "edit" => ("configs-edit", editable(context)),
-        "view" => ("configs-view", true),
-        _ => return false,
+        Some(Action::Edit) => ("configs-edit", editable(context)),
+        Some(Action::View) => ("configs-view", true),
+        None => return false,
     };
 
     let label = i18n::text(ui.ctx(), id);

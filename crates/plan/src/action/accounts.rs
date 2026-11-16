@@ -112,6 +112,7 @@ pub fn set_home_folder(user: &UserName, change: &HomeChange) -> Vec<Invocation> 
 
     if change.move_files {
         procedure.push(Invocation::Builtin(Builtin::RequireFreeHome(
+            user.clone(),
             change.home.clone(),
         )));
     }

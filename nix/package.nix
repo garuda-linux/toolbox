@@ -63,6 +63,11 @@ let
         pacman
       ];
 
+      # The catalog path is compiled in, so the build names the output it installs to.
+      preBuild = ''
+        export GARUDA_TOOLBOX_PREFIX=$out
+      '';
+
       postInstall = ''
         staged=$(mktemp -d)
         mv $out/bin/garuda-toolbox $staged/
@@ -74,7 +79,6 @@ let
       # Only the app is wrapped. The helper, run via pkexec, must stay a plain binary.
       postFixup = ''
         wrapProgram $out/bin/garuda-toolbox \
-          --set GARUDA_TOOLBOX_CATALOG_DIR $out/share/garuda-toolbox/catalog \
           --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibraries} \
           --suffix XDG_DATA_DIRS : ${kdePackages.breeze-icons}/share
       '';

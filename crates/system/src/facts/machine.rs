@@ -5,7 +5,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
-use crate::error::{ProbeError, from_io};
+use crate::error::{MissingFact, ProbeError, from_io};
 use crate::files;
 use crate::host::boot_time;
 use crate::kernels::OS_RELEASE;
@@ -79,9 +79,7 @@ impl MachineSource for SystemMachine {
         let release = release.trim();
 
         if release.is_empty() {
-            return Err(ProbeError::Missing {
-                what: "the kernel names no release".to_owned(),
-            });
+            return Err(ProbeError::Missing(MissingFact::KernelRelease));
         }
 
         Ok(release.to_owned())

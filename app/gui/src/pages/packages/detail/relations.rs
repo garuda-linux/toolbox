@@ -15,9 +15,11 @@ use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{minor_heading, rich, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::PackageName;
+use toolbox_text::OutsideText;
 
 use super::super::{Unfolded, text_line};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::packages::Details;
 
 /// The package each name in the details leads to, as the catalog answers.
@@ -36,8 +38,8 @@ pub fn resolve(catalog: Option<&Catalog>, info: &PackageDetails) -> Targets {
 
     info.depends
         .iter()
-        .chain(&info.required_by)
         .map(String::as_str)
+        .chain(info.required_by.iter().map(OutsideText::as_str))
         .chain(info.optional.iter().map(|value| value.name.as_str()))
         .filter_map(|value| Some((value.to_owned(), target(catalog, value)?)))
         .collect()
@@ -131,13 +133,16 @@ pub fn dependencies(
 }
 
 /// A name that `lookup` answers is a link to that package.
-pub fn names(
+pub fn names<T>(
     ui: &mut Ui,
     id: &str,
-    values: &[String],
+    values: &[T],
     lookup: &dyn Fn(&str) -> Option<PackageName>,
     all: &mut bool,
-) -> Option<PackageName> {
+) -> Option<PackageName>
+where
+    T: AsRef<str>,
+{
     heading(ui, id, values.len());
     if values.is_empty() {
         none(ui);
@@ -149,7 +154,7 @@ pub fn names(
     text_line(ui, |ui| {
         ui.spacing_mut().item_spacing.x = ui.tokens().sizes.card_gap;
         for value in part.items {
-            let clicked = name(ui, value, lookup);
+            let clicked = name(ui, value.as_ref(), lookup);
             if opened.is_none() {
                 opened = clicked;
             }
@@ -217,9 +222,9 @@ fn more(ui: &mut Ui, hidden: usize, all: &mut bool) {
     }
 
     let ctx = ui.ctx().clone();
-    let count = hidden.to_string();
-    let text = i18n::text_with(&ctx, "packages-more", &[("count", &count)]);
-    let name = i18n::text_with(&ctx, "packages-more-name", &[("count", &count)]);
+    let count = hidden;
+    let text = i18n::text_with(&ctx, "packages-more", &[("count", Arg::from(count))]);
+    let name = i18n::text_with(&ctx, "packages-more-name", &[("count", Arg::from(count))]);
     if text_button(ui, &text, &name).clicked() {
         *all = true;
     }
@@ -227,9 +232,13 @@ fn more(ui: &mut Ui, hidden: usize, all: &mut bool) {
 
 fn libraries(ui: &mut Ui, count: usize, all: &mut bool) {
     let ctx = ui.ctx().clone();
-    let count = count.to_string();
-    let text = i18n::text_with(&ctx, "packages-libraries", &[("count", &count)]);
-    let name = i18n::text_with(&ctx, "packages-libraries-name", &[("count", &count)]);
+    let text = i18n::text_with(&ctx, "packages-libraries", &[("count", Arg::from(count))]);
+    let name = i18n::text_with(
+        &ctx,
+        "packages-libraries-name",
+        &[("count", Arg::from(count))],
+    );
+
     if text_button(ui, &text, &name).clicked() {
         *all = true;
     }

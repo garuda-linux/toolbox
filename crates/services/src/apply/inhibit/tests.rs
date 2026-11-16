@@ -6,7 +6,11 @@ use super::{Hold, Inhibitor};
 /// logind inhibitor.
 #[tokio::test]
 async fn a_dry_run_holds_nothing_back() {
-    let Hold { _lock: lock } = Inhibitor::Logind.hold(Mode::DryRun).await;
+    let Hold { _lock: lock } = Inhibitor::Logind {
+        language: crate::i18n::FALLBACK,
+    }
+    .hold(Mode::DryRun)
+    .await;
 
     assert!(lock.is_none());
 }

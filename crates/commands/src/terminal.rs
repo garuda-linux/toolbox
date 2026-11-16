@@ -7,14 +7,18 @@ mod tests;
 
 use std::fs::{File, OpenOptions};
 use std::io::{BufRead as _, BufReader, IsTerminal as _, Read, Write as _};
+use std::os::fd::{AsFd as _, BorrowedFd};
 
 use rustix::termios::{
     LocalModes, OptionalActions, SpecialCodeIndex, Termios, tcgetattr, tcsetattr,
 };
-use toolbox_cli::Exit;
-use toolbox_cli::confirm::Prompt;
+use toolbox_cli::confirm::{Interrupted, Prompt};
 use toolbox_cli::output::{ColorMode, Paint};
 use toolbox_plan::MAX_PASSWORD_BYTES;
+
+/// Room for a password and a `\r` before the line break, a longer line is
+/// refused.
+const LINE_BYTES: usize = MAX_PASSWORD_BYTES + 1;
 
 /// Standard input and output for the question before a change: both must
 /// be a terminal, an answer piped in could not have read the question.
@@ -42,9 +46,14 @@ impl Prompt for Terminal {
         (read > 0).then_some(answer)
     }
 
-    fn secret(&mut self, question: &str) -> Option<String> {
-        let mut tty = tty()?;
-        let quiet = Quiet::on(&tty, Wait::ForInput)?;
+    fn secret(&mut self, question: &str) -> Result<Option<String>, Interrupted> {
+        let Some(mut tty) = tty() else {
+            return Ok(None);
+        };
+
+        let Some(quiet) = Quiet::on(&tty, Wait::ForInput) else {
+            return Ok(None);
+        };
 
         write!(tty, "{question}").ok();
         tty.flush().ok();
@@ -53,16 +62,14 @@ impl Prompt for Terminal {
         drop(quiet);
 
         match typed {
-            Typed::Line(answer) => Some(answer),
-            Typed::Closed => None,
-            Typed::Cancelled => std::process::exit(i32::from(Exit::Interrupted.code())),
+            Typed::Line(answer) => Ok(Some(answer)),
+            Typed::Closed => Ok(None),
+            Typed::Cancelled => Err(Interrupted),
         }
     }
 
     fn line(&mut self) -> Option<String> {
-        let mut answer = String::with_capacity(MAX_PASSWORD_BYTES + 2);
-        let read = std::io::stdin().lock().read_line(&mut answer).ok()?;
-        (read > 0).then_some(answer)
+        read_line_from(std::io::stdin().as_fd())
     }
 }
 
@@ -137,6 +144,41 @@ pub enum Typed {
     Cancelled,
     /// Ctrl+D on an empty line, or the input ended before Return.
     Closed,
+}
+
+/// The first line of `input`, read from the descriptor one byte at a time.
+/// std's buffer would keep the bytes after the line, and a secret left
+/// there is never wiped.
+fn read_line_from(input: BorrowedFd<'_>) -> Option<String> {
+    let mut line = [0_u8; LINE_BYTES];
+    let mut length = 0;
+    let mut byte = [0_u8];
+
+    let complete = loop {
+        match rustix::io::read(input, &mut byte) {
+            Err(rustix::io::Errno::INTR) => {}
+            Err(_) => break false,
+            Ok(0) => break length > 0,
+            Ok(_) if byte == *b"\n" => break true,
+            Ok(_) => match line.get_mut(length) {
+                Some(slot) => {
+                    *slot = byte[0];
+                    length += 1;
+                }
+                None => break false,
+            },
+        }
+    };
+
+    let text = complete
+        .then(|| line.get(..length))
+        .flatten()
+        .and_then(|typed| std::str::from_utf8(typed).ok())
+        .map(str::to_owned);
+
+    wipe_slice(&mut line);
+
+    text
 }
 
 /// The program's question answered while a plan runs: one line typed
@@ -215,9 +257,13 @@ pub fn wipe(text: impl Into<Vec<u8>>) {
 }
 
 fn wipe_bytes(mut bytes: Vec<u8>) {
+    wipe_slice(&mut bytes);
+}
+
+fn wipe_slice(bytes: &mut [u8]) {
     bytes.fill(0);
 
     // Without a reader the optimiser may drop the fill of a buffer that is
     // freed right after.
-    std::hint::black_box(&bytes);
+    std::hint::black_box(&*bytes);
 }

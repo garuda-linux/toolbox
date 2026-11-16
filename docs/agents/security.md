@@ -85,7 +85,10 @@ The helper repeats what only the wire shows: `DeleteUser`, locking and
 `SetHomeFolder -m` a taken target, and `SetHomeFolder -m` and `CreateUser`
 with a chosen home one below any folder everyone may write
 (the sticky bit too), because another user could place a link there
-between the check and the move.
+between the check and the move. A folder on the way that another user
+owns, or that its group may write, is refused too. `SetHomeFolder -m`
+also allows the account's own folders, since its user id is known there.
+A new account (`CreateUser`) allows only root's folders.
 
 ## Protected packages
 
@@ -193,8 +196,9 @@ helper. No editor runs as root.
 
 - A path is a `ConfigFilePath`: absolute, no control character, no empty,
   `.` or `..` part, below `CONFIG_ROOTS`, never below
-  `WITHHELD_CONFIG_FILES` and never ending in `WITHHELD_CONFIG_SUFFIXES`
-  (`*.netdev`, WireGuard keys in `/etc/systemd/network`)
+  `WITHHELD_CONFIG_FILES` and never with a part containing one of
+  `WITHHELD_CONFIG_NAMES` (`.netdev`, so copies such as `.bak` or
+  `.pacsave` too; WireGuard keys in `/etc/systemd/network`)
   (`crates/plan/src/config_file/path.rs`). A new file that holds a secret
   goes on one of those lists.
 - A write must also pass `ConfigFilePath::is_writable`
@@ -340,7 +344,7 @@ and server answers are untrusted.
 - egui draws them as plain text. Nothing becomes a link, image or style.
   Banners show the app's own words, the outside value beside them.
 - Hidden characters (controls, bidi overrides and marks, zero-width
-  characters) go through `toolbox_plan::text::is_hidden` and `plain`
+  characters) go through `toolbox_text::is_hidden` and `plain`
   wherever outside text is kept or printed. New outside text does too.
 - URLs open only from the catalog or a fixed list (`app/gui/src/links.rs`)
   and `file://` links of catalog home files. A package's website opens
@@ -361,6 +365,9 @@ user's, and an apply still asks for the password.
   and decodes it as a `QueueEdit` (`crates/services/src/queue/edit.rs`).
   Anything that does not decode into its domain's value objects refuses
   the whole edit. Each wish then meets every page guard, as a click.
+  A wish may carry the outcome of a run, since `queue apply` records a
+  failed change this way while the window is open. A forged outcome
+  changes only how the list marks the change.
   At most 64 questions wait for the app (`instance::WAITING_ASKS`), the
   next is refused as `too-many`. Every edit that lands shows a toast.
 - Nothing on the bus applies the queue. Refusals cross as fixed codes.
@@ -374,6 +381,9 @@ The app contacts the network only for:
   feed (`toolbox_news::Source`), at most every 6 hours,
 - the AUR metadata dump, only while the AUR setting is on,
 - a PrivateBin upload after its confirm dialog,
+- `rate-mirrors` when the user ranks the mirrors (the mirrors action of
+  the GUI and the `mirrors` command). It runs as the user and times the
+  mirrors of its `chaotic-aur` list. A dry run never ranks,
 - the public address after **Show public address**,
 - links the user opens, `ping` and `traceroute` to a host the user typed,
 - NetworkManager's own connectivity check.

@@ -14,6 +14,7 @@ pub use lead::{LeadChip, LeadSections, NoLead};
 use listed::{Listed, SectionChip, SectionRows};
 use toolbox_catalog::LoadProblem;
 use toolbox_core::Snapshot;
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::Refusal;
 use toolbox_core::features::toggles::shown::{self as view, Section, Tally};
 use toolbox_gui_kit::UiExt as _;
@@ -29,6 +30,7 @@ use crate::artwork::Artwork;
 use crate::catalogs::CatalogId;
 use crate::command::AppCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::refused::Shown as _;
 use crate::toggle_pages::{TogglePages, ToggleRefusal};
 
@@ -100,7 +102,7 @@ impl TogglePage {
             plan_running(ui, context);
         }
 
-        let query = self.search.trim().to_lowercase();
+        let query = Needle::new(&self.search);
         let listed = self.listed(ui, context, &query);
         let rest = (Same::of(context.snapshot), context.revision, Look::of(ui));
         let leads = self
@@ -141,13 +143,13 @@ impl TogglePage {
     /// The catalog's sections, shared with the cache, so a frame that asks
     /// twice copies no title.
     pub fn steps(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> Steps {
-        Steps(self.listed(ui, context, ""))
+        Steps(self.listed(ui, context, &Needle::default()))
     }
 
     /// The notices and the rows of the section `id` alone, without its
     /// heading, which the wizard's step title replaces.
     pub fn show_section(&mut self, ui: &mut Ui, context: &PageContext<'_>, id: &str) -> bool {
-        let listed = self.listed(ui, context, "");
+        let listed = self.listed(ui, context, &Needle::default());
         self.notices(ui, context, listed.unknown);
         listed
             .sections
@@ -159,7 +161,7 @@ impl TogglePage {
     /// The catalog's sections that `query` matches, from the cache while
     /// nothing they come from changed. A broken catalog shows a banner
     /// and leaves the lead sections.
-    fn listed(&mut self, ui: &mut Ui, context: &PageContext<'_>, query: &str) -> Arc<Listed> {
+    fn listed(&mut self, ui: &mut Ui, context: &PageContext<'_>, query: &Needle) -> Arc<Listed> {
         let catalog = match &context.catalogs.get(self.catalog).catalog {
             Ok(catalog) => catalog,
             Err(problem) => {
@@ -182,7 +184,7 @@ impl TogglePage {
             Look::of(ui),
         );
 
-        self.listed.get(&[query], rest, || {
+        self.listed.get(&[query.as_str()], rest, || {
             let _build = tracing::trace_span!("build rows").entered();
             let shown =
                 view::sections(catalog, context.snapshot, context.changes, context.desktops);
@@ -207,8 +209,8 @@ impl TogglePage {
         }
 
         if context.probed && unknown > 0 {
-            let count = unknown.to_string();
-            let text = i18n::text_with(&ctx, "toggles-unknown", &[("count", &count)]);
+            let count = unknown;
+            let text = i18n::text_with(&ctx, "toggles-unknown", &[("count", Arg::from(count))]);
             let again = i18n::text(&ctx, "common-read-again");
             if banner(ui, Tone::Warning, &text, &[&again]).value.is_some() {
                 context.commands.send(AppCommand::ReadSystem);
@@ -331,16 +333,23 @@ fn section_title(ctx: &egui::Context, catalog: CatalogId, section: &Section<'_>)
 
 fn problem_text(ctx: &egui::Context, problem: &LoadProblem) -> String {
     let reason = i18n::text(ctx, &format!("toggles-problem-{}", problem.code));
-    format!("{} {reason}", i18n::text(ctx, "toggles-problem"))
+    i18n::text_with(
+        ctx,
+        "toggles-problem-reason",
+        &[("reason", Arg::from(&reason))],
+    )
+    .into_owned()
 }
 
 /// "on/total", the count of a chip and of a section's heading.
 pub fn tally_text(ctx: &egui::Context, tally: Tally) -> String {
-    let (on, total) = (tally.on.to_string(), tally.total.to_string());
     i18n::text_with(
         ctx,
         "toggles-section-count",
-        &[("on", &on), ("total", &total)],
+        &[
+            ("on", Arg::from(tally.on)),
+            ("total", Arg::from(tally.total)),
+        ],
     )
     .into_owned()
 }
@@ -352,8 +361,13 @@ pub fn count_text(ctx: &egui::Context, tally: Tally, read: bool) -> String {
         return tally_text(ctx, tally);
     }
 
-    let total = tally.total.to_string();
-    i18n::text_with(ctx, "toggles-section-count-unread", &[("total", &total)]).into_owned()
+    let total = tally.total;
+    i18n::text_with(
+        ctx,
+        "toggles-section-count-unread",
+        &[("total", Arg::from(total))],
+    )
+    .into_owned()
 }
 
 /// [`count_text`], or none while nothing countable shows, since "0/0"

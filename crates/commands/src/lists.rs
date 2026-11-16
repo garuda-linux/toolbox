@@ -7,8 +7,6 @@ mod tests;
 
 pub mod listing;
 
-use std::ops::RangeInclusive;
-
 use serde::Serialize;
 use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::args::TogglePage;
@@ -20,11 +18,8 @@ use toolbox_core::features::toggles::shown::sections;
 use toolbox_core::features::toggles::{EntryState, is_offered, state};
 use toolbox_core::features::users::accounts;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
+use toolbox_plan::PEOPLE;
 use toolbox_services::page::PageId;
-
-/// `UID_MIN` to `UID_MAX` of `/etc/login.defs`, the bounds the window's
-/// people filter uses too.
-const PEOPLE: RangeInclusive<u32> = 1000..=60_000;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct ServiceRow {
@@ -36,7 +31,7 @@ pub struct ServiceRow {
     #[serde(rename = "sub_state")]
     pub state: String,
     pub at_boot: bool,
-    pub description: String,
+    pub description: toolbox_text::OutsideText,
 }
 
 #[derive(Clone, Debug, Serialize)]

@@ -9,12 +9,13 @@ mod watch;
 use std::fmt::Write as _;
 use std::time::SystemTime;
 
-use serde::Serialize;
+use serde::{Serialize, Serializer};
 use toolbox_cli::Exit;
 use toolbox_cli::output::Paint;
 use toolbox_core::features::status::days_since;
 use toolbox_services::home::Overview;
 use toolbox_system::{Facts, HealthLevel, PendingUpdate, ProbeError, Status};
+use toolbox_text::OutsideText;
 
 pub use self::command::status;
 pub use self::facts::{Disk, FactsView, Packages, facts_view};
@@ -34,14 +35,15 @@ pub enum Part<T> {
 pub struct Package {
     #[serde(rename = "id")]
     pub name: String,
-    pub from: String,
-    pub to: String,
+    pub from: OutsideText,
+    pub to: OutsideText,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct Issue {
-    pub level: &'static str,
-    pub message: String,
+    #[serde(serialize_with = "serialize_level")]
+    pub level: HealthLevel,
+    pub message: OutsideText,
     pub fix_available: bool,
 }
 
@@ -98,7 +100,7 @@ pub fn view(status: &Status, restart: &Result<bool, ProbeError>, now: SystemTime
             issues
                 .iter()
                 .map(|issue| Issue {
-                    level: level(issue.level),
+                    level: issue.level,
                     message: issue.message.clone(),
                     fix_available: issue.fix_available,
                 })
@@ -182,7 +184,7 @@ fn every_row(view: &StatusView) -> Vec<(&'static str, Shown)> {
 
 /// The things to do, each counted. Info findings ask for nothing.
 fn attention(view: &StatusView) -> Vec<String> {
-    let at = |wanted: &str| {
+    let at = |wanted: HealthLevel| {
         counted_part(&view.health, |issues| {
             issues.iter().filter(|issue| issue.level == wanted).count()
         })
@@ -209,9 +211,13 @@ fn attention(view: &StatusView) -> Vec<String> {
             "files to merge",
         ),
         stale,
-        counted(at("critical"), "critical issue", "critical issues"),
-        counted(at("high"), "high issue", "high issues"),
-        counted(at("low"), "low issue", "low issues"),
+        counted(
+            at(HealthLevel::Critical),
+            "critical issue",
+            "critical issues",
+        ),
+        counted(at(HealthLevel::High), "high issue", "high issues"),
+        counted(at(HealthLevel::Low), "low issue", "low issues"),
         restart.then(|| "restart needed".to_owned()),
     ]
     .into_iter()
@@ -270,11 +276,7 @@ fn findings(view: &StatusView, paint: Paint) -> String {
     }
 
     issues.iter().fold(String::from("\n"), |mut text, issue| {
-        let line = match issue.level {
-            "error" => paint.error(&issue.message),
-            "warning" => paint.warning(&issue.message),
-            other => format!("{other}: {}", issue.message),
-        };
+        let line = format!("{}: {}", level(issue.level), issue.message);
 
         writeln!(text, "{}", paint.item(&line)).ok();
         text
@@ -310,10 +312,9 @@ fn part<T, V>(result: &Result<T, ProbeError>, value: impl FnOnce(&T) -> V) -> Pa
         Ok(found) => Part::Ok {
             value: value(found),
         },
-        Err(ProbeError::Unavailable) => Part::Unavailable,
-        Err(error) => Part::Failed {
-            cause: error.to_string(),
-        },
+        Err(error) => error
+            .reason()
+            .map_or(Part::Unavailable, |cause| Part::Failed { cause }),
     }
 }
 
@@ -321,10 +322,7 @@ fn row<'a, T>(label: &'a str, part: &Part<T>, show: impl FnOnce(&T) -> String) -
     let shown = match part {
         Part::Ok { value } => Shown::Value(show(value)),
         Part::Unavailable => Shown::Unavailable,
-        Part::Failed { cause } => {
-            let raw = cause.strip_prefix("probe failed: ").unwrap_or(cause);
-            Shown::Failed(raw.to_owned())
-        }
+        Part::Failed { cause } => Shown::Failed(cause.clone()),
     };
 
     (label, shown)
@@ -364,4 +362,15 @@ const fn level(level: HealthLevel) -> &'static str {
         HealthLevel::Low => "low",
         HealthLevel::Info => "info",
     }
+}
+
+#[expect(
+    clippy::trivially_copy_pass_by_ref,
+    reason = "serde's serialize_with hands the field by reference"
+)]
+fn serialize_level<S>(level: &HealthLevel, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_str(self::level(*level))
 }

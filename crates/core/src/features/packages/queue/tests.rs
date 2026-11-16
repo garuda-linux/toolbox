@@ -137,7 +137,7 @@ fn the_running_kernel_is_not_queued_for_removal() {
             .map(|package| toolbox_state::kernels::LocalPackage {
                 name: name(package),
                 version: "6.14.0-4".to_owned(),
-                description: String::new(),
+                description: toolbox_text::plain(""),
             })
             .collect(),
     });

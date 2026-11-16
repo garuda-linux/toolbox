@@ -2,6 +2,7 @@
 //! or the look change.
 
 use egui::{Context, Ui};
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::Tally;
 
 use super::{TogglePage, shipped};
@@ -17,12 +18,12 @@ impl LeadSections for OneLead {
 
     fn data(&self, _context: &PageContext<'_>) {}
 
-    fn chips(&self, ctx: &Context, (): &(), _query: &str) -> Vec<LeadChip> {
+    fn chips(&self, ctx: &Context, (): &(), _query: &Needle) -> Vec<LeadChip> {
         let tally = Tally { on: 0, total: 1 };
         vec![LeadChip::new(ctx, "lead", "Lead".into(), (tally, true))]
     }
 
-    fn show(&self, _ui: &mut Ui, _: (&PageContext<'_>, &()), _id: &str, _query: &str) -> bool {
+    fn show(&self, _ui: &mut Ui, _: (&PageContext<'_>, &()), _id: &str, _query: &Needle) -> bool {
         false
     }
 }

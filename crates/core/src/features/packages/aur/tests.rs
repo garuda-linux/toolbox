@@ -13,7 +13,7 @@ fn aur(name: &str, description: &str, popularity: f64) -> AurPackage {
     AurPackage {
         name: package(name),
         version: "1.0-1".to_owned(),
-        description: description.to_owned(),
+        description: toolbox_text::plain(description),
         url: None,
         votes: 1,
         popularity,
@@ -33,7 +33,7 @@ fn aur(name: &str, description: &str, popularity: f64) -> AurPackage {
 
 fn catalog() -> AurCatalog {
     let mut tagged = aur("vscodium-bin", "Free build of the editor", 9.0);
-    tagged.keywords = vec!["IDE".to_owned()];
+    tagged.keywords = vec![toolbox_text::plain("IDE")];
 
     AurCatalog::new(AurIndex {
         packages: vec![

@@ -29,7 +29,7 @@ pub const MAX_ERROR_BYTES: usize = 64 << 10;
 
 /// `PIPE_BUF`, what every pipe holds even when the user's pipes were
 /// shrunk. Input is written before the wait, so it must never block.
-pub const MAX_INPUT_BYTES: usize = 4096;
+pub const MAX_STDIN_BYTES: usize = 4096;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Policy<'input> {
@@ -75,6 +75,13 @@ pub enum CaptureError {
     /// error.
     #[error("the program printed too much")]
     TooLarge,
+}
+
+/// Input the program would be fed past what a pipe holds.
+#[derive(Debug, thiserror::Error)]
+enum InputError {
+    #[error("the input is longer than a pipe surely holds")]
+    TooLong,
 }
 
 struct Tail {
@@ -247,11 +254,11 @@ pub fn run_captured(
 ) -> Result<Exited, CaptureError> {
     if policy
         .stdin
-        .is_some_and(|input| input.len() > MAX_INPUT_BYTES)
+        .is_some_and(|input| input.len() > MAX_STDIN_BYTES)
     {
         return Err(CaptureError::Failed(io::Error::new(
             io::ErrorKind::InvalidInput,
-            "the input is longer than a pipe surely holds",
+            InputError::TooLong,
         )));
     }
 

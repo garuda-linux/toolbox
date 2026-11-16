@@ -25,7 +25,8 @@ pub use toggles::{
     ToggleSection, is_web_url,
 };
 
-pub const INSTALLED_DIR: &str = "/usr/share/garuda-toolbox/catalog";
+/// The catalog folder of an installed copy, below the prefix `build.rs` compiled in.
+pub const INSTALLED_DIR: &str = env!("GARUDA_TOOLBOX_INSTALLED_DIR");
 
 /// The catalogs as the repository ships them, which the tests load.
 #[cfg(test)]

@@ -14,8 +14,8 @@ const DAY: Duration = Duration::from_hours(24);
 fn update(name: &str) -> PendingUpdate {
     PendingUpdate {
         name: PackageName::new(name).unwrap(),
-        from: "1".to_owned(),
-        to: "2".to_owned(),
+        from: toolbox_text::plain("1"),
+        to: toolbox_text::plain("2"),
     }
 }
 
@@ -27,7 +27,7 @@ fn status(now: SystemTime) -> Status {
         last_update: Ok(Some(now - DAY * 16)),
         health: Ok(vec![HealthIssue {
             level: HealthLevel::Low,
-            message: "The keyring is older than three months.".to_owned(),
+            message: toolbox_text::plain("The keyring is older than three months."),
             fix_available: true,
         }]),
     }
@@ -147,12 +147,12 @@ fn each_health_finding_has_a_line_of_its_own() {
     found.health = Ok(vec![
         HealthIssue {
             level: HealthLevel::Low,
-            message: "The keyring is old.".to_owned(),
+            message: toolbox_text::plain("The keyring is old."),
             fix_available: true,
         },
         HealthIssue {
             level: HealthLevel::Critical,
-            message: "The disk is full.".to_owned(),
+            message: toolbox_text::plain("The disk is full."),
             fix_available: false,
         },
     ]);
@@ -236,7 +236,7 @@ fn calm(now: SystemTime) -> Status {
 fn finding(level: HealthLevel) -> HealthIssue {
     HealthIssue {
         level,
-        message: "A finding.".to_owned(),
+        message: toolbox_text::plain("A finding."),
         fix_available: false,
     }
 }

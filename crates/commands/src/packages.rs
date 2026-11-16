@@ -145,11 +145,18 @@ fn installed() -> Result<BTreeSet<PackageName>, ProbeError> {
     }
 }
 
-fn listed(values: &[String]) -> String {
+fn listed<T>(values: &[T]) -> String
+where
+    T: AsRef<str>,
+{
     if values.is_empty() {
         "none".to_owned()
     } else {
-        values.join(", ")
+        values
+            .iter()
+            .map(AsRef::as_ref)
+            .collect::<Vec<&str>>()
+            .join(", ")
     }
 }
 
@@ -213,13 +220,14 @@ fn show_aur(args: &PackageShow, aur: &dyn AurSource, out: &mut Out<'_>) -> Exit 
 }
 
 fn aur_unreadable(error: &AurError, out: &mut Out<'_>) -> Exit {
-    match error {
-        AurError::Waiting { next } => unavailable(&aur::waiting_text(*next), out),
-        AurError::Download(reason) | AurError::Storage(reason) => {
-            failure(out, "the AUR's package list could not be read", reason);
-            Exit::Failure
-        }
-    }
+    let reason = match error {
+        AurError::Waiting { next } => return unavailable(&aur::waiting_text(*next), out),
+        AurError::Download(reason) => reason.to_string(),
+        AurError::Storage { path, error: cause } => format!("{}: {cause}", path.display()),
+    };
+
+    failure(out, "the AUR's package list could not be read", &reason);
+    Exit::Failure
 }
 
 fn unreadable(error: &ProbeError, out: &mut Out<'_>) -> Exit {

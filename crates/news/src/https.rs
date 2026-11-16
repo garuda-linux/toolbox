@@ -7,7 +7,7 @@ use std::io::Read as _;
 use std::time::Duration;
 
 use toolbox_https::http::StatusCode;
-use toolbox_https::{RequestError, Rules};
+use toolbox_https::{RequestError, Rules, USER_AGENT};
 
 use crate::{Source, Transport};
 
@@ -17,9 +17,6 @@ const TIMEOUT: Duration = Duration::from_secs(30);
 
 /// Far more than any feed of a few posts.
 const MAX_BYTES: u64 = 1 << 20;
-
-/// Plain and generic: the forum learns the program, nothing of the user.
-const USER_AGENT: &str = concat!("garuda-toolbox/", env!("CARGO_PKG_VERSION"));
 
 /// Blocks while a request runs, so call it off the GUI thread.
 pub struct Https {

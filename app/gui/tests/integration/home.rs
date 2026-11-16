@@ -53,8 +53,8 @@ impl Launcher for BrokenLauncher {
 pub fn update(name: &str) -> PendingUpdate {
     PendingUpdate {
         name: PackageName::new(name).unwrap(),
-        from: "1.0-1".to_owned(),
-        to: "1.1-1".to_owned(),
+        from: toolbox_text::plain("1.0-1"),
+        to: toolbox_text::plain("1.1-1"),
     }
 }
 
@@ -272,7 +272,7 @@ fn a_check_that_failed_shows_its_reason_on_request() {
     harness.run();
     assert!(
         harness
-            .query_by_label("garuda-health: no garuda-health")
+            .query_by_label("garuda-health: no garuda-health: fake source")
             .is_some()
     );
 }

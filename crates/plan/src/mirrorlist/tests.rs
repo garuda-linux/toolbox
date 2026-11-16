@@ -1,11 +1,17 @@
 use proptest::prelude::*;
 
-use super::{InvalidMirrorlist, MAX_MIRRORLIST_BYTES, Mirrorlist};
+use super::{InvalidMirrorlist, MAX_MIRRORLIST_BYTES, Mirrorlist, SAMPLE_MIRRORS};
 
 /// `/etc/pacman.d/chaotic-mirrorlist` of the Lima image.
 const CHAOTIC: &str = crate::testing::mirrorlist::CHAOTIC_MIRRORLIST;
 /// What `rate-mirrors --save` writes for chaotic-aur, its log as comments.
 const RATED: &str = crate::testing::mirrorlist::RATE_MIRRORS_CHAOTIC;
+
+/// The dry run placeholder is a valid list, or a dry run could not plan it.
+#[test]
+fn the_dry_run_placeholder_is_accepted() {
+    Mirrorlist::new(SAMPLE_MIRRORS).unwrap();
+}
 
 #[test]
 fn a_real_mirrorlist_is_accepted() {

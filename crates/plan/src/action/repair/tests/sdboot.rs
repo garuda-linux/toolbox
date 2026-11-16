@@ -3,7 +3,7 @@
 
 use super::{ROOT, as_run, bios, lines, open, regenerate, repair, uefi};
 use crate::action::testing::shown;
-use crate::{EspPlace, InstalledLoader, PartitionDevice, RepairWork, RootLayout};
+use crate::{EspPlace, InstalledLoader, LoaderRefusal, PartitionDevice, RepairWork, RootLayout};
 
 const RECHECK: &str = "check the devices of the repair again";
 const INITRAMFS: &str = "chroot /run/garuda-toolbox/boot-repair/root /usr/bin/dracut-rebuild, or chroot /run/garuda-toolbox/boot-repair/root /usr/bin/mkinitcpio -P where dracut-rebuild is not installed";
@@ -85,17 +85,23 @@ fn what_systemd_boot_cannot_do_is_refused_with_a_reason() {
     let system = open("/dev/sda2", RootLayout::Plain);
 
     for (work, loader, reason) in [
-        (bios("/dev/sda"), sdboot(EspPlace::Efi), "only through UEFI"),
-        (regenerate(), sdboot(EspPlace::Efi), "names none"),
+        (
+            bios("/dev/sda"),
+            sdboot(EspPlace::Efi),
+            LoaderRefusal::NotUefi,
+        ),
+        (
+            regenerate(),
+            sdboot(EspPlace::Efi),
+            LoaderRefusal::NoEspNamed,
+        ),
         (
             uefi("/dev/sda1"),
             InstalledLoader::SystemdBoot { esp: None },
-            "/etc/fstab mounts no EFI system partition",
+            LoaderRefusal::NoEspInFstab,
         ),
     ] {
-        let refused = as_run(&repair(system.clone(), work), loader).unwrap_err();
-
-        assert!(refused.contains(reason), "{refused}");
+        assert_eq!(as_run(&repair(system.clone(), work), loader), Err(reason));
     }
 }
 

@@ -283,16 +283,3 @@ fn clearing_the_output_hides_the_last_share_link_too() {
 
     assert_eq!(console.share(), &toolbox_services::share::Upload::Idle);
 }
-
-#[test]
-fn a_steps_shell_comment_is_left_out_of_its_command() {
-    assert_eq!(
-        super::without_comment("mkdir -p /run/x # for root alone"),
-        "mkdir -p /run/x"
-    );
-    assert_eq!(
-        super::without_comment("echo '# not a comment'"),
-        "echo '# not a comment'"
-    );
-    assert_eq!(super::without_comment("pacman -Syu"), "pacman -Syu");
-}

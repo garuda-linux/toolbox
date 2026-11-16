@@ -4,6 +4,7 @@
 use std::borrow::Cow;
 
 use egui::{Context, Ui};
+use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::Tally;
 
 use crate::pages::PageContext;
@@ -47,18 +48,23 @@ pub trait LeadSections {
     fn data(&self, context: &PageContext<'_>) -> Self::Data;
 
     /// Each section's chip, in the order they show, its count over the
-    /// rows `query` (trimmed, lower case, empty for all) matches.
-    fn chips(&self, ctx: &Context, data: &Self::Data, query: &str) -> Vec<LeadChip>;
+    /// rows `query` matches.
+    fn chips(&self, ctx: &Context, data: &Self::Data, query: &Needle) -> Vec<LeadChip>;
 
     /// How many of the rows could not be read, for the page's banner.
     fn unread(&self, _data: &Self::Data) -> usize {
         0
     }
 
-    /// Shows section `id` with its rows that match `query` (trimmed, lower
-    /// case, empty for all). Returns whether it showed a row.
-    fn show(&self, ui: &mut Ui, on: (&PageContext<'_>, &Self::Data), id: &str, query: &str)
-    -> bool;
+    /// Shows section `id` with its rows that match `query`. Returns whether
+    /// it showed a row.
+    fn show(
+        &self,
+        ui: &mut Ui,
+        on: (&PageContext<'_>, &Self::Data),
+        id: &str,
+        query: &Needle,
+    ) -> bool;
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -69,11 +75,11 @@ impl LeadSections for NoLead {
 
     fn data(&self, _context: &PageContext<'_>) {}
 
-    fn chips(&self, _ctx: &Context, (): &(), _query: &str) -> Vec<LeadChip> {
+    fn chips(&self, _ctx: &Context, (): &(), _query: &Needle) -> Vec<LeadChip> {
         Vec::new()
     }
 
-    fn show(&self, _ui: &mut Ui, _: (&PageContext<'_>, &()), _id: &str, _query: &str) -> bool {
+    fn show(&self, _ui: &mut Ui, _: (&PageContext<'_>, &()), _id: &str, _query: &Needle) -> bool {
         false
     }
 }

@@ -3,12 +3,13 @@
 //! than anything else the snapshot probes do, and the files only change
 //! with `pacman -Sy`.
 
+use std::borrow::Borrow;
 use std::collections::BTreeSet;
 use std::path::Path;
 use std::sync::Arc;
 use std::time::SystemTime;
 
-use alpm::SigLevel;
+use alpm::{Alpm, SigLevel};
 use parking_lot::Mutex;
 use toolbox_plan::PackageName;
 use toolbox_state::kernels::RepoPackage;
@@ -16,7 +17,7 @@ use toolbox_state::packages::{IndexEntry, Origin};
 use toolbox_state::parts::SyncPackages;
 
 use super::pacman_conf::PacmanConf;
-use super::{LINUX, description, failed, open, size};
+use super::{LINUX, description, failed, size};
 use crate::error::ProbeError;
 
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -48,8 +49,16 @@ pub struct SyncCache {
 impl SyncCache {
     /// The packages of the databases `conf` names, read again only when a
     /// database file changed. Probes that ask at the same time wait for
-    /// one read instead of starting their own.
-    pub fn read(&self, conf: &PacmanConf) -> Result<Arc<SyncRead>, ProbeError> {
+    /// one read instead of starting their own. `handle` is called only when
+    /// the kept read is out of date, so a reused read opens nothing.
+    pub fn read<H>(
+        &self,
+        conf: &PacmanConf,
+        handle: impl FnOnce() -> Result<H, ProbeError>,
+    ) -> Result<Arc<SyncRead>, ProbeError>
+    where
+        H: Borrow<Alpm>,
+    {
         let sync = conf.db_path.join("sync");
         let synced: Vec<Database> = conf
             .repos
@@ -67,7 +76,7 @@ impl SyncCache {
             return Ok(Arc::clone(read));
         }
 
-        let read = Arc::new(read(conf, &synced)?);
+        let read = Arc::new(read(handle()?.borrow(), &synced)?);
 
         *last = Some((synced, Arc::clone(&read)));
         drop(last);
@@ -85,8 +94,7 @@ fn database(sync: &Path, repo: &str) -> Option<Database> {
     })
 }
 
-fn read(conf: &PacmanConf, synced: &[Database]) -> Result<SyncRead, ProbeError> {
-    let handle = open(conf)?;
+fn read(handle: &Alpm, synced: &[Database]) -> Result<SyncRead, ProbeError> {
     let mut offered = BTreeSet::new();
     let mut linux = Vec::new();
     let mut entries = Vec::new();

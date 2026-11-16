@@ -2,6 +2,7 @@
 //! compiled in by `fluent-templates`. Each lookup names its language, so
 //! the window and the command line read the same texts.
 
+mod arg;
 pub mod changes;
 #[cfg(test)]
 mod tests;
@@ -11,6 +12,7 @@ use std::collections::HashMap;
 use std::ffi::OsString;
 use std::sync::LazyLock;
 
+pub use arg::Arg;
 use fluent_templates::fluent_bundle::FluentValue;
 use fluent_templates::{LanguageIdentifier, Loader as _, langid};
 use parking_lot::Mutex;
@@ -117,23 +119,15 @@ pub fn text_or_in(language: &LanguageIdentifier, id: &str, fallback: &str) -> Co
     )
 }
 
-/// [`text_in`] with named arguments. A whole number goes in as a number,
-/// so the message can pick its plural form by it.
+/// [`text_in`] with named arguments.
 pub fn text_with_in(
     language: &LanguageIdentifier,
     id: &str,
-    args: &[(&'static str, &str)],
+    args: &[(&'static str, Arg<'_>)],
 ) -> Cow<'static, str> {
     let args: HashMap<Cow<'static, str>, FluentValue<'static>> = args
         .iter()
-        .map(|(name, value)| {
-            let value = value.parse::<i64>().map_or_else(
-                |_| FluentValue::from((*value).to_owned()),
-                FluentValue::from,
-            );
-
-            (Cow::Borrowed(*name), value)
-        })
+        .map(|&(name, value)| (Cow::Borrowed(name), value.value()))
         .collect();
 
     Cow::Owned(

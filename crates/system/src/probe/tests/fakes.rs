@@ -12,28 +12,40 @@ use toolbox_state::locales::{CurrentSystemLocale, EnabledLocales, LocaleNames, S
 use toolbox_state::network::ModuleFacts;
 use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{
-    AvailableShells, CurrentShells, EnabledUnits, EnabledUserUnits, InstalledPackages, MaskedUnits,
-    MaskedUserUnits, OwnBlacklist, SyncPackages, UserConfigStates,
+    AvailableShells, CurrentShells, InstalledPackages, OwnBlacklist, SyncPackages, UserConfigStates,
 };
 use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig, HblockState};
 
 use super::{accounts, kernels, offered, units};
 use crate::probe::Sources;
+use crate::units::{SystemUnitFiles, UserUnitFiles};
 use crate::{
-    AccountSource, BootSource, HostSource, KernelSource, LinuxPackageSource, LocaleSource,
-    ModuleSource, PackageSource, ProbeError, SettingsSource, SyncSource, UnitSource,
-    UserConfigSource,
+    AccountSource, BootSource, HostSource, KernelSource, LocaleSource, ModuleSource, PackageScan,
+    PackageSource, ProbeError, SettingsSource, UnitSource, UserConfigSource,
 };
 
-pub struct FakePackages(pub Result<InstalledPackages, ProbeError>);
+/// The package reads of one snapshot, each with the answer the test gave.
+#[derive(Clone)]
+pub struct FakePackages {
+    pub installed: Result<InstalledPackages, ProbeError>,
+    pub offered: Result<SyncPackages, ProbeError>,
+    pub linux: Result<LinuxPackages, ProbeError>,
+}
 
-pub struct FakeSync(pub Result<SyncPackages, ProbeError>);
+impl FakePackages {
+    /// With the sync databases and kernel packages of a usual system.
+    pub fn new(installed: Result<InstalledPackages, ProbeError>) -> Self {
+        Self {
+            installed,
+            offered: Ok(offered()),
+            linux: Ok(LinuxPackages::default()),
+        }
+    }
+}
 
 pub struct FakeUnits {
-    pub system: Result<EnabledUnits, ProbeError>,
-    pub user: Result<EnabledUserUnits, ProbeError>,
-    pub masked: Result<MaskedUnits, ProbeError>,
-    pub masked_user: Result<MaskedUserUnits, ProbeError>,
+    pub system: Result<SystemUnitFiles, ProbeError>,
+    pub user: Result<UserUnitFiles, ProbeError>,
 }
 
 pub struct FakeAccounts(pub Result<Accounts, ProbeError>);
@@ -43,10 +55,8 @@ pub struct FakeSettings {
     pub garuda_update: Result<GarudaUpdateConfig, ProbeError>,
 }
 
-/// Answers the kernel packages and the running kernel. No kernel has a
-/// modules folder.
+/// Answers the running kernel. No kernel has a modules folder.
 pub struct FakeKernels {
-    pub linux: Result<LinuxPackages, ProbeError>,
     pub running: Result<RunningKernel, ProbeError>,
 }
 
@@ -60,12 +70,6 @@ pub struct FakeHost {
     pub desktops: Result<Vec<String>, ProbeError>,
     pub edition: Result<Option<String>, ProbeError>,
     pub reboot_pending: Result<bool, ProbeError>,
-}
-
-impl LinuxPackageSource for FakeKernels {
-    fn linux_packages(&self) -> Result<LinuxPackages, ProbeError> {
-        self.linux.clone()
-    }
 }
 
 impl KernelSource for FakeKernels {
@@ -97,37 +101,37 @@ impl LocaleSource for FakeLocales {
 }
 
 impl PackageSource for FakePackages {
+    fn scan(&self) -> Box<dyn PackageScan + '_> {
+        Box::new(self.clone())
+    }
+}
+
+impl PackageScan for FakePackages {
     fn installed(&self) -> Result<InstalledPackages, ProbeError> {
-        self.0.clone()
+        self.installed.clone()
     }
 
     /// Fails as the installed list does, since both read the same database.
     fn graph(&self) -> Result<PackageGraph, ProbeError> {
-        self.0.clone().map(|_| PackageGraph::default())
+        self.installed.clone().map(|_| PackageGraph::default())
     }
-}
 
-impl SyncSource for FakeSync {
     fn offered(&self) -> Result<SyncPackages, ProbeError> {
-        self.0.clone()
+        self.offered.clone()
+    }
+
+    fn linux_packages(&self) -> Result<LinuxPackages, ProbeError> {
+        self.linux.clone()
     }
 }
 
 impl UnitSource for FakeUnits {
-    fn enabled_units(&self) -> Result<EnabledUnits, ProbeError> {
+    fn system_unit_files(&self) -> Result<SystemUnitFiles, ProbeError> {
         self.system.clone()
     }
 
-    fn enabled_user_units(&self) -> Result<EnabledUserUnits, ProbeError> {
+    fn user_unit_files(&self) -> Result<UserUnitFiles, ProbeError> {
         self.user.clone()
-    }
-
-    fn masked_units(&self) -> Result<MaskedUnits, ProbeError> {
-        self.masked.clone()
-    }
-
-    fn masked_user_units(&self) -> Result<MaskedUserUnits, ProbeError> {
-        self.masked_user.clone()
     }
 }
 
@@ -236,8 +240,6 @@ impl ModuleSource for FakeModules {
 pub fn sources(packages: FakePackages, host: FakeHost) -> Sources {
     Sources {
         packages: Arc::new(packages),
-        sync: Arc::new(FakeSync(Ok(offered()))),
-        linux: Arc::new(kernels()),
         kernels: Arc::new(kernels()),
         locales: Arc::new(FakeLocales(Ok(EnabledLocales::default()))),
         units: Arc::new(units()),

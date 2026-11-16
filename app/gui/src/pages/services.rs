@@ -27,6 +27,7 @@ use super::rows::{Look, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, ServiceCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::units::{Units, UnitsFailure};
 
@@ -208,7 +209,7 @@ impl ServicesPage {
         let every = i18n::text_with(
             &ctx,
             "services-show-every",
-            &[("count", &counts.all.to_string())],
+            &[("count", Arg::from(counts.all))],
         );
 
         ui.add_space(ui.tokens().sizes.control_gap);

@@ -36,6 +36,25 @@ fn what_the_window_runs_at_once_never_waits_in_the_queue() {
 }
 
 #[test]
+fn only_the_unit_file_states_of_a_service_wait_in_the_queue() {
+    for queued in ["enable", "disable", "mask", "unmask"] {
+        let typed = command(&["services", queued, "sshd.service"]);
+
+        assert!(queueable(&typed).is_ok(), "`services {queued}` is refused");
+    }
+
+    for runs_now in ["start", "stop", "restart", "reload"] {
+        let typed = command(&["services", runs_now, "sshd.service"]);
+
+        assert_eq!(
+            queueable(&typed).err(),
+            Some(NotQueued::AtOnce),
+            "`services {runs_now}` is queued"
+        );
+    }
+}
+
+#[test]
 fn a_maintenance_repair_runs_at_once() {
     queueable(&command(&["maintenance", "run", "clean-package-cache"])).unwrap();
     assert_eq!(

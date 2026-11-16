@@ -10,6 +10,7 @@ use quick_xml::Reader;
 use quick_xml::escape::resolve_predefined_entity;
 use quick_xml::events::Event;
 use serde::{Deserialize, Serialize};
+use toolbox_text::OutsideText;
 
 use crate::Source;
 
@@ -22,7 +23,7 @@ const MAX_CATEGORIES: usize = 8;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Post {
-    pub title: String,
+    pub title: OutsideText,
     /// Only a link into its source's site, `None` for any other.
     pub link: Option<String>,
     /// Seconds since the epoch, `None` when the feed gave no valid date.
@@ -181,7 +182,7 @@ pub fn parse(feed: &[u8], source: Source) -> Result<Vec<Post>, FeedError> {
 }
 
 fn post(item: &Item, source: Source) -> Option<Post> {
-    let title: String = plain(item.title.trim()).take(TITLE_CHARS).collect();
+    let title = toolbox_text::plain_up_to(item.title.trim(), TITLE_CHARS);
     if title.trim().is_empty() {
         return None;
     }
@@ -205,9 +206,4 @@ fn post(item: &Item, source: Source) -> Option<Post> {
         source,
         manual,
     })
-}
-
-fn plain(text: &str) -> impl Iterator<Item = char> + '_ {
-    text.chars()
-        .filter(|character| !toolbox_plan::text::is_hidden(*character))
 }

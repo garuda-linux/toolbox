@@ -11,6 +11,7 @@ use toolbox_plan::PackageName;
 use toolbox_services::queue::clicked::on_copy;
 
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page_service::Handled;
 
 /// The text of a refusal, in the window's language.
@@ -21,7 +22,7 @@ pub trait Shown {
 
     /// With the placeables a text needs beside `$name`, such as the
     /// `$why` of a protected package.
-    fn text_with<'a>(&'a self, ctx: &egui::Context, more: &[(&'static str, &'a str)]) -> String;
+    fn text_with<'a>(&'a self, ctx: &egui::Context, more: &[(&'static str, Arg<'a>)]) -> String;
 }
 
 /// What a text names as `$name`. `()` names nothing, as the texts of
@@ -50,7 +51,7 @@ impl Subject for () {
 
 /// A protected package's text also names why it stays, as `$why`.
 impl<R: RefusalText, S: Subject> Shown for Refused<R, S> {
-    fn text_with<'a>(&'a self, ctx: &egui::Context, more: &[(&'static str, &'a str)]) -> String {
+    fn text_with<'a>(&'a self, ctx: &egui::Context, more: &[(&'static str, Arg<'a>)]) -> String {
         let why = self
             .refusal
             .protection()
@@ -59,9 +60,9 @@ impl<R: RefusalText, S: Subject> Shown for Refused<R, S> {
         let mut args: Vec<_> = self
             .subject
             .name()
-            .map(|name| ("name", name))
+            .map(|name| ("name", Arg::from(name)))
             .into_iter()
-            .chain(why.as_deref().map(|why| ("why", why)))
+            .chain(why.as_deref().map(|why| ("why", Arg::from(why))))
             .collect();
 
         args.extend_from_slice(more);

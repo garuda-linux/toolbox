@@ -16,6 +16,7 @@ mod suppression;
 mod tests_in_file;
 mod variant_label;
 
+use std::collections::BTreeSet;
 use std::path::Path;
 
 use super::{lint_file, lint_text};
@@ -46,7 +47,7 @@ fn count_at(rule: &str, path: &str, text: &str) -> usize {
 #[test]
 fn a_missing_tree_is_reported_as_unparsed() {
     let place = Place::new(Path::new("crates/x/src/lib.rs"));
-    let findings = super::lint_tree(&place, "", None, None);
+    let findings = super::lint_tree(&place, "", None, &BTreeSet::new());
 
     assert_eq!(findings.len(), 1);
     assert_eq!(findings[0].rule, "unparsed");

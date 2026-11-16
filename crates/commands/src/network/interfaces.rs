@@ -4,7 +4,7 @@
 use serde::Serialize;
 use toolbox_cli::output::Paint;
 use toolbox_core::features::network::{InterfaceCard, Link, Signal, SignalQuality};
-use toolbox_services::i18n::{FALLBACK, text_in, text_with_in};
+use toolbox_services::i18n::{Arg, FALLBACK, text_in, text_with_in};
 
 /// An interface card as the command shows it. The copy buttons of the
 /// window have no counterpart here, the values are plain text.
@@ -102,12 +102,14 @@ pub fn signal_text(percent: u8) -> String {
     };
 
     let word = text_in(FALLBACK, id).into_owned();
-    let percent = percent.to_string();
 
     text_with_in(
         &FALLBACK,
         "network-signal",
-        &[("word", word.as_str()), ("percent", percent.as_str())],
+        &[
+            ("word", Arg::from(word.as_str())),
+            ("percent", Arg::from(percent)),
+        ],
     )
     .into_owned()
 }

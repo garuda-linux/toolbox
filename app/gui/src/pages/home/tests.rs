@@ -106,7 +106,7 @@ fn news(posts: Vec<Post>) -> Loadable<News> {
 
 fn post(title: &str, link: Option<&str>) -> Post {
     Post {
-        title: title.to_owned(),
+        title: toolbox_text::plain(title),
         link: link.map(str::to_owned),
         published: Some(1_792_327_265),
         source: Source::Garuda,
@@ -162,7 +162,7 @@ fn without_posts_there_is_no_news_section() {
 #[test]
 fn an_arch_post_names_its_source_and_its_manual_step() {
     let arch = Post {
-        title: "glibc needs a manual intervention".to_owned(),
+        title: toolbox_text::plain("glibc needs a manual intervention"),
         link: Some("https://archlinux.org/news/glibc/".to_owned()),
         published: Some(1_792_327_265),
         source: Source::Arch,
@@ -185,7 +185,7 @@ fn an_arch_post_names_its_source_and_its_manual_step() {
 #[test]
 fn an_arch_post_cannot_link_to_the_forum() {
     let wrong = Post {
-        title: "Odd".to_owned(),
+        title: toolbox_text::plain("Odd"),
         link: Some("https://forum.garudalinux.org/t/1".to_owned()),
         published: None,
         source: Source::Arch,

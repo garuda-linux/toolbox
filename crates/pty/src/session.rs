@@ -11,7 +11,7 @@ use std::process::{Child, ExitStatus};
 use std::sync::mpsc::{self, Receiver};
 use std::time::Instant;
 
-use rustix::process::{Pid, kill_process_group};
+use rustix::process::{Pid, WaitId, WaitIdOptions, kill_process_group, waitid};
 use rustix::termios::tcsetwinsize;
 
 use crate::cancel::Cancellation;
@@ -169,20 +169,13 @@ impl Session {
         }
     }
 
-    /// Children that outlive the program (a hook ignoring SIGINT and SIGHUP) are killed here.
-    /// Their group id stays reserved while one lives, and is reused later, so no signal is sent after reaping.
-    fn reaped(&mut self, exit: Exit) -> Exit {
-        if self.is_cancelled()
-            && let Err(error) = self.signal_group(Signal::Kill)
-        {
-            tracing::warn!("cannot kill what is left of {}: {error}", self.id());
-        }
-
-        self.exit = Some(exit);
-        exit
-    }
-
     /// Call it in a loop with [`Self::poll_cancel`], a blocking wait could not cancel.
+    ///
+    /// The leader is reaped only after the group got its kill. A reaped
+    /// leader frees its group id, which another program may take, so a
+    /// cancel kills the group while the leader still waits as a zombie.
+    /// Children that outlive the program (a hook ignoring SIGINT and SIGHUP)
+    /// are killed here.
     ///
     /// # Errors
     ///
@@ -192,10 +185,20 @@ impl Session {
             return Ok(self.exit);
         }
 
-        Ok(self
-            .child
-            .try_wait()?
-            .map(|status| self.reaped(Exit::from(status))))
+        if !has_ended(&self.child)? {
+            return Ok(None);
+        }
+
+        if self.is_cancelled()
+            && let Err(error) = self.signal_group(Signal::Kill)
+        {
+            tracing::warn!("cannot kill what is left of {}: {error}", self.id());
+        }
+
+        let exit = Exit::from(self.child.wait()?);
+
+        self.exit = Some(exit);
+        Ok(Some(exit))
     }
 }
 
@@ -212,4 +215,16 @@ impl Drop for Session {
         // Reaping keeps no zombie behind.
         self.child.wait().ok();
     }
+}
+
+/// Whether the program has ended, without reaping it. A zombie keeps its
+/// process id, and with it the group id, until the caller reaps it.
+///
+/// # Errors
+///
+/// When the status cannot be read.
+pub fn has_ended(child: &Child) -> io::Result<bool> {
+    let options = WaitIdOptions::EXITED | WaitIdOptions::NOWAIT | WaitIdOptions::NOHANG;
+
+    Ok(waitid(WaitId::Pid(Pid::from_child(child)), options)?.is_some())
 }

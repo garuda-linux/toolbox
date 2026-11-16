@@ -20,7 +20,7 @@ impl PackageIndexSource for Index {
     fn index(&self) -> Result<PackageIndex, ProbeError> {
         let entry = |text: &str, installed: Option<InstallReason>| IndexEntry {
             name: name(text),
-            description: format!("About {text}"),
+            description: toolbox_text::plain(&format!("About {text}")),
             version: "1.0-1".to_owned(),
             origin: Origin::Repository("extra".to_owned()),
             size: 2048,
@@ -168,12 +168,12 @@ fn without_the_databases_the_change_is_unavailable() {
 fn the_facts_name_every_field() {
     let info = PackageInfo {
         name: "gimp".to_owned(),
-        description: "About gimp".to_owned(),
+        description: toolbox_text::plain("About gimp"),
         version: "1.0-1".to_owned(),
         repository: Some("extra".to_owned()),
         size: 2048,
         url: None,
-        licenses: vec!["GPL-3.0-or-later".to_owned()],
+        licenses: vec![toolbox_text::plain("GPL-3.0-or-later")],
         groups: Vec::new(),
         depends: vec!["gegl".to_owned()],
         optional: Vec::new(),

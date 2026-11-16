@@ -1,6 +1,7 @@
 //! The Services page's rows: systemd units with their states.
 
 use toolbox_plan::UnitName;
+use toolbox_text::OutsideText;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum ActiveState {
@@ -111,7 +112,7 @@ impl FileState {
 pub struct UnitInfo {
     pub name: UnitName,
     /// From the unit file, so untrusted text.
-    pub description: String,
+    pub description: OutsideText,
     pub active: ActiveState,
     /// The type specific state (`running`, `exited`, `listening`, …).
     pub sub_state: String,

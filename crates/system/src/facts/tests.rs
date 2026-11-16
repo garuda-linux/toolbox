@@ -2,12 +2,13 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 
 use toolbox_plan::{PackageName, UnitName};
+use toolbox_state::kernels::LinuxPackages;
 use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
 
 use super::{DiskSpace, FactSources, MachineSource, PackageCount, SystemMachine, probe_facts};
 use crate::ProbeError;
-use crate::packages::{OrphanSource, PackageSource, SyncSource};
+use crate::packages::{OrphanSource, PackageScan, PackageSource, SyncSource};
 use crate::test_support::write;
 use crate::units::FailedUnitSource;
 
@@ -30,12 +31,27 @@ struct FakeMachine;
 struct FakeUnits(Vec<UnitName>);
 
 impl PackageSource for FakeInstalled {
+    fn scan(&self) -> Box<dyn PackageScan + '_> {
+        Box::new(Self(self.0.clone()))
+    }
+}
+
+/// Facts read only the installed list, so the other reads have no database.
+impl PackageScan for FakeInstalled {
     fn installed(&self) -> Result<InstalledPackages, ProbeError> {
         self.0.clone()
     }
 
     fn graph(&self) -> Result<PackageGraph, ProbeError> {
         self.0.clone().map(|_| PackageGraph::default())
+    }
+
+    fn offered(&self) -> Result<SyncPackages, ProbeError> {
+        Err(ProbeError::Unavailable)
+    }
+
+    fn linux_packages(&self) -> Result<LinuxPackages, ProbeError> {
+        Err(ProbeError::Unavailable)
     }
 }
 

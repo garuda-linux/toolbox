@@ -20,3 +20,6 @@ pub use text::{
     ConfigText, ConfigWrite, Fingerprint, InvalidConfigText, MAX_CONFIG_BYTES, NotWritable,
 };
 pub use writable::{WRITABLE_CONFIG_FILES, WRITABLE_CONFIG_FOLDERS};
+
+/// Why a write waits for the file to stay as it was read.
+pub const UNCHANGED_WHY: &str = "only when it did not change meanwhile";

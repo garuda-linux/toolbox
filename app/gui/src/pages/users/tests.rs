@@ -43,7 +43,7 @@ fn user(text: &str, uid: u32, gecos: &str) -> User {
         name: name(text),
         uid,
         gid: uid,
-        gecos: gecos.to_owned(),
+        gecos: toolbox_text::plain(gecos),
         home: format!("/home/{text}"),
         shell: "/usr/bin/bash".to_owned(),
     }

@@ -3,17 +3,24 @@ use toolbox_gui_kit::widgets::{ButtonKind, DialogWidth, Question, question};
 
 use crate::command::{Command, CommandSender, UiCommand};
 use crate::i18n;
+use crate::i18n::Arg;
 
 pub fn ask_to_clear(
     ctx: &Context,
-    count: &str,
+    count: usize,
     confirming: &mut Option<UiCommand>,
     commands: &CommandSender,
 ) {
     let title = i18n::text(ctx, "command-clear-changes");
     let close = i18n::text(ctx, "dialog-close");
-    let body = i18n::text_with(ctx, "changes-remove-all-question", &[("count", count)]);
+    let body = i18n::text_with(
+        ctx,
+        "changes-remove-all-question",
+        &[("count", Arg::from(count))],
+    );
+
     let cancel = i18n::text(ctx, "changes-keep");
+
     let confirm = i18n::text(ctx, "changes-remove-all");
     let texts = Question {
         title: &title,

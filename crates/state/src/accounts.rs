@@ -4,6 +4,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_plan::{GroupName, UserName};
+use toolbox_text::OutsideText;
 
 /// `UID_MIN` and `UID_MAX` of `/etc/login.defs`: the ids useradd gives to
 /// people. Below are system accounts, above `nobody` and container ranges.
@@ -15,7 +16,7 @@ pub struct User {
     pub name: UserName,
     pub uid: u32,
     pub gid: u32,
-    pub gecos: String,
+    pub gecos: OutsideText,
     pub home: String,
     /// As the file has it, which may be empty or a program our rules for
     /// login shells reject.

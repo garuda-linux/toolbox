@@ -32,6 +32,26 @@ use crate::io::{print_answer, refuse};
 /// read at all.
 const MAX_FILE_BYTES: u64 = 4 << 20;
 
+#[derive(Debug, thiserror::Error)]
+enum ReadError {
+    #[error("it answers only the app, which asks through a socket")]
+    NotSocket,
+    #[error("it answers only the account of a person")]
+    SystemAccount,
+    #[error("nobody asked")]
+    NoCaller,
+    #[error("the file is no text")]
+    NotText,
+    #[error("this kind runs no program")]
+    NoProgram,
+    #[error("the read was stopped")]
+    Stopped,
+    #[error("the read printed too much")]
+    TooMuch,
+    #[error("the file is too large")]
+    TooLarge,
+}
+
 pub fn run(command: &str, kind: &str) -> ExitCode {
     let Some(kind) = ReadKind::from_args(command, kind) else {
         return refuse("it does not know this kind of read");
@@ -62,18 +82,11 @@ pub fn run(command: &str, kind: &str) -> ExitCode {
 /// uid is root's or a system account's.
 pub fn caller_of(stdin: impl AsFd) -> io::Result<Caller> {
     let peer = rustix::net::sockopt::socket_peercred(&stdin).map_err(|_not_a_socket| {
-        io::Error::new(
-            io::ErrorKind::PermissionDenied,
-            "it answers only the app, which asks through a socket",
-        )
+        io::Error::new(io::ErrorKind::PermissionDenied, ReadError::NotSocket)
     })?;
 
-    Caller::new(peer.uid.as_raw()).ok_or_else(|| {
-        io::Error::new(
-            io::ErrorKind::PermissionDenied,
-            "it answers only the account of a person",
-        )
-    })
+    Caller::new(peer.uid.as_raw())
+        .ok_or_else(|| io::Error::new(io::ErrorKind::PermissionDenied, ReadError::SystemAccount))
 }
 
 /// # Errors
@@ -85,8 +98,9 @@ pub fn caller_of(stdin: impl AsFd) -> io::Result<Caller> {
 pub fn answer(root: &Path, kind: ReadKind, caller: Option<Caller>) -> io::Result<String> {
     match kind {
         ReadKind::ShadowLocks => {
-            let caller = caller
-                .ok_or_else(|| io::Error::new(io::ErrorKind::PermissionDenied, "nobody asked"))?;
+            let caller = caller.ok_or_else(|| {
+                io::Error::new(io::ErrorKind::PermissionDenied, ReadError::NoCaller)
+            })?;
 
             let passwd = lossy(read_capped(&root.join(PASSWD))?);
 
@@ -117,7 +131,7 @@ where
 {
     let mut content = read_capped(path)?;
     let line = std::str::from_utf8(&content)
-        .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, "the file is no text"))
+        .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, ReadError::NotText))
         .and_then(|text| answer(text).map_err(io::Error::other));
 
     content.fill(0);
@@ -129,7 +143,7 @@ where
 fn run_program(root: &Path, kind: ReadKind) -> io::Result<ProgramAnswer> {
     let (program, arguments) = kind
         .program()
-        .ok_or_else(|| io::Error::other("this kind runs no program"))?;
+        .ok_or_else(|| io::Error::other(ReadError::NoProgram))?;
 
     let mut command = Command::new(program.below(root));
 
@@ -158,10 +172,10 @@ fn run_program(root: &Path, kind: ReadKind) -> io::Result<ProgramAnswer> {
         // No cancel and no deadline: this read passes a flag nobody sets
         // and a policy without a time limit.
         Err(CaptureError::Cancelled | CaptureError::TimedOut) => {
-            Err(io::Error::other("the read was stopped"))
+            Err(io::Error::other(ReadError::Stopped))
         }
         // A tail policy keeps the end instead.
-        Err(CaptureError::TooLarge) => Err(io::Error::other("the read printed too much")),
+        Err(CaptureError::TooLarge) => Err(io::Error::other(ReadError::TooMuch)),
     }
 }
 
@@ -175,7 +189,7 @@ fn read_capped(path: &Path) -> io::Result<Vec<u8>> {
         content.fill(0);
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
-            "the file is too large",
+            ReadError::TooLarge,
         ));
     }
 

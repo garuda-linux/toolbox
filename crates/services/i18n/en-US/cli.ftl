@@ -63,3 +63,4 @@ cli-boot-invalid-character = `{ $value }` holds a character that is not allowed 
 cli-boot-invalid-component = `{ $value }` is not a full path to a file
 cli-boot-wrong-file-type = `{ $value }` is not a file of the right type
 cli-boot-not-usable = `{ $value }` cannot be used here
+cli-password-not-repeated = the password was not repeated

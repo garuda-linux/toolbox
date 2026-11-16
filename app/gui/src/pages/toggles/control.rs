@@ -16,6 +16,7 @@ use toolbox_gui_kit::widgets::{
 
 use crate::catalogs::CatalogId;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::rows::SWITCH_WIDTH;
 
 /// How many lines of its description a row shows before it cuts.
@@ -139,7 +140,10 @@ fn button(ui: &mut Ui, shown: Shown<'_>) -> egui::Response {
     let name = i18n::text_with(
         &ctx,
         "packages-action-name",
-        &[("action", &*text), ("name", shown.title)],
+        &[
+            ("action", Arg::from(&*text)),
+            ("name", Arg::from(shown.title)),
+        ],
     )
     .into_owned();
 

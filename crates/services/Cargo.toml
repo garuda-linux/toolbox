@@ -24,6 +24,7 @@ toolbox-privatebin.workspace = true
 toolbox-pty.workspace = true
 toolbox-state.workspace = true
 toolbox-system.workspace = true
+toolbox-text.workspace = true
 crossbeam-channel.workspace = true
 fluent-templates.workspace = true
 futures-lite = { workspace = true, features = ["alloc"] }

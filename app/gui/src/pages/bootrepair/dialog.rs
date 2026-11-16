@@ -20,6 +20,7 @@ use super::texts;
 use crate::bootrepair::BootRepair;
 use crate::command::BootRepairCommand;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::pages::PageContext;
 
 pub struct Dialog {
@@ -167,7 +168,12 @@ impl Dialog {
         ui.add(Label::new(i18n::text(&ctx, "repair-runs-now")).wrap());
         if system.encryption == Encryption::Locked {
             ui.add_space(ui.tokens().sizes.card_gap);
-            let note = i18n::text_with(&ctx, "repair-encrypted", &[("system", &self.device)]);
+            let note = i18n::text_with(
+                &ctx,
+                "repair-encrypted",
+                &[("system", Arg::from(&self.device))],
+            );
+
             ui.add(Label::new(note).wrap());
 
             // A name above the field, as the other dialogs' fields have,
@@ -198,8 +204,9 @@ impl Dialog {
     /// The disk is the one written to: the system's own for its boot
     /// files, else the one that takes the boot loader.
     fn said(&self, ctx: &Context, facts: &RepairFacts, system: &System) -> Said {
-        let text =
-            |id: &str, words: &[(&'static str, &str)]| i18n::text_with(ctx, id, words).into_owned();
+        let text = |id: &str, words: &[(&'static str, Arg<'_>)]| {
+            i18n::text_with(ctx, id, words).into_owned()
+        };
 
         let rebuilt = VolumeDevice::new(self.device.as_str())
             .ok()
@@ -207,7 +214,10 @@ impl Dialog {
 
         match (&self.target, rebuilt) {
             (None, Some(esp)) => Said {
-                writes: text("repair-writes-regenerate-uefi", &[("esp", esp.as_str())]),
+                writes: text(
+                    "repair-writes-regenerate-uefi",
+                    &[("esp", Arg::from(esp.as_str()))],
+                ),
                 disk: texts::disks(system),
                 then: text("repair-then-regenerate-uefi", &[]),
             },
@@ -217,7 +227,7 @@ impl Dialog {
                 then: text("repair-then-regenerate", &[]),
             },
             (Some(Target::Esp(esp)), _) => Said {
-                writes: text("repair-writes-uefi", &[("target", esp.as_str())]),
+                writes: text("repair-writes-uefi", &[("target", Arg::from(esp.as_str()))]),
                 disk: facts
                     .inventory
                     .esps

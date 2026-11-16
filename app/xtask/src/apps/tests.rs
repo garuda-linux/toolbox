@@ -1,4 +1,5 @@
 mod moves;
+mod protected;
 mod wiki;
 
 use toolbox_catalog::{Check, ToggleCatalog};

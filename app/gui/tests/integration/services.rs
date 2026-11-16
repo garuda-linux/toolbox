@@ -74,7 +74,7 @@ impl UnitLister for Display {
 fn unit(name: &str, active: ActiveState, sub: &str, file_state: FileState) -> UnitInfo {
     UnitInfo {
         name: UnitName::new(name).unwrap(),
-        description: format!("About {name}"),
+        description: toolbox_text::plain(&format!("About {name}")),
         active,
         sub_state: sub.to_owned(),
         file_state,

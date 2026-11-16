@@ -1,10 +1,10 @@
 use std::fs;
 use std::os::unix::fs::symlink;
 
+use toolbox_plan::testing::account::SHADOW;
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchAnswer, FetchRefusal, MAX_CONFIG_BYTES};
 
 use super::answer;
-use crate::testing::SHADOW;
 
 /// `/etc/default/grub` of a Garuda install in QEMU.
 const DEFAULT_GRUB: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
