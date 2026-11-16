@@ -85,7 +85,14 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
     } = view;
 
     let status = status_bar::show(ui, reading, Mode::of_dry_run(dry_run));
-    sidebar::show(ui, page, sidebar_expanded, snap.sidebar, commands);
+    let side_reading = status_bar::reads_apart(reading, Mode::of_dry_run(dry_run));
+    sidebar::show(
+        ui,
+        (page, side_reading),
+        sidebar_expanded,
+        snap.sidebar,
+        commands,
+    );
 
     let changes = shown_changes(pages, page, changes_ui.open, changes);
     let queued = changes::Queued {
@@ -128,14 +135,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
     status
         .inspect(|rect| status_bar::fill(ui, *rect, reading, Mode::of_dry_run(dry_run), commands));
     let ctx = ui.ctx().clone();
-    let texts = ToastTexts {
-        name: &i18n::text(&ctx, "toast-name"),
-        close: &i18n::text(&ctx, "dialog-close"),
-    };
-
-    corner_note(&ctx, page_rect, reading, dry_run, stopping);
-
-    toasts.show(&ctx, page_rect, texts);
+    notices(&ctx, page_rect, stopping, toasts);
     palette.show(&ctx, context, commands);
 }
 
@@ -166,7 +166,6 @@ fn changes_band(ui: &mut Ui) -> Rect {
 }
 
 /// The page in the room the bars left, `jump` when a shortcut opened it.
-/// Returns where it lies.
 fn page_area(
     ui: &mut Ui,
     page: PageId,
@@ -200,6 +199,19 @@ fn page_area(
         .rect
 }
 
+fn notices(ctx: &egui::Context, page: Rect, stopping: bool, toasts: &mut Toasts) {
+    let texts = ToastTexts {
+        name: &i18n::text(ctx, "toast-name"),
+        close: &i18n::text(ctx, "dialog-close"),
+    };
+
+    if stopping {
+        status_bar::note(ctx, page, &i18n::text(ctx, "close-stopping-title"));
+    }
+
+    toasts.show(ctx, page, texts);
+}
+
 /// Gives the page's tiles its group's hue. Another page the pointer opened
 /// fades in. A shortcut's page and another tab of the same page show in
 /// place.
@@ -215,15 +227,5 @@ fn open_page(ctx: &egui::Context, page: PageId, jump: bool) {
 
     if before.is_some_and(|before| before != page.slug()) && !jump {
         start_page_entry(ctx);
-    }
-}
-
-/// What waits in the page's bottom corner: the quit note while the run
-/// stops, else a read in progress.
-fn corner_note(ctx: &egui::Context, page: Rect, reading: &Reading, dry_run: bool, stopping: bool) {
-    if stopping {
-        status_bar::note(ctx, page, &i18n::text(ctx, "close-stopping-title"));
-    } else {
-        status_bar::floating(ctx, page, reading, Mode::of_dry_run(dry_run));
     }
 }

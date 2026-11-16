@@ -16,7 +16,7 @@ use toolbox_gui::catalogs::Catalogs;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 
-use crate::common::{HEIGHT, packages, type_into, wheel, window};
+use crate::common::{HEIGHT, button, packages, type_into, wheel, window};
 use crate::discover::source_catalogs;
 use crate::look::look_for;
 use crate::system::first_read;
@@ -36,14 +36,6 @@ check = { group = "nico" }
 
 fn installed(names: &[&str]) -> InstalledPackages {
     InstalledPackages(packages(names))
-}
-
-/// A package row's button, named by what it does and the entry.
-fn button<'harness>(
-    harness: &'harness Harness<'static, App>,
-    name: &'harness str,
-) -> egui_kittest::Node<'harness> {
-    harness.get_by_role_and_label(Role::Button, name)
 }
 
 /// The app on the Components page with `catalogs`, after the first read

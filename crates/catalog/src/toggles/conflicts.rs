@@ -12,7 +12,6 @@ use std::collections::BTreeSet;
 use super::{ToggleCatalog, ToggleEntry};
 use crate::{EntryProblem, Problem};
 
-/// The entry's `conflicts` as written, `None` when the field is missing.
 pub fn list(raw: Option<Vec<String>>) -> Result<Vec<String>, Problem> {
     let Some(ids) = raw else {
         return Ok(Vec::new());

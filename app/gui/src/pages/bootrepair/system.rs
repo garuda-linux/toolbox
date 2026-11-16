@@ -37,6 +37,26 @@ const fn words<'a>(title: &'a str, description: &'a str) -> Words<'a> {
     }
 }
 
+fn select_row(
+    ui: &mut Ui,
+    first: bool,
+    (title, detail): (&str, &str),
+    names: &[&str],
+    selected: Option<usize>,
+) -> Option<usize> {
+    let width = wide_control(ui);
+    let mut picked = None;
+    row(ui, first, &words(title, detail), width, |ui| {
+        picked = Select::new(title, names)
+            .selected(selected)
+            .width(width)
+            .show(ui)
+            .value;
+    });
+
+    picked
+}
+
 fn installed(ui: &mut Ui, (facts, system): (&RepairFacts, &System), page: &mut BootRepairPage) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
@@ -87,18 +107,11 @@ fn layout(ui: &mut Ui, chosen: RootLayout, page: &mut BootRepairPage) {
 
     let options: Vec<&str> = names.iter().map(String::as_str).collect();
     let current = LAYOUTS.iter().position(|each| *each == chosen);
-    let width = wide_control(ui);
-    row(ui, false, &words(&title, &detail), width, |ui| {
-        if let Some(picked) = Select::new(&title, &options)
-            .selected(current)
-            .width(width)
-            .show(ui)
-            .value
-            .and_then(|index| LAYOUTS.get(index))
-        {
-            page.layout = Some(*picked);
-        }
-    });
+    if let Some(picked) = select_row(ui, false, (&title, &detail), &options, current)
+        .and_then(|index| LAYOUTS.get(index))
+    {
+        page.layout = Some(*picked);
+    }
 }
 
 fn repair(
@@ -183,18 +196,11 @@ fn targets(
     let lines: Vec<String> = choices.iter().map(texts::target_line).collect();
     let names: Vec<&str> = lines.iter().map(String::as_str).collect();
     let selected = current.and_then(|current| choices.iter().position(|each| each == current));
-    let width = wide_control(ui);
-    row(ui, true, &words(&title, &detail), width, |ui| {
-        if let Some(picked) = Select::new(&title, &names)
-            .selected(selected)
-            .width(width)
-            .show(ui)
-            .value
-            .and_then(|index| choices.get(index))
-        {
-            page.target = Some(picked.target.clone());
-        }
-    });
+    if let Some(picked) = select_row(ui, true, (&title, &detail), &names, selected)
+        .and_then(|index| choices.get(index))
+    {
+        page.target = Some(picked.target.clone());
+    }
 }
 
 /// Another system has its own usual target and layout.
@@ -209,18 +215,11 @@ fn root(ui: &mut Ui, (facts, system): (&RepairFacts, &System), page: &mut BootRe
 
     let title = i18n::text(&ctx, "repair-root").into_owned();
     let detail = i18n::text(&ctx, "repair-root-detail").into_owned();
-    let width = wide_control(ui);
-    row(ui, true, &words(&title, &detail), width, |ui| {
-        if let Some(index) = Select::new(&title, &names)
-            .selected(current)
-            .width(width)
-            .show(ui)
-            .value
-            && let Some(picked) = systems.get(index)
-        {
-            page.system = Some(picked.device().to_owned());
-            page.target = None;
-            page.layout = None;
-        }
-    });
+    if let Some(index) = select_row(ui, true, (&title, &detail), &names, current)
+        && let Some(picked) = systems.get(index)
+    {
+        page.system = Some(picked.device().to_owned());
+        page.target = None;
+        page.layout = None;
+    }
 }

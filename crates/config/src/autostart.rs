@@ -47,8 +47,7 @@ impl Autostart {
     /// cannot be removed.
     pub fn enable(&self) -> io::Result<()> {
         std::fs::create_dir_all(&self.folder)?;
-        remove_if_present(&self.link())?;
-        self.remove_legacy()?;
+        self.remove_entries()?;
         std::os::unix::fs::symlink(&self.desktop_file, self.link())?;
         tracing::info!("autostart on: {}", self.link().display());
         Ok(())
@@ -61,8 +60,7 @@ impl Autostart {
     ///
     /// When an existing entry cannot be removed.
     pub fn disable(&self) -> io::Result<()> {
-        remove_if_present(&self.link())?;
-        self.remove_legacy()?;
+        self.remove_entries()?;
         tracing::info!("autostart off");
         Ok(())
     }
@@ -82,7 +80,9 @@ impl Autostart {
         Ok(())
     }
 
-    fn remove_legacy(&self) -> io::Result<()> {
+    fn remove_entries(&self) -> io::Result<()> {
+        remove_if_present(&self.link())?;
+
         for name in LEGACY_NAMES {
             remove_if_present(&self.folder.join(name))?;
         }

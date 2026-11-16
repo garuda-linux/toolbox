@@ -78,6 +78,16 @@ const fn problem(part: Part, text: String, hint: String) -> Check {
     }
 }
 
+const fn optional(part: Part, text: String, hint: String) -> Check {
+    Check {
+        id: part.id,
+        name: part.name,
+        state: State::Optional,
+        text,
+        hint: Some(hint),
+    }
+}
+
 fn shown(path: &Path) -> String {
     path.display().to_string()
 }
@@ -181,13 +191,11 @@ fn sudo(facts: &Facts) -> Check {
     };
 
     if raises(&facts.pkexec) {
-        Check {
-            id: SUDO.id,
-            name: SUDO.name,
-            state: State::Optional,
-            text: format!("{what}: no fallback when pkexec cannot ask"),
-            hint: Some("install sudo: pkexec pacman -S sudo".to_owned()),
-        }
+        optional(
+            SUDO,
+            format!("{what}: no fallback when pkexec cannot ask"),
+            "install sudo: pkexec pacman -S sudo".to_owned(),
+        )
     } else {
         problem(
             SUDO,
@@ -206,14 +214,12 @@ fn policy(facts: &Facts) -> Check {
     }
 
     if facts.development {
-        Check {
-            id: POLICY.id,
-            name: POLICY.name,
-            state: State::Optional,
-            text: "not installed: a development build asks through pkexec's own action every time"
+        optional(
+            POLICY,
+            "not installed: a development build asks through pkexec's own action every time"
                 .to_owned(),
-            hint: Some(REINSTALL.to_owned()),
-        }
+            REINSTALL.to_owned(),
+        )
     } else {
         problem(
             POLICY,
@@ -266,7 +272,7 @@ fn programs(facts: &Facts) -> Vec<Check> {
         )
     };
 
-    let optional = [
+    let optionals = [
         (
             found.has("paru"),
             "paru",
@@ -294,17 +300,15 @@ fn programs(facts: &Facts) -> Vec<Check> {
     ];
 
     let mut checks = vec![checkupdates];
-    checks.extend(optional.into_iter().map(|(present, name, with, without)| {
+    checks.extend(optionals.into_iter().map(|(present, name, with, without)| {
         if present {
             ok(Part::named(name), format!("installed: {with}"))
         } else {
-            Check {
-                id: name,
-                name,
-                state: State::Optional,
-                text: format!("not installed: {without}"),
-                hint: Some(install("install", name, facts)),
-            }
+            optional(
+                Part::named(name),
+                format!("not installed: {without}"),
+                install("install", name, facts),
+            )
         }
     }));
     checks

@@ -1,11 +1,7 @@
-use std::sync::Arc;
-use std::time::Duration;
-
-use tokio::sync::mpsc::unbounded_channel;
 use toolbox_plan::protocol::Mode;
 
-use super::{FakeLauncher, recording_script, root_plan};
-use crate::apply::{ApplyCommand, OutputGate, PlanId, Report, Reporter, serve};
+use super::{FakeLauncher, recording_script, root_plan, serve_all};
+use crate::apply::{ApplyCommand, PlanId, Report};
 
 /// The command line's first Ctrl+C reaches the helper as its own answer,
 /// so the running step can end on its own.
@@ -79,29 +75,4 @@ async fn a_plan_sent_during_a_run_is_refused_under_its_own_id() {
             ("finished", PlanId::new(1)),
         ]
     );
-}
-
-async fn serve_all(launcher: FakeLauncher, commands: Vec<ApplyCommand>) -> Vec<Report> {
-    let (sender, receiver) = unbounded_channel();
-    let (reports, queue) = crate::waking::channel(crate::waking::Wake::none());
-    for command in commands {
-        sender.send(command).unwrap();
-    }
-
-    drop(sender);
-    tokio::time::timeout(
-        Duration::from_secs(20),
-        serve(
-            receiver,
-            Arc::new(launcher),
-            Reporter {
-                reports,
-                gate: OutputGate::default(),
-            },
-        ),
-    )
-    .await
-    .unwrap();
-
-    queue.try_iter().collect()
 }

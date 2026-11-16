@@ -1,6 +1,3 @@
-//! The System Tweaks page's choices beside the login shell, which
-//! `users edit --shell` sets.
-
 use clap::builder::{PossibleValuesParser, TypedValueParser as _};
 use clap::{Args, Subcommand};
 use toolbox_plan::{DnsProvider, GarudaUpdateFlag, WifiBackend};

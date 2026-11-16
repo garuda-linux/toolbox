@@ -49,6 +49,12 @@ pub struct Table {
 
 pub type Cell = Vec<Span>;
 
+impl Table {
+    fn cells(&self) -> impl Iterator<Item = &Cell> {
+        self.head.iter().chain(self.rows.iter().flatten())
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Code {
     pub language: Option<String>,
@@ -131,12 +137,7 @@ impl Block {
         match self {
             Self::Heading(heading) => heading.spans.iter().collect(),
             Self::Paragraph(spans) => spans.iter().collect(),
-            Self::Table(table) => table
-                .head
-                .iter()
-                .chain(table.rows.iter().flatten())
-                .flatten()
-                .collect(),
+            Self::Table(table) => table.cells().flatten().collect(),
             Self::List(_) | Self::Code(_) | Self::Callout(_) | Self::Image(_) | Self::Rule => {
                 Vec::new()
             }
@@ -156,7 +157,7 @@ impl Block {
                 out.push(self.spans().iter().map(|span| span.text.as_str()).collect());
             }
             Self::Table(table) => {
-                for cell in table.head.iter().chain(table.rows.iter().flatten()) {
+                for cell in table.cells() {
                     out.push(cell.iter().map(|span| span.text.as_str()).collect());
                 }
             }

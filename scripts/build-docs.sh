@@ -4,7 +4,6 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 version=0.5.4
-# SHA-256 of the musl archive of this version.
 sha256=5222beabd3e37dc5be0d18ff99b79058469354db5c220153a1b92db5ba12be89
 
 if ! command -v mdbook >/dev/null; then

@@ -21,7 +21,6 @@ use crate::pages::PageContext;
 use crate::pages::rows::{Initial, package_picture, picture_height, picture_slot};
 
 const LINES: u8 = 2;
-/// The state word of an installed package without a queued change.
 const INSTALLED: &str = "packages-installed";
 /// As large as a link row's chevron.
 const CHEVRON: f32 = 14.0;
@@ -45,19 +44,15 @@ pub trait PackageRow: ListItem + Copy {
 
     fn act(&self, page: &mut PackagesPage, context: &PageContext<'_>, act: Act);
 
-    /// The tags and marks between the name and the state.
     fn marks(&self, ui: &mut Ui);
 
     fn description(&self) -> &str;
 
-    /// The row's second small line, under the description.
     fn detail_line(&self, ctx: &Context) -> String;
 
-    /// The line under the detail page's title, before the state.
     fn header_line(&self, ctx: &Context) -> String;
 }
 
-/// One shown package of the index.
 #[derive(Clone, Copy, Debug)]
 pub struct Row<'a> {
     pub entry: &'a IndexEntry,
@@ -120,7 +115,6 @@ impl PackageRow for Row<'_> {
     }
 }
 
-/// The picture or the text, whichever is taller.
 pub fn height(ui: &Ui) -> f32 {
     row_height(
         ui,
@@ -196,7 +190,6 @@ fn chevron(ui: &mut Ui) {
     icons::GO_NEXT.image(theme.as_deref(), ink).paint_at(ui, at);
 }
 
-/// The button's text and what it does.
 pub fn button_text<R>(ui: &Ui, context: &PageContext<'_>, row: &R) -> (Cow<'static, str>, Act)
 where
     R: PackageRow,
@@ -259,7 +252,6 @@ where
     }
 }
 
-/// Taking back a queued change queues its opposite.
 pub const fn undone(wish: Toggle) -> Toggle {
     if wish.is_on() {
         Toggle::Off

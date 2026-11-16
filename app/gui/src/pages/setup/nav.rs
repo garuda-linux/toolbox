@@ -105,9 +105,8 @@ pub fn bar(
     moved
 }
 
-/// "Step 3 of 16" (the stage's name on the welcome page and the summary)
-/// over a thin bar filled up to stage `at`, which screen readers hear as a
-/// progress indicator.
+/// The stage's name or "Step N of M" over a thin bar, a progress indicator
+/// for screen readers.
 fn progress(ui: &mut Ui, page: &SetupPage, stages: &[(Stage, String)], at: usize) {
     let ctx = ui.ctx().clone();
     let tokens = ui.tokens();

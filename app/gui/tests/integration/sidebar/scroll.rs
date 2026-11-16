@@ -15,15 +15,16 @@ use crate::common::{HEIGHT, SMALLEST, launch_in, palette, wheel, window};
 
 const HEADINGS: [&str; 3] = ["Install", "System", "Care"];
 
+fn scrolled_pages() -> impl Iterator<Item = PageId> {
+    super::sidebar_pages().filter(|page| page.group() != Group::App)
+}
+
 fn first_below(harness: &Harness<'_, App>, top: f32) -> Rect {
-    let entries = PageId::ALL
-        .into_iter()
-        .filter(|page| page.group() != Group::App && *page != PageId::BootRepair)
-        .map(|page| {
-            harness
-                .get_by_role_and_label(Role::Tab, &entry_name(harness, page))
-                .rect()
-        });
+    let entries = scrolled_pages().map(|page| {
+        harness
+            .get_by_role_and_label(Role::Tab, &entry_name(harness, page))
+            .rect()
+    });
 
     let headings = HEADINGS
         .into_iter()
@@ -117,18 +118,13 @@ fn the_list_scrolled_to_the_open_page_keeps_its_room_at_the_top() {
     };
 
     let room = entry(&at_rest, PageId::Home).top() - top;
-    let listed = PageId::ALL
-        .into_iter()
-        .filter(|page| page.group() != Group::App && *page != PageId::BootRepair);
-
-    let first = listed
-        .clone()
+    let first = scrolled_pages()
         .map(|page| entry(&scrolled, page))
         .filter(|rect| rect.top() >= top - 0.5)
         .min_by(|one, other| one.top().total_cmp(&other.top()))
         .expect("an entry below the edge");
 
-    for page in listed {
+    for page in scrolled_pages() {
         let rect = entry(&scrolled, page);
         assert!(
             // The gap between two entries may lie under the edge.

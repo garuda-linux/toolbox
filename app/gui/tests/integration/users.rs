@@ -123,14 +123,9 @@ pub fn users_on(theme: Theme) -> Fixture {
     fixture
 }
 
-/// The app on its start page after the first read, with `changes` as the
-/// queue an earlier run left.
-fn restored(changes: ChangeSet) -> Fixture {
-    restored_with(changes, system(), Vec::new())
-}
-
-/// As [`restored`], with the system read as `probed` and the read's
-/// `issues`.
+/// The app on its start page after the first read, with the system read as
+/// `probed` and the read's `issues`, and `changes` as the queue an earlier
+/// run left.
 fn restored_with(changes: ChangeSet, probed: Snapshot, issues: Vec<ProbeIssue>) -> Fixture {
     restored_on(changes, probed, issues, Theme::Dark)
 }
@@ -183,7 +178,7 @@ fn restored_on(
 fn a_restored_lock_reads_the_flags_before_apply() {
     let mut changes = ChangeSet::default();
     changes.want::<AccountLocks>(name("grace"), Toggle::On, &Snapshot::default());
-    let mut fixture = restored(changes);
+    let mut fixture = restored_with(changes, system(), Vec::new());
     let harness = fixture.harness();
 
     step_until(harness, "Apply after the flags", |harness| {

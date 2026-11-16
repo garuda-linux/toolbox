@@ -4,11 +4,7 @@ use super::super::{
     BootCommand, Command, Group, GuideCommand, NetworkCommand, QueueCommand, SettingsCommand,
     TweaksCommand,
 };
-use super::parse;
-
-fn command(words: &[&str]) -> Command {
-    parse(words).unwrap().command.unwrap()
-}
+use super::{command, parse};
 
 #[test]
 fn a_collection_alone_lists() {

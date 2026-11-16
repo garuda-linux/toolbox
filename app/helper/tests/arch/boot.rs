@@ -120,7 +120,6 @@ fn grub_settings_change_only_their_lines_of_the_real_file() -> TestResult {
     assert_eq!(kept, FIXTURE);
     assert_eq!(second, [Outcome::Skipped], "already as wanted");
 
-    // A real shell reads the values back as they were asked for.
     assert_eq!(
         String::from_utf8_lossy(&sourced.stdout),
         "gnulinux-advanced-1>gnulinux-linux-lts-1|/usr/share/toolbox-test/back-1+2.png|loglevel=3 quiet splash mitigations=off"

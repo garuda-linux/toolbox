@@ -16,7 +16,7 @@ use toolbox_state::packages::{IndexEntry, Origin};
 use toolbox_state::parts::SyncPackages;
 
 use super::pacman_conf::PacmanConf;
-use super::{LINUX, description, failed, open};
+use super::{LINUX, description, failed, open, size};
 use crate::error::ProbeError;
 
 #[derive(Debug, Default, PartialEq, Eq)]
@@ -126,7 +126,7 @@ fn read(conf: &PacmanConf, synced: &[Database]) -> Result<SyncRead, ProbeError> 
                     description: description(package),
                     version: package.version().to_string(),
                     origin: Origin::Repository(repo.to_owned()),
-                    size: u64::try_from(package.isize()).unwrap_or_default(),
+                    size: size(package),
                     installed: None,
                 });
             }

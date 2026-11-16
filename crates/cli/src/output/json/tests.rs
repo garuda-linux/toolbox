@@ -44,8 +44,7 @@ fn a_line_is_one_compact_object() {
     assert_eq!(text, "{\"schema\":1,\"id\":\"zram\",\"on\":false}\n");
 }
 
-/// A list is an object too, so a script reads `schema` from every output
-/// alike, also with one row or none.
+/// A list is an object too, so every output carries `schema`, with one row or none.
 #[test]
 fn a_list_carries_its_rows_behind_the_schema() {
     let rows = [Row {

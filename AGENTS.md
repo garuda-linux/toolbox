@@ -95,7 +95,7 @@ every release. `scripts/release.sh` asks for it.
 ## Rules for every change
 
 - `.rs` files in `app/` and `crates/` stay at most 400 lines.
-  `.file-size-allow` may only shrink. Tests live in `foo/tests.rs`.
+  `.file-size-allow` may only shrink. Tests live in `crates/<crate>/src/tests.rs`.
 - Comments state why, never what, and only where the code cannot. No
   semicolons in prose. A real exception to `scripts/lint.sh` gets
   `// toolbox-lint: allow(<rule>) <reason>` above the line.

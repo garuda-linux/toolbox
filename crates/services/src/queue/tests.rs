@@ -28,6 +28,10 @@ fn two_packages() -> ChangeSet {
     changes
 }
 
+fn keys(queue: &Queue) -> Vec<String> {
+    queue.views().into_iter().map(|view| view.key).collect()
+}
+
 /// Waits for the writer task, which runs on its own schedule.
 fn wait_for(path: &Path, done: impl Fn(&Path) -> bool) {
     let until = Instant::now() + PATIENCE;
@@ -63,9 +67,7 @@ fn an_unreadable_file_is_an_empty_queue() {
 fn views_list_every_queued_change() {
     let queue = Queue::in_memory(two_packages());
 
-    let keys: Vec<String> = queue.views().into_iter().map(|view| view.key).collect();
-
-    assert_eq!(keys, ["firefox", "vlc"]);
+    assert_eq!(keys(&queue), ["firefox", "vlc"]);
 }
 
 #[test]
@@ -274,8 +276,7 @@ fn a_snapshot_drops_what_the_system_already_fulfils() {
 
     queue.meet(&installed(&["firefox"]));
 
-    let keys: Vec<String> = queue.views().into_iter().map(|view| view.key).collect();
-    assert_eq!(keys, vec!["vlc".to_owned()]);
+    assert_eq!(keys(&queue), vec!["vlc".to_owned()]);
 }
 
 #[test]
@@ -336,8 +337,7 @@ fn an_edit_from_a_command_joins_the_queue_against_the_snapshot() {
         &installed(&["steam"]),
     );
 
-    let keys: Vec<String> = queue.views().into_iter().map(|view| view.key).collect();
-    assert_eq!(keys, ["firefox", "gimp"]);
+    assert_eq!(keys(&queue), ["firefox", "gimp"]);
     assert_ne!(queue.revision(), start);
 }
 

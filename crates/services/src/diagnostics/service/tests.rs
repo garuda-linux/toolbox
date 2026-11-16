@@ -12,6 +12,7 @@ use toolbox_state::diagnostics::{
 use toolbox_system::DiagnosticSource;
 
 use super::{DiagnosticsHandle, DiagnosticsNote, DiagnosticsSink, Request, UploadProblem, serve};
+use crate::diagnostics::DryRunTransport;
 
 /// Answers every collector with its own name. Inxi blocks until it is
 /// cancelled, like a program that hangs.
@@ -80,15 +81,6 @@ impl Transport for Server {
     }
 }
 
-/// Takes every upload and answers with the same paste.
-struct Accepts;
-
-impl Transport for Accepts {
-    fn post(&self, _url: &str, _body: &str) -> Result<String, RequestError> {
-        Ok(r#"{"status":0,"id":"dryrun0000000000","deletetoken":"dryrun"}"#.to_owned())
-    }
-}
-
 struct Panics;
 
 /// Holds every upload until `open` is set, like a slow server.
@@ -112,7 +104,7 @@ impl Transport for Gate {
             std::thread::sleep(Duration::from_millis(5));
         }
 
-        Accepts.post(url, body)
+        DryRunTransport.post(url, body)
     }
 }
 
@@ -143,7 +135,7 @@ fn one(collector: Collector) -> Request {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn a_collector_reports_its_start_and_its_outcome() {
-    let (handle, mut heard) = start(Fake, Arc::new(Accepts));
+    let (handle, mut heard) = start(Fake, Arc::new(DryRunTransport));
 
     handle.send(one(Collector::Dmesg));
 
@@ -180,7 +172,7 @@ async fn a_collector_reports_its_start_and_its_outcome() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn the_full_report_names_each_collector_as_it_runs() {
-    let (handle, mut heard) = start(Quick, Arc::new(Accepts));
+    let (handle, mut heard) = start(Quick, Arc::new(DryRunTransport));
 
     handle.send(Request::Collect(Selection::All));
 
@@ -211,7 +203,7 @@ async fn the_full_report_names_each_collector_as_it_runs() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn a_new_collection_cancels_the_running_one() {
-    let (handle, mut heard) = start(Fake, Arc::new(Accepts));
+    let (handle, mut heard) = start(Fake, Arc::new(DryRunTransport));
 
     handle.send(one(Collector::Inxi));
     handle.send(one(Collector::Journal));
@@ -238,7 +230,7 @@ async fn a_new_collection_cancels_the_running_one() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn cancel_stops_the_run_and_says_so_once() {
-    let (handle, mut heard) = start(Fake, Arc::new(Accepts));
+    let (handle, mut heard) = start(Fake, Arc::new(DryRunTransport));
 
     handle.send(Request::Cancel);
     handle.send(one(Collector::Inxi));
@@ -259,7 +251,7 @@ async fn cancel_stops_the_run_and_says_so_once() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn a_cancelled_full_report_stops_at_the_blocked_collector() {
-    let (handle, mut heard) = start(Fake, Arc::new(Accepts));
+    let (handle, mut heard) = start(Fake, Arc::new(DryRunTransport));
 
     handle.send(Request::Collect(Selection::All));
 
@@ -368,7 +360,7 @@ async fn a_failed_upload_reports_the_reason() {
 
 #[tokio::test(flavor = "multi_thread")]
 async fn a_panicking_collector_ends_as_a_failed_collection() {
-    let (handle, mut heard) = start(Panics, Arc::new(Accepts));
+    let (handle, mut heard) = start(Panics, Arc::new(DryRunTransport));
 
     handle.send(one(Collector::Dmesg));
     assert_eq!(

@@ -36,7 +36,6 @@ use crate::i18n::changes::sentence;
 /// on the dialogs' layer put a returning pill over a dialog's buttons.
 const LAYER: Order = Order::Middle;
 
-/// The pill's own state, which only the window cares about.
 #[derive(Debug, Default)]
 pub struct ChangesState {
     pub open: bool,
@@ -47,7 +46,6 @@ pub struct ChangesState {
     pub confirming: Option<UiCommand>,
 }
 
-/// What is queued, and the id of the text that says why Apply waits.
 #[derive(Clone, Copy, Debug)]
 pub struct Queued<'view> {
     pub changes: &'view [ChangeView],
@@ -122,7 +120,6 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     overlays(&ctx, (rect, ui.layer_id()), queued, state, commands);
 }
 
-/// `pill` is where the pill lies and its layer.
 fn overlays(
     ctx: &Context,
     pill: (Rect, LayerId),

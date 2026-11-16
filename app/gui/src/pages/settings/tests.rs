@@ -27,6 +27,14 @@ fn sent(harness: &Harness<'static, PageState<SettingsPage>>) -> Vec<Command> {
     harness.state().fixture.sent()
 }
 
+fn select_minutes(harness: &mut Harness<'static, PageState<SettingsPage>>) {
+    harness
+        .get_by_role_and_label(Role::TextInput, "Minutes between checks")
+        .focus();
+    harness.run();
+    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
+}
+
 #[test]
 fn the_three_sections_show_their_rows() {
     let harness = page(Settings::default());
@@ -71,15 +79,9 @@ fn a_theme_segment_picks_the_theme() {
 #[test]
 fn minutes_outside_the_limits_are_held_to_them_with_a_note() {
     let mut harness = page(Settings::default());
-    let field = || "Minutes between checks";
-
+    select_minutes(&mut harness);
     harness
-        .get_by_role_and_label(Role::TextInput, field())
-        .focus();
-    harness.run();
-    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
-    harness
-        .get_by_role_and_label(Role::TextInput, field())
+        .get_by_role_and_label(Role::TextInput, "Minutes between checks")
         .type_text("2");
     harness.key_press(Key::Enter);
     harness.run();
@@ -100,15 +102,9 @@ fn minutes_outside_the_limits_are_held_to_them_with_a_note() {
 #[test]
 fn a_letter_is_not_typed_into_the_minutes() {
     let mut harness = page(Settings::default());
-    let field = || "Minutes between checks";
-
+    select_minutes(&mut harness);
     harness
-        .get_by_role_and_label(Role::TextInput, field())
-        .focus();
-    harness.run();
-    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
-    harness
-        .get_by_role_and_label(Role::TextInput, field())
+        .get_by_role_and_label(Role::TextInput, "Minutes between checks")
         .type_text("x");
     harness.key_press(Key::Enter);
     harness.run();
@@ -119,13 +115,7 @@ fn a_letter_is_not_typed_into_the_minutes() {
 #[test]
 fn an_empty_minutes_field_is_refused_with_the_note_and_keeps_the_setting() {
     let mut harness = page(Settings::default());
-    let field = || "Minutes between checks";
-
-    harness
-        .get_by_role_and_label(Role::TextInput, field())
-        .focus();
-    harness.run();
-    harness.key_press_modifiers(egui::Modifiers::COMMAND, Key::A);
+    select_minutes(&mut harness);
     harness.key_press(Key::Backspace);
     harness.key_press(Key::Enter);
     harness.run();

@@ -4,13 +4,13 @@
 
 use egui::accesskit::Role;
 use egui::epaint::ClippedShape;
-use egui::{Event, Modifiers, PointerButton, Pos2, Rect, Shape};
+use egui::{Event, Pos2, Rect, Shape};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_gui::App;
 
 use super::{app, grip};
-use crate::common::{drag, open_console, pane, wheel};
+use crate::common::{drag, open_console, pane, pointer_button, wheel};
 use crate::maintenance::maintenance;
 
 /// The left edge of the page beside the sidebar, in points.
@@ -126,18 +126,11 @@ fn a_click_on_the_sheet_never_reaches_the_page_under_it() {
         .expect("a tile under the sheet");
 
     let at = tile.center();
-    let button = |pressed| Event::PointerButton {
-        pos: at,
-        button: PointerButton::Primary,
-        pressed,
-        modifiers: Modifiers::NONE,
-    };
-
     harness.event(Event::PointerMoved(at));
     harness.run();
-    harness.event(button(true));
+    harness.event(pointer_button(at, true));
     harness.run();
-    harness.event(button(false));
+    harness.event(pointer_button(at, false));
     harness.run();
 
     assert!(

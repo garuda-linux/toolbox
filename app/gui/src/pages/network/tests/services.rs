@@ -11,15 +11,19 @@ use crate::page_service::Services;
 use crate::testing::PageFixture;
 use crate::units::{UnitListing, UnitLists, Units};
 
-#[test]
-fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
-    let manager = UnitInfo {
+fn network_manager() -> UnitInfo {
+    UnitInfo {
         name: UnitName::new("NetworkManager.service").unwrap(),
         description: "Network Manager".to_owned(),
         active: ActiveState::Active,
         sub_state: "running".to_owned(),
         file_state: FileState::Enabled,
-    };
+    }
+}
+
+#[test]
+fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
+    let manager = network_manager();
 
     let mut snapshot = Snapshot::default();
     snapshot.insert(facts());
@@ -58,13 +62,7 @@ fn a_service_state_is_a_dot_beside_the_name_as_on_services() {
 
 #[test]
 fn a_service_that_is_not_installed_is_not_listed() {
-    let manager = UnitInfo {
-        name: UnitName::new("NetworkManager.service").unwrap(),
-        description: "Network Manager".to_owned(),
-        active: ActiveState::Active,
-        sub_state: "running".to_owned(),
-        file_state: FileState::Enabled,
-    };
+    let manager = network_manager();
 
     let mut harness = PageFixture {
         services: Services {

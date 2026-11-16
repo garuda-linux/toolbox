@@ -210,13 +210,19 @@ impl SystemBootMenu {
 
     /// The helper's answer is decoded into the same type it was made
     /// from, so anything but a menu is refused whole.
-    fn ask_helper(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
-        let mut command = self.helper.read_command(ReadKind::GrubMenu);
+    fn ask_helper<T, E>(
+        &self,
+        kind: ReadKind,
+        cancel: &Arc<AtomicBool>,
+        parse: fn(&str) -> Result<T, E>,
+        wrap: fn(T) -> MenuRead,
+    ) -> MenuRead {
+        let mut command = self.helper.read_command(kind);
 
         match pkexec::ask(&mut command, MAX_LINE_BYTES, cancel) {
-            HelperRun::Answered(line) => GrubMenu::parse(line.trim_end()).map_or_else(
+            HelperRun::Answered(line) => parse(line.trim_end()).map_or_else(
                 |_not_a_menu| MenuRead::Unknown(HelperError::Unreadable),
-                MenuRead::Known,
+                wrap,
             ),
             HelperRun::Refused(refusal) => MenuRead::Refused(refusal),
             HelperRun::Failed(reason) => MenuRead::Unknown(reason),
@@ -237,7 +243,7 @@ impl BootMenuSource for SystemBootMenu {
             }
             Err(error) if error.kind() == io::ErrorKind::NotFound => MenuRead::Missing,
             Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
-                self.ask_helper(cancel)
+                self.ask_helper(ReadKind::GrubMenu, cancel, GrubMenu::parse, MenuRead::Known)
             }
             Err(error) => MenuRead::Unreadable(error.kind()),
         }

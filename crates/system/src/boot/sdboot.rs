@@ -9,14 +9,13 @@ use std::sync::atomic::AtomicBool;
 use toolbox_exec::sdboot_menu;
 use toolbox_plan::GRUB_DEFAULTS;
 use toolbox_plan::procedure::uki_rebuilds;
-use toolbox_plan::protocol::{MAX_LINE_BYTES, ReadKind};
+use toolbox_plan::protocol::ReadKind;
 use toolbox_plan::sdboot::{KERNEL_CMDLINE, SdBootMenu};
 use toolbox_state::boot::{BootLoader, KernelCmdline};
 
 use super::{MenuRead, SystemBootMenu};
 use crate::error::{ProbeError, from_io};
 use crate::files;
-use crate::pkexec::{self, HelperError, HelperRun};
 
 const LOADER_INFO: &str =
     "sys/firmware/efi/efivars/LoaderInfo-4a67b082-0a4c-41cf-b6c7-440b29bb8c4f";
@@ -29,24 +28,13 @@ impl SystemBootMenu {
     pub(super) fn sdboot_menu(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
         match sdboot_menu(&self.root) {
             Ok(menu) => MenuRead::SdBoot(menu),
-            Err(error) if error.kind() == io::ErrorKind::PermissionDenied => {
-                self.ask_helper_sdboot(cancel)
-            }
-            Err(error) => MenuRead::Unreadable(error.kind()),
-        }
-    }
-
-    fn ask_helper_sdboot(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
-        let mut command = self.helper.read_command(ReadKind::SdBootMenu);
-
-        match pkexec::ask(&mut command, MAX_LINE_BYTES, cancel) {
-            HelperRun::Answered(line) => SdBootMenu::parse(line.trim_end()).map_or_else(
-                |_not_a_menu| MenuRead::Unknown(HelperError::Unreadable),
+            Err(error) if error.kind() == io::ErrorKind::PermissionDenied => self.ask_helper(
+                ReadKind::SdBootMenu,
+                cancel,
+                SdBootMenu::parse,
                 MenuRead::SdBoot,
             ),
-            HelperRun::Refused(refusal) => MenuRead::Refused(refusal),
-            HelperRun::Failed(reason) => MenuRead::Unknown(reason),
-            HelperRun::Cancelled => MenuRead::Cancelled,
+            Err(error) => MenuRead::Unreadable(error.kind()),
         }
     }
 }

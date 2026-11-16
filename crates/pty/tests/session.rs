@@ -14,7 +14,6 @@ fn shell(script: &str) -> PtyCommand {
     PtyCommand::new("sh").args(["-c", script])
 }
 
-/// Returns whether it closed.
 fn read_until_closed(session: &Session, out: &mut String, deadline: Instant) -> bool {
     while let Some(left) = deadline.checked_duration_since(Instant::now()) {
         match session.output().recv_timeout(left) {

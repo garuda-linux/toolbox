@@ -1,5 +1,3 @@
-//! The line painted over an empty terminal: what it is for.
-
 use egui::{Rect, Sense, TextStyle, Ui, WidgetText, pos2, vec2};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::tokens;

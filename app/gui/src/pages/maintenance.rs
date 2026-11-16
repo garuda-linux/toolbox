@@ -190,7 +190,6 @@ fn waiting(ui: &mut Ui, id: &str, count: usize) {
     card(ui, |ui| skeleton_list(ui, rows, &name));
 }
 
-/// Waits while a plan runs, so it is disabled then.
 fn plan_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, kind: ButtonKind) -> bool {
     let text = i18n::text(ui.ctx(), id);
     ui.enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))

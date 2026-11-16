@@ -14,7 +14,7 @@ use std::path::Path;
 use toolbox_fs::{Permissions, Replace};
 use toolbox_plan::{Fingerprint, HomeWrite};
 
-use super::user_config::resolve;
+use super::user_config::{NEW_FILE, resolve};
 
 /// Backups stay readable by the user alone: config files may hold keys.
 const BACKUP: Replace<'static> = Replace::new(Permissions::Exactly(0o600));
@@ -49,7 +49,11 @@ pub fn write_home_file(home: &Path, write: &HomeWrite) -> io::Result<()> {
 
     toolbox_fs::replace(&backup, &current, &BACKUP)?.synced()?;
 
-    let keep = Replace::new(Permissions::Umask(0o666)).keeping_mode();
-    toolbox_fs::replace(&target, write.content.as_str().as_bytes(), &keep)?.synced()?;
+    toolbox_fs::replace(
+        &target,
+        write.content.as_str().as_bytes(),
+        &NEW_FILE.keeping_mode(),
+    )?
+    .synced()?;
     Ok(())
 }

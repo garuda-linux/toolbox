@@ -35,11 +35,7 @@ impl HomeConfigs {
     /// The home of the user running the app, from `HOME`.
     #[must_use = "the adapter does nothing until asked"]
     pub fn from_env() -> Self {
-        Self {
-            home: std::env::var_os("HOME")
-                .filter(|home| !home.is_empty())
-                .map(PathBuf::from),
-        }
+        Self { home: env_home() }
     }
 
     #[must_use = "the adapter does nothing until asked"]
@@ -76,4 +72,10 @@ impl UserConfigSource for HomeConfigs {
 
         Ok(UserConfigStates(states))
     }
+}
+
+pub fn env_home() -> Option<PathBuf> {
+    std::env::var_os("HOME")
+        .filter(|home| !home.is_empty())
+        .map(PathBuf::from)
 }

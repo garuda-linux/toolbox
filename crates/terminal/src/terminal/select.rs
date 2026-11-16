@@ -30,8 +30,7 @@ impl Terminal {
     }
 
     fn cell_point(&self, point: Point) -> CellPoint {
-        let history = i32::try_from(self.history_len()).unwrap_or(i32::MAX);
-        let line = point.line.0.saturating_add(history);
+        let line = point.line.0.saturating_add(self.history_offset());
 
         CellPoint {
             line: usize::try_from(line).unwrap_or_default(),

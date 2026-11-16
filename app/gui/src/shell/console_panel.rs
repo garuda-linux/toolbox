@@ -13,15 +13,16 @@ pub use sheet::{Place, cover, out};
 mod tests;
 
 use egui::{
-    Align, Color32, Context, CornerRadius, Frame, Label, Layout, Rect, ScrollArea, Ui, UiBuilder,
-    vec2,
+    Align, Color32, Context, CornerRadius, Frame, Id, Label, Layout, Rect, Response, ScrollArea,
+    Ui, UiBuilder, vec2,
 };
 use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
 use toolbox_gui_kit::theme::{CARD_RADIUS, PILL_HEIGHT};
-use toolbox_gui_kit::widgets::{Tone, banner, card, edge_ring, line, rich, status_word};
+use toolbox_gui_kit::widgets::{Tone, banner, card, line, rich, status_word};
 use toolbox_gui_kit::{UiExt as _, tokens};
+use toolbox_plan::StepId;
 use toolbox_plan::protocol::{Failure, Mode};
 
 use crate::apply::Problem;
@@ -257,7 +258,7 @@ fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
                         .show(ui, |ui| {
                             ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
                             for step in steps {
-                                ui.horizontal(|ui| {
+                                let row = ui.horizontal(|ui| {
                                     ui.allocate_ui(vec2(column, STEP_ROW_HEIGHT), |ui| {
                                         ui.set_min_width(column);
                                         step_state(ui, step.state, dry_run);
@@ -273,6 +274,8 @@ fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
 
                                     ui.add(Label::new(command).truncate());
                                 });
+
+                                follow_running(ui, step, &row.response);
                             }
                         });
                 });
@@ -342,14 +345,6 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
                         .show(ui)
                 });
 
-            // On the frame's edge, as the box fills its room and a ring
-            // outside it would be cut.
-            edge_ring(
-                ui,
-                &framed.inner.response,
-                framed.response.rect,
-                CARD_RADIUS,
-            );
             framed.inner
         })
         .inner;
@@ -370,5 +365,19 @@ fn terminal(ui: &mut Ui, console: &mut Console, commands: &CommandSender) {
 
     if let Some(size) = console.resize(output.fitting) {
         commands.send(AppCommand::ConsoleResize(size));
+    }
+}
+
+/// Brings the running step into view once as it starts, so a reader who
+/// scrolls away keeps the place until the next step runs.
+fn follow_running(ui: &Ui, step: &StepRow, row: &Response) {
+    if step.state != StepState::Running {
+        return;
+    }
+
+    let shown = Id::unique("console-running-step");
+    if ui.data(|data| data.get_temp::<StepId>(shown)) != Some(step.id) {
+        row.scroll_to_me(Some(Align::Center));
+        ui.data_mut(|data| data.insert_temp(shown, step.id));
     }
 }

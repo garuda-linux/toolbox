@@ -102,7 +102,6 @@ fn radio_detail(ctx: &egui::Context, id: &str, summary: RadioSummary, unknown: b
     }
 }
 
-/// `command` makes the command for the switch's new state.
 fn show_radio(
     ui: &mut Ui,
     context: &PageContext<'_>,

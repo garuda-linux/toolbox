@@ -1,6 +1,4 @@
-//! Boot options with its real state: the menu read once the page opens,
-//! a file from the chooser, the Kernels page's proposal and the
-//! snapshots.
+//! Boot options with the menu, a chosen file and the Kernels proposal.
 
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;

@@ -130,28 +130,25 @@ fn a_click_on_review_lets_the_popover_rise() {
     assert!(first.bottom() > rest.bottom() + 0.5, "{first:?} {rest:?}");
 }
 
-#[test]
-fn enter_on_review_shows_the_popover_at_once() {
+fn key_on_review_shows_the_popover_at_once(key: Key) {
     let mut harness = moving_app(&["firefox"]);
 
     harness.get_by_label("Review").focus();
     harness.run();
-    harness.key_press(Key::Enter);
+    harness.key_press(key);
     let (first, rest) = popover_rise(&mut harness);
 
     assert_eq!(first, rest);
 }
 
 #[test]
+fn enter_on_review_shows_the_popover_at_once() {
+    key_on_review_shows_the_popover_at_once(Key::Enter);
+}
+
+#[test]
 fn space_on_review_shows_the_popover_at_once() {
-    let mut harness = moving_app(&["firefox"]);
-
-    harness.get_by_label("Review").focus();
-    harness.run();
-    harness.key_press(Key::Space);
-    let (first, rest) = popover_rise(&mut harness);
-
-    assert_eq!(first, rest);
+    key_on_review_shows_the_popover_at_once(Key::Space);
 }
 
 fn review_rows(harness: &Harness<'static, App>) -> usize {

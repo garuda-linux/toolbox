@@ -19,6 +19,13 @@ fn app(theme: Theme, setup: Setup) -> Harness<'static, App> {
     launch_in(window(HEIGHT).with_theme(theme), setup)
 }
 
+fn step_while_threads_work(harness: &mut Harness<'static, App>, frames: u8) {
+    for _ in 0..frames {
+        std::thread::sleep(std::time::Duration::from_millis(20));
+        harness.step();
+    }
+}
+
 #[test]
 fn shell() {
     let mut results = SnapshotResults::new();
@@ -163,10 +170,7 @@ fn gaming_page() {
     let (mut harness, _runtime) = crate::gaming::gaming();
 
     // The pictures load from their files on other threads.
-    for _ in 0_u8..20 {
-        std::thread::sleep(std::time::Duration::from_millis(20));
-        harness.step();
-    }
+    step_while_threads_work(&mut harness, 20);
 
     harness.run();
 
@@ -281,10 +285,7 @@ fn discover_page() {
         .click();
 
     // The answers and the decoded pictures come from other threads.
-    for _ in 0_u8..30 {
-        std::thread::sleep(std::time::Duration::from_millis(20));
-        harness.step();
-    }
+    step_while_threads_work(&mut harness, 30);
 
     harness.run();
 

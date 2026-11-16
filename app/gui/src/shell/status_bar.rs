@@ -126,19 +126,14 @@ fn bar_shows(reading: &Reading, dry_run: bool) -> bool {
     dry_run || !failed(reading).is_empty()
 }
 
-/// A read in progress while the bar is away: a note over the bottom left
-/// of `page`, which moves nothing.
-pub fn floating(ctx: &Context, page: Rect, reading: &Reading, mode: Mode) {
-    let dry_run = mode.is_dry_run();
-    if bar_shows(reading, dry_run) || !reading.is_loading() {
-        return;
-    }
-
-    note(ctx, page, &i18n::text(ctx, "status-reading"));
+/// A read in progress the bar does not show, as it is away. The sidebar
+/// shows it then.
+pub fn reads_apart(reading: &Reading, mode: Mode) -> bool {
+    reading.is_loading() && !bar_shows(reading, mode.is_dry_run())
 }
 
-/// A line with a spinner over the bottom left of `page`, as the reading
-/// note has it.
+/// A line with a spinner over the bottom left of `page`, which moves
+/// nothing.
 pub fn note(ctx: &Context, page: Rect, text: &str) {
     let tokens = tokens::current(ctx);
     let inset = tokens.sizes.corner_inset;

@@ -10,7 +10,7 @@ use toolbox_state::packages::{
     PackageDetails, PackageIndex,
 };
 
-use super::{Libalpm, description, failed, open_local};
+use super::{Libalpm, description, failed, open_local, size};
 use crate::error::ProbeError;
 
 pub trait PackageIndexSource: Send + Sync {
@@ -196,8 +196,4 @@ const fn reason(reason: PackageReason) -> InstallReason {
         PackageReason::Explicit => InstallReason::Explicit,
         PackageReason::Depend => InstallReason::Dependency,
     }
-}
-
-fn size(package: &Pkg) -> u64 {
-    u64::try_from(package.isize()).unwrap_or_default()
 }

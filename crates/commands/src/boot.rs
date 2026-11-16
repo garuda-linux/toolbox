@@ -186,14 +186,16 @@ pub fn default_kernel(
     snapshot: &Snapshot,
 ) -> Result<Plan, Refused> {
     let Some(entry) = menu.kernel_entry(kernel) else {
-        let known = kernel_names(snapshot);
         let text = format!("the boot menu has no entry of `{kernel}`, see `boot entries`");
-        return Err(
-            Refused::Unknown(text).hinted(kernel.as_str(), known.iter().map(String::as_str))
-        );
+        return Err(unknown_kernel(text, kernel, snapshot));
     };
 
     boot_edit(Edit::Default(entry.id.as_str().to_owned()), snapshot)
+}
+
+pub(super) fn unknown_kernel(text: String, kernel: &PackageName, snapshot: &Snapshot) -> Refused {
+    let known = kernel_names(snapshot);
+    Refused::Unknown(text).hinted(kernel.as_str(), known.iter().map(String::as_str))
 }
 
 /// The builds every installed kernel with headers lacks, or only those of

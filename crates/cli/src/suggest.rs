@@ -33,8 +33,6 @@ where
     suggest(wanted, candidates).map(|found| format!("did you mean `{found}`?"))
 }
 
-/// The edits from `wanted` to `candidate`, or to it without `.service`
-/// when `wanted` has no suffix of its own.
 fn edits(wanted: &str, candidate: &str) -> usize {
     let candidate = candidate.to_lowercase();
     let full = distance(wanted, &candidate);

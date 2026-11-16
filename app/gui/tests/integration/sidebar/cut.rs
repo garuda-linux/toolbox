@@ -242,9 +242,7 @@ pub(super) fn collapsed_rail(height: f32) -> Rail {
     harness.run();
     harness.run();
 
-    let entries: Vec<(PageId, Rect)> = PageId::ALL
-        .into_iter()
-        .filter(|page| *page != PageId::BootRepair)
+    let entries: Vec<(PageId, Rect)> = super::sidebar_pages()
         .map(|page| {
             let name = toolbox_gui::i18n::text(&harness.ctx, page.text_id());
             (page, harness.get_by_role_and_label(Role::Tab, &name).rect())

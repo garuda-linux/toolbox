@@ -124,7 +124,6 @@ enum RawCheck {
     UserJson(RawUserJson),
 }
 
-/// The check as the catalog spells its kind, then what it watches.
 impl fmt::Display for Check {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
@@ -242,11 +241,8 @@ impl ToggleSection {
 
 impl RawSection<RawEntry> {
     fn validate(self, seen: &mut BTreeSet<String>) -> Result<ToggleSection, EntryProblem> {
-        if let Err(problem) = source::claim_id(&self.id, seen)
-            .and_then(|()| source::check_section(&self.title, &self.icon, self.entry.len()))
-        {
-            return Err(EntryProblem::new(self.id.clone(), problem));
-        }
+        source::claim_section(&self.id, &self.title, &self.icon, self.entry.len(), seen)
+            .map_err(|problem| EntryProblem::new(self.id.clone(), problem))?;
 
         let entries = self
             .entry

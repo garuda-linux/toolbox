@@ -53,6 +53,14 @@ fn shows(harness: &Shown, label: &str) -> bool {
     harness.query_all_by_label_contains(label).next().is_some()
 }
 
+fn succeeded() -> Plans {
+    Plans {
+        finished: 1,
+        last_succeeded: true,
+        ..Plans::default()
+    }
+}
+
 fn strawberry() -> ChangeSet {
     let mut changes = ChangeSet::default();
     changes.want::<Packages>(
@@ -147,13 +155,7 @@ fn the_summary_names_the_picks_and_opens_the_review() {
 
 #[test]
 fn an_apply_that_worked_shows_the_success_page() {
-    let plans = Plans {
-        finished: 1,
-        last_succeeded: true,
-        ..Plans::default()
-    };
-
-    let harness = page(ChangeSet::default(), plans, Stage::Summary);
+    let harness = page(ChangeSet::default(), succeeded(), Stage::Summary);
 
     assert!(shows(&harness, "Success!"));
     assert!(shows(&harness, "Finish setup"));
@@ -285,13 +287,7 @@ fn the_step_list_is_centred_under_the_page_whatever_next_says() {
 
 #[test]
 fn reopening_the_review_after_the_apply_still_leads_to_success() {
-    let plans = Plans {
-        finished: 1,
-        last_succeeded: true,
-        ..Plans::default()
-    };
-
-    let mut harness = page(strawberry(), plans, Stage::Summary);
+    let mut harness = page(strawberry(), succeeded(), Stage::Summary);
 
     harness.get_by_label("Review and apply").click();
     harness.run();

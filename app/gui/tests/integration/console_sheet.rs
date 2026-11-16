@@ -243,3 +243,40 @@ fn the_terminal_reaches_the_sheets_padding_and_its_hint_sits_in_the_header() {
         "the hint at {shown:?} is not above the terminal at {terminal:?}"
     );
 }
+
+/// A read in progress shows in the sidebar right above Settings, where
+/// neither the page nor the sheet reaches.
+#[test]
+fn the_reading_note_sits_in_the_sidebar_above_settings() {
+    let (mut harness, _runtime, _answer, _reads) = crate::system::app();
+    crate::system::step_until(&mut harness, "the reading notice", |harness| {
+        harness.query_all_by_label("Reading the system…").count() == 1
+    });
+    let console = open_console(&mut harness);
+
+    let note = harness.get_by_label("Reading the system…").rect();
+    let sidebar = pane(&harness, "Pages").expect("sidebar");
+    let settings = harness.get_by_role_and_label(Role::Tab, "Settings").rect();
+
+    assert!(
+        sidebar.contains_rect(note),
+        "the note at {note:?} is off the sidebar at {sidebar:?}"
+    );
+    assert!(note.bottom() <= settings.top(), "the note covers Settings");
+    assert!(
+        settings.top() - note.bottom() < 20.0,
+        "the note is far from Settings"
+    );
+    assert!(note.right() < console.left(), "the Console covers the note");
+    harness.snapshot("shell/sidebar_reading");
+
+    harness.get_by_label("Collapse sidebar").click();
+    harness.run();
+    let rail = pane(&harness, "Pages").expect("sidebar");
+    let dots = harness.get_by_label("Reading the system…").rect();
+    assert!(
+        rail.contains_rect(dots),
+        "the dots at {dots:?} are off the rail at {rail:?}"
+    );
+    harness.snapshot("shell/sidebar_reading_collapsed");
+}

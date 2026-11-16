@@ -24,7 +24,6 @@ const LIST_HEIGHT: f32 = 240.0;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Removal {
     pub package: PackageName,
-    /// The installed packages that need it.
     pub required: Vec<PackageName>,
     pub along: Vec<PackageName>,
 }

@@ -67,7 +67,6 @@ use crate::page::PageId;
 use crate::page_service::{Provides, Services};
 use crate::settings::SettingsView;
 
-/// What every page reads, built each frame.
 #[expect(
     clippy::struct_excessive_bools,
     reason = "independent facts each page reads, not states of one thing"
@@ -96,7 +95,6 @@ pub struct PageContext<'app> {
     /// changes no snapshot.
     pub version: &'static str,
     pub commands: &'app CommandSender,
-    /// What the Settings page shows.
     pub preferences: SettingsView<'app>,
 }
 

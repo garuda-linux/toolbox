@@ -46,7 +46,6 @@ pub struct Cancellation {
 }
 
 impl Cancellation {
-    /// A cancellation that waits `grace` between signals.
     #[must_use = "a cancellation does nothing until started"]
     pub const fn new(grace: Duration) -> Self {
         Self {

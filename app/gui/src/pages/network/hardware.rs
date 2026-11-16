@@ -145,7 +145,6 @@ fn queue_pciutils(context: &PageContext<'_>, wish: Toggle) {
         .commands
         .send(NetworkCommand::TogglePciutils { wish });
 }
-/// The PCI devices, then the USB ones.
 fn devices(hardware: &Hardware) -> Vec<&Device> {
     [&hardware.pci, &hardware.usb]
         .into_iter()

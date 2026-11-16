@@ -37,7 +37,6 @@ pub struct PackagesSetup {
     pub aur: Arc<dyn AurSource>,
 }
 
-/// One package as the detail view shows it.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Details {
     pub package: PackageName,
@@ -46,7 +45,6 @@ pub struct Details {
     pub history: Read<Vec<HistoryEntry>>,
 }
 
-/// The reads that were asked and have not landed yet.
 #[derive(Debug, Default)]
 struct Reads {
     index: bool,
@@ -311,7 +309,6 @@ impl<T> Read<T> {
 
 #[cfg(any(test, feature = "testing"))]
 impl Packages {
-    /// The state a page test shows, without reads.
     pub fn showing(index: Read<Arc<Catalog>>, details: Option<Details>) -> Self {
         Self {
             opened: true,

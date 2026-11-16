@@ -31,7 +31,6 @@ pub(super) fn waiting(page: &mut PackagesPage, ui: &mut Ui, aur_on: bool) {
     placeholder(ui, "packages-loading");
 }
 
-/// Package rows that wait, named by `id`.
 pub(super) fn placeholder(ui: &mut Ui, id: &str) {
     let name = i18n::text(ui.ctx(), id);
     let rows = SkeletonRows {

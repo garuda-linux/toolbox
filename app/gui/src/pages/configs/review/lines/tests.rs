@@ -13,6 +13,14 @@ fn find(rows: &Rows, kind: Kind) -> &Row {
     rows.lines.iter().find(|row| row.kind == kind).unwrap()
 }
 
+fn line_after_added(rows: &Rows) -> &Row {
+    rows.lines
+        .iter()
+        .skip_while(|row| row.kind != Kind::Added)
+        .nth(1)
+        .unwrap()
+}
+
 /// The capture with its timeout of 5 seconds set to 2.
 fn shorter_timeout() -> String {
     GRUB.replace("GRUB_TIMEOUT=5\n", "GRUB_TIMEOUT=2\n")
@@ -36,12 +44,7 @@ fn a_changed_line_has_its_number_in_both_files() {
     assert_eq!((added.old, added.new), (None, Some(4)));
     assert_eq!(added.text(), "GRUB_TIMEOUT=2");
 
-    let after = rows
-        .lines
-        .iter()
-        .skip_while(|row| row.kind != Kind::Added)
-        .nth(1)
-        .unwrap();
+    let after = line_after_added(&rows);
 
     assert_eq!(
         (after.kind, after.old, after.new),
@@ -59,12 +62,7 @@ fn an_added_line_moves_the_numbers_of_the_edited_file_on() {
 
     let rows = rows(&edited);
 
-    let after = rows
-        .lines
-        .iter()
-        .skip_while(|row| row.kind != Kind::Added)
-        .nth(1)
-        .unwrap();
+    let after = line_after_added(&rows);
 
     assert_eq!(
         (after.kind, after.old, after.new),

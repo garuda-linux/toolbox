@@ -1,6 +1,4 @@
-//! Pictures of every page in the light theme, at the smallest window and
-//! with the keyboard focus on its first control, so a layout that only
-//! breaks there shows in review.
+//! Pictures of every page at the smallest window, in light, and with the keyboard focus on its first control.
 
 mod german;
 
@@ -54,22 +52,22 @@ fn focus_page(harness: &mut Harness<'static, App>) {
     }
 }
 
-#[test]
-fn every_page_in_light() {
+fn every_page(theme: Theme, size: (f32, f32), name: &str) {
     let mut results = SnapshotResults::new();
     for id in pages() {
-        let mut harness = page(id, Theme::Light, WIDE, Setup::default());
-        results.add(harness.try_snapshot(format!("coverage/{}_light", id.slug())));
+        let mut harness = page(id, theme, size, Setup::default());
+        results.add(harness.try_snapshot(format!("coverage/{}_{name}", id.slug())));
     }
 }
 
 #[test]
+fn every_page_in_light() {
+    every_page(Theme::Light, WIDE, "light");
+}
+
+#[test]
 fn every_page_at_the_smallest_window() {
-    let mut results = SnapshotResults::new();
-    for id in pages() {
-        let mut harness = page(id, Theme::Dark, SMALLEST, Setup::default());
-        results.add(harness.try_snapshot(format!("coverage/{}_narrow", id.slug())));
-    }
+    every_page(Theme::Dark, SMALLEST, "narrow");
 }
 
 #[test]

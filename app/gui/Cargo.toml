@@ -27,6 +27,8 @@ testing = ["dep:egui_kittest", "toolbox-gui-kit/testing", "toolbox-services/test
 
 [dependencies]
 toolbox-aur.workspace = true
+# Only for its Adwaita title bar on GNOME, which eframe does not pass through.
+winit-csd.workspace = true
 toolbox-news.workspace = true
 toolbox-catalog.workspace = true
 toolbox-cli.workspace = true

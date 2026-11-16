@@ -114,7 +114,6 @@ pub fn attention_rows(overview: &Overview<'_>, reboot: bool) -> usize {
     rows(overview, reboot).into_iter().flatten().count()
 }
 
-/// The rows the status shows, in their order.
 fn rows(overview: &Overview<'_>, reboot: bool) -> [Option<Row>; 9] {
     [
         (overview.updates > 0).then_some(Row::Updates),

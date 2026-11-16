@@ -26,9 +26,7 @@ pub const DUMP_URL: &str = "https://aur.archlinux.org/packages-meta-ext-v1.json.
 
 pub const PACKAGES_PAGE: &str = "https://aur.archlinux.org/packages/";
 
-/// How long a download attempt, failed or not, blocks the next one. The
-/// AUR builds the dump once a day, and a failing client must not ask
-/// again and again.
+/// The AUR builds the dump once a day, and a failing client must not retry in a loop.
 pub const REFRESH_EVERY: Duration = Duration::from_hours(24);
 
 pub trait AurSource: Send + Sync {

@@ -177,7 +177,6 @@ impl App {
     }
 
     /// [`Self::run_at_once`] for a plan whose start `owner` waits for.
-    /// Returns whether `plan` was sent.
     pub(super) fn run_owned(&mut self, plan: Plan, owner: Owner) -> bool {
         let sent = self.run_unseen(plan, owner);
         if sent {
@@ -189,7 +188,6 @@ impl App {
 
     /// Runs `plan` past the queue with the Console closed, for a page that
     /// shows the outcome itself and waits for the start as `owner`.
-    /// Returns whether `plan` was sent.
     pub(super) fn run_unseen(&mut self, plan: Plan, owner: Owner) -> bool {
         let Some(id) = self.send_plan(plan) else {
             return false;

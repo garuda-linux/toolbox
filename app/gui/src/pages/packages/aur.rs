@@ -63,7 +63,6 @@ fn under_chips(ui: &mut Ui, add: impl FnOnce(&mut Ui)) {
     super::text_line(ui, add);
 }
 
-/// The AUR chip's list: the copy's state, the rows or why there are none.
 pub fn body(
     page: &mut PackagesPage,
     ui: &mut Ui,

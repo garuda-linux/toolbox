@@ -73,8 +73,7 @@ impl RawUserJson {
     }
 }
 
-/// The units restarted after the edit, only for an edit of a user config
-/// (restarting is no part of any other check's change).
+/// Units restarted after the edit, which only a user config edit may name.
 pub fn restart_units(names: Vec<String>, edits_config: bool) -> Result<Vec<UnitName>, Problem> {
     if names.is_empty() {
         return Ok(Vec::new());

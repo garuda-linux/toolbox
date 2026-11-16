@@ -22,6 +22,7 @@ use toolbox_plan::{ConfigFilePath, Editor, FetchAnswer, FetchRefusal, HomePath};
 use toolbox_state::configs::{ConfigEntryLocation, ConfigEntrySpec, Found, Link, Listing};
 
 use crate::pkexec::{self, HelperError, HelperRun};
+use crate::user_configs::env_home;
 
 pub trait HelperFetch: Send + Sync {
     /// The command that prints one [`FetchAnswer`] line for `path`.
@@ -80,9 +81,7 @@ impl<H> SystemConfigFiles<H> {
     pub fn system(helper: H) -> Self {
         Self {
             root: PathBuf::from("/"),
-            home: std::env::var_os("HOME")
-                .filter(|home| !home.is_empty())
-                .map(PathBuf::from),
+            home: env_home(),
             helper,
         }
     }
@@ -181,9 +180,8 @@ fn home_entry(path: &Path, relative: &HomePath, directory: bool) -> Option<Found
     Some(Found::Folder(names))
 }
 
-/// What the user cannot even see (a folder on the way that only root may enter)
-/// counts as missing: the page shows existing files only, and existence cannot be told.
-/// A symlink is shown with where it leads, as the helper would follow it: the same code looks.
+/// A path the user cannot see counts as missing, as existence cannot be told.
+/// A symlink shows where it leads, the way the helper follows it.
 fn root_entry(root: &Path, path: &ConfigFilePath, directory: bool) -> Option<Found> {
     match inspect(root, path) {
         toolbox_exec::Found::File { link } => Some(Found::File {

@@ -14,7 +14,7 @@ use toolbox_gui::App;
 use toolbox_gui::packages::SampleAur;
 
 use crate::common::{SMALLEST, TALL, WIDTH};
-use crate::packages::{app_with, app_with_aur, listed};
+use crate::packages::{app_with, app_with_aur, listed, open_package};
 use crate::system::{settle, step_until};
 
 /// The sample AUR whose last refresh failed.
@@ -33,18 +33,6 @@ fn aur_list(harness: &mut Harness<'static, App>) {
     harness.get_by_role_and_label(Role::Button, "AUR").click();
     step_until(harness, "the AUR list", |harness| {
         listed(harness, "paru-bin")
-    });
-    settle(harness);
-}
-
-fn open_paru(harness: &mut Harness<'static, App>) {
-    harness
-        .get_by_role_and_label(Role::ListItem, "paru-bin")
-        .click();
-    step_until(harness, "the AUR details", |harness| {
-        harness
-            .query_by_label("https://aur.archlinux.org/packages/paru-bin")
-            .is_some()
     });
     settle(harness);
 }
@@ -119,7 +107,11 @@ fn snapshots() {
         harness.key_press(egui::Key::Escape);
         settle(harness);
 
-        open_paru(harness);
+        open_package(
+            harness,
+            "paru-bin",
+            "https://aur.archlinux.org/packages/paru-bin",
+        );
         results.add(harness.try_snapshot(format!("packages/aur_detail_{name}")));
     }
 
@@ -148,7 +140,11 @@ fn snapshots() {
     results.add(harness.try_snapshot("packages/aur_install_narrow"));
     harness.key_press(egui::Key::Escape);
     settle(harness);
-    open_paru(harness);
+    open_package(
+        harness,
+        "paru-bin",
+        "https://aur.archlinux.org/packages/paru-bin",
+    );
     results.add(harness.try_snapshot("packages/aur_detail_narrow"));
 
     harness.set_size(egui::vec2(WIDTH, TALL));

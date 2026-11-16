@@ -292,8 +292,6 @@ fn parses_alone(section: &str, key: &str, value: &toml::Value) -> bool {
     toml::Value::Table(one).try_into::<Settings>().is_ok()
 }
 
-/// Two or three letters with one optional `-` or `_` part of two to
-/// eight letters or digits, such as `de` or `pt_BR`.
 fn is_language(code: &str) -> bool {
     let (primary, sub) = match code.split_once(['-', '_']) {
         Some((_, rest)) if rest.contains(['-', '_']) => return false,

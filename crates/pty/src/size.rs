@@ -42,8 +42,8 @@ pub fn clamped(size: TerminalSize) -> TerminalSize {
     }
 }
 
-/// `size` as the kernel's window size. A plain function because the orphan
-/// rule forbids `From` between two foreign types.
+/// A plain function because the orphan rule forbids `From` between two
+/// foreign types.
 pub const fn winsize(size: TerminalSize) -> Winsize {
     Winsize {
         ws_row: size.rows,

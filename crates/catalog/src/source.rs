@@ -72,7 +72,15 @@ pub fn claim_id(id: &str, seen: &mut BTreeSet<String>) -> Result<(), Problem> {
     Ok(())
 }
 
-pub fn check_section(title: &str, icon: &str, entries: usize) -> Result<(), Problem> {
+pub fn claim_section(
+    id: &str,
+    title: &str,
+    icon: &str,
+    entries: usize,
+    seen: &mut BTreeSet<String>,
+) -> Result<(), Problem> {
+    claim_id(id, seen)?;
+
     if is_blank(title) {
         return Err(Problem::EmptyTitle);
     }

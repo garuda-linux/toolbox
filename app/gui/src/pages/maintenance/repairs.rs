@@ -41,10 +41,24 @@ impl Asked {
             Self::Repair(repair) => MaintenanceCommand::RunRepair(repair),
         }
     }
+
+    const fn asks_first(self) -> bool {
+        match self {
+            Self::Operation(operation) => operation.asks_first(),
+            Self::Repair(repair) => repair.asks_first(),
+        }
+    }
+
+    pub(super) fn start(self, context: &PageContext<'_>, asking: &mut Option<Self>) {
+        if self.asks_first() {
+            *asking = Some(self);
+        } else {
+            context.commands.send(self.command());
+        }
+    }
 }
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
-    let ctx = ui.ctx().clone();
     heading(ui, icons::GAMES_SOLVE, "maintenance-repairs");
     let Some(programs) = context.home.programs else {
         super::waiting(ui, "maintenance-repairs", Repair::ALL.len());
@@ -57,19 +71,14 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
         for (index, repair) in programs.repairs.iter().enumerate() {
             card_row(ui, index == 0, |ui| {
                 if repair_row(ui, context, repair) {
-                    let asked = Asked::Repair(repair.repair);
-                    if repair.repair.asks_first() {
-                        *asking = Some(asked);
-                    } else {
-                        context.commands.send(asked.command());
-                    }
+                    Asked::Repair(repair.repair).start(context, asking);
                 }
             });
         }
     });
 
     if let Some(asked) = *asking {
-        ask(&ctx, context, asked, asking);
+        ask(ui.ctx(), context, asked, asking);
     }
 }
 
@@ -81,13 +90,12 @@ fn missing_banner(ui: &mut Ui, context: &PageContext<'_>, rows: &[RepairRow]) {
         return;
     }
 
-    let ctx = ui.ctx().clone();
     let names: Vec<&str> = wanted.into_iter().map(PackageName::as_str).collect();
     let packages = names.join(", ");
     let count = names.len().to_string();
     let args = [("packages", packages.as_str()), ("count", count.as_str())];
-    let text = i18n::text_with(&ctx, "maintenance-repairs-missing", &args);
-    let install = i18n::text_with(&ctx, "maintenance-install-missing", &args);
+    let text = i18n::text_with(ui.ctx(), "maintenance-repairs-missing", &args);
+    let install = i18n::text_with(ui.ctx(), "maintenance-install-missing", &args);
     let action = (!context.busy).then_some(&*install);
     if banner(ui, Tone::Neutral, &text, action.as_slice()).value == Some(0) {
         context.commands.send(MaintenanceCommand::InstallMissing);
@@ -105,7 +113,6 @@ fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> boo
     // The whole row greys, icon and words too, not its button alone.
     ui.enabled_ui(repair.available, |ui| {
         row(ui, repair_icon(repair.repair), &id, &detail, |ui| {
-            // A greyed Run says what brings it.
             if !repair.available {
                 let needs = i18n::text_with(
                     ui.ctx(),

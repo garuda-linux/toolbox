@@ -145,8 +145,7 @@ impl TogglePage {
     }
 
     /// The notices and the rows of the section `id` alone, without its
-    /// heading, which the wizard's step title replaces. Returns whether it
-    /// had rows.
+    /// heading, which the wizard's step title replaces.
     pub fn show_section(&mut self, ui: &mut Ui, context: &PageContext<'_>, id: &str) -> bool {
         let listed = self.listed(ui, context, "");
         self.notices(ui, context, listed.unknown);
@@ -248,7 +247,6 @@ impl TogglePage {
                 .chain(sections)
                 .collect();
 
-        // A second click on the chosen section shows them all again.
         let current = self.section.as_deref();
         if let Some(picked) = counted_chips(ui, "toggles-sections", &options, current).value {
             self.section = picked
@@ -302,7 +300,6 @@ impl TogglePage {
     }
 }
 
-/// The Setup Assistant's steps: each catalog section's id and title.
 #[derive(Clone, Debug, Default)]
 pub struct Steps(Arc<Listed>);
 
@@ -311,7 +308,6 @@ impl Steps {
         self.0.chips.is_empty()
     }
 
-    /// Each step's id and title, in order.
     pub fn pairs(&self) -> impl Iterator<Item = (&str, &str)> {
         self.0
             .chips

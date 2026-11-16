@@ -104,9 +104,7 @@ impl ToggleEntry {
         self.icon.as_deref()
     }
 
-    /// The freedesktop name of the glyph the entry's row shows in place of
-    /// a picture, so a catalog of system parts reads as one set rather than
-    /// a mix of app pictures and letter tiles.
+    /// The freedesktop glyph the row shows in place of a picture, so system parts read as one set.
     pub fn glyph(&self) -> Option<&str> {
         self.glyph.as_deref()
     }

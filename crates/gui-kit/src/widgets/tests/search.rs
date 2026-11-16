@@ -4,7 +4,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::{SearchTexts, request_search_focus, search_field, text_field};
-use crate::testing::{harness, lines_in};
+use crate::testing::{click_at, harness, lines_in};
 use crate::theme::PILL_HEIGHT;
 
 const TEXTS: SearchTexts<'static> = SearchTexts {
@@ -155,21 +155,6 @@ fn pill() -> (Harness<'static, (String, Rect)>, Rect) {
     harness.run();
     let rect = harness.state().1;
     (harness, rect)
-}
-
-fn click_at(harness: &mut Harness<'_, (String, Rect)>, at: egui::Pos2) {
-    let press = |pressed| egui::Event::PointerButton {
-        pos: at,
-        button: egui::PointerButton::Primary,
-        pressed,
-        modifiers: egui::Modifiers::NONE,
-    };
-
-    harness.event(egui::Event::PointerMoved(at));
-    harness.event(press(true));
-    harness.step();
-    harness.event(press(false));
-    harness.run();
 }
 
 #[test]

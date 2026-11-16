@@ -38,7 +38,6 @@ const CRITICAL: [&str; 11] = [
     "systemd-logind.service",
 ];
 
-/// The page starts with what runs.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Filter {
     pub search: String,

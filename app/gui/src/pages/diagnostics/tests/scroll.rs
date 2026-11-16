@@ -1,7 +1,7 @@
 use egui_kittest::kittest::Queryable as _;
-use toolbox_services::diagnostics::page::{Page, State};
+use toolbox_services::diagnostics::page::Page;
 
-use super::page;
+use super::{page, plain_report};
 
 /// The folded rows' line above the report.
 const COLLECT: &str = "Collect another report";
@@ -13,13 +13,7 @@ fn long_report() -> Page {
         text
     });
 
-    Page {
-        state: State::Report,
-        selection: "dmesg".to_owned(),
-        report: text.clone(),
-        raw: text,
-        ..Page::default()
-    }
+    plain_report(text)
 }
 
 fn wheel_at(harness: &mut super::Shown, at: egui::Pos2) {

@@ -1,29 +1,11 @@
-use std::time::{Duration, SystemTime};
-
 use toolbox_plan::PackageName;
 use toolbox_system::{
-    DiskSpace, Facts, HealthIssue, HealthLevel, PackageCount, PendingUpdate, ProbeError, Status,
+    DiskSpace, Facts, HealthIssue, HealthLevel, PackageCount, PendingUpdate, ProbeError,
 };
 
 use super::{Figure, Standing, Stat, Tile, tiles};
 use crate::home::Overview;
-
-const DAY: Duration = Duration::from_hours(24);
-const GB: u64 = 1_000_000_000;
-
-fn now() -> SystemTime {
-    SystemTime::UNIX_EPOCH + DAY * 20_000
-}
-
-fn quiet() -> Status {
-    Status {
-        updates: Ok(Vec::new()),
-        aur_updates: Err(ProbeError::Unavailable),
-        merges: Ok(Vec::new()),
-        last_update: Ok(Some(now() - DAY * 2)),
-        health: Ok(Vec::new()),
-    }
-}
+use crate::home::tests::{DAY, GB, now, quiet};
 
 fn facts(free: u64) -> Facts {
     Facts {

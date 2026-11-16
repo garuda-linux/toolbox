@@ -26,11 +26,8 @@ pub enum Key {
     Home,
     /// Line end, follows the application cursor mode like the arrows.
     End,
-    /// Sends `ESC [ 5 ~`.
     PageUp,
-    /// Sends `ESC [ 6 ~`.
     PageDown,
-    /// Sends `ESC [ 2 ~`.
     Insert,
     Delete,
     /// F1 to F12. Other numbers send nothing.

@@ -115,8 +115,7 @@ impl Activation {
         })
     }
 
-    /// Takes the tokens out of `platform_data`. A value that is no string
-    /// arrives as `None` and is ignored like an unknown key.
+    /// A value that is no string arrives as `None` and is ignored like an unknown key.
     #[must_use = "returns the new value, the old one stays as it was"]
     pub fn with_platform_data<'a>(
         mut self,

@@ -35,17 +35,15 @@ impl Paths {
     where
         F: Fn(&str) -> Option<OsString>,
     {
-        let named_home = lookup("HOME")
-            .map(PathBuf::from)
-            .filter(|path| path.is_absolute());
-
-        let home_named = named_home.is_some();
-        let home = named_home.unwrap_or_else(|| PathBuf::from("/root"));
         let named = |variable: &str| {
             lookup(variable)
                 .map(PathBuf::from)
                 .filter(|path| path.is_absolute())
         };
+
+        let named_home = named("HOME");
+        let home_named = named_home.is_some();
+        let home = named_home.unwrap_or_else(|| PathBuf::from("/root"));
 
         let base =
             |variable: &str, fallback: &str| named(variable).unwrap_or_else(|| home.join(fallback));

@@ -19,7 +19,6 @@ const PIPE_WIDTH: usize = 80;
 
 #[derive(Clone, Debug, Serialize)]
 struct GuideRow {
-    /// The page's name for `guide show`: its file without `.md`.
     #[serde(rename = "id")]
     page: String,
     #[serde(rename = "name")]

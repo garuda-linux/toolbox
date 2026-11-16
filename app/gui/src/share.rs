@@ -50,7 +50,6 @@ impl ShareLink {
     }
 
     /// Takes the notes that came since the last frame into `upload`.
-    /// Returns whether a link arrived.
     pub fn take(&self, upload: &mut Upload) -> bool {
         // Every note counts, so no early stop at the first link.
         let mut done = false;

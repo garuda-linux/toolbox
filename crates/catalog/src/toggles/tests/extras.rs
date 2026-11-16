@@ -122,7 +122,8 @@ fn conflicts_names_the_entries_turned_off() {
     let catalog = ToggleCatalog::parse(&text, "test.toml").unwrap();
 
     assert_eq!(catalog.entry("fresh").unwrap().conflicts(), ["still"]);
-    assert_eq!(catalog.entry("still").unwrap().conflicts(), [""; 0]);
+    let none: [&str; 0] = [];
+    assert_eq!(catalog.entry("still").unwrap().conflicts(), none);
 }
 
 #[test]

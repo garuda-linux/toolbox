@@ -36,15 +36,19 @@ fn a_moment(harness: &mut Harness<'static, App>) {
     }
 }
 
+fn assert_open_in_place(harness: &Harness<'static, App>) {
+    let open = pane(harness, "Console").expect("open");
+    assert!(open.height() >= SHEET, "{open:?}");
+    assert!(open.bottom() <= HEIGHT + 0.5, "in place: {open:?}");
+}
+
 #[test]
 fn ctrl_j_opens_and_closes_the_console_at_once() {
     let mut harness = app();
 
     harness.key_press_modifiers(Modifiers::COMMAND, Key::J);
     a_moment(&mut harness);
-    let open = pane(&harness, "Console").expect("open");
-    assert!(open.height() >= SHEET, "{open:?}");
-    assert!(open.bottom() <= HEIGHT + 0.5, "in place: {open:?}");
+    assert_open_in_place(&harness);
 
     harness.key_press_modifiers(Modifiers::COMMAND, Key::J);
     a_moment(&mut harness);
@@ -149,9 +153,7 @@ fn enter_in_the_palette_opens_the_console_at_once() {
     harness.key_press(Key::Enter);
     a_moment(&mut harness);
 
-    let open = pane(&harness, "Console").expect("open");
-    assert!(open.height() >= SHEET, "{open:?}");
-    assert!(open.bottom() <= HEIGHT + 0.5, "in place: {open:?}");
+    assert_open_in_place(&harness);
 }
 
 fn open_top(harness: &mut Harness<'static, App>) -> f32 {
@@ -203,9 +205,7 @@ fn with_less_motion_the_console_opens_at_once() {
     open_from_the_palette(&mut harness);
     a_moment(&mut harness);
 
-    let open = pane(&harness, "Console").expect("open");
-    assert!(open.height() >= SHEET, "{open:?}");
-    assert!(open.bottom() <= HEIGHT + 0.5, "in place: {open:?}");
+    assert_open_in_place(&harness);
 }
 
 #[test]

@@ -102,7 +102,7 @@ impl Secrets {
         Ok(secrets)
     }
 
-    /// The key as the link's fragment (base58, Bitcoin's alphabet).
+    /// The key as the link's fragment, base58 with Bitcoin's alphabet.
     pub(crate) fn fragment(&self) -> String {
         bs58::encode(self.key).into_string()
     }
@@ -120,10 +120,12 @@ pub(crate) fn seal(text: &str, secrets: &Secrets) -> Result<PasteRequest, SealEr
     encrypt(&compress(text)?, secrets)
 }
 
-/// `{"paste": text}` as raw deflate.
+fn json_bytes(value: &impl Serialize) -> Result<Vec<u8>, SealError> {
+    serde_json::to_vec(value).map_err(|_unserializable| SealError::Encryption)
+}
+
 fn compress(text: &str) -> Result<Vec<u8>, SealError> {
-    let content = serde_json::to_vec(&Content { paste: text })
-        .map_err(|_unserializable| SealError::Encryption)?;
+    let content = json_bytes(&Content { paste: text })?;
 
     Ok(miniz_oxide::deflate::compress_to_vec(
         &content,
@@ -131,8 +133,7 @@ fn compress(text: &str) -> Result<Vec<u8>, SealError> {
     ))
 }
 
-/// Encrypts the compressed content. Apart from the secrets the result
-/// depends on nothing, so a known answer can be compared byte for byte.
+/// Deterministic given the secrets, so a known answer can be compared byte for byte.
 fn encrypt(compressed: &[u8], secrets: &Secrets) -> Result<PasteRequest, SealError> {
     let adata = Adata(
         Spec(
@@ -150,8 +151,7 @@ fn encrypt(compressed: &[u8], secrets: &Secrets) -> Result<PasteRequest, SealErr
         0,
     );
 
-    let authenticated =
-        serde_json::to_vec(&adata).map_err(|_unserializable| SealError::Encryption)?;
+    let authenticated = json_bytes(&adata)?;
 
     let derived =
         pbkdf2::pbkdf2_hmac_array::<Sha256, KEY_BYTES>(&secrets.key, &secrets.salt, ITERATIONS);

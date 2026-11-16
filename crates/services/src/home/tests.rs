@@ -8,14 +8,14 @@ use toolbox_system::{
 
 use super::{Check, Overview, Pending};
 
-const DAY: Duration = Duration::from_hours(24);
-const GB: u64 = 1_000_000_000;
+pub(super) const DAY: Duration = Duration::from_hours(24);
+pub(super) const GB: u64 = 1_000_000_000;
 
-fn now() -> SystemTime {
+pub(super) fn now() -> SystemTime {
     SystemTime::UNIX_EPOCH + DAY * 20_000
 }
 
-fn quiet() -> Status {
+pub(super) fn quiet() -> Status {
     Status {
         updates: Ok(Vec::new()),
         aur_updates: Err(ProbeError::Unavailable),

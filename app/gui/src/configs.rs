@@ -57,7 +57,6 @@ pub struct Configs {
     jobs: Option<Jobs>,
 }
 
-/// The service's own code: an open, an edit or a view it refused.
 pub type ConfigsRefusal = crate::refused::Refused<Refusal>;
 
 impl Default for Configs {
@@ -324,7 +323,6 @@ impl Configs {
 
 #[cfg(any(test, feature = "testing"))]
 impl Configs {
-    /// The state a page test shows, without reads.
     pub fn showing(catalog: ConfigFileCatalog, listing: Listing) -> Self {
         Self {
             catalog: Ok(catalog),

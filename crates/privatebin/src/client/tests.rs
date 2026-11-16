@@ -15,11 +15,15 @@ struct Fake {
 }
 
 impl Fake {
-    fn answering(answer: &str) -> Self {
+    fn new(answer: Result<String, RequestError>) -> Self {
         Self {
-            answer: Ok(answer.to_owned()),
+            answer,
             requests: Mutex::new(Vec::new()),
         }
+    }
+
+    fn answering(answer: &str) -> Self {
+        Self::new(Ok(answer.to_owned()))
     }
 
     fn requests(&self) -> Vec<(String, String)> {
@@ -126,10 +130,7 @@ fn a_refusal_carries_the_servers_message_as_plain_text() {
 /// A proxy in front of PrivateBin answers a too large body with 413.
 #[test]
 fn an_error_status_is_a_refusal() {
-    let rejecting = Fake {
-        answer: Err(RequestError::Status(413)),
-        requests: Mutex::new(Vec::new()),
-    };
+    let rejecting = Fake::new(Err(RequestError::Status(413)));
 
     assert_eq!(
         upload_with(&rejecting, "report", &secrets()),
@@ -188,10 +189,7 @@ fn the_servers_url_field_is_ignored() {
 
 #[test]
 fn no_answer_and_a_strange_answer_are_told_apart() {
-    let offline = Fake {
-        answer: Err(RequestError::NoAnswer("no route to host".to_owned())),
-        requests: Mutex::new(Vec::new()),
-    };
+    let offline = Fake::new(Err(RequestError::NoAnswer("no route to host".to_owned())));
 
     assert_eq!(
         upload_with(&offline, "report", &secrets()),

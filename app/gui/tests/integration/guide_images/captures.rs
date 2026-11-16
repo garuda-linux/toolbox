@@ -14,7 +14,6 @@ use toolbox_gui::{App, Setup};
 use crate::common::{HEIGHT, TALL, installing, launch_in, open_tab, pane, shared_runtime, window};
 use crate::look::look_for;
 
-/// Every picture the guide shows.
 pub const ALL: [Capture; 24] = [
     Capture {
         name: "about",

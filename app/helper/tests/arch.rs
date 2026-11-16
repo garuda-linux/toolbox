@@ -210,7 +210,6 @@ fn orphans_are_found_and_removed() -> TestResult {
         .status()?;
     assert!(installed("toolbox-test-dep"));
 
-    // pacman lists the orphans and asks before it removes them.
     assert_eq!(
         apply_answering(
             vec![RootAction::RemoveOrphans],

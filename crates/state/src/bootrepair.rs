@@ -134,20 +134,17 @@ impl Inventory {
     /// The EFI system partition a reinstall for `system` would take
     /// first: one on a disk of the system, else the first free one.
     pub fn usual_esp(&self, system: &System) -> Option<&Esp> {
-        let free = || self.esps.iter().filter(|esp| !esp.in_use);
-
-        free()
-            .find(|esp| system.disks.contains(&esp.disk))
-            .or_else(|| free().next())
+        usual(&self.esps, &system.disks, |esp| esp.in_use, |esp| &esp.disk)
     }
 
     /// The disk a BIOS reinstall for `system` would take first.
     pub fn usual_disk(&self, system: &System) -> Option<&Disk> {
-        let free = || self.disks.iter().filter(|disk| !disk.in_use);
-
-        free()
-            .find(|disk| system.disks.contains(&disk.device))
-            .or_else(|| free().next())
+        usual(
+            &self.disks,
+            &system.disks,
+            |disk| disk.in_use,
+            |disk| &disk.device,
+        )
     }
 }
 
@@ -156,4 +153,17 @@ pub struct RepairFacts {
     pub firmware: Firmware,
     pub missing: Vec<Tool>,
     pub inventory: Inventory,
+}
+
+fn usual<'a, T>(
+    candidates: &'a [T],
+    system_disks: &[DiskDevice],
+    in_use: impl Fn(&T) -> bool,
+    disk: impl Fn(&T) -> &DiskDevice,
+) -> Option<&'a T> {
+    let free = || candidates.iter().filter(|candidate| !in_use(*candidate));
+
+    free()
+        .find(|candidate| system_disks.contains(disk(*candidate)))
+        .or_else(|| free().next())
 }

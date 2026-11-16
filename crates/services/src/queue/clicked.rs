@@ -17,9 +17,7 @@ impl Queue {
         let before = self.changes.to_saved();
         self.changes = changes;
 
-        if self.changes.to_saved() != before {
-            self.save();
-        }
+        self.save_if_changed(&before);
     }
 }
 

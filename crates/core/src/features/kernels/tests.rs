@@ -7,29 +7,15 @@ mod running;
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use toolbox_plan::KernelRelease;
 use toolbox_state::packages::PackageGraph;
 
 use super::{
-    Kernel, KernelReleases, LinuxPackages, Listed, LocalPackage, Refusal, RepoPackage, kernels,
-    toggle,
+    Kernel, KernelReleases, LinuxPackages, Listed, LocalPackage, Refusal, kernels, toggle,
 };
 use crate::domains::{InstalledPackages, Packages};
 use crate::test_support::package;
+use crate::testing::features::kernels::{release, repo};
 use crate::{ChangeSet, Snapshot, Toggle};
-
-fn release(name: &str) -> KernelRelease {
-    KernelRelease::new(name).unwrap()
-}
-
-fn repo(repo: &str, name: &str, version: &str) -> RepoPackage {
-    RepoPackage {
-        repo: repo.to_owned(),
-        name: package(name),
-        version: version.to_owned(),
-        description: format!("About {name}"),
-    }
-}
 
 fn local(name: &str, version: &str) -> LocalPackage {
     LocalPackage {

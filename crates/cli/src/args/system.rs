@@ -109,7 +109,6 @@ pub struct BootSet {
     pub confirm: Confirm,
 }
 
-/// A setting of the Boot Options page.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub enum BootKey {
     /// The entry that boots by default, as `boot entries` prints it.
@@ -232,7 +231,6 @@ pub struct SettingSet {
     pub value: String,
 }
 
-/// A setting of the app.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub enum SettingKey {
     /// A language code such as `de`, or `system`.

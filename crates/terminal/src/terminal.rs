@@ -37,7 +37,6 @@ pub struct CellPoint {
 }
 
 impl CellPoint {
-    /// `self` and `other` in reading order, the earlier first.
     pub fn in_order(self, other: Self) -> (Self, Self) {
         if self <= other {
             (self, other)
@@ -140,8 +139,7 @@ impl Terminal {
         self.feed(text.as_bytes());
     }
 
-    /// Changes the size. The program must be told as well (the pty's
-    /// resize or `Answer::Resize`).
+    /// The program must be told too, with the pty's resize or `Answer::Resize`.
     pub fn resize(&mut self, size: TerminalSize) {
         if size == self.size {
             return;
@@ -277,9 +275,12 @@ impl Terminal {
     fn engine_line(&self, line: usize) -> Line {
         let line = line.min(self.total_lines().saturating_sub(1));
         let top = i32::try_from(line).unwrap_or(i32::MAX);
-        let history = i32::try_from(self.history_len()).unwrap_or(i32::MAX);
 
-        Line(top.saturating_sub(history))
+        Line(top.saturating_sub(self.history_offset()))
+    }
+
+    fn history_offset(&self) -> i32 {
+        i32::try_from(self.history_len()).unwrap_or(i32::MAX)
     }
 
     fn engine_point(&self, point: CellPoint) -> Point {

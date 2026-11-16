@@ -138,24 +138,26 @@ pub fn type_into(harness: &mut Harness<'static, App>, field: &str, text: &str) {
     harness.run();
 }
 
-pub fn drag(harness: &mut Harness<'static, App>, from: Pos2, to: Pos2) {
-    let button = |pos, pressed| Event::PointerButton {
+pub fn pointer_button(pos: Pos2, pressed: bool) -> Event {
+    Event::PointerButton {
         pos,
         button: PointerButton::Primary,
         pressed,
         modifiers: Modifiers::NONE,
-    };
+    }
+}
 
+pub fn drag(harness: &mut Harness<'static, App>, from: Pos2, to: Pos2) {
     harness.event(Event::PointerMoved(from));
     harness.step();
-    harness.event(button(from, true));
+    harness.event(pointer_button(from, true));
     harness.step();
     for share in 1..=10_u8 {
         harness.event(Event::PointerMoved(from.lerp(to, f32::from(share) / 10.0)));
         harness.step();
     }
 
-    harness.event(button(to, false));
+    harness.event(pointer_button(to, false));
     harness.step();
 }
 

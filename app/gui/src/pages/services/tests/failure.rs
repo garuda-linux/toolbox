@@ -101,7 +101,6 @@ fn a_user_list_that_failed_names_the_user_manager() {
     );
 }
 
-/// Chips, search and sort narrow a list, so they show off until one exists.
 #[test]
 fn without_a_list_no_chip_search_or_sort_is_on() {
     for listing in [UnitListing::NotLoaded, refused()] {

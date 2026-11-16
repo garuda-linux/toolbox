@@ -123,9 +123,8 @@ impl Cache {
     fn refresh(&self, now: i64, with_copy: bool) -> Result<Refreshed, AurError> {
         let mut meta = self.meta();
 
-        // A clock set wrong forward once would block every download until
-        // it passed that time. Counting the attempt as now waits one day
-        // from the present, never longer.
+        // A clock once set far ahead would block downloads until that time
+        // passed, so the attempt counts as now.
         if meta.last_attempt.is_some_and(|last| last > now) {
             meta.last_attempt = Some(now);
             self.write(META_FILE, &meta)?;

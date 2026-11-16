@@ -16,7 +16,6 @@ use parking_lot::Mutex;
 use crate::format::{Style, format_record};
 use crate::terminal::echo;
 
-/// A log file is rotated once it grows past this size.
 const MAX_SIZE: u64 = 5 * 1024 * 1024;
 /// Rotated files kept next to the current one (`.1` is the newest).
 const KEEP: u32 = 3;
@@ -43,7 +42,6 @@ struct State {
     /// `None` until `open_file`: lines are buffered meanwhile.
     path: Option<PathBuf>,
     sink: Option<Sink>,
-    /// When the last open failed.
     failed: Option<Instant>,
     buffered: VecDeque<String>,
     /// No file will ever open, so nothing is buffered either.
@@ -92,8 +90,6 @@ impl FileLogger {
         state.buffered = VecDeque::new();
     }
 
-    /// Opens the file and writes the buffered lines first. Later lines go
-    /// straight to the file.
     pub fn open_file(&self, path: &Path) {
         let mut state = self.state.lock();
 
@@ -251,17 +247,17 @@ fn rotate(path: &Path) {
     };
 
     for n in (1..KEEP).rev() {
-        if let Err(error) = fs::rename(numbered(n), numbered(n + 1))
-            && error.kind() != io::ErrorKind::NotFound
-        {
-            report(&format!("cannot rotate {}: {error}", numbered(n).display()));
-        }
+        rename_history(&numbered(n), &numbered(n + 1));
     }
 
-    if let Err(error) = fs::rename(path, numbered(1))
+    rename_history(path, &numbered(1));
+}
+
+fn rename_history(from: &Path, to: &Path) {
+    if let Err(error) = fs::rename(from, to)
         && error.kind() != io::ErrorKind::NotFound
     {
-        report(&format!("cannot rotate {}: {error}", path.display()));
+        report(&format!("cannot rotate {}: {error}", from.display()));
     }
 }
 

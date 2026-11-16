@@ -12,12 +12,11 @@ use toolbox_plan::{DiskDevice, PartitionDevice, RepairRoot, VolumeDevice};
 
 use super::{Disk, Encryption, Esp, Inventory, System};
 
-/// What `lsblk` is asked for.
+/// The `lsblk` call that reads the disk layout.
 ///
-/// `--tree` nests partitions and mapped devices below their disk, which
-/// the flat list of `--output` alone does not. `--bytes`, because its own
-/// short sizes (`465.8G`) are in English and the page words sizes in the
-/// reader's language.
+/// `--tree` nests partitions and mapped devices below their disk, which the
+/// flat `--output` list does not. `--bytes`, because its own short sizes
+/// (`465.8G`) are in English and the page words sizes in the reader's language.
 pub const LSBLK_ARGUMENTS: [&str; 5] = [
     "--json",
     "--bytes",

@@ -28,8 +28,6 @@ struct NotStarted {
     source: std::io::Error,
 }
 
-/// What the helper's stderr said, and the launcher that reads a refusal
-/// in it.
 struct Complaints<'launcher> {
     launcher: &'launcher dyn Launcher,
     words: Option<JoinHandle<String>>,

@@ -17,7 +17,7 @@ use super::settings::FileChange;
 
 /// New files get what the user's umask leaves of this, like a file saved
 /// by an editor.
-const NEW_FILE: Replace<'static> = Replace::new(Permissions::Umask(0o666));
+pub(super) const NEW_FILE: Replace<'static> = Replace::new(Permissions::Umask(0o666));
 
 /// # Errors
 ///

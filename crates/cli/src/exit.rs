@@ -1,9 +1,8 @@
 //! The exit codes scripts can rely on.
 //!
 //! They are part of the interface: a code once given keeps its meaning, a
-//! new case gets a new code. 7 and 10 are retired: a change that would do
-//! nothing ends with 0 and a signal with 128 and its number, as a shell
-//! reports it.
+//! new case gets a new code. 7 and 10 are never given again, and a signal
+//! ends with 128 and its number, as a shell reports it.
 
 #[cfg(test)]
 mod tests;

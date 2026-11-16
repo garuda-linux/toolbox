@@ -26,8 +26,7 @@ pub const GARUDA_WIKI: &str = "https://wiki.garudalinux.org/";
 pub const ARCH_WIKI: &str = "https://wiki.archlinux.org/";
 const WEBSITE: &str = "https://garudalinux.org";
 
-/// The Help card: text id, icon and address. The forum is under
-/// Community.
+/// The forum is under Community.
 const HELP: [(&str, Icon, &str); 3] = [
     ("about-help-wiki", icons::DOCUMENTATION, GARUDA_WIKI),
     ("about-help-arch-wiki", icons::DOCUMENTATION, ARCH_WIKI),

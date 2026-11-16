@@ -1,13 +1,14 @@
 //! Every page that removes packages asks the kernel guard first.
 
 use super::super::{LinuxPackages, Refusal, RunningKernel, may_remove};
-use super::{local, repo};
+use super::local;
 use crate::domains::{InstalledPackages, Packages};
 use crate::test_support::{package, packages};
+use crate::testing::features::kernels::repo;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 /// `linux` runs. `linux-lts` is installed beside it.
-fn two_kernels() -> Snapshot {
+pub(super) fn two_kernels() -> Snapshot {
     let names = ["linux", "linux-headers", "linux-lts", "linux-lts-headers"];
     let mut snapshot = Snapshot::default();
 

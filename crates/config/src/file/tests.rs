@@ -1,7 +1,16 @@
 use std::fs;
 use std::os::unix::fs::{PermissionsExt as _, symlink};
+use std::path::Path;
 
 use super::{write_atomic, write_private};
+
+fn is_link(path: &Path) -> bool {
+    fs::symlink_metadata(path).unwrap().file_type().is_symlink()
+}
+
+fn mode(path: &Path) -> u32 {
+    fs::metadata(path).unwrap().permissions().mode() & 0o777
+}
 
 #[test]
 fn writes_into_missing_folders_and_replaces_old_content() {
@@ -29,18 +38,12 @@ fn keeps_the_destination_mode_and_uses_0600_for_new_files() {
     write_atomic(&kept, b"new").unwrap();
 
     assert_eq!(fs::read_to_string(&kept).unwrap(), "new");
-    assert_eq!(
-        fs::metadata(&kept).unwrap().permissions().mode() & 0o777,
-        0o640
-    );
+    assert_eq!(mode(&kept), 0o640);
 
     let fresh = dir.path().join("fresh.toml");
     write_atomic(&fresh, b"new").unwrap();
 
-    assert_eq!(
-        fs::metadata(&fresh).unwrap().permissions().mode() & 0o777,
-        0o600
-    );
+    assert_eq!(mode(&fresh), 0o600);
 }
 
 #[test]
@@ -55,12 +58,7 @@ fn a_symlinked_file_stays_a_link_and_its_target_gets_the_bytes() {
 
     write_atomic(&link, b"new").unwrap();
 
-    assert!(
-        fs::symlink_metadata(&link)
-            .unwrap()
-            .file_type()
-            .is_symlink()
-    );
+    assert!(is_link(&link));
     assert_eq!(fs::read_to_string(&real).unwrap(), "new");
 }
 
@@ -73,12 +71,7 @@ fn a_dangling_link_creates_its_target() {
 
     write_atomic(&link, b"new").unwrap();
 
-    assert!(
-        fs::symlink_metadata(&link)
-            .unwrap()
-            .file_type()
-            .is_symlink()
-    );
+    assert!(is_link(&link));
     assert_eq!(fs::read_to_string(&real).unwrap(), "new");
 }
 
@@ -127,8 +120,5 @@ fn a_private_file_is_0600_whatever_it_was() {
     write_private(&path, b"new").unwrap();
 
     assert_eq!(fs::read_to_string(&path).unwrap(), "new");
-    assert_eq!(
-        fs::metadata(&path).unwrap().permissions().mode() & 0o777,
-        0o600
-    );
+    assert_eq!(mode(&path), 0o600);
 }

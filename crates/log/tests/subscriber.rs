@@ -1,6 +1,6 @@
-//! The installed subscriber end to end, in a process of its own: the one
-//! global subscriber and `log` logger are set once here. The events name a
-//! target of ours, the test crate's own counts as a dependency.
+//! Runs in a process of its own, because the global subscriber and `log`
+//! logger can be set once per process. `toolbox_test` is ours, `wgpu_core`
+//! stands in for a dependency.
 
 use std::fs;
 

@@ -11,11 +11,10 @@ use toolbox_https::{RequestError, Rules};
 
 use crate::client::Transport;
 
-/// A report of some megabytes over a slow line still fits. A dead server
-/// does not block the page for longer.
+/// Fits a large paste on a slow line, and keeps a dead server from holding the page.
 const TIMEOUT: Duration = Duration::from_mins(2);
 
-/// The host of [`crate::client::SERVER`].
+/// Must match the host of [`crate::client::SERVER`], which a test checks.
 pub const HOST: &str = "bin.garudalinux.org";
 
 /// A paste answer is one short JSON object.

@@ -14,11 +14,9 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
 /// The shortest period, so a check never runs back to back.
 pub const MIN_MINUTES: u16 = 5;
-/// The longest period, a day.
 pub const MAX_MINUTES: u16 = 24 * PER_HOUR;
 
 const PER_HOUR: u16 = 60;
-/// The period a new install checks at, an hour.
 pub const DEFAULT_MINUTES: u16 = PER_HOUR;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -75,7 +73,6 @@ impl PartialEq for Status {
 }
 
 impl Status {
-    /// The minutes the checks run at while on, kept while they are off.
     pub const fn minutes(&self) -> u16 {
         match self.refresh {
             RefreshInterval::Minutes(minutes) => minutes,
@@ -91,7 +88,6 @@ impl Status {
         self.refresh = refresh;
     }
 
-    /// The interval of the checks turned on at the kept minutes, or off.
     pub const fn turned(&self, on: bool) -> RefreshInterval {
         if on {
             RefreshInterval::Minutes(self.minutes())

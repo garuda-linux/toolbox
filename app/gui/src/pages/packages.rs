@@ -32,7 +32,6 @@ pub struct PackagesPage {
     filter: Filter,
     /// The package the detail page shows, `None` for the list.
     open: Option<PackageName>,
-    /// The detail page shows the AUR's side of `open`.
     open_aur: bool,
     /// The packages the detail page came through, each with whether it
     /// showed its AUR side, the first one opened from the list first. Back
@@ -44,7 +43,6 @@ pub struct PackagesPage {
     history: detail::HistoryRows,
     facts: detail::FactRows,
     targets: detail::TargetRows,
-    /// The text the detail page's file list is filtered by.
     file_filter: String,
     files: detail::FileRows,
     aur_asked: bool,

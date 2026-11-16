@@ -4,11 +4,7 @@ use super::super::{
     AppsCommand, Cli, Command, DriversCommand, Group, KernelsCommand, LocalesCommand,
     NetworkCommand, PackagesCommand,
 };
-use super::parse;
-
-fn command(args: &[&str]) -> Command {
-    parse(args).unwrap().command.unwrap()
-}
+use super::command;
 
 #[test]
 fn packages_list_is_packages_search() {

@@ -13,12 +13,12 @@ mod tests;
 use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use ureq::Agent;
 /// The client's own error, the source of [`RequestError::Unreadable`].
 pub use ureq::Error as ClientError;
 use ureq::config::Config;
 use ureq::http::{HeaderName, Response, Uri};
 use ureq::tls::{RootCerts, TlsConfig, TlsProvider};
+use ureq::{Agent, RequestBuilder};
 pub use ureq::{Body, BodyReader, http};
 
 /// The only port an agent reaches.
@@ -124,10 +124,7 @@ impl Https {
         headers: &[(HeaderName, &str)],
     ) -> Result<Response<Body>, RequestError> {
         self.check_host(url)?;
-        let mut request = self.agent.get(url);
-        for (name, value) in headers {
-            request = request.header(name, *value);
-        }
+        let request = with_headers(self.agent.get(url), headers);
 
         answered(request.call())
     }
@@ -143,10 +140,7 @@ impl Https {
         body: &str,
     ) -> Result<Response<Body>, RequestError> {
         self.check_host(url)?;
-        let mut request = self.agent.post(url);
-        for (name, value) in headers {
-            request = request.header(name, *value);
-        }
+        let request = with_headers(self.agent.post(url), headers);
 
         answered(request.send(body))
     }
@@ -212,8 +206,7 @@ fn config(rules: &Rules) -> Config {
 
     let config = Agent::config_builder()
         .https_only(true)
-        // A redirect would reach a server the user was not told about.
-        // It is answered as a failure instead.
+        // A redirect could reach a server the user was not told about.
         .max_redirects(0)
         .timeout_global(Some(rules.timeout))
         .tls_config(tls);
@@ -225,8 +218,18 @@ fn config(rules: &Rules) -> Config {
     .build()
 }
 
-/// ureq hands a 3xx back as an answer when it follows no redirect. Only a
-/// 2xx counts here, so no caller reads a redirect's body as the content.
+fn with_headers<B>(
+    mut request: RequestBuilder<B>,
+    headers: &[(HeaderName, &str)],
+) -> RequestBuilder<B> {
+    for (name, value) in headers {
+        request = request.header(name, *value);
+    }
+
+    request
+}
+
+/// ureq returns a 3xx as an answer when it follows no redirect, so only 2xx counts as success.
 fn answered(result: Result<Response<Body>, ureq::Error>) -> Result<Response<Body>, RequestError> {
     let response = result.map_err(|error| from_call(&error))?;
     if response.status().is_success() {

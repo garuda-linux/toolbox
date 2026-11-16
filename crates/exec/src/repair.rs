@@ -282,7 +282,6 @@ fn below_repair_root(point: &str) -> bool {
         .is_some_and(|rest| rest.is_empty() || rest.starts_with('/'))
 }
 
-/// A folder that is not there is an answer, not a failure.
 fn absent_as_none<T>(result: io::Result<T>) -> io::Result<Option<T>> {
     match result {
         Ok(value) => Ok(Some(value)),

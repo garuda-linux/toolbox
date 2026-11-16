@@ -215,3 +215,7 @@ fn failed(what: &str) -> impl Fn(alpm::Error) -> ProbeError + '_ {
 fn description(package: &alpm::Pkg) -> String {
     toolbox_plan::text::plain(package.desc().unwrap_or_default())
 }
+
+fn size(package: &alpm::Pkg) -> u64 {
+    u64::try_from(package.isize()).unwrap_or_default()
+}

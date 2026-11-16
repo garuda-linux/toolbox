@@ -47,7 +47,6 @@ pub fn layout(
     job
 }
 
-/// The text of the piece `row` holds, without its colours.
 pub fn piece_text(runs: &[Run], row: Row) -> String {
     view::piece(runs, row.start, row.end)
         .into_iter()

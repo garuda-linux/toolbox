@@ -11,7 +11,6 @@ use crate::i18n;
 use crate::network::Network;
 use crate::pages::PageContext;
 
-/// The labels of the rows every card has.
 struct Labels {
     interface: String,
     ipv4: String,

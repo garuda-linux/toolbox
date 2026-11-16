@@ -30,7 +30,6 @@ pub struct Words<'a> {
 
 /// A setting whose control is a switch named by the row's title. A click
 /// anywhere on the row flips it too, so its target is the whole row.
-/// Returns whether it was flipped.
 pub fn switch_row(ui: &mut Ui, first: bool, words: &Words<'_>, on: bool, enabled: bool) -> bool {
     let sense = if enabled && ui.is_enabled() {
         Sense::CLICK

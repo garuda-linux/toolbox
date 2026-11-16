@@ -22,7 +22,6 @@ use crate::pages::setting_row::{Words, row};
 
 const FIELD_WIDTH: f32 = 240.0;
 const NUMBER_WIDTH: f32 = 120.0;
-/// The number field itself, inside its row's control column.
 const NUMBER_FIELD_WIDTH: f32 = 72.0;
 
 /// What the tests run with, kept while the page is away.

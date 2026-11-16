@@ -22,6 +22,8 @@ pub struct Sources {
     pub desktop: Option<DesktopTheme>,
     /// GTK's `gtk-application-prefer-dark-theme`.
     pub prefer_dark: Option<bool>,
+    /// A GTK desktop, whose roles the theme leaves open are libadwaita's.
+    pub gtk: bool,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -55,7 +57,7 @@ impl Look {
     /// The theme follows the desktop's own window colour first, as that is
     /// what its other apps show. The portal's accent fills in only where
     /// the desktop's files name none. The theme not in use keeps the
-    /// fallback palette.
+    /// base palette, libadwaita's on a GTK desktop.
     pub fn resolve(sources: &Sources) -> Self {
         let desktop = sources.desktop.clone().unwrap_or_default();
 
@@ -76,10 +78,18 @@ impl Look {
             colors.on_accent = Some(readable_on(accent));
         }
 
-        let active = colors.over(Palette::fallback(theme));
+        let base = |mode| {
+            if sources.gtk {
+                Palette::adwaita(mode)
+            } else {
+                Palette::fallback(mode)
+            }
+        };
+
+        let active = colors.over(base(theme));
         let (dark, light) = match theme {
-            Theme::Dark => (active, Palette::fallback(Theme::Light)),
-            Theme::Light => (Palette::fallback(Theme::Dark), active),
+            Theme::Dark => (active, base(Theme::Light)),
+            Theme::Light => (base(Theme::Dark), active),
         };
 
         Self {

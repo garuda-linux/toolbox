@@ -296,8 +296,8 @@ fn a_file_with_nothing_to_say_has_no_empty_line_under_its_path() {
             .height()
     };
 
-    // The root row's sentence is its lock mark now, so both rows are as
-    // tall as their title and path, and neither keeps an empty line.
+    // The root row's sentence is its lock mark, so both rows are as tall as
+    // their title and path, and neither keeps an empty line.
     assert!(
         (height("Bash") - height("GRUB default")).abs() < 1.0,
         "Bash is {} tall, GRUB default {}",

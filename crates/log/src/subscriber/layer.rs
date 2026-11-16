@@ -19,13 +19,11 @@ pub struct LineLayer<F> {
     write: F,
 }
 
-/// What a span keeps for the lines inside it.
 struct SpanText {
     fields: String,
     opened: Instant,
 }
 
-/// The message and the `key=value` fields of one event or span.
 #[derive(Default)]
 struct Fields {
     message: String,
@@ -145,14 +143,9 @@ impl Visit for Fields {
 impl Fields {
     /// `key=value`, quoted when the value would not read as one word. The
     /// fields `tracing-log` adds (`log.target`, …) are left out.
-    #[expect(clippy::use_debug, reason = "Debug of a str quotes and escapes it")]
     fn pair(&mut self, key: &str, value: &str) {
         if key.starts_with("log.") {
             return;
-        }
-
-        if !self.pairs.is_empty() {
-            self.pairs.push(' ');
         }
 
         let plain = !value.is_empty()
@@ -160,11 +153,13 @@ impl Fields {
                 .chars()
                 .any(|ch| ch.is_whitespace() || matches!(ch, '"' | '='));
 
-        if plain {
-            write!(self.pairs, "{key}={value}").ok();
+        let pair = if plain {
+            format!("{key}={value}")
         } else {
-            write!(self.pairs, "{key}={value:?}").ok();
-        }
+            format!("{key}={value:?}")
+        };
+
+        join(&mut self.pairs, &pair);
     }
 }
 
@@ -192,7 +187,6 @@ where
     out
 }
 
-/// `more` after `text`, a space between them when both have words.
 fn join(text: &mut String, more: &str) {
     if more.is_empty() {
         return;

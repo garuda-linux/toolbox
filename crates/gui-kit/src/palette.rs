@@ -37,41 +37,62 @@ pub struct Palette {
 impl Palette {
     /// Catppuccin Mocha for dark and Latte for light, both with the mauve
     /// accent.
+    #[must_use = "a palette does nothing until it is applied"]
+    pub const fn fallback(theme: Theme) -> Self {
+        match theme {
+            Theme::Dark => Self::of_roles([
+                0x1e_1e_2e, 0x18_18_25, 0xcd_d6_f4, 0xcb_a6_f7, 0x11_11_1b, 0xf3_8b_a8, 0xf9_e2_af,
+                0xa6_e3_a1,
+            ]),
+            Theme::Light => Self::of_roles([
+                0xef_f1_f5, 0xe6_e9_ef, 0x4c_4f_69, 0x88_39_ef, 0xef_f1_f5, 0xd2_0f_39, 0xdf_8e_1d,
+                0x40_a0_2b,
+            ]),
+        }
+    }
+
+    /// libadwaita's named colours (1.6) with its default blue accent, for
+    /// GTK desktops whose theme names no colours of its own. Light window
+    /// text is libadwaita's 80 % black over the window, made opaque.
+    #[must_use = "a palette does nothing until it is applied"]
+    pub const fn adwaita(theme: Theme) -> Self {
+        match theme {
+            Theme::Dark => Self::of_roles([
+                0x22_22_26, 0x1d_1d_20, 0xff_ff_ff, 0x35_84_e4, 0xff_ff_ff, 0xff_93_8c, 0xff_c2_52,
+                0x78_e9_ab,
+            ]),
+            Theme::Light => Self::of_roles([
+                0xfa_fa_fb, 0xff_ff_ff, 0x32_32_37, 0x35_84_e4, 0xff_ff_ff, 0xc0_1c_28, 0x9c_6e_03,
+                0x1b_85_53,
+            ]),
+        }
+    }
+
+    /// Window, view, text, accent, text on the accent, error, warning and
+    /// success as `0xRRGGBB`, with no colours of the app's own.
     #[expect(
         clippy::disallowed_methods,
         reason = "the palette and the desktop parsers are where colours are made"
     )]
-    #[must_use = "a palette does nothing until it is applied"]
-    pub const fn fallback(theme: Theme) -> Self {
-        match theme {
-            Theme::Dark => Self {
-                window: Color32::from_rgb(0x1e, 0x1e, 0x2e),
-                view: Color32::from_rgb(0x18, 0x18, 0x25),
-                text: Color32::from_rgb(0xcd, 0xd6, 0xf4),
-                accent: Color32::from_rgb(0xcb, 0xa6, 0xf7),
-                on_accent: Color32::from_rgb(0x11, 0x11, 0x1b),
-                error: Color32::from_rgb(0xf3, 0x8b, 0xa8),
-                warning: Color32::from_rgb(0xf9, 0xe2, 0xaf),
-                success: Color32::from_rgb(0xa6, 0xe3, 0xa1),
-                link: None,
-                visited: None,
-                tiles: None,
-                ansi: None,
-            },
-            Theme::Light => Self {
-                window: Color32::from_rgb(0xef, 0xf1, 0xf5),
-                view: Color32::from_rgb(0xe6, 0xe9, 0xef),
-                text: Color32::from_rgb(0x4c, 0x4f, 0x69),
-                accent: Color32::from_rgb(0x88, 0x39, 0xef),
-                on_accent: Color32::from_rgb(0xef, 0xf1, 0xf5),
-                error: Color32::from_rgb(0xd2, 0x0f, 0x39),
-                warning: Color32::from_rgb(0xdf, 0x8e, 0x1d),
-                success: Color32::from_rgb(0x40, 0xa0, 0x2b),
-                link: None,
-                visited: None,
-                tiles: None,
-                ansi: None,
-            },
+    const fn of_roles(rgb: [u32; 8]) -> Self {
+        const fn colour(rgb: u32) -> Color32 {
+            let [_, red, green, blue] = rgb.to_be_bytes();
+            Color32::from_rgb(red, green, blue)
+        }
+
+        Self {
+            window: colour(rgb[0]),
+            view: colour(rgb[1]),
+            text: colour(rgb[2]),
+            accent: colour(rgb[3]),
+            on_accent: colour(rgb[4]),
+            error: colour(rgb[5]),
+            warning: colour(rgb[6]),
+            success: colour(rgb[7]),
+            link: None,
+            visited: None,
+            tiles: None,
+            ansi: None,
         }
     }
 }

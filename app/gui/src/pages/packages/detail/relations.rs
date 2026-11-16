@@ -130,7 +130,7 @@ pub fn dependencies(
     opened
 }
 
-/// `lookup` answers is a link to that package.
+/// A name that `lookup` answers is a link to that package.
 pub fn names(
     ui: &mut Ui,
     id: &str,

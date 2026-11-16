@@ -5,6 +5,7 @@
 
 mod density;
 mod edges;
+mod reading;
 
 use egui::{Frame, Panel, Ui, UiBuilder};
 use toolbox_gui_kit::fonts::Weight;
@@ -44,9 +45,10 @@ struct Listed {
 }
 
 /// `instant`: the shortcut changed `expanded`, so the sidebar jumps.
+/// `reading`: a read runs that no status bar shows.
 pub fn show(
     ui: &mut Ui,
-    current: PageId,
+    (current, reading): (PageId, bool),
     expanded: &mut bool,
     instant: bool,
     commands: &CommandSender,
@@ -96,6 +98,10 @@ pub fn show(
                 .exact_size(density.pages_height(ui.ctx(), label, true))
                 .show(ui, |ui| ui.max_rect())
                 .inner;
+
+            if reading {
+                reading::show(ui, density.row, show_labels);
+            }
 
             // `cut_edges` lays the fade in the sidebar's own fill, egui's
             // would come on top.

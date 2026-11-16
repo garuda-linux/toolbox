@@ -93,6 +93,15 @@ fn plan() -> Plan {
 }
 
 fn run(plan: Plan, yes: bool, prompt: &mut Answers, outcome: Outcome) -> (Exit, String) {
+    run_with(helper(outcome), plan, yes, prompt)
+}
+
+fn run_with(
+    launcher: Arc<dyn Launcher>,
+    plan: Plan,
+    yes: bool,
+    prompt: &mut Answers,
+) -> (Exit, String) {
     let runtime = tokio::runtime::Runtime::new().unwrap();
     let mut out = Vec::new();
     let exit = carry_out(
@@ -104,7 +113,7 @@ fn run(plan: Plan, yes: bool, prompt: &mut Answers, outcome: Outcome) -> (Exit, 
         },
         None,
         runtime.handle(),
-        helper(outcome),
+        launcher,
         prompt,
         &mut Out::new(&mut out, Settings::default()),
     );
@@ -116,6 +125,13 @@ fn terminal(answers: &[&'static str]) -> Answers {
     Answers {
         terminal: true,
         answers: answers.iter().copied().collect(),
+    }
+}
+
+fn without_terminal() -> Answers {
+    Answers {
+        terminal: false,
+        answers: VecDeque::new(),
     }
 }
 
@@ -142,12 +158,7 @@ fn a_no_changes_nothing() {
 
 #[test]
 fn without_a_terminal_it_wants_yes() {
-    let mut piped = Answers {
-        terminal: false,
-        answers: VecDeque::new(),
-    };
-
-    let (exit, _) = run(plan(), false, &mut piped, Outcome::Succeeded);
+    let (exit, _) = run(plan(), false, &mut without_terminal(), Outcome::Succeeded);
 
     assert_eq!(exit, Exit::NeedsYes);
 }
@@ -176,28 +187,12 @@ fn an_empty_plan_has_nothing_to_ask() {
 }
 
 fn through(words: &'static str, prompt: &mut Answers) -> (Exit, String) {
-    let runtime = tokio::runtime::Runtime::new().unwrap();
-    let mut out = Vec::new();
     let launcher = Arc::new(Refusing {
         words,
         then: helper(Outcome::Succeeded),
     });
 
-    let exit = carry_out(
-        plan(),
-        Confirm {
-            yes: true,
-            dry_run: false,
-            json: false,
-        },
-        None,
-        runtime.handle(),
-        launcher,
-        prompt,
-        &mut Out::new(&mut out, Settings::default()),
-    );
-
-    (exit, String::from_utf8(out).unwrap())
+    run_with(launcher, plan(), true, prompt)
 }
 
 #[test]
@@ -237,14 +232,9 @@ fn a_denied_password_is_never_asked_again_through_sudo() {
 
 #[test]
 fn without_a_terminal_sudo_is_never_asked() {
-    let mut piped = Answers {
-        terminal: false,
-        answers: VecDeque::new(),
-    };
-
     let (exit, out) = through(
         "Error executing command as another user: No authentication agent found.",
-        &mut piped,
+        &mut without_terminal(),
     );
 
     assert_ne!(exit, Exit::Success, "{out}");
@@ -253,10 +243,7 @@ fn without_a_terminal_sudo_is_never_asked() {
 
 #[test]
 fn a_dry_run_prints_the_plan_and_never_asks_or_runs() {
-    let mut piped = Answers {
-        terminal: false,
-        answers: VecDeque::new(),
-    };
+    let mut piped = without_terminal();
 
     let runtime = tokio::runtime::Runtime::new().unwrap();
     let mut out = Vec::new();

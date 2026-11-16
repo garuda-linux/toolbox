@@ -39,7 +39,6 @@ use super::interrupt::{self, Stopper};
 use crate::out::{Out, Settings};
 
 const LOOK_AGAIN: Duration = Duration::from_millis(100);
-/// The command line sends one plan to a service of its own.
 const PLAN: PlanId = PlanId::new(1);
 
 struct Running {

@@ -19,7 +19,6 @@ pub struct Picked {
     matches: usize,
 }
 
-/// What the empty state's button asks to clear.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Clear {
     Search,

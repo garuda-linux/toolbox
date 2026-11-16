@@ -1,5 +1,3 @@
-//! The arguments of `guide`: the user guide's pages, read in the terminal.
-
 use clap::{Args, Subcommand};
 use toolbox_plan::PageName;
 

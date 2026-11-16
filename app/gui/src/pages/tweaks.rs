@@ -15,7 +15,6 @@ use super::toggles::{LeadChip, LeadSections};
 use crate::catalogs::CatalogId;
 use crate::i18n;
 
-/// The ids of the choices' sections, for their chips.
 const SHELL_NETWORK: &str = "shell-network";
 const GARUDA_UPDATE: &str = "garuda-update";
 

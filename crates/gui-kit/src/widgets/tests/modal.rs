@@ -4,7 +4,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use egui_kittest::{Harness, SnapshotResults};
 
 use super::super::{ButtonKind, Confirmation, DialogWidth, ModalWrapper, confirm_buttons};
-use crate::testing::{filled_rect, harness, painted_text};
+use crate::testing::{click_at, filled_rect, harness, painted_text};
 
 #[derive(Debug, Default)]
 struct Dialog {
@@ -128,19 +128,7 @@ fn open_after_a_click_beside(form: bool) -> bool {
     );
 
     harness.run();
-    let at = egui::pos2(5.0, 5.0);
-    let press = |pressed| egui::Event::PointerButton {
-        pos: at,
-        button: egui::PointerButton::Primary,
-        pressed,
-        modifiers: egui::Modifiers::NONE,
-    };
-
-    harness.event(egui::Event::PointerMoved(at));
-    harness.event(press(true));
-    harness.step();
-    harness.event(press(false));
-    harness.run();
+    click_at(&mut harness, egui::pos2(5.0, 5.0));
     *harness.state()
 }
 

@@ -3,7 +3,6 @@
 
 use toolbox_plan::PackageName;
 
-/// Where a package comes from. The AUR joins as another source later.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum Origin {
     /// A sync database of `pacman.conf`, by its section name.

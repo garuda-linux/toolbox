@@ -159,7 +159,14 @@ restore_base() {
   return 1
 }
 
-# stop_during <program> <command...>
+# shellcheck disable=SC2329 # used by the suites
+restart_vm() {
+  echo "Restarting $name"
+  setup "limactl stop" limactl stop "$name"
+  setup "limactl start" limactl start --tty=false "$name"
+  setup "SSH" wait_ssh
+}
+
 # A power loss while <program> runs.
 # shellcheck disable=SC2329 # used by the suites
 stop_during() {

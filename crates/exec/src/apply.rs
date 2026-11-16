@@ -268,26 +268,20 @@ fn run_once(
         Invocation::RunUnlessItRemovesProtected { preview, run } => {
             targets::unless_protected(step, preview, run, runner, sink)
         }
-        Invocation::Builtin(Builtin::RebuildInitramfs { root }) => {
-            match initramfs::rebuild(Path::new(SYSTEM_ROOT), *root) {
-                Some(command) => runner.run(step, &command, sink),
-                None => failure(
-                    step,
-                    sink,
-                    "neither dracut-rebuild nor mkinitcpio is installed, so the initramfs was not built again",
-                ),
-            }
-        }
-        Invocation::Builtin(Builtin::RebuildUkis { root }) => {
-            match uki::rebuild(Path::new(SYSTEM_ROOT), *root) {
-                Some(command) => runner.run(step, &command, sink),
-                None => failure(
-                    step,
-                    sink,
-                    "neither kernel-install-uki nor kernel-install is installed, so the UKIs were not built again",
-                ),
-            }
-        }
+        Invocation::Builtin(Builtin::RebuildInitramfs { root }) => rebuilt(
+            step,
+            initramfs::rebuild(Path::new(SYSTEM_ROOT), *root),
+            "neither dracut-rebuild nor mkinitcpio is installed, so the initramfs was not built again",
+            runner,
+            sink,
+        ),
+        Invocation::Builtin(Builtin::RebuildUkis { root }) => rebuilt(
+            step,
+            uki::rebuild(Path::new(SYSTEM_ROOT), *root),
+            "neither kernel-install-uki nor kernel-install is installed, so the UKIs were not built again",
+            runner,
+            sink,
+        ),
         Invocation::Builtin(Builtin::RepairBootLoader { system, work }) => {
             match repair::boot_loader_steps(Path::new(SYSTEM_ROOT), system, work) {
                 Ok(steps) => run_procedure(step, &steps, runner, sink),
@@ -307,5 +301,18 @@ fn run_once(
             sink,
             &format!("the secret for {} did not arrive", command.program().name()),
         ),
+    }
+}
+
+fn rebuilt(
+    step: StepId,
+    command: Option<Command>,
+    missing: &str,
+    runner: &mut dyn Runner,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    match command {
+        Some(command) => runner.run(step, &command, sink),
+        None => failure(step, sink, missing),
     }
 }

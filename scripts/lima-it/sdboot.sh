@@ -19,10 +19,7 @@ suite_sdboot() {
   check "kernels default linux-garuda saves its flavour" t_sdboot_default
   check "boot param add rebuilds the UKI with it" t_sdboot_param
   check "boot param remove refuses rw" t_sdboot_protected
-  echo "Restarting $name"
-  setup "limactl stop" limactl stop "$name"
-  setup "limactl start" limactl start --tty=false "$name"
-  setup "SSH" wait_ssh
+  restart_vm
   check "the kernel started with the new parameter" t_sdboot_running_param
   check "systemd-boot started the default entry" t_sdboot_selected
 }
@@ -42,13 +39,16 @@ t_sdboot_same_timeout() {
 
 t_sdboot_editor() { tb boot set editor off --yes && as_root "grep -qx 'editor no' $loader_conf"; }
 
-t_sdboot_grub_key() {
-  local before code=0
-  before=$(as_root "cat $loader_conf")
-  tb boot set submenus on --yes || code=$?
+t_sdboot_refused() {
+  local file=$1 before code=0
+  shift
+  before=$(as_root "cat $file")
+  tb "$@" --yes || code=$?
   echo "exit: $code"
-  [ "$code" = "$page_rule" ] && [ "$(as_root "cat $loader_conf")" = "$before" ]
+  [ "$code" = "$page_rule" ] && [ "$(as_root "cat $file")" = "$before" ]
 }
+
+t_sdboot_grub_key() { t_sdboot_refused "$loader_conf" boot set submenus on; }
 
 t_sdboot_default() {
   tb kernels default linux-garuda --yes &&
@@ -67,13 +67,7 @@ t_sdboot_param() {
   done'
 }
 
-t_sdboot_protected() {
-  local before code=0
-  before=$(as_root "cat $cmdline")
-  tb boot param remove rw --yes || code=$?
-  echo "exit: $code"
-  [ "$code" = "$page_rule" ] && [ "$(as_root "cat $cmdline")" = "$before" ]
-}
+t_sdboot_protected() { t_sdboot_refused "$cmdline" boot param remove rw; }
 
 t_sdboot_running_param() { vm grep -qw nowatchdog /proc/cmdline; }
 

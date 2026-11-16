@@ -33,15 +33,14 @@ pub trait Transport: Send + Sync {
 pub struct Paste {
     /// Whoever has it can read the paste, since the key is in its fragment.
     pub link: String,
-    /// Opening it deletes the paste before it expires. It holds no key, so
-    /// it cannot be read with it, but whoever has it can remove the paste.
+    /// Opening it deletes the paste before it expires. It has no key, so it
+    /// cannot read the paste, only remove it.
     pub delete_link: String,
 }
 
 impl fmt::Debug for Paste {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // The key after `#` opens the paste and the delete link's token
-        // removes it, so only the address before the key is printed.
+        // The fragment holds the key, so only the address before it is printed.
         let address = self.link.split('#').next().unwrap_or_default();
         f.debug_struct("Paste")
             .field("address", &address)
@@ -130,9 +129,8 @@ fn is_token(text: &str, max: usize) -> bool {
             .all(|character| character.is_ascii_alphanumeric())
 }
 
-/// The server's message as one short line of plain text. Control and
-/// escape characters never reach the display, and neither do Unicode
-/// bidi overrides, which reorder text instead of showing it.
+/// Drops hidden characters, such as bidi overrides that reorder the display,
+/// and cuts the message to one short line.
 fn plain(message: &str) -> String {
     message
         .chars()

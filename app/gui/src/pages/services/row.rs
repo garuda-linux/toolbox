@@ -80,8 +80,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
             ui.add(Label::new(Arc::clone(&row.description)).truncate());
         },
         |ui| {
-            // The menu, then the switch at the edge, the order of the App
-            // Catalog's rows and of Tab.
+            // Menu before switch, as in the App Catalog and in Tab order.
             let busy = i18n::text(ui.ctx(), "services-why-busy");
             ui.enabled_ui(!context.busy, |ui| {
                 row_menu(ui, state, &row.menu, |ui| {

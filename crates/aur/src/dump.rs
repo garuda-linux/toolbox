@@ -110,11 +110,6 @@ pub fn parse(gzipped: impl Read, max_bytes: u64) -> Result<Vec<AurPackage>, Dump
     parse_capped(gzipped, max_bytes, MAX_ENTRIES)
 }
 
-/// [`parse`] with a cap of `max_entries` packages.
-///
-/// # Errors
-///
-/// As [`parse`].
 pub fn parse_capped(
     gzipped: impl Read,
     max_bytes: u64,
@@ -139,7 +134,6 @@ pub fn parse_capped(
     }
 }
 
-/// name, which no command line and no list ever sees.
 fn cleaned(raw: Raw) -> Option<AurPackage> {
     let name = PackageName::new(raw.name?).ok()?;
     let texts = |values: Option<Vec<String>>| list(&values.unwrap_or_default());

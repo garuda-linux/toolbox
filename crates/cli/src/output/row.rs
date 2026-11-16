@@ -1,5 +1,3 @@
-//! The rows of a list and the state each one shows.
-
 use anstyle::{AnsiColor, Color};
 
 use super::DIM;

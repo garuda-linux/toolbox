@@ -8,6 +8,7 @@ use std::time::SystemTime;
 use crate::error::{ProbeError, from_io};
 use crate::files;
 use crate::host::boot_time;
+use crate::kernels::OS_RELEASE;
 
 /// pacman's default `CacheDir`. Another one in `pacman.conf` is rare
 /// enough that the row may miss it.
@@ -74,7 +75,7 @@ impl SystemMachine {
 
 impl MachineSource for SystemMachine {
     fn kernel(&self) -> Result<String, ProbeError> {
-        let release = files::read(&self.root.join("proc/sys/kernel/osrelease"))?;
+        let release = files::read(&self.root.join(OS_RELEASE))?;
         let release = release.trim();
 
         if release.is_empty() {

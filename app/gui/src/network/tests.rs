@@ -95,6 +95,13 @@ fn network(runtime: &Runtime, machine: &Arc<Machine>, online: bool) -> Network {
     )
 }
 
+fn start(online: bool) -> (Runtime, Arc<Machine>, Network) {
+    let runtime = Runtime::new().unwrap();
+    let machine = Arc::new(Machine::default());
+    let network = network(&runtime, &machine, online);
+    (runtime, machine, network)
+}
+
 fn settle(network: &mut Network, done: impl Fn(&Network) -> bool) {
     until("the read never ended", || {
         network.take();
@@ -104,9 +111,7 @@ fn settle(network: &mut Network, done: impl Fn(&Network) -> bool) {
 
 #[test]
 fn nothing_is_read_before_the_page_opens() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, machine, mut network) = start(true);
 
     network.plan_finished();
 
@@ -122,9 +127,7 @@ fn nothing_is_read_before_the_page_opens() {
 
 #[test]
 fn opening_reads_the_status_the_internet_and_the_hardware() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, _machine, mut network) = start(true);
 
     network.open();
     settle(&mut network, |shown| {
@@ -149,9 +152,7 @@ fn opening_reads_the_status_the_internet_and_the_hardware() {
 
 #[test]
 fn the_address_is_asked_only_on_request_and_can_be_forgotten() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, _machine, mut network) = start(true);
 
     assert_eq!(*network.address(), Address::NotAsked);
 
@@ -168,9 +169,7 @@ fn the_address_is_asked_only_on_request_and_can_be_forgotten() {
 
 #[test]
 fn an_unreachable_service_leaves_the_address_unknown() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, false);
+    let (_runtime, _machine, mut network) = start(false);
 
     network.lookup_address();
     settle(&mut network, |shown| *shown.address() != Address::Loading);
@@ -180,9 +179,7 @@ fn an_unreachable_service_leaves_the_address_unknown() {
 
 #[test]
 fn a_refused_radio_switch_is_remembered() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, machine, mut network) = start(true);
 
     network.set_radio(RadioTarget::Wifi, true);
     settle(&mut network, Network::radio_failed);
@@ -192,9 +189,7 @@ fn a_refused_radio_switch_is_remembered() {
 
 #[test]
 fn a_refresh_forgets_a_refused_radio_switch() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, _machine, mut network) = start(true);
     network.set_radio(RadioTarget::Wifi, true);
     settle(&mut network, Network::radio_failed);
 
@@ -205,9 +200,7 @@ fn a_refresh_forgets_a_refused_radio_switch() {
 
 #[test]
 fn an_answer_that_lands_after_a_forget_is_dropped() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, _machine, mut network) = start(true);
 
     network.lookup_address();
     network.forget_address();
@@ -222,9 +215,7 @@ fn an_answer_that_lands_after_a_forget_is_dropped() {
 
 #[test]
 fn a_new_ask_after_a_forget_shows_its_own_answer() {
-    let runtime = Runtime::new().unwrap();
-    let machine = Arc::new(Machine::default());
-    let mut network = network(&runtime, &machine, true);
+    let (_runtime, _machine, mut network) = start(true);
 
     network.lookup_address();
     network.forget_address();

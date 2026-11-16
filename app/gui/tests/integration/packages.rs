@@ -104,12 +104,12 @@ pub fn listed(harness: &Harness<'static, App>, package: &str) -> bool {
         .is_some()
 }
 
-fn open_gimp(harness: &mut Harness<'static, App>) {
+pub fn open_package(harness: &mut Harness<'static, App>, package: &str, url: &str) {
     harness
-        .get_by_role_and_label(Role::ListItem, "gimp")
+        .get_by_role_and_label(Role::ListItem, package)
         .click();
     step_until(harness, "the details", |harness| {
-        harness.query_by_label("https://www.gimp.org/").is_some()
+        harness.query_by_label(url).is_some()
     });
     settle(harness);
 }
@@ -146,7 +146,7 @@ fn an_install_from_a_search_waits_in_the_queue() {
 fn a_removal_names_what_goes_along_and_waits_in_the_queue() {
     let mut fixture = app(Theme::Dark, None);
     let harness = fixture.harness();
-    open_gimp(harness);
+    open_package(harness, "gimp", "https://www.gimp.org/");
 
     harness.get_by_label("Remove gimp").click();
     harness.run();
@@ -169,7 +169,7 @@ fn a_removal_names_what_goes_along_and_waits_in_the_queue() {
 fn a_dependency_opens_its_own_page_and_back_returns_to_the_first() {
     let mut fixture = app(Theme::Dark, None);
     let harness = fixture.harness();
-    open_gimp(harness);
+    open_package(harness, "gimp", "https://www.gimp.org/");
 
     harness.get_by_role_and_label(Role::Link, "gegl").click();
     step_until(harness, "gegl's details", |harness| {
@@ -199,7 +199,7 @@ fn snapshots() {
     let harness = dark.harness();
     results.add(harness.try_snapshot("packages/list_dark"));
 
-    open_gimp(harness);
+    open_package(harness, "gimp", "https://www.gimp.org/");
     results.add(harness.try_snapshot("packages/detail_dark"));
 
     harness.set_size(egui::vec2(SMALLEST.0, TALL));
@@ -226,12 +226,12 @@ fn snapshots() {
     let mut light = app(Theme::Light, None);
     let bright = light.harness();
     results.add(bright.try_snapshot("packages/list_light"));
-    open_gimp(bright);
+    open_package(bright, "gimp", "https://www.gimp.org/");
     results.add(bright.try_snapshot("packages/detail_light"));
 
     let mut german = app(Theme::Dark, Some("de-DE"));
     let deutsch = german.harness();
     results.add(deutsch.try_snapshot("packages/list_german"));
-    open_gimp(deutsch);
+    open_package(deutsch, "gimp", "https://www.gimp.org/");
     results.add(deutsch.try_snapshot("packages/detail_german"));
 }

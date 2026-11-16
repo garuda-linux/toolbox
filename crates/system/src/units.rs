@@ -142,12 +142,7 @@ impl FailedUnitSource for Systemctl {
 /// Lines of `UNIT LOAD ACTIVE SUB DESCRIPTION`. The active state is
 /// checked again, so a summary line does not count as a unit.
 fn parse_failed(output: &str) -> BTreeSet<UnitName> {
-    names::valid(output.lines().filter_map(|line| {
-        let mut columns = line.split_whitespace();
-        let unit = columns.next()?;
-
-        (columns.nth(1) == Some("failed")).then_some(unit)
-    }))
+    units_in_state(output, 1, "failed")
 }
 
 /// The arguments of one listing. `state_flag` is `--state=<state>`.
@@ -177,10 +172,14 @@ fn nothing_listed(finished: &command::Finished) -> bool {
 /// Lines of `UNIT STATE [PRESET]`. The state is checked again, so a legend
 /// or summary line that slips through does not count as a unit.
 fn parse_listed(output: &str, state: &str) -> BTreeSet<UnitName> {
+    units_in_state(output, 0, state)
+}
+
+fn units_in_state(output: &str, state_offset: usize, state: &str) -> BTreeSet<UnitName> {
     names::valid(output.lines().filter_map(|line| {
         let mut columns = line.split_whitespace();
         let unit = columns.next()?;
 
-        (columns.next() == Some(state)).then_some(unit)
+        (columns.nth(state_offset) == Some(state)).then_some(unit)
     }))
 }

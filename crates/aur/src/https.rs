@@ -21,7 +21,6 @@ const MAX_GZIPPED_BYTES: u64 = 64 << 20;
 /// Plain and generic: the AUR learns the program, nothing of the user.
 const USER_AGENT: &str = concat!("garuda-toolbox/", env!("CARGO_PKG_VERSION"));
 
-/// The host of [`crate::DUMP_URL`].
 pub const HOST: &str = "aur.archlinux.org";
 
 /// A validator longer than this is no `ETag` or date and is not kept.

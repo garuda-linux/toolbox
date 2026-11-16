@@ -25,6 +25,11 @@ let
     cp -r ${src}/docs/src docs/
   '';
 
+  crateSources = ''
+    cp -r ${src}/app app
+    cp -r ${src}/crates crates
+  '';
+
   xtaskCheck =
     name: setup: script:
     pkgs.runCommand name
@@ -58,16 +63,14 @@ in
   '';
 
   file-size = pkgs.runCommand "check-file-size" { } ''
-    cp -r ${src}/app app
-    cp -r ${src}/crates crates
+    ${crateSources}
     cp ${src}/.file-size-allow .file-size-allow
     ${pkgs.bash}/bin/bash ${src}/scripts/check-file-size.sh .
     touch $out
   '';
 
   lint = pkgs.runCommand "check-lint" { } ''
-    cp -r ${src}/app app
-    cp -r ${src}/crates crates
+    ${crateSources}
     ${rustPkg.lint}/bin/toolbox-lint app crates
     touch $out
   '';
@@ -83,8 +86,7 @@ in
       ''
         ${cargo-home}
         cp ${src}/Cargo.toml ${src}/Cargo.lock ${src}/deny.toml .
-        cp -r ${src}/app app
-        cp -r ${src}/crates crates
+        ${crateSources}
         chmod -R u+w .
         cargo deny --offline check licenses bans sources
         touch $out

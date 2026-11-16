@@ -80,19 +80,20 @@ fn script(events: &[Event]) -> String {
     format!("read request; printf '%s' '{quoted}'")
 }
 
-pub fn silent_script() -> String {
+fn finished_script(outcome: Outcome) -> String {
     let step = StepId::new(1);
     let events = [
         Event::Accepted,
         Event::Started { step },
-        Event::Finished {
-            step,
-            outcome: Outcome::Succeeded,
-        },
+        Event::Finished { step, outcome },
         Event::Done,
     ];
 
     script(&events)
+}
+
+pub fn silent_script() -> String {
+    finished_script(Outcome::Succeeded)
 }
 
 /// The step prints pacman's install of a Java runtime as a PTY captured
@@ -224,22 +225,12 @@ fn a_dismissed_password_dialog_is_told_in_words() {
 
 #[test]
 fn a_failed_step_shows_its_exit_code() {
-    let step = StepId::new(1);
-    let events = [
-        Event::Accepted,
-        Event::Started { step },
-        Event::Finished {
-            step,
-            outcome: Outcome::Failed {
-                cause: toolbox_plan::protocol::Failure::ExitCode { code: 1_i32 },
-                cleanup_failed: Vec::new(),
-            },
-        },
-        Event::Done,
-    ];
+    let failed = Outcome::Failed {
+        cause: toolbox_plan::protocol::Failure::ExitCode { code: 1_i32 },
+        cleanup_failed: Vec::new(),
+    };
 
-    let script = format!("{}; exit 1", script(&events));
-    let (mut harness, _runtime) = app(script, FIREFOX);
+    let (mut harness, _runtime) = app(format!("{}; exit 1", finished_script(failed)), FIREFOX);
 
     harness.get_by_label("Apply").click();
     harness.step();
@@ -332,18 +323,7 @@ fn a_running_plan_is_named_once_in_the_header() {
 }
 
 pub fn idle_script() -> String {
-    let step = StepId::new(1);
-    let events = [
-        Event::Accepted,
-        Event::Started { step },
-        Event::Finished {
-            step,
-            outcome: Outcome::Skipped,
-        },
-        Event::Done,
-    ];
-
-    script(&events)
+    finished_script(Outcome::Skipped)
 }
 
 #[test]

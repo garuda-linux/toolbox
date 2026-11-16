@@ -1,7 +1,7 @@
 //! A test process may end while lavapipe still runs the last frame's draw
 //! on its own thread, which then crashes in LLVM as the exit unloads the
-//! libraries (core dumps of 2026-11-15, SIGSEGV and SIGABRT after a passed
-//! test). The exit waits for the GPU first.
+//! libraries (SIGSEGV and SIGABRT after a passed test). The exit waits for
+//! the GPU first.
 
 use std::sync::Once;
 

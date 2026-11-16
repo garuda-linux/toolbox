@@ -16,6 +16,10 @@ pub(super) fn parse(args: &[&str]) -> Result<Cli, clap::Error> {
     Cli::try_from_words(std::iter::once("garuda-toolbox").chain(args.iter().copied()))
 }
 
+fn command(args: &[&str]) -> Command {
+    parse(args).unwrap().command.unwrap()
+}
+
 #[test]
 fn no_arguments_open_the_window() {
     let cli = parse(&[]).unwrap();

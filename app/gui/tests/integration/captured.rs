@@ -1,6 +1,4 @@
-//! The system the readers of the integration tests answer with when a test
-//! gives none: the Lima VM's captures, read through the probe's own parse
-//! where the probe parses text, and the coverage pictures' readers.
+//! The system the readers answer with when a test gives none, from the Lima VM captures.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
@@ -65,7 +63,6 @@ impl UnitLister for CapturedUnits {
     }
 }
 
-/// A `busctl` reply is a `{"type", "data"}` envelope around one array.
 /// The lock flags are left out, so no account shows as locked.
 struct NoLocks;
 
@@ -93,8 +90,7 @@ impl FileChooser for NoChooser {
     }
 }
 
-/// [`launch_in`] with the readers the other tests leave out, answered from
-/// the captures, so the coverage pictures show rows and not placeholders.
+/// A `busctl` reply is a `{"type", "data"}` envelope around one array.
 fn reply(json: &str) -> serde_json::Value {
     let mut envelope: serde_json::Value = serde_json::from_str(json).expect("a capture");
     envelope["data"][0].take()
@@ -250,7 +246,6 @@ fn sample_system(
     snapshot
 }
 
-/// The locale that `LANG` names in `locale.conf`.
 fn system_locale(conf: &str) -> Option<LocaleName> {
     conf.lines()
         .find_map(|line| line.strip_prefix("LANG="))

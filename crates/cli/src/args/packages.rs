@@ -1,6 +1,3 @@
-//! The Packages page's commands: search the repository, installed and AUR
-//! packages, show one, install and remove.
-
 use clap::{Args, Subcommand};
 use toolbox_plan::PackageName;
 

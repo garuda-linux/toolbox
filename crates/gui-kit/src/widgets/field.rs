@@ -183,7 +183,7 @@ fn space(width: f32) -> Atom<'static> {
     }
 }
 
-/// Added after the text edit, so it lies over it and takes the click.
+/// Drawn after the text edit, so it lies over it and takes the click.
 fn field_button(ui: &Ui, field: Id, rect: Rect, button: FieldButton<'_>) -> bool {
     let response = ui.interact(rect, field.with("button"), Sense::click());
     response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), button.name));
@@ -201,8 +201,7 @@ fn whole_points(points: f32) -> i8 {
 
 /// A field's fill in `slot` on `field` with `radius` corners, a step
 /// lighter under the pointer and a full step while it holds the focus.
-/// No rim: the fill alone marks the field, decided against the 3:1 edge a
-/// rim gave (Nico, 2026-11-11).
+/// No rim at rest: the fill alone marks the field.
 pub(super) fn paint_field(ui: &Ui, slot: ShapeIdx, field: Rect, radius: u8, focused: bool) {
     let tokens = tokens::current(ui.ctx());
     let hovered = ui.is_enabled() && ui.rect_contains_pointer(field);

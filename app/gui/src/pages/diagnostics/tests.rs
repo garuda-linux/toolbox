@@ -68,6 +68,16 @@ fn report() -> Page {
     }
 }
 
+fn plain_report(text: String) -> Page {
+    Page {
+        state: State::Report,
+        selection: "dmesg".to_owned(),
+        report: text.clone(),
+        raw: text,
+        ..Page::default()
+    }
+}
+
 fn uploaded() -> Page {
     Page {
         share: Upload::Done(Paste {

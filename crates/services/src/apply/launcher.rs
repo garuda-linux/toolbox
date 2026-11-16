@@ -53,13 +53,13 @@ pub trait Launcher: Send + Sync {
         Inhibitor::Off
     }
 
-    /// Why the program that raises the helper did not run it, read from
-    /// its own exit status and words. `None` when the helper ran.
     /// Whether `code` may be a refusal, before its words are read.
     fn may_refuse(&self, code: Option<i32>) -> bool {
         pkexec::refusal(code, "").is_some()
     }
 
+    /// Why the program that raises the helper did not run it, read from
+    /// its own exit status and words. `None` when the helper ran.
     fn refusal(&self, code: Option<i32>, stderr: &str) -> Option<Refusal> {
         pkexec::refusal(code, stderr)
     }

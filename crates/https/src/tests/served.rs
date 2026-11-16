@@ -22,7 +22,6 @@ struct Server {
     connections: Arc<AtomicUsize>,
 }
 
-/// Ignores the request and answers `answer`, then the end of the stream.
 #[derive(Debug)]
 struct Canned {
     buffers: LazyBuffers,

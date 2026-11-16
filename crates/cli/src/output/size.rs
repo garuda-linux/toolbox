@@ -4,7 +4,6 @@
 #[cfg(test)]
 mod tests;
 
-/// The units of a size, each 1024 times the last.
 const UNITS: [&str; 6] = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
 
 /// `bytes` with one decimal in the largest unit below it: `200.0 GiB`.

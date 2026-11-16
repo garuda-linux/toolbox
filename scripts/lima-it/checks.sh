@@ -29,7 +29,6 @@ service_checks() {
 
 t_service_list() { tj services list | jq -e --arg u "$unit" 'any(.rows[]; .id == $u)'; }
 
-# <command> <systemctl query> <expected answer>
 t_unit() {
   tb services "$1" "$unit" --yes || return 1
   [ "$(vm systemctl "$2" "$unit" || true)" = "$3" ]
@@ -76,7 +75,6 @@ network_checks() {
   check "network drivers allow virtio_net" t_driver allow false
 }
 t_nm_start() { tb services start NetworkManager.service --yes && vm nmcli -t general status; }
-# <blacklist|allow> <blacklisted afterwards>
 t_driver() {
   tb network drivers "$1" virtio_net --yes || return 1
   local listed=false
@@ -99,9 +97,6 @@ suite_basic() {
   locale_checks
   dkms_checks
   network_checks
-  echo "Restarting $name"
-  setup "limactl stop" limactl stop "$name"
-  setup "limactl start" limactl start --tty=false "$name"
-  setup "SSH" wait_ssh
+  restart_vm
   after_restart_checks
 }

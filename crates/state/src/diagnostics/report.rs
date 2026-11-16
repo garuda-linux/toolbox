@@ -210,8 +210,7 @@ fn end_line(text: &mut String) {
     }
 }
 
-/// holds colour codes. A program that ends without one would otherwise
-/// colour the app's own notes and the next heading of a full report.
+/// Closes an open colour code, else the next note or heading takes its colour.
 fn closed(text: &str) -> String {
     if !text.contains(ESCAPE) {
         return text.to_owned();

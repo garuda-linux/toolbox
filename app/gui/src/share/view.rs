@@ -60,7 +60,6 @@ impl ShareView<'_> {
 /// (open, the delete link) in a ⋯ menu at the end, as a row's menu is.
 ///
 /// Else the failure or the running upload, nothing before the first upload.
-/// Returns whether it drew anything.
 pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> bool {
     let Some(paste) = view.upload.paste() else {
         return running_or_failed(ui, view);
@@ -155,7 +154,6 @@ fn ours(paste: &Paste) -> bool {
 }
 
 /// The open question, if any: the upload of `shareable`, or the delete.
-/// Returns whether the user agreed to upload `shareable`.
 pub fn ask(
     ctx: &egui::Context,
     view: &ShareView<'_>,

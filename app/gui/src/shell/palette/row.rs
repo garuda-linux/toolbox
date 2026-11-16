@@ -13,7 +13,6 @@ use toolbox_gui_kit::widgets::{TileSize, line, paint_icon_tile, paint_letter_til
 
 use super::found::{Look, Row};
 
-/// The room between a key's name and its cap's edge, in points.
 const CAP_PADDING: f32 = 5.0;
 const CAP_RADIUS: u8 = 4;
 

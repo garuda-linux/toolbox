@@ -8,7 +8,7 @@ use toolbox_plan::UnitScope;
 use toolbox_state::network::InterfaceCard;
 use zbus::{Connection, MatchRule, MessageStream, OwnedVariant};
 
-use super::{DESTINATION, PropertyReads, ROOT_PATH, cards};
+use super::{DESTINATION, PropertyReads, ROOT_PATH, cards, unexpected};
 use crate::bus::{CALL_TIMEOUT, CallError, bounded, classify, forget_shared, shared};
 
 const PROPERTIES: &str = "org.freedesktop.DBus.Properties";
@@ -35,8 +35,7 @@ impl PropertyReads for SystemProperties {
             .deserialize()
             .map_err(|error| classify(&error))?;
 
-        serde_json::to_value(&properties)
-            .map_err(|error| CallError::Failed(format!("unexpected properties: {error}")))
+        serde_json::to_value(&properties).map_err(|error| unexpected(&error))
     }
 }
 

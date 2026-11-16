@@ -85,8 +85,7 @@ impl DiagnosticsPage {
         .widget_info(|| egui::WidgetInfo::labeled(egui::accesskit::Role::Document, true, &*label));
     }
 
-    /// The name of the report held, which the rows above may no longer
-    /// run, when it came in and how many lines it has, then the controls.
+    /// The report's name, when it came in, its line count, then the controls.
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
         let tokens = ui.tokens();

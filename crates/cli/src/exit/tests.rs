@@ -25,8 +25,6 @@ fn the_codes_scripts_rely_on_never_change() {
     );
 }
 
-/// Exit 7 (nothing to do) now ends with 0, and 10 (cancelled) with the signal's code.
-/// Neither number is given again, so no script meets a new meaning for them.
 #[test]
 fn the_retired_codes_are_given_no_more() {
     assert!(Exit::ALL.iter().all(|exit| ![7, 10].contains(&exit.code())));
@@ -60,8 +58,7 @@ fn every_meaning_is_told_apart() {
     assert_eq!(meanings.len(), Exit::ALL.len());
 }
 
-/// A script that matches the reason reads the same word in every
-/// version, as with the code.
+/// Scripts match the reason, so its words never change, as with the code.
 #[test]
 fn every_code_has_a_stable_reason() {
     let reasons: Vec<(u8, &str)> = Exit::ALL

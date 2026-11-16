@@ -225,8 +225,6 @@ impl AddUser {
         Some(i18n::text(ctx, &format!("users-add-why-{code}")).into_owned())
     }
 
-    /// The full name, the login, the password and whether the account may
-    /// administer.
     fn required(
         &mut self,
         ui: &mut Ui,

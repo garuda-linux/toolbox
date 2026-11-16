@@ -79,7 +79,6 @@ pub fn row_switch(ui: &mut Ui, state: &RowState, on: bool, name: &str, enabled: 
     clicked || (state.toggle && enabled)
 }
 
-/// Returns whether it was pressed.
 pub fn refusal_banner(ui: &mut Ui, tone: Tone, text: &str, dismiss_id: &str) -> bool {
     let dismiss = i18n::text(ui.ctx(), dismiss_id);
     let dismissed = banner(ui, tone, text, &[&dismiss]).value == Some(0);

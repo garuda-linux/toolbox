@@ -57,7 +57,6 @@ impl PtyCommand {
         self
     }
 
-    /// Sets one environment variable. `TERM` is always `xterm-256color`.
     #[must_use = "the builder returns the changed command"]
     pub fn env<K, V>(mut self, key: K, value: V) -> Self
     where

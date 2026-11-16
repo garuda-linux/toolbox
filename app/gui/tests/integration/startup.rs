@@ -1,14 +1,28 @@
 use std::sync::Arc;
 
 use egui::{TextStyle, Theme};
-use toolbox_gui::Setup;
+use egui_kittest::Harness;
 use toolbox_gui::desktop::DesktopLook;
+use toolbox_gui::{App, Setup};
 use toolbox_gui_kit::Palette;
 use toolbox_gui_kit::desktop::FontSpec;
 use toolbox_gui_kit::icons::{ThemeIcons, theme_in_use};
 use toolbox_gui_kit::tokens::Tokens;
 
 use crate::common::launch;
+
+fn launch_with_look() -> (
+    tokio::sync::watch::Sender<DesktopLook>,
+    Harness<'static, App>,
+) {
+    let (sender, receiver) = tokio::sync::watch::channel(DesktopLook::default());
+    let harness = launch(Setup {
+        look: Some(receiver),
+        ..Setup::default()
+    });
+
+    (sender, harness)
+}
 
 #[test]
 fn first_frame_uses_the_fallback_palette() {
@@ -21,11 +35,7 @@ fn first_frame_uses_the_fallback_palette() {
 
 #[test]
 fn a_new_desktop_look_takes_over_theme_and_colours() {
-    let (sender, receiver) = tokio::sync::watch::channel(DesktopLook::default());
-    let mut harness = launch(Setup {
-        look: Some(receiver),
-        ..Setup::default()
-    });
+    let (sender, mut harness) = launch_with_look();
 
     let mut light = DesktopLook::default();
     light.look.theme = Theme::Light;
@@ -42,11 +52,7 @@ fn a_new_desktop_look_takes_over_theme_and_colours() {
 
 #[test]
 fn the_desktop_icon_theme_reaches_the_icon_widgets() {
-    let (sender, receiver) = tokio::sync::watch::channel(DesktopLook::default());
-    let mut harness = launch(Setup {
-        look: Some(receiver),
-        ..Setup::default()
-    });
+    let (sender, mut harness) = launch_with_look();
 
     let icons = Arc::new(ThemeIcons::new("Papirus"));
     sender
@@ -62,11 +68,7 @@ fn the_desktop_icon_theme_reaches_the_icon_widgets() {
 
 #[test]
 fn the_desktop_font_size_sets_the_text_size() {
-    let (sender, receiver) = tokio::sync::watch::channel(DesktopLook::default());
-    let mut harness = launch(Setup {
-        look: Some(receiver),
-        ..Setup::default()
-    });
+    let (sender, mut harness) = launch_with_look();
 
     let mut larger = DesktopLook::default();
     larger.look.font = Some(FontSpec {

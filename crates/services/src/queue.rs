@@ -13,7 +13,7 @@ use std::path::PathBuf;
 
 use tokio::runtime::Handle;
 use toolbox_core::features::{Guard, Refusal, Unchecked};
-use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, Snapshot};
+use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, SavedChanges, Snapshot};
 use toolbox_plan::{Plan, PlannedAction, StepId};
 
 use self::applying::Applying;
@@ -116,9 +116,7 @@ impl Queue {
         self.changes.reconcile(snapshot);
         self.unchecked.recheck(&mut self.changes, snapshot);
 
-        if self.changes.to_saved() != before {
-            self.save();
-        }
+        self.save_if_changed(&before);
     }
 
     /// Lets feature logic change several wishes against `snapshot` at
@@ -131,9 +129,7 @@ impl Queue {
         let before = self.changes.to_saved();
         let result = edit(&mut self.changes, snapshot);
 
-        if self.changes.to_saved() != before {
-            self.save();
-        }
+        self.save_if_changed(&before);
 
         result
     }
@@ -157,9 +153,7 @@ impl Queue {
         self.unchecked = Unchecked::all();
         self.unchecked.recheck(&mut self.changes, snapshot);
 
-        if self.changes.to_saved() != before {
-            self.save();
-        }
+        self.save_if_changed(&before);
     }
 
     pub fn remove(&mut self, domain: &str, key: &str) {
@@ -257,6 +251,12 @@ impl Queue {
         self.revision = self.revision.wrapping_add(1);
         if let Some(writer) = &self.writer {
             writer.send(self.changes.to_saved());
+        }
+    }
+
+    fn save_if_changed(&mut self, before: &SavedChanges) {
+        if self.changes.to_saved() != *before {
+            self.save();
         }
     }
 }

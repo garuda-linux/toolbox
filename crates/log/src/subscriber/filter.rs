@@ -19,9 +19,8 @@ pub enum Origin {
     Rejected { value: String, error: String },
 }
 
-/// Our crates at `level`. Dependencies stay at warn, so their chatter
-/// never floods the log and their warnings are never lost, and open up to
-/// info only for trace ("Everything"). Deeper takes `GARUDA_TOOLBOX_LOG`.
+/// Our crates at `level`. Dependencies stay at warn so their chatter stays
+/// out of the log, and reach info only at trace ("Everything").
 #[must_use = "the filter does nothing until installed"]
 pub fn settings_filter(level: LevelFilter) -> EnvFilter {
     if level == LevelFilter::TRACE {

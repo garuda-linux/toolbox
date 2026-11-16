@@ -40,10 +40,8 @@ enum Line<'a> {
     },
     Error {
         message: &'a str,
-        /// The program's own words.
         #[serde(skip_serializing_if = "Option::is_none")]
         detail: Option<&'a str>,
-        /// What helps.
         #[serde(skip_serializing_if = "Option::is_none")]
         hint: Option<&'a str>,
     },

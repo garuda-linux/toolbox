@@ -3,7 +3,7 @@
 use egui_kittest::kittest::Queryable as _;
 
 use super::{app_with, queued, review};
-use crate::common::{WIDTH, installing, launch_in, pane};
+use crate::common::{WIDTH, installing, launch_in, pane, pointer_button};
 
 /// A queue too long for the room above the pill keeps a gap to the
 /// window's top and scrolls a shorter list.
@@ -75,18 +75,11 @@ fn a_click_beside_the_popover_closes_it() {
     let beside = page.left_top() + egui::vec2(12.0, 12.0);
 
     // A press and its release in the next frame, quick enough for a click.
-    let press = |pressed| egui::Event::PointerButton {
-        pos: beside,
-        button: egui::PointerButton::Primary,
-        pressed,
-        modifiers: egui::Modifiers::NONE,
-    };
-
     harness.event(egui::Event::PointerMoved(beside));
     harness.step();
-    harness.event(press(true));
+    harness.event(pointer_button(beside, true));
     harness.step();
-    harness.event(press(false));
+    harness.event(pointer_button(beside, false));
     harness.run();
 
     assert!(pane(&harness, "Changes to apply").is_none());

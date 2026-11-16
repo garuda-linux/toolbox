@@ -20,7 +20,6 @@ pub struct Diagnostics {
     pub confirm: Confirm,
 }
 
-/// A report of the diagnostics page.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Report(pub Selection);
 

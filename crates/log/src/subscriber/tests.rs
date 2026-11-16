@@ -6,7 +6,6 @@ use tracing::level_filters::LevelFilter;
 
 use super::{Origin, Stack, build};
 
-/// A stack whose lines land in the returned list.
 fn stack(variable: Option<&OsStr>) -> (Stack, Arc<Mutex<Vec<String>>>) {
     let lines = Arc::new(Mutex::new(Vec::new()));
     let sink = Arc::clone(&lines);

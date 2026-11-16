@@ -2,7 +2,6 @@
 //! terminal, with the failing stage named in every error.
 
 use std::fs::File;
-use std::os::fd::OwnedFd;
 use std::os::unix::process::CommandExt as _;
 use std::path::Path;
 use std::process::{Child, Stdio};
@@ -12,17 +11,6 @@ use rustix::pty::{OpenptFlags, grantpt, openpt, ptsname, unlockpt};
 
 use crate::PtyCommand;
 use crate::size::winsize;
-
-/// A new pseudo-terminal master, closed in children.
-///
-/// # Errors
-///
-/// When the system has no free pseudo-terminal or `/dev/ptmx` is missing.
-pub fn open_master() -> io::Result<OwnedFd> {
-    Ok(openpt(
-        OpenptFlags::RDWR | OpenptFlags::NOCTTY | OpenptFlags::CLOEXEC,
-    )?)
-}
 
 /// `error` with the `stage` that failed in front. A bare errno never says
 /// which step went wrong.
@@ -42,7 +30,9 @@ where
 /// When a terminal stage or the spawn itself fails. The message names the
 /// stage.
 pub fn spawn(command: &PtyCommand) -> io::Result<(Child, File)> {
-    let master = open_master().map_err(|error| stage_error("open a terminal master", error))?;
+    let master = openpt(OpenptFlags::RDWR | OpenptFlags::NOCTTY | OpenptFlags::CLOEXEC)
+        .map_err(|error| stage_error("open a terminal master", error))?;
+
     grantpt(&master).map_err(|error| stage_error("grant a terminal", error))?;
     unlockpt(&master).map_err(|error| stage_error("unlock a terminal", error))?;
 

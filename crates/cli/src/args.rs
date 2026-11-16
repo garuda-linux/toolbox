@@ -341,7 +341,6 @@ pub enum Command {
     Help(Help),
 }
 
-/// The output of a command that only reads.
 #[derive(Clone, Copy, Debug, Default, Args)]
 pub struct Read {
     /// Print JSON instead of text, for scripts.
@@ -349,7 +348,6 @@ pub struct Read {
     pub json: bool,
 }
 
-/// The question before a change.
 #[derive(Clone, Copy, Debug, Default, Args)]
 pub struct Confirm {
     /// Do not ask, carry the change out. Needed without a terminal.

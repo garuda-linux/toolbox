@@ -107,6 +107,7 @@ async fn follow(
             portal: portal::read(settings.as_ref()).await,
             desktop: read.files.desktop,
             prefer_dark: read.files.prefer_dark,
+            gtk: family == Family::Gtk,
         };
 
         let look = DesktopLook {

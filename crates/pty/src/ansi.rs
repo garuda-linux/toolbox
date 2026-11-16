@@ -57,7 +57,6 @@ pub fn read_escape(chars: &mut Peekable<Chars<'_>>, mut sequence: Option<&mut St
     keep(kind);
 
     match kind {
-        // CSI: parameters, then a final byte.
         '[' => {
             for next in chars.by_ref() {
                 keep(next);

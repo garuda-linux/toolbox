@@ -34,7 +34,6 @@ static GUIDE: LazyLock<Guide> = LazyLock::new(|| Guide::new(built_in::SUMMARY, b
 
 pub const FIRST_PAGE: &str = "introduction.md";
 
-/// The suffix of a light capture after its picture's stem.
 const LIGHT: &str = "-light.png";
 
 /// The guide built into the binary, parsed on first use.

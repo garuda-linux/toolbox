@@ -62,6 +62,7 @@ fn a_desktop_window_colour_decides_the_theme_over_the_portal() {
         },
         desktop: Some(light_desktop()),
         prefer_dark: None,
+        gtk: false,
     });
 
     assert_eq!(look.theme, Theme::Light);
@@ -89,6 +90,7 @@ fn the_portal_accent_fills_in_when_the_desktop_names_none() {
         },
         desktop: Some(light_desktop()),
         prefer_dark: None,
+        gtk: false,
     });
 
     assert_eq!(look.light.accent, BLUE);
@@ -107,6 +109,7 @@ fn the_desktop_accent_wins_over_the_portal() {
         },
         desktop: Some(desktop),
         prefer_dark: None,
+        gtk: false,
     });
 
     assert_eq!(look.light.accent, Color32::from_rgb(0x3d, 0xae, 0xe9));
@@ -197,4 +200,36 @@ fn the_desktop_files_turning_animations_off_reduce_motion_over_the_portal() {
     });
 
     assert!(look.reduced_motion);
+}
+
+/// Default GNOME ships no gtk.css, as libadwaita keeps its colours inside.
+#[test]
+fn a_gtk_desktop_without_colours_takes_adwaita_with_its_accent() {
+    let look = Look::resolve(&Sources {
+        portal: Portal {
+            dark: Some(true),
+            accent: Some(BLUE),
+            animations: None,
+        },
+        gtk: true,
+        ..Sources::default()
+    });
+
+    let adwaita = Palette::adwaita(Theme::Dark);
+    assert_eq!(look.dark.window, adwaita.window);
+    assert_eq!(look.dark.text, adwaita.text);
+    assert_eq!(look.dark.accent, BLUE);
+    assert_eq!(look.light, Palette::adwaita(Theme::Light));
+}
+
+#[test]
+fn a_gtk_theme_s_own_colours_still_win_over_adwaita() {
+    let look = Look::resolve(&Sources {
+        desktop: Some(light_desktop()),
+        gtk: true,
+        ..Sources::default()
+    });
+
+    assert_eq!(look.light.window, Color32::from_rgb(0xef, 0xf0, 0xf1));
+    assert_eq!(look.light.view, Palette::adwaita(Theme::Light).view);
 }

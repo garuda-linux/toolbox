@@ -45,9 +45,8 @@ pub fn title_header(ui: &mut Ui, title: &str, subtitle: &str) {
     );
 }
 
-/// Returns whether Read again was clicked or F5 pressed. While `reading`
-/// Read again spins, so a press shows that it was taken and F5 sends no
-/// second read.
+/// Returns whether Read again was clicked or F5 pressed. While `reading`,
+/// neither starts a second read.
 pub fn refresh_header_reading(
     ui: &mut Ui,
     (title, subtitle): (&str, &str),

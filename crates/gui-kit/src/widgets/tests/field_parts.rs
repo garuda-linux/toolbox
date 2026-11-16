@@ -1,10 +1,10 @@
 use egui::accesskit::Role;
-use egui::{Align2, Pos2, TextEdit, Theme};
+use egui::{Align2, TextEdit, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::{SecretText, SecretTexts, forget_text, secret_field, text_field};
-use crate::testing::{filled_rect, harness, painted_text, rim_colours_around};
+use crate::testing::{click_at, filled_rect, harness, painted_text, rim_colours_around};
 use crate::tokens;
 
 const SECRET: SecretTexts<'static> = SecretTexts {
@@ -12,21 +12,6 @@ const SECRET: SecretTexts<'static> = SecretTexts {
     show: "Show password",
     hide: "Hide password",
 };
-
-fn click_at<State>(harness: &mut Harness<'_, State>, at: Pos2) {
-    let press = |pressed| egui::Event::PointerButton {
-        pos: at,
-        button: egui::PointerButton::Primary,
-        pressed,
-        modifiers: egui::Modifiers::NONE,
-    };
-
-    harness.event(egui::Event::PointerMoved(at));
-    harness.event(press(true));
-    harness.step();
-    harness.event(press(false));
-    harness.run();
-}
 
 fn plain_field() -> Harness<'static, String> {
     let mut harness = harness(400.0, 100.0)

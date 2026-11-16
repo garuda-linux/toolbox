@@ -7,7 +7,6 @@ use pulldown_cmark::{Event, Parser, Tag, TagEnd};
 
 use super::{Image, Link, Span, Style};
 
-/// The spans of one run of text and the pictures in it.
 #[derive(Debug, Default)]
 pub(super) struct Inline {
     pub spans: Vec<Span>,

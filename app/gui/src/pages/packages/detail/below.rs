@@ -155,7 +155,6 @@ fn file_lines(ui: &mut Ui, files: &[String], places: &[usize]) {
     .widget_info(|| WidgetInfo::labeled(Role::Document, true, &*label));
 }
 
-/// The fold of the history, then its newest lines and Show all.
 pub fn history(
     page: &mut PackagesPage,
     ui: &mut Ui,

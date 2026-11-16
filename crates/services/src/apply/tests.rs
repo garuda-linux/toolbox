@@ -16,7 +16,6 @@ use toolbox_system::pkexec::Refusal;
 
 use super::{ApplyCommand, Launcher, OutputGate, PlanId, Problem, Report, Reporter, serve};
 
-/// The id the tests send their plan with.
 const PLAN: PlanId = PlanId::new(1);
 
 struct FakeLauncher {
@@ -68,11 +67,7 @@ fn root_plan() -> Plan {
     Plan::root(RootAction::RefreshKeyring)
 }
 
-async fn run_after(
-    commands: Vec<ApplyCommand>,
-    plan: Plan,
-    launcher: impl Launcher + 'static,
-) -> Vec<Report> {
+async fn serve_all(launcher: impl Launcher + 'static, commands: Vec<ApplyCommand>) -> Vec<Report> {
     let (sender, receiver) = unbounded_channel();
     let (reports, report_queue) = crate::waking::channel(crate::waking::Wake::none());
     let reporter = Reporter {
@@ -84,7 +79,6 @@ async fn run_after(
         sender.send(command).unwrap();
     }
 
-    sender.send(ApplyCommand::Run { id: PLAN, plan }).unwrap();
     drop(sender);
     tokio::time::timeout(
         Duration::from_secs(20),
@@ -94,6 +88,15 @@ async fn run_after(
     .unwrap();
 
     report_queue.try_iter().collect()
+}
+
+async fn run_after(
+    mut commands: Vec<ApplyCommand>,
+    plan: Plan,
+    launcher: impl Launcher + 'static,
+) -> Vec<Report> {
+    commands.push(ApplyCommand::Run { id: PLAN, plan });
+    serve_all(launcher, commands).await
 }
 
 async fn run(plan: Plan, launcher: impl Launcher + 'static) -> Vec<Report> {

@@ -55,6 +55,8 @@ egui = "0.37"
 # Without color_fonts the system colour emoji font draws nothing.
 epaint-color-fonts = { package = "epaint", version = "0.37", default-features = false, features = ["color_fonts"] }
 skrifa = "0.50.0"
+# GNOME leaves the title bar to the app. eframe does not pass this feature through.
+winit-csd = { package = "winit", version = "0.30", default-features = false, features = ["wayland-csd-adwaita"] }
 egui-wgpu = { version = "0.37", default-features = false }
 egui_extras = { version = "0.37", default-features = false, features = ["file", "image", "svg"] }
 # egui_extras's own, for the options every SVG of the window is parsed with.

@@ -187,7 +187,6 @@ where
 
     let mut ipv6 = addresses(reads, &device.ip6_config, IP6).await;
 
-    // Global and unique local addresses first, link-local last.
     ipv6.sort_by_key(|subnet| is_link_local(subnet.address));
 
     let card = InterfaceCard {
@@ -318,6 +317,9 @@ fn typed<T>(value: Value) -> Result<T, CallError>
 where
     T: DeserializeOwned,
 {
-    serde_json::from_value(value)
-        .map_err(|error| CallError::Failed(format!("unexpected properties: {error}")))
+    serde_json::from_value(value).map_err(|error| unexpected(&error))
+}
+
+pub(super) fn unexpected(error: &serde_json::Error) -> CallError {
+    CallError::Failed(format!("unexpected properties: {error}"))
 }

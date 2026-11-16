@@ -15,7 +15,6 @@ pub const URL_CHARS: usize = 2048;
 pub const ENTRY_CHARS: usize = 256;
 pub const LIST_ENTRIES: usize = 256;
 
-/// `text` without hidden characters, cut to `max` characters.
 pub fn plain(text: &str, max: usize) -> String {
     text.chars()
         .filter(|character| !toolbox_plan::text::is_hidden(*character))
@@ -23,13 +22,11 @@ pub fn plain(text: &str, max: usize) -> String {
         .collect()
 }
 
-/// [`plain`] of a value that may be missing, `None` once nothing is left.
 pub fn optional(text: Option<&str>, max: usize) -> Option<String> {
     text.map(|text| plain(text, max))
         .filter(|text| !text.trim().is_empty())
 }
 
-/// The first [`LIST_ENTRIES`] entries, each [`plain`], empty ones left out.
 pub fn list(entries: &[String]) -> Vec<String> {
     entries
         .iter()

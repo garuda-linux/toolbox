@@ -93,12 +93,7 @@ fn operation_row(
             };
 
             if plan_button(ui, context, "maintenance-run-now", kind) {
-                if operation.operation.asks_first() {
-                    *asking = Some(Asked::Operation(operation.operation));
-                } else {
-                    let run = MaintenanceCommand::RunOperation(operation.operation);
-                    context.commands.send(run);
-                }
+                Asked::Operation(operation.operation).start(context, asking);
             }
         });
 }

@@ -16,7 +16,7 @@ pub fn package(name: &str) -> PackageName {
     PackageName::new(name).unwrap()
 }
 
-fn repo(repo: &str, name: &str, version: &str) -> RepoPackage {
+pub fn repo(repo: &str, name: &str, version: &str) -> RepoPackage {
     RepoPackage {
         repo: repo.to_owned(),
         name: package(name),
@@ -81,6 +81,6 @@ pub fn vboxhost_build() -> DkmsBuild {
     }
 }
 
-fn release(name: &str) -> KernelRelease {
+pub fn release(name: &str) -> KernelRelease {
     KernelRelease::new(name).unwrap()
 }

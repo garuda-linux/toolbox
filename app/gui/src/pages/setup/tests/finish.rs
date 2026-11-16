@@ -4,7 +4,7 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::ChangeSet;
 
-use super::{page, shows, strawberry};
+use super::{page, shows, strawberry, succeeded};
 use crate::pages::Plans;
 use crate::pages::setup::Stage;
 
@@ -45,11 +45,7 @@ fn the_success_page_names_what_the_apply_installed() {
     let fixture = &mut harness.state_mut().fixture;
     fixture.changes = ChangeSet::default();
     fixture.revision += 1;
-    fixture.plans = Plans {
-        finished: 1,
-        last_succeeded: true,
-        ..Plans::default()
-    };
+    fixture.plans = succeeded();
     harness.run();
 
     assert!(shows(&harness, "Success!"));
@@ -71,13 +67,7 @@ fn the_success_page_links_to_the_forum_and_the_wikis() {
 
 #[test]
 fn finish_without_picks_after_an_apply_recommends_no_restart() {
-    let plans = Plans {
-        finished: 1,
-        last_succeeded: true,
-        ..Plans::default()
-    };
-
-    let mut harness = page(strawberry(), plans, Stage::Summary);
+    let mut harness = page(strawberry(), succeeded(), Stage::Summary);
     harness.state_mut().fixture.changes = ChangeSet::default();
     harness.run();
     assert!(shows(&harness, "A restart is recommended"));

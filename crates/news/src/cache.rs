@@ -73,9 +73,8 @@ impl Cache {
     /// Downloads when the last attempt is old enough. Returns why the
     /// download failed, `None` when none was due or it worked.
     fn refresh(&self, stored: &mut Stored, now: i64) -> Result<Option<NewsError>, NewsError> {
-        // A clock set wrong forward once would block every download until
-        // it passed that time. Counting the attempt as now waits from the
-        // present, never longer.
+        // A clock once set far ahead would block downloads until that time
+        // passed, so the attempt counts as now.
         if stored.last_attempt.is_some_and(|last| last > now) {
             stored.last_attempt = Some(now);
             self.write(stored)?;

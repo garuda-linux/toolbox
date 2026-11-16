@@ -11,7 +11,6 @@ pub enum Style {
     Color,
 }
 
-/// `text` in the ANSI colour `code` (SGR parameters) when colouring.
 fn paint(style: Style, code: &str, text: &str) -> String {
     match style {
         Style::Plain => text.to_owned(),

@@ -1,13 +1,9 @@
-//! The question before every queued change is removed.
-
 use egui::{Context, Id};
 use toolbox_gui_kit::widgets::{ButtonKind, DialogWidth, Question, question};
 
 use crate::command::{Command, CommandSender, UiCommand};
 use crate::i18n;
 
-/// The question for [`UiCommand::ClearChanges`], which the app asks before
-/// it removes anything.
 pub fn ask_to_clear(
     ctx: &Context,
     count: &str,

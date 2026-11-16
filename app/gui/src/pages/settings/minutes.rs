@@ -15,7 +15,6 @@ pub struct MinutesField {
 }
 
 impl MinutesField {
-    /// What the last typed value was held to, if it was refused.
     pub const fn held(&self) -> Option<u16> {
         self.held
     }

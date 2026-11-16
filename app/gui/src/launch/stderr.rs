@@ -24,7 +24,6 @@ const TAIL_BYTES: u64 = 16 * 1024;
 /// their own.
 const ATTEMPTS: u32 = 16;
 
-/// The extension of the files, which the sweep looks for.
 const EXTENSION: &str = "stderr";
 
 #[derive(Debug)]
@@ -114,7 +113,6 @@ pub fn sweep(log_dir: &Path) {
     }
 }
 
-/// The start of the names this process gives its files.
 fn own_prefix() -> String {
     format!("{}-", std::process::id())
 }

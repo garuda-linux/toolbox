@@ -65,6 +65,16 @@ fn shows(harness: &Shown, label: &str) -> bool {
     harness.query_all_by_label_contains(label).next().is_some()
 }
 
+// The taller rows put the button under the window's foot.
+fn ask_reinstall(harness: &mut Shown) {
+    harness
+        .get_by_label("Reinstall the boot loader…")
+        .scroll_to_me();
+    harness.run();
+    harness.get_by_label("Reinstall the boot loader…").click();
+    harness.run();
+}
+
 #[test]
 fn the_page_hides_the_queued_changes_as_each_repair_runs_at_once() {
     let page = BootRepairPage::default();
@@ -155,13 +165,7 @@ fn a_locked_system_is_repaired_only_with_its_passphrase() {
 
     assert!(shows(&harness, "Encrypted (LUKS), locked"));
 
-    // The taller rows put the button under the window's foot.
-    harness
-        .get_by_label("Reinstall the boot loader…")
-        .scroll_to_me();
-    harness.run();
-    harness.get_by_label("Reinstall the boot loader…").click();
-    harness.run();
+    ask_reinstall(&mut harness);
 
     let confirm = |shown: &Shown| {
         shown
@@ -235,13 +239,7 @@ fn the_passphrase_field_is_named_above_it_and_the_wait_is_explained() {
 
     let mut harness = page(locked(), start);
 
-    // The taller rows put the button under the window's foot.
-    harness
-        .get_by_label("Reinstall the boot loader…")
-        .scroll_to_me();
-    harness.run();
-    harness.get_by_label("Reinstall the boot loader…").click();
-    harness.run();
+    ask_reinstall(&mut harness);
 
     let field = "Passphrase of the encrypted partition";
     let named: Vec<_> = harness.query_all_by_label(field).collect();

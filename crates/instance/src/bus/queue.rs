@@ -17,8 +17,7 @@ const INTERFACE: &str = "org.garudalinux.toolbox.Queue";
 /// A whole queue fits many times over. Larger texts are refused unread.
 pub const MAX_QUEUE_TEXT: usize = 256 * 1024;
 
-/// How long a call waits for the window's answer. The window answers on
-/// its next logic pass, which also runs while it is hidden.
+/// The window answers on its next logic pass, which also runs while it is hidden.
 pub const ANSWER_LIMIT: Duration = Duration::from_secs(5);
 
 #[derive(Debug, PartialEq, Eq)]

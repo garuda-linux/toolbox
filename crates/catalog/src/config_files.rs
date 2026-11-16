@@ -112,11 +112,14 @@ impl ConfigFileCatalog {
                 problem,
             };
 
-            source::claim_id(&section.id, &mut seen)
-                .and_then(|()| {
-                    source::check_section(&section.title, &section.icon, section.entry.len())
-                })
-                .map_err(|problem| invalid(&section.id, problem))?;
+            source::claim_section(
+                &section.id,
+                &section.title,
+                &section.icon,
+                section.entry.len(),
+                &mut seen,
+            )
+            .map_err(|problem| invalid(&section.id, problem))?;
 
             let mut entries = Vec::with_capacity(section.entry.len());
 

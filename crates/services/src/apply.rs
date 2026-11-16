@@ -213,7 +213,6 @@ impl Reporter {
         self.report(Report::Step(event));
     }
 
-    /// Logs the failure once, where it happens, and tells the Console.
     fn helper_failed(&self, kind: HelperFailure, detail: String) {
         tracing::error!("the plan stopped ({}): {detail}", kind.as_str());
         self.report(Report::Problem(Problem::HelperFailed { kind, detail }));
@@ -250,7 +249,6 @@ impl Run<'_> {
         }
     }
 
-    /// The size answer a new segment starts with, if the Console has one.
     fn starting_size(&self) -> Option<Answer> {
         self.size.map(|size| Answer::Resize { size })
     }

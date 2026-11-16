@@ -1,16 +1,7 @@
 use egui_kittest::kittest::Queryable as _;
 
-use super::{live, page};
+use super::{ask_reinstall, live, page};
 use crate::pages::bootrepair::BootRepairPage;
-
-fn ask_reinstall(harness: &mut super::Shown) {
-    harness
-        .get_by_label("Reinstall the boot loader…")
-        .scroll_to_me();
-    harness.run();
-    harness.get_by_label("Reinstall the boot loader…").click();
-    harness.run();
-}
 
 /// On an installed system the disk is not the live ISO's, so the question
 /// says whose programs run as root.

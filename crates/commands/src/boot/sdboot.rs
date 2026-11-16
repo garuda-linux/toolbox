@@ -19,10 +19,9 @@ use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
 use toolbox_plan::{LoaderDefault, PackageName, Plan};
 use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 
-use super::entry_listing;
+use super::{entry_listing, unknown_kernel};
 use crate::act::run;
 use crate::change::{Refused, fresh};
-use crate::names::kernel_names;
 use crate::out::Out;
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
@@ -183,12 +182,8 @@ pub fn default_kernel(
     snapshot: &Snapshot,
 ) -> Result<LoaderSetting, Refused> {
     let Some(default) = boot::kernel_default(menu, kernel, snapshot) else {
-        let known = kernel_names(snapshot);
         let text = format!("systemd-boot has no image of `{kernel}`, see `boot entries`");
-
-        return Err(
-            Refused::Unknown(text).hinted(kernel.as_str(), known.iter().map(String::as_str))
-        );
+        return Err(unknown_kernel(text, kernel, snapshot));
     };
 
     Ok(LoaderSetting::Default(Some(default)))

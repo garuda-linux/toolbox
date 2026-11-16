@@ -17,7 +17,6 @@ const INTERVALS: [(RefreshInterval, &str, Option<u64>); 8] = [
     (RefreshInterval::Minutes(1440), "24h", Some(86_400)),
 ];
 
-/// `text` as the settings file, loaded.
 fn load(text: &str) -> Loaded {
     let dir = tempfile::tempdir().unwrap();
     let path = dir.path().join("settings.toml");

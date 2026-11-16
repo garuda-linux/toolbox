@@ -102,7 +102,6 @@ pub struct Signal {
     pub percent: u8,
 }
 
-/// The word for a signal strength.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SignalQuality {
     Excellent,

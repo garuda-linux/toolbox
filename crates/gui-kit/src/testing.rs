@@ -313,6 +313,21 @@ pub fn press_until<State>(
     false
 }
 
+pub fn click_at<State>(harness: &mut egui_kittest::Harness<'_, State>, at: egui::Pos2) {
+    let press = |pressed| egui::Event::PointerButton {
+        pos: at,
+        button: egui::PointerButton::Primary,
+        pressed,
+        modifiers: egui::Modifiers::NONE,
+    };
+
+    harness.event(egui::Event::PointerMoved(at));
+    harness.event(press(true));
+    harness.step();
+    harness.event(press(false));
+    harness.run();
+}
+
 /// What a screen reader says for `node`: its label, or the value egui
 /// gives a label's text.
 pub fn spoken_words(node: &egui_kittest::Node<'_>) -> String {

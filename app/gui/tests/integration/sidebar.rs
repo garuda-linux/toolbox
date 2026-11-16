@@ -26,6 +26,12 @@ fn entry_name(harness: &Harness<'_, App>, page: PageId) -> String {
     toolbox_gui::i18n::text(&harness.ctx, page.text_id()).into_owned()
 }
 
+fn sidebar_pages() -> impl Iterator<Item = PageId> {
+    PageId::ALL
+        .into_iter()
+        .filter(|page| *page != PageId::BootRepair)
+}
+
 fn foot_top(harness: &Harness<'_, App>) -> f32 {
     let settings = entry_name(harness, PageId::Settings);
     harness
@@ -46,10 +52,7 @@ fn every_entry_reachable(height: f32, dry_run: bool) {
 
     let foot_top = foot_top(&harness);
 
-    for page in PageId::ALL
-        .into_iter()
-        .filter(|page| *page != PageId::BootRepair)
-    {
+    for page in sidebar_pages() {
         let name = entry_name(&harness, page);
         harness
             .get_by_role_and_label(Role::Tab, &name)
@@ -129,9 +132,7 @@ fn a_collapsed_divider_keeps_six_points_to_the_selected_entry_on_each_side() {
         harness.run();
 
         let outline = tokens::current(&harness.ctx).outline;
-        let entries: Vec<_> = PageId::ALL
-            .into_iter()
-            .filter(|page| *page != PageId::BootRepair)
+        let entries: Vec<_> = sidebar_pages()
             .map(|page| {
                 let name = entry_name(&harness, page);
                 harness.get_by_role_and_label(Role::Tab, &name).rect()
@@ -227,6 +228,37 @@ fn fade_drawn(harness: &Harness<'_, App>) -> bool {
     faded_within(harness, toolbox_gui_kit::theme::SIDEBAR_WIDTH)
 }
 
+fn assert_unscrolled_and_uncut(harness: &Harness<'_, App>) {
+    for page in sidebar_pages() {
+        assert!(
+            in_sight_unscrolled(harness, page),
+            "{page:?} needs a scroll"
+        );
+    }
+
+    assert!(!fade_drawn(harness), "nothing is cut, so no fade");
+}
+
+fn packed_heading_gaps(harness: &Harness<'_, App>) -> [(&'static str, f32, f32); 3] {
+    let rect = |page: PageId| {
+        harness
+            .get_by_role_and_label(Role::Tab, &entry_name(harness, page))
+            .rect()
+    };
+
+    [
+        ("Install", PageId::Home, PageId::Setup),
+        ("System", PageId::Discover, PageId::Services),
+        ("Care", PageId::Boot, PageId::Maintenance),
+    ]
+    .map(|(heading, above, below)| {
+        let label = harness.get_by_role_and_label(Role::Heading, heading).rect();
+        let over = label.top() - rect(above).bottom();
+        let under = rect(below).top() - label.bottom();
+        (heading, over, under)
+    })
+}
+
 /// The default window's height shows every entry in its normal spacing.
 #[test]
 fn a_window_of_960_shows_every_entry_unpacked_without_scrolling() {
@@ -241,17 +273,7 @@ fn a_window_of_960_shows_every_entry_unpacked_without_scrolling() {
     let normal = tokens::current(&harness.ctx).sizes.nav_gap;
     assert!((gap - normal).abs() < 0.5, "packed: {gap} between entries");
 
-    for page in PageId::ALL
-        .into_iter()
-        .filter(|page| *page != PageId::BootRepair)
-    {
-        assert!(
-            in_sight_unscrolled(&harness, page),
-            "{page:?} needs a scroll"
-        );
-    }
-
-    assert!(!fade_drawn(&harness), "nothing is cut, so no fade");
+    assert_unscrolled_and_uncut(&harness);
 }
 
 #[test]
@@ -268,21 +290,8 @@ fn a_shorter_window_scrolls_with_a_fade_at_the_cut_edge() {
 #[test]
 fn a_packed_group_heading_has_more_room_above_than_below() {
     let harness = app(HEIGHT, false);
-    let rect = |page: PageId| {
-        harness
-            .get_by_role_and_label(Role::Tab, &entry_name(&harness, page))
-            .rect()
-    };
 
-    for (heading, above, below) in [
-        ("Install", PageId::Home, PageId::Setup),
-        ("System", PageId::Discover, PageId::Services),
-        ("Care", PageId::Boot, PageId::Maintenance),
-    ] {
-        let label = harness.get_by_role_and_label(Role::Heading, heading).rect();
-        let over = label.top() - rect(above).bottom();
-        let under = rect(below).top() - label.bottom();
-
+    for (heading, over, under) in packed_heading_gaps(&harness) {
         assert!(
             over >= under + 2.0,
             "{heading}: {over} above against {under} below"
@@ -295,43 +304,20 @@ fn a_packed_group_heading_has_more_room_above_than_below() {
 #[test]
 fn a_packed_group_heading_keeps_ten_above_and_four_below() {
     let harness = app(HEIGHT, false);
-    let rect = |page: PageId| {
-        harness
-            .get_by_role_and_label(Role::Tab, &entry_name(&harness, page))
-            .rect()
-    };
 
-    for (heading, above, below) in [
-        ("Install", PageId::Home, PageId::Setup),
-        ("System", PageId::Discover, PageId::Services),
-        ("Care", PageId::Boot, PageId::Maintenance),
-    ] {
-        let label = harness.get_by_role_and_label(Role::Heading, heading).rect();
-        let over = label.top() - rect(above).bottom();
-        let under = rect(below).top() - label.bottom();
-
+    for (heading, over, under) in packed_heading_gaps(&harness) {
         assert!(over >= 10.0 - 0.5, "{heading}: {over} above");
         assert!(under >= 4.0 - 0.5, "{heading}: {under} below");
     }
 }
 
-/// The packed list fits a window of 820. Earlier releases opened at 760,
-/// which no longer holds the packed headings' room (10 above, 4 below).
+/// The packed list fits a window of 820, which holds the packed headings'
+/// room (10 above, 4 below).
 #[test]
 fn a_window_of_820_shows_every_entry_packed_without_scrolling() {
     let harness = app(820.0, false);
 
-    for page in PageId::ALL
-        .into_iter()
-        .filter(|page| *page != PageId::BootRepair)
-    {
-        assert!(
-            in_sight_unscrolled(&harness, page),
-            "{page:?} needs a scroll"
-        );
-    }
-
-    assert!(!fade_drawn(&harness), "nothing is cut, so no fade");
+    assert_unscrolled_and_uncut(&harness);
 }
 
 #[test]

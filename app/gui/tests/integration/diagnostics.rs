@@ -1,5 +1,4 @@
-//! Diagnostics with its real service: a collected report, its upload to
-//! the dry-run paste server, the clipboard setting and the snapshots.
+//! Diagnostics with its real service and the dry-run paste server.
 
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;

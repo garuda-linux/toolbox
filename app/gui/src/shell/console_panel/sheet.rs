@@ -13,9 +13,7 @@ use toolbox_gui_kit::{frost, motion, tokens};
 
 use super::Sheet;
 
-/// The share of the page the sheet takes when first opened.
 const SHARE: f32 = 0.75;
-/// How far one press of Up or Down moves the focused grip, in points.
 const KEY_STEP: f32 = 32.0;
 /// The room between the grip's bar and its focus ring, so the ring reads
 /// as the bar's and not as a line of its own.
@@ -70,7 +68,6 @@ pub fn out(ctx: &Context, sheet: Sheet) -> f32 {
     motion::slide(ctx, slide, sheet.open, motion::SHEET)
 }
 
-/// `grip` names the bar for screen readers.
 pub fn show(
     ctx: &Context,
     place: Place,

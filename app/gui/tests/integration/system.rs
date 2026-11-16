@@ -170,13 +170,18 @@ pub fn first_read(harness: &mut Harness<'static, App>) {
     });
 }
 
+#[track_caller]
+fn until_reading_notice(harness: &mut Harness<'static, App>) {
+    step_until(harness, "the reading notice", |harness| {
+        harness.query_all_by_label("Reading the system…").count() == 1
+    });
+}
+
 #[test]
 fn the_first_read_shows_and_then_drops_what_is_done() {
     let (mut harness, _runtime, answer, _reads) = app();
 
-    step_until(&mut harness, "the reading notice", |harness| {
-        harness.query_all_by_label("Reading the system…").count() == 1
-    });
+    until_reading_notice(&mut harness);
     harness.get_by_label("Review").click();
     harness.step();
     step_until(&mut harness, "the popover", |harness| {
@@ -272,9 +277,7 @@ fn a_finished_plan_reads_the_system_and_empties_the_queue() {
 #[test]
 fn apply_waits_for_the_first_read() {
     let (mut harness, _runtime, answer, _reads) = app();
-    step_until(&mut harness, "the reading notice", |harness| {
-        harness.query_all_by_label("Reading the system…").count() == 1
-    });
+    until_reading_notice(&mut harness);
 
     assert!(harness.get_by_label("Apply").accesskit_node().is_disabled());
     harness.key_press_modifiers(Modifiers::COMMAND, Key::Enter);
@@ -329,11 +332,9 @@ fn bar_height(harness: &Harness<'static, App>) -> f32 {
 }
 
 #[test]
-fn a_read_alone_brings_no_bar_only_a_note_over_the_page() {
+fn a_read_alone_brings_no_bar_only_a_note_in_the_sidebar() {
     let (mut harness, _runtime, answer, _reads) = app();
-    step_until(&mut harness, "the reading notice", |harness| {
-        harness.query_all_by_label("Reading the system…").count() == 1
-    });
+    until_reading_notice(&mut harness);
     assert!(bar_height(&harness) < 1.0, "{}", bar_height(&harness));
 
     answer.send((installed(&[]), Vec::new())).unwrap();

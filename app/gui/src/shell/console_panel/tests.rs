@@ -192,25 +192,16 @@ fn ringed(harness: &egui_kittest::Harness<'_, crate::console::Console>) -> bool 
         })
 }
 
+/// Keys typed into the terminal would bring a ring back the next click
+/// hides, so its cursor alone shows the focus.
 #[test]
-fn a_terminal_the_keyboard_focused_rings_its_box() {
+fn a_focused_terminal_never_rings_its_box() {
     use egui_kittest::kittest::Queryable as _;
 
     let mut harness = terminal_box(false);
-    assert!(!ringed(&harness), "no ring before the focus");
-
     harness.get_by_role(egui::accesskit::Role::Terminal).focus();
     harness.run();
-
-    assert!(ringed(&harness));
-}
-
-#[test]
-fn a_terminal_focused_by_a_click_shows_no_ring() {
-    use egui_kittest::kittest::Queryable as _;
-
-    let mut harness = terminal_box(false);
-    harness.get_by_role(egui::accesskit::Role::Terminal).click();
+    harness.key_press(egui::Key::Tab);
     harness.run();
 
     assert!(
@@ -337,4 +328,39 @@ fn a_running_plan_shows_the_terminal_cursor() {
     harness.run();
 
     assert!(has_block_cursor(&harness));
+}
+
+/// A long plan runs its later steps below the list's fold, where the
+/// running one would hide.
+#[test]
+fn the_running_step_scrolls_into_view() {
+    let shown = |running: u32| {
+        let rows: Vec<StepRow> = (1..=12_u32)
+            .map(|number| StepRow {
+                id: StepId::new(number),
+                command: format!("step {number}"),
+                state: match number.cmp(&running) {
+                    std::cmp::Ordering::Less => StepState::Succeeded,
+                    std::cmp::Ordering::Equal => StepState::Running,
+                    std::cmp::Ordering::Greater => StepState::Waiting,
+                },
+            })
+            .collect();
+
+        let mut harness = toolbox_gui_kit::testing::harness(600.0, 400.0)
+            .build_ui(move |ui| steps(ui, &rows, false));
+
+        harness.run();
+        harness
+    };
+
+    let first = shown(1).get_by_label("step 1").rect();
+    let running = shown(11).get_by_label("step 11").rect();
+    assert!(
+        running.bottom() <= first.top() + super::STEPS_HEIGHT + 1.0,
+        "the running step ends at {}, the list shows {} px from {}",
+        running.bottom(),
+        super::STEPS_HEIGHT,
+        first.top()
+    );
 }

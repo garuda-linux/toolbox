@@ -59,7 +59,6 @@ pub struct RadioArgs {
     pub state: OnOff,
 }
 
-/// A radio of the Network page.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub enum Radio {
     Wifi,

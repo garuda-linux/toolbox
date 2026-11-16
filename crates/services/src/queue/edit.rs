@@ -151,8 +151,6 @@ impl QueueEdit {
         domains.restore(changes, &added, snapshot)
     }
 
-    /// The edit as the bus and the tests carry it.
-    ///
     /// # Errors
     ///
     /// What `serde_json` refuses, which an edit of strings and JSON values

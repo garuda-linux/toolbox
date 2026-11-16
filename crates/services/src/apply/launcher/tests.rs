@@ -145,10 +145,7 @@ fn a_plain_file_is_no_setuid_root_pkexec() {
 
 #[test]
 fn sudo_runs_the_same_helper_after_its_option_end() {
-    let launcher = HelperLauncher::Sudo {
-        helper: PathBuf::from("/usr/lib/garuda-toolbox/garuda-toolbox-helper"),
-        sudo: PathBuf::from("/usr/bin/sudo"),
-    };
+    let launcher = through_sudo();
 
     let (program, arguments) = argv(&launcher);
 

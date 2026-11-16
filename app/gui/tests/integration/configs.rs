@@ -1,6 +1,4 @@
-//! The Config Files page on the self-test's own catalog and files: the
-//! list by section, a folder's files, the view of a guarded file, and
-//! the snapshots.
+//! The Config Files page on the self-test's own catalog and files.
 
 use std::fs;
 use std::path::Path;

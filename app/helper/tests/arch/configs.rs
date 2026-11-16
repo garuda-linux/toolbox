@@ -84,6 +84,13 @@ fn write(path: &str, content: &str, original: &str) -> Result<RootAction, Box<dy
     })
 }
 
+fn text(path: &str, content: &str) -> Result<FetchAnswer, Box<dyn Error>> {
+    Ok(FetchAnswer::Text {
+        path: ConfigFilePath::new(path)?,
+        content: ConfigText::new(content)?,
+    })
+}
+
 #[test]
 fn a_file_only_root_reads_is_handed_out_as_text() -> TestResult {
     if !in_test_image() {
@@ -101,13 +108,7 @@ fn a_file_only_root_reads_is_handed_out_as_text() -> TestResult {
     let (code, answer) = fetch(FILE)?;
 
     assert_eq!(code, Some(0_i32));
-    assert_eq!(
-        FetchAnswer::parse(answer.trim_end())?,
-        FetchAnswer::Text {
-            path: ConfigFilePath::new(FILE)?,
-            content: ConfigText::new(OLD)?
-        }
-    );
+    assert_eq!(FetchAnswer::parse(answer.trim_end())?, text(FILE, OLD)?);
     Ok(())
 }
 
@@ -203,13 +204,7 @@ fn a_link_is_edited_as_its_target_and_stays_a_link() -> TestResult {
     let (code, answer) = fetch(&chain)?;
 
     assert_eq!(code, Some(0_i32));
-    assert_eq!(
-        FetchAnswer::parse(answer.trim_end())?,
-        FetchAnswer::Text {
-            path: ConfigFilePath::new(FILE)?,
-            content: ConfigText::new(OLD)?
-        }
-    );
+    assert_eq!(FetchAnswer::parse(answer.trim_end())?, text(FILE, OLD)?);
     assert_eq!(apply(vec![write(&chain, NEW, OLD)?])?, [Outcome::Succeeded]);
 
     let after = fs::metadata(FILE)?;

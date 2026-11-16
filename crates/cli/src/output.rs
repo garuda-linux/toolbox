@@ -207,9 +207,7 @@ impl Paint {
         text
     }
 
-    /// clap's help and errors in the same look: headers blue and bold,
-    /// literals bold, errors red. clap itself leaves colour out without a
-    /// terminal or with `NO_COLOR`.
+    /// clap itself leaves colour out without a terminal or with `NO_COLOR`.
     pub const fn help() -> clap::builder::Styles {
         clap::builder::Styles::styled()
             .header(BLUE)
@@ -316,7 +314,6 @@ fn fit(widths: &mut [usize], room: usize) {
     }
 }
 
-/// `cell` within `width` display columns, ending in `…` when it was cut.
 fn cut(cell: &str, width: usize) -> Cow<'_, str> {
     if cell.width() <= width {
         return Cow::Borrowed(cell);

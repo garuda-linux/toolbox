@@ -12,12 +12,10 @@ use toolbox_gui_kit::desktop::family::Family;
 use toolbox_gui_kit::desktop::gtk::settings::{self, Settings};
 use toolbox_gui_kit::desktop::{DesktopTheme, gtk, kde};
 
-/// The file names whose change can change the look.
 const LOOK_FILES: [&str; 4] = ["kdeglobals", "gtk.css", "gtk-dark.css", "settings.ini"];
 /// GTK reads the newest folder first.
 const GTK_VERSIONS: [&str; 2] = ["gtk-4.0", "gtk-3.0"];
 
-/// The XDG folders the look files live in.
 #[derive(Clone, Debug)]
 pub struct DesktopFiles {
     config: PathBuf,

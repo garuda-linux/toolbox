@@ -2,20 +2,8 @@
 //! at the edge, and the rows fold while a report shows.
 
 use egui_kittest::kittest::Queryable as _;
-use toolbox_services::diagnostics::page::{Page, State};
 
-use super::{page, report};
-
-fn with_long_line() -> Page {
-    let long = format!("kernel: {}end\n", "x".repeat(400));
-    Page {
-        state: State::Report,
-        selection: "dmesg".to_owned(),
-        report: long.clone(),
-        raw: long,
-        ..Page::default()
-    }
-}
+use super::{page, plain_report, report};
 
 #[test]
 fn the_search_keeps_only_the_lines_that_hold_it() {
@@ -32,7 +20,7 @@ fn the_search_keeps_only_the_lines_that_hold_it() {
 
 #[test]
 fn a_long_line_wraps_into_rows_that_fit_and_nothing_scrolls_sideways() {
-    let harness = page(with_long_line());
+    let harness = page(plain_report(format!("kernel: {}end\n", "x".repeat(400))));
     assert!(
         harness.query_by_label("Wrap lines").is_none(),
         "the report always wraps"

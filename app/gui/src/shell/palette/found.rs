@@ -25,7 +25,6 @@ use crate::pages::{PageContext, maintenance};
 /// At most this many rows: a short text matches hundreds of apps.
 const LIMIT: usize = 50;
 
-/// The rows' sections, in the order they are listed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Section {
     Pages,
@@ -34,7 +33,6 @@ pub enum Section {
     Apps,
 }
 
-/// What a row shows before its name.
 #[derive(Clone, Debug)]
 pub enum Look {
     Glyph(Icon, Hue),
@@ -100,7 +98,6 @@ impl Section {
     }
 }
 
-/// A page's own glyph and hue, as the sidebar shows them.
 fn page_look(page: PageId) -> Look {
     Look::Glyph(page.icon(), page.group().hue())
 }

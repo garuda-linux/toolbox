@@ -293,7 +293,6 @@ fn split(
     opened
 }
 
-/// The room between two groups of the page.
 fn group_gap(ui: &mut Ui) {
     ui.add_space(ui.tokens().sizes.section_gap);
 }

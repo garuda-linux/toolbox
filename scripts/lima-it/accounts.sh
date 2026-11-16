@@ -17,7 +17,6 @@ suite_accounts() {
   check "users remove --delete-home removes the account and its home" t_user_remove
 }
 
-# su_as <password>
 # su drops what was typed before its prompt, so the password comes later.
 su_as() {
   local typed

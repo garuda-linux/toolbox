@@ -36,8 +36,7 @@ impl Editing for SystemEditor {
     }
 }
 
-/// No editor runs, so one comment line added here gives the steps a
-/// change to review.
+/// Runs no editor. `stand_in_edit` takes the edit's place.
 pub struct DryRunEditor;
 
 impl Editing for DryRunEditor {

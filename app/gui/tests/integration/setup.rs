@@ -142,12 +142,7 @@ fn the_success_page_offers_no_second_apply() {
 }
 
 fn summary_with_a_pick(harness: &mut Harness<'static, App>) {
-    harness.get_by_label("Next").click();
-    harness.run();
-    harness
-        .get_by_role_and_label(Role::Button, "Install Strawberry Player")
-        .click();
-    harness.run();
+    pick_strawberry(harness);
     harness.get_by_label("Next").click();
     harness.run();
 }

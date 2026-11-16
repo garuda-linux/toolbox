@@ -9,7 +9,6 @@ use super::{Confirm, KernelsList, Read, ReadList};
 /// Longer ids name no entry of a catalog, unit or package.
 const ID_MAX: usize = 128;
 
-/// One service and where it lives.
 #[derive(Debug, Args)]
 pub struct UnitArgs {
     /// The unit, for example `bluetooth.service`. Without a type it is a
@@ -25,7 +24,6 @@ pub struct UnitArgs {
     pub confirm: Confirm,
 }
 
-/// One service to read.
 #[derive(Debug, Args)]
 pub struct UnitShow {
     /// The unit, for example `bluetooth.service`. Without a type it is a
@@ -153,7 +151,6 @@ pub struct KernelArgs {
     pub confirm: Confirm,
 }
 
-/// What a services command does to its unit.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
 pub enum UnitChange {
     Start,
