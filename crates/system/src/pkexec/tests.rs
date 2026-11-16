@@ -75,6 +75,13 @@ fn the_exit_code_alone_decides_without_words() {
     }
 }
 
+#[test]
+fn a_dismissed_dialog_is_dismissed() {
+    let typed = "Error executing command as another user: Request dismissed\n";
+
+    assert_eq!(refusal(Some(126_i32), typed), Some(Refusal::Dismissed));
+}
+
 /// pkexec's own answers, captured in a Garuda VM and the Garuda desktop VM.
 /// Plasma's agent answers a Cancel like a wrong password, not with 126.
 #[test]
@@ -109,6 +116,16 @@ fn real_pkexec_refusals_are_told_apart() {
             include_str!("fixtures/dismissed.code"),
             include_str!("fixtures/dismissed.stderr"),
             Refusal::Denied,
+        ),
+        (
+            include_str!("fixtures/no-agent-found.code"),
+            include_str!("fixtures/no-agent-found.stderr"),
+            Refusal::NoAgent,
+        ),
+        (
+            include_str!("fixtures/dead-parent.code"),
+            include_str!("fixtures/dead-parent.stderr"),
+            Refusal::Broken,
         ),
     ] {
         let code = code.trim().parse().ok();

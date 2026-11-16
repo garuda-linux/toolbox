@@ -61,19 +61,9 @@ fi
   exit 2
 }
 
-image=${GARUDA_LIMA_IMAGE:-target/lima/garuda-lima.qcow2}
-if [ -z "${GARUDA_LIMA_IMAGE:-}" ]; then
-  # shellcheck source=scripts/lima-image.sh
-  source scripts/lima-image.sh
-  lima_image "$image" || exit 2
-fi
-
-case $image in
-http://* | https://*) location=$image ;;
-*) location=$(readlink -f "$image") ;;
-esac
-images=$(jq -nc --arg l "$location" --arg d "${GARUDA_LIMA_IMAGE_DIGEST:-}" \
-  '[{location: $l, arch: "x86_64"} + (if $d == "" then {} else {digest: $d} end)]')
+# shellcheck source=scripts/lima-image.sh
+source scripts/lima-image.sh
+images=$(lima_images lima-profile.sh) || exit 2
 
 name=garuda-toolbox-profile
 lima_dir=${LIMA_HOME:-$HOME/.lima}/$name

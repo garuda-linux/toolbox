@@ -16,6 +16,9 @@ const LISTED_MASKED: &str = include_str!("fixtures/masked");
 const LISTED_USER_ENABLED: &str = include_str!("fixtures/user-enabled");
 const LISTED_USER_MASKED: &str = include_str!("fixtures/user-masked");
 const LISTED_FAILED: &str = include_str!("fixtures/failed");
+/// `list-unit-files --state=enabled,masked` of the Lima image, as the probe runs it.
+const IMAGE_ENABLED_MASKED: &str = include_str!("fixtures/image/enabled-masked");
+const IMAGE_USER_ENABLED_MASKED: &str = include_str!("fixtures/image/user-enabled-masked");
 
 fn units(names: &[&str]) -> BTreeSet<UnitName> {
     names
@@ -69,19 +72,30 @@ fn odd_lines_are_skipped() {
     assert_eq!(parse_listed(&output).enabled, user_enabled());
 }
 
-/// Two real listings stacked, and each row keeps its own state.
+/// One `--state=enabled,masked` run of the Lima image: each row keeps its
+/// own state.
 #[test]
 fn one_listing_splits_enabled_from_masked() {
-    let output = format!("{LISTED_ENABLED}{LISTED_MASKED}");
-    let listed = parse_listed(&output);
+    let listed = parse_listed(IMAGE_ENABLED_MASKED);
 
-    assert_eq!(listed.enabled, parse_listed(LISTED_ENABLED).enabled);
+    assert_eq!(listed.masked, units(&["systemd-firstboot.service"]));
+    assert!(listed.enabled.is_superset(&units(&["sshd.service"])));
+    assert!(
+        listed
+            .enabled
+            .is_disjoint(&units(&["systemd-firstboot.service"]))
+    );
+}
+
+/// The user scope of the Lima image masks nothing.
+#[test]
+fn the_user_listing_of_the_image_is_all_enabled() {
+    let listed = parse_listed(IMAGE_USER_ENABLED_MASKED);
+
+    assert!(listed.masked.is_empty());
     assert_eq!(
-        listed.masked,
-        units(&[
-            "systemd-firstboot.service",
-            "toolbox-fixture-masked.service"
-        ])
+        listed.enabled.len(),
+        IMAGE_USER_ENABLED_MASKED.lines().count()
     );
 }
 

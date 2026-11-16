@@ -49,3 +49,28 @@ lima_image() {
   mv "$path.part" "$path"
   echo "$sha" >"$path.sha256"
 }
+
+# `lima_images <script>` prints the `.images` list of a Lima config:
+# GARUDA_LIMA_IMAGE, a path or URL with GARUDA_LIMA_IMAGE_DIGEST as its
+# optional "sha256:<hex>", else target/lima/garuda-lima.qcow2 kept current.
+lima_images() {
+  local script=$1 image location
+  image=${GARUDA_LIMA_IMAGE:-target/lima/garuda-lima.qcow2}
+  if [ -z "${GARUDA_LIMA_IMAGE:-}" ]; then
+    lima_image "$image" >&2 || return 1
+  fi
+
+  case $image in
+  http://* | https://*) location=$image ;;
+  *)
+    [ -f "$image" ] || {
+      echo "$script: no image at $image, set GARUDA_LIMA_IMAGE" >&2
+      return 1
+    }
+    location=$(readlink -f "$image")
+    ;;
+  esac
+
+  jq -nc --arg l "$location" --arg d "${GARUDA_LIMA_IMAGE_DIGEST:-}" \
+    '[{location: $l, arch: "x86_64"} + (if $d == "" then {} else {digest: $d} end)]'
+}

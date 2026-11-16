@@ -56,25 +56,9 @@ for tool in limactl jq; do
   }
 done
 
-image=${GARUDA_LIMA_IMAGE:-target/lima/garuda-lima.qcow2}
-if [ -z "${GARUDA_LIMA_IMAGE:-}" ]; then
-  # shellcheck source=scripts/lima-image.sh
-  source scripts/lima-image.sh
-  lima_image "$image" || exit 2
-fi
-
-case $image in
-http://* | https://*) location=$image ;;
-*)
-  [ -f "$image" ] || {
-    echo "lima-it.sh: no image at $image, set GARUDA_LIMA_IMAGE" >&2
-    exit 2
-  }
-  location=$(readlink -f "$image")
-  ;;
-esac
-images=$(jq -nc --arg l "$location" --arg d "${GARUDA_LIMA_IMAGE_DIGEST:-}" \
-  '[{location: $l, arch: "x86_64"} + (if $d == "" then {} else {digest: $d} end)]')
+# shellcheck source=scripts/lima-image.sh
+source scripts/lima-image.sh
+images=$(lima_images lima-it.sh) || exit 2
 
 name=garuda-toolbox-it
 if [ -n "${LIMA_IT_ROOT:-}" ]; then

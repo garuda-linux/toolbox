@@ -1,0 +1,3 @@
+# STARTED AT: 2026-11-16 21:26:44.128980117 +01:00
+# VERSION: 0.33.0
+# ARGS: /usr/bin/rate-mirrors --save /tmp/chaotic-mirrorlist chaotic-aur

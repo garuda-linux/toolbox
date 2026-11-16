@@ -12,6 +12,11 @@ use crate::test_support::runnable_script;
 /// The file `rate-mirrors --save <file> chaotic-aur` 0.33.0 saved in the
 /// Lima VM, 28 servers below its log.
 const RATED: &str = toolbox_plan::testing::mirrorlist::RATE_MIRRORS_CHAOTIC;
+/// `rate-mirrors --save <file> chaotic-aur` 0.33.0 in the Lima VM without a
+/// network.
+const OFFLINE_STDOUT: &str = include_str!("fixtures/image/rate-mirrors-offline.stdout");
+const OFFLINE_STDERR: &str = include_str!("fixtures/image/rate-mirrors-offline.stderr");
+const OFFLINE_CODE: &str = include_str!("fixtures/image/rate-mirrors-offline.code");
 
 /// A stand-in for `rate-mirrors`: `--save <file> chaotic-aur`, so the
 /// file is the second argument.
@@ -41,16 +46,30 @@ fn a_ranked_list_becomes_a_mirrorlist() {
     assert_eq!(mirrorlist.servers(), 28);
 }
 
-/// No failed ranking was captured, so the complaint is made up.
+/// rate-mirrors of the Lima image without a network, replayed.
 #[test]
 fn a_failing_ranking_names_its_status_and_the_end_of_its_complaint() {
     let folder = tempfile::tempdir().unwrap();
-    let program = stand_in(folder.path(), "echo 'no mirror answered' >&2; exit 3");
+    let said = folder.path().join("said");
+    let complained = folder.path().join("complained");
+
+    fs::write(&said, OFFLINE_STDOUT).unwrap();
+    fs::write(&complained, OFFLINE_STDERR).unwrap();
+
+    let program = stand_in(
+        folder.path(),
+        &format!(
+            "cat '{}'; cat '{}' >&2; exit {}",
+            said.display(),
+            complained.display(),
+            OFFLINE_CODE.trim()
+        ),
+    );
 
     let problem = rank(&program).unwrap_err();
 
     assert!(
-        matches!(&problem, RankProblem::Failed(reason) if reason.contains("exit status: 3") && reason.contains("no mirror answered")),
+        matches!(&problem, RankProblem::Failed(reason) if reason.contains("exit status: 1") && reason.contains("failed to connect to https://gitlab.com/")),
         "{problem:?}"
     );
 }

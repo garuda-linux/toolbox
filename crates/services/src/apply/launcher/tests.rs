@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 use toolbox_plan::ConfigFilePath;
 use toolbox_plan::protocol::{Mode, ReadKind};
+use toolbox_system::pkexec::Refusal;
 use toolbox_system::{HelperFetch as _, HelperReads as _};
 
 use super::{HelperLauncher, Launcher as _, Way};
@@ -223,6 +224,37 @@ fn sudo_is_not_read_with_the_exit_codes_of_pkexec() {
 #[test]
 fn sudo_without_its_words_refused_nothing() {
     assert_eq!(through_sudo().refusal(Some(1_i32), ""), None);
+}
+
+/// sudo of the Garuda Lima image in the C locale. The `.terminal`
+/// captures are what sudo printed on the terminal script(1) gave it.
+#[test]
+fn real_sudo_refusals_are_told_apart() {
+    for (code, words, expected) in [
+        (
+            include_str!("fixtures/wrong-password-three-times.code"),
+            include_str!("fixtures/wrong-password-three-times.terminal"),
+            Refusal::Denied,
+        ),
+        (
+            include_str!("fixtures/not-in-sudoers.code"),
+            include_str!("fixtures/not-in-sudoers.terminal"),
+            Refusal::Denied,
+        ),
+        (
+            include_str!("fixtures/no-terminal.code"),
+            include_str!("fixtures/no-terminal.stderr"),
+            Refusal::NoAgent,
+        ),
+    ] {
+        let code = code.trim().parse().ok();
+
+        assert_eq!(
+            through_sudo().refusal(code, words),
+            Some(expected),
+            "{words}"
+        );
+    }
 }
 
 #[test]
