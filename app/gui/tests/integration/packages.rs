@@ -46,6 +46,28 @@ pub fn app_with_aur(
     aur: bool,
     source: Arc<dyn AurSource>,
 ) -> Fixture {
+    let (mut harness, runtime) = launch(theme, language, aur, source);
+    let page = if language.is_some() {
+        "Pakete"
+    } else {
+        "Packages"
+    };
+
+    harness.get_by_role_and_label(Role::Tab, page).click();
+
+    step_until(&mut harness, "the index", |harness| listed(harness, "gimp"));
+    settle(&mut harness);
+
+    Fixture::new(harness, runtime)
+}
+
+/// The app on the fake database after its first read, on its first page.
+pub fn launch(
+    theme: Theme,
+    language: Option<&str>,
+    aur: bool,
+    source: Arc<dyn AurSource>,
+) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();
     let probed = system();
@@ -78,18 +100,7 @@ pub fn app_with_aur(
         });
 
     first_read(&mut harness);
-    let page = if language.is_some() {
-        "Pakete"
-    } else {
-        "Packages"
-    };
-
-    harness.get_by_role_and_label(Role::Tab, page).click();
-
-    step_until(&mut harness, "the index", |harness| listed(harness, "gimp"));
-    settle(&mut harness);
-
-    Fixture::new(harness, runtime)
+    (harness, runtime)
 }
 
 fn preferences(aur: bool) -> PreferencesSetup {

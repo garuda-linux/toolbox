@@ -22,6 +22,7 @@ pub mod locales;
 pub mod maintenance;
 pub mod network;
 pub mod packages;
+mod reveal;
 pub mod rows;
 pub mod search_empty;
 pub mod services;

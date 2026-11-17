@@ -7,12 +7,18 @@ console-title = Console
 console-idle = No changes are being applied
 
 # The command palette (Ctrl+K).
-palette-search = Search pages and commands
+palette-search = Search pages, commands, apps and packages
 # Labels over the palette's groups of rows. The Maintenance group takes
 # the page's name.
 palette-group-pages = Pages
 palette-group-commands = Commands
 palette-group-apps = Apps
+palette-group-packages = Packages
+palette-group-aur = AUR
+# The last row of a group that shows only its best rows. $count is how many rows the group has, $page the name of the page that lists them all.
+palette-show-all = Show all { $count } in { $page }
+# The last row of a group that shows only its best rows, which shows the rest right there. $count is how many rows the group has.
+palette-show-all-here = Show all { $count }
 command-apply = Apply changes
 command-toggle-sidebar = Toggle sidebar
 command-toggle-console = Toggle console

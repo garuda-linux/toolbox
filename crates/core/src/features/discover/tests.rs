@@ -9,6 +9,7 @@ use toolbox_state::packages::{InstallReason, LocalNode, PackageGraph};
 use super::{AppOrder, Apps, Hit, arrange, icon_name, toggles};
 use crate::domains::{InstalledPackages, Packages, SyncPackages};
 use crate::features::search::Needle;
+use crate::features::search::ranked::Rank;
 use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
@@ -180,12 +181,14 @@ fn a_refused_removal_names_why() {
             name: package("aerc"),
             depends: vec!["efibootmgr".to_owned()],
             provides: Vec::new(),
+            optional: Vec::new(),
             reason: InstallReason::Explicit,
         },
         LocalNode {
             name: package("efibootmgr"),
             depends: Vec::new(),
             provides: Vec::new(),
+            optional: Vec::new(),
             reason: InstallReason::Dependency,
         },
     ]));
@@ -292,17 +295,16 @@ fn selected_apps_come_first_installed_or_queued_and_a_queued_removal_does_not() 
 }
 
 #[test]
-fn a_title_search_ignores_descriptions_and_packages() {
+fn an_app_ranks_by_its_title_before_its_description_and_packages() {
     let apps = apps();
-    let titled = |search: &str| -> Vec<String> {
+    let ranked = |search: &str| -> Vec<(String, Rank)> {
         let needle = Needle::new(search);
         apps.all()
-            .filter(|hit| hit.title_matches(&needle))
-            .map(|hit| hit.entry.id().to_owned())
+            .filter_map(|hit| Some((hit.entry.id().to_owned(), hit.rank(&needle)?)))
             .collect()
     };
 
-    assert_eq!(titled("FIRE"), ["firefox"]);
-    assert_eq!(titled("browser"), Vec::<String>::new());
-    assert_eq!(titled("w3m"), Vec::<String>::new());
+    assert_eq!(ranked("FIRE"), [("firefox".to_owned(), Rank::Prefix)]);
+    assert_eq!(ranked("mozilla"), [("firefox".to_owned(), Rank::InText)]);
+    assert_eq!(ranked("w3m"), [("aerc".to_owned(), Rank::InText)]);
 }

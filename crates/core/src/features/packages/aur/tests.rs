@@ -6,6 +6,7 @@ use crate::domain::Queued;
 use crate::domains::{AurPackages, InstalledPackages, Packages};
 use crate::features::packages::list::RowState;
 use crate::features::packages::queue::Refusal;
+use crate::features::search::ranked::Rank;
 use crate::test_support::{package, packages};
 use crate::{ChangeSet, Snapshot, Toggle};
 
@@ -154,5 +155,24 @@ fn nothing_is_queued_before_the_installed_packages_are_known() {
             &mut changes
         ),
         Err(Refusal::Unread.of(&package("yay-bin")))
+    );
+}
+
+#[test]
+fn ranked_packages_say_how_they_fit_the_most_popular_first() {
+    let catalog = catalog();
+    let needle = crate::features::search::Needle::new("paru");
+    let ranked: Vec<(Rank, String)> = catalog
+        .ranked(&needle)
+        .map(|(rank, place)| (rank, catalog.entries()[place].name.to_string()))
+        .collect();
+
+    assert_eq!(
+        ranked,
+        [
+            (Rank::InText, "aurutils".to_owned()),
+            (Rank::Prefix, "paru-bin".to_owned()),
+            (Rank::Exact, "paru".to_owned()),
+        ]
     );
 }

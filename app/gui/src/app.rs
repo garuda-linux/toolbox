@@ -13,6 +13,7 @@ mod instance;
 mod maintenance;
 mod network;
 mod preferences;
+mod reveal;
 mod services;
 mod setup;
 #[cfg(test)]

@@ -10,6 +10,7 @@ mod detail;
 mod list;
 mod remove;
 mod row;
+pub use row::repository;
 #[cfg(test)]
 mod tests;
 
@@ -116,6 +117,26 @@ impl PageView for PackagesPage {
 }
 
 impl PackagesPage {
+    /// Back returns to the list searched for the package.
+    pub fn reveal(&mut self, package: &PackageName, aur: bool) {
+        self.search_for(package.as_str(), aur);
+        self.opens(package, aur);
+    }
+
+    pub fn search_for(&mut self, text: &str, aur: bool) {
+        text.clone_into(&mut self.search);
+        self.filter = if aur { Filter::Aur } else { Filter::All };
+        self.open = None;
+        self.trail.clear();
+    }
+
+    fn opens(&mut self, package: &PackageName, aur: bool) {
+        self.open = Some(package.clone());
+        self.open_aur = aur;
+        self.unfolded = Unfolded::default();
+        self.file_filter.clear();
+    }
+
     /// Opens the detail page of `package` from the list, its AUR side for
     /// a row of the AUR chip.
     fn open(&mut self, package: &PackageName, aur: bool, context: &PageContext<'_>) {
@@ -143,10 +164,7 @@ impl PackagesPage {
     }
 
     fn show(&mut self, package: &PackageName, aur: bool, context: &PageContext<'_>) {
-        self.open = Some(package.clone());
-        self.open_aur = aur;
-        self.unfolded = Unfolded::default();
-        self.file_filter.clear();
+        self.opens(package, aur);
         context
             .commands
             .send(PackagesCommand::Show(package.clone()));

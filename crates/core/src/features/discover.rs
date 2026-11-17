@@ -13,6 +13,7 @@ use toolbox_catalog::{Check, ToggleCatalog, ToggleEntry, ToggleSection};
 use toolbox_plan::PackageName;
 
 use super::Refused;
+use super::search::ranked::Rank;
 use super::search::{Needle, folded};
 use super::toggles::{self, is_offered};
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -192,10 +193,9 @@ impl Hit<'_> {
         self.folded.text.contains(needle.as_str())
     }
 
-    /// Whether the app's title holds `needle`, for the command palette,
-    /// which names apps by their title alone.
-    pub fn title_matches(&self, needle: &Needle) -> bool {
-        self.folded.title.contains(needle.as_str())
+    /// By title, else by description or packages.
+    pub fn rank(&self, needle: &Needle) -> Option<Rank> {
+        needle.rank_folded(&self.folded.title, &self.folded.text)
     }
 }
 

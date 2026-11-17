@@ -13,6 +13,7 @@ pub mod diagnostics;
 pub mod maintenance;
 pub mod network;
 pub mod packages;
+pub mod reveal;
 pub mod shortcuts;
 #[cfg(test)]
 mod tests;
@@ -37,6 +38,7 @@ pub use self::diagnostics::DiagnosticsCommand;
 pub use self::maintenance::MaintenanceCommand;
 pub use self::network::NetworkCommand;
 pub use self::packages::PackagesCommand;
+pub use self::reveal::Reveal;
 pub use self::users::{UserEdit, UsersCommand};
 use crate::catalogs::CatalogId;
 use crate::instance::Arrival;
@@ -105,6 +107,7 @@ pub enum AppCommand {
     Users(UsersCommand),
     Configs(ConfigsCommand),
     BootRepair(BootRepairCommand),
+    Reveal(Reveal),
     Console(ConsoleCommand),
     Answer(crate::page_service::Answer),
     /// Another start asked for the window, maybe on a page.

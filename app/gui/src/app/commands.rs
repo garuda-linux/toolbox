@@ -63,7 +63,7 @@ impl App {
             UiCommand::Navigate(page) => self.navigate(ctx, page),
             UiCommand::ToggleSidebar => self.state.sidebar_expanded ^= true,
             UiCommand::ToggleConsole => self.state.console_open ^= true,
-            UiCommand::OpenPalette => self.palette.open(),
+            UiCommand::OpenPalette => self.open_palette(),
             UiCommand::Quit => ctx.send_viewport_cmd(egui::ViewportCommand::Close),
             UiCommand::ClearChanges => self.queue.clear(),
             UiCommand::Apply => {
@@ -149,6 +149,7 @@ impl App {
             AppCommand::Home(home) => self.run_home(home),
             AppCommand::Service(service) => self.run_service(service),
             AppCommand::Discover(discover) => self.run_discover(ctx, discover),
+            AppCommand::Reveal(reveal) => self.run_reveal(ctx, &reveal),
             AppCommand::Maintenance(maintenance) => self.run_maintenance(ctx, &maintenance),
             AppCommand::Network(network) => self.run_network(network),
             AppCommand::Packages(packages) => self.run_packages(&packages),

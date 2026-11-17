@@ -17,7 +17,7 @@ use toolbox_gui_kit::widgets::{
     DialogWidth, ModalWrapper, SearchTexts, menu_heading, search_field,
 };
 
-use self::found::{Asked, Row};
+use self::found::{Asked, Pick, Row, Section};
 use crate::command::{Command, CommandSender};
 use crate::i18n;
 use crate::pages::PageContext;
@@ -31,6 +31,8 @@ pub struct Palette {
     marked: usize,
     /// The rows of the last frame, while their inputs hold.
     found: Option<(Asked, Rc<[Row]>)>,
+    /// The sections that show every row, until the text changes.
+    expanded: Vec<Section>,
 }
 
 impl Palette {
@@ -38,6 +40,7 @@ impl Palette {
         self.open = true;
         self.query.clear();
         self.marked = 0;
+        self.expanded.clear();
     }
 
     /// A command chosen from the keyboard goes out as
@@ -47,7 +50,7 @@ impl Palette {
             return;
         }
 
-        let rows = found::cached(&mut self.found, ctx, context, &self.query);
+        let rows = found::cached(&mut self.found, ctx, context, &self.query, &self.expanded);
 
         let title = i18n::text(ctx, "command-open-palette");
         let hint = i18n::text(ctx, "palette-search");
@@ -72,6 +75,7 @@ impl Palette {
                 let search = search_field(ui, texts.name, &mut self.query, texts, width);
                 if search.changed() {
                     self.marked = 0;
+                    self.expanded.clear();
                 }
 
                 ui.add_space(ui.tokens().sizes.control_gap);
@@ -82,7 +86,7 @@ impl Palette {
                 let entered = entered
                     .then(|| rows.get(self.marked))
                     .flatten()
-                    .map(|row| (row.command.clone(), true));
+                    .map(|row| (row.pick.clone(), true));
 
                 let (clicked, pointed) = ScrollArea::vertical()
                     .max_height(ui.tokens().sizes.palette_list_height)
@@ -100,9 +104,13 @@ impl Palette {
             self.open = false;
         }
 
-        if let Some((command, by_key)) = modal.inner {
-            send(commands, command, by_key);
-            self.open = false;
+        match modal.inner {
+            Some((Pick::Run(command), by_key)) => {
+                send(commands, command, by_key);
+                self.open = false;
+            }
+            Some((Pick::Expand(section), _)) => self.expanded.push(section),
+            None => {}
         }
 
         // A closed palette need not keep the snapshot its rows were found in.
@@ -124,7 +132,7 @@ impl Palette {
         rows: &[Row],
         moved: bool,
         width: f32,
-    ) -> (Option<(Command, bool)>, Option<usize>) {
+    ) -> (Option<(Pick, bool)>, Option<usize>) {
         let pointer_moved = ui.input(|input| {
             input
                 .events
@@ -153,7 +161,7 @@ impl Palette {
 
             if response.clicked() {
                 let by_key = !response.clicked_by(egui::PointerButton::Primary);
-                chosen = Some((row.command.clone(), by_key));
+                chosen = Some((row.pick.clone(), by_key));
             }
         }
 

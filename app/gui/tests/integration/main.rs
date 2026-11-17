@@ -36,6 +36,8 @@ mod network;
 mod packages;
 mod packages_aur;
 mod page_scroll;
+mod palette_packages;
+mod palette_sections;
 mod schemes;
 mod sdboot;
 mod services;

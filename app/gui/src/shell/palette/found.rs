@@ -1,7 +1,9 @@
-//! What the palette finds for a text: every page and command by name,
-//! then the Maintenance page's operations, tools and repairs, then the
-//! Discover apps whose title holds it. Each row knows its section and the
-//! tile it shows.
+//! Without a text the palette lists every page and command. With one each
+//! source shows its best rows, and the section with the best row comes first.
+
+mod apps;
+mod packages;
+mod shell;
 
 use std::rc::Rc;
 use std::sync::Arc;
@@ -9,28 +11,29 @@ use std::sync::Arc;
 use egui::Context;
 use fluent_templates::LanguageIdentifier;
 use toolbox_core::Snapshot;
-use toolbox_core::features::discover::package;
 use toolbox_core::features::search::Needle;
-use toolbox_gui_kit::icons::{self, Icon};
+use toolbox_core::features::search::ranked::{Ranked, by_best};
+use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::tokens::Hue;
-use toolbox_plan::PackageName;
 
-use crate::command::{Command, DiscoverCommand, MaintenanceCommand, UiCommand};
+use crate::command::Command;
 use crate::i18n;
+use crate::i18n::Arg;
 use crate::page::PageId;
-use crate::page_ui::{GroupLook as _, PageLook as _, listed};
-use crate::pages::discover::category_title;
-use crate::pages::{PageContext, maintenance};
+use crate::page_ui::listed;
+use crate::pages::PageContext;
 
-/// At most this many rows: a short text matches hundreds of apps.
-const LIMIT: usize = 50;
+const CAP: usize = 5;
 
+/// In the order sections take when their best rows fit alike.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Section {
     Pages,
     Commands,
     Maintenance,
     Apps,
+    Packages,
+    Aur,
 }
 
 #[derive(Clone, Debug)]
@@ -50,7 +53,25 @@ pub struct Row {
     pub shortcut: Option<String>,
     pub section: Section,
     pub look: Look,
-    pub command: Command,
+    pub pick: Pick,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Pick {
+    Run(Command),
+    Expand(Section),
+}
+
+#[derive(Debug)]
+enum Rest {
+    /// The section ranked only its best few.
+    Page(PageId, Command),
+    Here,
+}
+
+pub struct Part {
+    ranked: Ranked<Row>,
+    rest: Rest,
 }
 
 /// What the found rows depend on, so the palette finds them again only
@@ -63,25 +84,31 @@ pub struct Asked {
     /// Held, so a new snapshot is told from the last by identity.
     snapshot: Arc<Snapshot>,
     boot_repair: bool,
+    packages: packages::Lists,
+    expanded: Vec<Section>,
 }
 
 impl Asked {
-    fn of(ctx: &Context, context: &PageContext<'_>, query: &str) -> Self {
+    fn of(ctx: &Context, context: &PageContext<'_>, query: &str, expanded: &[Section]) -> Self {
         Self {
             query: query.to_owned(),
+            expanded: expanded.to_vec(),
             revision: context.revision,
             language: i18n::language(ctx),
             snapshot: Arc::clone(context.snapshot),
             boot_repair: listed(ctx, PageId::BootRepair),
+            packages: packages::lists(context),
         }
     }
 
     fn same(&self, other: &Self) -> bool {
         self.query == other.query
+            && self.expanded == other.expanded
             && self.revision == other.revision
             && self.language == other.language
             && Arc::ptr_eq(&self.snapshot, &other.snapshot)
             && self.boot_repair == other.boot_repair
+            && packages::same(&self.packages, &other.packages)
     }
 }
 
@@ -92,137 +119,130 @@ impl Section {
             Self::Commands => "palette-group-commands",
             Self::Maintenance => PageId::Maintenance.text_id(),
             Self::Apps => "palette-group-apps",
+            Self::Packages => "palette-group-packages",
+            Self::Aur => "palette-group-aur",
         };
 
         i18n::text(ctx, id).into_owned()
     }
 }
 
-fn page_look(page: PageId) -> Look {
-    Look::Glyph(page.icon(), page.group().hue())
+impl Part {
+    /// Every hit, shown capped until expanded.
+    const fn here(ranked: Ranked<Row>) -> Self {
+        Self {
+            ranked,
+            rest: Rest::Here,
+        }
+    }
+
+    const fn capped(ranked: Ranked<Row>, page: PageId, command: Command) -> Self {
+        Self {
+            ranked,
+            rest: Rest::Page(page, command),
+        }
+    }
+
+    fn rows(self, ctx: &Context, expanded: &[Section]) -> Vec<Row> {
+        let Self { ranked, rest } = self;
+        let Some(section) = ranked.hits.first().map(|row| row.section) else {
+            return Vec::new();
+        };
+
+        let total = ranked.total;
+        let (cap, more) = match rest {
+            Rest::Here if expanded.contains(&section) => (total, None),
+            Rest::Here => {
+                let text =
+                    i18n::text_with(ctx, "palette-show-all-here", &[("count", Arg::from(total))]);
+
+                let look = ranked.hits.first().map(|row| row.look.clone());
+
+                (
+                    CAP,
+                    look.map(|look| (text.into_owned(), look, Pick::Expand(section))),
+                )
+            }
+            Rest::Page(page, command) => {
+                let shown = i18n::text(ctx, page.text_id());
+                let args = [
+                    ("count", Arg::from(total)),
+                    ("page", Arg::from(shown.as_ref())),
+                ];
+
+                let text = i18n::text_with(ctx, "palette-show-all", &args).into_owned();
+
+                (
+                    CAP,
+                    Some((text, shell::page_look(page), Pick::Run(command))),
+                )
+            }
+        };
+
+        let shown = cap.min(ranked.hits.len());
+        let last = more
+            .filter(|_| total > shown)
+            .map(|(name, look, pick)| Row {
+                name,
+                detail: String::new(),
+                shortcut: None,
+                section,
+                look,
+                pick,
+            });
+
+        ranked.hits.into_iter().take(cap).chain(last).collect()
+    }
 }
 
-/// The section and tile of a command. A command's glyph is the one its
-/// meaning has elsewhere in the app, Help's the guide's.
-fn command_look(command: UiCommand) -> (Section, Look) {
-    let glyph = match command {
-        UiCommand::Navigate(page) => return (Section::Pages, page_look(page)),
-        UiCommand::Help => return (Section::Commands, page_look(PageId::Guide)),
-        UiCommand::Apply => icons::SYSTEM_SOFTWARE_INSTALL,
-        UiCommand::ToggleSidebar => icons::SIDEBAR_COLLAPSE_LEFT,
-        UiCommand::ToggleConsole => icons::UTILITIES_TERMINAL,
-        UiCommand::OpenPalette | UiCommand::FocusSearch => icons::SYSTEM_SEARCH,
-        UiCommand::ReviewChanges | UiCommand::ClearChanges => icons::VIEW_PIM_TASKS,
-        UiCommand::Quit => icons::WINDOW_CLOSE,
-    };
-
-    (Section::Commands, Look::Glyph(glyph, Hue::Accent))
-}
-
-/// The rows for `query`, kept in `found` while nothing they depend on
-/// differs.
+/// Kept in `found` while nothing the rows depend on differs.
 pub fn cached(
     found: &mut Option<(Asked, Rc<[Row]>)>,
     ctx: &Context,
     context: &PageContext<'_>,
     query: &str,
+    expanded: &[Section],
 ) -> Rc<[Row]> {
-    let asked = Asked::of(ctx, context, query);
+    let asked = Asked::of(ctx, context, query, expanded);
     if let Some((before, rows)) = found.as_ref()
         && before.same(&asked)
     {
         return Rc::clone(rows);
     }
 
-    let rows: Rc<[Row]> = matches(ctx, context, query).into();
+    let rows: Rc<[Row]> = matches(ctx, context, query, expanded).into();
     *found = Some((asked, Rc::clone(&rows)));
     rows
 }
 
-/// Every page and command whose name holds the typed text, then the
-/// Maintenance entries and the apps this system offers whose title holds
-/// it. Those two only show for a typed text, there are too many to list.
-fn matches(ctx: &Context, context: &PageContext<'_>, query: &str) -> Vec<Row> {
+fn matches(
+    ctx: &Context,
+    context: &PageContext<'_>,
+    query: &str,
+    expanded: &[Section],
+) -> Vec<Row> {
     let needle = Needle::new(query);
-    let pages = PageId::ALL
+    if needle.is_empty() {
+        return shell::all(ctx, context);
+    }
+
+    let [pages, commands] = shell::found(ctx, context, &needle);
+    let [repositories, aur] = packages::found(ctx, context, &needle, query);
+    let mut parts: Vec<Part> = [
+        pages,
+        commands,
+        shell::maintenance(ctx, &needle),
+        apps::found(ctx, context, &needle, query),
+        repositories,
+        aur,
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
+
+    by_best(&mut parts, |part| part.ranked.best);
+    parts
         .into_iter()
-        .filter(|page| listed(ctx, *page))
-        .map(UiCommand::Navigate);
-
-    // Reviewing has nothing to show while the queue is empty.
-    let review = (!context.changes.is_empty()).then_some(UiCommand::ReviewChanges);
-    let commands = pages
-        .chain(UiCommand::ACTIONS)
-        .chain(review)
-        .filter(|command| *command != UiCommand::OpenPalette)
-        .map(|command| {
-            let (section, look) = command_look(command);
-            Row {
-                name: i18n::text(ctx, command.text_id()).into_owned(),
-                detail: String::new(),
-                shortcut: command
-                    .shortcut()
-                    .map(|shortcut| ctx.format_shortcut(&shortcut)),
-                section,
-                look,
-                command: command.into(),
-            }
-        })
-        .filter(|row| needle.is_in(&row.name));
-
-    let maintenance = (!needle.is_empty())
-        .then(maintenance::palette::entries)
-        .into_iter()
-        .flatten()
-        .map(|(id, tab)| Row {
-            name: i18n::text(ctx, &id).into_owned(),
-            detail: i18n::text(ctx, tab.text_id()).into_owned(),
-            shortcut: None,
-            section: Section::Maintenance,
-            look: page_look(PageId::Maintenance),
-            command: MaintenanceCommand::Reveal(tab).into(),
-        })
-        .filter(|row| needle.is_in(&row.name));
-
-    let apps = app_rows(ctx, context, &needle);
-
-    commands
-        .chain(maintenance)
-        .chain(apps)
-        .take(LIMIT)
+        .flat_map(|part| part.rows(ctx, expanded))
         .collect()
-}
-
-/// The apps this system offers whose title holds `needle`, none for an
-/// empty one.
-fn app_rows<'a>(
-    ctx: &'a Context,
-    context: &'a PageContext<'_>,
-    needle: &'a Needle,
-) -> impl Iterator<Item = Row> + 'a {
-    (!needle.is_empty())
-        .then(|| {
-            context
-                .catalogs
-                .apps
-                .apps
-                .offered(context.snapshot, context.changes)
-        })
-        .into_iter()
-        .flatten()
-        .filter(|(_, hit)| hit.title_matches(needle))
-        .map(|(_, hit)| {
-            let title = hit.entry.title();
-            let kept = package(hit.entry).map_or_else(|| hit.entry.id(), PackageName::as_str);
-            Row {
-                name: title.to_owned(),
-                detail: category_title(ctx, hit.category.id(), hit.category.title()),
-                shortcut: None,
-                section: Section::Apps,
-                look: Look::Letter {
-                    package: kept.to_owned(),
-                },
-                command: DiscoverCommand::Reveal(title.to_owned()).into(),
-            }
-        })
 }

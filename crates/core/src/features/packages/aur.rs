@@ -17,6 +17,7 @@ use super::list::RowState;
 use super::queue::Refusal;
 use crate::domain::Queued;
 use crate::domains::{AurPackages, InstalledPackages, Packages};
+use crate::features::search::ranked::Rank as SearchRank;
 use crate::features::search::{Needle, folded};
 use crate::features::{Refused, drop_refused};
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -123,6 +124,17 @@ impl AurCatalog {
     /// The last download of a newer copy failed.
     pub const fn stale(&self) -> bool {
         self.index.stale
+    }
+
+    /// Places in [`AurCatalog::entries`], the most popular first.
+    pub fn ranked<'a>(
+        &'a self,
+        needle: &'a Needle,
+    ) -> impl Iterator<Item = (SearchRank, usize)> + 'a {
+        self.popular.iter().filter_map(|&place| {
+            let rank = needle.rank_folded(self.names.get(place)?, self.texts.get(place)?)?;
+            Some((rank, place))
+        })
     }
 
     /// The places in [`AurCatalog::entries`] that `search` matches: the

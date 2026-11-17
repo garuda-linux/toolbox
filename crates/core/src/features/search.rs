@@ -9,6 +9,8 @@
 #[cfg(test)]
 mod tests;
 
+pub mod ranked;
+
 const FINAL_SIGMA: char = 'ς';
 const SIGMA: char = 'σ';
 
