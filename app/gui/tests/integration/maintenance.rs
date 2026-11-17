@@ -48,7 +48,7 @@ impl Fixture {
 }
 
 fn programs() -> Programs {
-    Programs::found(|path| path != Path::new("/usr/bin/btrfs-assistant-launcher"))
+    Programs::found(|path| path != Path::new("/usr/bin/btrfs-assistant"))
 }
 
 pub fn maintenance() -> Fixture {

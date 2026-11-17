@@ -25,8 +25,7 @@ type Page = Harness<'static, PageState<MaintenancePage>>;
 
 fn programs() -> Programs {
     Programs::found(|path| {
-        path != Path::new("/usr/bin/btrfs-assistant-launcher")
-            && path != Path::new("/usr/bin/rate-mirrors")
+        path != Path::new("/usr/bin/btrfs-assistant") && path != Path::new("/usr/bin/rate-mirrors")
     })
 }
 

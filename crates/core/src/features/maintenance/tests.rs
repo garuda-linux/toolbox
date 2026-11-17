@@ -278,7 +278,7 @@ fn tools_are_fixed_programs_from_known_packages() {
             ),
             (
                 "btrfs-assistant",
-                "/usr/bin/btrfs-assistant-launcher",
+                "/usr/bin/btrfs-assistant",
                 [].as_slice(),
                 "btrfs-assistant".to_owned()
             ),

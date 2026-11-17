@@ -265,7 +265,7 @@ impl Tool {
     pub const fn program(self) -> &'static str {
         match self {
             Self::ArchMirrors => "/usr/bin/reflector-simple",
-            Self::BtrfsAssistant => "/usr/bin/btrfs-assistant-launcher",
+            Self::BtrfsAssistant => "/usr/bin/btrfs-assistant",
             Self::EditRepositories => "/usr/bin/pace",
             Self::MergePacdiff => "/usr/lib/garuda/launch-terminal",
         }

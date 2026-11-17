@@ -143,7 +143,7 @@ fn a_tool_missing_after_its_install_names_the_program() {
     let problem = MaintenanceProblem::Launch {
         tool: "btrfs-assistant",
         cause: LaunchCause::AbsentAfterInstall,
-        reason: "/usr/bin/btrfs-assistant-launcher".to_owned(),
+        reason: "/usr/bin/btrfs-assistant".to_owned(),
     };
 
     let maintenance = Maintenance::showing(Some(problem), false, Vec::new(), None);

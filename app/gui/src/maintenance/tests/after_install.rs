@@ -49,7 +49,7 @@ fn a_tool_still_missing_after_its_install_says_so() {
         Some(&MaintenanceProblem::Launch {
             tool: "btrfs-assistant",
             cause: LaunchCause::AbsentAfterInstall,
-            reason: "/usr/bin/btrfs-assistant-launcher".to_owned(),
+            reason: "/usr/bin/btrfs-assistant".to_owned(),
         })
     );
 }

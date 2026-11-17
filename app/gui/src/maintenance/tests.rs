@@ -127,7 +127,7 @@ fn a_missing_tool_is_installed_and_opens_once_the_install_ends_well() {
 
     assert_eq!(
         *launcher.started.lock(),
-        [PathBuf::from("/usr/bin/btrfs-assistant-launcher")]
+        [PathBuf::from("/usr/bin/btrfs-assistant")]
     );
 }
 
