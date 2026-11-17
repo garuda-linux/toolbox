@@ -48,6 +48,8 @@ pub struct LocalNode {
     pub depends: Vec<String>,
     /// What it stands in for, in the same form.
     pub provides: Vec<String>,
+    /// The names of its optional dependencies, without what each is for.
+    pub optional: Vec<String>,
     pub reason: InstallReason,
 }
 

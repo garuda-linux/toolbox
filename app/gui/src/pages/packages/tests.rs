@@ -1,5 +1,6 @@
 mod dots;
 mod gaps;
+mod optional;
 mod remove;
 mod unread;
 mod view;
@@ -34,7 +35,7 @@ pub(super) fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap()
 }
 
-fn entry(text: &str, installed: Option<InstallReason>, origin: Origin) -> IndexEntry {
+pub(super) fn entry(text: &str, installed: Option<InstallReason>, origin: Origin) -> IndexEntry {
     IndexEntry {
         name: name(text),
         description: toolbox_text::plain(&format!("About {text}")),
@@ -48,11 +49,12 @@ fn entry(text: &str, installed: Option<InstallReason>, origin: Origin) -> IndexE
     }
 }
 
-fn node(text: &str, reason: InstallReason, depends: &[&str]) -> LocalNode {
+pub(super) fn node(text: &str, reason: InstallReason, depends: &[&str]) -> LocalNode {
     LocalNode {
         name: name(text),
         depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
         provides: Vec::new(),
+        optional: Vec::new(),
         reason,
     }
 }
@@ -108,6 +110,10 @@ pub(super) fn gimp_details() -> Details {
 }
 
 pub(super) fn fixture(details: Option<Details>) -> PageFixture {
+    fixture_with(catalog(), details)
+}
+
+pub(super) fn fixture_with(catalog: Arc<Catalog>, details: Option<Details>) -> PageFixture {
     let mut snapshot = Snapshot::default();
     let installed = ["gegl", "gimp", "leftover", "paru"].map(name);
     snapshot.insert(InstalledPackages(BTreeSet::from(installed)));
@@ -116,7 +122,7 @@ pub(super) fn fixture(details: Option<Details>) -> PageFixture {
 
     PageFixture {
         services: Services {
-            packages: Packages::showing(Read::Known(catalog()), details),
+            packages: Packages::showing(Read::Known(catalog), details),
             ..Services::default()
         },
         ..PageFixture::with_snapshot(snapshot)

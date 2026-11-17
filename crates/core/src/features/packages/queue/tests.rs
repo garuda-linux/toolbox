@@ -17,6 +17,7 @@ fn explicit(text: &str, depends: &[&str]) -> LocalNode {
         name: name(text),
         depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
         provides: Vec::new(),
+        optional: Vec::new(),
         reason: InstallReason::Explicit,
     }
 }
@@ -186,6 +187,7 @@ fn a_removal_is_checked_together_with_the_queued_ones() {
         explicit("app-a", &["systemd-libs"]),
         explicit("app-b", &["systemd-libs"]),
         LocalNode {
+            optional: Vec::new(),
             reason: InstallReason::Dependency,
             ..explicit("systemd-libs", &[])
         },

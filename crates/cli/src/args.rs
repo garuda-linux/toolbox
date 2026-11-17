@@ -40,7 +40,9 @@ pub use net::{
     NetworkCommand, OnOff, PingArgs, Radio, RadioArgs, ReinstallArgs, RepairArgs, SetupApply,
     SetupCommand, TraceArgs,
 };
-pub use packages::{PackageArgs, PackageInstall, PackageShow, PackagesCommand, PackagesSearch};
+pub use packages::{
+    PackageArgs, PackageInstall, PackageShow, PackagesCommand, PackagesOnly, PackagesSearch,
+};
 pub use pages::{
     AppsCommand, AppsList, Diagnostics, ServicesCommand, ServicesList, ServicesRead, ToggleCommand,
     ToggleList, TogglePage, Update,

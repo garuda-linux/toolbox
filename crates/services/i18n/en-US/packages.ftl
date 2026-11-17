@@ -11,6 +11,8 @@ packages-failed = The package databases could not be read.
 packages-filter-installed = Installed
 packages-filter-updates = Updates
 packages-filter-orphans = Orphans
+# Dependencies that installed packages only list as optional dependencies.
+packages-filter-optional = Optional
 packages-filter-all = All
 
 packages-none = No packages to show
@@ -20,7 +22,9 @@ packages-updates-failed = Updates could not be checked.
 packages-no-updates = No pending updates
 packages-no-updates-detail = Home checks for updates. Installed packages with a newer version show here.
 packages-no-orphans = No orphans
-packages-no-orphans-detail = Every package installed as a dependency is still needed by another one.
+packages-no-orphans-detail = Every package installed as a dependency is still required or listed as optional by another one.
+packages-no-optional = No optional-only dependencies
+packages-no-optional-detail = No package installed as a dependency is only listed as optional by another one.
 packages-nothing-matches-detail = The search looks at the names and descriptions under the chip that is picked.
 
 # Why a click queued nothing.
@@ -39,6 +43,16 @@ packages-take-back = Take back
 
 packages-tag-dependency = Dependency
 packages-tag-foreign = Not from a repository
+# $first is the installed package that lists this one as an optional dependency.
+packages-tag-optional-for = Optional for { $first }
+# $first is the first installed package that lists this one as an optional dependency, $more how many others do.
+packages-tag-optional-for-more =
+    { $more ->
+        [one] Optional for { $first } and one more
+       *[other] Optional for { $first } and { $more } more
+    }
+# $names lists every installed package that lists this one as an optional dependency, joined by commas.
+packages-tag-optional-for-all = Optional for { $names }
 packages-installed = Installed
 packages-installs = Installs with Apply
 packages-removes = Removes with Apply

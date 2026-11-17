@@ -27,6 +27,18 @@ fn block(text: &str, key: &str) -> Vec<String> {
         .unwrap_or_default()
 }
 
+/// The names of the `%OPTDEPENDS%` lines, without what each is for.
+fn optional_names(text: &str) -> Vec<String> {
+    block(text, "OPTDEPENDS")
+        .iter()
+        .map(|line| {
+            line.split_once(": ")
+                .map_or(line.as_str(), |(name, _)| name)
+                .to_owned()
+        })
+        .collect()
+}
+
 fn system() -> System {
     let system = System::new(&["core", "extra"]);
 
@@ -115,6 +127,7 @@ fn the_index_carries_the_installed_dependency_graph() {
             name: name("gimp"),
             depends: block(GIMP_DESC, "DEPENDS"),
             provides: Vec::new(),
+            optional: optional_names(GIMP_DESC),
             reason: InstallReason::Explicit,
         })
     );
@@ -127,6 +140,7 @@ fn the_index_carries_the_installed_dependency_graph() {
             "libgegl-npd-0.4.so=libgegl-npd-0.4.so-64".to_owned(),
             "libgegl-sc-0.4.so=libgegl-sc-0.4.so-64".to_owned(),
         ],
+        optional: optional_names(GEGL_DESC),
         reason: InstallReason::Dependency,
     }));
 }

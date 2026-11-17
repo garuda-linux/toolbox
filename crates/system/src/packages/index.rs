@@ -190,6 +190,11 @@ pub(super) fn local_node(package: &Pkg) -> Option<LocalNode> {
         name: PackageName::new(package.name()).ok()?,
         depends: strings(package.depends()),
         provides: strings(package.provides()),
+        optional: package
+            .optdepends()
+            .iter()
+            .map(|dep| dep.name().to_owned())
+            .collect(),
         reason: reason(package.reason()),
     })
 }

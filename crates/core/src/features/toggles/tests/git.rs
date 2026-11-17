@@ -18,12 +18,14 @@ fn the_git_build_meets_the_package_rules() {
             name: package("docker-git"),
             depends: vec!["efibootmgr".to_owned()],
             provides: Vec::new(),
+            optional: Vec::new(),
             reason: InstallReason::Explicit,
         },
         LocalNode {
             name: package("efibootmgr"),
             depends: Vec::new(),
             provides: Vec::new(),
+            optional: Vec::new(),
             reason: InstallReason::Dependency,
         },
     ]));

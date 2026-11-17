@@ -40,12 +40,14 @@ fn catalog_index() -> PackageIndex {
                 name: name("bash"),
                 depends: vec!["glibc".to_owned()],
                 provides: vec!["sh=5.2".to_owned()],
+                optional: Vec::new(),
                 reason: InstallReason::Dependency,
             },
             LocalNode {
                 name: name("glibc"),
                 depends: Vec::new(),
                 provides: Vec::new(),
+                optional: Vec::new(),
                 reason: InstallReason::Dependency,
             },
         ],
@@ -131,6 +133,7 @@ fn the_first_installed_package_that_provides_a_name_answers_for_it() {
         name: name("zsh"),
         depends: Vec::new(),
         provides: vec!["sh".to_owned()],
+        optional: Vec::new(),
         reason: InstallReason::Explicit,
     });
 

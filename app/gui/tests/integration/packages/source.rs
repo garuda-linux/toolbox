@@ -153,6 +153,7 @@ fn local(details: &PackageDetails) -> LocalNode {
         name: details.name.clone(),
         depends: details.depends.clone(),
         provides: details.provides.clone(),
+        optional: Vec::new(),
         reason: details
             .installed
             .as_ref()
@@ -183,6 +184,7 @@ fn node(text: &str, reason: InstallReason) -> LocalNode {
         name: name(text),
         depends: Vec::new(),
         provides: Vec::new(),
+        optional: Vec::new(),
         reason,
     }
 }

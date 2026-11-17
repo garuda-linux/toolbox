@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use toolbox_cli::args::{Confirm, PackageArgs, PackagesSearch, Read};
+use toolbox_cli::args::{Confirm, PackageArgs, PackagesOnly, PackagesSearch, Read};
 use toolbox_core::domains::{InstalledPackages, SyncPackages};
 use toolbox_core::features::packages::{
     IndexEntry, InstallReason, Installed, LocalNode, Origin, PackageDetails, PackageIndex,
@@ -32,6 +32,7 @@ impl PackageIndexSource for Index {
 
         Ok(PackageIndex {
             entries: vec![
+                entry("babl", Some(InstallReason::Dependency)),
                 entry("gimp", Some(InstallReason::Explicit)),
                 entry("inkscape", None),
                 entry("leftover", Some(InstallReason::Dependency)),
@@ -41,12 +42,21 @@ impl PackageIndexSource for Index {
                     name: name("gimp"),
                     depends: Vec::new(),
                     provides: Vec::new(),
+                    optional: vec!["babl".to_owned()],
                     reason: InstallReason::Explicit,
+                },
+                LocalNode {
+                    name: name("babl"),
+                    depends: Vec::new(),
+                    provides: Vec::new(),
+                    optional: Vec::new(),
+                    reason: InstallReason::Dependency,
                 },
                 LocalNode {
                     name: name("leftover"),
                     depends: Vec::new(),
                     provides: Vec::new(),
+                    optional: Vec::new(),
                     reason: InstallReason::Dependency,
                 },
             ],
@@ -65,8 +75,11 @@ fn name(text: &str) -> PackageName {
 fn search(text: Option<&str>, installed: bool, orphans: bool) -> PackagesSearch {
     PackagesSearch {
         text: text.map(str::to_owned),
-        installed,
-        orphans,
+        only: PackagesOnly {
+            installed,
+            orphans,
+            optional: false,
+        },
         aur: false,
         read: Read::default(),
     }
@@ -97,16 +110,27 @@ fn snapshot() -> Snapshot {
 #[test]
 fn a_search_looks_at_every_package_unless_told_otherwise() {
     let all = found(&search(None, false, false), &Index).unwrap();
-    assert_eq!(names(&all), ["gimp", "inkscape", "leftover"]);
+    assert_eq!(names(&all), ["babl", "gimp", "inkscape", "leftover"]);
 
     let text = found(&search(Some("INK"), false, false), &Index).unwrap();
     assert_eq!(names(&text), ["inkscape"]);
 
     let installed = found(&search(None, true, false), &Index).unwrap();
-    assert_eq!(names(&installed), ["gimp", "leftover"]);
+    assert_eq!(names(&installed), ["babl", "gimp", "leftover"]);
 
     let orphans = found(&search(None, false, true), &Index).unwrap();
     assert_eq!(names(&orphans), ["leftover"]);
+
+    let only_optional = PackagesSearch {
+        only: PackagesOnly {
+            optional: true,
+            ..PackagesOnly::default()
+        },
+        ..search(None, false, false)
+    };
+
+    let optional = found(&only_optional, &Index).unwrap();
+    assert_eq!(names(&optional), ["babl"], "babl is optional for gimp");
 }
 
 #[test]
@@ -114,8 +138,8 @@ fn the_listing_marks_installed_packages_and_counts_them() {
     let rows = found(&search(None, false, false), &Index).unwrap();
     let listing = listing(&rows);
 
-    assert_eq!(listing.summary.as_deref(), Some("3, 2 installed"));
-    assert_eq!(listing.rows[1].cells[0], "inkscape");
+    assert_eq!(listing.summary.as_deref(), Some("4, 3 installed"));
+    assert_eq!(listing.rows[2].cells[0], "inkscape");
 }
 
 #[test]

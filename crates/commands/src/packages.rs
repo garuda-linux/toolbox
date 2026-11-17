@@ -56,8 +56,7 @@ pub fn command(command: PackagesCommand, runtime: &Runtime, out: &mut Out<'_>) -
     }
 }
 
-/// The rows a search keeps: every package, the installed ones or the
-/// orphans, whose name or description holds the text.
+/// The rows of the picked chip whose name or description holds the text.
 ///
 /// # Errors
 ///
@@ -67,9 +66,11 @@ pub fn found(
     source: &dyn PackageIndexSource,
 ) -> Result<Vec<PackageRow>, ProbeError> {
     let catalog = Catalog::new(source.index()?);
-    let filter = if args.orphans {
+    let filter = if args.only.orphans {
         Filter::Orphans
-    } else if args.installed {
+    } else if args.only.optional {
+        Filter::Optional
+    } else if args.only.installed {
         Filter::Installed
     } else {
         Filter::All

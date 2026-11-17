@@ -100,6 +100,8 @@ impl PackageRow for Row<'_> {
         for id in tags(self.entry) {
             tag(ui, &i18n::text(ui.ctx(), id), Tone::Neutral);
         }
+
+        optional_tag(ui, self.catalog.optional_for(&self.entry.name));
     }
 
     fn description(&self) -> &str {
@@ -178,7 +180,7 @@ where
 const fn says_installed(filter: Filter) -> bool {
     matches!(
         filter,
-        Filter::Installed | Filter::Updates | Filter::Orphans
+        Filter::Installed | Filter::Updates | Filter::Orphans | Filter::Optional
     )
 }
 
@@ -340,5 +342,41 @@ pub fn repository(ctx: &Context, origin: &Origin) -> String {
     match origin {
         Origin::Repository(repo) => repo.clone(),
         Origin::Foreign => i18n::text(ctx, "packages-no-repository").into_owned(),
+    }
+}
+
+fn optional_tag(ui: &mut Ui, by: &[PackageName]) {
+    let Some((first, others)) = by.split_first() else {
+        return;
+    };
+
+    let ctx = ui.ctx().clone();
+    let id = if others.is_empty() {
+        "packages-tag-optional-for"
+    } else {
+        "packages-tag-optional-for-more"
+    };
+
+    let args = [
+        ("first", Arg::from(first.as_str())),
+        ("more", Arg::from(others.len())),
+    ];
+
+    let response = tag(ui, &i18n::text_with(&ctx, id, &args), Tone::Neutral);
+
+    if !others.is_empty() {
+        let names = by
+            .iter()
+            .map(PackageName::as_str)
+            .collect::<Vec<_>>()
+            .join(", ");
+
+        let all = i18n::text_with(
+            &ctx,
+            "packages-tag-optional-for-all",
+            &[("names", Arg::from(&names))],
+        );
+
+        _ = response.on_hover_text(all);
     }
 }

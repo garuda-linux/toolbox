@@ -33,7 +33,7 @@ pub fn steps() -> Vec<Step> {
 }
 
 /// The details of pacman itself on Arch, where its databases exist: one
-/// dependency followed and the way back.
+/// dependency followed, the way back and the optional-only dependencies.
 #[must_use = "the steps do nothing until a suite runs them"]
 pub fn arch_steps() -> Vec<Step> {
     let [field, name] = Step::type_into("Search packages", "pacman");
@@ -61,6 +61,11 @@ pub fn arch_steps() -> Vec<Step> {
         Step::Shot("packages-detail-dependency"),
         Step::click("Back to pacman"),
         Step::wait("Back to Packages"),
+        Step::click("Back to Packages"),
+        Step::shortcut(Key::A),
+        Step::press(Key::Backspace),
+        Step::button("Optional"),
+        Step::Shot("packages-optional"),
     ]
 }
 

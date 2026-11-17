@@ -319,6 +319,11 @@ fn filters(page: &mut PackagesPage, ui: &mut Ui, counts: ChipCounts) {
             "packages-filter-orphans",
             count(|known| known.orphans),
         ),
+        (
+            Filter::Optional,
+            "packages-filter-optional",
+            count(|known| known.optional),
+        ),
         (Filter::All, "packages-filter-all", count(|known| known.all)),
     ];
 
@@ -357,6 +362,7 @@ pub fn nothing(page: &mut PackagesPage, ui: &mut Ui) {
         let (title, detail) = match page.filter {
             Filter::Updates => ("packages-no-updates", "packages-no-updates-detail"),
             Filter::Orphans => ("packages-no-orphans", "packages-no-orphans-detail"),
+            Filter::Optional => ("packages-no-optional", "packages-no-optional-detail"),
             Filter::Installed | Filter::All | Filter::Aur => {
                 ("packages-none", "packages-none-detail")
             }

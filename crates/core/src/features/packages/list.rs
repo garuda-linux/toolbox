@@ -6,8 +6,9 @@ use std::collections::{BTreeMap, BTreeSet};
 use toolbox_plan::PackageName;
 use toolbox_state::packages::{IndexEntry, LocalNode, PackageIndex};
 
-use super::graph::{dependency_name, orphans};
+use super::graph::{dependency_name, optional_only, orphans};
 use crate::domains::{InstalledPackages, Packages};
+use crate::features::search::ranked::Rank;
 use crate::features::search::{Needle, folded};
 use crate::{ChangeSet, Snapshot, Toggle};
 
@@ -20,6 +21,8 @@ pub enum Filter {
     Installed,
     Updates,
     Orphans,
+    /// Dependencies that installed packages only list as optional.
+    Optional,
     All,
     /// The AUR's own list, which never mixes with the repositories'.
     Aur,
@@ -30,6 +33,7 @@ pub struct Counts {
     pub installed: usize,
     pub updates: usize,
     pub orphans: usize,
+    pub optional: usize,
     pub all: usize,
 }
 
@@ -46,6 +50,7 @@ pub struct Catalog {
     index: PackageIndex,
     folded: Vec<String>,
     orphans: BTreeSet<PackageName>,
+    optional: BTreeMap<PackageName, Vec<PackageName>>,
     /// Every name an installed package provides, with the first package
     /// that does, so a detail page finds a soname without a scan.
     providers: BTreeMap<String, PackageName>,
@@ -77,6 +82,7 @@ impl Catalog {
             .collect();
 
         let orphans = orphans(&index.local);
+        let optional = optional_only(&index.local);
         let mut providers = BTreeMap::new();
         for node in &index.local {
             for provided in &node.provides {
@@ -90,6 +96,7 @@ impl Catalog {
             index,
             folded,
             orphans,
+            optional,
             providers,
         }
     }
@@ -121,6 +128,25 @@ impl Catalog {
         self.orphans.contains(name)
     }
 
+    pub fn optional_for(&self, name: &PackageName) -> &[PackageName] {
+        self.optional.get(name).map_or(&[], Vec::as_slice)
+    }
+
+    /// Sorted by name.
+    pub fn ranked<'a>(
+        &'a self,
+        needle: &'a Needle,
+    ) -> impl Iterator<Item = (Rank, &'a IndexEntry)> + 'a {
+        self.index
+            .entries
+            .iter()
+            .zip(&self.folded)
+            .filter_map(|(entry, text)| {
+                let (name, description) = text.split_once('\n').unwrap_or((text, ""));
+                Some((needle.rank_folded(name, description)?, entry))
+            })
+    }
+
     pub fn view(&self, filter: Filter, search: &str, updates: &BTreeSet<PackageName>) -> View {
         let needle = Needle::new(search);
 
@@ -134,16 +160,19 @@ impl Catalog {
             let installed = entry.installed.is_some();
             let update = installed && updates.contains(&entry.name);
             let orphan = self.orphans.contains(&entry.name);
+            let optional = self.optional.contains_key(&entry.name);
             let counts = &mut view.counts;
             counts.all += 1;
             counts.installed += usize::from(installed);
             counts.updates += usize::from(update);
             counts.orphans += usize::from(orphan);
+            counts.optional += usize::from(optional);
 
             let shown = match filter {
                 Filter::Installed => installed,
                 Filter::Updates => update,
                 Filter::Orphans => orphan,
+                Filter::Optional => optional,
                 Filter::All => true,
                 Filter::Aur => false,
             };

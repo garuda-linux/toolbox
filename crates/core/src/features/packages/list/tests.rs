@@ -7,6 +7,7 @@ use toolbox_state::packages::{
 
 use super::{Catalog, Counts, Filter, RowState, row_state};
 use crate::domains::{InstalledPackages, Packages};
+use crate::features::search::ranked::Rank;
 use crate::{ChangeSet, Snapshot, Toggle};
 
 fn name(text: &str) -> PackageName {
@@ -39,6 +40,7 @@ fn node(text: &str, reason: InstallReason, depends: &[&str]) -> LocalNode {
         name: name(text),
         depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
         provides: Vec::new(),
+        optional: Vec::new(),
         reason,
     }
 }
@@ -140,6 +142,7 @@ fn the_counts_follow_the_search() {
             installed: 4,
             updates: 1,
             orphans: 1,
+            optional: 0,
             all: 6,
         }
     );
@@ -149,6 +152,7 @@ fn the_counts_follow_the_search() {
             installed: 1,
             updates: 0,
             orphans: 0,
+            optional: 0,
             all: 1,
         }
     );
@@ -200,11 +204,12 @@ fn every_filter_has_a_code() {
             Filter::Installed,
             Filter::Updates,
             Filter::Orphans,
+            Filter::Optional,
             Filter::All,
             Filter::Aur
         ]
         .map(Filter::as_str),
-        ["installed", "updates", "orphans", "all", "aur"]
+        ["installed", "updates", "orphans", "optional", "all", "aur"]
     );
 }
 
@@ -215,4 +220,54 @@ fn the_aur_chip_lists_no_repository_package() {
 
     assert_eq!(view.rows, Vec::<usize>::new());
     assert_eq!(view.counts.all, 6);
+}
+
+#[test]
+fn a_dependency_only_listed_as_optional_has_its_own_chip() {
+    let catalog = Catalog::new(PackageIndex {
+        entries: vec![
+            installed("atomicparsley", InstallReason::Dependency),
+            installed("leftover", InstallReason::Dependency),
+            installed("yt-dlp", InstallReason::Explicit),
+        ],
+        local: vec![
+            node("atomicparsley", InstallReason::Dependency, &[]),
+            node("leftover", InstallReason::Dependency, &[]),
+            LocalNode {
+                optional: vec!["atomicparsley".to_owned()],
+                ..node("yt-dlp", InstallReason::Explicit, &[])
+            },
+        ],
+    });
+
+    let optional = catalog.view(Filter::Optional, "", &no_updates());
+    let orphans = catalog.view(Filter::Orphans, "", &no_updates());
+
+    assert_eq!(names_of(&catalog, &optional.rows), ["atomicparsley"]);
+    assert_eq!(names_of(&catalog, &orphans.rows), ["leftover"]);
+    assert_eq!((optional.counts.optional, optional.counts.orphans), (1, 1));
+    assert_eq!(
+        catalog.optional_for(&name("atomicparsley")),
+        [name("yt-dlp")]
+    );
+    assert_eq!(
+        catalog.optional_for(&name("leftover")),
+        Vec::<PackageName>::new()
+    );
+}
+
+#[test]
+fn ranked_packages_go_by_name_then_by_description() {
+    let catalog = catalog();
+    let needle = crate::features::search::Needle::new("gimp");
+    let ranked: Vec<(Rank, &str)> = catalog
+        .ranked(&needle)
+        .map(|(rank, entry)| (rank, entry.name.as_str()))
+        .collect();
+
+    assert_eq!(ranked, [(Rank::Exact, "gimp")]);
+
+    let about = crate::features::search::Needle::new("about gegl");
+    let by_text: Vec<Rank> = catalog.ranked(&about).map(|(rank, _)| rank).collect();
+    assert_eq!(by_text, [Rank::InText]);
 }

@@ -44,22 +44,35 @@ pub struct PackagesSearch {
     /// any case. Without it every package.
     pub text: Option<String>,
 
-    /// Only the installed packages.
-    #[arg(long, conflicts_with = "orphans")]
-    pub installed: bool,
-
-    /// Only the dependencies no installed package needs any more.
-    #[arg(long)]
-    pub orphans: bool,
+    #[command(flatten)]
+    pub only: PackagesOnly,
 
     /// Search the AUR instead, also its keywords, the exact name first.
     /// Downloads the AUR's package list when the last try is a day old.
     /// Works while the window's AUR setting is off: the flag asks for it.
-    #[arg(long, conflicts_with_all = ["installed", "orphans"])]
+    #[arg(long, conflicts_with_all = ["installed", "orphans", "optional"])]
     pub aur: bool,
 
     #[command(flatten)]
     pub read: Read,
+}
+
+/// The chip of the window's Packages page a search keeps to, at most one.
+#[derive(Debug, Default, Args)]
+pub struct PackagesOnly {
+    /// Only the installed packages.
+    #[arg(long, conflicts_with_all = ["orphans", "optional"])]
+    pub installed: bool,
+
+    /// Only the dependencies no installed package needs any more, not
+    /// even as an optional dependency.
+    #[arg(long, conflicts_with = "optional")]
+    pub orphans: bool,
+
+    /// Only the dependencies that installed packages list as optional
+    /// and none requires.
+    #[arg(long)]
+    pub optional: bool,
 }
 
 #[derive(Debug, Args)]

@@ -1,9 +1,9 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_plan::PackageName;
 use toolbox_state::packages::{InstallReason, LocalNode};
 
-use super::{dependency_name, orphans, required_by, takes_along};
+use super::{dependency_name, optional_only, orphans, required_by, takes_along};
 
 fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap_or_else(|error| panic!("{text}: {error}"))
@@ -14,6 +14,7 @@ fn node(text: &str, reason: InstallReason, depends: &[&str], provides: &[&str]) 
         name: name(text),
         depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
         provides: provides.iter().map(|&dep| dep.to_owned()).collect(),
+        optional: Vec::new(),
         reason,
     }
 }
@@ -162,4 +163,46 @@ fn a_package_needed_through_what_it_provides_names_its_users() {
 
     assert_eq!(required_by(&name("bash"), &local), names(&[]));
     assert_eq!(required_by(&name("dash"), &local), names(&["makepkg"]));
+}
+
+fn listing_as_optional(text: &str, optional: &[&str]) -> LocalNode {
+    LocalNode {
+        optional: optional.iter().map(|&dep| dep.to_owned()).collect(),
+        ..explicit(text, &[])
+    }
+}
+
+#[test]
+fn a_dependency_only_listed_as_optional_is_no_orphan_but_optional() {
+    let local = [
+        listing_as_optional("yt-dlp", &["atomicparsley", "ffmpeg"]),
+        listing_as_optional("mpv", &["yt-dlp"]),
+        dependency("atomicparsley", &[]),
+        dependency("leftover", &[]),
+    ];
+
+    assert_eq!(orphans(&local), BTreeSet::from([name("leftover")]));
+    assert_eq!(
+        optional_only(&local),
+        BTreeMap::from([(name("atomicparsley"), names(&["yt-dlp"]))]),
+        "an explicit package and a missing one are neither"
+    );
+}
+
+#[test]
+fn a_required_dependency_is_not_optional_only() {
+    let local = [
+        explicit("gimp", &["gegl"]),
+        listing_as_optional("darktable", &["gegl", "dash"]),
+        dependency("gegl", &[]),
+        node("dash", InstallReason::Dependency, &[], &["sh"]),
+        listing_as_optional("inkscape", &["sh"]),
+    ];
+
+    assert_eq!(orphans(&local).len(), 0);
+    assert_eq!(
+        optional_only(&local),
+        BTreeMap::from([(name("dash"), names(&["darktable", "inkscape"]))]),
+        "an optional dependency resolves through what provides it, as a required one does"
+    );
 }

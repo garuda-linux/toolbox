@@ -13,6 +13,7 @@ fn node(name: &str, reason: InstallReason, depends: &[&str]) -> LocalNode {
         name: package(name),
         depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
         provides: Vec::new(),
+        optional: Vec::new(),
         reason,
     }
 }

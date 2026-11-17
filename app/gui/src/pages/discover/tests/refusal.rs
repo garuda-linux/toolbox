@@ -24,6 +24,7 @@ fn node(name: &str, depends: &[&str], reason: InstallReason) -> LocalNode {
         name: name.parse().unwrap(),
         depends: depends.iter().map(|&dep| dep.to_owned()).collect(),
         provides: Vec::new(),
+        optional: Vec::new(),
         reason,
     }
 }

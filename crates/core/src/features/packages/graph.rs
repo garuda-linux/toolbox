@@ -4,7 +4,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::collections::{BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 use toolbox_plan::PackageName;
 use toolbox_state::packages::{InstallReason, LocalNode};
@@ -16,6 +16,8 @@ struct Graph<'local> {
     by_name: HashMap<&'local str, usize>,
     needs: Vec<BTreeSet<usize>>,
     users: Vec<BTreeSet<usize>>,
+    /// For each package, the packages that list it as optional.
+    optional_users: Vec<BTreeSet<usize>>,
 }
 
 impl<'local> Graph<'local> {
@@ -58,25 +60,41 @@ impl<'local> Graph<'local> {
             })
             .collect();
 
-        let mut users = vec![BTreeSet::new(); local.len()];
-        for (user, needed) in needs.iter().enumerate() {
-            for &package in needed {
-                if let Some(of) = users.get_mut(package) {
-                    of.insert(user);
-                }
-            }
-        }
+        let users = users_of(&needs, local.len());
+        let wanted: Vec<BTreeSet<usize>> = local
+            .iter()
+            .enumerate()
+            .map(|(index, node)| {
+                node.optional
+                    .iter()
+                    .flat_map(|dependency| resolve(dependency))
+                    .filter(|&wanted| wanted != index)
+                    .collect()
+            })
+            .collect();
+
+        let optional_users = users_of(&wanted, local.len());
 
         Self {
             local,
             by_name,
             needs,
             users,
+            optional_users,
         }
     }
 
     fn users_of(&self, package: usize) -> impl Iterator<Item = &usize> {
         self.users.get(package).into_iter().flatten()
+    }
+
+    fn optional_users_of(&self, package: usize) -> impl Iterator<Item = &usize> {
+        self.optional_users.get(package).into_iter().flatten()
+    }
+
+    /// Pulled in as a dependency, and no installed package requires it.
+    fn unneeded(&self, package: usize) -> bool {
+        self.pulled_in(package) && self.users_of(package).next().is_none()
     }
 
     fn pulled_in(&self, package: usize) -> bool {
@@ -168,13 +186,51 @@ pub fn required_by(package: &PackageName, local: &[LocalNode]) -> Vec<PackageNam
     names
 }
 
+/// As `pacman -Qdtt` lists them.
 pub fn orphans(local: &[LocalNode]) -> BTreeSet<PackageName> {
     let graph = Graph::new(local);
 
     local
         .iter()
         .enumerate()
-        .filter(|(index, _)| graph.pulled_in(*index) && graph.users_of(*index).next().is_none())
+        .filter(|(index, _)| {
+            graph.unneeded(*index) && graph.optional_users_of(*index).next().is_none()
+        })
         .map(|(_, node)| node.name.clone())
         .collect()
+}
+
+/// With [`orphans`] they make what `pacman -Qdt` lists.
+pub fn optional_only(local: &[LocalNode]) -> BTreeMap<PackageName, Vec<PackageName>> {
+    let graph = Graph::new(local);
+
+    local
+        .iter()
+        .enumerate()
+        .filter(|(index, _)| graph.unneeded(*index))
+        .filter_map(|(index, node)| {
+            let mut by: Vec<PackageName> = graph
+                .optional_users_of(index)
+                .filter_map(|&user| local.get(user).map(|user| user.name.clone()))
+                .collect();
+
+            by.sort();
+
+            (!by.is_empty()).then(|| (node.name.clone(), by))
+        })
+        .collect()
+}
+
+/// The other side of `edges`: for each package, the ones that point at it.
+fn users_of(edges: &[BTreeSet<usize>], count: usize) -> Vec<BTreeSet<usize>> {
+    let mut users = vec![BTreeSet::new(); count];
+    for (user, pointed) in edges.iter().enumerate() {
+        for &package in pointed {
+            if let Some(of) = users.get_mut(package) {
+                of.insert(user);
+            }
+        }
+    }
+
+    users
 }

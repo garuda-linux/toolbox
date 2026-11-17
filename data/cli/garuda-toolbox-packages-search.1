@@ -4,7 +4,7 @@
 .SH NAME
 garuda\-toolbox\-packages\-search \- Search the repository and installed packages by name and description, or the AUR with `\-\-aur`
 .SH SYNOPSIS
-\fBgaruda\-toolbox packages search\fR [\fB\-\-installed\fR] [\fB\-\-orphans\fR] [\fB\-\-aur\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fITEXT\fR] 
+\fBgaruda\-toolbox packages search\fR [\fB\-\-installed\fR] [\fB\-\-orphans\fR] [\fB\-\-optional\fR] [\fB\-\-aur\fR] [\fB\-\-json\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fITEXT\fR] 
 .SH DESCRIPTION
 Search the repository and installed packages by name and description, or the AUR with `\-\-aur`
 .SH OPTIONS
@@ -13,7 +13,10 @@ Search the repository and installed packages by name and description, or the AUR
 Only the installed packages
 .TP
 \fB\-\-orphans\fR
-Only the dependencies no installed package needs any more
+Only the dependencies no installed package needs any more, not even as an optional dependency
+.TP
+\fB\-\-optional\fR
+Only the dependencies that installed packages list as optional and none requires
 .TP
 \fB\-\-aur\fR
 Search the AUR instead, also its keywords, the exact name first. Downloads the AUR\*(Aqs package list when the last try is a day old. Works while the window\*(Aqs AUR setting is off: the flag asks for it

@@ -11,6 +11,8 @@ packages-failed = Die Paketdatenbanken ließen sich nicht lesen.
 packages-filter-installed = Installiert
 packages-filter-updates = Updates
 packages-filter-orphans = Verwaist
+# Dependencies that installed packages only list as optional dependencies.
+packages-filter-optional = Optional
 packages-filter-all = Alle
 
 packages-none = Keine Pakete
@@ -20,7 +22,9 @@ packages-updates-failed = Die Updates ließen sich nicht prüfen.
 packages-no-updates = Keine ausstehenden Updates
 packages-no-updates-detail = Die Startseite sucht nach Updates. Installierte Pakete mit neuerer Version erscheinen hier.
 packages-no-orphans = Keine verwaisten Pakete
-packages-no-orphans-detail = Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht.
+packages-no-orphans-detail = Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht oder als optional genannt.
+packages-no-optional = Keine nur optionalen Abhängigkeiten
+packages-no-optional-detail = Kein als Abhängigkeit installiertes Paket wird von einem anderen nur als optional genannt.
 packages-nothing-matches-detail = Durchsucht Namen und Beschreibungen im gewählten Filter.
 
 # Why a click queued nothing.
@@ -39,6 +43,16 @@ packages-take-back = Zurücknehmen
 
 packages-tag-dependency = Abhängigkeit
 packages-tag-foreign = Fremdes Paket
+# $first is the installed package that lists this one as an optional dependency.
+packages-tag-optional-for = Optional für { $first }
+# $first is the first installed package that lists this one as an optional dependency, $more how many others do.
+packages-tag-optional-for-more =
+    { $more ->
+        [one] Optional für { $first } und ein weiteres
+       *[other] Optional für { $first } und { $more } weitere
+    }
+# $names lists every installed package that lists this one as an optional dependency, joined by commas.
+packages-tag-optional-for-all = Optional für { $names }
 packages-installed = Installiert
 packages-installs = Zu installieren
 packages-removes = Zu entfernen
