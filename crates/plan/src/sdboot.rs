@@ -1,6 +1,7 @@
 //! Only root may read the ESP, so the helper hands out settings and
 //! entries, never a file's text.
 
+mod bootctl;
 mod change;
 mod entry;
 mod esp;
@@ -9,13 +10,14 @@ mod settings;
 
 use serde::{Deserialize, Serialize};
 
+pub use self::bootctl::bootctl_default;
 pub use self::change::{InvalidLoaderChange, LoaderChange, LoaderKey, LoaderSetting};
 pub use self::entry::{EntryKind, LoaderEntry};
 pub use self::esp::{EspPlace, esp_place};
 pub use self::pe::{HEADER_BYTES, Section, sections};
 pub use self::settings::{LoaderSettings, LoaderTimeout};
-use crate::KernelRelease;
 use crate::protocol::{DecodeError, decode};
+use crate::{KernelRelease, LoaderEntryId};
 
 pub const LOADER_CONF: &str = "loader/loader.conf";
 /// Relative to `/`. kernel-install builds it into every UKI.
@@ -31,6 +33,10 @@ pub const MAX_ENTRIES: usize = 256;
 pub struct SdBootMenu {
     pub settings: LoaderSettings,
     pub entries: Vec<LoaderEntry>,
+    /// systemd-boot's own default, as `bootctl` names it. `None` while
+    /// bootctl did not answer.
+    #[serde(default)]
+    pub default: Option<LoaderEntryId>,
     /// Entry files that could not be read or are no entry.
     pub skipped: usize,
     /// Entries past [`MAX_ENTRIES`], left out.

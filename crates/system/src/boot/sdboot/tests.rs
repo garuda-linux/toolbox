@@ -1,13 +1,14 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
-use toolbox_plan::protocol::ReadKind;
+use toolbox_plan::LoaderEntryId;
+use toolbox_plan::protocol::{ProgramAnswer, ReadKind, encode};
 use toolbox_state::boot::BootLoader;
 
-use super::loader;
-use crate::test_support::write;
+use super::{default_through_helper, loader};
+use crate::test_support::{runnable_script, write};
 use crate::{
     BootMenuSource as _, BootSource as _, HelperReads, MenuRead, ProbeError, SystemBoot,
     SystemBootMenu,
@@ -30,6 +31,16 @@ struct NoHelper;
 impl HelperReads for NoHelper {
     fn read_command(&self, kind: ReadKind) -> Command {
         panic!("asked the helper for {}", kind.as_str());
+    }
+}
+
+/// Answers with one line, as the helper answers the bootctl read.
+struct Answering(PathBuf);
+
+impl HelperReads for Answering {
+    fn read_command(&self, kind: ReadKind) -> Command {
+        assert_eq!(kind, ReadKind::SdBootDefault);
+        Command::new(&self.0)
     }
 }
 
@@ -140,4 +151,54 @@ fn an_unreadable_install_conf_fails_the_loader_read() {
         loader(dir.path()),
         Err(ProbeError::Io { what, error: _ }) if what.contains("install.conf")
     ));
+}
+
+fn answering(dir: &Path, answer: &ProgramAnswer) -> Answering {
+    write(dir, "answer", encode(answer).unwrap());
+
+    let script = dir.join("helper");
+    runnable_script(&script, &format!("cat '{}'", dir.join("answer").display()));
+
+    Answering(script)
+}
+
+fn bootctl_ran(output: &str, code: i32) -> ProgramAnswer {
+    ProgramAnswer::Ran {
+        output: output.to_owned(),
+        errors: String::new(),
+        code: Some(code),
+        truncated: false,
+    }
+}
+
+#[test]
+fn the_default_comes_through_the_helper_when_the_esp_is_roots() {
+    let dir = tempfile::tempdir().unwrap();
+    let helper = answering(
+        dir.path(),
+        &bootctl_ran(toolbox_plan::testing::sdboot::IMAGE_BOOTCTL_LIST, 0),
+    );
+
+    assert_eq!(
+        default_through_helper(&helper, &Arc::new(AtomicBool::new(false))),
+        Some(LoaderEntryId::new("garuda-7.3.1-1-garuda.efi").unwrap())
+    );
+}
+
+/// A missing bootctl, one that fails and one whose output is no list all
+/// leave the default unknown and the menu as it is.
+#[test]
+fn a_failing_or_missing_bootctl_leaves_the_default_unknown() {
+    let failed = bootctl_ran(toolbox_plan::testing::sdboot::IMAGE_BOOTCTL_LIST, 1);
+
+    for answer in [ProgramAnswer::Missing, failed, bootctl_ran("no list", 0)] {
+        let dir = tempfile::tempdir().unwrap();
+        let helper = answering(dir.path(), &answer);
+
+        assert_eq!(
+            default_through_helper(&helper, &Arc::new(AtomicBool::new(false))),
+            None,
+            "{answer:?}"
+        );
+    }
 }

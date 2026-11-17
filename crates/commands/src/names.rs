@@ -26,6 +26,7 @@ use toolbox_core::domains::AvailableShells;
 use toolbox_core::features::boot::shown;
 use toolbox_core::features::boot::view::entries;
 use toolbox_core::features::discover::Apps;
+use toolbox_core::features::kernels::view::BootMenus;
 use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{ConfigFilePath, GRUB_CONFIG, GrubMenu, GrubPlatform, PackageName, UnitScope};
@@ -225,7 +226,7 @@ where
 }
 
 pub fn kernel_names(snapshot: &Snapshot) -> Vec<String> {
-    lists::kernels(snapshot)
+    lists::kernels(snapshot, BootMenus::default())
         .unwrap_or_default()
         .into_iter()
         .map(|row| row.name)

@@ -21,15 +21,15 @@ Changes wait in the queue until you apply them, see
 The top line names the kernel that runs right now, for example **Running
 kernel: 6.14.0-zen1-1-zen**. Installed kernels come first, then **Available**.
 
-| Part                          | Meaning                                                                                                  |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Running**                   | The kernel the system booted with                                                                        |
-| **Default**                   | The kernel the boot menu starts first. Its row has no **Set as default…** button                         |
-| `6.14.1.arch1-1 from core`    | The version and the repository pacman takes the kernel from                                              |
-| `installed 6.14.0.arch1-1`    | The installed version, shown when the repository has another one                                         |
-| `6.15rc1-1, in no repository` | An installed kernel that none of your repositories offers any more                                       |
-| **Headers missing**           | The matching headers package is not installed. **Headers install with Apply** once it waits in the queue |
-| **DKMS modules**              | The DKMS modules of this kernel, see [Build missing DKMS modules](#build-missing-dkms-modules)           |
+| Part                          | Meaning                                                                                                               |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Running**                   | The kernel the system booted with                                                                                     |
+| **Default**                   | The kernel the boot menu starts first. Its row has no **Set as default…** button, and it can show next to **Running** |
+| `6.14.1.arch1-1 from core`    | The version and the repository pacman takes the kernel from                                                           |
+| `installed 6.14.0.arch1-1`    | The installed version, shown when the repository has another one                                                      |
+| `6.15rc1-1, in no repository` | An installed kernel that none of your repositories offers any more                                                    |
+| **Headers missing**           | The matching headers package is not installed. **Headers install with Apply** once it waits in the queue              |
+| **DKMS modules**              | The DKMS modules of this kernel, see [Build missing DKMS modules](#build-missing-dkms-modules)                        |
 
 A kernel counts as one when its package name starts with `linux` and the same
 repository has a `-headers` package of the same version beside it. That
@@ -76,10 +76,16 @@ removal back.
    leaves the default entry as it was.
 
 The button shows on installed kernels that are not queued for removal and
-are not the default. The default kernel shows **Default** instead. When the
-app cannot read which kernel is the default, for example because GRUB boots
-the last entry it used (`GRUB_DEFAULT=saved`), no kernel shows **Default**
-and every installed kernel keeps its button.
+are not the default. The default kernel shows **Default** instead, next to
+**Running** when it runs too. The app finds the default from the boot menu:
+
+- On GRUB, the entry that `GRUB_DEFAULT` names. A top-level entry boots the
+  kernel of its `linux` line.
+- On systemd-boot, the entry that `bootctl` marks as the default.
+
+When the app cannot read which kernel is the default, for example because
+GRUB boots the last entry it used (`GRUB_DEFAULT=saved`), no kernel shows
+**Default** and every installed kernel keeps its button.
 
 When the boot menu has no entry for the kernel, Boot Options says so and offers
 nothing. This happens right after you install the kernel in another

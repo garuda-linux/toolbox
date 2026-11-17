@@ -296,6 +296,7 @@ fn kernels_mark_the_kernel_the_grub_menu_starts() {
         "GRUB_DEFAULT='gnulinux-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6>gnulinux-linux-lts-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6'",
         1,
     );
+
     snapshot.insert(toolbox_core::domains::CurrentGrub(
         toolbox_plan::GrubState::read(&text),
     ));
@@ -312,6 +313,7 @@ fn kernels_mark_the_kernel_the_grub_menu_starts() {
         },
     )
     .unwrap();
+
     let marked: Vec<&str> = rows
         .iter()
         .filter(|row| row.default)

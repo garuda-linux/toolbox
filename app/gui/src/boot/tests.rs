@@ -2,11 +2,15 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use tokio::runtime::Runtime;
-use toolbox_plan::{GrubMenu, GrubPlatform};
+use toolbox_core::Snapshot;
+use toolbox_core::domains::CurrentGrub;
+use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
 use toolbox_services::boot_menu::Menu;
 use toolbox_system::{BootMenuSource, MenuRead};
 
 use super::{Boot, BootSetup, Chosen, FileChooser, FileKind, Picked};
+use crate::page::PageId;
+use crate::page_service::PageService;
 use crate::testing::captures::GRUB_CFG;
 use crate::testing::until;
 
@@ -190,4 +194,18 @@ fn a_dialog_that_could_not_open_is_told_from_a_cancelled_one() {
         [answered(Chosen::Failed), answered(Chosen::Cancelled)],
         [true, false]
     );
+}
+
+#[test]
+fn opening_the_kernels_page_reads_the_menu_its_default_comes_from() {
+    let runtime = Runtime::new().unwrap();
+    let source = Arc::new(Source::default());
+    let mut boot = boot(&runtime, &source);
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(CurrentGrub(GrubState::read("")));
+
+    PageService::take(&mut boot, PageId::Kernels, &snapshot);
+    settle(&mut boot, |boot, _| boot.menu().known().is_some());
+
+    assert_eq!(source.0.load(Ordering::SeqCst), 1);
 }

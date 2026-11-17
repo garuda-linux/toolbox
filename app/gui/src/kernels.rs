@@ -4,7 +4,7 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_core::features::kernels::view::Listing;
+use toolbox_core::features::kernels::view::{BootMenus, Listing};
 use toolbox_core::features::kernels::{
     self as core_kernels, DkmsEntry, install_missing_headers, set_builds, set_headers,
 };
@@ -103,7 +103,7 @@ impl Kernels {
             }
         };
 
-        let Some(listing) = Listing::of(snapshot) else {
+        let Some(listing) = Listing::of(snapshot, BootMenus::default()) else {
             return Handled::taken();
         };
 

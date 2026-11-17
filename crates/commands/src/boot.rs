@@ -19,9 +19,10 @@ use toolbox_cli::args::{
 };
 use toolbox_core::features::boot::edit::{Edit, EditProblem, edit};
 use toolbox_core::features::boot::{Flag, shown};
-use toolbox_core::features::kernels::view::Listing;
+use toolbox_core::features::kernels::view::{BootMenus, Listing};
 use toolbox_core::features::kernels::{DkmsEntry, DkmsState, set_builds};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
+use toolbox_plan::sdboot::SdBootMenu;
 use toolbox_plan::{DkmsBuild as Build, GrubMenu, PackageName, Plan};
 use toolbox_services::dkms::{DkmsFailure, dkms_answer};
 use toolbox_state::boot::BootLoader;
@@ -56,6 +57,24 @@ pub struct ModuleRow {
     pub kernel: String,
     /// dkms's own word: `added`, `built`, `installed` or `broken`.
     pub state: &'static str,
+}
+
+/// The menu the default kernel comes from, as one read of the boot menu:
+/// systemd-boot's on systemd-boot, else GRUB's. Both stay `None` when the
+/// read failed, and then no kernel is the default.
+#[derive(Debug, Default)]
+pub struct DefaultMenus {
+    grub: Option<GrubMenu>,
+    sdboot: Option<SdBootMenu>,
+}
+
+impl DefaultMenus {
+    pub const fn view(&self) -> BootMenus<'_> {
+        BootMenus {
+            grub: self.grub.as_ref(),
+            sdboot: self.sdboot.as_ref(),
+        }
+    }
 }
 
 pub fn command(command: BootCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
@@ -223,7 +242,7 @@ pub fn build_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    let listing = Listing::of(snapshot)
+    let listing = Listing::of(snapshot, BootMenus::default())
         .ok_or_else(|| Refused::Rule("pacman's databases could not be read".to_owned()))?;
 
     let kernels = listing.kernels();
@@ -310,6 +329,28 @@ fn path_or_none(value: &str) -> String {
         String::new()
     } else {
         value.to_owned()
+    }
+}
+
+pub fn default_menus(settings: Settings) -> DefaultMenus {
+    let source = SystemBootMenu::system(Arc::new(super::root::helper(settings)));
+    match source.menu(&Arc::new(AtomicBool::new(false))) {
+        MenuRead::Known(grub) => DefaultMenus {
+            grub: Some(grub),
+            sdboot: None,
+        },
+        MenuRead::SdBoot(sdboot) => DefaultMenus {
+            grub: None,
+            sdboot: Some(sdboot),
+        },
+        other @ (MenuRead::Missing
+        | MenuRead::Refused(_)
+        | MenuRead::Unknown(_)
+        | MenuRead::Unreadable(_)
+        | MenuRead::Cancelled) => {
+            tracing::warn!("the boot menu was not read: {other:?}");
+            DefaultMenus::default()
+        }
     }
 }
 

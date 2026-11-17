@@ -5711,6 +5711,9 @@
     "kernels-running": {
       "string": "Läuft"
     },
+    "kernels-default": {
+      "string": "Standard"
+    },
     "kernels-installs": {
       "string": "Wird beim Übernehmen installiert"
     },
@@ -6749,7 +6752,7 @@
       "string": "Keine verwaisten Pakete"
     },
     "packages-no-orphans-detail": {
-      "string": "Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht."
+      "string": "Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht oder als optional genannt."
     },
     "packages-nothing-matches-detail": {
       "string": "Durchsucht Namen und Beschreibungen im gewählten Filter."
@@ -7831,7 +7834,7 @@
       "string": "Es werden keine Änderungen übernommen"
     },
     "palette-search": {
-      "string": "Seiten und Befehle durchsuchen"
+      "string": "Seiten, Befehle, Apps und Pakete durchsuchen"
     },
     "palette-group-pages": {
       "string": "Seiten"

@@ -5,11 +5,11 @@ apply everywhere.
 
 ## Who runs what
 
-| Runs as             | What                                                                                                                                                                        |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User                | the app, probes, user units and journals, user configuration files, `paru` (asks for root itself with `--sudo pkexec`), the editor, `rfkill`, `ping`, `traceroute`, `lsblk` |
-| Root, through D-Bus | login1 `Reboot`, systemd1. Both check polkit themselves                                                                                                                     |
-| Root, helper        | everything else, as typed `RootAction`s, one `pkexec` per apply                                                                                                             |
+| Runs as             | What                                                                                                                                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User                | the app, probes, user units and journals, user configuration files, `paru` (asks for root itself with `--sudo pkexec`), the editor, `rfkill`, `ping`, `traceroute`, `lsblk`, `bootctl list --json=short` where the ESP is readable |
+| Root, through D-Bus | login1 `Reboot`, systemd1. Both check polkit themselves                                                                                                                                                                            |
+| Root, helper        | everything else, as typed `RootAction`s, one `pkexec` per apply                                                                                                                                                                    |
 
 The app refuses to start as root.
 
@@ -174,19 +174,28 @@ without a password.
   the caller's own. The caller is the peer uid of stdin, a socket pair the
   app makes (`Policy::identified`). Any other stdin, root, a system
   account and `nobody` are refused. `!` and `*` count as locked.
-- `grub-menu`: titles and ids of at most 1000 entries, never the password
-  hash or the kernel command line. Only the branches of the running
-  firmware count (`/sys/firmware/efi`, as the app's own read).
+- `grub-menu`: titles, ids and the kernel package of each `linux` line, at
+  most 1000 entries, never the password hash or the kernel command line.
+  Only the branches of the running firmware count (`/sys/firmware/efi`, as
+  the app's own read).
 - `sdboot-menu`: the settings of `loader.conf` and the ids, titles and
   kernel releases of at most 256 entries on the ESP. The helper finds the ESP
   in the mount table and reads only a UKI's header and its `.osrel` and
   `.uname` sections, and runs no program.
+- `sdboot-default`: the one kind that runs a program in `read`. It runs
+  `/usr/bin/bootctl list --json=short` as root with no other argument and
+  answers the output as a program answer, so the app reads which entry
+  bootctl marks as the default. No other program may join this kind, and no
+  other kind may run a program in `read`.
 
 `garuda-toolbox-helper logs <kind>` (`dmesg`, `journal`) is a separate
 first argument with a password, so no log is ever reachable through
-`read`. A test fails when a program-running kind belongs to `read`.
+`read`. A test fails when a program-running kind belongs to `read`, except
+`sdboot-default` (`no_kind_that_runs_a_program_belongs_to_the_password_less_command`).
 Program, arguments and environment are constants. The app asks the helper
-only after its own read was denied.
+only after its own read was denied. Where the ESP is readable, the app runs
+the same `bootctl` command as the user (`crates/system/src/boot/sdboot.rs`),
+so no password is asked for the default there.
 
 ## Config files
 

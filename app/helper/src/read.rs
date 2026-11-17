@@ -63,7 +63,11 @@ pub fn run(command: &str, kind: &str) -> ExitCode {
             Ok(caller) => Some(caller),
             Err(error) => return refuse(&error.to_string()),
         },
-        ReadKind::GrubMenu | ReadKind::SdBootMenu | ReadKind::Dmesg | ReadKind::Journal => None,
+        ReadKind::GrubMenu
+        | ReadKind::SdBootMenu
+        | ReadKind::SdBootDefault
+        | ReadKind::Dmesg
+        | ReadKind::Journal => None,
     };
 
     print_answer(
@@ -116,7 +120,7 @@ pub fn answer(root: &Path, kind: ReadKind, caller: Option<Caller>) -> io::Result
             })
         }
         ReadKind::SdBootMenu => encode(&sdboot_menu(root)?).map_err(io::Error::other),
-        ReadKind::Dmesg | ReadKind::Journal => {
+        ReadKind::Dmesg | ReadKind::Journal | ReadKind::SdBootDefault => {
             encode(&run_program(root, kind)?).map_err(io::Error::other)
         }
     }

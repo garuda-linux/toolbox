@@ -2,6 +2,7 @@ mod hidden;
 mod platform;
 
 use super::{GrubMenu, GrubPlatform, MAX_ENTRIES, MenuEntry};
+use crate::PackageName;
 use crate::protocol::encode;
 
 /// `grub.cfg` of a used Garuda Mokka install, every UUID masked.
@@ -158,7 +159,7 @@ fn snapshot_submenus_nest_and_keep_their_blanks() {
 }
 
 /// The file may hold a password hash and the kernel command line. Only
-/// titles and ids leave the helper.
+/// titles, ids and kernel packages leave the helper.
 #[test]
 fn nothing_but_titles_and_ids_is_in_the_answer() {
     assert!(LIMA.contains("password_pbkdf2 admin grub.pbkdf2.sha512.10000.D2374BF99A3E"));
@@ -312,7 +313,7 @@ fn an_answer_with_a_bad_id_is_refused_whole() {
 #[test]
 fn a_kernel_finds_the_entry_that_boots_it_and_not_its_fallback() {
     let menu = GrubMenu::for_platform(LIMA, GrubPlatform::Efi);
-    let kernel = |name: &str| crate::PackageName::new(name).unwrap();
+    let kernel = |name: &str| PackageName::new(name).unwrap();
     let garuda = menu.kernel_entry(&kernel("linux-garuda")).unwrap();
 
     assert_eq!(garuda.title, "Garuda Linux, with Linux linux-garuda");
@@ -356,4 +357,43 @@ fn an_id_twice_is_listed_once_as_grub_boots_the_first() {
 
     assert_eq!(found(&menu, "6").as_deref(), Some("Shutdown"));
     assert_eq!(memtests(&menu), 1);
+}
+
+/// A top-level entry boots its kernel through its `linux` line, which its
+/// id does not name. The fallback initramfs entry boots the same kernel.
+#[test]
+fn an_entry_takes_the_kernel_its_linux_line_boots() {
+    let menu = GrubMenu::for_platform(LIMA, GrubPlatform::Efi);
+    let kernel = |name: &str| Some(PackageName::new(name).unwrap());
+
+    assert_eq!(entry(&menu, "Garuda Linux").kernel, kernel("linux-lts"));
+    assert_eq!(
+        entry(
+            &menu,
+            "Garuda Linux, with Linux linux-garuda (fallback initramfs)"
+        )
+        .kernel,
+        kernel("linux-garuda")
+    );
+}
+
+#[test]
+fn the_installed_top_level_entry_boots_linux_garuda() {
+    let menu = GrubMenu::for_platform(INSTALLED, GrubPlatform::Efi);
+
+    assert_eq!(
+        entry(&menu, "Garuda Linux").kernel,
+        Some(PackageName::new("linux-garuda").unwrap())
+    );
+}
+
+/// The shutdown entry has no `linux` line, and the memory tester boots an
+/// image that is no kernel.
+#[test]
+fn an_entry_that_boots_no_kernel_has_none() {
+    let lima = GrubMenu::for_platform(LIMA, GrubPlatform::Efi);
+    let installed = GrubMenu::for_platform(INSTALLED, GrubPlatform::Efi);
+
+    assert_eq!(entry(&lima, "Shutdown").kernel, None);
+    assert_eq!(entry(&installed, "Memory Tester (memtest86+)").kernel, None);
 }

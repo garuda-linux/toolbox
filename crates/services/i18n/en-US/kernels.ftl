@@ -15,6 +15,7 @@ kernels-count =
     }
 
 kernels-running = Running
+kernels-default = Default
 kernels-installs = Installs with Apply
 kernels-removes = Removes with Apply
 # $version and $repo name what the repository offers.

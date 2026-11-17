@@ -12,7 +12,7 @@ use std::sync::Arc;
 use egui::Ui;
 use row::Item;
 use toolbox_core::Snapshot;
-use toolbox_core::features::kernels::view::{self, Listing, Row};
+use toolbox_core::features::kernels::view::{self, BootMenus, Listing, Row};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
@@ -21,11 +21,13 @@ use toolbox_gui_kit::widgets::{
     hold_content, rich, section_heading, skeleton_rows,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
+use toolbox_services::boot_menu::Menu;
 use toolbox_services::dkms::Dkms;
 
 use super::header::refresh_header_reading;
 use super::rows::refused_banner;
 use super::{PageContext, PageView, plan_running};
+use crate::boot::Boot;
 use crate::command::{AppCommand, KernelCommand, KernelEdit};
 use crate::i18n;
 use crate::i18n::Arg;
@@ -43,7 +45,7 @@ pub struct KernelsPage {
 
 /// The rows and counts of one system, queue and dkms answer. `None`
 /// without the package databases.
-type Shown = RowCache<(Same<Snapshot>, u64, u64), Option<Built>>;
+type Shown = RowCache<(Same<Snapshot>, u64, u64, Same<Menu>), Option<Built>>;
 
 #[derive(Debug)]
 struct Built {
@@ -84,15 +86,22 @@ impl PageView for KernelsPage {
 impl KernelsPage {
     fn built(&mut self, context: &PageContext<'_>) -> Arc<Option<Built>> {
         let kernels = context.service::<Kernels>();
+        let boot = context.service::<Boot>();
         let rest = (
             Same::of(context.snapshot),
             context.revision,
             kernels.dkms_revision(),
+            boot.menu_identity(),
         );
 
         self.shown.get(&[], rest, || {
             let _build = tracing::trace_span!("build rows").entered();
-            let found = Listing::of(context.snapshot)?;
+            let menus = BootMenus {
+                grub: boot.menu().known(),
+                sdboot: boot.menu().sdboot(),
+            };
+
+            let found = Listing::of(context.snapshot, menus)?;
             let dkms = kernels.dkms_entries();
 
             Some(Built {

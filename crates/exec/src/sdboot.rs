@@ -66,6 +66,7 @@ pub fn sdboot_menu(root: &Path) -> io::Result<SdBootMenu> {
         .collect();
 
     let mut menu = SdBootMenu {
+        default: None,
         settings,
         skipped: ukis.skipped + type_one.skipped + (listed - entries.len()),
         cut: ukis.cut + type_one.cut,

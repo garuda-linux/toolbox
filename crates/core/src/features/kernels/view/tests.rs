@@ -1,4 +1,4 @@
-use super::{Listing, Row};
+use super::{BootMenus, Listing, Row};
 use crate::domains::{DkmsBuilds, Packages};
 use crate::features::kernels::{ModuleState, RunningKernel};
 use crate::features::toggles::shown::Control;
@@ -19,12 +19,12 @@ fn without_package_databases_there_is_no_listing() {
         package: None,
     });
 
-    assert!(Listing::of(&snapshot).is_none());
+    assert!(Listing::of(&snapshot, BootMenus::default()).is_none());
 }
 
 #[test]
 fn a_row_has_the_kernel_its_state_and_its_modules() {
-    let listing = Listing::of(&system()).unwrap();
+    let listing = Listing::of(&system(), BootMenus::default()).unwrap();
     let changes = ChangeSet::default();
     let rows = listing.rows(&changes, &dkms());
     let linux = row(&rows, "linux");
@@ -62,7 +62,7 @@ fn a_row_has_the_kernel_its_state_and_its_modules() {
 
 #[test]
 fn a_kernel_without_headers_has_no_modules() {
-    let listing = Listing::of(&system()).unwrap();
+    let listing = Listing::of(&system(), BootMenus::default()).unwrap();
     let rows = listing.rows(&ChangeSet::default(), &dkms());
     let lts = row(&rows, "linux-lts");
 
@@ -73,7 +73,7 @@ fn a_kernel_without_headers_has_no_modules() {
 
 #[test]
 fn modules_wait_for_dkms() {
-    let listing = Listing::of(&system()).unwrap();
+    let listing = Listing::of(&system(), BootMenus::default()).unwrap();
     let rows = listing.rows(&ChangeSet::default(), &[]);
 
     assert!(row(&rows, "linux").modules.is_empty());
@@ -84,7 +84,7 @@ fn modules_wait_for_dkms() {
 #[test]
 fn queued_changes_show_on_the_rows_and_leave_the_counts() {
     let snapshot = system();
-    let listing = Listing::of(&snapshot).unwrap();
+    let listing = Listing::of(&snapshot, BootMenus::default()).unwrap();
     let mut changes = ChangeSet::default();
 
     changes.want::<Packages>(package("linux-zen"), Toggle::On, &snapshot);
@@ -105,7 +105,7 @@ fn queued_changes_show_on_the_rows_and_leave_the_counts() {
 #[test]
 fn a_queued_removal_makes_an_installed_kernel_unwanted() {
     let snapshot = system();
-    let listing = Listing::of(&snapshot).unwrap();
+    let listing = Listing::of(&snapshot, BootMenus::default()).unwrap();
     let mut changes = ChangeSet::default();
 
     changes.want::<Packages>(package("linux-lts"), Toggle::Off, &snapshot);
@@ -122,7 +122,7 @@ fn a_queued_removal_makes_an_installed_kernel_unwanted() {
 #[test]
 fn the_listing_finds_the_running_kernel_and_the_builds() {
     let snapshot = system();
-    let listing = Listing::of(&snapshot).unwrap();
+    let listing = Listing::of(&snapshot, BootMenus::default()).unwrap();
     let linux = listing.kernel(&package("linux")).unwrap();
     let lts = listing.kernel(&package("linux-lts")).unwrap();
 
@@ -139,7 +139,7 @@ fn the_listing_finds_the_running_kernel_and_the_builds() {
 #[test]
 fn a_kernel_offers_install_remove_or_take_back() {
     let snapshot = system();
-    let listing = Listing::of(&snapshot).unwrap();
+    let listing = Listing::of(&snapshot, BootMenus::default()).unwrap();
     let mut changes = ChangeSet::default();
 
     changes.want::<Packages>(package("linux-lts"), Toggle::Off, &snapshot);
@@ -149,4 +149,56 @@ fn a_kernel_offers_install_remove_or_take_back() {
     assert_eq!(row(&rows, "linux").control(), Control::Remove);
     assert_eq!(row(&rows, "linux-zen").control(), Control::Install);
     assert_eq!(row(&rows, "linux-lts").control(), Control::TakeBack);
+}
+
+fn grub_default_of(value: &str) -> toolbox_state::boot::CurrentGrub {
+    let text = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB.replacen(
+        "GRUB_DEFAULT=0",
+        &format!("GRUB_DEFAULT='{value}'"),
+        1,
+    );
+
+    toolbox_state::boot::CurrentGrub(toolbox_plan::GrubState::read(&text))
+}
+
+#[test]
+fn the_row_of_the_kernel_the_grub_menu_starts_is_the_default() {
+    let mut snapshot = system();
+    snapshot.insert(grub_default_of(
+        "gnulinux-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6>gnulinux-linux-lts-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6",
+    ));
+    let menu = toolbox_plan::GrubMenu::for_platform(
+        toolbox_plan::testing::grub::LIMA_GRUB_CFG,
+        toolbox_plan::GrubPlatform::Efi,
+    );
+
+    let listing = Listing::of(
+        &snapshot,
+        BootMenus {
+            grub: Some(&menu),
+            sdboot: None,
+        },
+    )
+    .unwrap();
+
+    let rows = listing.rows(&ChangeSet::default(), &dkms());
+
+    assert_eq!(listing.default_kernel(), Some(&package("linux-lts")));
+    assert!(row(&rows, "linux-lts").default);
+    assert!(!row(&rows, "linux").default);
+}
+
+#[test]
+fn without_a_read_menu_no_row_is_the_default() {
+    let mut snapshot = system();
+    snapshot.insert(grub_default_of("0"));
+    let listing = Listing::of(&snapshot, BootMenus::default()).unwrap();
+
+    assert_eq!(listing.default_kernel(), None);
+    assert!(
+        listing
+            .rows(&ChangeSet::default(), &dkms())
+            .iter()
+            .all(|row| !row.default)
+    );
 }

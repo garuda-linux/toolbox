@@ -135,7 +135,17 @@ pub fn open_boot(harness: &mut Harness<'static, App>) {
 
 #[test]
 fn the_kernels_page_proposes_a_kernel_as_the_default() {
-    let mut fixture = app();
+    // GRUB's default of this capture boots linux-lts, which runs here and
+    // would then be the default. The default here is an entry of linux-garuda,
+    // which the system does not have, so linux-lts keeps its link.
+    let garuda = "gnulinux-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6>gnulinux-linux-garuda-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6";
+    let mut probed = system();
+    probed.insert(CurrentGrub(GrubState::read(&defaults().replacen(
+        "GRUB_DEFAULT=0",
+        &format!("GRUB_DEFAULT='{garuda}'"),
+        1,
+    ))));
+    let mut fixture = app_with(probed, Arc::new(Source));
     let harness = fixture.harness();
 
     harness.key_press_modifiers(Modifiers::COMMAND, Key::Num9);

@@ -217,7 +217,11 @@ fn apps(list: &AppsList, out: &mut Out<'_>) -> Exit {
 }
 
 fn kernels(list: &KernelsList, out: &mut Out<'_>) -> Exit {
-    match spinner::while_reading(list.read.json || out.quiet(), || lists::kernels(&system())) {
+    let (snapshot, menus) = spinner::while_reading(list.read.json || out.quiet(), || {
+        (system(), boot::default_menus(out.settings()))
+    });
+
+    match lists::kernels(&snapshot, menus.view()) {
         Some(rows) => filter::print(
             &list.read,
             &rows,

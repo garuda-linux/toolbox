@@ -250,11 +250,38 @@ fn program_reads_have_a_fixed_command_and_the_file_read_has_none() {
     }
 }
 
+/// The one default entry question a password-less read may ask `bootctl`.
+#[test]
+fn the_sdboot_default_is_the_one_read_that_runs_a_program() {
+    let shape = (
+        ReadKind::from_args("read", "sdboot-default"),
+        ReadKind::from_args("logs", "sdboot-default"),
+        ReadKind::SdBootDefault.program(),
+        ReadKind::SdBootDefault.environment().is_empty(),
+    );
+
+    assert_eq!(
+        shape,
+        (
+            Some(ReadKind::SdBootDefault),
+            None,
+            Some((Program::Bootctl, ["list", "--json=short"].as_slice())),
+            true,
+        )
+    );
+}
+
 /// polkit lets an active session run `read` without a password. Whatever
-/// runs a program as root must not be reachable that way.
+/// runs a program as root must not be reachable that way, except the one
+/// `bootctl` question of [`the_sdboot_default_is_the_one_read_that_runs_a_program`].
 #[test]
 fn no_kind_that_runs_a_program_belongs_to_the_password_less_command() {
     for kind in ReadKind::ALL {
+        if kind == ReadKind::SdBootDefault {
+            assert_eq!(kind.command(), "read");
+            continue;
+        }
+
         assert_eq!(
             kind.command() == "read",
             kind.program().is_none(),

@@ -17,6 +17,10 @@ pub enum ReadKind {
     /// Titles and ids only, never the text of `grub.cfg`, which may hold a password hash.
     GrubMenu,
     SdBootMenu,
+    /// Answers a [`ProgramAnswer`] of `bootctl list --json=short`, which
+    /// the menu's files do not show. The one kind of `read` that runs a
+    /// program (see docs/agents/security.md).
+    SdBootDefault,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -51,7 +55,8 @@ impl ProgramAnswer {
 }
 
 impl ReadKind {
-    pub const ALL: [Self; 5] = [
+    pub const ALL: [Self; 6] = [
+        Self::SdBootDefault,
         Self::ShadowLocks,
         Self::Dmesg,
         Self::Journal,
@@ -66,6 +71,7 @@ impl ReadKind {
             Self::Journal => "journal",
             Self::GrubMenu => "grub-menu",
             Self::SdBootMenu => "sdboot-menu",
+            Self::SdBootDefault => "sdboot-default",
         }
     }
 
@@ -73,6 +79,7 @@ impl ReadKind {
     pub const fn program(self) -> Option<(Program, &'static [&'static str])> {
         match self {
             Self::ShadowLocks | Self::GrubMenu | Self::SdBootMenu => None,
+            Self::SdBootDefault => Some((Program::Bootctl, &["list", "--json=short"])),
             // Colours are for a terminal, and the helper reads through a
             // pipe. The app shows them and takes them out of the plain report.
             Self::Dmesg => Some((Program::Dmesg, &["--color=always"])),
@@ -85,7 +92,11 @@ impl ReadKind {
     /// Fixed here like the arguments.
     pub const fn environment(self) -> &'static [(&'static str, &'static str)] {
         match self {
-            Self::ShadowLocks | Self::Dmesg | Self::GrubMenu | Self::SdBootMenu => &[],
+            Self::ShadowLocks
+            | Self::Dmesg
+            | Self::GrubMenu
+            | Self::SdBootMenu
+            | Self::SdBootDefault => &[],
             // journalctl has no option for colours. Sixteen colours, so the
             // app can show them in the desktop's theme.
             Self::Journal => &[("SYSTEMD_COLORS", "16")],
@@ -96,7 +107,7 @@ impl ReadKind {
     /// runs `read` without a password. Whole logs need a command of their own, which that rule cannot match.
     pub const fn command(self) -> &'static str {
         match self {
-            Self::ShadowLocks | Self::GrubMenu | Self::SdBootMenu => "read",
+            Self::ShadowLocks | Self::GrubMenu | Self::SdBootMenu | Self::SdBootDefault => "read",
             Self::Dmesg | Self::Journal => "logs",
         }
     }

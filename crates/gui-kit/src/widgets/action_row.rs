@@ -25,6 +25,8 @@ pub struct ActionRow<'text> {
     detail: &'text str,
     queued: &'text str,
     status: Option<(&'text str, Tone)>,
+    /// Beside `status`, when a row has two states such as Running and Default.
+    second_status: Option<(&'text str, Tone)>,
     row: Option<Id>,
 }
 
@@ -37,6 +39,7 @@ impl<'text> ActionRow<'text> {
             detail: "",
             queued: "",
             status: None,
+            second_status: None,
             row: None,
         }
     }
@@ -59,6 +62,12 @@ impl<'text> ActionRow<'text> {
     /// A [`status_dot`] with `label` beside the title, such as "Not installed".
     pub const fn status(mut self, label: &'text str, tone: Tone) -> Self {
         self.status = Some((label, tone));
+        self
+    }
+
+    /// A second [`status_dot`] after the one of [`Self::status`].
+    pub const fn second_status(mut self, label: &'text str, tone: Tone) -> Self {
+        self.second_status = Some((label, tone));
         self
     }
 
@@ -241,6 +250,10 @@ impl<'text> ActionRow<'text> {
                 ui.horizontal(|ui| {
                     ui.label(title);
                     if let Some((label, tone)) = self.status {
+                        status_dot(ui, label, tone);
+                    }
+
+                    if let Some((label, tone)) = self.second_status {
                         status_dot(ui, label, tone);
                     }
 

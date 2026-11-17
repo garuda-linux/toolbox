@@ -42,7 +42,8 @@ impl PageService for Boot {
     /// The systemd-boot settings come with the menu, and a wish the file
     /// now meets drops out of the queue.
     fn take(&mut self, page: PageId, snapshot: &Snapshot) -> Vec<AppCommand> {
-        if page == PageId::Boot {
+        // The Kernels page takes its default from the same menu read.
+        if matches!(page, PageId::Boot | PageId::Kernels) {
             let sdboot = snapshot.part::<BootLoader>() == Some(&BootLoader::SystemdBoot);
             self.open(sdboot || grub(snapshot).is_ok());
         }

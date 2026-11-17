@@ -47,11 +47,18 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
     let name = row.kernel.name.as_str();
     let details = row.kernel.is_installed() && row.queued != Some(Toggle::Off);
     let status = status(ui.ctx(), row);
+    let default = row
+        .default
+        .then(|| i18n::text(ui.ctx(), "kernels-default").into_owned());
 
     let words = ActionRow::new(glyph, Tone::Neutral, name).row(state.row);
-    let words = match &status {
-        Some((label, tone)) => words.status(label, *tone),
-        None => words,
+    let words = match (&status, &default) {
+        (Some((label, tone)), Some(default)) => words
+            .status(label, *tone)
+            .second_status(default, Tone::Success),
+        (Some((label, tone)), None) => words.status(label, *tone),
+        (None, Some(default)) => words.status(default, Tone::Success),
+        (None, None) => words,
     };
 
     words.show_with_body(
@@ -66,7 +73,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
         |ui| {
             // Every row reserves the default link's room, so the change
             // buttons line up whether or not a row has the link.
-            if details {
+            if details && !row.default {
                 default_link(ui, context, row);
             } else {
                 let text = i18n::text(ui.ctx(), "kernels-set-default");
@@ -96,6 +103,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
 }
 
 /// The state beside the name: a queued change, else that the kernel runs.
+/// A default kernel's own status comes beside it.
 fn status(ctx: &Context, row: &Row) -> Option<(String, Tone)> {
     match row.queued {
         Some(Toggle::On) => Some((

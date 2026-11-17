@@ -15,6 +15,7 @@ kernels-count =
     }
 
 kernels-running = Läuft
+kernels-default = Standard
 kernels-installs = Wird beim Übernehmen installiert
 kernels-removes = Wird beim Übernehmen entfernt
 # $version and $repo name what the repository offers.

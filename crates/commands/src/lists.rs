@@ -12,6 +12,7 @@ use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::args::TogglePage;
 use toolbox_core::features::discover::Apps;
 use toolbox_core::features::kernels::kernels_of;
+use toolbox_core::features::kernels::view::{BootMenus, Listing};
 use toolbox_core::features::locales::all_rows;
 use toolbox_core::features::services::{FileState, UnitInfo};
 use toolbox_core::features::toggles::shown::sections;
@@ -31,6 +32,8 @@ pub struct ServiceRow {
     #[serde(rename = "sub_state")]
     pub state: String,
     pub at_boot: bool,
+    /// systemd's `UnitFileState`, such as `enabled`, `disabled` or `masked`.
+    pub file_state: &'static str,
     pub description: toolbox_text::OutsideText,
 }
 
@@ -49,12 +52,19 @@ pub struct ToggleRow {
 }
 
 #[derive(Clone, Debug, Serialize)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "each flag is its own field of the JSON row"
+)]
 pub struct KernelRow {
     #[serde(rename = "id")]
     pub name: String,
     pub version: String,
     pub installed: bool,
     pub running: bool,
+    /// The kernel the boot menu starts first. False while the menu is not
+    /// read, so the answer never names a default it does not know.
+    pub default: bool,
     pub headers: bool,
 }
 
@@ -96,6 +106,7 @@ pub fn services(units: &[UnitInfo]) -> Vec<ServiceRow> {
             active: unit.active.as_str(),
             state: unit.sub_state.clone(),
             at_boot: matches!(unit.file_state, FileState::Enabled),
+            file_state: unit.file_state.as_str(),
             description: unit.description.clone(),
         })
         .collect();
@@ -153,8 +164,9 @@ pub fn apps(apps: &Apps, category: Option<&str>, snapshot: &Snapshot) -> Vec<Tog
 }
 
 /// `None` without the kernel packages: pacman's databases were not read.
-pub fn kernels(snapshot: &Snapshot) -> Option<Vec<KernelRow>> {
+pub fn kernels(snapshot: &Snapshot, menus: BootMenus<'_>) -> Option<Vec<KernelRow>> {
     let (listed, booted) = kernels_of(snapshot)?;
+    let default = Listing::of(snapshot, menus)?.default_kernel().cloned();
 
     Some(
         listed
@@ -167,6 +179,7 @@ pub fn kernels(snapshot: &Snapshot) -> Option<Vec<KernelRow>> {
                     .unwrap_or_else(|| kernel.version.clone()),
                 installed: kernel.installed.is_some(),
                 running: booted.as_ref() == Some(&kernel.name),
+                default: default.as_ref() == Some(&kernel.name),
                 headers: kernel.headers_installed,
             })
             .collect(),
@@ -196,19 +209,20 @@ pub fn locales(snapshot: &Snapshot) -> Vec<LocaleRow> {
 pub fn users(snapshot: &Snapshot) -> Option<Vec<UserRow>> {
     let found = accounts(snapshot).ok()?;
 
-    Some(
-        found
-            .users
-            .iter()
-            .map(|user| UserRow {
-                name: user.name.as_str().to_owned(),
-                uid: user.uid,
-                full_name: user.full_name().to_owned(),
-                home: user.home.clone(),
-                shell: user.shell.clone(),
-            })
-            .collect(),
-    )
+    let mut rows: Vec<UserRow> = found
+        .users
+        .iter()
+        .map(|user| UserRow {
+            name: user.name.as_str().to_owned(),
+            uid: user.uid,
+            full_name: user.full_name().to_owned(),
+            home: user.home.clone(),
+            shell: user.shell.clone(),
+        })
+        .collect();
+
+    rows.sort_by_key(|row| row.uid);
+    Some(rows)
 }
 
 /// The people's accounts and root, unless `all`, and how many system
@@ -232,22 +246,23 @@ pub fn people(rows: Vec<UserRow>, all: bool) -> (Vec<UserRow>, usize) {
 pub fn groups(snapshot: &Snapshot) -> Option<Vec<GroupRow>> {
     let found = accounts(snapshot).ok()?;
 
-    Some(
-        found
-            .groups
-            .iter()
-            .map(|group| GroupRow {
-                name: group.name.as_str().to_owned(),
-                gid: group.gid,
-                members: group
-                    .members
-                    .iter()
-                    .map(|member| member.as_str().to_owned())
-                    .collect(),
-                system: group.is_system(),
-            })
-            .collect(),
-    )
+    let mut rows: Vec<GroupRow> = found
+        .groups
+        .iter()
+        .map(|group| GroupRow {
+            name: group.name.as_str().to_owned(),
+            gid: group.gid,
+            members: group
+                .members
+                .iter()
+                .map(|member| member.as_str().to_owned())
+                .collect(),
+            system: group.is_system(),
+        })
+        .collect();
+
+    rows.sort_by_key(|row| row.gid);
+    Some(rows)
 }
 
 /// The page's id, as the window's `--page` takes it.

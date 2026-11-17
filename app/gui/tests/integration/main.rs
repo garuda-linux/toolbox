@@ -28,6 +28,7 @@ mod home_health;
 mod home_reads;
 mod instance;
 mod kernels;
+mod kernels_default;
 mod locales;
 mod look;
 mod maintenance;

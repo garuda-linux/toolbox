@@ -31,6 +31,8 @@ mod protected;
 #[path = "arch/repair.rs"]
 mod repair;
 mod repair_names;
+#[path = "arch/sdboot.rs"]
+mod sdboot;
 #[path = "arch/settings.rs"]
 mod settings;
 #[path = "arch/users.rs"]

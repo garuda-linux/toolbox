@@ -38,6 +38,9 @@ pub struct MenuEntry {
     pub position: String,
     pub submenu: bool,
     pub parent: Option<String>,
+    /// The kernel package its `linux` line boots, `vmlinuz-<package>` in
+    /// the folder of the line. `None` for an entry without one.
+    pub kernel: Option<PackageName>,
 }
 
 /// The answer to `garuda-toolbox-helper read grub-menu`.
@@ -71,6 +74,14 @@ struct Walk {
     branches: Branches,
     top: usize,
     depth: usize,
+    /// The entry whose `{` has not closed yet, so its `linux` line is its own.
+    body: Option<Body>,
+}
+
+struct Body {
+    index: usize,
+    /// The brace depth inside the entry.
+    depth: usize,
 }
 
 impl GrubMenu {
@@ -84,6 +95,7 @@ impl GrubMenu {
             branches: Branches::new(platform),
             top: 0,
             depth: 0,
+            body: None,
         };
 
         for line in config.lines().map(str::trim) {
@@ -151,13 +163,37 @@ impl Walk {
         if let Some(header) = header(line)
             && self.branches.active()
         {
-            self.entry(&header, opens);
+            let index = self.entry(&header, opens);
+
+            if let Some(index) = index.filter(|_| opens && !header.submenu) {
+                self.body = Some(Body {
+                    index,
+                    depth: self.depth.saturating_add(1),
+                });
+            }
+        }
+
+        if let Some(kernel) = linux_kernel(line)
+            && self.branches.active()
+            && let Some(body) = &self.body
+            && let Some(entry) = self.entries.get_mut(body.index)
+            && entry.kernel.is_none()
+        {
+            entry.kernel = Some(kernel);
         }
 
         if opens {
             self.depth = self.depth.saturating_add(1);
         } else if line == "}" {
             self.depth = self.depth.saturating_sub(1);
+
+            if self
+                .body
+                .as_ref()
+                .is_some_and(|body| body.depth > self.depth)
+            {
+                self.body = None;
+            }
 
             while self
                 .open
@@ -171,7 +207,8 @@ impl Walk {
         }
     }
 
-    fn entry(&mut self, header: &Header, opens: bool) {
+    /// The index of the entry when it was listed.
+    fn entry(&mut self, header: &Header, opens: bool) -> Option<usize> {
         let (number, around, places, parent) = if let Some(submenu) = self.open.last_mut() {
             let number = submenu.children;
 
@@ -196,16 +233,20 @@ impl Walk {
             .and_then(|full| MenuEntryId::new(full).ok());
 
         // GRUB boots the first entry of an id, a second one cannot be chosen.
+        let mut listed = None;
+
         if let Some(id) = &id
             && self.entries.len() < MAX_ENTRIES
             && !self.entries.iter().any(|entry| entry.id == *id)
         {
+            listed = Some(self.entries.len());
             self.entries.push(MenuEntry {
                 id: id.clone(),
                 title: title.clone(),
                 position: position.clone(),
                 submenu: header.submenu,
                 parent,
+                kernel: None,
             });
         }
 
@@ -218,7 +259,25 @@ impl Walk {
                 children: 0,
             });
         }
+
+        listed
     }
+}
+
+/// The kernel a `linux` line boots: `vmlinuz-<package>` as the last part of
+/// its path. A memory tester's image is no kernel, so it names none.
+fn linux_kernel(line: &str) -> Option<PackageName> {
+    let parts = words(line);
+    let mut parts = parts.iter();
+
+    if parts.next().map(String::as_str) != Some("linux") {
+        return None;
+    }
+
+    let image = parts.next()?;
+    let file = image.rsplit('/').next()?;
+
+    PackageName::new(file.strip_prefix("vmlinuz-")?).ok()
 }
 
 /// Without an id of its own an entry goes by its title.

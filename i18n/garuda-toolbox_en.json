@@ -5800,6 +5800,9 @@
     "kernels-running": {
       "string": "Running"
     },
+    "kernels-default": {
+      "string": "Default"
+    },
     "kernels-installs": {
       "string": "Installs with Apply"
     },
@@ -6824,6 +6827,10 @@
     "packages-filter-orphans": {
       "string": "Orphans"
     },
+    "packages-filter-optional": {
+      "string": "Optional",
+      "developer_comment": "Dependencies that installed packages only list as optional dependencies."
+    },
     "packages-filter-all": {
       "string": "All"
     },
@@ -6849,7 +6856,13 @@
       "string": "No orphans"
     },
     "packages-no-orphans-detail": {
-      "string": "Every package installed as a dependency is still needed by another one."
+      "string": "Every package installed as a dependency is still required or listed as optional by another one."
+    },
+    "packages-no-optional": {
+      "string": "No optional-only dependencies"
+    },
+    "packages-no-optional-detail": {
+      "string": "No package installed as a dependency is only listed as optional by another one."
     },
     "packages-nothing-matches-detail": {
       "string": "The search looks at the names and descriptions under the chip that is picked."
@@ -6891,6 +6904,18 @@
     },
     "packages-tag-foreign": {
       "string": "Not from a repository"
+    },
+    "packages-tag-optional-for": {
+      "string": "Optional for {first}",
+      "developer_comment": "$first is the installed package that lists this one as an optional dependency."
+    },
+    "packages-tag-optional-for-more": {
+      "string": "{more, plural, one {Optional for {first} and one more} other {Optional for {first} and {more} more}}",
+      "developer_comment": "$first is the first installed package that lists this one as an optional dependency, $more how many others do."
+    },
+    "packages-tag-optional-for-all": {
+      "string": "Optional for {names}",
+      "developer_comment": "$names lists every installed package that lists this one as an optional dependency, joined by commas."
     },
     "packages-installed": {
       "string": "Installed"
@@ -7258,6 +7283,14 @@
     },
     "services-show-enabled": {
       "string": "Enabled"
+    },
+    "services-show-disabled": {
+      "string": "Disabled",
+      "developer_comment": "Units that could start at boot but do not. A static unit has no such switch."
+    },
+    "services-show-masked": {
+      "string": "Masked",
+      "developer_comment": "Units that cannot start at all."
     },
     "services-show-failed": {
       "string": "Failed"
@@ -7958,7 +7991,7 @@
       "string": "No changes are being applied"
     },
     "palette-search": {
-      "string": "Search pages and commands",
+      "string": "Search pages, commands, apps and packages",
       "developer_comment": "The command palette (Ctrl+K)."
     },
     "palette-group-pages": {
@@ -7970,6 +8003,20 @@
     },
     "palette-group-apps": {
       "string": "Apps"
+    },
+    "palette-group-packages": {
+      "string": "Packages"
+    },
+    "palette-group-aur": {
+      "string": "AUR"
+    },
+    "palette-show-all": {
+      "string": "Show all {count} in {page}",
+      "developer_comment": "The last row of a group that shows only its best rows. $count is how many rows the group has, $page the name of the page that lists them all."
+    },
+    "palette-show-all-here": {
+      "string": "Show all {count}",
+      "developer_comment": "The last row of a group that shows only its best rows, which shows the rest right there. $count is how many rows the group has."
     },
     "command-apply": {
       "string": "Apply changes"

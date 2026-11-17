@@ -94,7 +94,9 @@ pub fn kernels(rows: &[KernelRow]) -> Listing<'_> {
                     (Mark::Off, "")
                 };
 
-                Row::cells(mark, &[&row.name, &row.version, state])
+                let default = if row.default { "default" } else { "" };
+
+                Row::cells(mark, &[&row.name, &row.version, state, default])
             })
             .collect(),
         hint: Some("garuda-toolbox kernels install <name>".to_owned()),

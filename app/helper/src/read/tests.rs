@@ -1,3 +1,4 @@
+mod sdboot;
 use std::fs;
 use std::path::Path;
 
@@ -11,8 +12,7 @@ use super::{answer, caller_of};
 /// The `grub.cfg` of a Garuda install in QEMU, UUIDs replaced by `x`.
 const GRUB_CFG: &str = toolbox_plan::testing::grub::INSTALLED_GRUB_CFG;
 
-/// A GRUB password as `grub-mkpasswd-pbkdf2` makes one, which the
-/// captured file has not.
+/// A GRUB password as `grub-mkpasswd-pbkdf2` makes one, unlike the captured file.
 const GRUB_PASSWORD: &str = "\
 set superusers=\"admin\"
 password_pbkdf2 admin grub.pbkdf2.sha512.10000.5A9F0C3E7B1D.99AABBCCDDEE

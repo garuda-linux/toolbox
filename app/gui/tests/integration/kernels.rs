@@ -26,10 +26,10 @@ use crate::look::look_for;
 use crate::system::{first_read, shows, step_until};
 
 /// What dkms lists for [`system`]: `nvidia` built for `linux`.
-const DKMS_STATUS: &str =
+pub const DKMS_STATUS: &str =
     "nvidia/550.90.07, 6.14.0-arch1-1, x86_64: installed\nvboxhost/7.1.6_OSE: added\n";
 
-fn package(name: &str) -> PackageName {
+pub fn package(name: &str) -> PackageName {
     name.parse().unwrap()
 }
 
