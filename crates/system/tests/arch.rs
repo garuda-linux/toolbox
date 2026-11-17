@@ -190,11 +190,13 @@ fn libalpm_offers_the_test_repository() -> TestResult {
 
     let offered = Libalpm::system().offered()?;
     let expected: Vec<PackageName> = [
+        "chaotic-mirrorlist",
         "linux-toolbox-test",
         "linux-toolbox-test-headers",
         "toolbox-test-a",
         "toolbox-test-conflict",
         "toolbox-test-dep",
+        "toolbox-test-on-protected",
         "toolbox-test-up",
     ]
     .into_iter()
