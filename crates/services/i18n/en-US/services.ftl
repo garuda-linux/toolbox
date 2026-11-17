@@ -7,6 +7,10 @@ services-search-hint = Search services…
 # Chips: one is picked, each shows what it names.
 services-show-running = Running
 services-show-enabled = Enabled
+# Units that could start at boot but do not. A static unit has no such switch.
+services-show-disabled = Disabled
+# Units that cannot start at all.
+services-show-masked = Masked
 services-show-failed = Failed
 services-show-all = All
 services-refresh = Read again

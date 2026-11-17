@@ -28,11 +28,11 @@ fn picked(harness: &egui_kittest::Harness<'static, PageState>, chip: &str) -> bo
 }
 
 #[test]
-fn four_chips_count_their_units_and_running_is_picked_at_first() {
+fn six_chips_count_their_units_and_running_is_picked_at_first() {
     let harness = three();
 
     assert!(picked(&harness, "Running 1"));
-    for chip in ["Enabled 2", "Failed 1", "All 3"] {
+    for chip in ["Enabled 2", "Disabled 1", "Masked 0", "Failed 1", "All 3"] {
         assert!(!picked(&harness, chip), "{chip}");
     }
 }
@@ -107,4 +107,21 @@ fn nothing_found_at_all_offers_no_button() {
     );
     assert!(harness.query_by_label_contains("Show all").is_none());
     assert!(harness.query_by_label("Show the one match").is_none());
+}
+
+#[test]
+fn the_masked_chip_lists_the_units_that_cannot_start() {
+    let masked = unit("systemd-firstboot.service", "First Boot", FileState::Masked);
+    let mut harness = loaded(vec![sshd(), failed(), masked]).harness(ServicesPage::default());
+
+    harness.run();
+
+    harness
+        .get_by_role_and_label(Role::Button, "Masked 1")
+        .click();
+    harness.run();
+
+    assert_eq!(harness.state().page.filter.shown, Shown::Masked);
+    assert!(harness.query_by_label_contains("First Boot").is_some());
+    assert!(harness.query_by_label_contains("OpenSSH Daemon").is_none());
 }

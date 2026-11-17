@@ -47,6 +47,8 @@ fn the_counts_follow_the_search_and_match_what_each_choice_lists() {
         Counts {
             running: 3,
             enabled: 2,
+            disabled: 2,
+            masked: 0,
             failed: 1,
             all: 5,
         }
@@ -69,22 +71,59 @@ fn the_counts_follow_the_search_and_match_what_each_choice_lists() {
     assert_eq!(searched.all, 4, "cups.socket has no service in its texts");
 }
 
-/// The command line knows only the active state and whether a unit starts
-/// at boot, and must list what the page lists.
+/// The command line knows only these two facts of a unit.
 #[test]
-fn the_choices_need_only_the_active_state_and_the_boot_flag() {
+fn the_state_choices_need_only_the_active_state() {
+    let file = FileState::Other;
     let cases = [
-        (Shown::Running, ActiveState::Reloading, false, true),
-        (Shown::Running, ActiveState::Inactive, true, false),
-        (Shown::Running, ActiveState::Failed, true, false),
-        (Shown::Enabled, ActiveState::Inactive, true, true),
-        (Shown::Enabled, ActiveState::Active, false, false),
-        (Shown::Failed, ActiveState::Failed, false, true),
-        (Shown::Failed, ActiveState::Active, true, false),
-        (Shown::All, ActiveState::Other, false, true),
+        (Shown::Running, ActiveState::Reloading, true),
+        (Shown::Running, ActiveState::Inactive, false),
+        (Shown::Running, ActiveState::Failed, false),
+        (Shown::Failed, ActiveState::Failed, true),
+        (Shown::Failed, ActiveState::Active, false),
+        (Shown::All, ActiveState::Other, true),
     ];
 
-    for (shown, active, at_boot, kept) in cases {
-        assert_eq!(shown.keeps(active, at_boot), kept, "{shown:?} {active:?}");
+    for (shown, active, kept) in cases {
+        assert_eq!(shown.keeps(active, file), kept, "{shown:?} {active:?}");
     }
+}
+
+#[test]
+fn the_boot_choices_need_only_the_file_state() {
+    let active = ActiveState::Inactive;
+    let cases = [
+        (Shown::Enabled, FileState::Enabled, true),
+        (Shown::Enabled, FileState::Static, false),
+        (Shown::Disabled, FileState::Disabled, true),
+        (Shown::Disabled, FileState::Static, false),
+        (Shown::Disabled, FileState::Masked, false),
+        (Shown::Masked, FileState::Masked, true),
+        (Shown::Masked, FileState::Disabled, false),
+    ];
+
+    for (shown, file, kept) in cases {
+        assert_eq!(shown.keeps(active, file), kept, "{shown:?} {file:?}");
+    }
+}
+
+#[test]
+fn disabled_lists_what_is_off_at_boot_and_masked_what_cannot_start() {
+    let mut units = units();
+    units.push(info(
+        "systemd-firstboot.service",
+        "First Boot Wizard",
+        ActiveState::Inactive,
+        FileState::Masked,
+    ));
+
+    assert_eq!(
+        names(&listed(&units, &only(Shown::Disabled), UnitOrder::Name)),
+        ["avahi-daemon.service", "cups.socket"],
+        "a static unit has no boot switch, so it is not disabled"
+    );
+    assert_eq!(
+        names(&listed(&units, &only(Shown::Masked), UnitOrder::Name)),
+        ["systemd-firstboot.service"]
+    );
 }

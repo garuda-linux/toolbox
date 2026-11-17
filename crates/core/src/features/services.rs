@@ -55,6 +55,9 @@ pub enum Shown {
     Running,
     /// Starts at boot.
     Enabled,
+    /// Could start at boot, but does not. A static unit has no such switch.
+    Disabled,
+    Masked,
     Failed,
     All,
 }
@@ -64,6 +67,8 @@ pub enum Shown {
 pub struct Counts {
     pub running: usize,
     pub enabled: usize,
+    pub disabled: usize,
+    pub masked: usize,
     pub failed: usize,
     pub all: usize,
 }
@@ -77,21 +82,30 @@ pub enum UnitWish {
 }
 
 impl Shown {
-    pub const EVERY: [Self; 4] = [Self::Running, Self::Enabled, Self::Failed, Self::All];
+    pub const EVERY: [Self; 6] = [
+        Self::Running,
+        Self::Enabled,
+        Self::Disabled,
+        Self::Masked,
+        Self::Failed,
+        Self::All,
+    ];
 
-    /// Whether a unit in `active` that starts at boot when `at_boot` is
-    /// listed. The command line has only these two facts of a unit.
-    pub const fn keeps(self, active: ActiveState, at_boot: bool) -> bool {
+    /// Whether a unit in `active` whose unit file is in `file` is listed.
+    /// The command line has only these two facts of a unit.
+    pub const fn keeps(self, active: ActiveState, file: FileState) -> bool {
         match self {
             Self::Running => !matches!(active, ActiveState::Inactive | ActiveState::Failed),
-            Self::Enabled => at_boot,
+            Self::Enabled => matches!(file, FileState::Enabled),
+            Self::Disabled => matches!(file, FileState::Disabled),
+            Self::Masked => matches!(file, FileState::Masked),
             Self::Failed => matches!(active, ActiveState::Failed),
             Self::All => true,
         }
     }
 
     pub const fn lets_through(self, unit: &UnitInfo) -> bool {
-        self.keeps(unit.active, matches!(unit.file_state, FileState::Enabled))
+        self.keeps(unit.active, unit.file_state)
     }
 
     pub fn as_str(self) -> &'static str {
@@ -104,6 +118,8 @@ impl Counts {
         match shown {
             Shown::Running => self.running,
             Shown::Enabled => self.enabled,
+            Shown::Disabled => self.disabled,
+            Shown::Masked => self.masked,
             Shown::Failed => self.failed,
             Shown::All => self.all,
         }
@@ -144,6 +160,8 @@ pub fn counts(units: &[UnitInfo], search: &str) -> Counts {
         .fold(Counts::default(), |counts, unit| Counts {
             running: counts.running + usize::from(Shown::Running.lets_through(unit)),
             enabled: counts.enabled + usize::from(Shown::Enabled.lets_through(unit)),
+            disabled: counts.disabled + usize::from(Shown::Disabled.lets_through(unit)),
+            masked: counts.masked + usize::from(Shown::Masked.lets_through(unit)),
             failed: counts.failed + usize::from(Shown::Failed.lets_through(unit)),
             all: counts.all + 1,
         })

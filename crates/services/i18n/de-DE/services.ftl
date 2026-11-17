@@ -7,6 +7,10 @@ services-search = Dienste durchsuchen
 services-search-hint = Dienste durchsuchen…
 services-show-running = Laufend
 services-show-enabled = Aktiviert
+# Units that could start at boot but do not. A static unit has no such switch.
+services-show-disabled = Deaktiviert
+# Units that cannot start at all.
+services-show-masked = Maskiert
 services-show-failed = Fehlgeschlagen
 services-show-all = Alle
 services-refresh = Neu einlesen

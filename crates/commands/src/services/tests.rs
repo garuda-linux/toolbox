@@ -9,6 +9,7 @@ fn bluetooth() -> ServiceRow {
         active: "active",
         state: "running".to_owned(),
         at_boot: true,
+        file_state: "enabled",
         description: toolbox_text::plain("Bluetooth service"),
     }
 }

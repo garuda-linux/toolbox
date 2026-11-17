@@ -1,6 +1,6 @@
-//! Services on the real system: the system units, then the user's. Which
-//! units a machine has is not known here, so the switches and the menu
-//! are left to the kittest tests.
+//! Services on the real system: the system units, the masked ones, then
+//! the user's. Which units a machine has is not known here, so the
+//! switches and the menu are left to the kittest tests.
 
 use egui::Key;
 
@@ -14,6 +14,9 @@ pub fn steps() -> Vec<Step> {
         Step::wait("Search services"),
         Step::WaitGone("Reading the services…"),
         Step::Shot("services"),
+        Step::button("Masked"),
+        Step::Shot("services-masked"),
+        Step::button("Running"),
         Step::click("User"),
         Step::WaitGone("Reading the services…"),
         Step::Shot("services-user"),

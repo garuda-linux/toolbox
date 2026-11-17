@@ -4,7 +4,7 @@
 .SH NAME
 garuda\-toolbox\-services\-list \- List the services and their state
 .SH SYNOPSIS
-\fBgaruda\-toolbox services list\fR [\fB\-\-user\fR] [\fB\-\-running\fR] [\fB\-\-failed\fR] [\fB\-\-enabled\fR] [\fB\-\-json\fR] [\fB\-\-search\fR \fITEXT\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] 
+\fBgaruda\-toolbox services list\fR [\fB\-\-user\fR] [\fB\-\-running\fR] [\fB\-\-failed\fR] [\fB\-\-enabled\fR] [\fB\-\-disabled\fR] [\fB\-\-masked\fR] [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-json\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-search\fR \fITEXT\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] 
 .SH DESCRIPTION
 List the services and their state
 .SH OPTIONS
@@ -21,14 +21,17 @@ Only the failed services
 \fB\-\-enabled\fR
 Only the services that start at boot
 .TP
-\fB\-\-json\fR
-Print JSON instead of text, for scripts
+\fB\-\-disabled\fR
+Only the services that could start at boot but do not. A static unit has no such switch
 .TP
-\fB\-\-search\fR \fI<TEXT>\fR
-Only the rows whose name contains this text, in any case
+\fB\-\-masked\fR
+Only the masked services, which cannot start at all
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-json\fR
+Print JSON instead of text, for scripts
 .TP
 \fB\-\-no\-pager\fR
 Print long text directly instead of through `$PAGER`
@@ -47,6 +50,9 @@ always
 .IP \(bu 2
 never
 .RE
+.TP
+\fB\-\-search\fR \fI<TEXT>\fR
+Only the rows whose name contains this text, in any case
 .TP
 \fB\-\-width\fR \fI<COLUMNS>\fR
 Cut long cells to this many columns

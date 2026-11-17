@@ -151,12 +151,13 @@ fn text_says_how_many_are_shown() {
     assert!(text.contains("podman") && !text.contains("steam"), "{text}");
 }
 
-fn service(name: &str, active: &'static str, at_boot: bool) -> ServiceRow {
+fn service(name: &str, active: &'static str, file_state: &'static str) -> ServiceRow {
     ServiceRow {
         name: name.to_owned(),
         active,
         state: String::new(),
-        at_boot,
+        at_boot: file_state == "enabled",
+        file_state,
         description: toolbox_text::plain(""),
     }
 }
@@ -167,6 +168,8 @@ fn services_list(running: bool, failed: bool, enabled: bool) -> ServicesList {
         running,
         failed,
         enabled,
+        disabled: false,
+        masked: false,
         read: ReadList::default(),
     }
 }
@@ -174,11 +177,12 @@ fn services_list(running: bool, failed: bool, enabled: bool) -> ServicesList {
 #[test]
 fn services_filter_by_state_and_boot() {
     let rows = [
-        service("a.service", "active", true),
-        service("b.service", "active", false),
-        service("c.service", "failed", true),
-        service("d.service", "inactive", true),
-        service("e.service", "activating", false),
+        service("a.service", "active", "enabled"),
+        service("b.service", "active", "disabled"),
+        service("c.service", "failed", "enabled"),
+        service("d.service", "inactive", "enabled"),
+        service("e.service", "activating", "static"),
+        service("f.service", "inactive", "masked"),
     ];
 
     let names = |list: ServicesList| -> Vec<String> {
@@ -195,6 +199,23 @@ fn services_filter_by_state_and_boot() {
     assert_eq!(names(services_list(false, true, false)), ["c.service"]);
     assert_eq!(names(services_list(true, false, true)), ["a.service"]);
     assert_eq!(names(services_list(false, false, true)).len(), 3);
+
+    let disabled = ServicesList {
+        disabled: true,
+        ..services_list(false, false, false)
+    };
+
+    let masked = ServicesList {
+        masked: true,
+        ..services_list(false, false, false)
+    };
+
+    assert_eq!(
+        names(disabled),
+        ["b.service"],
+        "a static unit has no boot switch"
+    );
+    assert_eq!(names(masked), ["f.service"]);
 }
 
 fn toggle(id: &str, state: &'static str) -> ToggleRow {

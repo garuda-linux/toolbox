@@ -9,6 +9,7 @@ fn service(name: &str, active: &'static str, at_boot: bool) -> ServiceRow {
         active,
         state: "running".to_owned(),
         at_boot,
+        file_state: if at_boot { "enabled" } else { "disabled" },
         description: toolbox_text::plain(""),
     }
 }
@@ -96,6 +97,7 @@ fn kernel(name: &str, installed: bool, running: bool) -> KernelRow {
         version: "6.1".to_owned(),
         installed,
         running,
+        default: false,
         headers: false,
     }
 }
@@ -117,10 +119,27 @@ fn kernels_say_which_runs_and_which_are_installed() {
     assert_eq!(
         listing.rows,
         [
-            Row::cells(Mark::On, &["linux", "6.1", "running"]),
-            Row::cells(Mark::On, &["linux-lts", "6.1", "installed"]),
-            Row::cells(Mark::Off, &["linux-zen", "6.1", ""]),
+            Row::cells(Mark::On, &["linux", "6.1", "running", ""]),
+            Row::cells(Mark::On, &["linux-lts", "6.1", "installed", ""]),
+            Row::cells(Mark::Off, &["linux-zen", "6.1", "", ""]),
         ]
+    );
+}
+
+#[test]
+fn the_default_kernel_has_a_column_of_its_own() {
+    let mut lts = kernel("linux-lts", true, false);
+    lts.default = true;
+
+    let rows = [kernel("linux", true, true), lts];
+    let listing = kernels(&rows);
+
+    assert_eq!(
+        listing.rows.last(),
+        Some(&Row::cells(
+            Mark::On,
+            &["linux-lts", "6.1", "installed", "default"]
+        ))
     );
 }
 

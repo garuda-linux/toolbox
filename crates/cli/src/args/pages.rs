@@ -115,8 +115,17 @@ pub struct ServicesList {
     pub failed: bool,
 
     /// Only the services that start at boot.
-    #[arg(long)]
+    #[arg(long, conflicts_with_all = ["disabled", "masked"])]
     pub enabled: bool,
+
+    /// Only the services that could start at boot but do not. A static
+    /// unit has no such switch.
+    #[arg(long, conflicts_with = "masked")]
+    pub disabled: bool,
+
+    /// Only the masked services, which cannot start at all.
+    #[arg(long)]
+    pub masked: bool,
 
     #[command(flatten)]
     pub read: ReadList,
