@@ -3,6 +3,7 @@
 //! `GetAll` replies behind [`PropertyReads`], so the parser runs on the
 //! captures in the tests and on the bus in the app.
 
+mod json;
 mod system;
 #[cfg(test)]
 mod tests;
