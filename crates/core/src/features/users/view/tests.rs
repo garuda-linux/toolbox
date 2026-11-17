@@ -5,7 +5,7 @@ use super::{
     users,
 };
 use crate::domains::{Accounts, AvailableShells};
-use crate::features::users::listing::{GroupOrder, UserOrder};
+use crate::features::users::listing::GroupOrder;
 use crate::features::users::{add_group, set_full_name, set_shell};
 use crate::test_support::{group, group_name, user, user_name};
 use crate::{ChangeSet, Snapshot};
@@ -45,19 +45,16 @@ fn names(snapshot: &Snapshot, changes: &ChangeSet, shown: &Shown) -> Vec<String>
 }
 
 #[test]
-fn the_page_opens_on_people_by_name_and_can_show_every_account() {
+fn the_page_opens_on_people_by_id_and_can_show_every_account() {
     let snapshot = snapshot();
     let changes = ChangeSet::default();
 
     assert_eq!(
         names(&snapshot, &changes, &Shown::people()),
-        ["ada", "nico"]
+        ["nico", "ada"]
     );
 
-    let every = Shown {
-        user_order: UserOrder::Id,
-        ..Shown::default()
-    };
+    let every = Shown::default();
 
     assert_eq!(names(&snapshot, &changes, &every), ["http", "nico", "ada"]);
 }

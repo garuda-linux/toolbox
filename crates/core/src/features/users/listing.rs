@@ -12,8 +12,8 @@ use crate::features::search::{Needle, Searchable, folded};
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, strum::IntoStaticStr)]
 #[strum(serialize_all = "kebab-case")]
 pub enum UserOrder {
-    #[default]
     Name,
+    #[default]
     Id,
     FullName,
     Home,
@@ -23,8 +23,8 @@ pub enum UserOrder {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, strum::IntoStaticStr)]
 #[strum(serialize_all = "kebab-case")]
 pub enum GroupOrder {
-    #[default]
     Name,
+    #[default]
     Id,
     Members,
 }

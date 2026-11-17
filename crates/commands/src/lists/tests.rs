@@ -1,12 +1,15 @@
+use std::collections::BTreeSet;
+
 use toolbox_catalog::ToggleCatalog;
 use toolbox_cli::args::TogglePage;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, Group, InstalledPackages, User};
+use toolbox_core::features::kernels::view::BootMenus;
 use toolbox_core::features::locales::{SupportedLocales, parse_supported};
 use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
 use toolbox_plan::{GroupName, PackageName, UnitName, UserName};
 
-use super::{UserRow, groups, locales, people, services, toggles, users};
+use super::{UserRow, groups, kernels, locales, people, services, toggles, users};
 
 const CATALOG: &str = r#"
 [[section]]
@@ -244,4 +247,84 @@ fn a_locale_row_as_json_has_the_name_the_commands_take() {
 
     assert_eq!(row("de_DE.UTF-8")["charset"], "UTF-8");
     assert_eq!(row("de_DE@euro")["charset"], "ISO-8859-15");
+}
+
+#[test]
+fn users_and_groups_are_listed_by_id() {
+    let mut snapshot = Snapshot::default();
+    let user = |name: &str, uid: u32| User {
+        name: UserName::new(name).unwrap(),
+        uid,
+        gid: uid,
+        gecos: toolbox_text::plain(""),
+        home: format!("/home/{name}"),
+        shell: "/bin/bash".to_owned(),
+    };
+
+    let group = |name: &str, gid: u32| Group {
+        name: GroupName::new(name).unwrap(),
+        gid,
+        members: BTreeSet::new(),
+    };
+
+    snapshot.insert(Accounts {
+        users: vec![user("ada", 1001), user("root", 0), user("http", 33)],
+        groups: vec![group("wheel", 998), group("root", 0), group("ada", 1001)],
+    });
+
+    let uids: Vec<u32> = users(&snapshot)
+        .unwrap()
+        .iter()
+        .map(|row| row.uid)
+        .collect();
+
+    let gids: Vec<u32> = groups(&snapshot)
+        .unwrap()
+        .iter()
+        .map(|row| row.gid)
+        .collect();
+
+    assert_eq!(uids, [0, 33, 1001]);
+    assert_eq!(gids, [0, 998, 1001]);
+}
+
+#[test]
+fn kernels_mark_the_kernel_the_grub_menu_starts() {
+    let mut snapshot = toolbox_core::testing::features::kernels::system();
+    let text = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB.replacen(
+        "GRUB_DEFAULT=0",
+        "GRUB_DEFAULT='gnulinux-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6>gnulinux-linux-lts-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6'",
+        1,
+    );
+    snapshot.insert(toolbox_core::domains::CurrentGrub(
+        toolbox_plan::GrubState::read(&text),
+    ));
+    let menu = toolbox_plan::GrubMenu::for_platform(
+        toolbox_plan::testing::grub::LIMA_GRUB_CFG,
+        toolbox_plan::GrubPlatform::Efi,
+    );
+
+    let rows = kernels(
+        &snapshot,
+        BootMenus {
+            grub: Some(&menu),
+            sdboot: None,
+        },
+    )
+    .unwrap();
+    let marked: Vec<&str> = rows
+        .iter()
+        .filter(|row| row.default)
+        .map(|row| row.name.as_str())
+        .collect();
+
+    assert_eq!(marked, ["linux-lts"]);
+}
+
+#[test]
+fn kernels_mark_no_default_without_a_read_menu() {
+    let snapshot = toolbox_core::testing::features::kernels::system();
+    let rows = kernels(&snapshot, BootMenus::default()).unwrap();
+
+    assert!(rows.iter().all(|row| !row.default));
 }

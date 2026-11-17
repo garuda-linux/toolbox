@@ -3,7 +3,7 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::Queued;
 use toolbox_core::domains::{Accounts, NewGroups, RemovedUsers};
-use toolbox_core::features::users::listing::GroupOrder;
+use toolbox_core::features::users::listing::{GroupOrder, UserOrder};
 use toolbox_core::features::users::run::PageRun;
 use toolbox_core::testing::Queue as _;
 use toolbox_plan::HomeFolder;
@@ -38,6 +38,7 @@ fn a_frame_with_the_same_inputs_builds_no_user_rows() {
 #[test]
 fn return_on_a_row_queued_for_removal_opens_no_edit() {
     let mut harness = page(unlocked());
+    harness.state_mut().page.shown.user_order = UserOrder::Name;
     let state = harness.state_mut();
     let snapshot = std::sync::Arc::clone(&state.fixture.snapshot);
     state
@@ -60,6 +61,8 @@ fn return_on_a_row_queued_for_removal_opens_no_edit() {
 #[test]
 fn return_on_a_row_opens_edit() {
     let mut harness = page(unlocked());
+    harness.state_mut().page.shown.user_order = UserOrder::Name;
+    harness.run();
     harness
         .get_by_role_and_label(Role::ListItem, "ada, Ada Lovelace")
         .focus();
@@ -83,7 +86,7 @@ fn a_frame_with_the_same_inputs_builds_no_group_rows() {
     harness.step();
     assert_eq!(harness.state().page.groups.builds(), built);
 
-    harness.state_mut().page.shown.group_order = GroupOrder::Id;
+    harness.state_mut().page.shown.group_order = GroupOrder::Name;
     harness.run();
     assert_eq!(harness.state().page.groups.builds(), built + 1);
 
@@ -101,6 +104,8 @@ fn a_frame_with_the_same_inputs_builds_no_group_rows() {
 #[test]
 fn the_keyboard_hint_shows_while_a_row_has_the_focus() {
     let mut harness = page(unlocked());
+    harness.state_mut().page.shown.user_order = UserOrder::Name;
+    harness.run();
     let hint = "Arrow keys pick an account. Return edits it, the Menu key opens its other actions.";
     assert!(harness.query_by_label(hint).is_none());
 

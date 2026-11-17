@@ -174,3 +174,9 @@ fn the_group_picker_finds_names_only_and_leaves_out_queued_groups() {
     assert_eq!(names("cra"), Vec::<String>::new());
     assert_eq!(names("").len(), 6);
 }
+
+#[test]
+fn both_lists_open_sorted_by_id() {
+    assert_eq!(UserOrder::default(), UserOrder::Id);
+    assert_eq!(GroupOrder::default(), GroupOrder::Id);
+}
