@@ -83,8 +83,8 @@ out too. The section shows only where `garuda-update` is installed.
 
 ## Turn system tweaks on or off
 
-Below the choices, rows in the sections **Common**, **Performance**,
-**Powersaving** and **Right click emulation** work like the
+Below the choices, rows in the sections **Common**, **Performance**, **Powersaving** and **Right click emulation** work
+like the
 [Components](components.md) page: each row is a package or a service, its
 switch shows whether it is on, and flipping it queues the change.
 Examples are `profile-sync-daemon`, `ananicy-cpp`, `thermald` and

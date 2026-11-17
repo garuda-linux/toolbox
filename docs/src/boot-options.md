@@ -175,8 +175,7 @@ splash works there in a limited way.
 
 Under **Appearance**:
 
-- **GRUB background picture** is a PNG, JPEG or TGA picture behind the menu
-  (`GRUB_BACKGROUND`).
+- **GRUB background picture** is a PNG, JPEG or TGA picture behind the menu (`GRUB_BACKGROUND`).
 - **GRUB theme** is the `theme.txt` file of a GRUB theme (`GRUB_THEME`),
   usually below `/usr/share/grub/themes`. A theme brings its own background.
 
@@ -208,8 +207,8 @@ unlocked. Pick a file on a partition GRUB can read, for example below
 
 ## On systemd-boot
 
-New Garuda installs start with systemd-boot and one unified kernel image
-(UKI) per kernel, built with the kernel command line inside. The page tells
+New Garuda installs start with systemd-boot and one unified kernel image (UKI) per kernel, built with the kernel command
+line inside. The page tells
 the two boot loaders apart by what started the system, so a GRUB left on the
 disk does not count.
 
@@ -225,13 +224,12 @@ partition:
   It offers the kernel's image, saved by its kind like the default entry. A
   kernel without an image yet shows **systemd-boot has no image of the
   kernel … yet**. The fallback image is never offered.
-- **Remember the last entry**: starts the entry you picked last time
-  (`default @saved`). Switching it off goes back to the first entry.
+- **Remember the last entry**: starts the entry you picked last time (`default @saved`). Switching it off goes back to
+  the first entry.
 - **Menu timeout**: systemd-boot's default, a number of seconds, **The menu
   waits for a key**, or **Hidden unless a key is held at start**.
-- **Edit entries at boot**, **Entries systemd-boot finds itself** and
-  **Firmware settings entry**: three segments, **Default**, **On** and
-  **Off**. **Default** removes the line so systemd-boot decides.
+- **Edit entries at boot**, **Entries systemd-boot finds itself** and **Firmware settings entry**: three segments,
+  **Default**, **On** and **Off**. **Default** removes the line so systemd-boot decides.
 
 Applying changes only the queued lines. Every other line stays, also the
 ones garuda-common-settings adds, and the old file stays beside it as
@@ -248,8 +246,8 @@ none of these files.
 ### Change kernel parameters on systemd-boot
 
 **Kernel parameters** works as described in
-[Change kernel parameters](#change-kernel-parameters), with the chips,
-**New parameter** and the four switches. It writes `/etc/kernel/cmdline`
+[Change kernel parameters](#change-kernel-parameters), with the chips, **New parameter** and the four switches. It
+writes `/etc/kernel/cmdline`
 instead of `/etc/default/grub`.
 
 - `root=`, `rootflags=` and `rw` have no remove button. Without them the

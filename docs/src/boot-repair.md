@@ -145,8 +145,8 @@ Afterwards the page says how it went:
 
 - **The running system uses the disk of this partition, so it cannot be
   repaired from here.** Something from that disk is mounted, for example
-  because you opened it in the file manager. Unmount it and click
-  **Read again**. The disk the live system itself runs from is never written
+  because you opened it in the file manager. Unmount it and click **Read again**. The disk the live system itself runs
+  from is never written
   to.
 - **No EFI system partition was found on a disk that is free, so no boot
   loader can be installed. The boot menu of a GRUB system can still be
@@ -163,8 +163,8 @@ Afterwards the page says how it went:
   partition is unlocked. Unlock it in the file manager or with
   `cryptsetup open`, then click **Read again**.
 
-For anything this page does not cover, **Repair an installed system** on
-**Home** opens a root shell inside the installed system, see
+For anything this page does not cover, **Repair an installed system** on **Home** opens a root shell inside the
+installed system, see
 [Home and system status](home.md#on-the-live-iso).
 
 ## Test mode

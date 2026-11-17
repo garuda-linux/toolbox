@@ -7,8 +7,8 @@ Rules for pages, gui-kit widgets and the command line's output.
 - Page header: title, purpose, then tabs and **Read again** on the
   title's line, the same on every tab. F5 presses **Read again** only
   while it is enabled and no dialog or focused terminal is in the way.
-- A fixed toolbar under the header: search at the left, a labelled
-  **Sort by** dropdown at the right. Filter chips scroll with the body.
+- A fixed toolbar under the header: search at the left, a labelled **Sort by** dropdown at the right. Filter chips
+  scroll with the body.
   A chip group wraps onto as many lines as its width needs, with no
   sideways scroll, no edge fade and no scroll bar.
 - The page paints under the header band. The band shows the live blur
@@ -21,8 +21,7 @@ Rules for pages, gui-kit widgets and the command line's output.
 - Row actions sit at the right, on the middle of the whole row. On a row
   taller than about three lines they sit on its title line instead, so
   they stay beside the name they act on (decided 2026-11-15). When the
-  text would get less than `MIN_TEXT_WIDTH` they drop under it
-  (`ActionRow`, `split_row`).
+  text would get less than `MIN_TEXT_WIDTH` they drop under it (`ActionRow`, `split_row`).
 - The leading tile or picture and the title start at the row's top. A
   text shorter than the tile is not centred on it.
 - Controls keep `theme::PILL_HEIGHT` inside a card row. A card row's title
@@ -37,8 +36,7 @@ Rules for pages, gui-kit widgets and the command line's output.
   entries 32 (`PILL_HEIGHT`), link and check rows 40 (decided L-16a).
 - Tags have one size (`TAG_HEIGHT`) and sit on the line's middle.
 - A row's title, its tags and every description line start at one x.
-- Text is centred on its capitals, not on egui's line box
-  (`fonts::cap_centring`). A `LayoutJob` in a title line takes
+- Text is centred on its capitals, not on egui's line box (`fonts::cap_centring`). A `LayoutJob` in a title line takes
   `valign: Align::Center`.
 - Every row menu entry has an icon, or none of the menu's entries do.
 - A dropdown's open list is as wide as its button or its widest entry, at
@@ -93,8 +91,8 @@ Rules for pages, gui-kit widgets and the command line's output.
   corners. Filter chips, the search field and segmented controls stay
   pills (`PILL_RADIUS`), so what narrows a list reads apart from a
   control.
-- A disabled control has one look: egui's fade of a disabled Ui
-  (`disabled_alpha`) over its own colours, never a swapped colour or a
+- A disabled control has one look: egui's fade of a disabled Ui (`disabled_alpha`) over its own colours, never a swapped
+  colour or a
   second fade (`widgets/press.rs`). A Ghost button stays transparent.
 - Text sizes come from the steps in `fonts.rs` (`TITLE`, `SECTION`,
   `BODY`, `SMALL`, `CAPTION`), never a multiple of one.
@@ -104,11 +102,11 @@ Rules for pages, gui-kit widgets and the command line's output.
 - The window is opaque. `sidebar` is `window` under `header_scrim`, so
   sidebar and header band read as one surface.
 - Icons follow [icons.md](icons.md). Row, link and section icons sit in a
-  `widgets::icon_tile` in the open page's group hue, set by the shell
-  (`tokens::set_page_hue`). Pages never pick one. Rows with a status keep
+  `widgets::icon_tile` in the open page's group hue, set by the shell (`tokens::set_page_hue`). Pages never pick one.
+  Rows with a status keep
   the status wash.
-- An app without a picture, or while it loads, shows a letter tile
-  (`widgets::paint_letter_tile`). Its hue comes from the package name, so
+- An app without a picture, or while it loads, shows a letter tile (`widgets::paint_letter_tile`). Its hue comes from
+  the package name, so
   it is the same on every page and in every language. It is decorative.
 - Toggle rows always keep the picture slot, so every row aligns.
 - Page body at most `theme::CONTENT_WIDTH`, centred. Only the User guide
@@ -126,8 +124,7 @@ Rules for pages, gui-kit widgets and the command line's output.
   empty state names it and offers **Show all N matches**.
 - A state (Running, Installed, Failed) is a `widgets::status_dot`, a dot
   and the word in secondary text, as a pill would repeat down the page.
-- A queued change is an accent status dot everywhere
-  (`widgets::queued_tag`), never a pill.
+- A queued change is an accent status dot everywhere (`widgets::queued_tag`), never a pill.
 - A count is no state and shows as plain secondary text.
 - A state that changes while it shows is a `widgets::status_word`, so
   screen readers hear it change.
@@ -136,8 +133,8 @@ Rules for pages, gui-kit widgets and the command line's output.
   not read the whole list.
 - A part that could not be read gets one banner with **Read again**, not a
   line on every row.
-- A page that could not be read at all shows a centred empty state with
-  **Read again** under it (`widgets::empty_state_action`). Its button
+- A page that could not be read at all shows a centred empty state with **Read again** under it
+  (`widgets::empty_state_action`). Its button
   sends what the header's **Read again** and F5 send.
 - A page that waits for its main content shows skeleton rows in the card
   shape of the rows to come (`widgets::skeleton_list`), named by what is
@@ -161,8 +158,8 @@ Rules for pages, gui-kit widgets and the command line's output.
 - Tab order: sidebar, header, page body, status bar last. Controls inside
   a row in visual order.
 - A list and a chip group take one Tab stop (`widgets/roving.rs`). A list's
-  is its last focused row, a chip group's the selected chip. Up and Down
-  (Left and Right on chips) move it, Home and End go to the ends. Tests
+  is its last focused row, a chip group's the selected chip. Up and Down (Left and Right on chips) move it, Home and End
+  go to the ends. Tests
   reach a row by these keys, not by an accessibility focus, which egui
   ignores on a widget that is not a Tab stop.
 
@@ -194,8 +191,8 @@ Rules for pages, gui-kit widgets and the command line's output.
   condition in one word, other states get their own key.
 - `list` for collections, `show` for one state view. Every read takes
   `--json`, every `list` takes `--search`.
-- Lists and `show` page through a pager on a terminal
-  (`crates/commands/src/pager.rs`), never under `--json`, questions or
+- Lists and `show` page through a pager on a terminal (`crates/commands/src/pager.rs`), never under `--json`, questions
+  or
   running output.
 - A change prints the plan and asks `Continue? [y/N]`. No terminal and no
   `--yes` refuses. `--dry-run` prints the plan and exits 0. Steps are

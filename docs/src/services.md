@@ -18,15 +18,17 @@ mounts. systemd calls all of them "units".
   time. Each chip counts the services it would list for the current
   search:
 
-  | Chip        | Lists                                                      |
-  | ----------- | ---------------------------------------------------------- |
-  | **Running** | Services that are neither stopped nor failed (the default) |
-  | **Enabled** | Services that start at boot                                |
-  | **Failed**  | Services that failed                                       |
-  | **All**     | Every service                                              |
+  | Chip         | Lists                                                                             |
+  | ------------ | --------------------------------------------------------------------------------- |
+  | **Running**  | Services that are neither stopped nor failed (the default)                        |
+  | **Enabled**  | Services that start at boot                                                       |
+  | **Disabled** | Services that could start at boot but do not. A static service has no such switch |
+  | **Masked**   | Services that cannot be started at all                                            |
+  | **Failed**   | Services that failed                                                              |
+  | **All**      | Every service                                                                     |
 
-  `services list --running`, `--enabled` and `--failed` on the command
-  line list the same services.
+  `services list --running`, `--enabled`, `--disabled`, `--masked` and
+  `--failed` on the command line list the same services.
 
 - **Sort by** at the right of the search orders the list by **Name** (the
   default) or **Problems first**. With **Problems first** the failed services
@@ -41,8 +43,8 @@ app starts or stops a service.
 
 Each row shows the service's description first and its file name below.
 Hover over a row, or move the keyboard focus to it, to see both in full.
-Beside the name, a coloured dot and a word say whether the service runs
-(**Running**, **Stopped**, **Failed**, …). The **At boot** switch at the
+Beside the name, a coloured dot and a word say whether the service runs (**Running**, **Stopped**, **Failed**, …). The
+**At boot** switch at the
 right says whether it starts at boot. Services that cannot simply be
 switched on at boot say why instead:
 
@@ -119,8 +121,8 @@ systemd-logind) asks first, with the risk named and a red button.
 
 **Retry** tries again. When a list was read before, it stays and the reason
 shows in a banner above it, with **Read again**. **No service matches.** means the search or the
-picked chip hides everything. When the search finds services under
-**All**, a button such as **Show all 3 matches** picks **All** and keeps the
+picked chip hides everything. When the search finds services under **All**, a button such as **Show all 3 matches**
+picks **All** and keeps the
 search. The ✕ in the search field empties it.
 
 Screen readers announce a failed service, and the state of the service the

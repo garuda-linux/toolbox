@@ -28,8 +28,7 @@ into `crates/services/i18n/<locale>/*.ftl`. Both take `--check`.
   since Transifex fills untranslated strings with the source.
 - A changed message gets the canonical shape and loses `# untranslated`.
 - A missing message goes after the one before it in the English file.
-- Export then import of the checked-in files changes nothing
-  (`exporting_and_importing_the_real_files_changes_nothing`).
+- Export then import of the checked-in files changes nothing (`exporting_and_importing_the_real_files_changes_nothing`).
 
 ## CI
 

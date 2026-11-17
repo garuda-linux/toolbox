@@ -177,8 +177,7 @@ the code to `~/.local/state/garuda-toolbox/crash.log`. Once the file reaches
 
 **Symptoms**
 
-- The window shows only **Garuda Toolbox is not installed completely** and
-  **Quit**.
+- The window shows only **Garuda Toolbox is not installed completely** and **Quit**.
 - `garuda-toolbox doctor` reports `/usr/share/garuda-toolbox/catalog is
 missing`.
 

@@ -25,8 +25,8 @@ does, a card says how many checks passed and names them.
 
 ## Status cards
 
-Each card has one button at its right. A card with more to offer has a
-**⋯** button beside it that opens the rest. In a narrow window they sit
+Each card has one button at its right. A card with more to offer has a **⋯** button beside it that opens the rest. In a
+narrow window they sit
 under its text.
 
 | Card                                                                 | Shown when                                                                         | Buttons                                                         |
@@ -51,14 +51,13 @@ password, for example when other users are logged in.
 
 ## See which packages will be updated
 
-Open the **⋯** menu of either update card and click **Show packages**.
-**Pending updates** lists every package with the installed and the new
+Open the **⋯** menu of either update card and click **Show packages**. **Pending updates** lists every package with the
+installed and the new
 version, for example
 `linux-zen` with `6.13.8.zen1-1 → 6.14.1.zen1-1`. Repository packages come
 first. Packages from the AUR follow and are marked **AUR**.
 
-The list is as fresh as the last check. Click **Read again** beside
-**System status** to renew it.
+The list is as fresh as the last check. Click **Read again** beside **System status** to renew it.
 
 ## Update AUR packages
 
@@ -74,16 +73,15 @@ changes and answer, also in an editor paru opens.
 A message says how many checks could not run, and the card of passed
 checks does not show. **Show details** names each check with the reason
 the system gave, and **Read again** runs the checks once more. When the
-update check failed, for example without a network, one message reads
-**The update check failed.** with **Read again**.
+update check failed, for example without a network, one message reads **The update check failed.** with **Read again**.
 
 ## When the status is checked
 
 - When the app starts.
 - After every apply, successful or not.
 - With **Read again** beside **System status**, or `F5`.
-- Every hour while the app runs. Change this under **Settings** →
-  **Time between checks**, or turn **Check for updates automatically**
+- Every hour while the app runs. Change this under **Settings** → **Time between checks**, or turn **Check for updates
+  automatically**
   off.
 
 Each check downloads the package lists into a temporary folder and asks
@@ -102,8 +100,8 @@ to do something by hand around an update is marked **Manual step**: on
 Arch the posts whose title says "manual intervention", on Garuda the
 posts of the forum's Maintenance announcements.
 
-Click a title to open the post in your browser. **Garuda forum** and
-**Arch news** beside the heading open all posts of each site. The app asks
+Click a title to open the post in your browser. **Garuda forum** and **Arch news** beside the heading open all posts of
+each site. The app asks
 each site at most every six hours and keeps its posts, so they show
 without a network too.
 
@@ -111,8 +109,8 @@ without a network too.
 
 Below the news, **Next steps** offers up to three cards on one line:
 **Review changes** while changes wait, **Setup Assistant** until you have
-gone through it once (not on a live system), then **Maintenance** and
-**Diagnostics**. In a narrow window they wrap onto more lines.
+gone through it once (not on a live system), then **Maintenance** and **Diagnostics**. In a narrow window they wrap onto
+more lines.
 Every other page is in the sidebar. The links to Garuda Linux's websites
 and community are on **About**.
 

@@ -27,8 +27,8 @@ come first.
   enabled.
 
 Each row shows the language and the country of the locale in English, for
-example `German (Germany)`, with the locale and its character set below it
-(`de_DE.UTF-8, UTF-8`) and **Enabled** or **Disabled**. The row of the locale
+example `German (Germany)`, with the locale and its character set below it (`de_DE.UTF-8, UTF-8`) and **Enabled** or
+**Disabled**. The row of the locale
 your system language uses ends with `system language`.
 
 The names come from the locale definitions that glibc installs below
@@ -75,8 +75,8 @@ are. The new language applies from your next login.
 
 Some programs ship their translations, dictionaries or help in separate
 packages, such as `firefox-i18n-de`, `libreoffice-fresh-de` or `hunspell-de`.
-The **Language packs** tab lists the packs that fit your enabled locales
-(queued ones included) and belong to a program you have installed.
+The **Language packs** tab lists the packs that fit your enabled locales (queued ones included) and belong to a program
+you have installed.
 
 - Flip a pack's switch (or select it and press `Space`) to queue its
   installation. Flip an installed pack's switch to queue its removal. A

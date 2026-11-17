@@ -15,8 +15,8 @@ It sits in its own band below the page, so it never covers a control.
 one line in plain words, for example **Install firefox**. The × at the end
 of a line drops that change. **Hide** closes the list again.
 
-While the [Console](console.md) is open, the same count, **Review** and
-**Apply** sit at the right of the Console's header instead.
+While the [Console](console.md) is open, the same count, **Review** and **Apply** sit at the right of the Console's
+header instead.
 
 While the window is open, a `garuda-toolbox` command that changes the queue
 edits the window's queue and shows the note **The queue was changed from
@@ -61,15 +61,15 @@ header then says how many steps had nothing to do.
 > shows its exit code. The changes that did not run stay in the queue, so
 > **Apply** runs them again once you fixed the cause.
 
-A change whose steps did not all finish stays in the queue with the tag
-**Did not finish**, even when part of it already shows on its page. For
+A change whose steps did not all finish stays in the queue with the tag **Did not finish**, even when part of it already
+shows on its page. For
 example, a locale whose line in `/etc/locale.gen` was switched on while
 `locale-gen` failed. The tag goes away once an apply runs all of the
 change's steps. `garuda-toolbox queue apply` keeps such changes the same
 way.
 
-If you close the password dialog, nothing changes and the Console shows
-**The password dialog was closed. Nothing was changed.**
+If you close the password dialog, nothing changes and the Console shows **The password dialog was closed. Nothing was
+changed.**
 
 > **Note:** The app never sees or stores your password. The desktop asks for
 > it and remembers the approval itself for a few minutes, so applying again

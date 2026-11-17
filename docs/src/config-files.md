@@ -23,8 +23,8 @@ shows you what changed, and only then is the file replaced.
 ## Before you start
 
 Editing a file needs a terminal editor. The app uses the editor named
-in `$VISUAL` or `$EDITOR` when it is one of micro, nano, vim, nvim, vi, helix
-(`hx`), emacs, ne, joe or mcedit. Anything else in these variables is ignored.
+in `$VISUAL` or `$EDITOR` when it is one of micro, nano, vim, nvim, vi, helix (`hx`), emacs, ne, joe or mcedit. Anything
+else in these variables is ignored.
 Without a usable choice the app takes the first installed one of micro, nano
 and vi. The app looks for the editor in `/usr/bin` first, then in the
 folders of your `$PATH`. Garuda Linux ships micro.
@@ -85,8 +85,8 @@ as if you had opened it from the file manager.
 3. The **Console** opens with your editor on a copy of the file. Change what
    you want, save and quit the editor.
 4. The page comes back with the dialog `Save the changes to <file>?`. It shows
-   every changed line with a few lines around it, under a heading such as
-   **Lines 3 to 6**: added lines start with `+` on a green row, removed lines
+   every changed line with a few lines around it, under a heading such as **Lines 3 to 6**: added lines start with `+`
+   on a green row, removed lines
    with `-` on a red row. Two columns at the left number each line, in the
    file as it is and in your edited copy. It also names the file that will be written when that is another one (see
    [Files that are links](#files-that-are-links)).
@@ -217,8 +217,8 @@ who may administer the system or what runs as root, so it is only shown
 here. Change it in a terminal with sudo.`
 
 The text cannot be changed in the dialog. Select a part of it with the mouse,
-or with `Shift` and the arrow keys, and copy it with `Ctrl+c`.
-**Copy all** copies the whole text to the clipboard. **Close** or `Esc`
+or with `Shift` and the arrow keys, and copy it with `Ctrl+c`. **Copy all** copies the whole text to the clipboard.
+**Close** or `Esc`
 closes the dialog, and the text goes with it. Nothing is written and
 nothing is queued.
 

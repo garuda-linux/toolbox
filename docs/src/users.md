@@ -37,8 +37,8 @@ the other actions, and `Tab` moves on to the buttons of the row.
 - The search field finds users by user name, user ID, full name, home
   folder, login shell and group, without regard to upper and lower case.
   The button at its end clears it. When nobody matches, the page says so.
-- **Sort by** at the right of the search field sorts by **User name** (at
-  first), **User ID**, **Full name**, **Home folder** or **Login shell**.
+- **Sort by** at the right of the search field sorts by **User name**, **User ID** (at
+  first), **Full name**, **Home folder** or **Login shell**.
   Accounts with the same value stay in the order of their names, and an
   empty full name or shell comes last.
 - **Read again** (the round arrow at the top of the page, or `F5`) reads the
@@ -103,8 +103,7 @@ why one failed. Afterwards the new user appears in the list.
 
 When the account could not be added, for example because you closed the
 password question, the dialog opens again with everything you entered except
-the two passwords. Enter them again and click **Add user now** once more, or
-**Cancel**.
+the two passwords. Enter them again and click **Add user now** once more, or **Cancel**.
 
 > **Note:** Adding a user is not offered while changes are being applied.
 > Wait until they are done.
@@ -122,8 +121,8 @@ with the new password from then on.
 
 ### Passwords are never stored
 
-A password you type goes straight from the dialog to the program that sets it
-(`chpasswd`), on that program's input. It is not written to the queue, the
+A password you type goes straight from the dialog to the program that sets it (`chpasswd`), on that program's input. It
+is not written to the queue, the
 saved queue file, the Console, the log or the command line of any program,
 and the dialog empties its fields when it closes. A password cannot hold a
 line break or another control character and is at most 512 bytes long.
@@ -132,13 +131,12 @@ line break or another control character and is at most 512 bytes long.
 
 Open the menu with the three dots on the user's row and click **Queue lock**
 or **Queue unlock**, then apply the queue. The entry follows the account:
-a locked account offers **Queue unlock**. Click **Don't lock** or
-**Don't unlock** in the same menu to take it back before that. Your own
+a locked account offers **Queue unlock**. Click **Don't lock** or **Don't unlock** in the same menu to take it back
+before that. Your own
 account has no lock entry.
 
 Locking disables the password (`usermod -L`). The user can no longer log in
-with it. Other ways in, such as an SSH key, keep working. Unlocking
-(`usermod -U`) brings the old password back.
+with it. Other ways in, such as an SSH key, keep working. Unlocking (`usermod -U`) brings the old password back.
 
 > **Note:** An account that never had a password cannot be unlocked. Set a
 > password instead.
@@ -224,16 +222,16 @@ Other changes queued for the user are dropped when you queue its removal.
 
 The **Groups** tab lists every group with its group ID and members. Its
 search field finds groups by name, group ID and member, and **Sort by** at
-its right sorts them by **Group name** (at first), **Group ID** or
-**Most members**. A group that is only queued has no group ID yet and comes
+its right sorts them by **Group name**, **Group ID** (at first) or **Most members**. A group that is only queued has no
+group ID yet and comes
 last by ID.
 
 To add one, click **Add group…**, enter a **Group name** (the same rules as
 for user names) and click **Queue group**. The new group shows as **New**
 right away, and users can be put into it before you apply.
 
-To remove one, click the button at the end of its row and confirm with
-**Queue removal**. Its members leave it. Files that belong to the group keep
+To remove one, click the button at the end of its row and confirm with **Queue removal**. Its members leave it. Files
+that belong to the group keep
 its number as their group. The same button takes a queued group or a queued
 removal back. System groups and the primary group of a user have no such
 button, because their removal would be refused.

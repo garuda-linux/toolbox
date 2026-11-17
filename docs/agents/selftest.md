@@ -18,8 +18,7 @@ without cargo.
 ## Rules
 
 - The self-test never changes the machine. The helper runs with
-  `GARUDA_TOOLBOX_HELPER=dry-run`, every other effect is a dry-run port
-  (see [Dry run](architecture.md#dry-run)).
+  `GARUDA_TOOLBOX_HELPER=dry-run`, every other effect is a dry-run port (see [Dry run](architecture.md#dry-run)).
 - Probes read the real system. Where Garuda tools may be missing, a step
   waits for either state (`Step::WaitEither`).
 - The script gives the run its own environment:

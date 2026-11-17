@@ -12,8 +12,8 @@ computer unless you upload a report yourself.
 
 ## Collect a report
 
-Under **Reports** each report has a row that says what it holds. Click
-**Collect** in the row of the report you want. The page says what is being
+Under **Reports** each report has a row that says what it holds. Click **Collect** in the row of the report you want.
+The page says what is being
 collected meanwhile, and the report appears below. While a report shows, the
 rows fold into **Collect another report**. Click it to unfold them.
 
@@ -85,8 +85,8 @@ the same, and the other parts are still collected.
 
 ## Copy a report
 
-Click **Copy report** in the report's header line. **Copy report** and
-**Share report…** show once a report is there. A short note at the top right of the
+Click **Copy report** in the report's header line. **Copy report** and **Share report…** show once a report is there. A
+short note at the top right of the
 window confirms the copy. The copy is plain text without colours, ready to
 paste into a forum post.
 
@@ -154,8 +154,8 @@ that two lines name the same disk. Private addresses such as
 Each upload also has a delete link: opening it removes the report from the
 server. It waits in the **⋯** menu of the **Uploaded.** line.
 
-- **Delete now…** asks **Delete the report from the server?** first.
-  **Delete** then opens the delete link in your browser. The server removes
+- **Delete now…** asks **Delete the report from the server?** first. **Delete** then opens the delete link in your
+  browser. The server removes
   the report at once, and the link to the report stops working for everyone.
   The page takes both links away.
 - **Copy delete link** copies it, so you can keep it and delete the report

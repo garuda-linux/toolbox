@@ -15,8 +15,8 @@ shows that category alone. The number on each chip counts the apps your
 system can install.
 
 Every row shows the app's icon, its name and up to two lines of its
-description, with the **⋯** menu and a button at the right: **Install**, or
-**Remove** for an app that says **Installed**. Point at a cut description
+description, with the **⋯** menu and a button at the right: **Install**, or **Remove** for an app that says
+**Installed**. Point at a cut description
 to read it whole.
 
 ## Search
@@ -24,8 +24,8 @@ to read it whole.
 To find an app, type in **Search apps…** at the top. The search looks at
 the names, descriptions and package names of the apps the chosen chip
 shows. With **All** it looks through every category, and the results show
-under the heading of their category, for example Firefox under
-**Internet**. While you search, the number on each chip counts its
+under the heading of their category, for example Firefox under **Internet**. While you search, the number on each chip
+counts its
 matches, and a chip still picks its category. Clear the field to see the
 whole category again.
 
@@ -102,8 +102,8 @@ so you can still remove it. Categories without such apps are hidden.
 ## Where the icons come from
 
 A row shows the icon your icon theme has for the package. When the theme
-has none, it shows the picture from the AppStream data of the repositories
-(the `archlinux-appstream-data` package), and otherwise a generic package
+has none, it shows the picture from the AppStream data of the repositories (the `archlinux-appstream-data` package), and
+otherwise a generic package
 icon.
 
 ## See also

@@ -1,8 +1,8 @@
 # Command palette and shortcuts
 
-The command palette finds pages, commands, Maintenance operations and the
-apps of **App Catalog** by name, so you can reach them with the keyboard
-alone.
+The command palette finds pages, commands, Maintenance operations, the
+apps of **App Catalog** and the packages of the repositories and the AUR,
+so you can reach them with the keyboard alone.
 
 ![The open command palette listing pages and commands](images/palette-open.png)
 
@@ -14,25 +14,35 @@ alone.
 
 Press `Esc` to close the palette without choosing.
 
-An entry shows when its name holds what you typed. Upper and lower case do
-not matter. Apps and Maintenance operations show only once you type, because
-there are too many to list. The list shows at most 50 entries, so type more when
-you do not see yours. When nothing fits, the list stays empty.
+Without a text the palette lists the pages and commands. Once you type, an
+entry shows when its name holds the text, an app or a package also when its
+description does. Upper and lower
+case do not matter. Each group shows its best five entries: an exact name
+first, then names that start with the text, then names that hold it, then
+entries found by their description. The group with the best entry comes
+first. A group with more ends with **Show all**: for apps and packages it
+opens their page searched for the text, for the others it shows the whole
+group in the palette. When nothing fits, the list stays empty.
+
+Packages are read when the palette opens, so the first look may take a
+moment. AUR packages show only while the AUR is turned on in **Settings**.
 
 ### What an entry does
 
-| Entry                   | Shown at the right       | Choosing it                                               |
-| ----------------------- | ------------------------ | --------------------------------------------------------- |
-| A page, such as Kernels | its shortcut, if any     | Opens the page                                            |
-| A command               | its shortcut, if any     | Runs it, see below                                        |
-| A Maintenance operation | **Maintenance** and tab  | Opens **Maintenance** on the tab that holds the operation |
-| An app, such as Firefox | **App** and its category | Opens **App Catalog** with the app on top                 |
+| Entry                   | Shown at the right                           | Choosing it                                               |
+| ----------------------- | -------------------------------------------- | --------------------------------------------------------- |
+| A page, such as Kernels | its shortcut, if any                         | Opens the page                                            |
+| A command               | its shortcut, if any                         | Runs it, see below                                        |
+| A Maintenance operation | **Maintenance** and tab                      | Opens **Maintenance** on the tab that holds the operation |
+| An app, such as Firefox | **App** and its category                     | Opens **App Catalog** with the app on top                 |
+| A package               | its repository, and **Installed** when it is | Opens the package on **Packages**                         |
+| An AUR package          | **AUR**, and **Installed** when it is        | Opens the package on **Packages**                         |
 
 The commands are **Apply changes**, **Review changes** (only while changes
-wait), **Remove all changes**, **Search this page**, **Help for this page**,
-**Toggle sidebar**, **Toggle console** and **Quit**. They run at once, as
-their shortcut would. **Remove all changes** asks first. Pages, operations
-and apps only open. They never change anything by themselves.
+wait), **Remove all changes**, **Search this page**, **Help for this page**, **Toggle sidebar**, **Toggle console** and
+**Quit**. They run at once, as
+their shortcut would. **Remove all changes** asks first. Pages, operations,
+apps and packages only open. They never change anything by themselves.
 
 ### Keys in the palette
 

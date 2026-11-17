@@ -51,10 +51,9 @@ for the end and a note at the top says so.
 
 The rows under **Tools** on **Common** open tools in their own window. When a
 tool is missing, its button says **Install and open…** and the row says that
-the installation starts at once. Click it: the installation runs in the
-**Console** and asks for your password, and the tool opens when the
-installation succeeded. For
-**Refresh Chaotic-AUR mirrors** the ranking starts instead.
+the installation starts at once. Click it: the installation runs in the **Console** and asks for your password, and the
+tool opens when the
+installation succeeded. For **Refresh Chaotic-AUR mirrors** the ranking starts instead.
 
 | Row                             | Tool                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
@@ -133,8 +132,8 @@ password.
 > **Warning:** **Full reset** and **Reinstall packages** reinstall every
 > package. This takes a long time and downloads a large amount of data.
 
-**Reset package manager settings**, **Full reset**, **Reset audio**,
-**Reset Snapper** and **Reinstall packages** ask first. The question says
+**Reset package manager settings**, **Full reset**, **Reset audio**, **Reset Snapper** and **Reinstall packages** ask
+first. The question says
 what is lost, for example that **Reset Snapper** deletes every snapshot.
 The red button with the repair's name runs it. **Cancel** or `Esc` leaves
 the system as it is.
@@ -142,8 +141,8 @@ the system as it is.
 Every row is shown. A row whose program is missing is greyed out and says
 what it needs, for example **Needs garuda-update**. One note above the rows
 names every missing package, `garuda-health`, `garuda-update` or both, and
-offers to install them all with one button, for example
-**Install garuda-health, garuda-update**. The installation starts at once in
+offers to install them all with one button, for example **Install garuda-health, garuda-update**. The installation
+starts at once in
 the Console and asks for your password. The rows unlock once it is done.
 
 ## See also

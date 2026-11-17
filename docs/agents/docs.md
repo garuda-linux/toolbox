@@ -61,5 +61,5 @@ their `docs/src/SUMMARY.md` entries stay in sync.
   real prerequisites, one `##` per goal with numbered steps, tables for
   reference, `## See also` with 2 to 4 pages.
 - Troubleshooting entry: a `##` heading with the problem in the user's
-  words or the exact message, then bold **Symptoms**, **Cause**,
-  **Solution** (numbered) and **Prevention** when there is one.
+  words or the exact message, then bold **Symptoms**, **Cause**, **Solution** (numbered) and **Prevention** when there
+  is one.

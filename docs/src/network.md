@@ -11,8 +11,7 @@ again. The page also reads again after every run in the Console.
 
 ## Check the connection
 
-The **Status** tab starts with **Connection**, with **Radios** and
-**Services** below it.
+The **Status** tab starts with **Connection**, with **Radios** and **Services** below it.
 
 | Line               | What it shows                                                      |
 | ------------------ | ------------------------------------------------------------------ |
@@ -35,14 +34,14 @@ The answer comes from NetworkManager's own connectivity check. Garuda
 Toolbox sends no test packets by itself. On a system that uses another
 network manager the line stays **Unknown**.
 
-**Router** and **Interface** show **None** without a default route and
-**Not available** when the `ip` program is missing.
+**Router** and **Interface** show **None** without a default route and **Not available** when the `ip` program is
+missing.
 
 Below **Connection** each active Ethernet or Wi-Fi interface has a card,
 titled with its connection's name. A card lists the interface, its IPv4
 and IPv6 addresses, the DNS servers for it, its MAC address, and for a
-wire the link speed or for Wi-Fi the network name and the signal, such as
-**Good (57 %)**. Each address, server and MAC address has a copy button.
+wire the link speed or for Wi-Fi the network name and the signal, such as **Good (57 %)**. Each address, server and MAC
+address has a copy button.
 The cards come from NetworkManager and update when it reports a change.
 Without NetworkManager no card shows. Bridges, VPN tunnels and disconnected
 interfaces have no card.
@@ -104,8 +103,8 @@ for your position. To make a service start at every boot, use
 
 The **Drivers** tab lists the network drivers (kernel modules) of the
 running kernel. Search by name with the field under the tabs, or narrow
-the list with the two rows of chips: one for the state and one for the kind
-(**Ethernet**, **Wireless**, **Bluetooth** or **Other**). **All** in a row
+the list with the two rows of chips: one for the state and one for the kind (**Ethernet**, **Wireless**, **Bluetooth**
+or **Other**). **All** in a row
 shows every driver again.
 
 | State                   | Meaning                                                  |
@@ -155,8 +154,8 @@ or edit a file in `/etc/modprobe.d` yourself in
 kernel are not on the disk. That is normal right after a kernel update:
 restart the computer first.
 
-**No driver matches** means the search or the filters hide every driver.
-**Clear filters** empties the search field and shows all states and kinds.
+**No driver matches** means the search or the filters hide every driver. **Clear filters** empties the search field and
+shows all states and kinds.
 When the drivers could not be read, **Read again** reads them again.
 
 ## List network hardware
@@ -187,8 +186,8 @@ On the **Tools** tab under **Connection tests**:
 3. For the route to the host, set **Most hops (for traceroute)** (1 to 255)
    and click **Run traceroute** beside it.
 
-Both run with your own rights and show their output in the Console. Click
-**Cancel** there to stop one early. Once a test ended, a note under the
+Both run with your own rights and show their output in the Console. Click **Cancel** there to stop one early. Once a
+test ended, a note under the
 buttons says whether it finished or ended with an error. While the Console
 is closed, **Show Console** in the note opens it.
 

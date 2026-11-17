@@ -19,10 +19,10 @@ the assistant directly.
 2. Each step shows the apps of one category as rows with an icon, a name
    and a short description. Click **Install** on a row to pick the app.
    The row says **Installs with Apply**, and **Take back** drops the pick.
-3. Click **Next** to go on, also when you want nothing from a category.
-   **Back** returns to the step before. Your picks stay.
-4. To go straight to a category, open the list between **Back** and
-   **Next** and choose it. The list holds **Welcome**, every category with
+3. Click **Next** to go on, also when you want nothing from a category. **Back** returns to the step before. Your picks
+   stay.
+4. To go straight to a category, open the list between **Back** and **Next** and choose it. The list holds **Welcome**,
+   every category with
    its number and the **Summary**, and always shows where you are. Your
    picks stay here too.
 
@@ -70,8 +70,8 @@ way round. When the other branch is installed, it is queued for removal.
 
 ## Check the summary and apply
 
-1. The **Summary** step lists **Apps to install**, **Apps to remove** and
-   **Services to enable**, each with a count and the names.
+1. The **Summary** step lists **Apps to install**, **Apps to remove** and **Services to enable**, each with a count and
+   the names.
 2. Click **Review and apply**. **Review** opens with every queued change,
    also those you queued on other pages. The changes pill is hidden on every
    step, so **Review and apply** is the one way to apply here.
@@ -79,19 +79,19 @@ way round. When the other branch is installed, it is queued for removal.
    removes and enables everything in the Console. See
    [Review and apply changes](applying.md).
 
-When the apply worked and the queue is empty again, the assistant shows
-**Success!** and recommends a restart. **Restart…** restarts the computer
+When the apply worked and the queue is empty again, the assistant shows **Success!** and recommends a restart.
+**Restart…** restarts the computer
 after one more question. **Finish setup** returns to Home. Below them,
-links open the **Garuda forum**, the **Garuda Linux wiki** and the
-**Arch Linux wiki** in your web browser. The changes pill stays hidden on
+links open the **Garuda forum**, the **Garuda Linux wiki** and the **Arch Linux wiki** in your web browser. The changes
+pill stays hidden on
 this page.
 
 When every pick was already in place, the page says so instead of calling
 the system ready. In test mode it says that nothing was installed or
 changed.
 
-When you picked nothing, the Summary says so and the button reads
-**Finish**. It shows **Success!** without changing anything.
+When you picked nothing, the Summary says so and the button reads **Finish**. It shows **Success!** without changing
+anything.
 
 When a step of the apply fails, the Console shows the error and the
 assistant stays where it was. What did not run stays in the queue, so you

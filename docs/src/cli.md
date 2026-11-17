@@ -74,12 +74,12 @@ too and take `--json` as well (`configs show` prints the file itself).
 | `toggle list [--page components\|system-settings\|gaming\|setup]` | The switches and whether each is on.                                  |
 | `toggle show <id>`                                                | One switch: its page, state, what tells it is on and what it brings.  |
 | `apps list [--category <category>]`                               | The App Catalog's apps and whether each is installed.                 |
-| `packages search [<text>] [--installed\|--orphans]`               | Repository and installed packages whose name or description matches.  |
+| `packages search [<text>] [--installed\|--orphans\|--optional]`   | Repository and installed packages whose name or description matches.  |
 | `packages show <package>`                                         | One package: repository, version, size, dependencies, files.          |
-| `kernels list`                                                    | The installed and available kernels, the running one marked.          |
+| `kernels list`                                                    | Installed and available kernels, the running and default ones marked. |
 | `locales list`                                                    | The locales, the enabled ones and the system's marked.                |
-| `users list [--all]`                                              | Root and the people accounts, every account with `--all`.             |
-| `groups list`                                                     | The groups with their members.                                        |
+| `users list [--all]`                                              | Root and the people accounts by user ID, every account with `--all`.  |
+| `groups list`                                                     | The groups with their members, by group ID.                           |
 
 A switch shows `on`, `off`, or `unknown` when its state could not be read.
 `doctor` ends with exit code 9 when a part the toolbox needs is missing
@@ -100,8 +100,8 @@ uninstall` are the `remove` commands.
 
 Every `list` takes `--search <text>`, which keeps the rows whose name or
 shown name holds the text, upper or lower case alike. Some lists take
-filters of their own: `services list --running`, `--failed` or
-`--enabled`, `toggle list --on` or `--off`, `apps list --installed`,
+filters of their own: `services list --running`, `--failed`,
+`--enabled`, `--disabled` or `--masked`, `toggle list --on` or `--off`, `apps list --installed`,
 `kernels list --installed` and `locales list --enabled`. Filters apply to
 `--json` too. The title still counts the whole list and says how many
 are shown.
@@ -319,7 +319,8 @@ $ garuda-toolbox packages remove gimp
 
 `packages search` lists every repository and installed package whose name
 or description holds the text, `--installed` the installed ones only,
-`--orphans` the dependencies nothing needs anymore. `--json` prints an
+`--orphans` the dependencies nothing needs anymore, `--optional` the
+dependencies installed packages only list as optional. `--json` prints an
 array, `packages show --json` one object, with sizes in bytes and the
 install date in seconds since 1970. `install` runs `pacman -S --needed`
 for a package a repository offers, `remove` runs `pacman -Rns`, which
@@ -387,10 +388,9 @@ $ garuda-toolbox groups add media
 password is never an argument: it is asked twice on the terminal without
 echo, or read from the first line of standard input with
 `--password-stdin`. `--admin` puts the account into `wheel`, and is
-refused on a system without that group, as the page offers no
-**Administrator** switch there. `--group`
-into further groups. `users edit` changes the full name, the login shell
-(one of `/etc/shells`), the groups and the home folder. `lock` and
+refused on a system without that group, as the page offers no **Administrator** switch there. `--group`
+into further groups. `users edit` changes the full name, the login shell (one of `/etc/shells`), the groups and the home
+folder. `lock` and
 `unlock` lock and unlock the password. `remove` keeps the home folder
 unless `--delete-home`, which wants the account's name typed. The account
 running the command can be neither locked nor removed, as on the page.
@@ -634,8 +634,8 @@ renames a field raises it. The field names follow one pattern:
   with its `cause`, the words of what failed.
 - States that need more than one word, or a yes or no, have names of
   their own: `on` for switches and apps (`true`, `false`, or `null` when
-  it could not be read), `active` and `sub_state` for services
-  (systemd's own words, such as `active` and `running`) and `result` for
+  it could not be read), `active` and `sub_state` for services (systemd's own words, such as `active` and `running`) and
+  `result` for
   the checks of `doctor` (`ok`, `problem`, `optional` or `unknown`).
 
 For example, `status --json`:

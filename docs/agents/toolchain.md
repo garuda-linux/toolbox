@@ -54,8 +54,8 @@
 
 - `scripts/install.sh` is the only place that knows where files go, for
   both `nix/package.nix` and `packaging/PKGBUILD`.
-- The desktop file is named like the binary and the Wayland app_id
-  (`APP_ID` in `app/gui/src/main.rs`), so the compositor finds its icon.
+- The desktop file is named like the binary and the Wayland app_id (`APP_ID` in `app/gui/src/main.rs`), so the
+  compositor finds its icon.
   Validate it and the metainfo with `desktop-file-validate` and
   `appstreamcli validate --no-net`.
 - In the PKGBUILD only `prepare()` touches the network, `build()` and
@@ -71,8 +71,8 @@
 ## Arch integration tests
 
 `scripts/arch-it.sh [cargo test arguments]` runs tests as root in
-`ci/arch/Containerfile`, with an offline repository of test packages
-(`ci/arch/make-repo.sh`). The container has no systemd, polkit or pkexec.
+`ci/arch/Containerfile`, with an offline repository of test packages (`ci/arch/make-repo.sh`). The container has no
+systemd, polkit or pkexec.
 
 - Tests that change the system return at once unless `TOOLBOX_IT_ARCH=1`,
   root and `/etc/arch-release` are all given. They run with
@@ -87,8 +87,7 @@
 container cannot run: systemd units, locales, DKMS and NetworkManager. It
 builds the package with `scripts/arch-package.sh --nocheck`, or with
 `--no-build` takes the package of the `Cargo.toml` version from
-`target/arch-package/`. It starts a Garuda Lima VM
-(`tests/lima/garuda.yaml`), installs the package with dkms,
+`target/arch-package/`. It starts a Garuda Lima VM (`tests/lima/garuda.yaml`), installs the package with dkms,
 v4l2loopback-dkms and networkmanager, and drives the CLI with `--yes`. At
 the end it restarts the VM once and checks that the changes survive the
 boot.

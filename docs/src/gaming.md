@@ -8,8 +8,7 @@ tools, controller drivers, games and emulators.
 ## Find an entry
 
 Type in **Search this page…** above the rows. Only the rows whose name or
-description holds the text stay. **Nothing matches the search** with
-**Clear search** appears when none does.
+description holds the text stay. **Nothing matches the search** with **Clear search** appears when none does.
 
 ## Install or remove a gaming app
 

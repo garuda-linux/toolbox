@@ -25,9 +25,8 @@ blurred. After a finished run, opening another page hides the Console.
 ## See how an apply goes
 
 While changes are applied, the line above the terminal says **Applying
-changes…** and the step list marks the running step. Each step says
-**Waiting**, **Running**, **Done**, **Nothing to do**, **Cancelled** or
-**Failed** with its exit code.
+changes…** and the step list marks the running step. Each step says **Waiting**, **Running**, **Done**, **Nothing to
+do**, **Cancelled** or **Failed** with its exit code.
 
 ## See how an apply ended
 
@@ -40,8 +39,7 @@ When the apply ends, the line above the terminal says how it went:
 - **Test mode: nothing was changed** in test mode, where no step runs.
   Every step then says **Not run (test mode)**.
 - **Stopped before all changes were applied** when a step failed or the
-  password was refused. Changes that did not run stay in the queue, so
-  **Apply** runs them again.
+  password was refused. Changes that did not run stay in the queue, so **Apply** runs them again.
 
 When the update replaced the running kernel or system libraries,
 [Home](home.md) offers **Restart…**.
@@ -112,14 +110,13 @@ To show the output to someone who helps you, upload it:
    [Diagnostics](diagnostics.md#what-the-upload-replaces). Read it and
    search it for anything else you do not want to share. A program that
    writes on meanwhile does not change it.
-3. Click **Upload**. One row in the Console says **Uploaded.**, with
-   **Copy link** and **Hide**. Its **⋯** menu holds **Open in browser**,
-   **Copy delete link** and **Delete now…**.
+3. Click **Upload**. One row in the Console says **Uploaded.**, with **Copy link** and **Hide**. Its **⋯** menu holds
+   **Open in browser**, **Copy delete link** and **Delete now…**.
 
 The upload works like the one on [Diagnostics](diagnostics.md#share-a-report):
 the text goes to `bin.garudalinux.org`, encrypted on your computer, and
-the server deletes it after one month. Nothing is sent before you click
-**Upload**. **Cancel** sends nothing. With **Copy reports to the
+the server deletes it after one month. Nothing is sent before you click **Upload**. **Cancel** sends nothing. With
+**Copy reports to the
 clipboard** on in Settings, the link goes to the clipboard by itself.
 
 > **Note:** Anyone who has the link can read the output. Programs print

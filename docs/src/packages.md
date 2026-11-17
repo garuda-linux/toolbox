@@ -17,13 +17,14 @@ chips are greyed out and show no number.
 
 The chips above the list pick what it shows:
 
-| Chip          | What it lists                                                              |
-| ------------- | -------------------------------------------------------------------------- |
-| **Installed** | Every installed package. This is how the page opens                        |
-| **Updates**   | Installed packages with a pending update, the same ones **Home** counts    |
-| **Orphans**   | Packages installed as a dependency that no installed package needs anymore |
-| **All**       | Every package of the repositories, plus the installed ones they lack       |
-| **AUR**       | The packages of the AUR, only while the AUR is turned on in **Settings**   |
+| Chip          | What it lists                                                                                                                                       |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Installed** | Every installed package. This is how the page opens                                                                                                 |
+| **Updates**   | Installed packages with a pending update, the same ones **Home** counts                                                                             |
+| **Orphans**   | Packages installed as a dependency that no installed package needs anymore, not even as an optional dependency, as `pacman -Qdtt` lists them        |
+| **Optional**  | Packages installed as a dependency that installed packages only list as an optional dependency. With **Orphans** they make what `pacman -Qdt` lists |
+| **All**       | Every package of the repositories, plus the installed ones they lack                                                                                |
+| **AUR**       | The packages of the AUR, only while the AUR is turned on in **Settings**                                                                            |
 
 **Updates** holds the repository updates and the AUR updates that **Home**
 found, so both show the same number. Until the check for updates has
@@ -42,6 +43,9 @@ then its repository, version and installed size. Next to the name:
 - **Dependency** marks a package pulled in by another one.
 - **Not from a repository** marks an installed package no configured
   repository offers, such as one built from the AUR.
+- **Optional for** names the installed package that lists it as an optional
+  dependency while none requires it. With several, the tag says how many
+  more and its tooltip names them all.
 - **Installed**, **Installs with Apply** or **Removes with Apply** tells its
   state.
 

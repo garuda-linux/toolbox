@@ -41,8 +41,8 @@ The app refuses to start as root.
 - A panic fails its step. A panic in an `Always` command ends the helper,
   so cleanup commands stay simple. The release profile keeps unwinding.
 - `Answer::Input` above 64 KiB (`MAX_INPUT_BYTES`) is refused. The app
-  splits pastes and strips control characters but tab and line breaks
-  (`toolbox_terminal::encode_paste`). Input and output queues are bounded,
+  splits pastes and strips control characters but tab and line breaks (`toolbox_terminal::encode_paste`). Input and
+  output queues are bounded,
   so a stuck or flooding program never stalls the helper.
 - The helper links no runtime, GUI, D-Bus, HTTP or `parking_lot`
   (`app/helper/tests/dependencies.rs`, `cargo tree --target all`).
@@ -83,8 +83,8 @@ The helper repeats what only the wire shows: `DeleteUser`, locking and
 60000, `CreateUser` and `SetShell` a shell not in `/etc/shells`,
 `SetSystemLocale` a locale not enabled in `/etc/locale.gen`,
 `SetHomeFolder -m` a taken target, and `SetHomeFolder -m` and `CreateUser`
-with a chosen home one below any folder everyone may write
-(the sticky bit too), because another user could place a link there
+with a chosen home one below any folder everyone may write (the sticky bit too), because another user could place a link
+there
 between the check and the move. A folder on the way that another user
 owns, or that its group may write, is refused too. `SetHomeFolder -m`
 also allows the account's own folders, since its user id is known there.
@@ -106,8 +106,7 @@ compiled in, so no missing file can empty it.
 - The cascade check needs the `PackageGraph` part. Without it no removal
   passes.
 - A wish from the session bus or a saved queue meets the same checks in
-  the `Guard::PackageRemovals` recheck
-  (`features/packages/recheck.rs`), which drops it with a log line.
+  the `Guard::PackageRemovals` recheck (`features/packages/recheck.rs`), which drops it with a log line.
 - The helper refuses a `RemovePackages` step that names a protected
   package (`Request::validate`). Before `-Rns` it asks
   `pacman -Rs --print` what goes along and fails the step when that

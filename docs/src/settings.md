@@ -34,8 +34,8 @@ below 5 or above 1440 (a day) is held to the nearest limit, and the row
 says so, for example **Checks run between every 5 minutes and once a day,
 so this is 5 minutes.**
 
-Turn **Check for updates automatically** off to check only when you press
-**Read again** on [Home](home.md). The **Time between checks** row hides
+Turn **Check for updates automatically** off to check only when you press **Read again** on [Home](home.md). The **Time
+between checks** row hides
 while the switch is off. The minutes stay in the settings file, so turned
 on again, also after a restart, the checks run on the minutes they had
 before.
@@ -44,8 +44,8 @@ before.
 
 Pick a language under **Language**. The texts change at once, without a
 restart. **System language** follows the language of your desktop
-session again. Each language shows under its own name, for example
-**Deutsch (Deutschland)**. A text that is not translated yet shows in
+session again. Each language shows under its own name, for example **Deutsch (Deutschland)**. A text that is not
+translated yet shows in
 English.
 
 > **Note:** Programs that run in the **Console** print in the language of
@@ -107,8 +107,8 @@ Open **About** at the bottom of the sidebar. The page shows:
   edition, the desktop, whether this is the live system, the running
   kernel and the number of installed packages, in English and without
   your user name. Paste them into a bug report or a forum post.
-- The **Licence**, who made the app, where to send **Bug reports** (the
-  **Issue tracker on GitLab**) and the **Website**. The two addresses have
+- The **Licence**, who made the app, where to send **Bug reports** (the **Issue tracker on GitLab**) and the
+  **Website**. The two addresses have
   a copy button, shown when the pointer rests on the row or the button has
   the keyboard focus.
 - Beside it, the places to find help: **Garuda Linux wiki**, **Arch
