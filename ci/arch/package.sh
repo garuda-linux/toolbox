@@ -42,8 +42,15 @@ mkdir -p "$dest"
 chown -R builder: "$work"
 
 # runuser keeps root's HOME, where cargo and the tests could not write.
+# The container is removed afterwards, so a failed snapshot's pictures are
+# kept in the output folder.
 runuser -u builder -- env -C "$work/packaging" HOME=/home/builder "${cache[@]}" PKGDEST="$dest" \
-  makepkg --noconfirm --force "$@"
+  makepkg --noconfirm --force "$@" || {
+  failed=$?
+  find "$work" \( -name '*.new.png' -o -name '*.diff.png' \) -exec cp --parents -t "$out" {} + 2>/dev/null || true
+  echo "package.sh: snapshot pictures of the failed run are below $out$work" >&2
+  exit "$failed"
+}
 cp "$dest"/garuda-toolbox-*.pkg.tar.* "$out"/
 
 {
