@@ -13,9 +13,9 @@ use egui::accesskit::Role;
 use egui::{Key, Modifiers, Ui};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::domains::{Accounts, CurrentUser, EnabledUnits, InstalledPackages};
+use toolbox_core::domains::{Accounts, CurrentUser, EnabledUnits, Group, InstalledPackages};
 use toolbox_core::{Snapshot, Toggle};
-use toolbox_plan::UserName;
+use toolbox_plan::{GroupName, UserName};
 
 use super::{NoLead, TogglePage};
 use crate::catalogs::{CatalogId, Catalogs};
@@ -41,10 +41,14 @@ impl PageView for Plain {
 /// The shipped catalogs on a system that was read: nothing installed or
 /// enabled, and a user in no group.
 fn shipped() -> PageFixture {
+    with_accounts(Accounts::default())
+}
+
+fn with_accounts(accounts: Accounts) -> PageFixture {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(BTreeSet::new()));
     snapshot.insert(EnabledUnits(BTreeSet::new()));
-    snapshot.insert(Accounts::default());
+    snapshot.insert(accounts);
     snapshot.insert(CurrentUser(UserName::new("nico").expect("a user name")));
 
     PageFixture {
@@ -111,6 +115,34 @@ fn space_on_a_focused_entry_asks_for_its_change() {
             entry: "pipewire-support".to_owned(),
             wish: Toggle::On,
         })]
+    );
+}
+
+#[test]
+fn a_switch_entry_that_is_on_reads_enabled_beside_its_title() {
+    let fixture = with_accounts(Accounts {
+        users: Vec::new(),
+        groups: vec![Group {
+            name: GroupName::new("realtime").expect("a group name"),
+            gid: 977,
+            members: BTreeSet::from([UserName::new("nico").expect("a user name")]),
+        }],
+    });
+
+    let page = TogglePage::new(CatalogId::Components, "page-gaming", "page-gaming-subtitle");
+    let mut harness = fixture.harness(Plain(page));
+    harness.run();
+
+    assert!(
+        harness
+            .query_by_role_and_label(Role::ListItem, "Realtime group, Enabled")
+            .is_some()
+    );
+    assert!(
+        harness
+            .query_by_role_and_label(Role::ListItem, "PipeWire")
+            .is_some(),
+        "an entry that is off reads no state"
     );
 }
 

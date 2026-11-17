@@ -32,6 +32,8 @@ toggles-turns-on = Wird beim Übernehmen eingeschaltet
 toggles-enable = Aktivieren
 toggles-disable = Deaktivieren
 toggles-turns-off = Wird beim Übernehmen ausgeschaltet
+# Beside the title of a setting that is on, as "Installed" is beside a package.
+toggles-enabled = Aktiviert
 toggles-dismiss = Ausblenden
 
 # Why the catalog could not be loaded.

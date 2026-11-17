@@ -67,8 +67,8 @@ pub struct EntryRow {
     /// A probe could not read what the entry checks.
     pub unknown: bool,
     pub control: Control,
-    /// "Installed" beside the title of a package that is.
-    pub installed: Option<Cow<'static, str>>,
+    /// "Installed" or "Enabled" beside the title of an entry that is.
+    pub status: Option<Cow<'static, str>>,
     pub on: bool,
     pub changeable: bool,
     pub url: Option<String>,
@@ -196,12 +196,12 @@ impl EntryRow {
         let control = control::of(catalog, entry);
 
         let note = entry::note(ctx, catalog, entry, control);
-        let installed = (control == Control::Remove).then(|| i18n::text(ctx, "packages-installed"));
+        let status = entry::status(catalog, entry, control).map(|text| i18n::text(ctx, text));
 
         let name = note
             .as_ref()
             .map(|(note, _)| note)
-            .or(installed.as_ref())
+            .or(status.as_ref())
             .map_or_else(|| title.clone(), |note| format!("{title}, {note}"));
 
         let url = entry.entry.url().map(str::to_owned);
@@ -213,7 +213,7 @@ impl EntryRow {
             note,
             unknown: context.probed && entry.unread(),
             control,
-            installed,
+            status,
             on: entry.state.shown_on(),
             changeable: entry.changeable(),
             glyph: entry.entry.glyph().and_then(icons::named),

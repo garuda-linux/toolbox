@@ -36,8 +36,7 @@ constants of `crates/gui-kit/src/icons.rs`, bundled in
   white and the tint colours it. Breeze's symbolic shield would keep a
   green check otherwise. A theme file in `currentColor` is a glyph even
   for a coloured icon.
-- The desktop's icon theme is read off the UI thread
-  (`app/gui/src/desktop/icon_files.rs`) for every constant of
+- The desktop's icon theme is read off the UI thread (`app/gui/src/desktop/icon_files.rs`) for every constant of
   `icons::ALL`. A theme with fewer symbolic glyphs mixes its own with the
   bundled ones, all in the same tint.
 - A new meaning needs a glyph no other meaning uses. Add its row below.

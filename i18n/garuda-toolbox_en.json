@@ -8244,6 +8244,10 @@
     "toggles-turns-off": {
       "string": "Turns off with Apply"
     },
+    "toggles-enabled": {
+      "string": "Enabled",
+      "developer_comment": "Beside the title of a setting that is on, as \"Installed\" is beside a package."
+    },
     "toggles-dismiss": {
       "string": "Dismiss"
     },

@@ -136,8 +136,8 @@ fn text(ui: &mut Ui, row: &EntryRow) {
             queued_tag(ui, note, *tone);
         }
 
-        if let Some(installed) = &row.installed {
-            status_dot(ui, installed, Tone::Success);
+        if let Some(status) = &row.status {
+            status_dot(ui, status, Tone::Success);
         }
     });
 
@@ -204,6 +204,17 @@ pub fn note(
         i18n::text_with(ctx, text, &[("names", Arg::from(&names))]),
         Tone::Neutral,
     ))
+}
+
+/// The text id of what the entry is in the system, beside its title. The
+/// Settings page leaves it out, its switch shows it.
+pub fn status(catalog: CatalogId, entry: &Entry<'_>, kind: Control) -> Option<&'static str> {
+    let on = entry.state.queued.is_none() && entry.state.system == Some(Toggle::On);
+    match kind {
+        Control::Remove => Some("packages-installed"),
+        Control::Switch if on && catalog != CatalogId::Settings => Some("toggles-enabled"),
+        Control::Switch | Control::Install | Control::TakeBack => None,
+    }
 }
 
 /// What picks the hue of the entry's letter tile: the package it checks,

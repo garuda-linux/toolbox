@@ -32,6 +32,8 @@ toggles-turns-on = Turns on with Apply
 toggles-enable = Enable
 toggles-disable = Disable
 toggles-turns-off = Turns off with Apply
+# Beside the title of a setting that is on, as "Installed" is beside a package.
+toggles-enabled = Enabled
 toggles-dismiss = Dismiss
 
 # Why the catalog could not be loaded.

@@ -21,8 +21,7 @@
   data comes from its service (`context.service::<T>()`): the dkms
   reading from `Kernels`, the unit lists from `Units`, the app pictures
   from `Artwork`. The design system is
-  `crates/gui-kit`. The window is opaque, blur stays inside it
-  ([Frost](#frost)).
+  `crates/gui-kit`. The window is opaque, blur stays inside it ([Frost](#frost)).
 - Console: a full terminal, so full-screen programs such as paru's
   editor work. A plain-text transcript beside it serves screen readers,
   copy and share. Output is never clickable. A queue is applied as a whole.
@@ -150,8 +149,8 @@ A function that can fail returns its own error type, derived with
 `#[source]`, behind an `Arc` where the type must stay `Clone`. A probe
 fails with a typed `ProbeError` variant per cause, never free text. A fake
 fails with `ProbeError::fake` (feature `testing`). `Result<_, String>`
-only in `toolbox-xtask`, `toolbox-lint` and clap value parsers
-(`crates/cli/src/args*`, `crates/commands/src/settings.rs`), because clap
+only in `toolbox-xtask`, `toolbox-lint` and clap value parsers (`crates/cli/src/args*`,
+`crates/commands/src/settings.rs`), because clap
 prints the `String` as the usage error.
 
 ## Concurrency
@@ -207,11 +206,10 @@ prints the `String` as the usage error.
    - `PageService::handle` gets every command with the queue and the
      snapshot. It returns `Handled { taken, edit, answers }`. `taken` says
      the service ran the command, so `App` leaves it, also for a refused
-     click. The edit is a `QueueEdit` of a clone of the queue
-     (`QueueEdit::of_click`), which `App` takes in the same frame through
+     click. The edit is a `QueueEdit` of a clone of the queue (`QueueEdit::of_click`), which `App` takes in the same
+     frame through
      `Queue::apply_edit`. That keeps the met guards, unlike `Queue::take`
-     of the bus. Work that needs `App` goes back as an answer
-     (`AppCommand::ReadSystem`, `Answer::ShowPage`).
+     of the bus. Work that needs `App` goes back as an answer (`AppCommand::ReadSystem`, `Answer::ShowPage`).
    - The service owns the page's last refused click as a core
      `features::Refused<R, S = String>`, most through `queue_or_refuse`, or
      `queue_or_keep` (`app/gui/src/refused.rs`) for a rule that names its
@@ -243,8 +241,8 @@ prints the `String` as the usage error.
 ### Dry run
 
 `GARUDA_TOOLBOX_HELPER=dry-run` makes the helper only check plans. Every
-other effect is a port that `app/gui/src/ports.rs` picks at start
-(`DryRunTransport`, `DryRunAddress`, `DryRunActions`, `DryRunLauncher`).
+other effect is a port that `app/gui/src/ports.rs` picks at start (`DryRunTransport`, `DryRunAddress`, `DryRunActions`,
+`DryRunLauncher`).
 Pages never see the mode. The apply service skips user steps.
 
 Sample data never ships. `DryRunRepair`, `SampleMirrors`, `SampleAur` and
@@ -327,10 +325,10 @@ only `/usr/share/garuda-toolbox/catalog` and never the source tree.
    changes. When one of them failed or never ran, each of those changes
    stays queued as `Outcome::Failed` with the first such step, even when
    the snapshot already shows its wish: a first step that changes the
-   probed state (a `locale.gen` edit) can succeed while a later one
-   (`locale-gen`) fails. A step that found nothing to do ended well. A
-   dry run records no outcome. The Changes popover tags a failed change
-   (`change-unfinished`). It leaves after an apply that finished its
+   probed state (a `locale.gen` edit) can succeed while a later one (`locale-gen`) fails. A step that found nothing to
+   do ended well. A
+   dry run records no outcome. The Changes popover tags a failed change (`change-unfinished`). It leaves after an apply
+   that finished its
    domain's steps and a snapshot that shows it, or when the user takes
    it back. A new wish for the item makes it untried again. The outcome
    is saved in `changes.json` and the CLI's `queue apply` keeps it the
@@ -406,8 +404,7 @@ Rules a page keeps that its code does not show at a glance:
   the files. Only `--write` writes. Without sync databases it fails unless
   `--unfiltered`.
 - A toggle page hides a package entry that is neither installed nor in
-  `SyncPackages`, unless a change of it is queued
-  (`features::toggles::is_offered`).
+  `SyncPackages`, unless a change of it is queued (`features::toggles::is_offered`).
 
 ## Accessibility
 

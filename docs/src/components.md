@@ -12,11 +12,10 @@ Each row is one thing: a package, a system service or a group your
 account belongs to.
 
 - A package row has a button. **Install** queues the package, an installed
-  package says **Installed** and offers **Remove**. The row then says
-  **Installs with Apply** or **Removes with Apply**, and the button reads
-  **Take back**.
+  package says **Installed** and offers **Remove**. The row then says **Installs with Apply** or **Removes with Apply**,
+  and the button reads **Take back**.
 - A service or group row has a button too. **Enable** queues turning it
-  on, a row that is on offers **Disable**. The row says **Turns on with
+  on, a row that is on says **Enabled** and offers **Disable**. The row says **Turns on with
   Apply** or **Turns off with Apply**. Click the button again to take the
   change out of the queue.
 - `Space` on a selected row does what its button does.

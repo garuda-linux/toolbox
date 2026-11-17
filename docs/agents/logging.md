@@ -8,10 +8,9 @@
   helper's stderr into its log as `helper:`.
 - The app installs `toolbox_log::subscriber`, with `LogTracer` for the
   `log` records of egui, wgpu and other dependencies.
-- The full log always goes to the rotating file
-  (`crates/services/src/log_folder.rs`) at the configured level.
-- A CLI command writes no log line to the terminal
-  (`toolbox_log::quiet_terminal`) and states problems as its own `error:`
+- The full log always goes to the rotating file (`crates/services/src/log_folder.rs`) at the configured level.
+- A CLI command writes no log line to the terminal (`toolbox_log::quiet_terminal`) and states problems as its own
+  `error:`
   and `warning:` lines. Only the window also logs to the terminal.
 
 ## Levels
@@ -37,8 +36,8 @@
 - `--features profiling` on `toolbox-gui` sends trace spans to Tracy on
   localhost, one frame per egui frame. The client is pinned to the Tracy
   that nixpkgs ships (`nix run nixpkgs#tracy`), the protocols must match.
-- `scripts/lima-profile.sh [--suite LIST]` records self-test suites
-  (default `packages-arch,kernels`) on the Garuda Lima VM into
+- `scripts/lima-profile.sh [--suite LIST]` records self-test suites (default `packages-arch,kernels`) on the Garuda Lima
+  VM into
   `.claude/tracy/vm-<suite>.tracy`, read with `tracy-csvexport`. The VM
   renders on the CPU, so only CPU zones count. Needs KVM and podman.
 
