@@ -1,4 +1,5 @@
 use std::collections::BTreeSet;
+use std::path::Path;
 
 use toolbox_plan::UnitName;
 
@@ -6,7 +7,7 @@ use super::{
     FailedUnitSource as _, Systemctl, UnitSource as _, list_args, parse_failed, parse_listed,
 };
 use crate::ProbeError;
-use crate::test_support::{fake_program, on_path};
+use crate::test_support::fake_program;
 
 /// The listings of the Lima VM, each from the argv of [`list_args`] with
 /// its `--state`, or from `list-units --state=failed`.
@@ -123,14 +124,16 @@ fn a_failing_program_is_a_failure() {
 }
 
 /// A sandbox without a system or user manager may still fail, but only a
-/// missing systemctl is "not available".
+/// missing systemctl is "not available". The adapter never reads `PATH`,
+/// so a systemctl found only there counts as missing.
 #[test]
 fn real_systemctl_answers_or_is_unavailable() {
     let systemctl = Systemctl::new();
+    let installed = Path::new(&systemctl.program).is_file();
     let system = systemctl.system_unit_files();
     let user = systemctl.user_unit_files();
 
-    if on_path("systemctl") {
+    if installed {
         assert_ne!(system, Err(ProbeError::Unavailable));
         assert_ne!(user, Err(ProbeError::Unavailable));
     } else {

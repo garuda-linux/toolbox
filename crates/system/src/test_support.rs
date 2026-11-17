@@ -5,16 +5,9 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Duration;
-use std::{env, fs, thread};
+use std::{fs, thread};
 
 use tempfile::TempDir;
-
-/// Whether `program` is found the way `Command` finds it, so a test of a
-/// real adapter knows which answer to expect.
-pub fn on_path(program: &str) -> bool {
-    env::var_os("PATH")
-        .is_some_and(|path| env::split_paths(&path).any(|folder| folder.join(program).is_file()))
-}
 
 /// Whether the tests run as root, who opens every file whatever its mode.
 pub fn running_as_root() -> bool {
