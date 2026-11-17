@@ -23,6 +23,12 @@ pub fn cap_off_centre<State>(harness: &Harness<'_, State>, text: &str, rect: Rec
     Some(f32::midpoint(top, bottom) - rect.center().y)
 }
 
+/// The bottom of the capitals of `text`'s first line, see [`capitals_top`].
+pub fn baseline<State>(harness: &Harness<'_, State>, text: &str) -> Option<f32> {
+    let shape = painted_text(harness, text)?;
+    capital_span(harness, &shape).map(|(_, bottom)| bottom)
+}
+
 /// Where the last frame painted the top of the capitals of `text`: its
 /// first capital, else an "H" in its font laid on its baseline. `None`
 /// when it painted no such text.

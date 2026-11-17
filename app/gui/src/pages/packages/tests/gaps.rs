@@ -9,7 +9,7 @@ use egui_kittest::kittest::Queryable as _;
 use toolbox_aur::AurSource as _;
 use toolbox_core::features::packages::aur::AurCatalog;
 use toolbox_core::features::packages::list::Filter;
-use toolbox_gui_kit::testing::{capitals_top, last_baseline_within};
+use toolbox_gui_kit::testing::{baseline, capitals_top, last_baseline_within};
 use toolbox_gui_kit::tokens;
 
 use super::super::PackagesPage;
@@ -69,4 +69,18 @@ fn an_aur_rows_capitals_have_as_much_room_above_as_its_last_baseline_below() {
     let mut harness = fixture.harness(page);
     harness.run();
     assert_even(&harness, "paru-bin");
+}
+
+#[test]
+fn the_aur_off_hint_and_its_link_share_a_baseline() {
+    let mut harness = fixture(None).harness(PackagesPage::default());
+    harness.run();
+
+    let hint = baseline(&harness, "AUR packages are hidden.").expect("the hint is painted");
+    let link = baseline(&harness, "Turn them on in Settings").expect("the link is painted");
+
+    assert!(
+        (hint - link).abs() <= SAME,
+        "the hint's baseline is at {hint}, the link's at {link}"
+    );
 }

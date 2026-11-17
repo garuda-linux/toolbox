@@ -10,11 +10,12 @@ mod tests;
 
 use std::sync::Arc;
 
-use egui::{Label, Ui};
+use egui::accesskit::Role;
+use egui::{Color32, Label, Sense, Ui, WidgetInfo, vec2};
 use toolbox_core::features::packages::list::{Catalog, Filter};
-use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::Same;
-use toolbox_gui_kit::widgets::{Tone, banner, loading_indicator, rich, text_link};
+use toolbox_gui_kit::widgets::{Tone, banner, line, loading_indicator, rich, text_link};
 use toolbox_gui_kit::{UiExt as _, tokens};
 
 use self::row::AurRow;
@@ -49,12 +50,27 @@ pub fn off_hint(ui: &mut Ui, context: &PageContext<'_>) {
     let tokens = tokens::current(&ctx);
     under_chips(ui, |ui| {
         let hint = i18n::text(&ctx, "packages-aur-off");
-        ui.add(Label::new(rich(ui, &hint, Weight::Regular, SMALL, tokens.secondary)).wrap());
+        on_link_baseline(ui, &hint, tokens.secondary);
         let link = i18n::text(&ctx, "packages-aur-off-settings");
         if text_link(ui, &link, &link).clicked() {
             context.commands.send(UiCommand::Navigate(PageId::Settings));
         }
     });
+}
+
+/// egui centres the smaller line in the link's row, off the link's baseline.
+fn on_link_baseline(ui: &mut Ui, text: &str, colour: Color32) {
+    let link = line(ui, "H", Weight::Medium, BODY, Color32::PLACEHOLDER);
+    let own = line(ui, "H", Weight::Regular, SMALL, Color32::PLACEHOLDER);
+    let drop = link.mesh_bounds.bottom() - own.mesh_bounds.bottom();
+
+    let galley = line(ui, text, Weight::Regular, SMALL, colour);
+    let size = vec2(galley.size().x, link.size().y);
+    let (rect, response) = ui.allocate_exact_size(size, Sense::hover());
+    response.widget_info(|| WidgetInfo::labeled(Role::Label, true, text));
+
+    let at = rect.min + vec2(0.0, drop);
+    ui.painter().galley(at, galley, colour);
 }
 
 /// The line under the chips, one height in either view, so its text and

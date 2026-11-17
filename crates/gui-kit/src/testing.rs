@@ -6,7 +6,9 @@ mod caps;
 pub mod desktop;
 mod gpu;
 
-pub use caps::{cap_off_centre, capitals_top, deep_descent_font, last_baseline_within, test_fonts};
+pub use caps::{
+    baseline, cap_off_centre, capitals_top, deep_descent_font, last_baseline_within, test_fonts,
+};
 use egui_kittest::HarnessBuilder;
 use egui_kittest::kittest::Queryable as _;
 
