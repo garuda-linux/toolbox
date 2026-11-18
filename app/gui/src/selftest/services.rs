@@ -30,5 +30,10 @@ pub fn systemd_steps() -> Vec<Step> {
         Step::WaitGone("Reading the services…"),
         Step::button("Masked"),
         Step::Shot("services-masked"),
+        Step::button("Dead"),
+        Step::Shot("services-dead"),
+        Step::click("User"),
+        Step::WaitGone("Reading the services…"),
+        Step::Shot("services-user-dead"),
     ]
 }

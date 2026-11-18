@@ -24,10 +24,11 @@ mounts. systemd calls all of them "units".
   | **Enabled**  | Services that start at boot                                                       |
   | **Disabled** | Services that could start at boot but do not. A static service has no such switch |
   | **Masked**   | Services that cannot be started at all                                            |
+  | **Dead**     | Services that are stopped and did not fail                                        |
   | **Failed**   | Services that failed                                                              |
   | **All**      | Every service                                                                     |
 
-  `services list --running`, `--enabled`, `--disabled`, `--masked` and
+  `services list --running`, `--enabled`, `--disabled`, `--masked`, `--dead` and
   `--failed` on the command line list the same services.
 
 - **Sort by** at the right of the search orders the list by **Name** (the

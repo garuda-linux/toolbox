@@ -11,6 +11,8 @@ services-show-enabled = Enabled
 services-show-disabled = Disabled
 # Units that cannot start at all.
 services-show-masked = Masked
+# Units that are stopped and did not fail, systemd's "inactive (dead)".
+services-show-dead = Dead
 services-show-failed = Failed
 services-show-all = All
 services-refresh = Read again

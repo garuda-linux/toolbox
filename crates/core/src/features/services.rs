@@ -58,6 +58,8 @@ pub enum Shown {
     /// Could start at boot, but does not. A static unit has no such switch.
     Disabled,
     Masked,
+    /// Stopped and not failed: what systemd calls `inactive (dead)`.
+    Dead,
     Failed,
     All,
 }
@@ -69,6 +71,7 @@ pub struct Counts {
     pub enabled: usize,
     pub disabled: usize,
     pub masked: usize,
+    pub dead: usize,
     pub failed: usize,
     pub all: usize,
 }
@@ -82,11 +85,12 @@ pub enum UnitWish {
 }
 
 impl Shown {
-    pub const EVERY: [Self; 6] = [
+    pub const EVERY: [Self; 7] = [
         Self::Running,
         Self::Enabled,
         Self::Disabled,
         Self::Masked,
+        Self::Dead,
         Self::Failed,
         Self::All,
     ];
@@ -99,6 +103,7 @@ impl Shown {
             Self::Enabled => matches!(file, FileState::Enabled),
             Self::Disabled => matches!(file, FileState::Disabled),
             Self::Masked => matches!(file, FileState::Masked),
+            Self::Dead => matches!(active, ActiveState::Inactive),
             Self::Failed => matches!(active, ActiveState::Failed),
             Self::All => true,
         }
@@ -120,6 +125,7 @@ impl Counts {
             Shown::Enabled => self.enabled,
             Shown::Disabled => self.disabled,
             Shown::Masked => self.masked,
+            Shown::Dead => self.dead,
             Shown::Failed => self.failed,
             Shown::All => self.all,
         }
@@ -162,6 +168,7 @@ pub fn counts(units: &[UnitInfo], search: &str) -> Counts {
             enabled: counts.enabled + usize::from(Shown::Enabled.lets_through(unit)),
             disabled: counts.disabled + usize::from(Shown::Disabled.lets_through(unit)),
             masked: counts.masked + usize::from(Shown::Masked.lets_through(unit)),
+            dead: counts.dead + usize::from(Shown::Dead.lets_through(unit)),
             failed: counts.failed + usize::from(Shown::Failed.lets_through(unit)),
             all: counts.all + 1,
         })

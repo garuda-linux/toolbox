@@ -127,6 +127,10 @@ pub struct ServicesList {
     #[arg(long)]
     pub masked: bool,
 
+    /// Only the stopped services that did not fail.
+    #[arg(long, conflicts_with_all = ["running", "failed"])]
+    pub dead: bool,
+
     #[command(flatten)]
     pub read: ReadList,
 }

@@ -49,6 +49,7 @@ fn the_counts_follow_the_search_and_match_what_each_choice_lists() {
             enabled: 2,
             disabled: 2,
             masked: 0,
+            dead: 1,
             failed: 1,
             all: 5,
         }
@@ -79,6 +80,10 @@ fn the_state_choices_need_only_the_active_state() {
         (Shown::Running, ActiveState::Reloading, true),
         (Shown::Running, ActiveState::Inactive, false),
         (Shown::Running, ActiveState::Failed, false),
+        (Shown::Dead, ActiveState::Inactive, true),
+        (Shown::Dead, ActiveState::Failed, false),
+        (Shown::Dead, ActiveState::Deactivating, false),
+        (Shown::Dead, ActiveState::Active, false),
         (Shown::Failed, ActiveState::Failed, true),
         (Shown::Failed, ActiveState::Active, false),
         (Shown::All, ActiveState::Other, true),
@@ -125,5 +130,13 @@ fn disabled_lists_what_is_off_at_boot_and_masked_what_cannot_start() {
     assert_eq!(
         names(&listed(&units, &only(Shown::Masked), UnitOrder::Name)),
         ["systemd-firstboot.service"]
+    );
+}
+
+#[test]
+fn dead_lists_what_is_stopped_but_not_failed() {
+    assert_eq!(
+        names(&listed(&units(), &only(Shown::Dead), UnitOrder::Name)),
+        ["cups.socket"]
     );
 }

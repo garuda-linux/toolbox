@@ -140,6 +140,7 @@ pub fn services(list: &ServicesList) -> Filter<'static, ServiceRow> {
         .only(list.enabled, keeps(Shown::Enabled))
         .only(list.disabled, keeps(Shown::Disabled))
         .only(list.masked, keeps(Shown::Masked))
+        .only(list.dead, keeps(Shown::Dead))
 }
 
 /// An unknown state is neither on nor off.

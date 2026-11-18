@@ -7292,6 +7292,10 @@
       "string": "Masked",
       "developer_comment": "Units that cannot start at all."
     },
+    "services-show-dead": {
+      "string": "Dead",
+      "developer_comment": "Units that are stopped and did not fail, systemd's \"inactive (dead)\"."
+    },
     "services-show-failed": {
       "string": "Failed"
     },

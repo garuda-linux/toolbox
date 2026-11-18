@@ -170,6 +170,7 @@ fn services_list(running: bool, failed: bool, enabled: bool) -> ServicesList {
         enabled,
         disabled: false,
         masked: false,
+        dead: false,
         read: ReadList::default(),
     }
 }
@@ -216,6 +217,17 @@ fn services_filter_by_state_and_boot() {
         "a static unit has no boot switch"
     );
     assert_eq!(names(masked), ["f.service"]);
+
+    let dead = ServicesList {
+        dead: true,
+        ..services_list(false, false, false)
+    };
+
+    assert_eq!(
+        names(dead),
+        ["d.service", "f.service"],
+        "a failed unit is not dead"
+    );
 }
 
 fn toggle(id: &str, state: &'static str) -> ToggleRow {

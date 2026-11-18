@@ -101,7 +101,7 @@ uninstall` are the `remove` commands.
 Every `list` takes `--search <text>`, which keeps the rows whose name or
 shown name holds the text, upper or lower case alike. Some lists take
 filters of their own: `services list --running`, `--failed`,
-`--enabled`, `--disabled` or `--masked`, `toggle list --on` or `--off`, `apps list --installed`,
+`--enabled`, `--disabled`, `--masked` or `--dead`, `toggle list --on` or `--off`, `apps list --installed`,
 `kernels list --installed` and `locales list --enabled`. Filters apply to
 `--json` too. The title still counts the whole list and says how many
 are shown.

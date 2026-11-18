@@ -28,28 +28,57 @@ fn picked(harness: &egui_kittest::Harness<'static, PageState>, chip: &str) -> bo
 }
 
 #[test]
-fn six_chips_count_their_units_and_running_is_picked_at_first() {
+fn seven_chips_count_their_units_and_running_is_picked_at_first() {
     let harness = three();
 
     assert!(picked(&harness, "Running 1"));
-    for chip in ["Enabled 2", "Disabled 1", "Masked 0", "Failed 1", "All 3"] {
+    let others = [
+        "Enabled 2",
+        "Disabled 1",
+        "Masked 0",
+        "Dead 1",
+        "Failed 1",
+        "All 3",
+    ];
+
+    for chip in others {
         assert!(!picked(&harness, chip), "{chip}");
     }
 }
 
 #[test]
 fn one_chip_is_picked_at_a_time_and_lists_its_units() {
-    let mut harness = three();
+    let cases = [
+        (
+            "Failed 1",
+            Shown::Failed,
+            "Bluetooth",
+            ["CUPS", "OpenSSH Daemon"],
+        ),
+        (
+            "Dead 1",
+            Shown::Dead,
+            "CUPS",
+            ["Bluetooth", "OpenSSH Daemon"],
+        ),
+    ];
 
-    harness
-        .get_by_role_and_label(Role::Button, "Failed 1")
-        .click();
-    harness.run();
+    for (chip, shown, listed, hidden) in cases {
+        let mut harness = three();
 
-    assert_eq!(harness.state().page.filter.shown, Shown::Failed);
-    assert!(!picked(&harness, "Running 1"));
-    assert!(harness.query_by_label_contains("Bluetooth").is_some());
-    assert!(harness.query_by_label_contains("OpenSSH Daemon").is_none());
+        harness.get_by_role_and_label(Role::Button, chip).click();
+        harness.run();
+
+        assert_eq!(harness.state().page.filter.shown, shown);
+        assert!(!picked(&harness, "Running 1"), "{chip}");
+        assert!(harness.query_by_label_contains(listed).is_some(), "{chip}");
+        for name in hidden {
+            assert!(
+                harness.query_by_label_contains(name).is_none(),
+                "{chip}: {name}"
+            );
+        }
+    }
 }
 
 #[test]
