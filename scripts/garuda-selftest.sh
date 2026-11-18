@@ -7,7 +7,8 @@
 # under a headless weston as a user of its own, since the app refuses root.
 #   --keep      keep the container (podman exec -it garuda-toolbox-selftest bash)
 #   --no-build  take the binary of the last build in target/garuda-selftest
-#   suite...    default `all` and `packages-arch`, as the arch-selftest CI job
+#   suite...    default `all` and `packages-arch` as the arch-selftest CI job,
+#               then `services-systemd`
 # Shots and logs land in target/garuda-selftest/runs/<suite>/, the JUnit
 # report in target/garuda-selftest/junit.xml.
 # shellcheck source-path=SCRIPTDIR
@@ -29,7 +30,7 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
-[ ${#suites[@]} -gt 0 ] || suites=(all packages-arch)
+[ ${#suites[@]} -gt 0 ] || suites=(all packages-arch services-systemd)
 
 out=target/garuda-selftest
 binary=$out/garuda-toolbox

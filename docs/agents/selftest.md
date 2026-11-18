@@ -30,6 +30,9 @@ without cargo.
   - `--boot-repair` for the `bootrepair` and `all` suites
 - `ARCH_SUITES` (`packages-arch`) need pacman's databases. `all` leaves
   them out, `arch-selftest` runs each by name after `all`.
+- `SYSTEMD_SUITES` (`services-systemd`) need systemd on a system bus,
+  which the `arch-selftest` container lacks. `all` leaves them out,
+  `scripts/garuda-selftest.sh` runs each by name.
 - `scripts/coverage.sh` runs the suites of `COVERAGE_SELFTESTS` (default
   `all`) instrumented.
 - Real root actions are tested by `scripts/arch-it.sh` (see

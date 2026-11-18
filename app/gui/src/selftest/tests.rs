@@ -208,3 +208,13 @@ fn the_aur_suite_runs_in_all_and_queues_nothing() {
             .contains(&Step::Shot("packages-aur-detail"))
     );
 }
+
+/// The chips stay off until systemd answers, which the plain Arch runner
+/// has no bus for: their suite runs alone and `all` leaves it out.
+#[test]
+fn the_systemd_suite_runs_alone_and_all_leaves_it_out() {
+    let systemd = steps("services-systemd").unwrap();
+
+    assert!(systemd.contains(&Step::button("Masked")));
+    assert!(!steps("all").unwrap().contains(&Step::button("Masked")));
+}

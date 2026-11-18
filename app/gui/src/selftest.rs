@@ -74,6 +74,10 @@ const SUITES: [(&str, Suite); 21] = [
 /// databases. `all` leaves them out, CI runs each by name.
 const ARCH_SUITES: [(&str, Suite); 1] = [("packages-arch", packages::arch_steps)];
 
+/// Suites that need systemd on a system bus, which the Arch runner lacks.
+/// `all` leaves them out, `scripts/garuda-selftest.sh` runs each by name.
+const SYSTEMD_SUITES: [(&str, Suite); 1] = [("services-systemd", services::systemd_steps)];
+
 type Suite = fn() -> Vec<Step>;
 
 pub fn requested(lookup: impl Fn(&str) -> Option<OsString>) -> Option<(PathBuf, String)> {
@@ -94,6 +98,7 @@ pub fn steps(suite: &str) -> Option<Vec<Step>> {
     SUITES
         .iter()
         .chain(ARCH_SUITES.iter())
+        .chain(SYSTEMD_SUITES.iter())
         .find(|(name, _)| *name == suite)
         .map(|(_, steps)| steps())
 }
