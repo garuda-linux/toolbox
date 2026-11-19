@@ -10,6 +10,7 @@ mod config_file;
 mod feed;
 mod initramfs;
 mod located;
+mod merge;
 mod pty_runner;
 mod repair;
 mod report;
@@ -26,8 +27,10 @@ pub use builtin::FileChange;
 pub use capture::{CaptureError, Captured, Exited, MAX_ERROR_BYTES, Policy, capture, run_captured};
 pub use config_file::{
     ConfigRead, Found, MAX_FOLDER_FILES, ReadError, WriteError, inspect, read_config_file,
+    read_real,
 };
 pub use located::{editor as locate_editor, program as locate_program};
+pub use merge::{MergeError, Resolved, is_backup, is_fetchable, resolve as resolve_merge};
 pub use pty_runner::{Environment, PtyRunner};
 pub use repair::{PreflightError, preflight};
 pub use sdboot::sdboot_menu;

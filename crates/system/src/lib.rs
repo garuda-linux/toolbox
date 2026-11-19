@@ -19,6 +19,7 @@ mod host;
 mod kernels;
 mod locales;
 mod locks;
+mod merges;
 pub mod mirrors;
 mod names;
 mod network;
@@ -62,6 +63,7 @@ pub use host::{Host, HostRoots, HostSource, ProcessEnv, SystemHost};
 pub use kernels::{Dkms, DkmsSource, KernelSource, SystemKernels};
 pub use locales::{EtcLocales, LocaleSource};
 pub use locks::{HelperLocks, LockProblem, LockSource};
+pub use merges::{MergePair, read_pair};
 pub use network::{
     Cards, Checked, ModuleSource, NetworkActions, NetworkSource, SystemActions, SystemModules,
     SystemNetwork, connectivity, property_changes, system_cards,
@@ -80,10 +82,12 @@ pub use probe::{FailedProbes, Probe, ProbeIssue, Sources, failed_probes, probe_s
 pub use repair::DryRunRepair;
 pub use repair::{RepairSource, SystemRepair};
 pub use settings::{EtcSettings, SettingsSource};
+#[cfg(any(test, feature = "selftest"))]
+pub use status::FoundCopies;
 pub use status::{
     AurUpdateSource, Checkupdates, GarudaHealth, HealthIssue, HealthLevel, HealthSource,
     MergeSource, Pacdiff, PacmanLog, Paru, PendingUpdate, RecentLogSource, Status, StatusSources,
-    UpdateLogSource, UpdateSource, probe_status,
+    UpdateLogSource, UpdateSource, merge_copies, probe_status,
 };
 pub use toolbox_exec::locate_editor;
 pub use units::{FailedUnitSource, Systemctl, UnitSource};

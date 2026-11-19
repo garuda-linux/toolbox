@@ -1,12 +1,13 @@
 mod line;
 
-use egui::{Color32, Id, Rect, Response, Role, Sense, Ui, Vec2, WidgetInfo, pos2, vec2};
+use egui::text::{LayoutJob, TextFormat};
+use egui::{Align, Color32, Id, Rect, Response, Role, Sense, Ui, Vec2, WidgetInfo, pos2, vec2};
 pub use line::{chips, counted_chips, named_chips, toggle_chips};
 
 use super::mark_word::mark_and_word;
 use super::press::{Pointer, hover_amount};
 use super::{focus_ring, line, roving};
-use crate::fonts::{CAPTION, SMALL, Weight};
+use crate::fonts::{self, CAPTION, SMALL, Weight};
 use crate::tokens::{self, Tokens};
 
 const CHIP_HEIGHT: f32 = 32.0;
@@ -155,6 +156,33 @@ pub fn status_dot(ui: &mut Ui, label: &str, tone: Tone) -> Response {
         (Vec2::splat(DOT), DOT_GAP),
         text,
         (Role::Label, label),
+        |ui, mark| {
+            ui.painter().circle_filled(mark.center(), DOT / 2.0, dot);
+        },
+    )
+}
+
+/// [`status_dot`] whose word goes on with `rest` in the regular weight,
+/// laid out as one text, so both parts share a baseline.
+pub fn status_dot_then(ui: &mut Ui, label: &str, rest: &str, tone: Tone) -> Response {
+    let tokens = tokens::current(ui.ctx());
+    let format = |weight| TextFormat {
+        valign: Align::Center,
+        ..TextFormat::simple(fonts::font(ui.style(), weight, SMALL), tokens.secondary)
+    };
+
+    let mut job = LayoutJob::default();
+    job.append(label, 0.0, format(Weight::Medium));
+    job.append(&format!(" {rest}"), 0.0, format(Weight::Regular));
+
+    let text = ui.fonts_mut(|fonts| fonts.layout_job(job));
+    let name = format!("{label} {rest}");
+    let dot = tone.dot(&tokens);
+    mark_and_word(
+        ui,
+        (Vec2::splat(DOT), DOT_GAP),
+        text,
+        (Role::Label, &name),
         |ui, mark| {
             ui.painter().circle_filled(mark.center(), DOT / 2.0, dot);
         },

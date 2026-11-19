@@ -53,6 +53,12 @@ printf '%s\n' '# ~/.bashrc' "alias ll='ls -l'" >"$configs/home/.bashrc"
 printf 'NAME="Garuda Linux"\n' >"$configs/root/usr/lib/os-release"
 ln -s ../usr/lib/os-release "$configs/root/etc/os-release"
 printf 'root ALL=(ALL:ALL) ALL\n\0' >"$configs/root/etc/sudoers"
+# Copies for Home's merge dialog: the Lima pacman.conf as its own .pacnew
+# beside it with Color commented out, and a .pacsave whose file is gone.
+pacman_conf="$repo/crates/system/src/packages/pacman_conf/fixtures/pacman.conf"
+cp "$pacman_conf" "$configs/root/etc/pacman.conf.pacnew"
+sed 's/^Color$/#Color/' "$pacman_conf" >"$configs/root/etc/pacman.conf"
+cp "$repo/crates/plan/src/testing/locales/fixtures/locale.gen" "$configs/root/etc/locale.gen.pacsave"
 export GARUDA_TOOLBOX_SELFTEST_CONFIGS="$configs"
 
 mkdir -p "$XDG_CONFIG_HOME/garuda-toolbox"

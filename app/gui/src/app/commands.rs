@@ -146,7 +146,7 @@ impl App {
                 tracing::warn!("no page service took {command:?}");
             }
             AppCommand::Toast { kind, text } => self.toasts.add(kind, text),
-            AppCommand::Home(home) => self.run_home(home),
+            AppCommand::Home(home) => self.run_home(&home),
             AppCommand::Service(service) => self.run_service(service),
             AppCommand::Discover(discover) => self.run_discover(ctx, discover),
             AppCommand::Reveal(reveal) => self.run_reveal(ctx, &reveal),

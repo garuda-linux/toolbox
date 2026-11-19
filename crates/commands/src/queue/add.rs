@@ -9,9 +9,10 @@ mod tests;
 use toolbox_cli::args::{
     AppsCommand, BootCommand, BootSet, Command, DkmsBuild, DkmsCommand, DriversCommand, EditUser,
     EntryArgs, Group, GroupArgs, GroupsCommand, KernelArgs, KernelsCommand, LocaleArgs,
-    LocalesCommand, MaintenanceCommand, ModuleArgs, NetworkCommand, PackageArgs, PackageInstall,
-    PackagesCommand, ParamArgs, ParamCommand, RemoveUser, ServicesRead, TaskArgs, ToggleCommand,
-    TweaksCommand, UnitArgs, UnitChange, UserArgs, UsersCommand,
+    LocalesCommand, MaintenanceCommand, MergeResolveArgs, MergesCommand, ModuleArgs,
+    NetworkCommand, PackageArgs, PackageInstall, PackagesCommand, ParamArgs, ParamCommand,
+    RemoveUser, ServicesRead, TaskArgs, ToggleCommand, TweaksCommand, UnitArgs, UnitChange,
+    UserArgs, UsersCommand,
 };
 use toolbox_core::Toggle;
 use toolbox_core::features::maintenance::page::OPERATION_KEYS;
@@ -40,6 +41,7 @@ pub enum Queueable<'a> {
     Parameter(&'a ParamArgs, Toggle),
     Driver(&'a ModuleArgs, Toggle),
     Tweak(&'a TweaksCommand),
+    Merge(&'a MergeResolveArgs),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -79,7 +81,8 @@ impl Queueable<'_> {
             | Self::BootSet(_)
             | Self::Parameter(..)
             | Self::Driver(..)
-            | Self::Tweak(_) => None,
+            | Self::Tweak(_)
+            | Self::Merge(_) => None,
         }
     }
 }
@@ -184,6 +187,7 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
             | TweaksCommand::Hblock(_)
             | TweaksCommand::UpdateFlag(_)),
         )) => Ok(Queueable::Tweak(tweak)),
+        Command::Merges(MergesCommand::Resolve(args)) => Ok(Queueable::Merge(args)),
         Command::Status(_)
         | Command::Doctor(_)
         | Command::Pages(_)
@@ -200,6 +204,7 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
         | Command::Groups(_)
         | Command::Boot(_)
         | Command::Configs(_)
+        | Command::Merges(_)
         | Command::Network(_)
         | Command::Tweaks(_)
         | Command::BootRepair(_)

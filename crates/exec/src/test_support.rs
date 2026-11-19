@@ -5,11 +5,13 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
-use toolbox_plan::StepId;
 use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::{Event, Failure, Outcome};
+use toolbox_plan::{ConfigFilePath, ConfigText, StepId};
 
 use crate::apply::EventSink;
+
+pub const BACKUPS: &str = "var/lib/garuda-toolbox/backups";
 
 impl EventSink for Vec<Event> {
     fn send(&mut self, event: Event) {
@@ -76,4 +78,12 @@ pub fn gone(pid_file: &Path) -> bool {
     }
 
     !process.exists()
+}
+
+pub fn path(text: &str) -> ConfigFilePath {
+    ConfigFilePath::new(text).unwrap()
+}
+
+pub fn text(content: &str) -> ConfigText {
+    ConfigText::new(content).unwrap()
 }

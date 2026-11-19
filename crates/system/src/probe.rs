@@ -22,6 +22,7 @@ use crate::locales::{EtcLocales, LocaleSource};
 use crate::network::{ModuleSource, SystemModules};
 use crate::packages::{Libalpm, PackageScan, PackageSource};
 use crate::settings::{EtcSettings, SettingsSource};
+use crate::status::{MergeSource, Pacdiff, merge_copies};
 use crate::units::{Systemctl, UnitSource};
 use crate::user_configs::{HomeConfigs, UserConfigSource};
 
@@ -41,6 +42,8 @@ pub struct Sources {
     /// The kernel's modules and every modprobe blacklist, for the Network
     /// page's drivers and the guard of a restored blacklist change.
     pub modules: Arc<dyn ModuleSource>,
+    /// The copies pacman left, for the queued merges.
+    pub merges: Arc<dyn MergeSource>,
     /// The edits the catalogs offer, so the probe reads only their files.
     pub config_edits: Arc<[UserConfigEdit]>,
 }
@@ -65,6 +68,7 @@ impl Sources {
             boot: Arc::new(SystemBoot::system()),
             user_configs: Arc::new(HomeConfigs::from_env()),
             modules: Arc::new(SystemModules::system()),
+            merges: Arc::new(Pacdiff::new()),
             config_edits: Arc::from([]),
         }
     }
@@ -128,6 +132,12 @@ pub fn probe_snapshot(sources: &Sources) -> (Snapshot, Vec<ProbeIssue>) {
     probe_settings(sources, &mut snapshot, &mut issues);
     probe_kernels_and_locales(sources, packages.as_ref(), &mut snapshot, &mut issues);
     probe_boot(sources.boot.as_ref(), &mut snapshot, &mut issues);
+    insert(
+        &mut snapshot,
+        &mut issues,
+        Probe::Merges,
+        merge_copies(sources.merges.as_ref()),
+    );
     snapshot.insert(host);
     snapshot.insert(failed_probes(&issues));
 

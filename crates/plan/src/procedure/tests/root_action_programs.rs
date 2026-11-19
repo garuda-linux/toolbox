@@ -37,6 +37,7 @@ fn builtin_programs(builtin: &Builtin) -> Vec<Program> {
             initramfs_rebuilds().iter().map(Command::program).collect()
         }
         Builtin::RebuildUkis { root: _ } => uki_rebuilds().iter().map(Command::program).collect(),
+        Builtin::SnapshotBeforeMerges => vec![crate::merge::snapshot().program()],
         Builtin::RepairBootLoader { system, work } => loaders()
             .into_iter()
             .flat_map(|loader| boot_loader_steps(system, work, loader).unwrap_or_default())
@@ -58,6 +59,7 @@ fn builtin_programs(builtin: &Builtin) -> Vec<Program> {
         | Builtin::RequireSafeHome(_)
         | Builtin::RequireUserGroup(_)
         | Builtin::WriteConfigFile(_)
+        | Builtin::ResolveMerge(_)
         | Builtin::WriteHomeFile(_)
         | Builtin::EditModprobeBlacklist { module: _, on: _ }
         | Builtin::EditGrubDefaults(_)

@@ -13,9 +13,9 @@ use crate::page::PageId;
 use crate::pages::home::HomeProblem;
 
 impl App {
-    pub(super) fn run_home(&mut self, command: HomeCommand) {
+    pub(super) fn run_home(&mut self, command: &HomeCommand) {
         match command {
-            HomeCommand::RunNow(run) => self.run_now(run),
+            HomeCommand::RunNow(run) => self.run_now(*run),
             // The page disables Restart while a plan runs. A command from
             // elsewhere waits for the plan the same way.
             HomeCommand::Restart if self.console.running() => {}
@@ -23,7 +23,11 @@ impl App {
             HomeCommand::StartInstaller => self.start_installer(),
             HomeCommand::SetupFinished => self.state.setup_finished = true,
             // The service takes these, see `hand_to_services`.
-            HomeCommand::QueueUpgrade(_) | HomeCommand::DismissProblem | HomeCommand::Refresh => {}
+            HomeCommand::QueueUpgrade(_)
+            | HomeCommand::DismissProblem
+            | HomeCommand::Refresh
+            | HomeCommand::ReadMerges
+            | HomeCommand::Merge { copy: _, choice: _ } => {}
         }
     }
 

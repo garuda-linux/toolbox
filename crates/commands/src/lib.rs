@@ -17,6 +17,7 @@ mod help;
 mod interrupt;
 pub mod lists;
 pub mod locales;
+pub mod merges;
 mod mirrors;
 pub mod names;
 pub mod network;
@@ -191,6 +192,7 @@ fn dispatch(command: Command, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         Command::Groups(command) => accounts::groups_command(command, runtime, out),
         Command::Boot(Group(command)) => boot::command(command, runtime, out),
         Command::Configs(command) => configs::command(command, runtime, out),
+        Command::Merges(command) => merges::command(&command, runtime, out),
         Command::Network(Group(command)) => network::command(command, runtime, out),
         Command::Tweaks(Group(command)) => tweaks::command(&command, runtime, out),
         Command::Packages(command) => packages::command(command, runtime, out),

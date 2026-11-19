@@ -20,6 +20,8 @@ mod homes;
 mod loader;
 #[path = "arch/locales.rs"]
 mod locales;
+#[path = "arch/merges.rs"]
+mod merges;
 #[path = "arch/network.rs"]
 mod network;
 mod oneshot;

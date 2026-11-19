@@ -4,6 +4,7 @@ mod grub;
 mod home_file;
 mod loader;
 mod locale;
+mod mirrorlist;
 mod modules;
 mod settings;
 #[cfg(test)]
@@ -20,15 +21,16 @@ pub use cmdline::write_kernel_cmdline;
 pub use grub::edit_grub_defaults;
 pub use home_file::write_home_file;
 pub use locale::{SystemLocaleChange, edit_locale_gen, set_system_locale};
+use mirrorlist::mirrorlist_written;
 pub use modules::edit_modprobe_blacklist;
 pub use settings::{
     FileChange, set_garuda_update_flag, shell_is_listed, write_dns_config, write_wifi_backend,
 };
-use toolbox_plan::procedure::{Builtin, CHAOTIC_MIRRORLIST, DATABASE_LOCK, SHELLS};
+use toolbox_plan::procedure::{Builtin, DATABASE_LOCK, SHELLS};
 use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{
     DNS_CONFIG, GARUDA_UPDATE_CONFIG, GRUB_DEFAULTS, HomeWrite, LOCALE_CONF, LOCALE_GEN,
-    LocaleName, MODPROBE_BLACKLIST, Mirrorlist, NETWORKMANAGER_CONF_D, ShellPath, StepId, Toggle,
+    LocaleName, MODPROBE_BLACKLIST, NETWORKMANAGER_CONF_D, ShellPath, StepId, Toggle,
     UserConfigEdit, WIFI_BACKEND_CONFIG,
 };
 pub use user_config::edit_user_config;
@@ -36,7 +38,7 @@ pub use user_config::edit_user_config;
 use self::accounts::require_free_home;
 use crate::apply::EventSink;
 use crate::report::{failure, note};
-use crate::{config_file, repair, secure};
+use crate::{config_file, merge, repair, secure};
 
 pub const PROC: &str = "proc";
 pub const SYSTEM_ROOT: &str = "/";
@@ -57,6 +59,10 @@ pub enum LockRemoval {
 /// Runs `builtin` against the system below `root` and the user's home
 /// `home`, and reports to `sink`. The helper has no home: edits of user
 /// files fail there.
+#[expect(
+    clippy::too_many_lines,
+    reason = "one arm per builtin, a new builtin fails to compile until it is run"
+)]
 pub fn execute(
     root: &Path,
     home: Option<&Path>,
@@ -99,6 +105,7 @@ pub fn execute(
         Builtin::RequireFreeHome(who, folder) => require_free_home(root, step, who, folder, sink),
         Builtin::RequireSafeHome(folder) => accounts::require_safe_home(root, step, folder, sink),
         Builtin::WriteConfigFile(write) => config_file::execute(root, step, write, sink),
+        Builtin::ResolveMerge(resolve) => merge::execute(root, step, resolve, sink),
         Builtin::WriteHomeFile(write) => home_write(home, step, write, sink),
         Builtin::EditModprobeBlacklist { module, on } => changed(
             step,
@@ -122,6 +129,7 @@ pub fn execute(
         // They run programs, which only the runner can: `apply` hands them there.
         Builtin::RebuildInitramfs { root: _ }
         | Builtin::RebuildUkis { root: _ }
+        | Builtin::SnapshotBeforeMerges
         | Builtin::RepairBootLoader { system: _, work: _ } => failure(step, sink, NEEDS_RUNNER),
     }
 }
@@ -175,20 +183,6 @@ pub fn remove_database_lock(proc_root: &Path, lock: &Path) -> io::Result<LockRem
     }
 }
 
-/// Writes the Chaotic-AUR mirrorlist below `root` and keeps the old one as
-/// `chaotic-mirrorlist.bak`. Returns whether there was an old one.
-///
-/// # Errors
-///
-/// When `etc/pacman.d` below `root` is missing or reached through a
-/// symlink, or the write fails.
-pub fn install_mirrorlist(root: &Path, mirrorlist: &Mirrorlist) -> io::Result<bool> {
-    let (dir, name) = secure::open_parent(root, CHAOTIC_MIRRORLIST)?;
-    let backup = format!("{name}.bak");
-
-    secure::replace_system_file(&dir, name, mirrorlist.as_str().as_bytes(), Some(&backup))
-}
-
 fn rewritten(
     dir: &OwnedFd,
     name: &str,
@@ -233,33 +227,6 @@ fn lock_holder(proc_root: &Path, lock: &Metadata) -> io::Result<Option<u32>> {
     }
 
     Ok(None)
-}
-
-fn mirrorlist_written(
-    root: &Path,
-    step: StepId,
-    mirrorlist: &Mirrorlist,
-    sink: &mut dyn EventSink,
-) -> Outcome {
-    match install_mirrorlist(root, mirrorlist) {
-        Ok(true) => note(
-            step,
-            sink,
-            "wrote the Chaotic-AUR mirrorlist, the old one is chaotic-mirrorlist.bak",
-            Outcome::Succeeded,
-        ),
-        Ok(false) => note(
-            step,
-            sink,
-            "wrote the Chaotic-AUR mirrorlist",
-            Outcome::Succeeded,
-        ),
-        Err(error) => failure(
-            step,
-            sink,
-            &format!("cannot write the Chaotic-AUR mirrorlist: {error}"),
-        ),
-    }
 }
 
 fn database_lock(root: &Path, step: StepId, sink: &mut dyn EventSink) -> Outcome {

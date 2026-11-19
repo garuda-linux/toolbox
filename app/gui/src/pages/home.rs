@@ -1,6 +1,7 @@
 mod dialogs;
 mod hero;
 pub mod logo;
+mod merges;
 mod news;
 mod next;
 mod stats;
@@ -56,6 +57,7 @@ pub struct HomePage {
     details: bool,
     updates_open: bool,
     asking_to_restart: bool,
+    merges: Option<merges::MergeDialog>,
 }
 
 impl PageView for HomePage {

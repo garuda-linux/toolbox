@@ -63,8 +63,8 @@ pub use buttons::{
 pub use card::{card, card_row, card_row_with, padded_card};
 pub use check_row::{CHECK_ROW_HEIGHT, CheckRowTexts, check_row, check_row_with_line};
 pub use chip::{
-    Tone, chip, chips, counted_chips, link_tag, named_chips, queued_tag, status_dot, tag,
-    toggle_chips,
+    Tone, chip, chips, counted_chips, link_tag, named_chips, queued_tag, status_dot,
+    status_dot_then, tag, toggle_chips,
 };
 pub use choice::Choice;
 pub use dim::{dim_opacity, dim_picture, dimmed};

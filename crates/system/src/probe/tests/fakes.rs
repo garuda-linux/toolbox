@@ -1,5 +1,6 @@
 //! Fake ports for the probe tests: each answers what the test put in.
 
+use std::path::PathBuf;
 use std::sync::Arc;
 
 use toolbox_plan::{
@@ -20,8 +21,8 @@ use super::{accounts, kernels, offered, units};
 use crate::probe::Sources;
 use crate::units::{SystemUnitFiles, UserUnitFiles};
 use crate::{
-    AccountSource, BootSource, HostSource, KernelSource, LocaleSource, ModuleSource, PackageScan,
-    PackageSource, ProbeError, SettingsSource, UnitSource, UserConfigSource,
+    AccountSource, BootSource, HostSource, KernelSource, LocaleSource, MergeSource, ModuleSource,
+    PackageScan, PackageSource, ProbeError, SettingsSource, UnitSource, UserConfigSource,
 };
 
 /// The package reads of one snapshot, each with the answer the test gave.
@@ -237,6 +238,14 @@ impl ModuleSource for FakeModules {
     }
 }
 
+pub struct FakeMerges;
+
+impl MergeSource for FakeMerges {
+    fn waiting(&self) -> Result<Vec<PathBuf>, ProbeError> {
+        Ok(Vec::new())
+    }
+}
+
 pub fn sources(packages: FakePackages, host: FakeHost) -> Sources {
     Sources {
         packages: Arc::new(packages),
@@ -252,6 +261,7 @@ pub fn sources(packages: FakePackages, host: FakeHost) -> Sources {
         boot: Arc::new(FakeBoot),
         user_configs: Arc::new(FakeConfigs),
         modules: Arc::new(FakeModules),
+        merges: Arc::new(FakeMerges),
         config_edits: Arc::from([]),
     }
 }

@@ -35,8 +35,8 @@ use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_services::dkms::{Dkms as DkmsAnswer, dkms_answer};
 use toolbox_system::{
-    Dkms, DkmsSource as _, FactSources, Facts, Sources, Status, StatusSources, probe_facts,
-    probe_snapshot, probe_status,
+    Dkms, DkmsSource as _, FactSources, Facts, Sources, Status, probe_facts, probe_snapshot,
+    probe_status,
 };
 use tracing::level_filters::LevelFilter;
 
@@ -330,7 +330,7 @@ fn readers(handle: &Handle, ctx: &egui::Context, settings: &Settings) -> Readers
     let repaint = || toolbox_gui::waking::repaint(ctx.clone());
     let program = Dkms::system();
     let status = reader::spawn(handle, repaint(), "the status", || {
-        probe_status(&StatusSources::system())
+        probe_status(&ports::status_sources())
     });
 
     status.every(settings.status.refresh.period());

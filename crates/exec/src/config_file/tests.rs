@@ -13,8 +13,7 @@ use super::write::{WriteError, write_real};
 use super::{ConfigRead, Found, ReadError, inspect, look, read_config_file};
 use crate::builtin::FileChange;
 use crate::secure::Unreadable;
-
-pub(super) const BACKUPS: &str = "var/lib/garuda-toolbox/backups";
+pub(super) use crate::test_support::{BACKUPS, path, text};
 
 /// A root folder with `etc/fstab` and `etc/conf.d`.
 fn system() -> TempDir {
@@ -23,14 +22,6 @@ fn system() -> TempDir {
     fs::create_dir_all(root.path().join("etc/conf.d")).unwrap();
     fs::write(root.path().join("etc/fstab"), "old = 1\n").unwrap();
     root
-}
-
-pub(super) fn path(text: &str) -> ConfigFilePath {
-    ConfigFilePath::new(text).unwrap()
-}
-
-pub(super) fn text(content: &str) -> ConfigText {
-    ConfigText::new(content).unwrap()
 }
 
 /// What a write of a config file does, with the link followed the way

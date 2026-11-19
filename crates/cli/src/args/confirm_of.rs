@@ -1,12 +1,46 @@
 //! The app learns from it before anything runs whether standard output is
 //! JSON Lines only.
 
+use clap::Args;
+
 use super::{
-    AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, Confirm, DkmsCommand,
+    AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, DkmsCommand,
     DriversCommand, Group, GroupsCommand, KernelsCommand, LocalesCommand, MaintenanceCommand,
-    NetworkCommand, PackagesCommand, PacksCommand, ParamCommand, QueueCommand, ServicesCommand,
-    SetupCommand, ToggleCommand, TweaksCommand, UsersCommand,
+    MergesCommand, NetworkCommand, PackagesCommand, PacksCommand, ParamCommand, QueueCommand,
+    ServicesCommand, SetupCommand, ToggleCommand, TweaksCommand, UsersCommand,
 };
+
+#[derive(Clone, Copy, Debug, Default, Args)]
+pub struct Read {
+    /// Print JSON instead of text, for scripts.
+    #[arg(long)]
+    pub json: bool,
+}
+
+#[derive(Clone, Copy, Debug, Default, Args)]
+pub struct Confirm {
+    /// Do not ask, carry the change out. Needed without a terminal.
+    #[arg(long, short = 'y')]
+    pub yes: bool,
+
+    /// Print the plan and stop, without asking and without changing
+    /// anything.
+    #[arg(long, conflicts_with = "yes")]
+    pub dry_run: bool,
+
+    /// Print JSON Lines instead of text, for scripts. Needs `--yes` or
+    /// `--dry-run`.
+    #[arg(long)]
+    pub json: bool,
+}
+
+impl Confirm {
+    /// `--json` without `--yes` or `--dry-run`: the question cannot be
+    /// asked, as its answer would land among the JSON lines.
+    pub const fn cannot_ask(self) -> bool {
+        self.json && !self.yes && !self.dry_run
+    }
+}
 
 impl Command {
     /// The question of a change, `None` for a command that only reads.
@@ -34,6 +68,7 @@ impl Command {
             }
             Self::Boot(Group(command)) => boot(command),
             Self::Configs(ConfigsCommand::Edit(args)) => Some(args.confirm),
+            Self::Merges(MergesCommand::Resolve(args)) => Some(args.confirm),
             Self::Network(Group(NetworkCommand::Drivers(
                 DriversCommand::Blacklist(args)
                 | DriversCommand::Allow(args)
@@ -56,6 +91,7 @@ impl Command {
             | Self::Dkms(DkmsCommand::List(_))
             | Self::Groups(GroupsCommand::List(_))
             | Self::Configs(ConfigsCommand::List(_) | ConfigsCommand::Show(_))
+            | Self::Merges(MergesCommand::List(_) | MergesCommand::Show(_))
             | Self::Network(_)
             | Self::BootRepair(BootRepairCommand::Show(_))
             | Self::Setup(SetupCommand::List(_))

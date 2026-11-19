@@ -1,0 +1,22 @@
+{
+  "version": 5,
+  "changes": [
+    {
+      "domain": "config-merges",
+      "item": "/etc/pacman.conf.pacnew",
+      "wish": {
+        "resolution": {
+          "kind": "take-copy"
+        },
+        "copy": {
+          "bytes": 3048,
+          "hash": 6586497912638162069
+        },
+        "current": {
+          "bytes": 3047,
+          "hash": 705292179900126207
+        }
+      }
+    }
+  ]
+}

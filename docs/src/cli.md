@@ -468,6 +468,29 @@ rights and its previous version kept in
 `~/.local/state/garuda-toolbox/backups`. A file that changed meanwhile is
 not overwritten. Files the page only shows are never edited.
 
+### Configuration files to merge
+
+For example:
+
+```console
+$ garuda-toolbox merges list
+$ garuda-toolbox merges show /etc/pacman.conf.pacnew
+$ garuda-toolbox merges resolve /etc/pacman.conf.pacnew --take-new
+$ garuda-toolbox merges resolve /etc/locale.gen.pacsave --keep
+```
+
+`merges list` names the `.pacnew`, `.pacsave` and `.pacorig` files
+`pacdiff -o` finds, with how many changes each brings. A file only root may
+read shows as not read there. `merges show` prints the changes from the
+file in use to the copy, and asks for the password when only root may read
+them. `merges resolve --keep` removes the copy, `--take-new` puts it in the
+file's place and keeps the old file in `/var/lib/garuda-toolbox/backups`.
+A snapshot is taken first where snapper is set up. An older save
+(`.pacsave.1`) and a copy that equals its file only take `--keep`. Copies of
+files the toolbox never opens, such as `/etc/shadow.pacnew`, are listed to
+be merged in a terminal. Picking single changes is done in the window, see
+[Home](home.md).
+
 ### Network
 
 For example:

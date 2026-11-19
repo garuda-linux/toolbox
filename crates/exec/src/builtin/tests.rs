@@ -8,7 +8,8 @@ use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::{Event, Outcome};
 use toolbox_plan::{GarudaUpdateFlag, Mirrorlist, ShellPath, StepId};
 
-use super::{LockRemoval, execute, install_mirrorlist, lock_holder, remove_database_lock};
+use super::mirrorlist::install_mirrorlist;
+use super::{LockRemoval, execute, lock_holder, remove_database_lock};
 use crate::test_support::{assert_failed, run_builtin};
 
 /// `/etc/pacman.d/chaotic-mirrorlist` as the package ships it in Lima.

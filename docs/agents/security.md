@@ -258,6 +258,24 @@ helper, which has no home. It follows symlinks, checks the `Fingerprint`,
 backs up to `~/.local/state/garuda-toolbox/backups/` (0700 and 0600) and
 keeps the mode. A missing file is never created.
 
+### Merges of pacman's copies
+
+`RootAction::ResolveMerge` (`crates/plan/src/merge.rs`, `crates/exec/src/merge.rs`):
+
+- `MergeCopy`: a `ConfigFilePath` ending in `.pacnew`, `.pacsave`,
+  `.pacsave.N` or `.pacorig`. Withheld files never qualify.
+- The helper reads `%BACKUP%` of `/var/lib/pacman/local/*/files` itself
+  and refuses a file no package lists.
+- No symlinks. Both `Fingerprint`s must match what the user compared.
+- `.pacsave.N` can only go. A merged text needs the file in use
+  (`MergeChoice::fits`, checked on decode).
+- Writes go through `write_real` (backup, owner and mode kept). A copy
+  without its file is renamed in with `RENAME_NOREPLACE`.
+- `fetch` hands out copies and their backup files under the same check
+  (`is_fetchable`).
+- `SnapshotBeforeMerges` runs snapper only where it and
+  `/etc/snapper/configs/root` exist.
+
 ## User config edits
 
 Catalog `user-*` checks (`UserAction::EditUserConfig`) run as the user in

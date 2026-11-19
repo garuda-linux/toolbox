@@ -1,4 +1,5 @@
-//! Home's dialogs: the pending updates and the restart question.
+//! Home's dialogs: the pending updates, the restart question and the
+//! configuration files to merge.
 
 use egui::{Context, Id, Label, ScrollArea, Ui};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
@@ -30,6 +31,12 @@ pub fn show(
 
     if page.asking_to_restart {
         restart(page, ctx, context);
+    }
+
+    if let Some(dialog) = page.merges.as_mut()
+        && super::merges::show(dialog, ctx, context)
+    {
+        page.merges = None;
     }
 }
 

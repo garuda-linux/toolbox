@@ -1,5 +1,6 @@
 mod live;
 mod lost;
+mod merges;
 mod steps;
 
 use std::sync::Arc;
@@ -24,6 +25,7 @@ use crate::pages::maintenance::Tab;
 use crate::testing::{PageFixture, PageState};
 
 const GB: u64 = 1_000_000_000;
+const SUMMARY: &str = "One thing needs attention · last update 16 days ago";
 
 type Shown = Harness<'static, PageState<HomePage>>;
 
@@ -335,36 +337,22 @@ fn three_steps_share_one_line() {
     );
 }
 
+/// One text, so the status and the last update share a baseline and the
+/// dot sits between two spaces.
 #[test]
-fn the_summary_dot_has_a_space_on_both_sides() {
+fn the_summary_is_one_line_of_the_small_size() {
     let harness = greeted();
-    let attention = harness.get_by_label("One thing needs attention").rect();
-    let updated = harness.get_by_label("· last update 16 days ago").rect();
-
-    let font = fonts::font(&harness.ctx.global_style(), Weight::Regular, SMALL);
-    let space = harness.ctx.fonts_mut(|fonts| fonts.glyph_width(&font, ' '));
-
-    let gap = updated.left() - attention.right();
-    assert!(
-        (gap - space).abs() < 1.0,
-        "{gap} before the dot, {space} after it"
-    );
-}
-
-#[test]
-fn the_summary_status_and_last_update_share_the_small_size() {
-    let harness = greeted();
-    let size = |text: &str| {
-        let shape = toolbox_gui_kit::testing::painted_text(&harness, text)?;
-        shape
-            .galley
-            .job
-            .sections
-            .first()
-            .map(|part| part.format.font_id.size)
-    };
-
+    let shape = toolbox_gui_kit::testing::painted_text(&harness, SUMMARY).unwrap();
     let small = fonts::font(&harness.ctx.global_style(), Weight::Regular, SMALL).size;
-    assert_eq!(size("One thing needs attention"), Some(small));
-    assert_eq!(size("· last update 16 days ago"), Some(small));
+    let sizes: Vec<f32> = shape
+        .galley
+        .job
+        .sections
+        .iter()
+        .map(|part| part.format.font_id.size)
+        .collect();
+
+    assert_eq!(sizes, [small, small]);
+    assert_eq!(shape.galley.rows.len(), 1);
+    assert!(harness.query_by_label(SUMMARY).is_some());
 }

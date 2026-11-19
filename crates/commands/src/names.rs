@@ -47,8 +47,9 @@ use super::{catalogs, guide, lists};
 /// A completion that waits longer than this for systemd gives no names.
 const SYSTEMD_WAIT: Duration = Duration::from_secs(2);
 
-/// The config files' listing never reads a file through it.
-struct NoHelper;
+/// For reads that never ask for a password, such as the config files'
+/// listing.
+pub(crate) struct NoHelper;
 
 impl HelperFetch for NoHelper {
     fn fetch_command(&self, _path: &ConfigFilePath) -> Command {

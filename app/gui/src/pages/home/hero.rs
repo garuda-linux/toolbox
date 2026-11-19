@@ -2,8 +2,8 @@
 //! below it hold the system's figures.
 
 use egui::{Label, Ui, vec2};
-use toolbox_gui_kit::fonts::{self, BODY, SECTION, SMALL, Weight};
-use toolbox_gui_kit::widgets::{Tone, rich, status_dot};
+use toolbox_gui_kit::fonts::{BODY, SECTION, Weight};
+use toolbox_gui_kit::widgets::{Tone, rich, status_dot, status_dot_then};
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_services::home::Overview;
 use toolbox_system::Host;
@@ -83,7 +83,6 @@ fn summary(
     }
 
     let ctx = ui.ctx().clone();
-    let tokens = tokens::current(&ctx);
     let (text, tone) = if count == 0 {
         (i18n::text(&ctx, "home-summary-fine"), Tone::Success)
     } else {
@@ -96,21 +95,17 @@ fn summary(
         (text, Tone::Warning)
     };
 
-    ui.horizontal_wrapped(|ui| {
-        // The second part starts with "·" and a space, so a space before
-        // it keeps the dot in the middle.
-        let font = fonts::font(ui.style(), Weight::Regular, SMALL);
-        ui.spacing_mut().item_spacing.x = ui.fonts_mut(|fonts| fonts.glyph_width(&font, ' '));
+    let Some(days) = overview.days else {
         status_dot(ui, &text, tone);
-        if let Some(days) = overview.days {
-            let id = if days == 0 {
-                "home-summary-updated-today"
-            } else {
-                "home-summary-updated"
-            };
+        return;
+    };
 
-            let updated = i18n::text_with(&ctx, id, &[("days", Arg::from(days))]);
-            ui.label(rich(ui, &updated, Weight::Regular, SMALL, tokens.secondary));
-        }
-    });
+    let id = if days == 0 {
+        "home-summary-updated-today"
+    } else {
+        "home-summary-updated"
+    };
+
+    let updated = i18n::text_with(&ctx, id, &[("days", Arg::from(days))]);
+    status_dot_then(ui, &text, &updated, tone);
 }

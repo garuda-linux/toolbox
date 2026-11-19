@@ -20,7 +20,9 @@ use std::thread;
 use std::time::SystemTime;
 
 pub use health::{GarudaHealth, HealthIssue, HealthLevel, HealthSource};
-pub use pacdiff::{MergeSource, Pacdiff};
+#[cfg(any(test, feature = "selftest"))]
+pub use pacdiff::FoundCopies;
+pub use pacdiff::{MergeSource, Pacdiff, merge_copies};
 pub use pacman_log::{PacmanLog, RecentLogSource, UpdateLogSource};
 pub use updates::{AurUpdateSource, Checkupdates, Paru, PendingUpdate, UpdateSource};
 

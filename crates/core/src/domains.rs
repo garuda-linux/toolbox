@@ -9,6 +9,7 @@ mod groups;
 mod hblock;
 mod locales;
 mod masks;
+mod merges;
 mod modules;
 mod network;
 mod packages;
@@ -29,6 +30,7 @@ pub use groups::{Groups, Membership};
 pub use hblock::{Hblock, HblockState};
 pub use locales::{CurrentSystemLocale, EnabledLocales, Locales, SystemLocales};
 pub use masks::{SystemUnitMasks, UserUnitMasks};
+pub use merges::{ConfigMerges, MergeCopies};
 pub use modules::{ModuleBlacklist, OwnBlacklist};
 pub use network::{CurrentDns, CurrentWifiBackend, Dns, WifiBackends};
 pub use packages::{InstalledPackages, Packages, SyncPackages};
@@ -74,6 +76,7 @@ pub fn all() -> Result<crate::Domains, crate::RegistryError> {
         .with::<RemovedUsers>()?
         .with::<RemovedGroups>()?
         .with::<ModuleBlacklist>()?
+        .with::<ConfigMerges>()?
         .with::<GrubDefaults>()?
         .with::<LoaderSettingsDomain>()?
         .with::<SdBootKernelDomain>()?

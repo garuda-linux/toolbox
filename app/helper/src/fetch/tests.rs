@@ -4,7 +4,7 @@ use std::os::unix::fs::symlink;
 use toolbox_plan::testing::account::SHADOW;
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchAnswer, FetchRefusal, MAX_CONFIG_BYTES};
 
-use super::answer;
+use super::{answer, merge_answer};
 
 /// `/etc/default/grub` of a Garuda install in QEMU.
 const DEFAULT_GRUB: &str = toolbox_plan::testing::grub::INSTALLED_DEFAULT_GRUB;
@@ -237,4 +237,31 @@ fn an_unreadable_file_is_an_error_not_an_answer() {
             .kind(),
         std::io::ErrorKind::PermissionDenied
     );
+}
+
+#[test]
+fn a_copy_pacman_left_is_handed_out_without_following_a_link() {
+    let root = tempfile::tempdir().unwrap();
+
+    fs::create_dir_all(root.path().join("etc")).unwrap();
+    fs::write(
+        root.path().join("etc/sudoers.pacnew"),
+        "root ALL=(ALL:ALL) ALL\n",
+    )
+    .unwrap();
+    fs::write(root.path().join("etc/elsewhere"), "x\n").unwrap();
+    symlink("elsewhere", root.path().join("etc/sudoers")).unwrap();
+
+    let decoded = |text: &str| {
+        FetchAnswer::parse(merge_answer(root.path(), &path(text)).unwrap().trim_end()).unwrap()
+    };
+
+    assert_eq!(
+        decoded("/etc/sudoers.pacnew"),
+        FetchAnswer::Text {
+            path: path("/etc/sudoers.pacnew"),
+            content: ConfigText::new("root ALL=(ALL:ALL) ALL\n").unwrap(),
+        }
+    );
+    assert_eq!(decoded("/etc/sudoers"), refusal(FetchRefusal::Link));
 }

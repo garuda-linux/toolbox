@@ -29,8 +29,8 @@ use crate::sdboot::LoaderChange;
 use crate::{
     ConfigWrite, DkmsBuild, DnsProvider, FullName, GarudaUpdateFlag, GroupName, GrubSettings,
     HomeChange, HomeFolder, InstalledSystem, KernelModule, KernelParameters, LocaleEntry,
-    LocaleName, Mirrorlist, NewUser, PackageName, Password, PlymouthTheme, RepairWork, ShellPath,
-    UnitName, UserName, WifiBackend,
+    LocaleName, MergeResolve, Mirrorlist, NewUser, PackageName, Password, PlymouthTheme,
+    RepairWork, ShellPath, UnitName, UserName, WifiBackend,
 };
 
 /// Work that needs root. Runs in `garuda-toolbox-helper`.
@@ -164,6 +164,13 @@ pub enum RootAction {
     WriteConfigFile {
         write: ConfigWrite,
     },
+    /// Removes a copy pacman left beside a configuration file, or puts it
+    /// or a merged text in the file's place.
+    ResolveMerge {
+        merge: MergeResolve,
+    },
+    /// A snapper snapshot of `/` before the merges, where snapper is set up.
+    SnapshotBeforeMerges,
     /// `modprobe` with NetworkManager stopped meanwhile and started again
     /// whatever happens.
     LoadModule {
@@ -274,6 +281,10 @@ impl RootAction {
         }
     }
 
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one arm per action, a new action fails to compile until it names its steps"
+    )]
     pub fn procedure(&self) -> Vec<Invocation> {
         match self {
             Self::InstallPackages { packages } => vec![run(install(packages))],
@@ -316,6 +327,10 @@ impl RootAction {
             Self::CreateGroup { group } => accounts::create_group(group),
             Self::DeleteGroup { group } => accounts::delete_group(group),
             Self::WriteConfigFile { write } => vec![write.invocation()],
+            Self::ResolveMerge { merge } => {
+                vec![Invocation::Builtin(Builtin::ResolveMerge(merge.clone()))]
+            }
+            Self::SnapshotBeforeMerges => vec![Invocation::Builtin(Builtin::SnapshotBeforeMerges)],
             Self::LoadModule { module } => network::load_module(module),
             Self::UnloadModule { module } => network::unload_module(module),
             Self::SetModuleBlacklisted {

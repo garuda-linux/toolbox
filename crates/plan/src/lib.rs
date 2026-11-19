@@ -16,6 +16,7 @@ mod garuda_update;
 mod grub;
 pub mod lines;
 mod locale;
+mod merge;
 mod mirrorlist;
 mod name;
 mod network;
@@ -63,6 +64,11 @@ pub use grub::{
 pub use locale::{
     LOCALE_CONF, LOCALE_GEN, LocaleEntry, is_builtin_locale, same_locale, set_system_lang,
     system_lang,
+};
+pub use merge::{
+    CopyKind, InvalidMergeCopy, MergeChoice, MergeCopy, MergeResolve, PACKAGE_FILES, PACMAN_LOCAL,
+    Resolution, SNAPPER_ROOT_CONFIG, SNAPSHOT_DESCRIPTION, UnfitChoice, backup_files, lists_backup,
+    snapshot as merge_snapshot,
 };
 pub use mirrorlist::{InvalidMirrorlist, Mirrorlist, SAMPLE_MIRRORS};
 pub use name::{

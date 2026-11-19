@@ -14,8 +14,8 @@ use toolbox_plan::protocol::{Event, Failure, Leftover, Mode, Outcome};
 use toolbox_plan::{RootAction, SecretInput, Step, StepId, UserAction};
 
 use crate::builtin::SYSTEM_ROOT;
-use crate::report::failure;
-use crate::{initramfs, repair, uki};
+use crate::report::{failure, note};
+use crate::{initramfs, merge, repair, uki};
 
 pub trait Procedure {
     fn procedure(&self) -> Vec<Invocation>;
@@ -282,6 +282,17 @@ fn run_once(
             runner,
             sink,
         ),
+        Invocation::Builtin(Builtin::SnapshotBeforeMerges) => {
+            match merge::snapshot(Path::new(SYSTEM_ROOT)) {
+                Some(command) => runner.run(step, &command, sink),
+                None => note(
+                    step,
+                    sink,
+                    "snapper has no configuration of /, so the previous versions are kept in the backup folder only",
+                    Outcome::Skipped,
+                ),
+            }
+        }
         Invocation::Builtin(Builtin::RepairBootLoader { system, work }) => {
             match repair::boot_loader_steps(Path::new(SYSTEM_ROOT), system, work) {
                 Ok(steps) => run_procedure(step, &steps, runner, sink),

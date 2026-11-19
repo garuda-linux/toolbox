@@ -1,7 +1,7 @@
 use egui::Ui;
 use toolbox_cli::output::size;
-use toolbox_core::features::maintenance::page::operations;
-use toolbox_core::features::maintenance::{Operation, RunNow, upgrade_queued};
+use toolbox_core::features::maintenance::page::{PageTool, operations};
+use toolbox_core::features::maintenance::{Operation, RunNow, Tool, upgrade_queued};
 use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitName;
@@ -15,6 +15,7 @@ use crate::i18n;
 use crate::i18n::Arg;
 use crate::page::PageId;
 use crate::pages::PageContext;
+use crate::pages::rows::more::{item, more};
 
 pub(super) fn updates(
     page: &mut HomePage,
@@ -104,8 +105,14 @@ pub(super) fn stale(ui: &mut Ui, context: &PageContext<'_>) {
     );
 }
 
-/// The files only, their merge tool opens from Maintenance.
-pub(super) fn merges(ui: &mut Ui, overview: &Overview<'_>) {
+/// Review opens the dialog that compares and queues them. meld, through
+/// the script Maintenance runs, stays in the menu.
+pub(super) fn merges(
+    page: &mut HomePage,
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    overview: &Overview<'_>,
+) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "home-merges");
     let files: Vec<String> = overview
@@ -116,7 +123,24 @@ pub(super) fn merges(ui: &mut Ui, overview: &Overview<'_>) {
 
     ActionRow::new(icons::VCS_DIFF, Tone::Warning, &title)
         .detail(&files.join("\n"))
-        .show(ui, |_| {});
+        .show(ui, |ui| {
+            ui.horizontal(|ui| {
+                let review = i18n::text(&ctx, "home-merges-review");
+                if pill_button(ui, &review, ButtonKind::Soft).clicked() {
+                    super::super::merges::open(&mut page.merges, context);
+                }
+
+                more(ui, &title, |ui| {
+                    if item(ui, "home-merges-meld", !context.busy) {
+                        context
+                            .commands
+                            .send(MaintenanceCommand::OpenTool(PageTool::Program(
+                                Tool::MergePacdiff,
+                            )));
+                    }
+                });
+            });
+        });
 }
 
 pub(super) fn health(

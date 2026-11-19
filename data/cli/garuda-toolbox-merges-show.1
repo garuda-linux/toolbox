@@ -1,0 +1,48 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH garuda-toolbox-merges-show 1  "garuda-toolbox 6.3.0" 
+.SH NAME
+garuda\-toolbox\-merges\-show \- Show what a copy changes against the file in use, as a unified diff
+.SH SYNOPSIS
+\fBgaruda\-toolbox merges show\fR [\fB\-v\fR|\fB\-\-verbose\fR] [\fB\-\-no\-pager\fR] [\fB\-\-color\fR \fIWHEN\fR] [\fB\-\-width\fR \fICOLUMNS\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fICOPY\fR> 
+.SH DESCRIPTION
+Show what a copy changes against the file in use, as a unified diff
+.SH OPTIONS
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print the programs\*(Aq own words under an error
+.TP
+\fB\-\-no\-pager\fR
+Print long text directly instead of through `$PAGER`
+.TP
+\fB\-\-color\fR \fI<WHEN>\fR [default: auto]
+Colour the output: auto, always or never
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+auto
+.IP \(bu 2
+always
+.IP \(bu 2
+never
+.RE
+.TP
+\fB\-\-width\fR \fI<COLUMNS>\fR
+Cut long cells to this many columns
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Leave out the spinner and the hints
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fICOPY\fR>
+The copy, such as `/etc/pacman.conf.pacnew`
+.SH EXTRA
+Example:
+  garuda\-toolbox merges show /etc/pacman.conf.pacnew
+.SH "SEE ALSO"
+garuda\-toolbox\-merges(1), garuda\-toolbox(1)

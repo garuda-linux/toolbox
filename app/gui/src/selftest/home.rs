@@ -1,6 +1,7 @@
 //! Home on the real system: the greeting with its stat tiles, the status once
-//! checked, the dry run's sample news, then a fresh check through the
-//! heading's button. A page opened before comes back as a recent chip.
+//! checked, the dry run's sample news, the merge dialog with the self-test's
+//! own copies, then a fresh check through the heading's button. A page
+//! opened before comes back as a recent chip.
 
 use egui::Key;
 
@@ -20,6 +21,23 @@ pub fn steps() -> Vec<Step> {
         Step::wait("Open Toolbox sample: a new kernel series"),
         Step::wait("Manual step"),
         Step::Shot("home"),
+        Step::button("Review…"),
+        Step::wait("/etc/locale.gen.pacsave beside /etc/locale.gen"),
+        Step::wait("The file in use is gone. The copy can take its place."),
+        Step::button("Restore saved file"),
+        Step::WaitContaining(", queued"),
+        Step::Shot("home-merges-gone"),
+        Step::button("Take back"),
+        Step::tab("/etc/pacman.conf"),
+        Step::wait("/etc/pacman.conf.pacnew beside /etc/pacman.conf"),
+        Step::disabled_button("Queue the merge"),
+        Step::radio("Take new"),
+        Step::button("Queue the merge"),
+        Step::WaitContaining(", queued"),
+        Step::Shot("home-merges"),
+        Step::button("Take back"),
+        Step::press(Key::Escape),
+        Step::WaitGone("Files"),
         Step::click("Read again"),
         Step::WaitGone("Checking the system…"),
         Step::wait("Next steps"),

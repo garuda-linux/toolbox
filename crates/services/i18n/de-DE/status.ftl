@@ -24,6 +24,7 @@ probe-hblock = Werbeblocker (hBlock)
 probe-wifi-backend = WLAN-Backend
 probe-garuda-update = Einstellungen von garuda-update
 probe-module-blacklist = Blacklist der Kernelmodule
+probe-merges = offene .pacnew-Dateien
 probe-boot-loader = Bootloader
 probe-grub = Bootmenü (GRUB)
 probe-kernel-cmdline = Kernel-Befehlszeile (systemd-boot)

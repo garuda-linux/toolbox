@@ -6,6 +6,10 @@ mod tests;
 pub const COMMANDS: &[(&str, &[&str])] = &[
     ("account-locks", &["users", "lock", "guest"]),
     ("aur-packages", &["packages", "install", "--aur", "yay-bin"]),
+    (
+        "config-merges",
+        &["merges", "resolve", "/etc/pacman.conf.pacnew", "--take-new"],
+    ),
     ("dkms-modules", &["dkms", "build"]),
     ("dns", &["tweaks", "dns", "cloudflare"]),
     (

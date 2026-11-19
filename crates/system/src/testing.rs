@@ -4,4 +4,5 @@ pub mod host;
 pub mod locales;
 pub mod network;
 pub mod packages;
+pub mod status;
 pub mod systemd;

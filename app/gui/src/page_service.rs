@@ -301,3 +301,9 @@ impl Provides<Artwork> for Services {
         &self.artwork
     }
 }
+
+impl Provides<Home> for Services {
+    fn provide(&self) -> &Home {
+        &self.home
+    }
+}

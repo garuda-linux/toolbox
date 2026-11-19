@@ -15,7 +15,7 @@ pub mod viewing;
 
 use std::collections::BTreeSet;
 
-pub use diff::{Diff, hunk_lines};
+pub use diff::{Change, Diff, Line, hunk_lines};
 use toolbox_catalog::{ConfigEntry, ConfigFileCatalog};
 use toolbox_plan::{
     ConfigFilePath, EditCopy, Editor, FetchRefusal, HomePath, Plan, RootAction, UserAction,

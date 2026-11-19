@@ -27,8 +27,8 @@ use toolbox_core::features::maintenance::RunNow;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::protocol::TerminalSize;
 use toolbox_plan::{
-    DnsProvider, GarudaUpdateFlag, LocaleEntry, LocaleName, PackageName, ShellPath, UnitName,
-    UnitOperation, UnitScope, WifiBackend,
+    DnsProvider, GarudaUpdateFlag, LocaleEntry, LocaleName, MergeChoice, MergeCopy, PackageName,
+    ShellPath, UnitName, UnitOperation, UnitScope, WifiBackend,
 };
 
 pub use self::boot::BootCommand;
@@ -176,7 +176,7 @@ pub enum ConsoleCommand {
     ClearOutput,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HomeCommand {
     RunNow(RunNow),
     /// Queues the system update with the other changes, or takes it back.
@@ -188,6 +188,13 @@ pub enum HomeCommand {
     SetupFinished,
     /// The note on Home was read.
     DismissProblem,
+    /// Reads both files of every copy pacman left, for the merge dialog.
+    ReadMerges,
+    /// Queues what happens to a copy, or takes it back with `None`.
+    Merge {
+        copy: MergeCopy,
+        choice: Option<MergeChoice>,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

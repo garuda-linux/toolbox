@@ -24,6 +24,8 @@ impl Builtin {
                 Some(crate::config_file::UNCHANGED_WHY)
             }
             Self::RepairBootLoader { system, work } => crate::action::loader_why(system, work),
+            Self::ResolveMerge(_) => Some(crate::MergeResolve::why()),
+            Self::SnapshotBeforeMerges => Some("so the merges can be rolled back with snapper"),
             Self::InstallMirrorlist(_)
             | Self::RequireListedShell(_)
             | Self::WriteDnsConfig(_)

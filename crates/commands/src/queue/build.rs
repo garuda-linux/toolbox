@@ -91,6 +91,9 @@ pub fn build(
             crate::tweaks::onto(tweak, snapshot, changes);
             Ok(())
         }
+        Queueable::Merge(args) => {
+            crate::merges::onto(args, &system.merge_pair(&args.copy), snapshot, changes)
+        }
         Queueable::Driver(args, on) => {
             network::blacklist_onto(args, Toggle::from_on(on.is_on()), snapshot, changes)
         }

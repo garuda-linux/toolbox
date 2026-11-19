@@ -19,7 +19,7 @@ use resolve::{Unresolved, resolve};
 use rustix::fs::{AtFlags, FileType};
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchRefusal, InvalidConfigText, MAX_CONFIG_BYTES};
 use write::refusal_text;
-pub use write::{WriteError, execute};
+pub use write::{WriteError, execute, write_real};
 
 use crate::secure::{self, Attributes, Unreadable};
 
@@ -181,7 +181,7 @@ pub fn read_real(root: &Path, path: &ConfigFilePath) -> Result<ConfigText, ReadE
 }
 
 /// A missing folder, or a symlink where one should be, is an answer.
-fn open_folder(root: &Path, folder: &str) -> Result<OwnedFd, ReadError> {
+pub fn open_folder(root: &Path, folder: &str) -> Result<OwnedFd, ReadError> {
     secure::open_dir(root, Path::new(folder)).map_err(|error| {
         error
             .raw_os_error()
@@ -193,7 +193,7 @@ fn open_folder(root: &Path, folder: &str) -> Result<OwnedFd, ReadError> {
     })
 }
 
-fn read_text(dir: &OwnedFd, name: &str) -> Result<(ConfigText, Attributes), ReadError> {
+pub fn read_text(dir: &OwnedFd, name: &str) -> Result<(ConfigText, Attributes), ReadError> {
     let file = secure::read_regular(dir, name, MAX_CONFIG_BYTES)?;
     let text = ConfigText::from_bytes(file.content).map_err(|error| {
         ReadError::Refused(match error {

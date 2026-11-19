@@ -28,8 +28,8 @@ use crate::settings::{
 };
 use crate::{
     ConfigWrite, DnsProvider, GarudaUpdateFlag, GroupName, GrubSettings, HomeDirectory, HomeWrite,
-    InstalledSystem, KernelModule, KernelParameters, LocaleEntry, LocaleName, Mirrorlist,
-    RepairWork, ShellPath, Toggle, UserConfigEdit, UserName, WifiBackend,
+    InstalledSystem, KernelModule, KernelParameters, LocaleEntry, LocaleName, MergeResolve,
+    Mirrorlist, RepairWork, ShellPath, Toggle, UserConfigEdit, UserName, WifiBackend,
 };
 
 /// Where [`Builtin::InstallMirrorlist`] writes, relative to `/`.
@@ -172,6 +172,13 @@ pub enum Builtin {
     /// owner and mode and the previous version in the backup folder. Fails
     /// when the file no longer is the version the edit started from.
     WriteConfigFile(ConfigWrite),
+    /// Removes a copy pacman left beside a configuration file, or puts it
+    /// or a merged text in the file's place. Fails unless pacman lists the
+    /// file as a backup file and both files are as the user saw them.
+    ResolveMerge(MergeResolve),
+    /// Runs [`crate::merge::snapshot`] where snapper has a configuration of
+    /// the root file system, else does nothing.
+    SnapshotBeforeMerges,
     /// [`Builtin::WriteConfigFile`] for a file in the user's home. Runs only
     /// in the app, as the user: the helper has no home to write.
     WriteHomeFile(HomeWrite),
@@ -227,6 +234,10 @@ impl Builtin {
         fmt::from_fn(|out| self.write_command(out, Shown::Commands)).to_string()
     }
 
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one arm per builtin, a new builtin fails to compile until it names its command"
+    )]
     fn write_command(&self, out: &mut fmt::Formatter<'_>, shown: Shown) -> fmt::Result {
         match self {
             Self::RemoveDatabaseLock => write!(out, "rm /{DATABASE_LOCK}"),
@@ -267,6 +278,12 @@ impl Builtin {
                 write!(out, "check that {group} is not a system group")
             }
             Self::WriteConfigFile(write) => out.write_str(&write.command()),
+            Self::ResolveMerge(resolve) => out.write_str(&resolve.command()),
+            Self::SnapshotBeforeMerges => write!(
+                out,
+                "{}, where snapper has a configuration of /",
+                crate::merge::snapshot()
+            ),
             Self::WriteHomeFile(write) => out.write_str(&write.command()),
             Self::EditModprobeBlacklist { module, on } => {
                 let verb = if *on { "add" } else { "remove" };

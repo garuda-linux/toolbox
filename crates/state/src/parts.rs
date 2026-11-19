@@ -1,9 +1,16 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use toolbox_plan::{KernelModule, PackageName, ShellPath, UnitName, UserConfigEdit, UserName};
+use toolbox_plan::{
+    KernelModule, MergeCopy, PackageName, ShellPath, UnitName, UserConfigEdit, UserName,
+};
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct MaskedUnits(pub BTreeSet<UnitName>);
+
+/// The copies pacman left beside configuration files, as `pacdiff -o`
+/// lists them. A copy the toolbox may not open is left out.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct MergeCopies(pub BTreeSet<MergeCopy>);
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct MaskedUserUnits(pub BTreeSet<UnitName>);
@@ -53,6 +60,8 @@ impl crate::Part for OwnBlacklist {}
 impl crate::Part for AvailableShells {}
 
 impl crate::Part for MaskedUnits {}
+
+impl crate::Part for MergeCopies {}
 
 impl crate::Part for MaskedUserUnits {}
 

@@ -86,7 +86,7 @@ pub fn show(
                 Row::Updates => rows::updates(page, ui, context, overview),
                 Row::Aur => rows::aur(page, ui, context, overview),
                 Row::Stale => rows::stale(ui, context),
-                Row::Merges => rows::merges(ui, overview),
+                Row::Merges => rows::merges(page, ui, context, overview),
                 Row::Disk => rows::disk(ui, context),
                 Row::Services => rows::services(ui, context, overview),
                 Row::Cleanup => rows::cleanup(ui, context, overview),

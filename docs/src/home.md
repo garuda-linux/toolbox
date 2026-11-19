@@ -34,7 +34,7 @@ under its text.
 | **2 updates available**                                              | The repositories have newer packages (`checkupdates`)                              | **Update now**, in **⋯** **Queue update** and **Show packages** |
 | **One AUR update available**                                         | AUR packages have newer versions (`paru -Qua`)                                     | **Update in Console**, in **⋯** **Show packages**               |
 | **The last update is overdue**                                       | The last update is more than 14 days old, no updates known                         | **Update now**                                                  |
-| **Configuration files to merge**                                     | `.pacnew` or `.pacsave` files wait (`pacdiff -o`)                                  | none, the merge tool opens from [Maintenance](maintenance.md)   |
+| **Configuration files to merge**                                     | `.pacnew` or `.pacsave` files wait (`pacdiff -o`)                                  | **Review…**, in **⋯** **Open in meld**                          |
 | **Disk space is low**                                                | Less than a tenth of `/` is free, or less than 10 GB                               | **Open Maintenance**                                            |
 | **A service failed**                                                 | A system service stopped with an error, named in the card                          | **Show in Services**                                            |
 | **Orphans and package cache**                                        | A package is no longer needed, or the cache holds over 5 GB                        | **Queue clean-up**, then **Don't clean up** to take it back     |
@@ -48,6 +48,42 @@ run with your other changes after you review them.
 
 The restart goes through the system's login service. It may ask for a
 password, for example when other users are logged in.
+
+## Merge configuration files
+
+When an update brings a new version of a configuration file you edited,
+pacman keeps your file and saves the new one beside it as `.pacnew`. When
+it removes or replaces a file you edited, it keeps your version as
+`.pacsave`. Home lists these copies under **Configuration files to
+merge**.
+
+1. Click **Review…**.
+1. For each change, pick **Keep current** or **Take new** (**Take saved**
+   for a `.pacsave`). Every change starts at **Keep current**.
+1. Click **Queue the merge**. To queue the whole file instead, click
+   **Keep current file** or **Use new file** (**Restore saved file** for a
+   `.pacsave`). To change the merged text by hand, click **Edit result…**.
+1. Apply your changes.
+
+A queued file shows **queued** in the list. **Take back** removes it from
+the queue.
+
+| Copy                             | Actions                                                         |
+| -------------------------------- | --------------------------------------------------------------- |
+| Same as the file in use          | **Remove the copy**                                             |
+| File in use is gone              | **Use new file** or **Restore saved file**, **Remove the copy** |
+| Older save (`.pacsave.1` and up) | **Remove the copy**                                             |
+
+Files only root may read, such as `/etc/sudoers`, ask for your password.
+The dialog leaves out copies of files that hold secrets, such as
+`/etc/shadow.pacnew`. Merge those in a terminal, or with **⋯** → **Open
+in meld** on the card.
+
+> **Note:** Where snapper is set up, the toolbox takes a snapshot of `/`
+> first. It keeps the old file in `/var/lib/garuda-toolbox/backups`.
+
+To merge from a terminal, see `garuda-toolbox merges` in
+[Command line](cli.md).
 
 ## See which packages will be updated
 

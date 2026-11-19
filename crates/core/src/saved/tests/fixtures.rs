@@ -16,6 +16,10 @@ const SAVED: &[(&str, &str)] = &[
         include_str!("../fixtures/aur-packages.json"),
     ),
     (
+        "config-merges",
+        include_str!("../fixtures/config-merges.json"),
+    ),
+    (
         "dkms-modules",
         include_str!("../fixtures/dkms-modules.json"),
     ),

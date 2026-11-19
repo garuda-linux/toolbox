@@ -22,6 +22,7 @@ probe-hblock = ad blocking (hBlock)
 probe-wifi-backend = Wi-Fi backend
 probe-garuda-update = garuda-update settings
 probe-module-blacklist = blocked kernel modules
+probe-merges = configuration files to merge
 probe-boot-loader = boot loader
 probe-grub = boot menu (GRUB)
 probe-kernel-cmdline = kernel command line (systemd-boot)

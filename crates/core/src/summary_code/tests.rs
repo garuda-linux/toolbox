@@ -30,6 +30,7 @@ fn removals_masks_and_blacklists_show_before_they_apply() {
     assert_eq!(
         destructive,
         [
+            "config-merge-take",
             "driver-blacklist",
             "group-leave",
             "group-remove",

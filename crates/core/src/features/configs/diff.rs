@@ -79,8 +79,7 @@ impl<'text> Diff<'text> {
         Self { lines }
     }
 
-    #[cfg(test)]
-    fn lines(&self) -> &[Line<'text>] {
+    pub fn lines(&self) -> &[Line<'text>] {
         &self.lines
     }
 

@@ -1,12 +1,22 @@
 use std::path::PathBuf;
 
-use super::{MergeSource as _, Pacdiff, parse_files};
+use toolbox_plan::MergeCopy;
+
+use super::{MergeSource as _, Pacdiff, merge_copies, parse_files};
 use crate::ProbeError;
 use crate::test_support::fake_program;
 
 /// `pacdiff -o` as root in the Lima VM.
 const PACDIFF: &str = include_str!("fixtures/pacdiff-o.stdout");
 const PACDIFF_CODE: &str = include_str!("fixtures/pacdiff-o.code");
+
+struct Listed(Vec<PathBuf>);
+
+impl super::MergeSource for Listed {
+    fn waiting(&self) -> Result<Vec<PathBuf>, ProbeError> {
+        Ok(self.0.clone())
+    }
+}
 
 fn paths(values: &[&str]) -> Vec<PathBuf> {
     values.iter().map(PathBuf::from).collect()
@@ -73,4 +83,43 @@ fn a_failing_pacdiff_fails() {
 #[test]
 fn a_silent_pacdiff_has_nothing_to_merge() {
     assert_eq!(Pacdiff::with_program("true").waiting(), Ok(Vec::new()));
+}
+
+#[test]
+fn the_snapshot_holds_each_copy_the_toolbox_may_open() {
+    let copies = merge_copies(&Listed(parse_files(PACDIFF))).unwrap();
+    let names: Vec<&str> = copies.0.iter().map(MergeCopy::as_str).collect();
+
+    assert_eq!(
+        names,
+        ["/etc/locale.gen.pacsave", "/etc/pacman.conf.pacnew"]
+    );
+}
+
+/// The Lima output with a copy of the password hashes added.
+#[test]
+fn a_copy_of_a_withheld_file_stays_out_of_the_snapshot() {
+    let output = format!("{PACDIFF}/etc/shadow.pacnew\n");
+    let copies = merge_copies(&Listed(parse_files(&output))).unwrap();
+
+    assert_eq!(copies.0.len(), 2);
+}
+
+#[test]
+fn a_self_test_finds_the_copies_among_its_own_files() {
+    let root = tempfile::tempdir().unwrap();
+    let etc = root.path().join("etc");
+
+    std::fs::create_dir_all(&etc).unwrap();
+    for name in ["pacman.conf", "pacman.conf.pacnew", "locale.gen.pacsave"] {
+        std::fs::write(etc.join(name), "").unwrap();
+    }
+
+    assert_eq!(
+        super::FoundCopies::new(root.path().to_owned()).waiting(),
+        Ok(paths(&[
+            "/etc/locale.gen.pacsave",
+            "/etc/pacman.conf.pacnew"
+        ]))
+    );
 }

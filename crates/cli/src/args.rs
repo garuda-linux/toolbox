@@ -13,6 +13,7 @@ mod confirm_of;
 mod group;
 mod guide;
 mod list;
+mod merges;
 mod net;
 mod packages;
 mod pages;
@@ -32,9 +33,11 @@ pub use change::{
     TaskArgs, UnitArgs, UnitChange, UnitShow,
 };
 use clap::{Args, Parser, Subcommand};
+pub use confirm_of::{Confirm, Read};
 pub use group::{Defaulted, Group};
 pub use guide::{GuideCommand, GuideShow};
 pub use list::{KernelsList, LocalesList, ReadList, Search};
+pub use merges::{KeepOrTake, MergeResolveArgs, MergeShow, MergesCommand};
 pub use net::{
     BootRepairCommand, ConfigArgs, ConfigEdit, ConfigsCommand, DriversCommand, ModuleArgs,
     NetworkCommand, OnOff, PingArgs, Radio, RadioArgs, ReinstallArgs, RepairArgs, SetupApply,
@@ -269,6 +272,14 @@ pub enum Command {
     )]
     Configs(ConfigsCommand),
 
+    /// List, compare and resolve the copies pacman left beside config files.
+    #[command(
+        display_order = 12,
+        subcommand,
+        after_help = "Example:\n  garuda-toolbox merges show /etc/pacman.conf.pacnew"
+    )]
+    Merges(MergesCommand),
+
     /// Show the connection and switch radios, drivers and network tests.
     #[command(
         display_order = 13,
@@ -341,38 +352,6 @@ pub enum Command {
         after_help = "Examples:\n  garuda-toolbox help\n  garuda-toolbox help users add"
     )]
     Help(Help),
-}
-
-#[derive(Clone, Copy, Debug, Default, Args)]
-pub struct Read {
-    /// Print JSON instead of text, for scripts.
-    #[arg(long)]
-    pub json: bool,
-}
-
-#[derive(Clone, Copy, Debug, Default, Args)]
-pub struct Confirm {
-    /// Do not ask, carry the change out. Needed without a terminal.
-    #[arg(long, short = 'y')]
-    pub yes: bool,
-
-    /// Print the plan and stop, without asking and without changing
-    /// anything.
-    #[arg(long, conflicts_with = "yes")]
-    pub dry_run: bool,
-
-    /// Print JSON Lines instead of text, for scripts. Needs `--yes` or
-    /// `--dry-run`.
-    #[arg(long)]
-    pub json: bool,
-}
-
-impl Confirm {
-    /// `--json` without `--yes` or `--dry-run`: the question cannot be
-    /// asked, as its answer would land among the JSON lines.
-    pub const fn cannot_ask(self) -> bool {
-        self.json && !self.yes && !self.dry_run
-    }
 }
 
 /// A page, an action or a category, by the rule the session bus applies

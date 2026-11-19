@@ -1,6 +1,8 @@
 //! Configuration files waiting for a merge: `.pacnew`, `.pacsave` and
 //! `.pacorig` files, as `pacdiff -o` lists them.
 
+#[cfg(any(test, feature = "selftest"))]
+mod found;
 #[cfg(test)]
 mod tests;
 
@@ -8,8 +10,12 @@ use std::ffi::OsString;
 use std::path::PathBuf;
 
 use toolbox_exec::{Environment, locate_program};
+use toolbox_plan::MergeCopy;
 use toolbox_plan::procedure::Program;
+use toolbox_state::parts::MergeCopies;
 
+#[cfg(any(test, feature = "selftest"))]
+pub use self::found::FoundCopies;
 use crate::command;
 use crate::error::ProbeError;
 
@@ -69,4 +75,22 @@ fn parse_files(output: &str) -> Vec<PathBuf> {
         .filter(|line| line.starts_with('/'))
         .map(PathBuf::from)
         .collect()
+}
+
+/// The copies the toolbox may open. Others, such as `/etc/shadow.pacnew`,
+/// stay for a merge in a terminal.
+///
+/// # Errors
+///
+/// The [`ProbeError`] of `source`.
+pub fn merge_copies(source: &dyn MergeSource) -> Result<MergeCopies, ProbeError> {
+    source.waiting().map(|paths| {
+        MergeCopies(
+            paths
+                .iter()
+                .filter_map(|path| path.to_str())
+                .filter_map(|path| MergeCopy::new(path).ok())
+                .collect(),
+        )
+    })
 }

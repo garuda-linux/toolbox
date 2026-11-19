@@ -7,9 +7,9 @@ mod tests;
 use toolbox_cli::args::{
     AppsCommand, BootCommand, BootRepairCommand, Command, ConfigsCommand, DkmsCommand,
     DriversCommand, Group, GroupsCommand, GuideCommand, KernelsCommand, LocalesCommand,
-    MaintenanceCommand, NetworkCommand, PackagesCommand, PacksCommand, QueueCommand, ResetArgs,
-    ResetList, ServicesCommand, SettingsCommand, SetupCommand, ToggleCommand, TweaksCommand,
-    UsersCommand,
+    MaintenanceCommand, MergesCommand, NetworkCommand, PackagesCommand, PacksCommand, QueueCommand,
+    ResetArgs, ResetList, ServicesCommand, SettingsCommand, SetupCommand, ToggleCommand,
+    TweaksCommand, UsersCommand,
 };
 
 pub const fn json_read(command: &Command) -> bool {
@@ -45,6 +45,7 @@ pub const fn read_json(command: &Command) -> Option<bool> {
         | Command::Locales(LocalesCommand::Packs(PacksCommand::List(list)))
         | Command::Groups(GroupsCommand::List(list))
         | Command::Configs(ConfigsCommand::List(list))
+        | Command::Merges(MergesCommand::List(list))
         | Command::Network(Group(NetworkCommand::Drivers(DriversCommand::List(list))))
         | Command::Setup(SetupCommand::List(list))
         | Command::Tweaks(Group(TweaksCommand::List(list)))
@@ -75,6 +76,7 @@ pub const fn read_json(command: &Command) -> Option<bool> {
         | Command::Groups(_)
         | Command::Boot(_)
         | Command::Configs(_)
+        | Command::Merges(_)
         | Command::Network(_)
         | Command::Tweaks(_)
         | Command::BootRepair(_)

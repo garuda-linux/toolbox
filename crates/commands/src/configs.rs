@@ -381,7 +381,7 @@ fn unknown(key: &str, out: &mut Out<'_>) -> Exit {
 
 /// Why a root-owned file was not read, in the page's codes, and the
 /// program's own words for `--verbose`.
-fn read_problem(problem: &ReadProblem) -> (String, String) {
+pub(crate) fn read_problem(problem: &ReadProblem) -> (String, String) {
     let code = match problem {
         ReadProblem::Refused(reason) => reason.as_str(),
         ReadProblem::NotRun(refusal) => refusal.code(),

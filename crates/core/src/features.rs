@@ -9,6 +9,7 @@ pub mod kernels;
 pub mod live;
 pub mod locales;
 pub mod maintenance;
+pub mod merges;
 pub mod missing;
 pub mod network;
 pub mod packages;

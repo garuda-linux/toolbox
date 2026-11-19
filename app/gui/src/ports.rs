@@ -43,8 +43,9 @@ use toolbox_services::address::{AddressSource, KdeGeoIp};
 use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
 use toolbox_system::{
     ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing, HelperLocks,
-    Libalpm, NetworkActions, NetworkSource, PacmanLog, SystemActions, SystemBootMenu,
-    SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork, SystemRepair,
+    Libalpm, NetworkActions, NetworkSource, PacmanLog, StatusSources, SystemActions,
+    SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork,
+    SystemRepair,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";
@@ -234,6 +235,20 @@ fn self_test_configs(
     lookup(SELF_TEST_CONFIGS)
         .filter(|_| development)
         .map(PathBuf::from)
+}
+
+/// The status of the machine. A self-test build with its own config files
+/// finds the copies to merge among them, as the Home dialog reads them
+/// there.
+pub fn status_sources() -> StatusSources {
+    let sources = StatusSources::system();
+    let found = self_test_configs(|key| std::env::var_os(key), DEVELOPMENT)
+        .and_then(|dir| samples::merges(dir.join("root")));
+
+    match found {
+        Some(merges) => StatusSources { merges, ..sources },
+        None => sources,
+    }
 }
 
 /// The disks of the machine, or a sample machine in a self-test build's

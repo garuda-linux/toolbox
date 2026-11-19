@@ -5,15 +5,15 @@ use crate::{
     BootloaderId, ConfigFilePath, ConfigText, ConfigWrite, DiskDevice, DkmsBuild, DkmsModuleName,
     DkmsVersion, DnsProvider, Fingerprint, FullName, GarudaUpdateFlag, GroupName, GrubSetting,
     GrubSettings, HomeChange, HomeDirectory, HomeFolder, InstalledSystem, KernelModule,
-    KernelParameters, KernelRelease, LocaleEntry, LocaleName, Mirrorlist, NewHome, NewUser,
-    NewUserParts, PackageName, PartitionDevice, Password, PlymouthTheme, RemoteAction, RepairRoot,
-    RepairWork, RootAction, RootLayout, ShellPath, TargetList, UnitName, UnitOperation, Upgrader,
-    UserName, VolumeDevice, WifiBackend,
+    KernelParameters, KernelRelease, LocaleEntry, LocaleName, MergeChoice, MergeCopy, MergeResolve,
+    Mirrorlist, NewHome, NewUser, NewUserParts, PackageName, PartitionDevice, Password,
+    PlymouthTheme, RemoteAction, RepairRoot, RepairWork, Resolution, RootAction, RootLayout,
+    ShellPath, TargetList, UnitName, UnitOperation, Upgrader, UserName, VolumeDevice, WifiBackend,
 };
 
 /// Every kind [`kind`] names. Written by hand, so a variant missing here
 /// fails [`every_root_action_variant_has_a_sample`].
-const KINDS: [&str; 47] = [
+const KINDS: [&str; 49] = [
     "install-packages",
     "remove-packages",
     "upgrade-system",
@@ -50,6 +50,8 @@ const KINDS: [&str; 47] = [
     "create-group",
     "delete-group",
     "write-config-file",
+    "resolve-merge",
+    "snapshot-before-merges",
     "load-module",
     "unload-module",
     "set-module-blacklisted",
@@ -123,6 +125,8 @@ fn kind(action: &RootAction) -> &'static str {
         RootAction::CreateGroup { group: _ } => "create-group",
         RootAction::DeleteGroup { group: _ } => "delete-group",
         RootAction::WriteConfigFile { write: _ } => "write-config-file",
+        RootAction::ResolveMerge { merge: _ } => "resolve-merge",
+        RootAction::SnapshotBeforeMerges => "snapshot-before-merges",
         RootAction::LoadModule { module: _ } => "load-module",
         RootAction::UnloadModule { module: _ } => "unload-module",
         RootAction::SetModuleBlacklisted {
@@ -291,6 +295,17 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
                 original: Fingerprint::of(b"old"),
             },
         },
+        RootAction::ResolveMerge {
+            merge: MergeResolve {
+                copy: MergeCopy::new("/etc/pacman.conf.pacnew").unwrap(),
+                choice: MergeChoice {
+                    resolution: Resolution::TakeCopy,
+                    copy: Fingerprint::of(b"new"),
+                    current: Some(Fingerprint::of(b"old")),
+                },
+            },
+        },
+        RootAction::SnapshotBeforeMerges,
         RootAction::LoadModule { module: module() },
         RootAction::UnloadModule { module: module() },
         RootAction::SetModuleBlacklisted {

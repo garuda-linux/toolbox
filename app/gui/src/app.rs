@@ -46,7 +46,7 @@ use crate::configs::Configs;
 use crate::console::Console;
 use crate::desktop::DesktopLook;
 use crate::diagnostics::Diagnostics;
-use crate::home::{Home, HomeReaders};
+use crate::home::{Home, HomeReaders, MergeReads};
 use crate::instance::Arrivals;
 use crate::kernels::Kernels;
 use crate::launch::Launcher;
@@ -172,6 +172,14 @@ impl App {
         home.set_problem(
             (setup.queue_lost > 0).then_some(HomeProblem::QueueLost(setup.queue_lost)),
         );
+        if let Some(configs) = &setup.configs {
+            home.set_merge_reads(MergeReads::new(
+                configs.runtime.clone(),
+                waking::repaint(cc.egui_ctx.clone()),
+                Arc::clone(&configs.source),
+            ));
+        }
+
         let app = Self {
             pages: preferences::pages_for(&prefs),
             prefs,

@@ -6,12 +6,13 @@ use std::collections::BTreeSet;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{
     Accounts, AvailableShells, BootLoader, CurrentGrub, CurrentSystemLocale, CurrentUser,
-    EnabledLocales, Group, InstalledPackages, PlymouthState, SdBootKernel, SyncPackages, User,
+    EnabledLocales, Group, InstalledPackages, MergeCopies, PlymouthState, SdBootKernel,
+    SyncPackages, User,
 };
 use toolbox_plan::sdboot::{LoaderSettings, SdBootMenu};
 use toolbox_plan::{
-    GroupName, GrubState, KernelRelease, LocaleEntry, PackageName, PlymouthTheme, ShellPath,
-    UnitName, UserName, system_lang,
+    ConfigText, GroupName, GrubState, KernelRelease, LocaleEntry, MergeCopy, PackageName,
+    PlymouthTheme, ShellPath, UnitName, UserName, system_lang,
 };
 use toolbox_state::boot::KernelCmdline;
 use toolbox_state::kernels::{
@@ -20,7 +21,7 @@ use toolbox_state::kernels::{
 use toolbox_state::locales::{SupportedLocales, parse_supported};
 use toolbox_state::network::drivers::{ModuleFacts, loaded_modules, network_modules};
 use toolbox_state::services::{ActiveState, FileState, UnitInfo};
-use toolbox_system::Host;
+use toolbox_system::{Host, MergePair};
 
 use super::super::FakeSystem;
 
@@ -33,6 +34,8 @@ const LOCALE_CONF: &str = toolbox_plan::testing::locales::LOCALE_CONF;
 const LOCALE_GEN: &str = toolbox_plan::testing::locales::LOCALE_GEN;
 const MODULES_DEP: &str = toolbox_system::testing::network::modules::BARE_METAL_MODULES_DEP;
 const PLYMOUTH_THEMES: &str = toolbox_plan::testing::boot::PLYMOUTH_THEMES;
+const PACDIFF_O: &str = toolbox_system::testing::status::PACDIFF_O;
+const PACMAN_CONF: &str = toolbox_system::testing::packages::PACMAN_CONF;
 const PROC_MODULES: &str = toolbox_system::testing::network::modules::BARE_METAL_PROC_MODULES;
 const SUPPORTED: &str = toolbox_plan::testing::locales::SUPPORTED;
 
@@ -162,6 +165,12 @@ fn install() -> Snapshot {
     snapshot.insert(SupportedLocales(parse_supported(SUPPORTED)));
     snapshot.insert(EnabledLocales(LocaleEntry::enabled_in(LOCALE_GEN)));
     snapshot.insert(CurrentSystemLocale(system_lang(LOCALE_CONF)));
+    snapshot.insert(MergeCopies(
+        PACDIFF_O
+            .lines()
+            .map(|path| MergeCopy::new(path).unwrap())
+            .collect(),
+    ));
     snapshot.insert(ModuleFacts {
         loaded: loaded_modules(PROC_MODULES),
         modules: network_modules(MODULES_DEP),
@@ -211,5 +220,18 @@ pub(super) fn reads() -> FakeSystem {
             settings: LoaderSettings::parse(LOADER_CONF),
             ..SdBootMenu::default()
         }),
+        merges: vec![pacnew()],
+    }
+}
+
+/// `/etc/pacman.conf` of the Lima VM, and its `.pacnew` with the number
+/// of parallel downloads changed.
+pub(super) fn pacnew() -> MergePair {
+    let new = PACMAN_CONF.replace("ParallelDownloads = 5", "ParallelDownloads = 10");
+
+    MergePair {
+        copy: MergeCopy::new("/etc/pacman.conf.pacnew").unwrap(),
+        copied: Ok(ConfigText::new(new).unwrap()),
+        current: Ok(Some(ConfigText::new(PACMAN_CONF).unwrap())),
     }
 }

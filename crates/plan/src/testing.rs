@@ -6,6 +6,7 @@ pub mod boot;
 pub mod grub;
 pub mod host;
 pub mod locales;
+pub mod merge;
 pub mod mirrorlist;
 pub mod network;
 pub mod repair;

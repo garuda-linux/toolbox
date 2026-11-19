@@ -10,12 +10,12 @@ use toolbox_core::domains::{AurPackages, InstalledPackages};
 use toolbox_core::features::packages::aur::{AurIndex, AurPackage};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::sdboot::SdBootMenu;
-use toolbox_plan::{PackageName, UnitScope};
+use toolbox_plan::{FetchRefusal, MergeCopy, PackageName, UnitScope};
 use toolbox_services::catalogs::Catalogs;
 use toolbox_services::units::UnitList;
 use toolbox_state::kernels::DkmsEntry;
 use toolbox_state::services::UnitInfo;
-use toolbox_system::ProbeError;
+use toolbox_system::{MergePair, ProbeError, ReadProblem};
 
 use super::{Sources, SystemReads, build};
 use crate::change::Refused;
@@ -58,12 +58,14 @@ impl Clock for Fixed {
 }
 
 /// The running system from memory: its units, its DKMS modules, its
-/// systemd-boot menu and garuda-update installed.
+/// systemd-boot menu, the files of its copies pacman left and
+/// garuda-update installed.
 #[derive(Default)]
 struct FakeSystem {
     units: Vec<UnitInfo>,
     dkms: Vec<DkmsEntry>,
     menu: Option<SdBootMenu>,
+    merges: Vec<MergePair>,
 }
 
 impl SystemReads for FakeSystem {
@@ -77,6 +79,19 @@ impl SystemReads for FakeSystem {
 
     fn garuda_update(&self) -> bool {
         true
+    }
+
+    /// A copy it holds no files of is gone, as is its file.
+    fn merge_pair(&self, copy: &MergeCopy) -> MergePair {
+        self.merges
+            .iter()
+            .find(|pair| pair.copy == *copy)
+            .cloned()
+            .unwrap_or_else(|| MergePair {
+                copy: copy.clone(),
+                copied: Err(ReadProblem::Refused(FetchRefusal::Missing)),
+                current: Ok(None),
+            })
     }
 
     fn boot_menu(&self) -> Option<SdBootMenu> {

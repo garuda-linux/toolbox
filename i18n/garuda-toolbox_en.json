@@ -4216,6 +4216,15 @@
     "change-clean-package-cache": {
       "string": "Clean the package cache"
     },
+    "change-config-merge-keep": {
+      "string": "Keep {file}, remove {copy}"
+    },
+    "change-config-merge-take": {
+      "string": "Replace {file} with {copy}"
+    },
+    "change-config-merge-write": {
+      "string": "Merge {copy} into {file}"
+    },
     "change-dkms-build": {
       "string": "Build the {module} module for kernel {kernel}"
     },
@@ -5528,6 +5537,96 @@
     },
     "home-merges": {
       "string": "Configuration files to merge"
+    },
+    "home-merges-review": {
+      "string": "Review…"
+    },
+    "home-merges-meld": {
+      "string": "Open in meld"
+    },
+    "home-merges-title": {
+      "string": "Configuration files to merge"
+    },
+    "home-merges-reading": {
+      "string": "Reading the files…"
+    },
+    "home-merges-failed": {
+      "string": "The files could not be read."
+    },
+    "home-merges-none": {
+      "string": "Nothing left to merge."
+    },
+    "home-merges-files": {
+      "string": "Files"
+    },
+    "home-merges-pair": {
+      "string": "{copy} beside {file}"
+    },
+    "home-merges-queued": {
+      "string": "queued"
+    },
+    "home-merges-take-back": {
+      "string": "Take back"
+    },
+    "home-merges-unreadable": {
+      "string": "A file could not be read. Use meld instead."
+    },
+    "home-merges-gone": {
+      "string": "The file in use is gone. The copy can take its place."
+    },
+    "home-merges-same": {
+      "string": "The copy is the same as the file in use."
+    },
+    "home-merges-older": {
+      "string": "An older saved version. It can only be removed."
+    },
+    "home-merges-remove": {
+      "string": "Remove the copy"
+    },
+    "home-merges-keep": {
+      "string": "Keep current"
+    },
+    "home-merges-take-new": {
+      "string": "Take new"
+    },
+    "home-merges-take-saved": {
+      "string": "Take saved"
+    },
+    "home-merges-change": {
+      "string": "Change {number}"
+    },
+    "home-merges-unchanged": {
+      "string": "{count, plural, one {One unchanged line} other {{count} unchanged lines}}"
+    },
+    "home-merges-keep-file": {
+      "string": "Keep current file"
+    },
+    "home-merges-use-file": {
+      "string": "Use new file"
+    },
+    "home-merges-restore-file": {
+      "string": "Restore saved file"
+    },
+    "home-merges-queue-picks": {
+      "string": "Queue the merge"
+    },
+    "home-merges-edit": {
+      "string": "Edit result…"
+    },
+    "home-merges-edit-name": {
+      "string": "Merged text"
+    },
+    "home-merges-edit-invalid": {
+      "string": "The text is too large or holds a NUL character."
+    },
+    "home-merges-edit-back": {
+      "string": "Back"
+    },
+    "home-merges-edit-queue": {
+      "string": "Queue the edited text"
+    },
+    "home-merges-applied": {
+      "string": "This runs with your other changes. Where snapper is set up, a snapshot comes first. The old file is kept in /var/lib/garuda-toolbox/backups."
     },
     "home-health-errors": {
       "string": "garuda-health found problems"
@@ -8183,6 +8282,9 @@
     },
     "probe-module-blacklist": {
       "string": "blocked kernel modules"
+    },
+    "probe-merges": {
+      "string": "configuration files to merge"
     },
     "probe-boot-loader": {
       "string": "boot loader"
