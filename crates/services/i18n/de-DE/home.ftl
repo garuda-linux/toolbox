@@ -1,6 +1,6 @@
 home-hello = Hallo, { $user }!
 home-welcome = Willkommen bei Garuda Linux
-home-subtitle = Pflege dein System und richte es ein.
+home-subtitle = System pflegen und einrichten.
 
 home-status = Systemstatus
 home-refresh = Neu einlesen
@@ -33,7 +33,7 @@ home-updates =
         [one] Ein Update verfügbar
        *[other] { $count } Updates verfügbar
     }
-home-updates-detail = Aktualisiere jetzt in der Konsole oder merk das Update zusammen mit deinen anderen Änderungen vor.
+home-updates-detail = Jetzt in der Konsole aktualisieren oder das Update zusammen mit den übrigen Änderungen vormerken.
 home-update-now = Jetzt aktualisieren
 home-queue-update = Update vormerken
 home-unqueue-update = Nicht aktualisieren
@@ -43,7 +43,7 @@ home-aur-updates =
         [one] Ein AUR-Update verfügbar
        *[other] { $count } AUR-Updates verfügbar
     }
-home-aur-detail = paru baut Pakete aus dem AUR (Arch User Repository) in der Konsole. Prüfe dort die Build-Dateien und beantworte die Rückfragen.
+home-aur-detail = paru baut Pakete aus dem AUR (Arch User Repository) in der Konsole. Dort die Build-Dateien prüfen und die Rückfragen beantworten.
 home-aur-update = In der Konsole aktualisieren
 home-stale = Ein Update ist überfällig
 home-stale-detail = Arch-basierte Systeme sollten mindestens alle zwei Wochen aktualisiert werden.
@@ -90,11 +90,11 @@ home-restart-detail = Der Kernel oder Systembibliotheken wurden im laufenden Bet
 home-restart-button = Neu starten…
 
 home-restart-question = Jetzt neu starten?
-home-restart-question-detail = Speichere zuerst deine Arbeit. Offene Programme werden geschlossen.
+home-restart-question-detail = Die Arbeit zuerst speichern. Offene Programme werden geschlossen.
 home-restart-confirm = Neu starten
 home-cancel = Abbrechen
 home-restart-denied = Der Neustart wurde nicht genehmigt.
-home-restart-failed = Der Computer ließ sich nicht neu starten. Starte ihn über das Menü deines Desktops neu.
+home-restart-failed = Der Computer ließ sich nicht neu starten. Über das Menü des Desktops neu starten.
 
 home-pending = Ausstehende Updates
 home-pending-none = Es stehen keine Updates aus.
@@ -103,18 +103,18 @@ home-pending-versions = { $from } → { $to }
 
 home-live = Live-System
 home-install = Garuda Linux installieren
-home-install-detail = Startet das Installationsprogramm. Es fragt nach deinem Passwort.
+home-install-detail = Das Installationsprogramm wird gestartet. Es fragt nach dem Passwort.
 home-install-button = Installation starten
 # $reason is the system's own words, in English.
 home-install-failed = Das Installationsprogramm ließ sich nicht starten: { $reason }
 home-programs-failed = Die Suche nach den Werkzeugen des Live-Systems ist fehlgeschlagen.
 home-chroot = Ein installiertes System reparieren
-home-chroot-detail = Öffnet in der Konsole eine Root-Shell im installierten Garuda Linux auf diesem Computer. Mit exit verlässt du sie.
+home-chroot-detail = In der Konsole wird eine Root-Shell im installierten Garuda Linux auf diesem Computer geöffnet. Mit exit wird sie wieder verlassen.
 home-chroot-button = In der Konsole öffnen
 
 home-next = Nächste Schritte
 home-next-setup = Apps auswählen und installieren
-home-next-maintenance = Dein System pflegen
+home-next-maintenance = System pflegen
 home-next-review =
     { $count ->
         [one] Eine Änderung wurde noch nicht übernommen
@@ -126,8 +126,8 @@ home-next-review =
 home-summary-fine = Alles in Ordnung
 home-summary-attention =
     { $count ->
-        [one] Ein Punkt braucht deine Aufmerksamkeit
-       *[other] { $count } Punkte brauchen deine Aufmerksamkeit
+        [one] Ein Punkt erfordert Aufmerksamkeit
+       *[other] { $count } Punkte erfordern Aufmerksamkeit
     }
 home-summary-updated-today = · heute aktualisiert
 home-summary-updated =
@@ -162,7 +162,7 @@ home-stat-last-update-days =
 home-stat-unknown = Unbekannt
 
 home-disk = Wenig Speicherplatz
-home-disk-detail = Entferne verwaiste Pakete, leere den Paket-Cache oder lösche alte Snapshots unter „Wartung“.
+home-disk-detail = Verwaiste Pakete entfernen, den Paket-Cache leeren oder alte Snapshots unter „Wartung“ löschen.
 home-disk-button = Wartung öffnen
 home-services =
     { $count ->
@@ -209,4 +209,4 @@ home-queue-lost =
     }
 home-queue-lost-dismiss = Ausblenden
 # A run from Home did not start, as other changes are being applied.
-home-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Starte ihn erneut, sobald sie abgeschlossen sind.
+home-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut starten, sobald sie abgeschlossen sind.

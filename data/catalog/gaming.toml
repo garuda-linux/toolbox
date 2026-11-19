@@ -7,13 +7,6 @@ title = "Game launchers"
 icon = "games-config-board"
 
 [[section.entry]]
-id = "bottles"
-title = "Bottles"
-description = "Easily manage wine and proton prefix"
-check = { package = "bottles" }
-icon = "bottles.svg"
-
-[[section.entry]]
 id = "heroic-games-launcher-bin"
 title = "Heroic Games Launcher"
 description = "An Open source Launcher for Epic, Amazon and GOG Games"

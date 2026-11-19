@@ -20,4 +20,4 @@ guide-hits = { $count ->
    *[other] { $count } Treffer
 }
 guide-no-hits = Keine Treffer für „{ $search }“ im Handbuch.
-guide-no-hits-body = Versuche es mit weniger oder anderen Suchbegriffen.
+guide-no-hits-body = Weniger oder andere Suchbegriffe verwenden.

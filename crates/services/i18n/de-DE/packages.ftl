@@ -31,8 +31,8 @@ packages-nothing-matches-detail = Durchsucht Namen und Beschreibungen im gewähl
 packages-refused-not-offered = { $name } lässt sich nicht installieren: Kein eingerichtetes Repository bietet es an.
 packages-refused-unread = { $name } lässt sich noch nicht vormerken: Die installierten Pakete werden noch eingelesen.
 packages-refused-running-kernel = { $name } ist der laufende Kernel und bleibt deshalb installiert.
-packages-refused-running-unknown = { $name } bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Starte den Computer neu und versuch es noch einmal.
-packages-refused-last-kernel = { $name } ist der letzte installierte Kernel. Installiere einen anderen, bevor du ihn entfernst.
+packages-refused-running-unknown = { $name } bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Den Computer neu starten und erneut versuchen.
+packages-refused-last-kernel = { $name } ist der letzte installierte Kernel. Vor dem Entfernen einen anderen Kernel installieren.
 packages-dismiss = Ausblenden
 # A row button's name for screen readers: $action is the button, such as Install, $name the package.
 packages-action-name = { $action } { $name }
@@ -138,10 +138,10 @@ packages-filter-aur = AUR
 packages-aur-off = AUR-Pakete sind ausgeblendet.
 packages-aur-off-settings = In den Einstellungen einblenden
 packages-aur-loading = Die Paketliste des AUR wird eingelesen…
-packages-aur-failed = Die Paketliste des AUR konnte nicht heruntergeladen werden. Der nächste Versuch folgt in einem Tag.
-packages-aur-waiting = Die Paketliste des AUR liegt noch nicht vor. Der letzte Download ist fehlgeschlagen, der nächste folgt einen Tag danach.
+packages-aur-failed = Die Paketliste des AUR konnte nicht heruntergeladen werden. Der nächste Versuch erfolgt einen Tag später.
+packages-aur-waiting = Die Paketliste des AUR liegt noch nicht vor. Der letzte Download ist fehlgeschlagen, der nächste Versuch erfolgt einen Tag danach.
 # $date is the day the list was downloaded, such as 2025-01-10.
-packages-aur-note = Stand: { $date }. AUR-Pakete sind Skripte der Community, die auf deinem Computer gebaut werden.
+packages-aur-note = Stand: { $date }. AUR-Pakete sind Skripte der Community, die lokal gebaut werden.
 # After the note when the last download of a newer list failed.
 packages-aur-stale = Die Liste konnte nicht aktualisiert werden und ist vielleicht veraltet.
 packages-tag-aur = AUR
@@ -153,7 +153,7 @@ packages-aur-votes = { $count ->
     }
 
 packages-aur-install-title = { $package } aus dem AUR bauen?
-packages-aur-install-body = Das Paket wird aus einem Skript der Community auf deinem Computer gebaut. paru zeigt dir das Build-Skript vorher in der Konsole.
+packages-aur-install-body = Das Paket wird aus einem Skript der Community lokal gebaut. paru zeigt das Build-Skript vorher in der Konsole.
 packages-aur-install-confirm = Bauen und installieren
 
 packages-aur-maintainer = Betreuer

@@ -1,7 +1,7 @@
 {
   "about": {
     "page-about-subtitle": {
-      "string": "Wartung und Einrichtung für dein Garuda Linux."
+      "string": "Wartung und Einrichtung des Garuda-Linux-Systems."
     },
     "about-hero-credits": {
       "string": "Vom Garuda-Linux-Team"
@@ -39,9 +39,6 @@
     "about-copied": {
       "string": "In die Zwischenablage kopiert."
     },
-    "about-help": {
-      "string": "Hilfe"
-    },
     "about-help-wiki": {
       "string": "Garuda-Linux-Wiki"
     },
@@ -58,7 +55,7 @@
       "string": "Exorzist gerufen"
     },
     "about-exorcist-called": {
-      "string": "Wer hier klickt, muss ziemlich verzweifelt sein. Der Exorzist ist unterwegs. Spinnt die App danach immer noch, melde dich im Garuda-Linux-Forum oder im Issue-Tracker."
+      "string": "Wer hier klickt, muss ziemlich verzweifelt sein. Der Exorzist ist unterwegs. Verhält sich die App danach weiter falsch, sollte das im Garuda-Linux-Forum oder im Issue-Tracker gemeldet werden."
     },
     "about-exorcist-forum": {
       "string": "Forum"
@@ -73,7 +70,7 @@
       "string": "Startseite"
     },
     "about-web-start-description": {
-      "string": "Startseite für deinen Browser"
+      "string": "Startseite für den Browser"
     },
     "about-web-gitlab": {
       "string": "GitLab"
@@ -91,7 +88,7 @@
       "string": "SearXNG"
     },
     "about-web-searx-description": {
-      "string": "Suchmaschine, die deine Privatsphäre respektiert"
+      "string": "Suchmaschine, die auf Privatsphäre achtet"
     },
     "about-web-vaultwarden": {
       "string": "Vaultwarden"
@@ -103,7 +100,7 @@
       "string": "Spenden"
     },
     "about-web-donate-description": {
-      "string": "Unterstütze das Garuda-Linux-Projekt"
+      "string": "Das Garuda-Linux-Projekt unterstützen"
     },
     "about-community": {
       "string": "Community"
@@ -150,16 +147,16 @@
       "string": "Eine der Gruppen existiert nicht oder ist zum Entfernen vorgemerkt."
     },
     "account-refusal-root": {
-      "string": "{name} ist ein Root-Konto. Garuda Toolbox ändert es nicht."
+      "string": "{name} ist ein Root-Konto, das von Garuda Toolbox nicht geändert wird."
     },
     "account-refusal-current-user": {
-      "string": "Mit {name} bist du gerade angemeldet. Das eigene Konto kann nicht gesperrt oder entfernt werden."
+      "string": "{name} ist das aktuell angemeldete Konto. Es kann nicht selbst gesperrt oder entfernt werden."
     },
     "account-refusal-system-account": {
       "string": "{name} ist ein Systemkonto. Entfernen lassen sich nur Konten von Personen."
     },
     "account-refusal-outside-user-range": {
-      "string": "{name} hat eine UID außerhalb von 1000 bis 60000 und bleibt daher, wie es ist."
+      "string": "Die UID von {name} liegt außerhalb von 1000 bis 60000, daher bleibt das Konto unverändert."
     },
     "account-refusal-last-admin": {
       "string": "{name} ist das letzte Mitglied der Gruppen wheel und sudo. Ohne dieses Konto könnte niemand mehr dieses System verwalten."
@@ -171,16 +168,16 @@
       "string": "{name} kann nicht gesperrt werden, solange unklar ist, welche Administratoren gesperrt sind."
     },
     "account-refusal-primary-group": {
-      "string": "{name} ist die primäre Gruppe eines Benutzers und kann nicht entfernt werden."
+      "string": "{name} ist die primäre Gruppe eines Benutzers und bleibt daher erhalten."
     },
     "account-refusal-system-group": {
       "string": "{name} ist eine Systemgruppe. Installierte Programme benötigen sie."
     },
     "account-refusal-user-exists": {
-      "string": "Ein Benutzer {name} existiert bereits."
+      "string": "Ein Benutzer namens {name} existiert bereits."
     },
     "account-refusal-group-exists": {
-      "string": "Eine Gruppe {name} existiert bereits."
+      "string": "Eine Gruppe namens {name} existiert bereits."
     },
     "account-refusal-shell-not-listed": {
       "string": "Diese Shell steht nicht in /etc/shells."
@@ -195,7 +192,7 @@
       "string": "Dieses Home-Verzeichnis wird bereits von einem anderen Konto verwendet."
     },
     "account-refusal-busy": {
-      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind."
+      "string": "Andere Änderungen werden gerade übernommen, daher wurde dieser Vorgang nicht gestartet. Erneut versuchen, sobald sie abgeschlossen sind."
     }
   },
   "boot": {
@@ -215,19 +212,19 @@
       "string": "GRUB-Einstellungen konnten nicht gelesen werden"
     },
     "boot-failed-detail": {
-      "string": "Den Grund findest du unten im Fenster. Mit „Neu einlesen“ versuchst du es erneut."
+      "string": "Der Grund steht unten im Fenster. Mit „Neu einlesen“ erneut versuchen."
     },
     "boot-missing": {
       "string": "Dieses System verwendet nicht GRUB als Bootloader"
     },
     "boot-missing-detail": {
-      "string": "/etc/default/grub fehlt, daher kann diese Seite nichts ändern. Andere Bootloader richtest du mit ihren eigenen Werkzeugen ein."
+      "string": "/etc/default/grub fehlt, daher kann diese Seite nichts ändern. Andere Bootloader werden mit ihren eigenen Werkzeugen eingerichtet."
     },
     "boot-loading": {
       "string": "Boot-Einstellungen werden gelesen…"
     },
     "boot-vm": {
-      "string": "Du nutzt eine virtuelle Maschine. Der Splash-Screen funktioniert dort nur eingeschränkt."
+      "string": "Dieses System läuft in einer virtuellen Maschine. Der Splash-Screen funktioniert dort nur eingeschränkt."
     },
     "boot-refused-unavailable": {
       "string": "Auf diesem System fehlt /etc/default/grub, daher gibt es nichts zu ändern."
@@ -236,7 +233,7 @@
       "string": "{value} hinzufügen?"
     },
     "boot-risky-body": {
-      "string": "Dieser Parameter öffnet beim Start eine root-Shell oder schaltet eine Schutzschicht ab. Jeder am Computer könnte ihn dann übernehmen. Füge ihn nur hinzu, wenn du weißt, wofür du ihn brauchst."
+      "string": "Dieser Parameter öffnet beim Start eine root-Shell oder schaltet eine Schutzschicht ab. Dann könnte jeder am Computer die Kontrolle übernehmen. Nur hinzufügen, wenn bekannt ist, wozu er gebraucht wird."
     },
     "boot-risky-confirm": {
       "string": "Parameter hinzufügen"
@@ -245,7 +242,7 @@
       "string": "Abbrechen"
     },
     "boot-refused-custom-command-line": {
-      "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Bearbeite /etc/default/grub auf der Seite „Konfigurationsdateien“."
+      "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Die Datei /etc/default/grub auf der Seite „Konfigurationsdateien“ bearbeiten."
     },
     "boot-refused-too-many-parameters": {
       "string": "Die Kernel-Befehlszeile ist voll."
@@ -257,7 +254,7 @@
       "string": "Dieses System hat keine /etc/kernel/cmdline. Seine Booteinträge bringen ihre eigenen Parameter mit, daher gibt es nichts zu ändern."
     },
     "boot-refused-custom-kernel-cmdline": {
-      "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Bearbeite /etc/kernel/cmdline auf der Seite „Konfigurationsdateien“."
+      "string": "Die Kernel-Befehlszeile lässt sich hier nicht ändern. Die Datei /etc/kernel/cmdline auf der Seite „Konfigurationsdateien“ bearbeiten."
     },
     "boot-refused-protected-parameter": {
       "string": "{name} bleibt: Ohne diesen Parameter findet das System kein Root-Dateisystem zum Starten."
@@ -290,37 +287,37 @@
       "string": "Standardeintrag"
     },
     "boot-default-known": {
-      "string": "Der Menüeintrag, der gestartet wird, wenn du keinen anderen wählst."
+      "string": "Der Menüeintrag, der startet, wenn kein anderer gewählt wird."
     },
     "boot-default-missing": {
       "string": "GRUB hat noch kein Bootmenü erstellt, daher gibt es keine Einträge zur Auswahl."
     },
     "boot-default-dismissed": {
-      "string": "Die Passwortabfrage wurde geschlossen, daher fehlen die Einträge des Bootmenüs. Mit „Neu einlesen“ versuchst du es erneut."
+      "string": "Die Passwortabfrage wurde geschlossen, daher fehlen die Einträge des Bootmenüs. Mit „Neu einlesen“ erneut versuchen."
     },
     "boot-default-denied": {
-      "string": "Die Einträge des Bootmenüs fehlen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen. Mit „Neu einlesen“ versuchst du es erneut."
+      "string": "Die Einträge des Bootmenüs fehlen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen. Mit „Neu einlesen“ erneut versuchen."
     },
     "boot-default-no-agent": {
       "string": "Die Einträge des Bootmenüs fehlen, weil keine Passwortabfrage erscheinen konnte: In dieser Sitzung läuft kein polkit-Agent."
     },
     "boot-default-helper-missing": {
-      "string": "Die Einträge des Bootmenüs fehlen, weil das Hilfsprogramm von Garuda Toolbox nicht installiert ist. Installiere Garuda Toolbox neu."
+      "string": "Die Einträge des Bootmenüs fehlen, weil das Hilfsprogramm von Garuda Toolbox nicht installiert ist. Garuda Toolbox neu installieren."
     },
     "boot-default-broken": {
       "string": "Die Einträge des Bootmenüs fehlen, weil pkexec auf diesem System nicht laufen kann."
     },
     "boot-default-unknown": {
-      "string": "Das Bootmenü konnte nicht gelesen werden, daher fehlen seine Einträge. Mit „Neu einlesen“ versuchst du es erneut."
+      "string": "Das Bootmenü konnte nicht gelesen werden, daher fehlen seine Einträge. Mit „Neu einlesen“ erneut versuchen."
     },
     "boot-default-not-asked": {
-      "string": "Das Bootmenü wurde noch nicht gelesen. Mit „Neu einlesen“ liest du es ein."
+      "string": "Das Bootmenü wurde noch nicht gelesen. Mit „Neu einlesen“ wird es eingelesen."
     },
     "boot-default-loading": {
       "string": "Das Bootmenü wird eingelesen…"
     },
     "boot-default-remembered": {
-      "string": "GRUB startet den zuletzt gewählten Eintrag."
+      "string": "GRUB startet den zuletzt gestarteten Eintrag."
     },
     "boot-default-last": {
       "string": "Zuletzt gestarteter Eintrag"
@@ -344,7 +341,7 @@
       "string": "Wie lange das Menü wartet, bevor es den Standardeintrag startet."
     },
     "boot-timeout-unknown": {
-      "string": "Die eingetragene Wartezeit ist keine Zahl. Wählst du hier einen Wert, wird sie ersetzt."
+      "string": "Die eingetragene Wartezeit ist keine Zahl. Ein hier gewählter Wert ersetzt sie."
     },
     "boot-timeout-seconds": {
       "string": "Wartezeit des Menüs in Sekunden"
@@ -362,7 +359,7 @@
       "string": "Einträge in Untermenüs gruppieren"
     },
     "boot-submenus-detail": {
-      "string": "Ist das aus, stehen alle Einträge im Hauptmenü, ohne „Erweiterte Optionen“."
+      "string": "Ohne diese Option stehen alle Einträge im Hauptmenü, und es gibt kein Untermenü „Erweiterte Optionen“."
     },
     "boot-os-prober": {
       "string": "Nach anderen Betriebssystemen suchen"
@@ -377,13 +374,13 @@
       "string": "Der Kernel {kernel} ist bereits der Standardeintrag."
     },
     "boot-proposal-remember": {
-      "string": "GRUB startet den zuletzt gewählten Eintrag. Schalte „Letzten Eintrag merken“ aus, um den Kernel {kernel} zum Standard zu machen."
+      "string": "GRUB startet den zuletzt gestarteten Eintrag. „Letzten Eintrag merken“ ausschalten, um den Kernel {kernel} zum Standard zu machen."
     },
     "boot-proposal-none": {
-      "string": "Das Bootmenü hat keinen Eintrag für den Kernel {kernel}. Wähle den Eintrag selbst oder erstelle das Menü neu, indem du eine beliebige Änderung auf dieser Seite übernimmst."
+      "string": "Das Bootmenü hat keinen Eintrag für den Kernel {kernel}. Den Eintrag selbst wählen oder das Menü neu erstellen, indem eine beliebige Änderung auf dieser Seite übernommen wird."
     },
     "boot-proposal-sdboot-none": {
-      "string": "systemd-boot hat noch kein Image des Kernels {kernel}. Sein Image wird gebaut, wenn der Kernel installiert oder aktualisiert wird. Wähle den Eintrag selbst, sobald er da ist."
+      "string": "systemd-boot hat noch kein Image des Kernels {kernel}. Sein Image wird gebaut, wenn der Kernel installiert oder aktualisiert wird. Den Eintrag selbst wählen, sobald er vorhanden ist."
     },
     "boot-proposal-loading": {
       "string": "Der Menüeintrag des Kernels {kernel} wird gesucht…"
@@ -410,7 +407,7 @@
       "string": "Keine Parameter."
     },
     "boot-parameters-custom": {
-      "string": "Die Kernel-Befehlszeile enthält Anführungszeichen oder andere Zeichen, die diese Seite nicht bearbeiten kann: {line} Bearbeite /etc/default/grub stattdessen auf der Seite „Konfigurationsdateien“."
+      "string": "Die Kernel-Befehlszeile enthält Anführungszeichen oder andere Zeichen, die diese Seite nicht bearbeiten kann: {line} Stattdessen die Datei /etc/default/grub auf der Seite „Konfigurationsdateien“ bearbeiten."
     },
     "boot-parameter-new": {
       "string": "Neuer Kernel-Parameter"
@@ -431,7 +428,7 @@
       "string": "Die meisten Startmeldungen ausblenden (quiet)"
     },
     "boot-flag-quiet-detail": {
-      "string": "Ist das aus, zeigt der Kernel beim Systemstart alle Meldungen."
+      "string": "Ohne diese Option zeigt der Kernel beim Systemstart alle Meldungen."
     },
     "boot-flag-splash": {
       "string": "Splash-Screen anzeigen (splash)"
@@ -461,7 +458,7 @@
       "string": "Die Animation, die Plymouth beim Systemstart zeigt. Beim Übernehmen wird die Initramfs neu erstellt (das kleine Startsystem, das der Kernel zuerst lädt). Das dauert eine Weile."
     },
     "boot-plymouth-queued": {
-      "string": "Plymouth ist zur Installation vorgemerkt. Wähle ein Theme, sobald es installiert ist."
+      "string": "Plymouth ist zur Installation vorgemerkt. Ein Theme wählen, sobald es installiert ist."
     },
     "boot-plymouth-missing": {
       "string": "Plymouth ist nicht installiert, daher gibt es keine Themes zur Auswahl."
@@ -476,7 +473,7 @@
       "string": "Ein PNG-, JPEG- oder TGA-Bild hinter dem Bootmenü. Ein GRUB-Theme hat seinen eigenen Hintergrund."
     },
     "boot-background-from-theme": {
-      "string": "In /etc/default/grub als GRUB_MENU_PICTURE gesetzt, das manche GRUB-Themes lesen. Wähle ein Bild, um es zu ersetzen."
+      "string": "In /etc/default/grub als GRUB_MENU_PICTURE gesetzt, das manche GRUB-Themes lesen. Ein Bild wählen, um es zu ersetzen."
     },
     "boot-background-title": {
       "string": "Hintergrundbild wählen"
@@ -509,7 +506,7 @@
       "string": "{name} leeren"
     },
     "boot-file-chooser-failed": {
-      "string": "Der Dateidialog ließ sich nicht öffnen. Installiere ein Dateiauswahl-Portal wie xdg-desktop-portal-kde oder xdg-desktop-portal-gtk und versuche es dann noch einmal."
+      "string": "Der Dateidialog ließ sich nicht öffnen. Ein Dateiauswahl-Portal wie xdg-desktop-portal-kde oder xdg-desktop-portal-gtk installieren und danach erneut versuchen."
     },
     "boot-sdboot-unset": {
       "string": "Vorgabe von systemd-boot"
@@ -533,10 +530,10 @@
       "string": "Wie lange das Menü wartet, bevor es den Standardeintrag startet."
     },
     "boot-sdboot-timeout-menu-force": {
-      "string": "Das Menü wartet auf eine Taste"
+      "string": "Das Menü wartet auf einen Tastendruck"
     },
     "boot-sdboot-timeout-menu-hidden": {
-      "string": "Verborgen, außer beim Start wird eine Taste gehalten"
+      "string": "Verborgen, außer wenn beim Start eine Taste gehalten wird"
     },
     "boot-sdboot-timeout-menu-disabled": {
       "string": "Das Menü wird nie gezeigt"
@@ -563,7 +560,7 @@
       "string": "Jeder Parameter ist ein Wort wie nowatchdog oder loglevel=3. Sie werden in /etc/kernel/cmdline geschrieben und in jedes Kernel-Image eingebaut."
     },
     "boot-sdboot-parameters-custom": {
-      "string": "Die Kernel-Befehlszeile enthält Anführungszeichen oder andere Zeichen, die diese Seite nicht bearbeiten kann: {line} Bearbeite /etc/kernel/cmdline stattdessen auf der Seite „Konfigurationsdateien“."
+      "string": "Die Kernel-Befehlszeile enthält Anführungszeichen oder andere Zeichen, die diese Seite nicht bearbeiten kann: {line} Stattdessen die Datei /etc/kernel/cmdline auf der Seite „Konfigurationsdateien“ bearbeiten."
     },
     "boot-sdboot-cmdline-running": {
       "string": "/etc/kernel/cmdline gibt es noch nicht, daher sind das die Parameter, mit denen das System gestartet ist. Die erste Änderung legt die Datei an."
@@ -586,7 +583,7 @@
       "string": "Neu einlesen"
     },
     "repair-asks-first": {
-      "string": "Vor jeder Reparatur siehst du, auf welche Partition und welchen Datenträger geschrieben wird. GRUB-Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert."
+      "string": "Vor jeder Reparatur werden die Partition und der Datenträger genannt, auf die geschrieben wird. GRUB-Systeme mit eigener /boot-Partition oder einer EFI-Systempartition außerhalb von /boot/efi werden hier nicht repariert."
     },
     "repair-test-mode": {
       "string": "Testmodus: Diese Seite ist für das Live-System gedacht und erscheint hier nur, weil Garuda Toolbox mit --boot-repair gestartet wurde. Datenträger des laufenden Systems bleiben unberührt."
@@ -601,13 +598,13 @@
       "string": "Datenträger konnten nicht gelesen werden"
     },
     "repair-failed-detail": {
-      "string": "Den Grund findest du im Log. Mit „Neu einlesen“ versuchst du es erneut."
+      "string": "Den Grund nennt das Log. Mit „Neu einlesen“ wird es erneut versucht."
     },
     "repair-missing": {
       "string": "Die Boot-Reparatur ist auf diesem System nicht möglich"
     },
     "repair-missing-detail": {
-      "string": "Diese Programme fehlen: {tools}. Installiere sie und wähle dann „Neu einlesen“."
+      "string": "Diese Programme fehlen: {tools}. Die Programme installieren und danach „Neu einlesen“ verwenden."
     },
     "repair-none": {
       "string": "Kein installiertes System gefunden"
@@ -655,7 +652,7 @@
       "string": "Verschlüsselt (LUKS), entsperrt"
     },
     "repair-locked-detail": {
-      "string": "Vor der Reparatur wirst du nach dem Passwort gefragt. Danach wird die Partition wieder gesperrt."
+      "string": "Vor der Reparatur wird nach dem Passwort gefragt. Danach wird die Partition wieder gesperrt."
     },
     "repair-disk": {
       "string": "Datenträger"
@@ -664,7 +661,7 @@
       "string": "Speicherort des Systems"
     },
     "repair-layout-detail": {
-      "string": "Garuda installiert ins Subvolumen @, ein Btrfs-Verzeichnis mit dem System. Wähle die oberste Ebene nur, wenn das System ohne Subvolumen installiert wurde."
+      "string": "Garuda wird ins Subvolumen @ installiert, ein Btrfs-Verzeichnis, das das System enthält. Die oberste Ebene sollte nur gewählt werden, wenn das System ohne Subvolumen installiert wurde."
     },
     "repair-layout-subvolume": {
       "string": "Im Subvolumen @ (Garudas Aufteilung, ein Btrfs-Verzeichnis, das das System enthält)"
@@ -679,7 +676,7 @@
       "string": "Auf der obersten Ebene"
     },
     "repair-in-use": {
-      "string": "Das laufende System nutzt den Datenträger dieser Partition, deshalb kann sie von hier aus nicht repariert werden. Starte das Live-System von einem anderen Medium oder hänge alle Partitionen dieses Datenträgers aus und wähle dann „Neu einlesen“."
+      "string": "Das laufende System nutzt den Datenträger dieser Partition, darum kann sie von hier aus nicht repariert werden. Das Live-System von einem anderen Medium starten oder alle Partitionen dieses Datenträgers aushängen und danach „Neu einlesen“ wählen."
     },
     "repair-work": {
       "string": "Reparatur"
@@ -694,7 +691,7 @@
       "string": "Datenträger für den Bootloader"
     },
     "repair-target-disk-detail": {
-      "string": "GRUB wird in die ersten Sektoren dieses Datenträgers geschrieben. Wähle den Datenträger, von dem dein Computer startet."
+      "string": "GRUB wird in die ersten Sektoren dieses Datenträgers geschrieben. Den Datenträger wählen, von dem der Computer startet."
     },
     "repair-no-esp": {
       "string": "Auf keinem freien Datenträger wurde eine EFI-Systempartition gefunden, daher kann kein Bootloader installiert werden. Das Bootmenü eines GRUB-Systems kann trotzdem neu geschrieben werden."
@@ -709,16 +706,16 @@
       "string": "Bootdateien neu bauen…"
     },
     "repair-running": {
-      "string": "Die Reparatur läuft. Ihre Ausgabe siehst du in der Konsole."
+      "string": "Die Reparatur läuft. Die Ausgabe erscheint in der Konsole."
     },
     "repair-succeeded": {
-      "string": "Die Reparatur wurde fehlerfrei abgeschlossen. Starte den Computer ohne das Live-Medium neu, um das installierte System zu testen."
+      "string": "Die Reparatur wurde fehlerfrei abgeschlossen. Den Computer ohne das Live-Medium neu starten, um das installierte System zu testen."
     },
     "repair-failed-run": {
-      "string": "Die Reparatur ist fehlgeschlagen. Alle Partitionen wurden wieder ausgehängt und gesperrt. Welcher Befehl fehlschlug, siehst du in der Konsole."
+      "string": "Die Reparatur ist fehlgeschlagen. Alle Partitionen wurden wieder ausgehängt und gesperrt. Die Konsole zeigt, welcher Befehl fehlschlug."
     },
     "repair-busy": {
-      "string": "Die Reparatur wurde nicht gestartet, weil noch eine andere Aufgabe lief. Versuche es erneut, wenn sie abgeschlossen ist."
+      "string": "Die Reparatur wurde nicht gestartet, weil noch eine andere Aufgabe lief. Erneut versuchen, sobald sie abgeschlossen ist."
     },
     "repair-show-console": {
       "string": "Konsole anzeigen"
@@ -778,10 +775,10 @@
       "string": "Die Reparatur startet sofort und fragt nach dem Passwort eines Administrators. Jeder Befehl erscheint in der Konsole."
     },
     "repair-trust-disk": {
-      "string": "Dies ist nicht die Live-ISO. grub-install, mkinitcpio und bootctl des gewählten Systems laufen als root. Repariere nur eine Festplatte, auf die niemand sonst schreiben konnte."
+      "string": "Dies ist nicht die Live-ISO. grub-install, mkinitcpio und bootctl des gewählten Systems laufen als root. Es sollte nur ein Datenträger repariert werden, auf den niemand sonst schreiben konnte."
     },
     "repair-encrypted": {
-      "string": "{system} ist verschlüsselt. Für die Reparatur wird es entsperrt und danach wieder gesperrt. Garuda Toolbox speichert dein Passwort nirgends."
+      "string": "{system} ist verschlüsselt. Für die Reparatur wird es entsperrt und danach wieder gesperrt. Das Passwort wird in keiner Datei von Garuda Toolbox gespeichert."
     },
     "repair-passphrase": {
       "string": "Passwort der verschlüsselten Partition"
@@ -793,19 +790,19 @@
       "string": "Die Datenträger ließen sich nicht lesen, daher kann nichts repariert werden."
     },
     "repair-refused-unknown-system": {
-      "string": "Dieses System ist nicht mehr in der Liste. Lies die Datenträger neu ein."
+      "string": "Dieses System ist nicht mehr in der Liste. Die Datenträger neu einlesen."
     },
     "repair-refused-in-use": {
       "string": "Das laufende System nutzt diesen Datenträger, daher wird nichts darauf geschrieben."
     },
     "repair-refused-unknown-target": {
-      "string": "Wähle zuerst das Ziel für den Bootloader."
+      "string": "Das Ziel für den Bootloader muss zuerst gewählt werden."
     },
     "repair-refused-unknown-layout": {
-      "string": "Wähle zuerst den Speicherort des Systems."
+      "string": "Der Speicherort des Systems muss zuerst gewählt werden."
     },
     "repair-refused-empty": {
-      "string": "Gib das Passwort der verschlüsselten Partition ein."
+      "string": "Das Passwort der verschlüsselten Partition eingeben."
     },
     "repair-refused-too-long": {
       "string": "Das Passwort ist zu lang."
@@ -817,7 +814,7 @@
       "string": "Die Reparatur konnte nicht gestartet werden."
     },
     "repair-why-passphrase": {
-      "string": "Gib zuerst das Passwort ein."
+      "string": "Das Passwort muss eingegeben werden, um fortzufahren."
     },
     "repair-why-busy": {
       "string": "Gerade läuft noch eine andere Aufgabe."
@@ -855,7 +852,7 @@
       "string": "EasyEffects"
     },
     "catalog-components-easyeffects-description": {
-      "string": "Effekte für Mikrofon und Wiedergabe. Installiere am besten auch die Calf und LSP Plugins."
+      "string": "Effekte für Mikrofon und Wiedergabe. Zusätzlich empfohlen: Calf Plugins und LSP Plugins."
     },
     "catalog-components-lsp-plugins": {
       "string": "LSP Plugins"
@@ -873,7 +870,7 @@
       "string": "JamesDSP"
     },
     "catalog-components-jamesdsp-description": {
-      "string": "Effektprozessor für Bass-Boost, Equalizer und mehr. Probier am besten zuerst EasyEffects aus."
+      "string": "Effektprozessor für Bass-Boost, Equalizer und mehr. Für den Einstieg wird zuerst EasyEffects empfohlen."
     },
     "catalog-components-virtualization": {
       "string": "Virtualisierung"
@@ -894,13 +891,13 @@
       "string": "Gruppe „libvirt“"
     },
     "catalog-components-group-libvirt-description": {
-      "string": "Mitgliedschaft in der Gruppe „libvirt“, damit du virtuelle Maschinen mit KVM und QEMU verwalten kannst."
+      "string": "Mitgliedschaft in der Gruppe „libvirt“ für die Verwaltung virtueller Maschinen mit KVM und QEMU."
     },
     "catalog-components-group-kvm": {
       "string": "Gruppe „kvm“"
     },
     "catalog-components-group-kvm-description": {
-      "string": "Mitgliedschaft in der Gruppe „kvm“, damit du schnelle, hardwarebeschleunigte virtuelle Maschinen nutzen kannst."
+      "string": "Mitgliedschaft in der Gruppe „kvm“ für die Nutzung schneller, hardwarebeschleunigter virtueller Maschinen."
     },
     "catalog-components-qemu": {
       "string": "QEMU"
@@ -918,7 +915,7 @@
       "string": "Gruppe „vboxusers“"
     },
     "catalog-components-group-vboxusers-description": {
-      "string": "Mitgliedschaft in der Gruppe „vboxusers“, damit du VirtualBox nutzen kannst."
+      "string": "Mitgliedschaft in der Gruppe „vboxusers“ für die Nutzung von VirtualBox."
     },
     "catalog-components-qemu-user-static": {
       "string": "QEMU User Static"
@@ -951,7 +948,7 @@
       "string": "Gruppe „docker“"
     },
     "catalog-components-group-docker-description": {
-      "string": "Mitgliedschaft in der Gruppe „docker“, damit du Docker-Befehle ohne sudo nutzen kannst."
+      "string": "Mitgliedschaft in der Gruppe „docker“ für Docker-Befehle ohne sudo."
     },
     "catalog-components-docker-compose": {
       "string": "Docker Compose"
@@ -969,7 +966,7 @@
       "string": "Podman Desktop"
     },
     "catalog-components-podman-desktop-description": {
-      "string": "Grafische App, um deine Podman-Container zu verwalten, zu erstellen und anzusehen."
+      "string": "Grafische App zum Verwalten, Erstellen und Anzeigen von Podman-Containern."
     },
     "catalog-components-podman-docker": {
       "string": "Podman als Docker"
@@ -981,19 +978,19 @@
       "string": "Distrobox"
     },
     "catalog-components-distrobox-description": {
-      "string": "Gut eingebundene Container anderer Distributionen. So nutzt du Apps aus Ubuntu, Fedora oder Arch direkt in Garuda."
+      "string": "Container anderer Distributionen mit enger Systemintegration. Apps aus Ubuntu, Fedora oder Arch lassen sich so direkt in Garuda nutzen."
     },
     "catalog-components-kontainer": {
       "string": "Kontainer"
     },
     "catalog-components-kontainer-description": {
-      "string": "KDE-App, mit der du Distrobox-Container bequem verwaltest."
+      "string": "KDE-App zum komfortablen Verwalten von Distrobox-Containern."
     },
     "catalog-components-boxbuddy": {
       "string": "BoxBuddy"
     },
     "catalog-components-boxbuddy-description": {
-      "string": "Grafische App, mit der du deine Distrobox-Umgebungen verwaltest und nutzt."
+      "string": "Grafische App zum Verwalten und Nutzen von Distrobox-Umgebungen."
     },
     "catalog-components-winboat": {
       "string": "WinBoat"
@@ -1008,13 +1005,13 @@
       "string": "NetworkManager"
     },
     "catalog-components-networkmanager-description": {
-      "string": "Daemon, der deine WLAN-, Ethernet- und VPN-Verbindungen einrichtet und verwaltet."
+      "string": "Daemon zum Einrichten und Verwalten von WLAN-, Ethernet- und VPN-Verbindungen."
     },
     "catalog-components-enabled-networkmanager": {
       "string": "NetworkManager-Dienst"
     },
     "catalog-components-enabled-networkmanager-description": {
-      "string": "Daemon von NetworkManager, damit du dich mit dem Internet verbinden kannst."
+      "string": "Daemon von NetworkManager für die Verbindung mit dem Internet."
     },
     "catalog-components-enabled-modemmanager": {
       "string": "ModemManager"
@@ -1035,7 +1032,7 @@
       "string": "Bluetooth-Dienst"
     },
     "catalog-components-enabled-bluetooth-description": {
-      "string": "Hintergrunddienst, mit dem du Bluetooth-Geräte koppelst und verbindest."
+      "string": "Hintergrunddienst zum Koppeln und Verbinden von Bluetooth-Geräten."
     },
     "catalog-components-autoconnect": {
       "string": "Automatisch verbinden"
@@ -1074,19 +1071,19 @@
       "string": "SANE im Netzwerk"
     },
     "catalog-components-enabled-saned-description": {
-      "string": "Daemon, der deinen Scanner im lokalen Netzwerk freigibt."
+      "string": "Daemon zum Freigeben von Scannern im lokalen Netzwerk."
     },
     "catalog-components-group-cups": {
       "string": "Gruppe „cups“"
     },
     "catalog-components-group-cups-description": {
-      "string": "Mitgliedschaft in der Gruppe „cups“, damit du Drucker und Druckaufträge verwalten kannst."
+      "string": "Mitgliedschaft in der Gruppe „cups“ für die Verwaltung von Druckern und Druckaufträgen."
     },
     "catalog-components-group-scanner": {
       "string": "Gruppe „scanner“"
     },
     "catalog-components-group-scanner-description": {
-      "string": "Mitgliedschaft in der Gruppe „scanner“, damit du Dokumentenscanner nutzen kannst."
+      "string": "Mitgliedschaft in der Gruppe „scanner“ für die Nutzung von Dokumentenscannern."
     },
     "catalog-components-group-lp": {
       "string": "Gruppe „lp“"
@@ -1107,7 +1104,7 @@
       "string": "UFW-Dienst"
     },
     "catalog-components-enabled-ufw-description": {
-      "string": "Dienst von UFW, der deine Firewall-Regeln durchsetzt."
+      "string": "Dienst von UFW, der die Firewall-Regeln durchsetzt."
     },
     "catalog-components-firewalld": {
       "string": "firewalld"
@@ -1119,19 +1116,19 @@
       "string": "firewalld-Dienst"
     },
     "catalog-components-enabled-firewalld-description": {
-      "string": "Daemon von firewalld, der dein System vor eingehenden Verbindungen schützt."
+      "string": "Daemon von firewalld, der das System vor eingehenden Verbindungen schützt."
     },
     "catalog-components-opensnitch": {
       "string": "OpenSnitch"
     },
     "catalog-components-opensnitch-description": {
-      "string": "Firewall auf Anwendungsebene. Sie fragt nach, sobald ein Programm ins Internet will."
+      "string": "Firewall auf Anwendungsebene, die bei jedem Verbindungsversuch eines Programms ins Internet nachfragt."
     },
     "catalog-components-enabled-opensnitch": {
       "string": "OpenSnitch-Dienst"
     },
     "catalog-components-enabled-opensnitch-description": {
-      "string": "Daemon von OpenSnitch, der den Netzwerkverkehr deiner Anwendungen überwacht."
+      "string": "Daemon von OpenSnitch, der den Netzwerkverkehr der Anwendungen überwacht."
     },
     "catalog-components-misc": {
       "string": "Sonstiges"
@@ -1149,13 +1146,13 @@
       "string": "Profile-sync-daemon"
     },
     "catalog-settings-profile-sync-daemon-description": {
-      "string": "Browserprofile (etwa von Firefox oder Brave) im schnellen Arbeitsspeicher (tmpfs). Der Browser reagiert schneller und deine SSD wird geschont."
+      "string": "Browserprofile (etwa von Firefox oder Brave) im schnellen Arbeitsspeicher (tmpfs). Der Browser reagiert schneller und die SSD wird geschont."
     },
     "catalog-settings-enable-profile-sync-daemon": {
       "string": "PSD-Dienst"
     },
     "catalog-settings-enable-profile-sync-daemon-description": {
-      "string": "Dienst, der deine Browserprofile automatisch im Arbeitsspeicher hält."
+      "string": "Dienst, der Browserprofile automatisch im Arbeitsspeicher hält."
     },
     "catalog-settings-systemd-oomd": {
       "string": "systemd-oomd"
@@ -1167,7 +1164,7 @@
       "string": "Gastkonto"
     },
     "catalog-settings-guest-user-description": {
-      "string": "Temporäres Gastkonto ohne Passwort und ohne Zugriff auf deine Dateien. Beim Abmelden wird es geleert."
+      "string": "Temporäres Gastkonto ohne Passwort und ohne Zugriff auf persönliche Dateien. Beim Abmelden wird es geleert."
     },
     "catalog-settings-performance": {
       "string": "Leistung"
@@ -1182,13 +1179,13 @@
       "string": "Ananicy-C++"
     },
     "catalog-settings-ananicy-cpp-description": {
-      "string": "Auto NICe Daemon. Er passt die CPU-Priorität laufender Prozesse an, damit die App, die du gerade nutzt, mehr Rechenzeit bekommt."
+      "string": "Auto NICe Daemon. Er passt die CPU-Priorität laufender Prozesse an, damit die gerade aktive App mehr Rechenzeit bekommt."
     },
     "catalog-settings-enable-ananicy-cpp": {
       "string": "Ananicy-Dienst"
     },
     "catalog-settings-enable-ananicy-cpp-description": {
-      "string": "Dienst, der laufend die CPU-Prioritäten deiner Anwendungen verwaltet."
+      "string": "Dienst, der die CPU-Prioritäten der Anwendungen laufend verwaltet."
     },
     "catalog-settings-bpftune-git": {
       "string": "bpftune"
@@ -1200,7 +1197,7 @@
       "string": "bpftune-Dienst"
     },
     "catalog-settings-enable-bpftune-description": {
-      "string": "Dienst, der deine Netzwerkleistung laufend optimiert."
+      "string": "Dienst, der die Netzwerkleistung laufend optimiert."
     },
     "catalog-settings-enabled-preload": {
       "string": "Preload-Dienst"
@@ -1227,7 +1224,7 @@
       "string": "thermald"
     },
     "catalog-settings-thermald-description": {
-      "string": "Temperatur-Daemon von Intel. Er kühlt rechtzeitig, bevor die CPU heruntertakten muss."
+      "string": "Temperatur-Daemon von Intel. Er verhindert Überhitzung, indem er frühzeitig kühlt, bevor die CPU gedrosselt werden muss."
     },
     "catalog-settings-enabled-thermald": {
       "string": "thermald-Dienst"
@@ -1245,19 +1242,19 @@
       "string": "Dienst für Energieprofile"
     },
     "catalog-settings-enabled-power-profiles-daemon-description": {
-      "string": "Daemon, mit dem dein Desktop die Energieprofile umschaltet."
+      "string": "Daemon, mit dem die Desktopumgebung die Energieprofile umschaltet."
     },
     "catalog-settings-intel-undervolt": {
       "string": "Intel Undervolt"
     },
     "catalog-settings-intel-undervolt-description": {
-      "string": "Niedrigere Spannung für Intel-Prozessoren. Das verringert Wärme und Stromverbrauch ohne Leistungsverlust, verlängert die Akkulaufzeit und verhindert Heruntertakten."
+      "string": "Niedrigere Spannung für Intel-Prozessoren. Das verringert Wärme und Stromverbrauch ohne Leistungsverlust, verlängert die Akkulaufzeit und verhindert das Drosseln durch Hitze."
     },
     "catalog-settings-enabled-intel-undervolt": {
       "string": "Intel-Undervolt-Dienst"
     },
     "catalog-settings-enabled-intel-undervolt-description": {
-      "string": "Daemon, der deine Undervolt-Einstellungen beim Systemstart anwendet."
+      "string": "Daemon, der die Undervolt-Einstellungen beim Systemstart anwendet."
     },
     "catalog-settings-rightclick-emulation": {
       "string": "Rechtsklick-Emulation"
@@ -1272,16 +1269,16 @@
       "string": "Desktop und Apps"
     },
     "catalog-settings-audio-no-suspend": {
-      "string": "Audio ohne Ruhezustand"
+      "string": "Audio ohne Leerlaufabschaltung"
     },
     "catalog-settings-audio-no-suspend-description": {
-      "string": "Kein Ruhezustand für PipeWire-Geräte. Soundkarten bleiben aktiv und knacken nicht mehr beim Aufwachen."
+      "string": "Schaltet die Leerlaufabschaltung von PipeWire-Geräten aus. Soundkarten bleiben aktiv und knacken nicht mehr beim Aufwachen."
     },
     "catalog-settings-kde-borderless-maximize": {
       "string": "Randlos maximieren in KDE"
     },
     "catalog-settings-kde-borderless-maximize-description": {
-      "string": "KWin-Einstellung, die Titelleiste und Rahmen maximierter Fenster in KDE Plasma ausblendet. So gewinnst du Platz in der Höhe."
+      "string": "KWin-Einstellung, die Titelleiste und Rahmen maximierter Fenster in KDE Plasma ausblendet. Dadurch steht mehr vertikaler Platz zur Verfügung."
     },
     "catalog-settings-discord-disable-autoupdate": {
       "string": "Discord-Auto-Update abschalten"
@@ -1291,12 +1288,6 @@
     },
     "catalog-gaming-launchers": {
       "string": "Spiele-Launcher"
-    },
-    "catalog-gaming-bottles": {
-      "string": "Bottles"
-    },
-    "catalog-gaming-bottles-description": {
-      "string": "Einfache Verwaltung von Wine- und Proton-Präfixen."
     },
     "catalog-gaming-heroic-games-launcher-bin": {
       "string": "Heroic Games Launcher"
@@ -1422,7 +1413,7 @@
       "string": "LACT"
     },
     "catalog-gaming-lact-description": {
-      "string": "Einstellungen für deine Grafikkarte unter Linux."
+      "string": "Konfigurationswerkzeug für Grafikkarten unter Linux."
     },
     "catalog-gaming-mangohud": {
       "string": "MangoHud"
@@ -1494,13 +1485,13 @@
       "string": "Aisleriot"
     },
     "catalog-gaming-aisleriot-description": {
-      "string": "Sammlung von Solitaire-Kartenspielen."
+      "string": "Sammlung von Patience-Kartenspielen."
     },
     "catalog-gaming-angband": {
       "string": "Angband"
     },
     "catalog-gaming-angband-description": {
-      "string": "Roguelike, in dem du Dungeons nach Motiven von Tolkien erkundest."
+      "string": "Roguelike zur Erkundung von Dungeons nach Motiven von Tolkien."
     },
     "catalog-gaming-armagetronad": {
       "string": "Armagetron Advanced"
@@ -1512,7 +1503,7 @@
       "string": "Atomix"
     },
     "catalog-gaming-atomix-description": {
-      "string": "Puzzlespiel, in dem du Moleküle aus einzelnen Atomen baust."
+      "string": "Puzzlespiel zum Bauen von Molekülen aus einzelnen Atomen."
     },
     "catalog-gaming-augustus": {
       "string": "Augustus"
@@ -1524,7 +1515,7 @@
       "string": "Barrage"
     },
     "catalog-gaming-barrage-description": {
-      "string": "Brutaler Point-and-Click-Shooter mit schönen Effekten."
+      "string": "Brutaler Point-and-Click-Shooter mit aufwendigen Effekten."
     },
     "catalog-gaming-bass": {
       "string": "Beneath a Steel Sky"
@@ -1584,7 +1575,7 @@
       "string": "Dwarf Fortress"
     },
     "catalog-gaming-dwarffortress-description": {
-      "string": "Fantasy-Spiel für Einzelspieler. Du steuerst einen Außenposten der Zwerge oder einen Abenteurer in einer zufällig erzeugten, dauerhaften Welt."
+      "string": "Fantasy-Spiel für Einzelspieler. Gesteuert wird ein Außenposten der Zwerge oder ein Abenteurer in einer zufällig erzeugten, dauerhaften Welt."
     },
     "catalog-gaming-singularity": {
       "string": "Endgame Singularity"
@@ -1602,7 +1593,7 @@
       "string": "Fish Fillets"
     },
     "catalog-gaming-fillets-ng-description": {
-      "string": "Umsetzung des wunderbaren Puzzlespiels Fish Fillets."
+      "string": "Umsetzung des Puzzlespiels Fish Fillets."
     },
     "catalog-gaming-flare-game": {
       "string": "Flare"
@@ -1638,7 +1629,7 @@
       "string": "gbrainy"
     },
     "catalog-gaming-gbrainy-description": {
-      "string": "Denksportaufgaben, die Spaß machen und dein Gehirn fit halten."
+      "string": "Denksportaufgaben zum Trainieren des Denkvermögens."
     },
     "catalog-gaming-gcompris-qt": {
       "string": "GCompris"
@@ -1686,13 +1677,13 @@
       "string": "Hedgewars"
     },
     "catalog-gaming-hedgewars-description": {
-      "string": "Worms-Klon, den viele besser finden als das Original. Ihr schießt abwechselnd eure Gegner ins Jenseits, mit urkomischen Folgen. Am meisten Spaß macht es zu mehreren."
+      "string": "Worms-Klon, den viele dem Original vorziehen. Gegner werden abwechselnd ins Jenseits geschossen, mit komischen Folgen. Am besten im Mehrspielermodus."
     },
     "catalog-gaming-julius": {
       "string": "Julius"
     },
     "catalog-gaming-julius-description": {
-      "string": "Freie Neuumsetzung von Caesar III. Du brauchst das Originalspiel."
+      "string": "Freie Neuumsetzung von Caesar III. Benötigt die Daten des Originalspiels."
     },
     "catalog-gaming-katawa-shoujo-reengineered-bin": {
       "string": "Katawa Shoujo"
@@ -1710,7 +1701,7 @@
       "string": "Kobo Deluxe"
     },
     "catalog-gaming-kobodeluxe-description": {
-      "string": "Verbesserte Version von XKobo, einem süchtig machenden Weltraum-Shooter."
+      "string": "Verbesserte Version von XKobo, einem Weltraum-Shooter."
     },
     "catalog-gaming-lbreakout2": {
       "string": "LBreakout2"
@@ -1722,7 +1713,7 @@
       "string": "Lincity-ng"
     },
     "catalog-gaming-lincity-ng-description": {
-      "string": "Städtebausimulation. Du gewinnst mit einer nachhaltigen Wirtschaft oder indem du alle Bewohner mit Raumschiffen evakuierst."
+      "string": "Städtebausimulation. Siegbedingungen sind eine nachhaltige Wirtschaft oder die Evakuierung aller Bewohner mit Raumschiffen."
     },
     "catalog-gaming-luanti": {
       "string": "Luanti"
@@ -1764,7 +1755,7 @@
       "string": "NetHack"
     },
     "catalog-gaming-nethack-description": {
-      "string": "Spiel für Einzelspieler, in dem du Dungeons erkundest."
+      "string": "Roguelike für Einzelspieler zur Erkundung von Dungeons."
     },
     "catalog-gaming-openbve": {
       "string": "openBVE"
@@ -1788,7 +1779,7 @@
       "string": "OpenRCT2"
     },
     "catalog-gaming-openrct2-description": {
-      "string": "Freie Neuumsetzung von RollerCoaster Tycoon 2 mit Mehrspielermodus. Du brauchst das Originalspiel."
+      "string": "Freie Neuumsetzung von RollerCoaster Tycoon 2 mit Mehrspielermodus. Benötigt die Daten des Originalspiels."
     },
     "catalog-gaming-openttd": {
       "string": "OpenTTD"
@@ -1902,7 +1893,7 @@
       "string": "Warsow"
     },
     "catalog-gaming-warsow-description": {
-      "string": "Schneller Ego-Shooter für mehrere Spieler mit Fokus auf Bewegung und Trick-Sprünge."
+      "string": "Schneller Ego-Shooter für mehrere Spieler mit Schwerpunkt auf Bewegung und Sprungtricks."
     },
     "catalog-gaming-widelands": {
       "string": "Widelands"
@@ -2019,7 +2010,7 @@
       "string": "Pegasus Frontend"
     },
     "catalog-gaming-pegasus-frontend-git-description": {
-      "string": "Anpassbare Oberfläche, die Emulatoren startet und deine Spielesammlung verwaltet."
+      "string": "Anpassbare Oberfläche, die Emulatoren startet und die Spielesammlung verwaltet."
     },
     "catalog-gaming-rpcs3-git": {
       "string": "RPCS3"
@@ -2100,7 +2091,7 @@
       "string": "AntimicroX"
     },
     "catalog-gaming-antimicrox-description": {
-      "string": "Tastatur- und Maussteuerung über die Tasten deines Gamepads."
+      "string": "Tastatur- und Maussteuerung über die Tasten des Gamepads."
     },
     "catalog-gaming-anydesk-bin": {
       "string": "AnyDesk"
@@ -2130,7 +2121,7 @@
       "string": "DisplayCAL"
     },
     "catalog-gaming-displaycal-description": {
-      "string": "Kalibrierung und Vermessung deines Bildschirms mit Argyll CMS."
+      "string": "Kalibrierung und Vermessung von Bildschirmen mit Argyll CMS."
     },
     "catalog-gaming-droidcam": {
       "string": "DroidCam"
@@ -2148,7 +2139,7 @@
       "string": "GOverlay"
     },
     "catalog-gaming-goverlay-description": {
-      "string": "Oberfläche, mit der du Overlays für Vulkan und OpenGL verwaltest."
+      "string": "Oberfläche zum Verwalten von Overlays für Vulkan und OpenGL."
     },
     "catalog-gaming-gwe": {
       "string": "GWE"
@@ -2166,13 +2157,13 @@
       "string": "Input Remapper"
     },
     "catalog-gaming-input-remapper-git-description": {
-      "string": "Neue Tastenbelegung für deine Eingabegeräte."
+      "string": "Neue Tastenbelegung für Eingabegeräte."
     },
     "catalog-gaming-keyboard-visualizer-git": {
       "string": "Keyboard Visualizer"
     },
     "catalog-gaming-keyboard-visualizer-git-description": {
-      "string": "Lichtshow zur Musik für deine RGB-Beleuchtung mit OpenRGB."
+      "string": "Lichtshow zur Musik für RGB-Beleuchtung mit OpenRGB."
     },
     "catalog-gaming-mumble": {
       "string": "Mumble"
@@ -2184,7 +2175,7 @@
       "string": "NoiseTorch"
     },
     "catalog-gaming-noisetorch-description": {
-      "string": "Unterdrückung von Störgeräuschen deines Mikrofons in Echtzeit."
+      "string": "Unterdrückung von Störgeräuschen des Mikrofons in Echtzeit."
     },
     "catalog-gaming-nyrna": {
       "string": "Nyrna"
@@ -2232,7 +2223,7 @@
       "string": "SoundWire"
     },
     "catalog-gaming-soundwire-description": {
-      "string": "Drahtlose Übertragung des PC-Tons auf dein Android-Smartphone oder andere PCs."
+      "string": "Drahtlose Übertragung des PC-Tons auf ein Android-Smartphone oder andere PCs."
     },
     "catalog-gaming-streamlink-twitch-gui-bin": {
       "string": "Streamlink Twitch GUI"
@@ -2340,13 +2331,13 @@
       "string": "LibreWolf"
     },
     "catalog-setup-librewolf-description": {
-      "string": "Browser mit Fokus auf Datenschutz, Sicherheit und Freiheit"
+      "string": "Browser mit Schwerpunkt auf Datenschutz, Sicherheit und Freiheit"
     },
     "catalog-setup-firefox": {
       "string": "Firefox"
     },
     "catalog-setup-firefox-description": {
-      "string": "Schneller, privater und sicherer Browser"
+      "string": "Browser mit Schwerpunkt auf Geschwindigkeit, Privatsphäre und Sicherheit"
     },
     "catalog-setup-firefox-esr": {
       "string": "Firefox ESR"
@@ -2358,7 +2349,7 @@
       "string": "Chromium"
     },
     "catalog-setup-chromium-description": {
-      "string": "Schneller, schlichter und sicherer Browser"
+      "string": "Browser mit Schwerpunkt auf Geschwindigkeit, Schlichtheit und Sicherheit"
     },
     "catalog-setup-ungoogled-chromium": {
       "string": "Ungoogled Chromium"
@@ -2427,7 +2418,7 @@
       "string": "Element"
     },
     "catalog-setup-element-description": {
-      "string": "Ausgereifter Matrix-Client für Teams"
+      "string": "Ausgereifter Matrix-Client für die Zusammenarbeit in Chats und Räumen"
     },
     "catalog-setup-wire": {
       "string": "Wire"
@@ -2562,7 +2553,7 @@
       "string": "GitKraken"
     },
     "catalog-setup-git-kraken-description": {
-      "string": "Übersichtlicher, schneller Git-Client"
+      "string": "Git-Client mit übersichtlicher Oberfläche"
     },
     "catalog-setup-github": {
       "string": "GitHub Desktop"
@@ -2784,7 +2775,7 @@
       "string": "Pencil2D"
     },
     "catalog-setup-pencil2d-description": {
-      "string": "Handgezeichnete 2D-Animationen"
+      "string": "Zeichenprogramm für handgezeichnete 2D-Animationen"
     },
     "catalog-setup-synfig-studio": {
       "string": "Synfig Studio"
@@ -3000,7 +2991,7 @@
       "string": "Mailspring"
     },
     "catalog-setup-mailspring-description": {
-      "string": "Schöner, schneller E-Mail-Client"
+      "string": "E-Mail-Client mit moderner Oberfläche"
     },
     "catalog-setup-claws-mail": {
       "string": "Claws Mail"
@@ -3381,7 +3372,7 @@
       "string": "PipeWire-Konfiguration"
     },
     "catalog-config-files-pipewire-config-description": {
-      "string": "Deine Konfiguration des PipeWire-Daemons"
+      "string": "PipeWire-Konfiguration des Benutzers"
     },
     "catalog-config-files-system-alsa": {
       "string": "ALSA (System)"
@@ -3393,7 +3384,7 @@
       "string": "ALSA (Benutzer)"
     },
     "catalog-config-files-user-alsa-description": {
-      "string": "Deine ALSA-Konfiguration"
+      "string": "ALSA-Konfiguration des Benutzers"
     },
     "catalog-config-files-wireplumber": {
       "string": "WirePlumber"
@@ -3660,7 +3651,7 @@
       "string": "SSH-Konfiguration"
     },
     "catalog-config-files-ssh-config-description": {
-      "string": "Deine Konfiguration des SSH-Clients"
+      "string": "SSH-Client-Konfiguration des Benutzers"
     },
     "catalog-config-files-sshd-config": {
       "string": "SSHD-Konfiguration"
@@ -3831,7 +3822,7 @@
       "string": "Mauszeiger-Design (Benutzer)"
     },
     "catalog-config-files-cursor-theme-user-description": {
-      "string": "Dein Mauszeiger-Design"
+      "string": "Mauszeiger-Design des Benutzers"
     },
     "catalog-config-files-fontconfig-system": {
       "string": "Fontconfig (System)"
@@ -3843,7 +3834,7 @@
       "string": "Fontconfig (Benutzer)"
     },
     "catalog-config-files-fontconfig-user-description": {
-      "string": "Deine Schrifteinstellungen"
+      "string": "Schrifteinstellungen des Benutzers"
     },
     "catalog-config-files-grub-theme": {
       "string": "GRUB-Theme"
@@ -3912,7 +3903,7 @@
       "string": "Bash"
     },
     "catalog-config-files-bash-description": {
-      "string": "Deine Bash-Konfiguration"
+      "string": "Bash-Konfiguration des Benutzers"
     },
     "catalog-config-files-bash-system-config": {
       "string": "Bash (System)"
@@ -3936,13 +3927,13 @@
       "string": "Fish"
     },
     "catalog-config-files-fish-description": {
-      "string": "Deine Fish-Konfiguration"
+      "string": "Fish-Konfiguration des Benutzers"
     },
     "catalog-config-files-git-config": {
       "string": "Git-Konfiguration"
     },
     "catalog-config-files-git-config-description": {
-      "string": "Deine Git-Konfiguration"
+      "string": "Git-Konfiguration des Benutzers"
     },
     "catalog-config-files-kitty": {
       "string": "Kitty"
@@ -3960,7 +3951,7 @@
       "string": "Profil"
     },
     "catalog-config-files-profile-description": {
-      "string": "Deine Umgebung und Programme beim Anmelden"
+      "string": "Umgebungsvariablen und Programme bei der Anmeldung"
     },
     "catalog-config-files-rofi-config": {
       "string": "Rofi-Konfiguration"
@@ -3996,7 +3987,7 @@
       "string": "Zsh"
     },
     "catalog-config-files-zsh-description": {
-      "string": "Deine Zsh-Konfiguration"
+      "string": "Zsh-Konfiguration des Benutzers"
     },
     "catalog-config-files-users-and-authentication": {
       "string": "Benutzer und Anmeldung"
@@ -4083,10 +4074,10 @@
       "string": "Tokyo Night Day"
     },
     "catalog-colour-schemes-gruvbox": {
-      "string": "Gruvbox Dunkel"
+      "string": "Gruvbox Dark"
     },
     "catalog-colour-schemes-solarized-dark": {
-      "string": "Solarized Dunkel"
+      "string": "Solarized Dark"
     },
     "catalog-colour-schemes-rose-pine": {
       "string": "Rosé Pine"
@@ -4095,37 +4086,37 @@
       "string": "Rosé Pine Moon"
     },
     "catalog-colour-schemes-everforest": {
-      "string": "Everforest Dunkel"
+      "string": "Everforest Dark"
     },
     "catalog-colour-schemes-one-dark": {
       "string": "One Dark"
     },
     "catalog-colour-schemes-ayu-dark": {
-      "string": "Ayu Dunkel"
+      "string": "Ayu Dark"
     },
     "catalog-colour-schemes-ayu-mirage": {
       "string": "Ayu Mirage"
     },
     "catalog-colour-schemes-nord-light": {
-      "string": "Nord Hell"
+      "string": "Nord Light"
     },
     "catalog-colour-schemes-dracula-alucard": {
       "string": "Dracula Alucard"
     },
     "catalog-colour-schemes-gruvbox-light": {
-      "string": "Gruvbox Hell"
+      "string": "Gruvbox Light"
     },
     "catalog-colour-schemes-solarized-light": {
-      "string": "Solarized Hell"
+      "string": "Solarized Light"
     },
     "catalog-colour-schemes-rose-pine-dawn": {
       "string": "Rosé Pine Dawn"
     },
     "catalog-colour-schemes-everforest-light": {
-      "string": "Everforest Hell"
+      "string": "Everforest Light"
     },
     "catalog-colour-schemes-ayu-light": {
-      "string": "Ayu Hell"
+      "string": "Ayu Light"
     }
   },
   "changes": {
@@ -4142,7 +4133,7 @@
       "string": "Ansehen"
     },
     "changes-show-console": {
-      "string": "Zeigen"
+      "string": "Konsole anzeigen"
     },
     "changes-hide": {
       "string": "Ausblenden"
@@ -4197,6 +4188,15 @@
     },
     "change-clean-package-cache": {
       "string": "Paket-Cache leeren"
+    },
+    "change-config-merge-keep": {
+      "string": "{file} beibehalten und {copy} löschen"
+    },
+    "change-config-merge-take": {
+      "string": "{file} durch {copy} ersetzen"
+    },
+    "change-config-merge-write": {
+      "string": "{copy} in {file} übernehmen"
     },
     "change-dkms-build": {
       "string": "Modul {module} für Kernel {kernel} bauen"
@@ -4306,7 +4306,7 @@
         "developer_comment": "Used when `name` is `menu-force`."
       },
       "other": {
-        "string": "systemd-boot-Menü verbergen, außer beim Start wird eine Taste gehalten",
+        "string": "systemd-boot-Menü verbergen, außer wenn beim Start eine Taste gehalten wird",
         "developer_comment": "Used when `name` is `other`."
       }
     },
@@ -4423,6 +4423,9 @@
     },
     "change-wifi-backend": {
       "string": "{name} als WLAN-Backend verwenden"
+    },
+    "changes-inhibit-why": {
+      "string": "Änderungen werden gerade angewendet"
     }
   },
   "cli": {
@@ -4430,7 +4433,7 @@
       "string": "der Katalog hat keinen solchen Schalter"
     },
     "cli-switch-unmet": {
-      "string": "dieser Schalter braucht einen anderen, der aus ist, schalte zuerst diesen ein"
+      "string": "für diesen Schalter muss zuerst ein anderer eingeschaltet werden, der noch aus ist"
     },
     "cli-repair-not-offered": {
       "string": "die Startreparatur gibt es nur im Live-System"
@@ -4445,13 +4448,13 @@
       "string": "das laufende System nutzt diesen Datenträger, darum wird nichts darauf geschrieben"
     },
     "cli-repair-unknown-target": {
-      "string": "wähle zuerst, wohin der Bootloader kommt"
+      "string": "zuerst muss festgelegt werden, wohin der Bootloader kommt"
     },
     "cli-repair-unknown-layout": {
-      "string": "wähle zuerst, wo das System liegt"
+      "string": "zuerst muss festgelegt werden, wo das System liegt"
     },
     "cli-repair-no-passphrase": {
-      "string": "gib die Passphrase der verschlüsselten Partition ein"
+      "string": "die Passphrase der verschlüsselten Partition eingeben"
     },
     "cli-account-unavailable": {
       "string": "die Benutzerkonten dieses Systems konnten nicht gelesen werden"
@@ -4463,22 +4466,22 @@
       "string": "eine der Gruppen gibt es nicht, oder sie wird gerade entfernt"
     },
     "cli-account-root": {
-      "string": "das ist ein Root-Konto, Garuda Toolbox ändert es nicht"
+      "string": "dieses Root-Konto wird von Garuda Toolbox nicht geändert"
     },
     "cli-account-current-user": {
-      "string": "mit diesem Konto bist du angemeldet, es kann sich nicht selbst sperren oder entfernen"
+      "string": "dieses Konto ist angemeldet und kann sich nicht selbst sperren oder entfernen"
     },
     "cli-account-system-account": {
       "string": "das ist ein Systemkonto, nur Konten von Personen lassen sich entfernen"
     },
     "cli-account-no-admin-group": {
-      "string": "dieses System hat keine wheel-Gruppe, der ein neues Konto beitreten kann, daher kann es kein Administrator sein"
+      "string": "dieses System hat keine wheel-Gruppe, der ein neues Konto beitreten könnte, daher kann es keine Administratorrechte erhalten"
     },
     "cli-account-outside-user-range": {
-      "string": "dieses Konto hat eine Benutzer-ID außerhalb von 1000 bis 60000, darum bleibt es, wie es ist"
+      "string": "die Benutzer-ID dieses Kontos liegt außerhalb von 1000 bis 60000, darum bleibt es unverändert"
     },
     "cli-account-last-admin": {
-      "string": "das ist das letzte Mitglied der Gruppen wheel und sudo, ohne eines könnte niemand dieses System verwalten"
+      "string": "das ist das letzte Mitglied der Gruppen wheel und sudo, ohne ein Mitglied könnte niemand dieses System verwalten"
     },
     "cli-account-last-admin-lock": {
       "string": "das ist das letzte Mitglied der Gruppen wheel und sudo, mit gesperrtem Passwort könnte niemand dieses System verwalten"
@@ -4490,7 +4493,7 @@
       "string": "das ist die primäre Gruppe eines Benutzers, darum bleibt sie"
     },
     "cli-account-system-group": {
-      "string": "das ist eine Systemgruppe, installierte Programme verlassen sich auf sie"
+      "string": "das ist eine Systemgruppe, installierte Programme sind auf sie angewiesen"
     },
     "cli-account-user-exists": {
       "string": "einen Benutzer mit diesem Namen gibt es schon"
@@ -4514,19 +4517,19 @@
       "string": "`{name}`: {why}"
     },
     "cli-locale-system-locale": {
-      "string": "das ist die Systemsprache, wähle eine andere Systemsprache, bevor du sie abschaltest"
+      "string": "das ist die Systemsprache, vor dem Abschalten muss eine andere Systemsprache gewählt werden"
     },
     "cli-locale-last-locale": {
       "string": "mindestens eine Locale muss eingeschaltet bleiben"
     },
     "cli-locale-not-enabled": {
-      "string": "diese Locale ist nicht eingeschaltet, schalte sie zuerst ein"
+      "string": "diese Locale ist nicht eingeschaltet, sie muss zuerst eingeschaltet werden"
     },
     "cli-locale-package": {
       "string": "die Paketregeln verhindern, dass dieses Sprachpaket entfernt wird"
     },
     "cli-driver-other-file": {
-      "string": "eine andere Treiber-Einstellungsdatei in modprobe.d sperrt diesen Treiber, Garuda Toolbox ändert nur seine eigene Datei"
+      "string": "eine andere Treiber-Einstellungsdatei in modprobe.d sperrt diesen Treiber, nur die eigene Datei wird von Garuda Toolbox geändert"
     },
     "cli-driver-unavailable": {
       "string": "die Treiber dieses Systems konnten nicht gelesen werden"
@@ -4535,7 +4538,7 @@
       "string": "die Paketregeln behalten dieses Paket installiert"
     },
     "cli-busy": {
-      "string": "es werden noch andere Änderungen übernommen, versuche es erneut, sobald sie fertig sind"
+      "string": "es werden noch andere Änderungen übernommen, erneut versuchen, sobald sie abgeschlossen sind"
     },
     "cli-driver-not-listed": {
       "string": "das ist kein Netzwerktreiber dieses Systems, siehe `network drivers list`"
@@ -4547,13 +4550,13 @@
       "string": "dieser Treiber ist nicht geladen"
     },
     "cli-boot-needs-confirm": {
-      "string": "`{value}` öffnet beim Start eine Root-Shell oder schaltet eine Sicherheitsschicht ab\ngib --force an, wenn du das willst"
+      "string": "`{value}` öffnet beim Start eine Root-Shell oder schaltet eine Sicherheitsschicht ab\n--force angeben, wenn das gewollt ist"
     },
     "cli-boot-unavailable": {
       "string": "dieses System hat kein /etc/default/grub, darum gibt es nichts zu ändern"
     },
     "cli-boot-custom-command-line": {
-      "string": "die Kernel-Befehlszeile wird hier nicht geändert, bearbeite stattdessen /etc/default/grub"
+      "string": "die Kernel-Befehlszeile wird hier nicht geändert, stattdessen /etc/default/grub bearbeiten"
     },
     "cli-boot-too-many-parameters": {
       "string": "die Kernel-Befehlszeile ist voll"
@@ -4565,7 +4568,7 @@
       "string": "dieses System hat kein /etc/kernel/cmdline, seine Starteinträge tragen ihre eigenen Parameter"
     },
     "cli-boot-custom-kernel-cmdline": {
-      "string": "die Kernel-Befehlszeile wird hier nicht geändert, bearbeite stattdessen /etc/kernel/cmdline"
+      "string": "die Kernel-Befehlszeile wird hier nicht geändert, stattdessen /etc/kernel/cmdline bearbeiten"
     },
     "cli-boot-protected-parameter": {
       "string": "`{value}` bleibt, ohne ihn findet das System kein Root-Dateisystem zum Starten"
@@ -4587,6 +4590,9 @@
     },
     "cli-boot-not-usable": {
       "string": "`{value}` lässt sich hier nicht verwenden"
+    },
+    "cli-password-not-repeated": {
+      "string": "das Passwort wurde nicht wiederholt"
     }
   },
   "common": {
@@ -4627,7 +4633,7 @@
       "string": "Beenden, ohne die Bearbeitung zu übernehmen?"
     },
     "close-edit-detail": {
-      "string": "Deine Änderungen an einer Konfigurationsdatei sind noch nicht geschrieben. Beim Beenden gehen sie verloren."
+      "string": "Die Änderungen an einer Konfigurationsdatei wurden noch nicht geschrieben. Beim Beenden gehen sie verloren."
     },
     "close-edit-keep": {
       "string": "Weiter bearbeiten"
@@ -4693,7 +4699,7 @@
       "string": "Garuda Toolbox ist nicht vollständig installiert"
     },
     "missing-catalog-body": {
-      "string": "Ein Ordner, den es braucht, fehlt. Installiere das Paket garuda-toolbox neu und starte die App dann erneut."
+      "string": "Ein benötigter Ordner fehlt. Das Paket garuda-toolbox sollte neu installiert und die App danach erneut gestartet werden."
     },
     "missing-catalog-folder": {
       "string": "Fehlender Ordner"
@@ -4713,7 +4719,7 @@
   },
   "configs": {
     "page-configs-subtitle": {
-      "string": "Bekannte Konfigurationsdateien des Systems und deiner Apps."
+      "string": "Bekannte Konfigurationsdateien des Systems und der installierten Apps."
     },
     "configs-refresh": {
       "string": "Neu einlesen"
@@ -4782,7 +4788,7 @@
       "string": "Hier nicht bearbeitbar: Der Symlink führt aus den Konfigurationsverzeichnissen des Systems heraus, zu einer Paketdatei oder einer generierten Datei"
     },
     "configs-problem-dismissed": {
-      "string": "{path} wurde nicht gelesen: Du hast die Passwortabfrage geschlossen."
+      "string": "{path} wurde nicht gelesen: Die Passwortabfrage wurde geschlossen."
     },
     "configs-problem-denied": {
       "string": "{path} wurde nicht gelesen: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen."
@@ -4791,13 +4797,13 @@
       "string": "{path} wurde nicht gelesen, weil keine Passwortabfrage erscheinen konnte: In dieser Sitzung läuft kein polkit-Agent."
     },
     "configs-problem-helper-missing": {
-      "string": "{path} wurde nicht gelesen, weil das Hilfsprogramm von Garuda Toolbox fehlt. Installiere Garuda Toolbox neu."
+      "string": "{path} wurde nicht gelesen, weil das Hilfsprogramm von Garuda Toolbox fehlt. Garuda Toolbox neu installieren."
     },
     "configs-problem-missing": {
       "string": "{path} existiert nicht mehr."
     },
     "configs-problem-link": {
-      "string": "{path} oder ein übergeordnetes Verzeichnis wurde während des Lesens durch einen Symlink ersetzt und deshalb nicht angetastet. Lies die Dateien neu ein und versuche es erneut."
+      "string": "{path} oder ein übergeordnetes Verzeichnis wurde während des Lesens durch einen Symlink ersetzt und deshalb nicht angetastet. Erneut prüfen und den Vorgang wiederholen."
     },
     "configs-problem-dangling": {
       "string": "{path} ist ein Symlink, der ins Leere führt. Es gibt nichts zu bearbeiten."
@@ -4815,16 +4821,16 @@
       "string": "{path} ist keine Textdatei und kann hier nicht bearbeitet werden."
     },
     "configs-problem-no-editor": {
-      "string": "Es ist kein Terminal-Editor installiert. Installiere micro, nano oder vi und versuche es erneut."
+      "string": "Es ist kein Terminal-Editor installiert. micro, nano oder vi installieren und danach erneut versuchen."
     },
     "configs-problem-busy": {
-      "string": "In der Konsole läuft gerade etwas anderes. Versuche es erneut, wenn es abgeschlossen ist."
+      "string": "In der Konsole läuft bereits ein anderer Vorgang. Erneut versuchen, wenn er abgeschlossen ist."
     },
     "configs-problem-editor-failed": {
       "string": "Der Editor wurde mit einem Fehler beendet. {path} bleibt unverändert."
     },
     "configs-problem-write-failed": {
-      "string": "{path} wurde nicht geschrieben. Den Grund zeigt die Konsole. Deine Änderungen bleiben erhalten."
+      "string": "{path} wurde nicht geschrieben. Den Grund zeigt die Konsole. Die Änderungen bleiben erhalten."
     },
     "configs-problem-copy-failed": {
       "string": "Die Arbeitskopie konnte nicht verwendet werden."
@@ -4833,10 +4839,10 @@
       "string": "{path} wurde nicht gelesen, weil sich pkexec auf diesem System nicht ausführen lässt. Details stehen im Log."
     },
     "configs-problem-failed": {
-      "string": "Bei {path} ist unerwartet ein Fehler aufgetreten. Versuche es erneut."
+      "string": "Bei {path} ist unerwartet ein Fehler aufgetreten. Erneut versuchen."
     },
     "configs-problem-read-only": {
-      "string": "Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Bearbeite sie in einem Terminal mit sudo."
+      "string": "Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Die Bearbeitung erfolgt in einem Terminal mit sudo."
     },
     "configs-problem-read-failed": {
       "string": "{path} konnte nicht gelesen werden."
@@ -4854,19 +4860,19 @@
       "string": "{path} ist keine Textdatei und kann hier nicht angezeigt werden."
     },
     "configs-view-busy": {
-      "string": "Es wird noch eine andere Datei gelesen. Versuche es erneut, sobald sie angezeigt wird."
+      "string": "Es wird noch eine andere Datei gelesen. Erneut versuchen, sobald sie angezeigt wird."
     },
     "configs-status-reading": {
       "string": "{path} wird gelesen…"
     },
     "configs-status-editing": {
-      "string": "{path} ist in der Konsole mit {editor} geöffnet. Speichere und beende den Editor, um weiterzumachen."
+      "string": "{path} ist in der Konsole mit {editor} geöffnet. Zum Weitermachen den Editor speichern und beenden."
     },
     "configs-status-comparing": {
-      "string": "Deine Kopie wird mit {path} verglichen…"
+      "string": "Die Arbeitskopie wird mit {path} verglichen…"
     },
     "configs-status-review": {
-      "string": "Deine Änderungen an {path} sind bereit zur Prüfung."
+      "string": "Die Änderungen an {path} warten auf eine Prüfung."
     },
     "configs-status-writing": {
       "string": "{path} wird geschrieben…"
@@ -4890,7 +4896,7 @@
       "string": "Änderungen an {path} speichern?"
     },
     "configs-review-link": {
-      "string": "{path} ist ein Symlink. Gespeichert wird in sein Ziel {target}. Der Symlink selbst bleibt unverändert."
+      "string": "{path} ist ein Symlink. Beim Speichern wird die Datei geschrieben, auf die er verweist, {target}. Der Symlink selbst bleibt unverändert."
     },
     "configs-review-summary": {
       "string": "Hinzugefügte Zeilen: {added}. Entfernte Zeilen: {removed}. Zum Speichern ist ein Administratorpasswort nötig. Die aktuelle Fassung wird als {backup} gesichert."
@@ -4899,7 +4905,7 @@
       "string": "Hinzugefügte Zeilen: {added}. Entfernte Zeilen: {removed}. Die aktuelle Fassung wird als {backup} gesichert."
     },
     "configs-review-write-failed": {
-      "string": "{path} wurde nicht geschrieben. Den Grund zeigt die Konsole. Wurde die Datei inzwischen geändert, vergleiche erneut, um deine Änderungen mit dem aktuellen Stand abzugleichen."
+      "string": "{path} wurde nicht geschrieben. Den Grund zeigt die Konsole. Wurde die Datei inzwischen geändert, sollte erneut verglichen werden, damit die Änderung mit dem aktuellen Stand abgeglichen wird."
     },
     "configs-review-diff": {
       "string": "Die Änderungen: hinzugefügte Zeilen beginnen mit einem Pluszeichen, entfernte mit einem Minuszeichen"
@@ -4923,7 +4929,7 @@
       "string": "Änderungen verwerfen?"
     },
     "configs-discard-question": {
-      "string": "Deine Änderungen an {path} gehen verloren. Die Datei bleibt unverändert."
+      "string": "Die Änderungen an {path} gehen verloren. Die Datei bleibt unverändert."
     },
     "configs-discard-keep": {
       "string": "Weiter bearbeiten"
@@ -4953,10 +4959,10 @@
       "string": "Diese Datei kann hier nicht geöffnet werden."
     },
     "configs-refused-busy": {
-      "string": "In der Konsole läuft gerade etwas anderes. Versuche es erneut, wenn es abgeschlossen ist."
+      "string": "In der Konsole läuft bereits ein anderer Vorgang. Erneut versuchen, wenn er abgeschlossen ist."
     },
     "configs-refused-read-only": {
-      "string": "Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Bearbeite sie in einem Terminal mit sudo."
+      "string": "Diese Datei legt fest, wer das System verwalten darf oder was als root läuft, und wird deshalb hier nur angezeigt. Die Bearbeitung erfolgt in einem Terminal mit sudo."
     }
   },
   "console": {
@@ -4967,7 +4973,7 @@
       "string": "Strg+Tab verlässt das Terminal."
     },
     "console-idle-hint": {
-      "string": "Hier erscheint die Ausgabe, sobald du Änderungen übernimmst."
+      "string": "Die Ausgabe der nächsten Übernahme erscheint hier."
     },
     "console-printed-nothing": {
       "string": "Die Änderungen haben keine Ausgabe erzeugt."
@@ -5012,10 +5018,10 @@
       "string": "Testmodus: Es wurde nichts geändert"
     },
     "console-status-failed": {
-      "string": "Nicht alle Änderungen wurden übernommen"
+      "string": "Abgebrochen, bevor alle Änderungen übernommen waren"
     },
     "console-busy": {
-      "string": "Es werden noch andere Änderungen übernommen. Versuche es danach erneut."
+      "string": "Es werden noch andere Änderungen übernommen. Die Übernahme danach erneut starten."
     },
     "console-cancel-waits": {
       "string": "Der Vorgang wird abgebrochen, sobald die Passwortabfrage beantwortet ist."
@@ -5054,13 +5060,13 @@
       "string": "Die Passwortabfrage wurde geschlossen. Es wurde nichts geändert."
     },
     "refusal-denied": {
-      "string": "Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen. Es wurde nichts geändert."
+      "string": "Die Passwortabfrage wurde geschlossen oder das Passwort nicht akzeptiert. Es wurde nichts geändert."
     },
     "refusal-no-agent": {
-      "string": "Die Passwortabfrage konnte nicht angezeigt werden. Melde dich in einer Desktop-Sitzung mit polkit-Agent an."
+      "string": "Die Passwortabfrage konnte nicht angezeigt werden. In einer Desktop-Sitzung mit polkit-Agent anmelden."
     },
     "refusal-helper-missing": {
-      "string": "Das Hilfsprogramm von Garuda Toolbox fehlt. Installiere garuda-toolbox neu."
+      "string": "Das Hilfsprogramm von Garuda Toolbox fehlt. garuda-toolbox neu installieren."
     },
     "refusal-broken": {
       "string": "pkexec lässt sich auf diesem System nicht ausführen. Details stehen im Log."
@@ -5078,7 +5084,7 @@
       "string": "Das Hilfsprogramm wurde ohne Ein- und Ausgabe gestartet."
     },
     "helper-lost": {
-      "string": "Die Verbindung zum Hilfsprogramm wurde unterbrochen: {detail}"
+      "string": "Die Ausgabe des Hilfsprogramms konnte nicht verfolgt werden: {detail}"
     },
     "helper-ended": {
       "string": "Das Hilfsprogramm wurde beendet, bevor die Änderungen abgeschlossen waren: {detail}"
@@ -5093,10 +5099,10 @@
       "string": "Fehler beim Übernehmen"
     },
     "notify-applied-body": {
-      "string": "Garuda Toolbox hat deine Änderungen übernommen."
+      "string": "Garuda Toolbox hat die Übernahme der Änderungen abgeschlossen."
     },
     "notify-failed-body": {
-      "string": "Ein Schritt ist fehlgeschlagen. Details findest du in der Konsole."
+      "string": "Ein Schritt ist fehlgeschlagen. Details stehen in der Konsole."
     },
     "console-mirror-missing": {
       "string": "Auf dem Spiegelserver fehlt eine Datei, die diese Installation benötigt, da die Paketdatenbanken älter sind als der Spiegelserver. Eine Systemaktualisierung bringt sie auf den aktuellen Stand."
@@ -5146,7 +5152,7 @@
       "string": "Journal"
     },
     "diagnostics-journalctl-description": {
-      "string": "Die letzten 1000 Zeilen des Systemjournals. Fragt nach deinem Passwort, falls dein Konto keinen Lesezugriff hat."
+      "string": "Die letzten 1000 Zeilen des Systemjournals. Fragt nach dem Passwort, falls das eigene Konto keinen Lesezugriff hat."
     },
     "diagnostics-pacman": {
       "string": "pacman-Log"
@@ -5158,16 +5164,16 @@
       "string": "Kernel-Log"
     },
     "diagnostics-dmesg-description": {
-      "string": "Kernelmeldungen aus dmesg. Fragt nach deinem Passwort, falls das System sie vor Benutzern verbirgt."
+      "string": "Kernelmeldungen aus dmesg. Fragt nach dem Passwort, falls das System sie vor Benutzern verbirgt."
     },
     "diagnostics-all": {
       "string": "Vollständiger Bericht"
     },
     "diagnostics-all-description": {
-      "string": "Alles oben Genannte in einem Bericht. Kann zweimal nach deinem Passwort fragen."
+      "string": "Alles oben Genannte in einem Bericht. Kann zweimal nach dem Passwort fragen."
     },
     "diagnostics-idle-detail": {
-      "string": "Der Bericht bleibt auf diesem Computer, solange du ihn nicht teilst."
+      "string": "Der Bericht bleibt auf diesem Computer, solange er nicht geteilt wird."
     },
     "diagnostics-collecting": {
       "string": "{name} wird erstellt…"
@@ -5176,7 +5182,7 @@
       "string": "{name} wird erstellt ({step} von {count})…"
     },
     "diagnostics-collecting-detail": {
-      "string": "Startest du einen anderen Bericht, wird dieser abgebrochen."
+      "string": "Das Starten eines anderen Berichts bricht diesen ab."
     },
     "diagnostics-empty": {
       "string": "{name} hat keine Ausgabe erzeugt."
@@ -5188,16 +5194,16 @@
       "string": "Das nötige Programm ist nicht installiert."
     },
     "diagnostics-dismissed": {
-      "string": "{name} wurde nicht erstellt: Du hast die Passwortabfrage geschlossen."
+      "string": "{name} wurde nicht erstellt: Die Passwortabfrage wurde geschlossen."
     },
     "diagnostics-denied": {
-      "string": "{name} wurde nicht erstellt: Dein Konto hat keinen Lesezugriff."
+      "string": "{name} wurde nicht erstellt: Das Konto darf dies nicht lesen."
     },
     "diagnostics-no-agent": {
       "string": "{name} wurde nicht erstellt: Die Passwortabfrage konnte nicht angezeigt werden, da in dieser Sitzung kein polkit-Agent läuft."
     },
     "diagnostics-helper-missing": {
-      "string": "{name} wurde nicht erstellt: Das Hilfsprogramm von Garuda Toolbox fehlt. Installiere Garuda Toolbox neu."
+      "string": "{name} wurde nicht erstellt: Das Hilfsprogramm von Garuda Toolbox fehlt. Garuda Toolbox neu installieren."
     },
     "diagnostics-failed": {
       "string": "{name} ist fehlgeschlagen: {reason}"
@@ -5227,7 +5233,7 @@
       "string": "Bericht teilen…"
     },
     "diagnostics-share-tooltip": {
-      "string": "Lädt den Bericht verschlüsselt auf bin.garudalinux.org hoch und gibt dir einen Link zum Teilen."
+      "string": "Der Bericht wird verschlüsselt auf bin.garudalinux.org hochgeladen. Danach steht ein Link zum Teilen bereit."
     },
     "diagnostics-report-copied": {
       "string": "Bericht in die Zwischenablage kopiert."
@@ -5256,7 +5262,7 @@
       "string": "Weitere Aktionen für {name}"
     },
     "discover-unreadable": {
-      "string": "Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht an, was installiert ist. Das Installieren einer bereits installierten App bewirkt nichts."
+      "string": "Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht, was installiert ist. Eine bereits installierte App zu installieren, bewirkt nichts."
     },
     "discover-problem": {
       "string": "Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt."
@@ -5277,7 +5283,7 @@
       "string": "Keine Apps vorhanden"
     },
     "discover-none-detail": {
-      "string": "Apps, die deine Repositorys nicht anbieten, sind ausgeblendet."
+      "string": "Apps, die die konfigurierten Repositorys nicht anbieten, werden ausgeblendet."
     },
     "discover-category-documents": {
       "string": "Dokumente"
@@ -5302,6 +5308,9 @@
     },
     "discover-category-utilities": {
       "string": "Werkzeuge"
+    },
+    "discover-problem-reason": {
+      "string": "Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt. {reason}"
     }
   },
   "guide": {
@@ -5354,7 +5363,7 @@
       "string": "Keine Treffer für „{search}“ im Handbuch."
     },
     "guide-no-hits-body": {
-      "string": "Versuche es mit weniger oder anderen Suchbegriffen."
+      "string": "Weniger oder andere Suchbegriffe verwenden."
     }
   },
   "home": {
@@ -5365,7 +5374,7 @@
       "string": "Willkommen bei Garuda Linux"
     },
     "home-subtitle": {
-      "string": "Pflege dein System und richte es ein."
+      "string": "System pflegen und einrichten."
     },
     "home-status": {
       "string": "Systemstatus"
@@ -5419,7 +5428,7 @@
       "string": "{count, plural, one {Ein Update verfügbar} other {{count} Updates verfügbar}}"
     },
     "home-updates-detail": {
-      "string": "Aktualisiere jetzt in der Konsole oder merk das Update zusammen mit deinen anderen Änderungen vor."
+      "string": "Jetzt in der Konsole aktualisieren oder das Update zusammen mit den übrigen Änderungen vormerken."
     },
     "home-update-now": {
       "string": "Jetzt aktualisieren"
@@ -5437,7 +5446,7 @@
       "string": "{count, plural, one {Ein AUR-Update verfügbar} other {{count} AUR-Updates verfügbar}}"
     },
     "home-aur-detail": {
-      "string": "paru baut Pakete aus dem AUR (Arch User Repository) in der Konsole. Prüfe dort die Build-Dateien und beantworte die Rückfragen."
+      "string": "paru baut Pakete aus dem AUR (Arch User Repository) in der Konsole. Dort die Build-Dateien prüfen und die Rückfragen beantworten."
     },
     "home-aur-update": {
       "string": "In der Konsole aktualisieren"
@@ -5450,6 +5459,96 @@
     },
     "home-merges": {
       "string": "Offene .pacnew-Dateien"
+    },
+    "home-merges-review": {
+      "string": "Prüfen…"
+    },
+    "home-merges-meld": {
+      "string": "In meld öffnen"
+    },
+    "home-merges-title": {
+      "string": "Konfigurationsdateien zusammenführen"
+    },
+    "home-merges-reading": {
+      "string": "Dateien werden gelesen…"
+    },
+    "home-merges-failed": {
+      "string": "Die Dateien konnten nicht gelesen werden."
+    },
+    "home-merges-none": {
+      "string": "Es gibt nichts mehr zusammenzuführen."
+    },
+    "home-merges-files": {
+      "string": "Dateien"
+    },
+    "home-merges-pair": {
+      "string": "{copy} zu {file}"
+    },
+    "home-merges-queued": {
+      "string": "vorgemerkt"
+    },
+    "home-merges-take-back": {
+      "string": "Zurücknehmen"
+    },
+    "home-merges-unreadable": {
+      "string": "Eine der Dateien konnte nicht gelesen werden. Sie kann stattdessen mit meld zusammengeführt werden."
+    },
+    "home-merges-gone": {
+      "string": "Die zugehörige Datei existiert nicht mehr. Die Kopie kann an ihre Stelle treten."
+    },
+    "home-merges-same": {
+      "string": "Die Kopie ist mit der aktuellen Datei identisch."
+    },
+    "home-merges-older": {
+      "string": "Ältere Sicherung, die nur gelöscht werden kann."
+    },
+    "home-merges-remove": {
+      "string": "Kopie löschen"
+    },
+    "home-merges-keep": {
+      "string": "Beibehalten"
+    },
+    "home-merges-take-new": {
+      "string": "Übernehmen"
+    },
+    "home-merges-take-saved": {
+      "string": "Sicherung übernehmen"
+    },
+    "home-merges-change": {
+      "string": "Änderung {number}"
+    },
+    "home-merges-unchanged": {
+      "string": "{count, plural, one {Eine unveränderte Zeile} other {{count} unveränderte Zeilen}}"
+    },
+    "home-merges-keep-file": {
+      "string": "Aktuelle Datei behalten"
+    },
+    "home-merges-use-file": {
+      "string": "Neue Datei übernehmen"
+    },
+    "home-merges-restore-file": {
+      "string": "Sicherung wiederherstellen"
+    },
+    "home-merges-queue-picks": {
+      "string": "Zusammenführung vormerken"
+    },
+    "home-merges-edit": {
+      "string": "Ergebnis bearbeiten…"
+    },
+    "home-merges-edit-name": {
+      "string": "Zusammengeführter Text"
+    },
+    "home-merges-edit-invalid": {
+      "string": "Der Text ist zu groß oder enthält ein NUL-Zeichen."
+    },
+    "home-merges-edit-back": {
+      "string": "Zurück"
+    },
+    "home-merges-edit-queue": {
+      "string": "Bearbeiteten Text vormerken"
+    },
+    "home-merges-applied": {
+      "string": "Die Auswahl wird zusammen mit den übrigen Änderungen angewendet. Ist snapper eingerichtet, wird vorher ein Snapshot erstellt. Die bisherige Datei wird unter /var/lib/garuda-toolbox/backups gesichert."
     },
     "home-health-errors": {
       "string": "garuda-health hat Probleme gefunden"
@@ -5476,7 +5575,7 @@
       "string": "Jetzt neu starten?"
     },
     "home-restart-question-detail": {
-      "string": "Speichere zuerst deine Arbeit. Offene Programme werden geschlossen."
+      "string": "Die Arbeit zuerst speichern. Offene Programme werden geschlossen."
     },
     "home-restart-confirm": {
       "string": "Neu starten"
@@ -5488,7 +5587,7 @@
       "string": "Der Neustart wurde nicht genehmigt."
     },
     "home-restart-failed": {
-      "string": "Der Computer ließ sich nicht neu starten. Starte ihn über das Menü deines Desktops neu."
+      "string": "Der Computer ließ sich nicht neu starten. Über das Menü des Desktops neu starten."
     },
     "home-pending": {
       "string": "Ausstehende Updates"
@@ -5509,7 +5608,7 @@
       "string": "Garuda Linux installieren"
     },
     "home-install-detail": {
-      "string": "Startet das Installationsprogramm. Es fragt nach deinem Passwort."
+      "string": "Das Installationsprogramm wird gestartet. Es fragt nach dem Passwort."
     },
     "home-install-button": {
       "string": "Installation starten"
@@ -5524,7 +5623,7 @@
       "string": "Ein installiertes System reparieren"
     },
     "home-chroot-detail": {
-      "string": "Öffnet in der Konsole eine Root-Shell im installierten Garuda Linux auf diesem Computer. Mit exit verlässt du sie."
+      "string": "In der Konsole wird eine Root-Shell im installierten Garuda Linux auf diesem Computer geöffnet. Mit exit wird sie wieder verlassen."
     },
     "home-chroot-button": {
       "string": "In der Konsole öffnen"
@@ -5536,7 +5635,7 @@
       "string": "Apps auswählen und installieren"
     },
     "home-next-maintenance": {
-      "string": "Dein System pflegen"
+      "string": "System pflegen"
     },
     "home-next-review": {
       "string": "{count, plural, one {Eine Änderung wurde noch nicht übernommen} other {{count} Änderungen wurden noch nicht übernommen}}"
@@ -5545,7 +5644,7 @@
       "string": "Alles in Ordnung"
     },
     "home-summary-attention": {
-      "string": "{count, plural, one {Ein Punkt braucht deine Aufmerksamkeit} other {{count} Punkte brauchen deine Aufmerksamkeit}}"
+      "string": "{count, plural, one {Ein Punkt erfordert Aufmerksamkeit} other {{count} Punkte erfordern Aufmerksamkeit}}"
     },
     "home-summary-updated-today": {
       "string": "· heute aktualisiert"
@@ -5596,7 +5695,7 @@
       "string": "Wenig Speicherplatz"
     },
     "home-disk-detail": {
-      "string": "Entferne verwaiste Pakete, leere den Paket-Cache oder lösche alte Snapshots unter „Wartung“."
+      "string": "Verwaiste Pakete entfernen, den Paket-Cache leeren oder alte Snapshots unter „Wartung“ löschen."
     },
     "home-disk-button": {
       "string": "Wartung öffnen"
@@ -5677,7 +5776,7 @@
       "string": "Ausblenden"
     },
     "home-busy": {
-      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Starte ihn erneut, sobald sie abgeschlossen sind."
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut starten, sobald sie abgeschlossen sind."
     }
   },
   "kernels": {
@@ -5697,7 +5796,7 @@
       "string": "Keine Kernel verfügbar. Die Paketdatenbanken von pacman konnten nicht gelesen werden."
     },
     "kernels-none": {
-      "string": "Keine Kernel gefunden. Die Repositorys bieten keinen an. Aktualisiere die Paketdatenbanken auf der Seite „Wartung“."
+      "string": "Keine Kernel gefunden. Die Repositorys bieten keinen an. Die Paketdatenbanken sollten auf der Seite „Wartung“ aktualisiert werden."
     },
     "kernels-installed": {
       "string": "Installiert"
@@ -5730,7 +5829,7 @@
       "string": "installiert: {installed}"
     },
     "kernels-running-note": {
-      "string": "Dieser Kernel läuft gerade und kann nicht entfernt werden. Starte mit einem anderen Kernel neu, um ihn zu entfernen."
+      "string": "Dieser Kernel läuft gerade und bleibt deshalb installiert. Zum Entfernen mit einem anderen Kernel neu starten."
     },
     "kernels-headers-missing": {
       "string": "Header fehlen"
@@ -5796,10 +5895,10 @@
       "string": "{name} läuft gerade und bleibt deshalb installiert."
     },
     "kernels-refusal-running-unknown": {
-      "string": "Der laufende Kernel ist unbekannt, daher kann kein Kernel entfernt werden. Starte den Computer neu und versuche es erneut."
+      "string": "Der laufende Kernel ist unbekannt, daher kann kein Kernel entfernt werden. Den Computer neu starten und erneut versuchen."
     },
     "kernels-refusal-last-kernel": {
-      "string": "{name} ist der letzte installierte Kernel. Installiere einen anderen, bevor du ihn entfernst."
+      "string": "{name} ist der letzte installierte Kernel. Vor dem Entfernen muss ein anderer installiert werden."
     },
     "kernels-dismiss": {
       "string": "Ausblenden"
@@ -5809,11 +5908,14 @@
     },
     "kernels-set-default-name": {
       "string": "{kernel} als Standardeintrag im Bootmenü festlegen"
+    },
+    "kernels-version-note": {
+      "string": "{version} · {note}"
     }
   },
   "locales": {
     "page-locales-subtitle": {
-      "string": "Verfügbare Sprachen, Zahlen- und Datumsformate sowie Übersetzungen für deine Programme."
+      "string": "Verfügbare Sprachen, Zahlen- und Datumsformate sowie Übersetzungen für die installierten Programme."
     },
     "locales-refresh": {
       "string": "Neu einlesen"
@@ -5885,7 +5987,7 @@
       "string": "Systemsprache"
     },
     "locales-system-detail": {
-      "string": "Die Systemsprache gilt ab der nächsten Anmeldung. Zur Auswahl stehen nur aktivierte Locales. Aktiviere deshalb zuerst eine Locale in der Liste unten."
+      "string": "Die Systemsprache gilt ab der nächsten Anmeldung. Zur Auswahl stehen nur aktivierte Locales. Zuerst muss eine Locale in der Liste unten aktiviert werden."
     },
     "locales-system-unset": {
       "string": "Nicht gesetzt"
@@ -5897,22 +5999,22 @@
       "string": "{language} ({territory}), {code}"
     },
     "locales-refused-system-locale": {
-      "string": "{name} ist die Systemsprache. Wähle eine andere Systemsprache, bevor du sie deaktivierst."
+      "string": "{name} ist die Systemsprache. Vor dem Deaktivieren muss eine andere Systemsprache gewählt werden."
     },
     "locales-refused-last-locale": {
       "string": "Mindestens eine Locale muss aktiviert bleiben."
     },
     "locales-refused-not-enabled": {
-      "string": "{name} ist nicht aktiviert. Aktiviere die Locale zuerst."
+      "string": "{name} ist nicht aktiviert. Die Locale muss zuerst aktiviert werden."
     },
     "locales-dismiss": {
       "string": "Ausblenden"
     },
     "locales-packs-intro": {
-      "string": "Sprachpakete für deine aktivierten Locales und installierten Programme. {count, plural, one {Ein Paket ist nicht installiert.} other {{count} Pakete sind nicht installiert.}}"
+      "string": "Sprachpakete für die aktivierten Locales und installierten Programme. {count, plural, one {Ein Paket ist nicht installiert.} other {{count} Pakete sind nicht installiert.}}"
     },
     "locales-packs-intro-plain": {
-      "string": "Sprachpakete für deine aktivierten Locales und installierten Programme."
+      "string": "Sprachpakete für die aktivierten Locales und installierten Programme."
     },
     "locales-packs-add-missing": {
       "string": "Alle fehlenden vormerken"
@@ -5989,7 +6091,7 @@
       "string": "Paketpflege"
     },
     "maintenance-operations-detail": {
-      "string": "Vorgemerkte Aufgaben werden mit deinen anderen Änderungen übernommen. Du kannst eine auch sofort in der Konsole ausführen."
+      "string": "Aufgaben vormerken, um sie zusammen mit den übrigen Änderungen zu übernehmen, oder eine davon sofort in der Konsole ausführen."
     },
     "maintenance-run-now": {
       "string": "Jetzt ausführen"
@@ -6070,10 +6172,10 @@
       "string": "Nicht installiert"
     },
     "maintenance-tool-missing": {
-      "string": "Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug."
+      "string": "Die Installation startet sofort in der Konsole und fragt nach dem Passwort. Danach wird das Werkzeug geöffnet."
     },
     "maintenance-ranker-missing": {
-      "string": "rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung."
+      "string": "rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach dem Passwort. Danach beginnt die Bewertung."
     },
     "maintenance-ranking": {
       "string": "Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist."
@@ -6112,7 +6214,7 @@
       "string": "Konfigurationsupdates zusammenführen"
     },
     "maintenance-tool-merge-pacdiff-detail": {
-      "string": ".pacnew- und .pacsave-Dateien nebeneinander vergleichen und zusammenführen. Updates legen sie neben Konfigurationsdateien ab, die du geändert hast."
+      "string": ".pacnew- und .pacsave-Dateien nebeneinander vergleichen und zusammenführen. Nach einem Update liegen sie neben einer geänderten Konfigurationsdatei, zusammen mit deren neuer Version."
     },
     "maintenance-problem-launch-absent": {
       "string": "Die Installation ist fertig, aber {reason} fehlt, daher wurde {tool} nicht gestartet."
@@ -6124,13 +6226,13 @@
       "string": "rate-mirrors konnte nicht gestartet werden, die Chaotic-AUR-Spiegelserver wurden nicht bewertet: {reason}"
     },
     "maintenance-problem-mirrors-exit": {
-      "string": "Die Bewertung der Chaotic-AUR-Spiegelserver ist fehlgeschlagen, ihre Liste ist unverändert. Prüfe deine Internetverbindung und versuche es erneut."
+      "string": "Die Bewertung der Chaotic-AUR-Spiegelserver ist fehlgeschlagen, ihre Liste ist unverändert. Die Internetverbindung prüfen und erneut versuchen."
     },
     "maintenance-problem-mirrors-invalid": {
       "string": "Die Bewertung ergab keine brauchbare Liste von Spiegelservern. Die Chaotic-AUR-Liste ist unverändert."
     },
     "maintenance-problem-busy": {
-      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Starte ihn erneut, sobald sie abgeschlossen sind."
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut starten, sobald sie abgeschlossen sind."
     },
     "maintenance-problem-dismiss": {
       "string": "Ausblenden"
@@ -6139,7 +6241,7 @@
       "string": "App-Einstellungen"
     },
     "maintenance-reset-detail": {
-      "string": "Wähle die Apps, deren Einstellungen auf Garudas Standardeinstellungen zurückgesetzt werden sollen. Deine aktuellen Dateien bleiben als Sicherung erhalten."
+      "string": "Apps auswählen, deren Einstellungen auf Garudas Standardeinstellungen zurückgesetzt werden sollen. Die aktuellen Dateien bleiben als Sicherung erhalten."
     },
     "maintenance-reset-empty": {
       "string": "Keine Standardeinstellungen gefunden"
@@ -6181,7 +6283,7 @@
       "string": "Jede Reparatur läuft in der Konsole, damit sie Rückfragen stellen kann."
     },
     "maintenance-repairs-missing": {
-      "string": "{count, plural, one {Die ausgegrauten Reparaturen brauchen {packages}, das nicht installiert ist. Installiere es, um sie freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.} other {Die ausgegrauten Reparaturen brauchen {packages}, die nicht installiert sind. Installiere sie, um die Reparaturen freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.}}"
+      "string": "{count, plural, one {Die ausgegrauten Reparaturen brauchen {packages}, das nicht installiert ist. Zum Freischalten muss es installiert werden. Die Installation startet sofort in der Konsole und fragt nach dem Passwort.} other {Die ausgegrauten Reparaturen brauchen {packages}, die nicht installiert sind. Zum Freischalten müssen sie installiert werden. Die Installation startet sofort in der Konsole und fragt nach dem Passwort.}}"
     },
     "maintenance-install-missing": {
       "string": "{packages} installieren"
@@ -6244,19 +6346,19 @@
       "string": "Abbrechen"
     },
     "maintenance-repair-remote-fix-question": {
-      "string": "Deine pacman.conf und die Mirrorlisten werden durch Garudas Standardfassung ersetzt. Von dir hinzugefügte Repositorys gehen dabei verloren."
+      "string": "Die pacman.conf und die Mirrorlisten werden durch Garudas Standardfassung ersetzt. Hinzugefügte Repositorys gehen danach verloren."
     },
     "maintenance-repair-remote-full-fix-question": {
-      "string": "Deine pacman.conf wird durch Garudas Standardfassung ersetzt und jedes installierte Paket wird neu heruntergeladen und installiert. Das dauert lange und braucht eine funktionierende Internetverbindung."
+      "string": "Die pacman.conf wird durch Garudas Standardfassung ersetzt, und jedes installierte Paket wird neu heruntergeladen und installiert. Das dauert lange und setzt eine funktionierende Internetverbindung voraus."
     },
     "maintenance-repair-remote-reset-audio-question": {
-      "string": "PipeWire und WirePlumber werden neu installiert und deine Audioeinstellungen auf den Standard zurückgesetzt."
+      "string": "PipeWire und WirePlumber werden neu installiert und die Audioeinstellungen auf den Standard zurückgesetzt."
     },
     "maintenance-repair-remote-reset-snapper-question": {
       "string": "Alle Snapper-Snapshots und Backup-Subvolumen werden gelöscht und die Snapper-Konfigurationen neu angelegt. Ältere Snapshots lassen sich danach nicht mehr wiederherstellen."
     },
     "maintenance-repair-remote-reinstall-question": {
-      "string": "Alle installierten Pakete werden neu heruntergeladen und installiert. Das dauert lange und braucht eine funktionierende Internetverbindung."
+      "string": "Alle installierten Pakete werden neu heruntergeladen und installiert. Das dauert lange und setzt eine funktionierende Internetverbindung voraus."
     },
     "maintenance-repair-needs": {
       "string": "Benötigt {package}"
@@ -6326,9 +6428,6 @@
     "network-none": {
       "string": "Keine"
     },
-    "network-not-available": {
-      "string": "Nicht verfügbar"
-    },
     "network-not-known": {
       "string": "Unbekannt"
     },
@@ -6384,13 +6483,13 @@
       "string": "Per Taste oder Schalter am Computer abgeschaltet"
     },
     "network-radio-denied": {
-      "string": "Diese Sitzung darf Funkgeräte nicht ein- oder ausschalten. Melde dich direkt am Computer an oder frag einen Admin."
+      "string": "Diese Sitzung darf Funkgeräte nicht ein- oder ausschalten. Dafür ist eine Anmeldung direkt am Computer oder die Freigabe durch einen Administrator nötig."
     },
     "network-radio-missing": {
       "string": "Die Funkschalter sind nicht erreichbar, weil das rfkill-Gerät des Kernels (/dev/rfkill) fehlt."
     },
     "network-radio-failed": {
-      "string": "Das Funkgerät ließ sich nicht schalten. Den Grund findest du im Log von Garuda Toolbox."
+      "string": "Das Funkgerät ließ sich nicht schalten. Der Grund steht im Log von Garuda Toolbox."
     },
     "network-services": {
       "string": "Dienste"
@@ -6498,7 +6597,7 @@
       "string": "Keine Netzwerktreiber gefunden"
     },
     "network-drivers-none-detail": {
-      "string": "Die Module des laufenden Kernels liegen nicht auf der Festplatte. Starte nach einem Kernel-Update zuerst den Computer neu."
+      "string": "Die Module des laufenden Kernels liegen nicht auf der Festplatte. Nach einem Kernel-Update zuerst den Computer neu starten."
     },
     "network-drivers-no-match": {
       "string": "Kein Treiber passt"
@@ -6528,7 +6627,7 @@
       "string": "{module} entladen?"
     },
     "network-driver-unload-question": {
-      "string": "Alle Geräte, die {module} steuert, funktionieren sofort nicht mehr. Steuert es deine Netzwerkkarte, bricht die Verbindung ab, bis du es wieder lädst."
+      "string": "Alle Geräte, die {module} steuert, funktionieren sofort nicht mehr. Steuert es die Netzwerkkarte, bricht die Verbindung ab, bis es wieder geladen wird."
     },
     "network-driver-unload-keep": {
       "string": "Geladen lassen"
@@ -6549,7 +6648,7 @@
       "string": "Die Treiber dieses Systems ließen sich nicht lesen."
     },
     "network-refused-busy": {
-      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind."
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut versuchen, sobald sie abgeschlossen sind."
     },
     "network-hardware-intro": {
       "string": "Netzwerkgeräte laut lspci und lsusb."
@@ -6559,9 +6658,6 @@
     },
     "network-hardware-copy-line": {
       "string": "Diese Zeile kopieren"
-    },
-    "network-hardware-list": {
-      "string": "Netzwerkgeräte"
     },
     "network-hardware-reading": {
       "string": "Geräte werden gelesen…"
@@ -6594,13 +6690,13 @@
       "string": "Verbindungstests"
     },
     "network-tests-detail": {
-      "string": "Beide Tests laufen mit deinen Benutzerrechten und zeigen ihre Ausgabe in der Konsole."
+      "string": "Beide Tests laufen mit den Rechten des angemeldeten Benutzers und zeigen ihre Ausgabe in der Konsole."
     },
     "network-host": {
       "string": "Host"
     },
     "network-host-problem": {
-      "string": "Gib einen Hostnamen oder eine IP-Adresse ein, zum Beispiel garudalinux.org."
+      "string": "Einen Hostnamen oder eine IP-Adresse eingeben, zum Beispiel garudalinux.org."
     },
     "network-pings": {
       "string": "Anzahl der Pings"
@@ -6727,6 +6823,9 @@
     "packages-filter-orphans": {
       "string": "Verwaist"
     },
+    "packages-filter-optional": {
+      "string": "Optional"
+    },
     "packages-filter-all": {
       "string": "Alle"
     },
@@ -6754,6 +6853,12 @@
     "packages-no-orphans-detail": {
       "string": "Jedes als Abhängigkeit installierte Paket wird noch von einem anderen gebraucht oder als optional genannt."
     },
+    "packages-no-optional": {
+      "string": "Keine nur optionalen Abhängigkeiten"
+    },
+    "packages-no-optional-detail": {
+      "string": "Kein als Abhängigkeit installiertes Paket wird von einem anderen nur als optional genannt."
+    },
     "packages-nothing-matches-detail": {
       "string": "Durchsucht Namen und Beschreibungen im gewählten Filter."
     },
@@ -6767,10 +6872,10 @@
       "string": "{name} ist der laufende Kernel und bleibt deshalb installiert."
     },
     "packages-refused-running-unknown": {
-      "string": "{name} bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Starte den Computer neu und versuch es noch einmal."
+      "string": "{name} bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Den Computer neu starten und erneut versuchen."
     },
     "packages-refused-last-kernel": {
-      "string": "{name} ist der letzte installierte Kernel. Installiere einen anderen, bevor du ihn entfernst."
+      "string": "{name} ist der letzte installierte Kernel. Vor dem Entfernen einen anderen Kernel installieren."
     },
     "packages-dismiss": {
       "string": "Ausblenden"
@@ -6792,6 +6897,15 @@
     },
     "packages-tag-foreign": {
       "string": "Fremdes Paket"
+    },
+    "packages-tag-optional-for": {
+      "string": "Optional für {first}"
+    },
+    "packages-tag-optional-for-more": {
+      "string": "{more, plural, one {Optional für {first} und ein weiteres} other {Optional für {first} und {more} weitere}}"
+    },
+    "packages-tag-optional-for-all": {
+      "string": "Optional für {names}"
     },
     "packages-installed": {
       "string": "Installiert"
@@ -6977,13 +7091,13 @@
       "string": "Die Paketliste des AUR wird eingelesen…"
     },
     "packages-aur-failed": {
-      "string": "Die Paketliste des AUR konnte nicht heruntergeladen werden. Der nächste Versuch folgt in einem Tag."
+      "string": "Die Paketliste des AUR konnte nicht heruntergeladen werden. Der nächste Versuch erfolgt einen Tag später."
     },
     "packages-aur-waiting": {
-      "string": "Die Paketliste des AUR liegt noch nicht vor. Der letzte Download ist fehlgeschlagen, der nächste folgt einen Tag danach."
+      "string": "Die Paketliste des AUR liegt noch nicht vor. Der letzte Download ist fehlgeschlagen, der nächste Versuch erfolgt einen Tag danach."
     },
     "packages-aur-note": {
-      "string": "Stand: {date}. AUR-Pakete sind Skripte der Community, die auf deinem Computer gebaut werden."
+      "string": "Stand: {date}. AUR-Pakete sind Skripte der Community, die lokal gebaut werden."
     },
     "packages-aur-stale": {
       "string": "Die Liste konnte nicht aktualisiert werden und ist vielleicht veraltet."
@@ -7004,7 +7118,7 @@
       "string": "{package} aus dem AUR bauen?"
     },
     "packages-aur-install-body": {
-      "string": "Das Paket wird aus einem Skript der Community auf deinem Computer gebaut. paru zeigt dir das Build-Skript vorher in der Konsole."
+      "string": "Das Paket wird aus einem Skript der Community lokal gebaut. paru zeigt das Build-Skript vorher in der Konsole."
     },
     "packages-aur-install-confirm": {
       "string": "Bauen und installieren"
@@ -7108,19 +7222,19 @@
       "string": "Pflege"
     },
     "page-components-subtitle": {
-      "string": "Hardware-Unterstützung und Systemfunktionen hinzufügen. Änderungen bleiben vorgemerkt, bis du sie übernimmst."
+      "string": "Hardware-Unterstützung und Systemfunktionen hinzufügen. Änderungen bleiben vorgemerkt, bis sie übernommen werden."
     },
     "page-gaming-subtitle": {
-      "string": "Launcher, Werkzeuge und Emulatoren zum Spielen unter Linux. Wähle aus, was du möchtest, und übernimm die Auswahl."
+      "string": "Launcher, Werkzeuge und Emulatoren zum Spielen unter Linux. Gewünschtes auswählen und danach übernehmen."
     },
     "page-discover-subtitle": {
-      "string": "Apps aus dem Arch-Wiki, nach Kategorien geordnet. Änderungen bleiben vorgemerkt, bis du sie übernimmst."
+      "string": "Apps aus dem Arch-Wiki, nach Kategorien geordnet. Änderungen bleiben vorgemerkt, bis sie übernommen werden."
     },
     "page-packages-subtitle": {
-      "string": "Pakete aus den Repositorys und alle installierten Pakete. Änderungen bleiben vorgemerkt, bis du sie übernimmst."
+      "string": "Pakete aus den Repositorys und alle installierten Pakete. Änderungen bleiben vorgemerkt, bis sie übernommen werden."
     },
     "page-system-settings-subtitle": {
-      "string": "Systemweite Einstellungen für Shell, Netzwerk, Leistung und Desktop. Änderungen bleiben vorgemerkt, bis du sie übernimmst."
+      "string": "Systemweite Einstellungen für Shell, Netzwerk, Leistung und Desktop. Änderungen bleiben vorgemerkt, bis sie übernommen werden."
     }
   },
   "services": {
@@ -7147,6 +7261,15 @@
     },
     "services-show-enabled": {
       "string": "Aktiviert"
+    },
+    "services-show-disabled": {
+      "string": "Deaktiviert"
+    },
+    "services-show-masked": {
+      "string": "Maskiert"
+    },
+    "services-show-dead": {
+      "string": "Inaktiv"
     },
     "services-show-failed": {
       "string": "Fehlgeschlagen"
@@ -7182,22 +7305,22 @@
       "string": "Die Dienste konnten nicht gelesen werden."
     },
     "services-user-unavailable": {
-      "string": "Das systemd deines Benutzers ist nicht erreichbar."
+      "string": "Die systemd-Instanz des Benutzers ist nicht erreichbar."
     },
     "services-user-denied": {
-      "string": "Keine Berechtigung, die Dienste deines Benutzers zu lesen."
+      "string": "Keine Berechtigung, die Benutzerdienste zu lesen."
     },
     "services-user-failed": {
-      "string": "Die Dienste deines Benutzers konnten nicht gelesen werden."
+      "string": "Die Benutzerdienste konnten nicht gelesen werden."
     },
     "services-none-detail": {
-      "string": "Ändere die Suche oder die Filter, um mehr Dienste zu sehen."
+      "string": "Die Suche oder die Filter ändern, um mehr Dienste zu sehen."
     },
     "services-show-every": {
       "string": "{count, plural, one {Den einen Treffer zeigen} other {Alle {count} Treffer zeigen}}"
     },
     "services-busy": {
-      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind."
+      "string": "Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut versuchen, sobald sie abgeschlossen sind."
     },
     "services-dismiss": {
       "string": "Ausblenden"
@@ -7407,7 +7530,7 @@
       "string": "{unit}: {verb}?"
     },
     "services-ask-why": {
-      "string": "Deine Sitzung hängt von {unit} ab: Anmeldebildschirm, Netzwerk, Passwortabfrage oder Systembus. Stoppst du den Dienst, kann deine grafische Sitzung enden oder die Verbindung abbrechen."
+      "string": "Die Sitzung hängt von {unit} ab: Anmeldebildschirm, Netzwerk, Passwortabfrage oder Systembus. Beim Stoppen kann die grafische Sitzung enden oder die Verbindung abbrechen."
     },
     "services-ask-cancel": {
       "string": "Abbrechen"
@@ -7439,13 +7562,13 @@
       "string": "Sprache"
     },
     "settings-language-description": {
-      "string": "Die Änderung wirkt sofort. Fehlende Übersetzungen erscheinen auf Englisch."
+      "string": "Die Texte wechseln sofort. Eine unvollständige Sprache zeigt die fehlenden Texte auf Englisch."
     },
     "settings-language-system": {
       "string": "Systemsprache"
     },
     "settings-theme": {
-      "string": "Farbschema"
+      "string": "Erscheinungsbild"
     },
     "settings-theme-description": {
       "string": "Hell, dunkel oder passend zum Desktop."
@@ -7463,13 +7586,13 @@
       "string": "Dunkle Farben"
     },
     "settings-dark-scheme-description": {
-      "string": "Farben für das dunkle Farbschema. „System“ übernimmt Farben und Akzentfarbe des Desktops."
+      "string": "Farben, solange das Erscheinungsbild dunkel ist. Bei „System“ werden Farben und Akzentfarbe des Desktops übernommen."
     },
     "settings-light-scheme": {
       "string": "Helle Farben"
     },
     "settings-light-scheme-description": {
-      "string": "Farben für das helle Farbschema. „System“ übernimmt Farben und Akzentfarbe des Desktops."
+      "string": "Farben, solange das Erscheinungsbild hell ist. Bei „System“ werden Farben und Akzentfarbe des Desktops übernommen."
     },
     "settings-scheme-system": {
       "string": "System"
@@ -7478,7 +7601,7 @@
       "string": "Weniger Animationen"
     },
     "settings-motion-description": {
-      "string": "Leisten und Hinweise erscheinen sofort, ohne Animation."
+      "string": "Bereiche und Hinweise erscheinen sofort, statt einzugleiten und einzublenden."
     },
     "settings-motion-system": {
       "string": "Wie das System"
@@ -7499,13 +7622,13 @@
       "string": "Automatisch nach Updates suchen"
     },
     "settings-refresh-auto-description": {
-      "string": "Jede Prüfung lädt die Paketlisten herunter und fragt das AUR (Arch User Repository) ab. Ausgeschaltet sucht die Startseite nur, wenn du auf „Neu einlesen“ klickst."
+      "string": "Bei jeder Prüfung werden die Paketlisten heruntergeladen und das AUR (Arch User Repository) abgefragt. Ist sie ausgeschaltet, prüft die Startseite nur nach einem Klick auf „Neu einlesen“."
     },
     "settings-refresh-interval": {
       "string": "Zeit zwischen den Prüfungen"
     },
     "settings-refresh-interval-description": {
-      "string": "Von alle 5 Minuten bis einmal am Tag (1440 Minuten)."
+      "string": "Zwischen 5 Minuten und einmal am Tag (1440 Minuten)."
     },
     "settings-refresh-minutes": {
       "string": "Prüfintervall in Minuten"
@@ -7520,7 +7643,7 @@
       "string": "Dienste beim Öffnen"
     },
     "settings-user-units-description": {
-      "string": "Welche Units die Seite „Dienste“ beim Öffnen anzeigt."
+      "string": "Legt fest, welche Units die Seite „Dienste“ beim Öffnen auflistet."
     },
     "settings-user-units-system": {
       "string": "System"
@@ -7532,19 +7655,19 @@
       "string": "AUR-Pakete anzeigen"
     },
     "settings-aur-description": {
-      "string": "Die Seite „Pakete“ zeigt auch Pakete aus dem Arch User Repository. Die Liste wird höchstens einmal am Tag heruntergeladen. AUR-Pakete sind Skripte der Community, die auf deinem Computer gebaut werden."
+      "string": "Die Seite „Pakete“ zeigt auch Pakete aus dem Arch User Repository. Die Liste wird höchstens einmal am Tag heruntergeladen. AUR-Pakete sind Community-Skripte, die lokal gebaut werden."
     },
     "settings-copy-reports": {
       "string": "Berichte in die Zwischenablage kopieren"
     },
     "settings-copy-reports-description": {
-      "string": "Fertige Berichte werden sofort kopiert. Nach dem Hochladen wird der Link kopiert, auch bei der Konsolenausgabe."
+      "string": "Ein fertiger Bericht wird sofort kopiert, ebenso der Link nach dem Hochladen. Das gilt auch für die Konsolenausgabe."
     },
     "settings-log-level": {
       "string": "Detailgrad der Logdatei"
     },
     "settings-log-level-description": {
-      "string": "Wie viel Garuda Toolbox in seine Logdatei schreibt. Wähle „Ausführlich“, bevor du ein Problem meldest."
+      "string": "Legt fest, wie viel Garuda Toolbox in die Logdatei schreibt. Vor einer Problemmeldung sollte „Ausführlich“ gewählt werden."
     },
     "settings-log-error": {
       "string": "Nur Fehler"
@@ -7564,7 +7687,7 @@
   },
   "setup": {
     "page-setup-subtitle": {
-      "string": "Wähle die Software, die du installieren möchtest."
+      "string": "Software auswählen, die installiert werden soll."
     },
     "setup-welcome": {
       "string": "Willkommen"
@@ -7573,13 +7696,13 @@
       "string": "Willkommen beim Einrichtungsassistenten"
     },
     "setup-welcome-text": {
-      "string": "Wähle deine Apps Kategorie für Kategorie aus. Installiert wird erst, wenn du am Ende deine Auswahl prüfst und übernimmst."
+      "string": "Gewünschte Apps Kategorie für Kategorie auswählen. Nichts wird installiert, bevor die Auswahl am Ende geprüft und übernommen wurde."
     },
     "setup-welcome-steps": {
-      "string": "{count, plural, one {Es gibt 1 Kategorie.} other {Es gibt {count} Kategorien.}} Mit „Weiter“ überspringst du eine Kategorie, mit „Zurück“ kehrst du zu ihr zurück. Über die Liste dazwischen erreichst du jede Kategorie direkt."
+      "string": "{count, plural, one {Es gibt 1 Kategorie.} other {Es gibt {count} Kategorien.}} „Weiter“ überspringt eine nicht benötigte Kategorie, „Zurück“ kehrt zu ihr zurück. Über die Liste dazwischen wird jede Kategorie direkt erreicht."
     },
     "setup-welcome-installed": {
-      "string": "Bereits installierte Apps sind eingeschaltet. Schaltest du eine aus, wird sie entfernt."
+      "string": "Bereits installierte Apps sind eingeschaltet. Wird eine ausgeschaltet, wird sie entfernt."
     },
     "setup-unavailable": {
       "string": "Die App-Liste des Einrichtungsassistenten konnte nicht gelesen werden"
@@ -7624,13 +7747,13 @@
       "string": "Zu aktivierende Dienste: {count}"
     },
     "setup-review-note": {
-      "string": "Die Übersicht zeigt alle vorgemerkten Änderungen, auch von anderen Seiten. Geändert wird erst, wenn du sie dort übernimmst."
+      "string": "Die Übersicht zeigt alle vorgemerkten Änderungen, auch die von anderen Seiten. Geändert wird erst, wenn sie dort übernommen werden."
     },
     "setup-review": {
       "string": "Prüfen und übernehmen"
     },
     "setup-nothing": {
-      "string": "Du hast nichts ausgewählt. Geh zurück, um Apps zu wählen, oder schließe ohne Änderungen ab."
+      "string": "Nichts ausgewählt. Zurückgehen, um Apps zu wählen, oder ohne Änderungen abschließen."
     },
     "setup-finish": {
       "string": "Abschließen"
@@ -7639,13 +7762,13 @@
       "string": "Fertig"
     },
     "setup-ready": {
-      "string": "Dein System ist eingerichtet und einsatzbereit."
+      "string": "Das System ist eingerichtet und einsatzbereit."
     },
     "setup-ready-tested": {
       "string": "Testmodus: Es wurde nichts installiert oder geändert."
     },
     "setup-ready-nothing": {
-      "string": "Alles, was du ausgewählt hast, war schon eingerichtet."
+      "string": "Alles, was ausgewählt wurde, war schon eingerichtet."
     },
     "setup-installed": {
       "string": "Installierte Apps: {count}"
@@ -7696,16 +7819,16 @@
       }
     },
     "share-upload-where": {
-      "string": "Der folgende Text wird an bin.garudalinux.org gesendet. Er wird bereits auf diesem Computer verschlüsselt, sodass der Server ihn nicht lesen kann. Jeder mit dem Link kann ihn aber lesen. Der Server löscht ihn nach einem Monat."
+      "string": "Der folgende Text wird an bin.garudalinux.org gesendet. Er wird auf diesem Computer verschlüsselt, sodass der Server ihn nicht lesen kann. Wer den Link hat, kann ihn aber lesen. Der Server löscht ihn nach einem Monat."
     },
     "share-upload-check": {
-      "string": "Prüfe ihn auf weitere Angaben, die du nicht teilen möchtest. Die Suche markiert jeden Treffer."
+      "string": "Den Text auf weitere Angaben prüfen, die nicht geteilt werden sollen. Die Suche markiert jeden Treffer."
     },
     "share-upload-replaced-none": {
-      "string": "Soweit die Toolbox es erkennt, nennt der Text weder dich noch diesen Computer."
+      "string": "Soweit die Toolbox es erkennt, nennt der Text weder den Benutzer noch diesen Computer."
     },
     "share-upload-replaced": {
-      "string": "{count, plural, one {Ein Wert, der dich oder diesen Computer nennt, wurde ersetzt, etwa der Benutzername, der Rechnername, eine Seriennummer oder eine öffentliche Adresse.} other {{count} Werte, die dich oder diesen Computer nennen, wurden ersetzt, etwa der Benutzername, der Rechnername, Seriennummern und öffentliche Adressen.}}"
+      "string": "{count, plural, one {Ein Wert, der den Benutzer oder diesen Computer nennt, wurde ersetzt, etwa der Benutzername, der Rechnername, eine Seriennummer oder eine öffentliche Adresse.} other {{count} Werte, die den Benutzer oder diesen Computer nennen, wurden ersetzt, etwa der Benutzername, der Rechnername, Seriennummern und öffentliche Adressen.}}"
     },
     "share-upload-search": {
       "string": "Text durchsuchen"
@@ -7773,7 +7896,7 @@
       }
     },
     "share-delete-detail": {
-      "string": "Danach kann niemand mehr den Link öffnen, auch du nicht. Der Löschlink wird in deinem Browser geöffnet."
+      "string": "Danach lässt sich der Link von niemandem mehr öffnen. Der Löschlink wird im Browser geöffnet."
     },
     "share-delete-cancel": {
       "string": "Abbrechen"
@@ -7782,7 +7905,7 @@
       "string": "Löschen"
     },
     "share-upload-network": {
-      "string": "Das Hochladen ist fehlgeschlagen. bin.garudalinux.org ist nicht erreichbar. Prüfe die Netzwerkverbindung."
+      "string": "Das Hochladen ist fehlgeschlagen. bin.garudalinux.org ist nicht erreichbar. Die Netzwerkverbindung prüfen."
     },
     "share-upload-refused": {
       "report": {
@@ -7808,7 +7931,7 @@
       }
     },
     "share-upload-stopped": {
-      "string": "Das Hochladen ist wegen eines Fehlers in Garuda Toolbox fehlgeschlagen. Melde ihn im Forum oder im Issue-Tracker."
+      "string": "Das Hochladen ist wegen eines Fehlers in Garuda Toolbox fehlgeschlagen. Der Fehler sollte im Forum oder im Issue-Tracker gemeldet werden."
     },
     "share-upload-detail": {
       "string": "{problem} ({detail})"
@@ -7844,6 +7967,18 @@
     },
     "palette-group-apps": {
       "string": "Apps"
+    },
+    "palette-group-packages": {
+      "string": "Pakete"
+    },
+    "palette-group-aur": {
+      "string": "AUR"
+    },
+    "palette-show-all": {
+      "string": "Alle {count} in {page} zeigen"
+    },
+    "palette-show-all-here": {
+      "string": "Alle {count} zeigen"
     },
     "command-apply": {
       "string": "Änderungen übernehmen"
@@ -7903,10 +8038,10 @@
       "string": "Benachrichtigung"
     },
     "toast-plan-succeeded": {
-      "string": "Deine Änderungen wurden übernommen."
+      "string": "Die Änderungen wurden übernommen."
     },
     "toast-plan-failed": {
-      "string": "Ein Schritt ist fehlgeschlagen. Details findest du in der Konsole."
+      "string": "Ein Schritt ist fehlgeschlagen. Details stehen in der Konsole."
     },
     "toast-link-failed": {
       "string": "Der Link konnte nicht geöffnet werden."
@@ -8000,6 +8135,9 @@
     "probe-module-blacklist": {
       "string": "Blacklist der Kernelmodule"
     },
+    "probe-merges": {
+      "string": "offene .pacnew-Dateien"
+    },
     "probe-boot-loader": {
       "string": "Bootloader"
     },
@@ -8016,7 +8154,7 @@
       "string": "Prüfung auf virtuelle Maschine"
     },
     "probe-user-configs": {
-      "string": "deine Konfigurationsdateien"
+      "string": "Konfigurationsdateien des Benutzers"
     },
     "probe-linux-packages": {
       "string": "Kernelpakete"
@@ -8037,7 +8175,7 @@
       "string": "Systemsprache"
     },
     "probe-user": {
-      "string": "dein Konto"
+      "string": "Benutzerkonto"
     },
     "probe-live-iso": {
       "string": "Prüfung auf Live-System"
@@ -8081,7 +8219,7 @@
       "string": "?/{total}"
     },
     "toggles-unknown": {
-      "string": "{count, plural, one {Der Zustand eines Eintrags konnte nicht gelesen werden. Sein Schalter zeigt eventuell den falschen Zustand.} other {Der Zustand von {count} Einträgen konnte nicht gelesen werden. Ihre Schalter zeigen eventuell den falschen Zustand.}}"
+      "string": "{count, plural, one {Der Zustand eines Eintrags konnte nicht gelesen werden. Sein Schalter zeigt eventuell den falschen Zustand.} other {Der Zustand von {count} Einträgen konnte nicht gelesen werden. Die Schalter zeigen eventuell den falschen Zustand.}}"
     },
     "toggles-state-unknown": {
       "string": "Zustand unbekannt."
@@ -8104,6 +8242,9 @@
     "toggles-turns-off": {
       "string": "Wird beim Übernehmen ausgeschaltet"
     },
+    "toggles-enabled": {
+      "string": "Aktiviert"
+    },
     "toggles-dismiss": {
       "string": "Ausblenden"
     },
@@ -8118,6 +8259,9 @@
     },
     "toggles-problem-invalid": {
       "string": "Eine Katalogdatei enthält einen ungültigen Eintrag."
+    },
+    "toggles-problem-reason": {
+      "string": "Die Liste konnte nicht geladen werden. {reason}"
     }
   },
   "tweaks": {
@@ -8143,7 +8287,7 @@
       "string": "Login-Shell"
     },
     "tweaks-shell-description": {
-      "string": "Empfohlen wird eine POSIX-kompatible Shell wie Bash oder Zsh. Fish solltest du nur über das Profil deines Terminals verwenden."
+      "string": "Empfohlen wird eine POSIX-kompatible Shell wie Bash oder Zsh. Fish sollte nur über das Profil des Terminals genutzt werden."
     },
     "tweaks-dns": {
       "string": "DNS-Server"
@@ -8164,7 +8308,7 @@
       "string": "Blockiert Werbung, Tracker und Schadsoftware-Domains mit hblock."
     },
     "tweaks-dns-default": {
-      "string": "Aus deinem Netzwerk (Standard)"
+      "string": "Aus dem Netzwerk (Standard)"
     },
     "tweaks-dns-google": {
       "string": "Google (8.8.8.8)"
@@ -8185,7 +8329,7 @@
       "string": "Mirrorliste nicht aktualisieren"
     },
     "tweaks-flag-skip-mirrorlist-description": {
-      "string": "Vor Systemaktualisierungen werden nicht die schnellsten Arch-Spiegelserver für die Mirrorliste ermittelt."
+      "string": "Vor Systemaktualisierungen werden die schnellsten Arch-Spiegelserver nicht neu ermittelt."
     },
     "tweaks-flag-update-aur": {
       "string": "AUR-Pakete aktualisieren"
@@ -8286,7 +8430,7 @@
       "string": "Keine regulären Benutzer"
     },
     "users-none-regular-detail": {
-      "string": "Schalte den Filter ab, um auch Systemkonten zu sehen."
+      "string": "Den Filter ausschalten, um auch Systemkonten anzuzeigen."
     },
     "users-show-all": {
       "string": "Alle Konten anzeigen"
@@ -8295,10 +8439,10 @@
       "string": "Benutzer"
     },
     "users-keys": {
-      "string": "Mit den Pfeiltasten wählst du ein Konto, mit der Eingabetaste bearbeitest du es. Die Menütaste öffnet weitere Aktionen."
+      "string": "Mit den Pfeiltasten ein Konto wählen und mit der Eingabetaste bearbeiten. Die Menütaste öffnet weitere Aktionen."
     },
     "users-tag-you": {
-      "string": "Du"
+      "string": "Eigenes Konto"
     },
     "users-tag-locked": {
       "string": "Gesperrt"
@@ -8367,10 +8511,10 @@
       "string": "Es ist nicht bekannt, welche Konten gesperrt sind: Der Passwortdialog wurde geschlossen oder das Passwort nicht angenommen."
     },
     "users-locks-no-agent": {
-      "string": "Es ist nicht bekannt, welche Konten gesperrt sind. In dieser Sitzung läuft kein polkit-Agent (das Programm, das nach deinem Passwort fragt, wenn eine App mehr Rechte braucht), daher erschien keine Passwortabfrage."
+      "string": "Es ist nicht bekannt, welche Konten gesperrt sind. In dieser Sitzung läuft kein polkit-Agent (das Programm, das nach dem Passwort fragt, wenn eine App mehr Rechte braucht), daher erschien keine Passwortabfrage."
     },
     "users-locks-helper-missing": {
-      "string": "Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox ist nicht installiert. Installiere Garuda Toolbox neu."
+      "string": "Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox ist nicht installiert. Garuda Toolbox neu installieren."
     },
     "users-locks-unknown": {
       "string": "Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox konnte es nicht auslesen."
@@ -8400,13 +8544,13 @@
       "string": "{name} ist ein Root-Konto. Garuda Toolbox ändert es nicht."
     },
     "users-refused-current-user": {
-      "string": "Mit {name} bist du gerade angemeldet. Das eigene Konto lässt sich nicht sperren oder entfernen."
+      "string": "{name} ist das aktuell angemeldete Konto. Es lässt sich nicht sperren oder entfernen."
     },
     "users-refused-system-account": {
       "string": "{name} ist ein Systemkonto. Entfernen lassen sich nur Konten von Personen."
     },
     "users-refused-outside-user-range": {
-      "string": "{name} hat eine UID außerhalb von 1000 bis 60000 und bleibt daher, wie es ist."
+      "string": "{name} hat eine UID außerhalb von 1000 bis 60000 und bleibt unverändert."
     },
     "users-refused-last-admin": {
       "string": "{name} ist das letzte Mitglied der Gruppen wheel und sudo. Ohne dieses Konto könnte niemand mehr dieses System verwalten."
@@ -8424,10 +8568,10 @@
       "string": "{name} ist eine Systemgruppe. Installierte Programme brauchen sie."
     },
     "users-refused-user-exists": {
-      "string": "Einen Benutzer {name} gibt es schon."
+      "string": "Der Benutzer {name} existiert bereits."
     },
     "users-refused-group-exists": {
-      "string": "Eine Gruppe {name} gibt es schon."
+      "string": "Die Gruppe {name} existiert bereits."
     },
     "users-refused-unknown-user": {
       "string": "Es gibt keinen Benutzer {name}."
@@ -8451,13 +8595,13 @@
       "string": "Dieses Home-Verzeichnis gehört bereits einem anderen Konto."
     },
     "users-refused-busy": {
-      "string": "Es werden noch andere Änderungen übernommen, deshalb wurde für {name} nichts geändert. Versuche es erneut, sobald sie fertig sind."
+      "string": "Es werden noch andere Änderungen übernommen, deshalb wurde für {name} nichts geändert. Erneut versuchen, sobald sie abgeschlossen sind."
     },
     "users-refused-unavailable": {
       "string": "Die Benutzerkonten dieses Systems ließen sich nicht lesen."
     },
     "users-name-empty": {
-      "string": "Gib einen Namen ein."
+      "string": "Einen Namen eingeben."
     },
     "users-name-too-long": {
       "string": "Der Name ist zu lang."
@@ -8472,7 +8616,7 @@
       "string": "Der Name ist ungültig."
     },
     "users-home-empty": {
-      "string": "Gib ein Verzeichnis ein."
+      "string": "Ein Verzeichnis eingeben."
     },
     "users-home-too-long": {
       "string": "Das Home-Verzeichnis ist zu lang."
@@ -8505,7 +8649,7 @@
       "string": "Der vollständige Name darf nicht mit einem Leerzeichen beginnen oder enden."
     },
     "users-password-empty": {
-      "string": "Gib ein Passwort ein."
+      "string": "Ein Passwort eingeben."
     },
     "users-password-too-long": {
       "string": "Das Passwort ist zu lang."
@@ -8529,7 +8673,7 @@
       "string": "Vollständiger Name"
     },
     "users-field-full-name-hint": {
-      "string": "Optional. Der Benutzername darunter folgt seinem ersten Wort, bis du ihn selbst änderst."
+      "string": "Optional. Der Benutzername darunter folgt seinem ersten Wort, bis er selbst geändert wird."
     },
     "users-field-shell": {
       "string": "Login-Shell"
@@ -8589,7 +8733,7 @@
       "string": "Gruppen suchen…"
     },
     "users-add-note": {
-      "string": "Der Benutzer wird sofort angelegt. Dafür wird dein Passwort abgefragt."
+      "string": "Der Benutzer wird sofort angelegt. Dafür wird das eigene Passwort abgefragt."
     },
     "users-add-confirm": {
       "string": "Benutzer jetzt hinzufügen"
@@ -8598,16 +8742,16 @@
       "string": "Weitere Optionen"
     },
     "users-add-why-no-name": {
-      "string": "Gib einen Benutzernamen ein."
+      "string": "Einen Benutzernamen eingeben."
     },
     "users-add-why-bad-name": {
       "string": "Der Benutzername ist ungültig. Der Grund steht darunter."
     },
     "users-add-why-no-password": {
-      "string": "Gib ein Passwort ein."
+      "string": "Ein Passwort eingeben."
     },
     "users-add-why-no-repeat": {
-      "string": "Wiederhole das Passwort."
+      "string": "Das Passwort wiederholen."
     },
     "users-add-why-fields": {
       "string": "Ein Feld oben enthält einen Fehler."
@@ -8628,10 +8772,10 @@
       "string": "Nur der Kontoeintrag ändert sich, Dateien werden nicht verschoben. Alles bleibt in {old}. {new} muss bereits existieren, sonst hat {user} bei der nächsten Anmeldung kein Home-Verzeichnis. {user} muss beim Übernehmen abgemeldet sein."
     },
     "users-home-current-user": {
-      "string": "Das Home-Verzeichnis deines eigenen Kontos lässt sich nicht ändern, solange darin Programme laufen."
+      "string": "Das Home-Verzeichnis des eigenen Kontos lässt sich nicht ändern, solange darin Programme laufen."
     },
     "users-edit-note": {
-      "string": "Die Änderungen bleiben vorgemerkt, bis du sie übernimmst."
+      "string": "Die Änderungen bleiben vorgemerkt, bis sie übernommen werden."
     },
     "users-queue-changes": {
       "string": "Änderungen vormerken"
@@ -8640,7 +8784,7 @@
       "string": "Passwort von {user} setzen"
     },
     "users-password-note": {
-      "string": "Das Passwort wird sofort gesetzt. Dafür wird dein eigenes Passwort abgefragt. Diese Seite meldet, wenn es fertig ist. Das Passwort wird weder in den vorgemerkten Änderungen noch in einer Datei von Garuda Toolbox gespeichert."
+      "string": "Das Passwort wird sofort gesetzt. Dafür wird das eigene Passwort abgefragt. Diese Seite meldet, wenn es fertig ist. Das Passwort wird weder in den vorgemerkten Änderungen noch in einer Datei von Garuda Toolbox gespeichert."
     },
     "users-password-confirm": {
       "string": "Passwort jetzt setzen"
@@ -8649,7 +8793,7 @@
       "string": "Gruppen von {user}"
     },
     "users-groups-note": {
-      "string": "Die Änderungen bleiben vorgemerkt, bis du sie übernimmst. Sie gelten ab der nächsten Anmeldung des Benutzers."
+      "string": "Die Änderungen bleiben vorgemerkt, bis sie übernommen werden. Sie gelten ab der nächsten Anmeldung des Benutzers."
     },
     "users-choice-detail": {
       "string": "{group} (GID {gid}, Mitglieder: {members})"
@@ -8664,7 +8808,7 @@
       "string": "Benutzer {user} entfernen?"
     },
     "users-remove-goes": {
-      "string": "Das Entfernen bleibt vorgemerkt, bis du es übernimmst. Entfernt wird:"
+      "string": "Das Entfernen bleibt vorgemerkt, bis es übernommen wird. Entfernt wird:"
     },
     "users-remove-account": {
       "string": "• Das Konto {user} und sein Passwort"
@@ -8760,7 +8904,7 @@
       "string": "Gruppe {group} entfernen?"
     },
     "groups-remove-detail": {
-      "string": "Alle Mitglieder verlieren ihre Mitgliedschaft. Dateien der Gruppe behalten ihre GID. Das Entfernen bleibt vorgemerkt, bis du es übernimmst."
+      "string": "Alle Mitglieder verlieren ihre Mitgliedschaft. Dateien der Gruppe behalten ihre GID. Das Entfernen bleibt vorgemerkt, bis es übernommen wird."
     },
     "groups-remove-confirm": {
       "string": "Entfernen vormerken"
@@ -8772,7 +8916,7 @@
       "string": "Gruppenname"
     },
     "groups-add-note": {
-      "string": "Die Gruppe bleibt vorgemerkt, bis du sie übernimmst. Benutzer kannst du ihr schon vorher zuweisen."
+      "string": "Die Gruppe bleibt vorgemerkt, bis sie übernommen wird. Benutzer lassen sich ihr schon vorher zuweisen."
     },
     "groups-add-confirm": {
       "string": "Gruppe vormerken"

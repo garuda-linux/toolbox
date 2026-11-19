@@ -1,6 +1,6 @@
 # The About page.
 
-page-about-subtitle = Wartung und Einrichtung für dein Garuda Linux.
+page-about-subtitle = Wartung und Einrichtung des Garuda-Linux-Systems.
 about-hero-credits = Vom Garuda-Linux-Team
 about-copy-details = Systemdetails kopieren
 about-details-copied = Systemdetails in die Zwischenablage kopiert.
@@ -20,23 +20,23 @@ about-help-arch-wiki = Arch-Linux-Wiki
 about-help-status = Dienststatus
 about-exorcist = Exorzisten rufen
 about-exorcist-title = Exorzist gerufen
-about-exorcist-called = Wer hier klickt, muss ziemlich verzweifelt sein. Der Exorzist ist unterwegs. Spinnt die App danach immer noch, melde dich im Garuda-Linux-Forum oder im Issue-Tracker.
+about-exorcist-called = Wer hier klickt, muss ziemlich verzweifelt sein. Der Exorzist ist unterwegs. Verhält sich die App danach weiter falsch, sollte das im Garuda-Linux-Forum oder im Issue-Tracker gemeldet werden.
 about-exorcist-forum = Forum
 about-exorcist-tracker = Issue-Tracker
 
 about-web = Garuda Linux im Netz
 about-web-start = Startseite
-about-web-start-description = Startseite für deinen Browser
+about-web-start-description = Startseite für den Browser
 about-web-gitlab = GitLab
 about-web-gitlab-description = Quellcode von Garuda Linux
 about-web-chaotic = Chaotic-AUR
 about-web-chaotic-description = Fertig gebaute AUR-Pakete und ihre Updates
 about-web-searx = SearXNG
-about-web-searx-description = Suchmaschine, die deine Privatsphäre respektiert
+about-web-searx-description = Suchmaschine, die auf Privatsphäre achtet
 about-web-vaultwarden = Vaultwarden
 about-web-vaultwarden-description = Bitwarden-kompatibler Passwortmanager
 about-web-donate = Spenden
-about-web-donate-description = Unterstütze das Garuda-Linux-Projekt
+about-web-donate-description = Das Garuda-Linux-Projekt unterstützen
 
 about-community = Community
 about-community-forum = Forum

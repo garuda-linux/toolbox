@@ -8,7 +8,7 @@ use crate::testing::{drawing_top, letters_top};
 
 #[test]
 fn a_bundled_picture_starts_at_the_titles_letters() {
-    for (search, title) in [("bottles", "Bottles"), ("heroic", "Heroic Games Launcher")] {
+    for (search, title) in [("itch", "Itch"), ("heroic", "Heroic Games Launcher")] {
         let mut harness = page(CatalogId::Gaming, search);
         let slot = textured_rects(&harness)
             .into_iter()

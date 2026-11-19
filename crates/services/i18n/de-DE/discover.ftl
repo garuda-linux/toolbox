@@ -8,7 +8,7 @@ discover-all = Alle
 discover-sort-name = Name
 discover-sort-selected = Ausgewählte zuerst
 discover-actions = Weitere Aktionen für { $name }
-discover-unreadable = Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht an, was installiert ist. Das Installieren einer bereits installierten App bewirkt nichts.
+discover-unreadable = Die installierten Apps konnten nicht ermittelt werden. Die Zeilen zeigen daher nicht, was installiert ist. Eine bereits installierte App zu installieren, bewirkt nichts.
 discover-problem = Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt.
 discover-nothing-matches-detail = Die Suche umfasst Namen, Beschreibungen und Paketnamen in allen Kategorien.
 # A chip picked a category without a match while others have some. $category is the category's name, $search what the user typed.
@@ -21,7 +21,7 @@ discover-show-all-matches =
        *[other] Alle { $count } Treffer zeigen
     }
 discover-none = Keine Apps vorhanden
-discover-none-detail = Apps, die deine Repositorys nicht anbieten, sind ausgeblendet.
+discover-none-detail = Apps, die die konfigurierten Repositorys nicht anbieten, werden ausgeblendet.
 
 # The categories, by their catalog id.
 discover-category-documents = Dokumente

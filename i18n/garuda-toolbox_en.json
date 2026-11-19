@@ -1304,12 +1304,6 @@
     "catalog-gaming-launchers": {
       "string": "Game launchers"
     },
-    "catalog-gaming-bottles": {
-      "string": "Bottles"
-    },
-    "catalog-gaming-bottles-description": {
-      "string": "Easily manage wine and proton prefix"
-    },
     "catalog-gaming-heroic-games-launcher-bin": {
       "string": "Heroic Games Launcher"
     },

@@ -40,8 +40,8 @@ command-help-tooltip = Handbuch zur aktuellen Seite öffnen
 
 # Notes at the top right of the page about background results.
 toast-name = Benachrichtigung
-toast-plan-succeeded = Deine Änderungen wurden übernommen.
-toast-plan-failed = Ein Schritt ist fehlgeschlagen. Details findest du in der Konsole.
+toast-plan-succeeded = Die Änderungen wurden übernommen.
+toast-plan-failed = Ein Schritt ist fehlgeschlagen. Details stehen in der Konsole.
 toast-link-failed = Der Link konnte nicht geöffnet werden.
 settings-not-saved = Eine Einstellung konnte nicht gespeichert werden.
 toast-queue-not-saved = Die vorgemerkten Änderungen konnten nicht gespeichert werden. Beim Beenden der App gehen sie verloren.

@@ -4,7 +4,7 @@ kernels-running-release = Laufender Kernel: { $release }
 kernels-refresh = Neu einlesen
 kernels-reading = Kernel werden eingelesen…
 kernels-unavailable = Keine Kernel verfügbar. Die Paketdatenbanken von pacman konnten nicht gelesen werden.
-kernels-none = Keine Kernel gefunden. Die Repositorys bieten keinen an. Aktualisiere die Paketdatenbanken auf der Seite „Wartung“.
+kernels-none = Keine Kernel gefunden. Die Repositorys bieten keinen an. Die Paketdatenbanken sollten auf der Seite „Wartung“ aktualisiert werden.
 
 kernels-installed = Installiert
 kernels-available = Verfügbar
@@ -22,7 +22,7 @@ kernels-removes = Wird beim Übernehmen entfernt
 kernels-version = { $version } aus { $repo }
 kernels-version-local = { $version }, nicht in den Repositorys
 kernels-version-installed = installiert: { $installed }
-kernels-running-note = Dieser Kernel läuft gerade und kann nicht entfernt werden. Starte mit einem anderen Kernel neu, um ihn zu entfernen.
+kernels-running-note = Dieser Kernel läuft gerade und bleibt deshalb installiert. Zum Entfernen mit einem anderen Kernel neu starten.
 
 kernels-headers-missing = Header fehlen
 kernels-headers-queued = Header werden beim Übernehmen installiert
@@ -58,8 +58,8 @@ kernels-queue-all-builds = Alle Modulbauten vormerken
 
 # Why a click was not queued. $name is the kernel's package name.
 kernels-refusal-running = { $name } läuft gerade und bleibt deshalb installiert.
-kernels-refusal-running-unknown = Der laufende Kernel ist unbekannt, daher kann kein Kernel entfernt werden. Starte den Computer neu und versuche es erneut.
-kernels-refusal-last-kernel = { $name } ist der letzte installierte Kernel. Installiere einen anderen, bevor du ihn entfernst.
+kernels-refusal-running-unknown = Der laufende Kernel ist unbekannt, daher kann kein Kernel entfernt werden. Den Computer neu starten und erneut versuchen.
+kernels-refusal-last-kernel = { $name } ist der letzte installierte Kernel. Vor dem Entfernen muss ein anderer installiert werden.
 kernels-dismiss = Ausblenden
 
 # The link that opens Boot options with a kernel offered as the default.

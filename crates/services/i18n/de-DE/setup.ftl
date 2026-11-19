@@ -1,13 +1,13 @@
-page-setup-subtitle = Wähle die Software, die du installieren möchtest.
+page-setup-subtitle = Software auswählen, die installiert werden soll.
 setup-welcome = Willkommen
 setup-welcome-title = Willkommen beim Einrichtungsassistenten
-setup-welcome-text = Wähle deine Apps Kategorie für Kategorie aus. Installiert wird erst, wenn du am Ende deine Auswahl prüfst und übernimmst.
+setup-welcome-text = Gewünschte Apps Kategorie für Kategorie auswählen. Nichts wird installiert, bevor die Auswahl am Ende geprüft und übernommen wurde.
 # $count is how many categories there are.
 setup-welcome-steps = { $count ->
         [one] Es gibt 1 Kategorie.
        *[other] Es gibt { $count } Kategorien.
-    } Mit „Weiter“ überspringst du eine Kategorie, mit „Zurück“ kehrst du zu ihr zurück. Über die Liste dazwischen erreichst du jede Kategorie direkt.
-setup-welcome-installed = Bereits installierte Apps sind eingeschaltet. Schaltest du eine aus, wird sie entfernt.
+    } „Weiter“ überspringt eine nicht benötigte Kategorie, „Zurück“ kehrt zu ihr zurück. Über die Liste dazwischen wird jede Kategorie direkt erreicht.
+setup-welcome-installed = Bereits installierte Apps sind eingeschaltet. Wird eine ausgeschaltet, wird sie entfernt.
 setup-unavailable = Die App-Liste des Einrichtungsassistenten konnte nicht gelesen werden
 setup-none = Keine App aus der Liste kann auf diesem System installiert werden
 # $number is the step, $count all of them, $title its category.
@@ -27,17 +27,17 @@ setup-next-key = Alt+Rechts
 setup-install = Zu installierende Apps: { $count }
 setup-remove = Zu entfernende Apps: { $count }
 setup-units = Zu aktivierende Dienste: { $count }
-setup-review-note = Die Übersicht zeigt alle vorgemerkten Änderungen, auch von anderen Seiten. Geändert wird erst, wenn du sie dort übernimmst.
+setup-review-note = Die Übersicht zeigt alle vorgemerkten Änderungen, auch die von anderen Seiten. Geändert wird erst, wenn sie dort übernommen werden.
 setup-review = Prüfen und übernehmen
-setup-nothing = Du hast nichts ausgewählt. Geh zurück, um Apps zu wählen, oder schließe ohne Änderungen ab.
+setup-nothing = Nichts ausgewählt. Zurückgehen, um Apps zu wählen, oder ohne Änderungen abschließen.
 setup-finish = Abschließen
 
 setup-success = Fertig
-setup-ready = Dein System ist eingerichtet und einsatzbereit.
+setup-ready = Das System ist eingerichtet und einsatzbereit.
 # The apply was a dry run.
 setup-ready-tested = Testmodus: Es wurde nichts installiert oder geändert.
 # Every step found its part already done.
-setup-ready-nothing = Alles, was du ausgewählt hast, war schon eingerichtet.
+setup-ready-nothing = Alles, was ausgewählt wurde, war schon eingerichtet.
 # The success page. $count is how many.
 setup-installed = Installierte Apps: { $count }
 setup-removed = Entfernte Apps: { $count }

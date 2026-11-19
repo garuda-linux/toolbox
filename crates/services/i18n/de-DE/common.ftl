@@ -28,7 +28,7 @@ close-running-quit = Abbrechen und beenden
 
 # Asked when the window is closed while Config Files shows an edit that was not applied.
 close-edit-question = Beenden, ohne die Bearbeitung zu übernehmen?
-close-edit-detail = Deine Änderungen an einer Konfigurationsdatei sind noch nicht geschrieben. Beim Beenden gehen sie verloren.
+close-edit-detail = Die Änderungen an einer Konfigurationsdatei wurden noch nicht geschrieben. Beim Beenden gehen sie verloren.
 close-edit-keep = Weiter bearbeiten
 close-edit-quit = Verwerfen und beenden
 
@@ -67,7 +67,7 @@ protected-along = Diese Entfernung würde auch { $name } entfernen, das installi
 missing-catalog-quit = Beenden
 # The missing-catalog window: a title, what to do, then the missing folder and the reinstall command, each with a copy button. $label is the row's name.
 missing-catalog-title = Garuda Toolbox ist nicht vollständig installiert
-missing-catalog-body = Ein Ordner, den es braucht, fehlt. Installiere das Paket garuda-toolbox neu und starte die App dann erneut.
+missing-catalog-body = Ein benötigter Ordner fehlt. Das Paket garuda-toolbox sollte neu installiert und die App danach erneut gestartet werden.
 missing-catalog-folder = Fehlender Ordner
 missing-catalog-reinstall = Neu installieren mit
 missing-catalog-copy = { $label } kopieren

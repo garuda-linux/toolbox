@@ -6,7 +6,7 @@ use super::{catalog_names, check, theme_names};
 #[test]
 fn a_catalog_icon_without_a_file_ending_is_a_theme_name() {
     assert_eq!(
-        catalog_names("icon = \"audio-volume-high\"\nicon = \"bottles.svg\"\nname = \"x\"\n"),
+        catalog_names("icon = \"audio-volume-high\"\nicon = \"itch.svg\"\nname = \"x\"\n"),
         ["audio-volume-high"]
     );
 }

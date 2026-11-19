@@ -1,4 +1,4 @@
-page-locales-subtitle = Verfügbare Sprachen, Zahlen- und Datumsformate sowie Übersetzungen für deine Programme.
+page-locales-subtitle = Verfügbare Sprachen, Zahlen- und Datumsformate sowie Übersetzungen für die installierten Programme.
 locales-refresh = Neu einlesen
 locales-tabs = Reiter der Sprachen-Seite
 locales-tab-locales = Locales
@@ -24,23 +24,23 @@ locales-detail-code = { $code }
 locales-detail-code-system = { $code }, Systemsprache
 
 locales-system = Systemsprache
-locales-system-detail = Die Systemsprache gilt ab der nächsten Anmeldung. Zur Auswahl stehen nur aktivierte Locales. Aktiviere deshalb zuerst eine Locale in der Liste unten.
+locales-system-detail = Die Systemsprache gilt ab der nächsten Anmeldung. Zur Auswahl stehen nur aktivierte Locales. Zuerst muss eine Locale in der Liste unten aktiviert werden.
 locales-system-unset = Nicht gesetzt
 locales-system-choice = { $language }, { $code }
 locales-system-choice-territory = { $language } ({ $territory }), { $code }
 
 # Why a click was not queued.
-locales-refused-system-locale = { $name } ist die Systemsprache. Wähle eine andere Systemsprache, bevor du sie deaktivierst.
+locales-refused-system-locale = { $name } ist die Systemsprache. Vor dem Deaktivieren muss eine andere Systemsprache gewählt werden.
 locales-refused-last-locale = Mindestens eine Locale muss aktiviert bleiben.
-locales-refused-not-enabled = { $name } ist nicht aktiviert. Aktiviere die Locale zuerst.
+locales-refused-not-enabled = { $name } ist nicht aktiviert. Die Locale muss zuerst aktiviert werden.
 locales-dismiss = Ausblenden
 
 locales-packs-intro =
-    Sprachpakete für deine aktivierten Locales und installierten Programme. { $count ->
+    Sprachpakete für die aktivierten Locales und installierten Programme. { $count ->
         [one] Ein Paket ist nicht installiert.
        *[other] { $count } Pakete sind nicht installiert.
     }
-locales-packs-intro-plain = Sprachpakete für deine aktivierten Locales und installierten Programme.
+locales-packs-intro-plain = Sprachpakete für die aktivierten Locales und installierten Programme.
 locales-packs-add-missing = Alle fehlenden vormerken
 locales-packs-sort = Sprachpakete sortieren
 locales-packs-sort-package = Paket

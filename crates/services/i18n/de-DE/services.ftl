@@ -24,17 +24,17 @@ services-none = Keine passenden Dienste.
 services-unavailable = systemd ist nicht erreichbar.
 services-denied = Keine Berechtigung, die Dienste zu lesen.
 services-failed = Die Dienste konnten nicht gelesen werden.
-services-user-unavailable = Das systemd deines Benutzers ist nicht erreichbar.
-services-user-denied = Keine Berechtigung, die Dienste deines Benutzers zu lesen.
-services-user-failed = Die Dienste deines Benutzers konnten nicht gelesen werden.
-services-none-detail = Ändere die Suche oder die Filter, um mehr Dienste zu sehen.
+services-user-unavailable = Die systemd-Instanz des Benutzers ist nicht erreichbar.
+services-user-denied = Keine Berechtigung, die Benutzerdienste zu lesen.
+services-user-failed = Die Benutzerdienste konnten nicht gelesen werden.
+services-none-detail = Die Suche oder die Filter ändern, um mehr Dienste zu sehen.
 services-show-every =
     { $count ->
         [one] Den einen Treffer zeigen
        *[other] Alle { $count } Treffer zeigen
     }
 # A start, stop or journal did not run, as other changes are being applied.
-services-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind.
+services-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut versuchen, sobald sie abgeschlossen sind.
 services-dismiss = Ausblenden
 # Why an action of a unit's menu cannot be picked, shown on hover.
 services-why-busy = Erst möglich, wenn die laufenden Änderungen abgeschlossen sind.
@@ -114,5 +114,5 @@ services-file-unknown-hint = Zu diesem Dienst meldet systemd keine Datei.
 services-file-other-hint = systemd meldet einen Dateizustand, den diese App noch nicht kennt.
 # $verb is the action (Stop, Restart, Mask), $unit the unit.
 services-ask-title = { $unit }: { $verb }?
-services-ask-why = Deine Sitzung hängt von { $unit } ab: Anmeldebildschirm, Netzwerk, Passwortabfrage oder Systembus. Stoppst du den Dienst, kann deine grafische Sitzung enden oder die Verbindung abbrechen.
+services-ask-why = Die Sitzung hängt von { $unit } ab: Anmeldebildschirm, Netzwerk, Passwortabfrage oder Systembus. Beim Stoppen kann die grafische Sitzung enden oder die Verbindung abbrechen.
 services-ask-cancel = Abbrechen

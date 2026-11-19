@@ -30,8 +30,8 @@ group-care = Pflege
 # Shown on a page the egui app does not have yet.
 
 # One line under each page title.
-page-components-subtitle = Hardware-Unterstützung und Systemfunktionen hinzufügen. Änderungen bleiben vorgemerkt, bis du sie übernimmst.
-page-gaming-subtitle = Launcher, Werkzeuge und Emulatoren zum Spielen unter Linux. Wähle aus, was du möchtest, und übernimm die Auswahl.
-page-discover-subtitle = Apps aus dem Arch-Wiki, nach Kategorien geordnet. Änderungen bleiben vorgemerkt, bis du sie übernimmst.
-page-packages-subtitle = Pakete aus den Repositorys und alle installierten Pakete. Änderungen bleiben vorgemerkt, bis du sie übernimmst.
-page-system-settings-subtitle = Systemweite Einstellungen für Shell, Netzwerk, Leistung und Desktop. Änderungen bleiben vorgemerkt, bis du sie übernimmst.
+page-components-subtitle = Hardware-Unterstützung und Systemfunktionen hinzufügen. Änderungen bleiben vorgemerkt, bis sie übernommen werden.
+page-gaming-subtitle = Launcher, Werkzeuge und Emulatoren zum Spielen unter Linux. Gewünschtes auswählen und danach übernehmen.
+page-discover-subtitle = Apps aus dem Arch-Wiki, nach Kategorien geordnet. Änderungen bleiben vorgemerkt, bis sie übernommen werden.
+page-packages-subtitle = Pakete aus den Repositorys und alle installierten Pakete. Änderungen bleiben vorgemerkt, bis sie übernommen werden.
+page-system-settings-subtitle = Systemweite Einstellungen für Shell, Netzwerk, Leistung und Desktop. Änderungen bleiben vorgemerkt, bis sie übernommen werden.

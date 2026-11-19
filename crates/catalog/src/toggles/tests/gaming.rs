@@ -19,7 +19,7 @@ fn the_shipped_gaming_catalog_has_its_seven_sections() {
             "misc"
         ]
     );
-    assert_eq!(catalog.entries().count(), 156);
+    assert_eq!(catalog.entries().count(), 155);
 
     let gamemode = catalog.entry("gamemode").unwrap();
 

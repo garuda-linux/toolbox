@@ -9,13 +9,13 @@ share-upload-question = { $subject ->
     [report] Diesen Bericht hochladen?
    *[output] Diese Ausgabe hochladen?
 }
-share-upload-where = Der folgende Text wird an bin.garudalinux.org gesendet. Er wird bereits auf diesem Computer verschlüsselt, sodass der Server ihn nicht lesen kann. Jeder mit dem Link kann ihn aber lesen. Der Server löscht ihn nach einem Monat.
-share-upload-check = Prüfe ihn auf weitere Angaben, die du nicht teilen möchtest. Die Suche markiert jeden Treffer.
-share-upload-replaced-none = Soweit die Toolbox es erkennt, nennt der Text weder dich noch diesen Computer.
+share-upload-where = Der folgende Text wird an bin.garudalinux.org gesendet. Er wird auf diesem Computer verschlüsselt, sodass der Server ihn nicht lesen kann. Wer den Link hat, kann ihn aber lesen. Der Server löscht ihn nach einem Monat.
+share-upload-check = Den Text auf weitere Angaben prüfen, die nicht geteilt werden sollen. Die Suche markiert jeden Treffer.
+share-upload-replaced-none = Soweit die Toolbox es erkennt, nennt der Text weder den Benutzer noch diesen Computer.
 share-upload-replaced =
     { $count ->
-        [one] Ein Wert, der dich oder diesen Computer nennt, wurde ersetzt, etwa der Benutzername, der Rechnername, eine Seriennummer oder eine öffentliche Adresse.
-       *[other] { $count } Werte, die dich oder diesen Computer nennen, wurden ersetzt, etwa der Benutzername, der Rechnername, Seriennummern und öffentliche Adressen.
+        [one] Ein Wert, der den Benutzer oder diesen Computer nennt, wurde ersetzt, etwa der Benutzername, der Rechnername, eine Seriennummer oder eine öffentliche Adresse.
+       *[other] { $count } Werte, die den Benutzer oder diesen Computer nennen, wurden ersetzt, etwa der Benutzername, der Rechnername, Seriennummern und öffentliche Adressen.
     }
 share-upload-search = Text durchsuchen
 share-upload-search-hint = Text durchsuchen
@@ -43,12 +43,12 @@ share-delete-question = { $subject ->
     [report] Den Bericht vom Server löschen?
    *[output] Die Ausgabe vom Server löschen?
 }
-share-delete-detail = Danach kann niemand mehr den Link öffnen, auch du nicht. Der Löschlink wird in deinem Browser geöffnet.
+share-delete-detail = Danach lässt sich der Link von niemandem mehr öffnen. Der Löschlink wird im Browser geöffnet.
 share-delete-cancel = Abbrechen
 share-delete-confirm = Löschen
 
 # Why an upload failed. $detail is the system's or the server's words.
-share-upload-network = Das Hochladen ist fehlgeschlagen. bin.garudalinux.org ist nicht erreichbar. Prüfe die Netzwerkverbindung.
+share-upload-network = Das Hochladen ist fehlgeschlagen. bin.garudalinux.org ist nicht erreichbar. Die Netzwerkverbindung prüfen.
 share-upload-refused = { $subject ->
     [report] Das Hochladen ist fehlgeschlagen. Der Paste-Dienst hat den Bericht abgelehnt, zum Beispiel weil er zu groß ist.
    *[output] Das Hochladen ist fehlgeschlagen. Der Paste-Dienst hat die Ausgabe abgelehnt, zum Beispiel weil sie zu groß ist.
@@ -58,6 +58,6 @@ share-upload-seal = { $subject ->
     [report] Das Hochladen ist fehlgeschlagen. Der Bericht konnte nicht verschlüsselt werden.
    *[output] Das Hochladen ist fehlgeschlagen. Die Ausgabe konnte nicht verschlüsselt werden.
 }
-share-upload-stopped = Das Hochladen ist wegen eines Fehlers in Garuda Toolbox fehlgeschlagen. Melde ihn im Forum oder im Issue-Tracker.
+share-upload-stopped = Das Hochladen ist wegen eines Fehlers in Garuda Toolbox fehlgeschlagen. Der Fehler sollte im Forum oder im Issue-Tracker gemeldet werden.
 share-upload-detail = { $problem } ({ $detail })
 share-upload-dismiss = Ausblenden

@@ -40,9 +40,9 @@ network-bluetooth-missing = Kein Bluetooth-Adapter gefunden
 network-flight = Flugmodus
 network-flight-missing = Kein Funkgerät zum Abschalten
 network-radio-hard = Per Taste oder Schalter am Computer abgeschaltet
-network-radio-denied = Diese Sitzung darf Funkgeräte nicht ein- oder ausschalten. Melde dich direkt am Computer an oder frag einen Admin.
+network-radio-denied = Diese Sitzung darf Funkgeräte nicht ein- oder ausschalten. Dafür ist eine Anmeldung direkt am Computer oder die Freigabe durch einen Administrator nötig.
 network-radio-missing = Die Funkschalter sind nicht erreichbar, weil das rfkill-Gerät des Kernels (/dev/rfkill) fehlt.
-network-radio-failed = Das Funkgerät ließ sich nicht schalten. Den Grund findest du im Log von Garuda Toolbox.
+network-radio-failed = Das Funkgerät ließ sich nicht schalten. Der Grund steht im Log von Garuda Toolbox.
 
 network-services = Dienste
 network-services-reading = Dienste werden gelesen…
@@ -81,7 +81,7 @@ network-drivers-count = { $shown } von { $count } Treibern
 network-drivers-reading = Treiber werden gelesen…
 network-drivers-unreadable = Die Treiber dieses Systems ließen sich nicht lesen
 network-drivers-none = Keine Netzwerktreiber gefunden
-network-drivers-none-detail = Die Module des laufenden Kernels liegen nicht auf der Festplatte. Starte nach einem Kernel-Update zuerst den Computer neu.
+network-drivers-none-detail = Die Module des laufenden Kernels liegen nicht auf der Festplatte. Nach einem Kernel-Update zuerst den Computer neu starten.
 network-drivers-no-match = Kein Treiber passt
 network-drivers-clear = Filter zurücksetzen
 # $files lists the other modprobe files.
@@ -92,7 +92,7 @@ network-driver-load = Laden
 network-driver-unload = Entladen
 network-driver-unload-ask = Entladen…
 network-driver-unload-title = { $module } entladen?
-network-driver-unload-question = Alle Geräte, die { $module } steuert, funktionieren sofort nicht mehr. Steuert es deine Netzwerkkarte, bricht die Verbindung ab, bis du es wieder lädst.
+network-driver-unload-question = Alle Geräte, die { $module } steuert, funktionieren sofort nicht mehr. Steuert es die Netzwerkkarte, bricht die Verbindung ab, bis es wieder geladen wird.
 network-driver-unload-keep = Geladen lassen
 network-driver-blacklist = Auf die Blacklist setzen
 network-driver-allow = Von der Blacklist nehmen
@@ -100,7 +100,7 @@ network-driver-unqueue = Zurücknehmen
 # Why a blacklist click was not queued. $driver names the driver.
 network-refused-other-file = { $name }: Eine andere Datei in modprobe.d setzt diesen Treiber auf die Blacklist. Garuda Toolbox ändert nur seine eigene Datei.
 network-refused-unavailable = Die Treiber dieses Systems ließen sich nicht lesen.
-network-refused-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Versuche es erneut, sobald sie abgeschlossen sind.
+network-refused-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut versuchen, sobald sie abgeschlossen sind.
 
 network-hardware-intro = Netzwerkgeräte laut lspci und lsusb.
 network-hardware-copy-all = Alle kopieren
@@ -116,9 +116,9 @@ network-hardware-queue-pciutils = pciutils vormerken
 network-hardware-unqueue-pciutils = pciutils zurücknehmen
 
 network-tests = Verbindungstests
-network-tests-detail = Beide Tests laufen mit deinen Benutzerrechten und zeigen ihre Ausgabe in der Konsole.
+network-tests-detail = Beide Tests laufen mit den Rechten des angemeldeten Benutzers und zeigen ihre Ausgabe in der Konsole.
 network-host = Host
-network-host-problem = Gib einen Hostnamen oder eine IP-Adresse ein, zum Beispiel garudalinux.org.
+network-host-problem = Einen Hostnamen oder eine IP-Adresse eingeben, zum Beispiel garudalinux.org.
 network-pings = Anzahl der Pings
 network-timeout = Zeitlimit in Sekunden
 network-hops = Maximale Hops (für traceroute)

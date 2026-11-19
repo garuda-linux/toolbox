@@ -22,7 +22,7 @@ toggles-section-count-unread = ?/{ $total }
 toggles-unknown =
     { $count ->
         [one] Der Zustand eines Eintrags konnte nicht gelesen werden. Sein Schalter zeigt eventuell den falschen Zustand.
-       *[other] Der Zustand von { $count } Einträgen konnte nicht gelesen werden. Ihre Schalter zeigen eventuell den falschen Zustand.
+       *[other] Der Zustand von { $count } Einträgen konnte nicht gelesen werden. Die Schalter zeigen eventuell den falschen Zustand.
     }
 toggles-state-unknown = Zustand unbekannt.
 # $names lists the titles of the entries, joined by commas.

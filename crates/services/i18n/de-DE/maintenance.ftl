@@ -8,7 +8,7 @@ maintenance-tab-reset = Einstellungen zurücksetzen
 maintenance-tab-repairs = Reparaturen
 
 maintenance-operations = Paketpflege
-maintenance-operations-detail = Vorgemerkte Aufgaben werden mit deinen anderen Änderungen übernommen. Du kannst eine auch sofort in der Konsole ausführen.
+maintenance-operations-detail = Aufgaben vormerken, um sie zusammen mit den übrigen Änderungen zu übernehmen, oder eine davon sofort in der Konsole ausführen.
 maintenance-run-now = Jetzt ausführen
 maintenance-unqueue = Vormerkung entfernen
 maintenance-queued = Läuft beim Übernehmen
@@ -38,8 +38,8 @@ maintenance-install-open = Installieren und öffnen…
 # The dot beside the title of a tool that is not installed.
 maintenance-not-installed = Nicht installiert
 
-maintenance-tool-missing = Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach öffnet sich das Werkzeug.
-maintenance-ranker-missing = rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort, danach beginnt die Bewertung.
+maintenance-tool-missing = Die Installation startet sofort in der Konsole und fragt nach dem Passwort. Danach wird das Werkzeug geöffnet.
+maintenance-ranker-missing = rate-mirrors wird benötigt. Die Installation startet sofort in der Konsole und fragt nach dem Passwort. Danach beginnt die Bewertung.
 maintenance-ranking = Die Spiegelserver werden getestet. Das dauert bis zu fünf Minuten. Die Konsole öffnet sich, sobald die neue Liste bereit ist.
 maintenance-ranking-progress = Spiegelserver werden bewertet, { $time }
 maintenance-ranking-cancel = Bewertung abbrechen
@@ -52,20 +52,20 @@ maintenance-tool-btrfs-assistant-detail = Snapshots verwalten und Btrfs-Wartung 
 maintenance-tool-edit-repositories = Repositorys bearbeiten
 maintenance-tool-edit-repositories-detail = Repositorys mit pace, dem Editor für pacman.conf, aktivieren und deaktivieren.
 maintenance-tool-merge-pacdiff = Konfigurationsupdates zusammenführen
-maintenance-tool-merge-pacdiff-detail = .pacnew- und .pacsave-Dateien nebeneinander vergleichen und zusammenführen. Updates legen sie neben Konfigurationsdateien ab, die du geändert hast.
+maintenance-tool-merge-pacdiff-detail = .pacnew- und .pacsave-Dateien nebeneinander vergleichen und zusammenführen. Nach einem Update liegen sie neben einer geänderten Konfigurationsdatei, zusammen mit deren neuer Version.
 
 # Why a tool did not start or the mirrors were not ranked. $tool is the
 # tool's name, $reason the system's own words.
 maintenance-problem-launch-absent = Die Installation ist fertig, aber { $reason } fehlt, daher wurde { $tool } nicht gestartet.
 maintenance-problem-mirrors-timeout = Die Bewertung der Chaotic-AUR-Spiegelserver dauerte länger als fünf Minuten und wurde abgebrochen. Die Liste der Spiegelserver ist unverändert.
 maintenance-problem-mirrors-start = rate-mirrors konnte nicht gestartet werden, die Chaotic-AUR-Spiegelserver wurden nicht bewertet: { $reason }
-maintenance-problem-mirrors-exit = Die Bewertung der Chaotic-AUR-Spiegelserver ist fehlgeschlagen, ihre Liste ist unverändert. Prüfe deine Internetverbindung und versuche es erneut.
+maintenance-problem-mirrors-exit = Die Bewertung der Chaotic-AUR-Spiegelserver ist fehlgeschlagen, ihre Liste ist unverändert. Die Internetverbindung prüfen und erneut versuchen.
 maintenance-problem-mirrors-invalid = Die Bewertung ergab keine brauchbare Liste von Spiegelservern. Die Chaotic-AUR-Liste ist unverändert.
-maintenance-problem-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Starte ihn erneut, sobald sie abgeschlossen sind.
+maintenance-problem-busy = Es werden gerade andere Änderungen übernommen, daher wurde der Vorgang nicht gestartet. Erneut starten, sobald sie abgeschlossen sind.
 maintenance-problem-dismiss = Ausblenden
 
 maintenance-reset = App-Einstellungen
-maintenance-reset-detail = Wähle die Apps, deren Einstellungen auf Garudas Standardeinstellungen zurückgesetzt werden sollen. Deine aktuellen Dateien bleiben als Sicherung erhalten.
+maintenance-reset-detail = Apps auswählen, deren Einstellungen auf Garudas Standardeinstellungen zurückgesetzt werden sollen. Die aktuellen Dateien bleiben als Sicherung erhalten.
 maintenance-reset-empty = Keine Standardeinstellungen gefunden
 maintenance-reset-empty-detail = In /etc/skel liegen keine Standardeinstellungen von Garuda.
 maintenance-reset-button = Auswahl zurücksetzen…
@@ -88,8 +88,8 @@ maintenance-repairs-detail = Jede Reparatur läuft in der Konsole, damit sie Rü
 # $packages lists the missing packages, separated by commas. $count is
 # how many they are.
 maintenance-repairs-missing = { $count ->
-    [one] Die ausgegrauten Reparaturen brauchen { $packages }, das nicht installiert ist. Installiere es, um sie freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.
-   *[other] Die ausgegrauten Reparaturen brauchen { $packages }, die nicht installiert sind. Installiere sie, um die Reparaturen freizuschalten. Die Installation startet sofort in der Konsole und fragt nach deinem Passwort.
+    [one] Die ausgegrauten Reparaturen brauchen { $packages }, das nicht installiert ist. Zum Freischalten muss es installiert werden. Die Installation startet sofort in der Konsole und fragt nach dem Passwort.
+   *[other] Die ausgegrauten Reparaturen brauchen { $packages }, die nicht installiert sind. Zum Freischalten müssen sie installiert werden. Die Installation startet sofort in der Konsole und fragt nach dem Passwort.
 }
 maintenance-install-missing = { $packages } installieren
 maintenance-run = Ausführen
@@ -114,9 +114,9 @@ maintenance-repair-remote-reinstall-detail = Alle installierten Pakete neu insta
 # what the user had. $repair is the repair's name, such as Full reset.
 maintenance-repair-question = { $repair } ausführen?
 maintenance-repair-cancel = Abbrechen
-maintenance-repair-remote-fix-question = Deine pacman.conf und die Mirrorlisten werden durch Garudas Standardfassung ersetzt. Von dir hinzugefügte Repositorys gehen dabei verloren.
-maintenance-repair-remote-full-fix-question = Deine pacman.conf wird durch Garudas Standardfassung ersetzt und jedes installierte Paket wird neu heruntergeladen und installiert. Das dauert lange und braucht eine funktionierende Internetverbindung.
-maintenance-repair-remote-reset-audio-question = PipeWire und WirePlumber werden neu installiert und deine Audioeinstellungen auf den Standard zurückgesetzt.
+maintenance-repair-remote-fix-question = Die pacman.conf und die Mirrorlisten werden durch Garudas Standardfassung ersetzt. Hinzugefügte Repositorys gehen danach verloren.
+maintenance-repair-remote-full-fix-question = Die pacman.conf wird durch Garudas Standardfassung ersetzt, und jedes installierte Paket wird neu heruntergeladen und installiert. Das dauert lange und setzt eine funktionierende Internetverbindung voraus.
+maintenance-repair-remote-reset-audio-question = PipeWire und WirePlumber werden neu installiert und die Audioeinstellungen auf den Standard zurückgesetzt.
 maintenance-repair-remote-reset-snapper-question = Alle Snapper-Snapshots und Backup-Subvolumen werden gelöscht und die Snapper-Konfigurationen neu angelegt. Ältere Snapshots lassen sich danach nicht mehr wiederherstellen.
-maintenance-repair-remote-reinstall-question = Alle installierten Pakete werden neu heruntergeladen und installiert. Das dauert lange und braucht eine funktionierende Internetverbindung.
+maintenance-repair-remote-reinstall-question = Alle installierten Pakete werden neu heruntergeladen und installiert. Das dauert lange und setzt eine funktionierende Internetverbindung voraus.
 maintenance-repair-needs = Benötigt { $package }

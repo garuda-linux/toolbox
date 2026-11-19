@@ -27,7 +27,7 @@ fn content_of(ui: &Ui, row: Rect) -> Rect {
 
 /// A title and `lines` lines of description, short enough to never wrap.
 fn words(ui: &mut Ui, lines: u8) -> Rect {
-    let title = title_line(ui, true, |ui| ui.label("Bottles").rect);
+    let title = title_line(ui, true, |ui| ui.label("Lutris").rect);
     let ink = tokens::current(ui.ctx()).secondary;
     for line in 0..lines {
         let text = rich(ui, &format!("Line {line}"), Weight::Regular, SMALL, ink);
@@ -47,7 +47,7 @@ fn split(lines: u8, with_switch: bool) -> Placed {
                         ui,
                         width,
                         |ui| words(ui, lines),
-                        |ui| with_switch.then(|| switch(ui, true, "Bottles").rect),
+                        |ui| with_switch.then(|| switch(ui, true, "Lutris").rect),
                     )
                 });
 

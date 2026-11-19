@@ -12,7 +12,7 @@ changes-running =
        *[other] Änderungen werden übernommen
     }
 changes-review = Ansehen
-changes-show-console = Zeigen
+changes-show-console = Konsole anzeigen
 changes-hide = Ausblenden
 changes-together = Eine Passwortabfrage für alle Änderungen
 changes-apply-all =
@@ -93,7 +93,7 @@ change-loader-timeout =
 change-loader-timeout-menu =
     { $name ->
         [menu-force] systemd-boot-Menü zeigen, bis eine Taste gedrückt wird
-       *[other] systemd-boot-Menü verbergen, außer beim Start wird eine Taste gehalten
+       *[other] systemd-boot-Menü verbergen, außer wenn beim Start eine Taste gehalten wird
     }
 change-loader-timeout-unset = Die eigene Wartezeit von systemd-boot verwenden
 change-loader-default = { $name } mit systemd-boot standardmäßig starten

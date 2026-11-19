@@ -106,8 +106,8 @@ fn the_gaming_catalog_loads_with_its_pictures() {
 
     let gaming = catalogs.get(CatalogId::Gaming);
     let catalog = gaming.catalog.as_ref().unwrap();
-    let bottles = catalog.entry("bottles").unwrap();
-    assert!(gaming.icon_dir.join(bottles.icon().unwrap()).is_file());
+    let itch = catalog.entry("itch-setup-bin").unwrap();
+    assert!(gaming.icon_dir.join(itch.icon().unwrap()).is_file());
 }
 
 #[test]
