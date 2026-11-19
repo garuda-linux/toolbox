@@ -19,6 +19,10 @@ pub const EDIT_FOLDER: &str = "garuda-toolbox/edit";
 /// Linux's `PATH_MAX`.
 const MAX_PATH_BYTES: usize = 4096;
 
+/// Lets the Console's glass show behind vim and Neovim, whose colour schemes fill it.
+const CLEAR_BACKGROUND: &str =
+    "highlight Normal ctermbg=NONE guibg=NONE | highlight NonText ctermbg=NONE guibg=NONE";
+
 /// A terminal editor that runs inside the Console.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -125,15 +129,15 @@ impl Editor {
         match self {
             // Without it Emacs opens a window of its own outside the Console.
             Self::Emacs => command.arg("-nw"),
-            Self::Micro
-            | Self::Nano
-            | Self::Vim
-            | Self::Neovim
-            | Self::Vi
-            | Self::Helix
-            | Self::Ne
-            | Self::Joe
-            | Self::Mcedit => command,
+            // `simple` leaves the background unset, so the Console's glass
+            // shows through. A flag is never saved to the user's settings.
+            Self::Micro => command.args(["-colorscheme", "simple"]),
+            // Runs after the user's vimrc, so only the background goes.
+            Self::Vim | Self::Neovim => command.args(["-c", CLEAR_BACKGROUND]),
+            Self::Mcedit => command.args(["-S", "modarcon16-defbg"]),
+            // ex-vi has no colours, the others keep the terminal's
+            // background. Helix takes a theme only from a whole config file.
+            Self::Nano | Self::Vi | Self::Helix | Self::Ne | Self::Joe => command,
         }
         .arg(copy.as_str())
     }

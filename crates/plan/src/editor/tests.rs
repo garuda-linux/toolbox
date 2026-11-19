@@ -77,8 +77,20 @@ fn the_editor_opens_the_copy_and_emacs_stays_in_the_terminal() {
         })
     };
 
-    assert_eq!(edit(Editor::Micro), [format!("micro {COPY}")]);
-    assert_eq!(edit(Editor::Neovim), [format!("nvim {COPY}")]);
+    assert_eq!(
+        edit(Editor::Micro),
+        [format!("micro -colorscheme simple {COPY}")]
+    );
+    assert_eq!(
+        edit(Editor::Neovim),
+        [format!(
+            "nvim -c 'highlight Normal ctermbg=NONE guibg=NONE | highlight NonText ctermbg=NONE guibg=NONE' {COPY}"
+        )]
+    );
+    assert_eq!(
+        edit(Editor::Mcedit),
+        [format!("mcedit -S modarcon16-defbg {COPY}")]
+    );
     assert_eq!(edit(Editor::Emacs), [format!("emacs -nw {COPY}")]);
 }
 
