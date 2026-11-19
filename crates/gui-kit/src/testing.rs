@@ -330,6 +330,19 @@ pub fn click_at<State>(harness: &mut egui_kittest::Harness<'_, State>, at: egui:
     harness.run();
 }
 
+/// Turns the wheel at `at`. A negative `delta` scrolls the content up.
+pub fn wheel_at<State>(harness: &mut egui_kittest::Harness<'_, State>, at: egui::Pos2, delta: f32) {
+    harness.event(egui::Event::PointerMoved(at));
+    harness.event(egui::Event::MouseWheel {
+        unit: egui::MouseWheelUnit::Point,
+        delta: egui::vec2(0.0, delta),
+        modifiers: egui::Modifiers::NONE,
+        phase: egui::TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
+    });
+    harness.run();
+}
+
 /// What a screen reader says for `node`: its label, or the value egui
 /// gives a label's text.
 pub fn spoken_words(node: &egui_kittest::Node<'_>) -> String {

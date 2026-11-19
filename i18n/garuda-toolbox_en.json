@@ -5079,6 +5079,9 @@
     "console-cancel-waits": {
       "string": "The cancel takes effect once the password dialog is answered."
     },
+    "console-editing": {
+      "string": "Save and quit the editor to go on."
+    },
     "console-rejected": {
       "string": "The helper refused the changes: {reason}",
       "developer_comment": "$reason is the helper's own words, shown as they are."

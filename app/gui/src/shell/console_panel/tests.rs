@@ -1,3 +1,5 @@
+mod notices;
+
 use std::cell::Cell;
 use std::rc::Rc;
 
@@ -328,6 +330,33 @@ fn a_running_plan_shows_the_terminal_cursor() {
     harness.run();
 
     assert!(has_block_cursor(&harness));
+}
+
+/// Shrunk to its widest command, the list left its scroll bar in the
+/// middle of the card and the wheel dead over the rest of it.
+#[test]
+fn the_step_list_scrolls_from_the_right_edge_of_its_card() {
+    let rows: Vec<StepRow> = (1..=12_u32)
+        .map(|number| StepRow {
+            id: StepId::new(number),
+            command: format!("step {number}"),
+            state: StepState::Waiting,
+        })
+        .collect();
+
+    let mut harness =
+        toolbox_gui_kit::testing::harness(600.0, 400.0).build_ui(move |ui| steps(ui, &rows, false));
+
+    harness.run();
+
+    let before = harness.get_by_label("step 1").rect().top();
+    toolbox_gui_kit::testing::wheel_at(&mut harness, egui::pos2(560.0, before + 4.0), -100.0);
+
+    let after = harness.get_by_label("step 1").rect().top();
+    assert!(
+        after < before,
+        "step 1 stayed at {after} after a wheel turn at the right edge"
+    );
 }
 
 /// A long plan runs its later steps below the list's fold, where the

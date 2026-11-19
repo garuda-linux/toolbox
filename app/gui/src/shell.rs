@@ -102,11 +102,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         console_open,
     };
 
-    let sheet = console_panel::Sheet {
-        open: console_open,
-        instant: snap.console,
-        dry_run,
-    };
+    let sheet = console_sheet(console_open, snap, dry_run);
 
     // The sheet lies over the page, so the page keeps its size. While it
     // shows, the queue sits in its header and the band gives the page
@@ -121,6 +117,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
             room: page_rect,
             out,
         },
+        editing: editing(context),
     };
 
     let sheet_shown = console_panel::show(ui.ctx(), at, console, commands, |ui| {
@@ -151,6 +148,22 @@ fn shown_changes<'list>(
     } else {
         &[]
     }
+}
+
+const fn console_sheet(open: bool, snap: Snap, dry_run: bool) -> console_panel::Sheet {
+    console_panel::Sheet {
+        open,
+        instant: snap.console,
+        dry_run,
+    }
+}
+
+fn editing(context: &PageContext<'_>) -> bool {
+    context
+        .service::<crate::configs::Configs>()
+        .session()
+        .phase()
+        .is_editing()
 }
 
 fn changes_band(ui: &mut Ui) -> Rect {

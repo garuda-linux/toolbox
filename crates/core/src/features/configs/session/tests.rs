@@ -1,4 +1,5 @@
 mod home;
+mod phase;
 
 use toolbox_plan::{ConfigFilePath, ConfigText, ConfigWrite, EditCopy, Editor};
 

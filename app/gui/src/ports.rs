@@ -43,9 +43,9 @@ use toolbox_services::address::{AddressSource, KdeGeoIp};
 use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
 use toolbox_system::{
     ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing, HelperLocks,
-    Libalpm, NetworkActions, NetworkSource, PacmanLog, StatusSources, SystemActions,
-    SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork,
-    SystemRepair,
+    Libalpm, MergeSource, NetworkActions, NetworkSource, PacmanLog, Sources, StatusSources,
+    SystemActions, SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor,
+    SystemNetwork, SystemRepair,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";
@@ -237,16 +237,35 @@ fn self_test_configs(
         .map(PathBuf::from)
 }
 
-/// The status of the machine. A self-test build with its own config files
-/// finds the copies to merge among them, as the Home dialog reads them
-/// there.
+/// A self-test build with its own config files finds the copies to merge
+/// among them, as the Home dialog reads them there.
+fn self_test_merges(
+    lookup: impl Fn(&str) -> Option<OsString>,
+    development: bool,
+) -> Option<Arc<dyn MergeSource>> {
+    samples::merges(self_test_configs(lookup, development)?.join("root"))
+}
+
 pub fn status_sources() -> StatusSources {
     let sources = StatusSources::system();
-    let found = self_test_configs(|key| std::env::var_os(key), DEVELOPMENT)
-        .and_then(|dir| samples::merges(dir.join("root")));
 
-    match found {
+    match self_test_merges(|key| std::env::var_os(key), DEVELOPMENT) {
         Some(merges) => StatusSources { merges, ..sources },
+        None => sources,
+    }
+}
+
+/// The snapshot must see the copies the Home card shows, or a queued merge
+/// of one counts as already done.
+pub fn snapshot_sources() -> Sources {
+    snapshot_sources_with(|key| std::env::var_os(key), DEVELOPMENT)
+}
+
+fn snapshot_sources_with(lookup: impl Fn(&str) -> Option<OsString>, development: bool) -> Sources {
+    let sources = Sources::system();
+
+    match self_test_merges(lookup, development) {
+        Some(merges) => Sources { merges, ..sources },
         None => sources,
     }
 }

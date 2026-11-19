@@ -27,6 +27,7 @@ console-status-failed = Stopped before all changes were applied
 
 console-busy = Other changes are still being applied. Apply these once they are done.
 console-cancel-waits = The cancel takes effect once the password dialog is answered.
+console-editing = Save and quit the editor to go on.
 # $reason is the helper's own words, shown as they are.
 console-rejected = The helper refused the changes: { $reason }
 

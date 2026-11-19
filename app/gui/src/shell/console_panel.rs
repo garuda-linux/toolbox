@@ -48,6 +48,9 @@ pub struct Sheet {
 pub struct At {
     pub sheet: Sheet,
     pub place: Place,
+    /// A config file's editor runs. The page that tells how to go on lies
+    /// under the sheet.
+    pub editing: bool,
 }
 
 /// Draws the sheet at its place over the page. `pill` draws the queued
@@ -61,7 +64,12 @@ pub fn show(
     pill: impl FnOnce(&mut Ui),
 ) -> bool {
     let _ui = tracing::trace_span!("console ui").entered();
-    let At { sheet, place } = at;
+    let At {
+        sheet,
+        place,
+        editing,
+    } = at;
+
     let tokens = tokens::current(ctx);
     let frame = Frame::new()
         .fill(tokens.pane)
@@ -81,7 +89,7 @@ pub fn show(
     let shown = sheet::show(ctx, place, &grip, frame, |ui| {
         ui.name_pane(&i18n::text(ui.ctx(), "pane-console"));
         header(ui, console, sheet.dry_run, commands, pill);
-        notices(ui, console);
+        notices(ui, console, editing);
         output::share(ui, console, commands);
         steps(ui, console.steps(), sheet.dry_run);
         mirror::offer(ui, console, commands);
@@ -182,12 +190,16 @@ fn header(
     ui.add_space(tokens.sizes.heading_gap);
 }
 
-fn notices(ui: &mut Ui, console: &Console) {
+fn notices(ui: &mut Ui, console: &Console, editing: bool) {
     let ctx = ui.ctx().clone();
     let mut notice = |tone: Tone, text: &str| {
         banner(ui, tone, text, &[]);
         ui.add_space(ui.tokens().sizes.control_gap);
     };
+
+    if editing {
+        notice(Tone::Neutral, &i18n::text(&ctx, "console-editing"));
+    }
 
     if console.refused() {
         notice(Tone::Warning, &i18n::text(&ctx, "console-busy"));
@@ -256,6 +268,7 @@ fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
                     toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
                     ScrollArea::vertical()
                         .max_height(STEPS_HEIGHT)
+                        .auto_shrink([false, true])
                         .show(ui, |ui| {
                             ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
                             for step in steps {

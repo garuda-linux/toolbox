@@ -68,6 +68,13 @@ impl Phase {
         }
     }
 
+    pub const fn is_editing(self) -> bool {
+        matches!(
+            self,
+            Self::Starting(Stage::Editor) | Self::Running(Stage::Editor)
+        )
+    }
+
     pub const fn is_free(self) -> bool {
         matches!(
             self,

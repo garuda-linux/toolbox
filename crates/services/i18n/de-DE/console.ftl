@@ -27,6 +27,7 @@ console-status-failed = Abgebrochen, bevor alle Änderungen übernommen waren
 
 console-busy = Es werden noch andere Änderungen übernommen. Die Übernahme danach erneut starten.
 console-cancel-waits = Der Vorgang wird abgebrochen, sobald die Passwortabfrage beantwortet ist.
+console-editing = Zum Fortfahren die Datei im Editor speichern und den Editor beenden.
 # $reason is the helper's own words, shown as they are.
 console-rejected = Das Hilfsprogramm hat die Änderungen abgelehnt: { $reason }
 

@@ -83,7 +83,8 @@ as if you had opened it from the file manager.
    a password dialog asks for an administrator. Most files in `/etc` can be read
    without one.
 3. The **Console** opens with your editor on a copy of the file. Change what
-   you want, save and quit the editor.
+   you want, save and quit the editor. Until you do, the Console shows
+   `Save and quit the editor to go on.` above the editor.
 4. The page comes back with the dialog `Save the changes to <file>?`. It shows
    every changed line with a few lines around it, under a heading such as **Lines 3 to 6**: added lines start with `+`
    on a green row, removed lines

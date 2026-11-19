@@ -35,8 +35,7 @@ use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_services::dkms::{Dkms as DkmsAnswer, dkms_answer};
 use toolbox_system::{
-    Dkms, DkmsSource as _, FactSources, Facts, Sources, Status, probe_facts, probe_snapshot,
-    probe_status,
+    Dkms, DkmsSource as _, FactSources, Facts, Status, probe_facts, probe_snapshot, probe_status,
 };
 use tracing::level_filters::LevelFilter;
 
@@ -234,7 +233,7 @@ fn system_snapshot(
     ctx: &egui::Context,
     catalogs: &Catalogs,
 ) -> snapshot::SnapshotHandle {
-    let sources = Sources::system().with_config_edits(catalogs.config_edits());
+    let sources = ports::snapshot_sources().with_config_edits(catalogs.config_edits());
 
     let wake = toolbox_gui::waking::repaint(ctx.clone());
     snapshot::spawn(handle, wake, move || probe_snapshot(&sources))
