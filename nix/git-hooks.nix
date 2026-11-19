@@ -23,6 +23,13 @@ gitHooksLib.${pkgs.stdenv.hostPlatform.system}.run {
       pass_filenames = false;
     };
 
+    cargo-shear = {
+      enable = true;
+      entry = "${pkgs.cargo-shear}/bin/cargo-shear";
+      files = "(Cargo\\.toml|\\.rs)$";
+      pass_filenames = false;
+    };
+
     toolbox-lint = {
       enable = true;
       entry = "scripts/lint.sh";

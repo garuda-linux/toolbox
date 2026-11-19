@@ -31,6 +31,7 @@ let
         pkgs.pacman
         rustToolchain
         pkgs.cargo-deny
+        pkgs.cargo-shear
         pkgs.cargo-nextest
         pkgs.cargo-llvm-cov
         pkgs.watchexec

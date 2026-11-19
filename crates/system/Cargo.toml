@@ -20,7 +20,6 @@ parking_lot.workspace = true
 rustix = { workspace = true, features = ["fs", "process"] }
 serde.workspace = true
 serde_json.workspace = true
-strum.workspace = true
 thiserror.workspace = true
 toolbox-exec.workspace = true
 toolbox-catalog.workspace = true

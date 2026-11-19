@@ -33,7 +33,6 @@ toolbox-news.workspace = true
 toolbox-catalog.workspace = true
 toolbox-cli.workspace = true
 toolbox-commands.workspace = true
-clap.workspace = true
 toolbox-config.workspace = true
 toolbox-core.workspace = true
 toolbox-exec.workspace = true
@@ -67,8 +66,6 @@ notify.workspace = true
 parking_lot.workspace = true
 rustix = { workspace = true, features = ["fs", "process"] }
 serde.workspace = true
-serde_json.workspace = true
-thiserror.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros", "sync", "time", "process", "io-util"] }
 zbus.workspace = true
 kittest = { workspace = true, optional = true }
@@ -87,6 +84,7 @@ toolbox-core = { workspace = true, features = ["testing"] }
 toolbox-plan = { workspace = true, features = ["testing"] }
 toolbox-pty = { workspace = true, features = ["testing"] }
 toolbox-state = { workspace = true, features = ["testing"] }
+serde_json.workspace = true
 tempfile.workspace = true
 toolbox-exec = { workspace = true, features = ["testing"] }
 egui_kittest.workspace = true

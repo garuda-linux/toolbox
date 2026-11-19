@@ -10,6 +10,10 @@ license = "GPL-3.0-or-later"
 rust-version = "1.95"
 publish = false
 
+# Dependencies taken for a feature alone, which no code names.
+[workspace.metadata.cargo-shear]
+ignored = ["epaint-color-fonts", "tracy-client", "tracy-client-sys", "winit-csd"]
+
 [workspace.dependencies]
 toolbox-aur = { path = "crates/aur" }
 toolbox-news = { path = "crates/news" }
@@ -55,7 +59,8 @@ eframe = { version = "0.37", default-features = false, features = ["accesskit", 
 egui = "0.37"
 # Without color_fonts the system colour emoji font draws nothing.
 epaint-color-fonts = { package = "epaint", version = "0.37", default-features = false, features = ["color_fonts"] }
-skrifa = "0.50.0"
+# Pinned to the skrifa epaint 0.37 links, so the window carries one copy.
+skrifa = "=0.44.0"
 # GNOME leaves the title bar to the app. eframe does not pass this feature through.
 winit-csd = { package = "winit", version = "0.30", default-features = false, features = ["wayland-csd-adwaita"] }
 egui-wgpu = { version = "0.37", default-features = false }
@@ -103,7 +108,8 @@ tracing = { version = "0.1", default-features = false, features = ["std", "log"]
 tracing-subscriber = { version = "0.3", default-features = false, features = ["env-filter", "registry", "std"] }
 tracing-log = { version = "0.2", default-features = false, features = ["log-tracer", "std"] }
 # Never in the root helper's crates (helper, exec, pty, fs, plan).
-parking_lot = "0.13"
+# Pinned to the parking_lot eframe, arboard and alacritty_terminal link, so it is one copy.
+parking_lot = "=0.12.5"
 quick-xml = { version = "0.42", default-features = false }
 pulldown-cmark = { version = "0.13", default-features = false }
 regex = "1"

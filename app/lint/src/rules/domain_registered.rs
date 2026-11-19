@@ -40,7 +40,7 @@ pub fn registered(text: &str) -> Result<BTreeSet<String>, String> {
 }
 
 /// `X` of a `.with::<X>()` call, `None` for any other call.
-fn with_type<'t>(source: &Source<'t>, call: tree_sitter::Node<'t>) -> Option<String> {
+fn with_type(source: &Source<'_>, call: tree_sitter::Node<'_>) -> Option<String> {
     let function = call.child_by_field_name("function")?;
     if function.kind() != "generic_function" {
         return None;

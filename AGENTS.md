@@ -52,6 +52,7 @@ cargo nextest run --workspace --features toolbox-gui/testing
 nix fmt                # treefmt
 scripts/lint.sh        # toolbox-lint: comments and shape
 scripts/check-file-size.sh
+cargo shear
 cargo xtask catalog-validate
 cargo xtask catalog-ftl --check
 cargo xtask catalog-readable --check

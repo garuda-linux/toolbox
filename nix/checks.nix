@@ -92,6 +92,23 @@ in
         touch $out
       '';
 
+  cargo-shear =
+    pkgs.runCommand "check-cargo-shear"
+      {
+        nativeBuildInputs = [
+          rustToolchain
+          pkgs.cargo-shear
+        ];
+      }
+      ''
+        ${cargo-home}
+        cp ${src}/Cargo.toml ${src}/Cargo.lock .
+        ${crateSources}
+        chmod -R u+w .
+        cargo shear
+        touch $out
+      '';
+
   # libalpm for the repository filter of `wiki-sync`.
   catalog =
     xtaskCheck "check-catalog"

@@ -7,7 +7,7 @@
   the self-test or the container and VM tests. Nothing built by Nix ships.
   Arch (`ci/arch/`) runs the release build on stable Rust, the MSRV check,
   the self-test, the helper integration tests and the PKGBUILD.
-- prek hooks (`nix/git-hooks.nix`) run clippy, file sizes, `toolbox-lint`,
+- prek hooks (`nix/git-hooks.nix`) run clippy, cargo-shear, file sizes, `toolbox-lint`,
   treefmt, trufflehog and commitizen on every commit.
 - The `tests` check adds `cargo test --doc`, since nextest runs no doc
   tests. Advisories need the network, so the GitLab job `advisories` runs
@@ -27,6 +27,10 @@
 
 ## Cargo and lints
 
+- cargo-shear finds unused dependencies. A dependency taken only for a
+  feature goes into `[workspace.metadata.cargo-shear]` `ignored`.
+- An `=` pin that matches the version a dependency links keeps one copy
+  in the binary. Its comment names the dependency.
 - All versions in `[workspace.dependencies]`, metadata in
   `[workspace.package]`.
 - One pinned nightly (`nix/rust-toolchain.nix`), only rustfmt uses its
