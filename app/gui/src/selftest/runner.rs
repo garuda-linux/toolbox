@@ -107,7 +107,11 @@ impl Runner {
                 self.started = Instant::now();
             }
             Outcome::Waiting if self.started.elapsed() > self.patience => {
-                self.fail(format!("FAIL step {} ({step:?}): timed out", self.number));
+                let still = self.still_there(&step).unwrap_or_default();
+                self.fail(format!(
+                    "FAIL step {} ({step:?}): timed out{still}",
+                    self.number
+                ));
             }
             Outcome::Waiting => {}
             Outcome::Failed(reason) => {
@@ -173,6 +177,28 @@ impl Runner {
             tree: tree_id,
             disabled: node.0.is_disabled(),
         })
+    }
+
+    /// Where the label a [`Step::WaitGone`] waited out still is, since the
+    /// shot of the window cannot show a node drawn nowhere.
+    fn still_there(&self, step: &Step) -> Option<String> {
+        let Step::WaitGone(label) = *step else {
+            return None;
+        };
+
+        let root = Found(self.tree.as_ref()?.root());
+        let node = root.query_all_by_label(label).next()?.0;
+        let parents: Vec<String> = std::iter::successors(node.parent(), AccessKitNode::parent)
+            .map(|parent| described(&parent))
+            .collect();
+
+        let chain: Vec<&str> = parents.iter().rev().map(String::as_str).collect();
+        Some(format!(
+            ", still there: {} at {:?} in {}",
+            described(&node),
+            node.bounding_box(),
+            chain.join(" > ")
+        ))
     }
 
     fn containing(&self, text: &str) -> bool {
@@ -286,6 +312,14 @@ impl Plugin for Runner {
             self.advance(ctx);
             ctx.request_repaint();
         }
+    }
+}
+
+fn described(node: &AccessKitNode<'_>) -> String {
+    let role = node.role();
+    match node.label() {
+        Some(label) if !label.is_empty() => format!("{role:?} {label:?}"),
+        Some(_) | None => format!("{role:?}"),
     }
 }
 

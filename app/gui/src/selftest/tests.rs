@@ -98,16 +98,30 @@ fn either_of_two_labels_ends_the_wait() {
     assert_eq!(verdict(&mut harness, dir.path()), "PASS\n");
 }
 
+fn timed_out(suite: Vec<Step>) -> String {
+    let dir = TempDir::new().unwrap();
+    let mut harness = playground(suite, dir.path(), Duration::from_millis(50));
+    verdict(&mut harness, dir.path())
+}
+
 #[test]
 fn a_step_that_never_happens_fails_with_its_number() {
-    let dir = TempDir::new().unwrap();
-    let suite = vec![Step::wait("Hello"), Step::wait("Never")];
-    let mut harness = playground(suite, dir.path(), Duration::from_millis(50));
-
-    let verdict = verdict(&mut harness, dir.path());
+    let verdict = timed_out(vec![Step::wait("Hello"), Step::wait("Never")]);
 
     assert!(verdict.starts_with("FAIL step 2 "), "{verdict}");
     assert!(verdict.contains("timed out"), "{verdict}");
+}
+
+#[test]
+fn a_label_that_stays_is_named_with_its_place_and_parents() {
+    let verdict = timed_out(vec![Step::WaitGone("Hello")]);
+
+    assert!(
+        verdict.contains("timed out, still there: Label"),
+        "{verdict}"
+    );
+    assert!(verdict.contains(" at "), "{verdict}");
+    assert!(verdict.contains(" in Window"), "{verdict}");
 }
 
 #[test]
