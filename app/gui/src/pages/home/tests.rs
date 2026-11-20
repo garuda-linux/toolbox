@@ -1,6 +1,7 @@
 mod live;
 mod lost;
 mod merges;
+mod merges_many;
 mod steps;
 
 use std::sync::Arc;

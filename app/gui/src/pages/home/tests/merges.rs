@@ -33,7 +33,10 @@ fn pair(current: Option<String>) -> MergePair {
 
 fn waiting(pairs: Vec<MergePair>) -> PageFixture {
     let mut status = status();
-    status.merges = Ok(vec![PathBuf::from(COPY)]);
+    status.merges = Ok(pairs
+        .iter()
+        .map(|pair| PathBuf::from(pair.copy.as_str()))
+        .collect());
 
     let mut fixture = PageFixture {
         status: Some(Loadable::Loaded(Arc::new(status))),
@@ -44,7 +47,7 @@ fn waiting(pairs: Vec<MergePair>) -> PageFixture {
     fixture
 }
 
-fn opened(pairs: Vec<MergePair>) -> Shown {
+pub(super) fn opened(pairs: Vec<MergePair>) -> Shown {
     let mut harness = page(waiting(pairs));
 
     harness
