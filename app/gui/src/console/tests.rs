@@ -283,3 +283,31 @@ fn clearing_the_output_hides_the_last_share_link_too() {
 
     assert_eq!(console.share(), &toolbox_services::share::Upload::Idle);
 }
+
+#[test]
+fn a_new_plan_starts_with_an_empty_terminal() {
+    let mut console = Console::new();
+    started(&mut console);
+    output(&mut console, "old run\r\n");
+    console.take(finished(true));
+
+    started(&mut console);
+
+    assert!(!console.has_output());
+    assert_eq!(console.output_text(), "");
+}
+
+#[test]
+fn a_new_plan_hides_the_last_share_link() {
+    let mut console = Console::new();
+    started(&mut console);
+    console.take(finished(true));
+    *console.share_mut() = toolbox_services::share::Upload::Done(toolbox_privatebin::Paste {
+        link: "https://bin.example/?a#key".to_owned(),
+        delete_link: String::new(),
+    });
+
+    started(&mut console);
+
+    assert_eq!(console.share(), &toolbox_services::share::Upload::Idle);
+}

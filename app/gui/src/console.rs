@@ -102,6 +102,7 @@ impl Console {
                         state: StepState::Waiting,
                     })
                     .collect();
+                self.wipe_output();
                 self.status = Status::Running;
                 self.runs += 1;
                 self.problem = None;
@@ -247,8 +248,7 @@ impl Console {
             return false;
         }
 
-        self.terminal = Terminal::new(self.terminal.size());
-        self.output = false;
+        self.wipe_output();
         self.steps.clear();
         self.status = Status::Idle;
         self.problem = None;
@@ -256,14 +256,18 @@ impl Console {
         self.refused = false;
         self.cancel_waits = false;
         self.mirror.clear();
+        true
+    }
+
+    fn wipe_output(&mut self) {
+        self.terminal = Terminal::new(self.terminal.size());
+        self.output = false;
 
         // A running upload keeps its row, so its link still has a place
         // to arrive.
         if !self.share.running() {
             self.share.clear();
         }
-
-        true
     }
 
     pub const fn share(&self) -> &Upload {
