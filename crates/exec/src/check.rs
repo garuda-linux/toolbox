@@ -1,8 +1,7 @@
-//! Running a program that judges a configuration text it reads on its
-//! standard input, as `visudo -c -f -` does before a merge puts a sudoers
-//! file in place. The text is no secret, so what the program prints
-//! reaches the Console as it is. The feed of a secret stays apart
-//! (`crate::feed`).
+//! Runs a checker that reads a configuration text on its standard input, as
+//! `visudo -c -f -` does before a merge. The text is no secret, so the
+//! checker's words reach the Console as they are. A secret is fed apart, in
+//! `crate::feed`.
 
 #[cfg(test)]
 mod tests;
@@ -22,12 +21,10 @@ use crate::feed::FEED_DEADLINE;
 use crate::pty_runner::Environment;
 use crate::report::{ended, failure, output};
 
-/// The same as a feed's: a check ends within a second. One that hangs
-/// would hold the helper, and only the stop flag reaches it before.
+/// A hung check would hold the helper, so it gets a feed's deadline.
 pub const CHECK_DEADLINE: Duration = FEED_DEADLINE;
 
-/// Runs `command` with `text` on its standard input and [`CHECK_DEADLINE`].
-/// `cancel` stops it, as it stops a query. [`report`] tells the Console.
+/// `cancel` stops it, as it stops a query.
 ///
 /// # Errors
 ///
@@ -47,8 +44,6 @@ pub fn check(
     )
 }
 
-/// The checker's words as they are, then how it ended. `deadline` is the
-/// one it ran with.
 pub fn report(
     step: StepId,
     command: &Command,

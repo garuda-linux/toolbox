@@ -157,7 +157,7 @@ fn stderr_only_drops_the_buffer_and_keeps_nothing_after() {
     logger.stderr_only();
     logger.write_line("late\n");
 
-    assert!(logger.state.lock().buffered.is_empty());
+    assert_eq!(logger.state.lock().buffered, VecDeque::new());
 }
 
 #[test]

@@ -231,9 +231,8 @@ impl MergeResolve {
         }
     }
 
-    /// The check the new text must pass before it takes the file's place.
-    /// sudo refuses every rule while one of its files does not parse, so
-    /// a broken sudoers file would take away the way to repair it.
+    /// sudo refuses every rule while one sudoers file does not parse, so a
+    /// broken one would lock out the repair.
     pub fn syntax_check(&self) -> Option<Command> {
         let puts_text = !matches!(self.choice.resolution, Resolution::KeepCurrent);
         let original = self.copy.original.as_str();

@@ -65,8 +65,7 @@ fn file_names_give_their_package() {
     assert_eq!(package_of("x-1-x86_64.pkg.tar.zst"), None);
 }
 
-/// makepkg signs with `--sign` beside the package. The signature is no
-/// package, else a signed build would hold two files of one package.
+/// Else a signed build would hold two files of one package.
 #[test]
 fn a_signature_is_no_package() {
     assert_eq!(package_of(&format!("{OCTOPI}.sig")), None);
@@ -115,8 +114,6 @@ fn a_signed_build_stages_its_package() {
     );
 }
 
-/// Only the asked package is copied: the `-debug` package and other files
-/// makepkg left stay behind.
 #[test]
 fn the_asked_package_is_copied_into_the_store() {
     let (root, folder) = system();
@@ -254,7 +251,6 @@ fn the_home_of_the_caller_comes_from_passwd() {
     ));
 }
 
-/// The passwd capture with its `user` given the uid of the test.
 fn passwd_with_caller(root: &Path) {
     fs::create_dir_all(root.join("etc")).unwrap();
     let passwd = toolbox_plan::testing::accounts::PASSWD
@@ -275,7 +271,6 @@ fn octopi(reason: InstallReason) -> Install<'static> {
     }
 }
 
-/// The root the install ran in and the commands pacman got.
 fn installed_with(reason: InstallReason) -> (TempDir, Vec<String>) {
     let (root, folder) = system();
     passwd_with_caller(root.path());
@@ -329,7 +324,6 @@ fn a_kept_reason_passes_no_reason_flag() {
     );
 }
 
-/// Without a caller the helper does not know whose home to read.
 #[test]
 fn no_caller_installs_nothing() {
     let (root, _folder) = system();

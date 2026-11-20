@@ -78,7 +78,6 @@ fn unchecked(root: &Path, merge: &MergeResolve) -> Result<Resolved, MergeError> 
     resolve(root, merge, no_check)
 }
 
-/// Runs the step below `root` and returns how it ended and what it printed.
 fn executed(root: &Path, merge: &MergeResolve) -> (Outcome, String) {
     let mut events = Vec::new();
     let outcome = execute(

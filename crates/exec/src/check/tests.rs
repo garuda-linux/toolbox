@@ -79,8 +79,7 @@ fn a_text_the_program_accepts_passes() {
     assert_eq!(said, "parsed OK\r\n");
 }
 
-/// It ends before it read a byte. The broken pipe says nothing its exit
-/// code and its message do not.
+/// It ends before reading a byte, so the broken pipe adds nothing.
 #[test]
 fn a_program_that_reads_nothing_ends_the_check_with_its_answer() {
     let (outcome, said) = checked(
@@ -99,8 +98,6 @@ fn a_program_that_reads_nothing_ends_the_check_with_its_answer() {
     assert_eq!(said, "no input wanted\r\n");
 }
 
-/// The writer blocks on a full pipe nobody reads, the wait still sees the
-/// deadline.
 #[test]
 fn a_program_that_never_reads_is_stopped_at_the_deadline() {
     let started = Instant::now();

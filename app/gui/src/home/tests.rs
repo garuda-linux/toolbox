@@ -110,3 +110,12 @@ fn without_a_check_there_is_no_garuda_update_and_no_tool() {
         [PageId::Kernels]
     );
 }
+
+#[test]
+fn a_closed_merge_dialog_is_taken() {
+    let mut home = Home::default();
+
+    let handled = click(&mut home, HomeCommand::CloseMerges, &ChangeSet::default());
+
+    assert!(handled.taken);
+}

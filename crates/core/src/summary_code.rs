@@ -13,6 +13,7 @@ pub enum SummaryCode {
     AccountUnlock,
     AurInstall,
     CleanPackageCache,
+    ConfigMergeDiscard,
     ConfigMergeKeep,
     ConfigMergeTake,
     ConfigMergeWrite,
@@ -100,7 +101,8 @@ impl SummaryCode {
     pub const fn destructive(self) -> bool {
         matches!(
             self,
-            Self::ConfigMergeTake
+            Self::ConfigMergeDiscard
+                | Self::ConfigMergeTake
                 | Self::DriverBlacklist
                 | Self::GroupLeave
                 | Self::GroupRemove
@@ -125,9 +127,10 @@ impl SummaryCode {
             Self::HomeFolder => &["user", "folder"],
             Self::LoginShell => &["user", "shell"],
             Self::DkmsBuild => &["module", "kernel"],
-            Self::ConfigMergeKeep | Self::ConfigMergeTake | Self::ConfigMergeWrite => {
-                &["copy", "file"]
-            }
+            Self::ConfigMergeDiscard
+            | Self::ConfigMergeKeep
+            | Self::ConfigMergeTake
+            | Self::ConfigMergeWrite => &["copy", "file"],
             Self::GrubTimeout | Self::LoaderTimeout => &["count"],
             Self::AccountLock
             | Self::AccountUnlock

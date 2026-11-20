@@ -1,6 +1,5 @@
-//! The install order of AUR packages as `paru -Po --aur <targets>` prints
-//! it, read as the user without root: the repo packages to install first,
-//! then the AUR packages to build, each after what it needs.
+//! The order `paru -Po --aur <targets>` prints, read without root: repo
+//! packages first, then AUR builds, each after what it needs.
 
 #[cfg(test)]
 mod tests;
@@ -24,8 +23,7 @@ pub struct RepoInstall {
     pub name: PackageName,
 }
 
-/// One package of a build. A pkgbase that makes several of the asked
-/// packages comes once per package, on lines next to each other.
+/// One package of a build. A pkgbase making several packages gets one per package.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AurBuild {
     pub role: Role,
@@ -50,9 +48,9 @@ pub enum InvalidOrder {
     Name(#[from] InvalidName),
 }
 
-/// Reads the output of `paru -Po`. A line of another kind is left out, as
-/// a newer paru may add some. A `REPO` or `AUR` line that is not whole
-/// fails the read, so a broken order never plans.
+/// Reads the output of `paru -Po`. Lines of other kinds are skipped, as a
+/// newer paru may print some. A `REPO`, `AUR` or `MISSING` line that is not
+/// whole fails the read.
 ///
 /// # Errors
 ///

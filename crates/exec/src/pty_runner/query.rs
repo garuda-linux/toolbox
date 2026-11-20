@@ -27,7 +27,6 @@ pub const QUERY_DEADLINE: Duration = Duration::from_mins(2);
 /// Which ends of a query are an answer.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum QueryKind {
-    /// Exit code 0, or an [`empty_miss`].
     Listing,
     /// `pacman -T`: exit code 0 when every name is met, 127 with the
     /// unmet names.

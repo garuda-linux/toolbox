@@ -1,5 +1,4 @@
-//! A dependency install takes only what `pacman -T` names as unmet, so an
-//! installed package keeps the reason it was installed for.
+//! Only unmet names go to pacman, so installed packages keep their install reason.
 
 use std::collections::VecDeque;
 
@@ -67,7 +66,6 @@ fn nothing_unmet_is_nothing_to_do() {
     assert_eq!(finished(&events), [(StepId::new(1), Outcome::Skipped)]);
 }
 
-/// The lines become arguments of a root `pacman -S`.
 #[test]
 fn a_name_that_was_not_asked_fails_the_step() {
     let mut runner = answering(&["cmake", "linux-lts"]);

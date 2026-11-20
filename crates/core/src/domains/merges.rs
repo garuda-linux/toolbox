@@ -4,7 +4,9 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_plan::{MergeChoice, MergeCopy, MergeResolve, PlannedAction, Resolution, RootAction};
+use toolbox_plan::{
+    CopyKind, MergeChoice, MergeCopy, MergeResolve, PlannedAction, Resolution, RootAction,
+};
 pub use toolbox_state::parts::MergeCopies;
 
 use super::each;
@@ -21,6 +23,7 @@ impl Domain for ConfigMerges {
     const ID: &'static str = "config-merges";
     const STAGE: Stage = Stage::new(Stage::FILES.rank() + 3);
     const CODES: &'static [SummaryCode] = &[
+        SummaryCode::ConfigMergeDiscard,
         SummaryCode::ConfigMergeKeep,
         SummaryCode::ConfigMergeTake,
         SummaryCode::ConfigMergeWrite,
@@ -60,7 +63,8 @@ impl Domain for ConfigMerges {
 
     fn summary(item: &MergeCopy, wish: &MergeChoice) -> Summary {
         let code = match wish.resolution {
-            Resolution::KeepCurrent => SummaryCode::ConfigMergeKeep,
+            Resolution::KeepCurrent if item.kind() == CopyKind::New => SummaryCode::ConfigMergeKeep,
+            Resolution::KeepCurrent => SummaryCode::ConfigMergeDiscard,
             Resolution::TakeCopy => SummaryCode::ConfigMergeTake,
             Resolution::Merged { text: _ } => SummaryCode::ConfigMergeWrite,
         };

@@ -115,7 +115,7 @@ fn mean_softness(palette: &Palette) -> Option<(f32, f32)> {
             (count + 1.0, light + one, sum + chroma)
         });
 
-    (count > 0.0).then(|| (light / count, chroma / count))
+    (count > 0.0).then_some((light / count, chroma / count))
 }
 
 /// The roles that carry the scheme's hues, in the order their hues lead.

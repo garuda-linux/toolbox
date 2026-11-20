@@ -173,13 +173,11 @@ impl PageTool {
 /// The upgrader the system has: garuda-update when installed. Without the
 /// installed packages, `program_found` says whether its program was there.
 pub fn upgrader(snapshot: &Snapshot, program_found: bool) -> Upgrader {
-    snapshot.part::<InstalledPackages>().map_or_else(
-        || {
-            if program_found {
-                Upgrader::GarudaUpdate
-            } else {
-                Upgrader::Pacman
-            }
+    snapshot.part::<InstalledPackages>().map_or(
+        if program_found {
+            Upgrader::GarudaUpdate
+        } else {
+            Upgrader::Pacman
         },
         upgrader_for,
     )

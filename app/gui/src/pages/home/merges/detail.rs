@@ -1,7 +1,9 @@
 //! One copy against the file in use, with a pick per change.
 
 use egui::{Frame, Label, ScrollArea, Ui};
-use toolbox_core::features::merges::{Comparison, Part, Pick, Standing, choice, queued, standing};
+use toolbox_core::features::merges::{
+    CachedComparison, Comparison, Part, Pick, Standing, choice, edit_start, queued, settled,
+};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
@@ -100,13 +102,27 @@ fn heading(ui: &mut Ui, context: &PageContext<'_>, copy: &MergeCopy) {
 fn standing_of(ui: &mut Ui, dialog: &mut MergeDialog, files: &Files<'_>) {
     let copy = files.copy;
 
-    match (standing(copy, files.current, files.copied), files.current) {
-        (Standing::Differs { changes: _ }, Some(current)) => {
-            let comparison = Comparison::new(current, files.copied);
-            changes(ui, dialog, copy, &comparison);
-            buttons(ui, dialog, files, &comparison);
+    match (settled(copy, files.current, files.copied), files.current) {
+        (None, Some(current)) => {
+            dialog.compare(copy, current, files.copied);
+
+            let picks = dialog.picks.get(copy).map_or(&[][..], Vec::as_slice);
+            let Some(cached) = dialog.compared.get_mut(copy) else {
+                return;
+            };
+
+            let picked = changes(ui, copy, picks, cached.comparison());
+            let editing = buttons(ui, files, picks, cached);
+
+            if let Some((change, pick)) = picked {
+                dialog.pick(copy, change, pick);
+            }
+
+            if let Some(start) = editing {
+                dialog.editing = Some((copy.clone(), start));
+            }
         }
-        (Standing::CurrentGone, _) => {
+        (Some(Standing::CurrentGone), _) | (None, None) => {
             note(ui, "home-merges-gone");
             ui.horizontal(|ui| {
                 let take = i18n::text(ui.ctx(), take_file_id(copy.kind()));
@@ -118,7 +134,10 @@ fn standing_of(ui: &mut Ui, dialog: &mut MergeDialog, files: &Files<'_>) {
             });
         }
         (
-            standing @ (Standing::Same | Standing::OlderSave | Standing::Differs { changes: _ }),
+            Some(
+                standing
+                @ (Standing::Same | Standing::OlderSave | Standing::Differs { changes: _ }),
+            ),
             _,
         ) => {
             let id = if standing == Standing::Same {
@@ -159,27 +178,38 @@ fn remove_button(ui: &mut Ui, files: &Files<'_>) {
     }
 }
 
-fn changes(ui: &mut Ui, dialog: &mut MergeDialog, copy: &MergeCopy, comparison: &Comparison<'_>) {
+/// The pick the user made this frame, by the number of its change.
+fn changes(
+    ui: &mut Ui,
+    copy: &MergeCopy,
+    picks: &[Pick],
+    comparison: &Comparison,
+) -> Option<(usize, Pick)> {
     let ctx = ui.ctx().clone();
     let keep = i18n::text(&ctx, "home-merges-keep");
     let take = i18n::text(&ctx, take_id(copy.kind()));
     let parts = comparison.parts();
+    let count = parts.len();
     let height = (ui.available_height() - FOOTER).max(FOOTER);
     let mut change = 0;
+    let mut chosen = None;
 
     ScrollArea::vertical()
         .id_salt(("toolbox_gui::home::merges::changes", copy.as_str()))
         .max_height(height)
         .auto_shrink([false, true])
         .show(ui, |ui| {
-            for (index, part) in parts.iter().enumerate() {
+            for (index, part) in parts.enumerate() {
                 match part {
-                    Part::Same(lines_of) => {
-                        same(ui, lines_of, index == 0, index + 1 == parts.len());
+                    Part::Same(text) => {
+                        let lines_of: Vec<&str> = text.split_inclusive('\n').collect();
+                        same(ui, &lines_of, index == 0, index + 1 == count);
                     }
                     Part::Change { current, copy: new } => {
-                        lines(ui, current, '-', Tone::Error);
-                        lines(ui, new, '+', Tone::Success);
+                        let removed: Vec<&str> = current.split_inclusive('\n').collect();
+                        let added: Vec<&str> = new.split_inclusive('\n').collect();
+                        lines(ui, &removed, '-', Tone::Error);
+                        lines(ui, &added, '+', Tone::Success);
 
                         let name = i18n::text_with(
                             &ctx,
@@ -187,12 +217,12 @@ fn changes(ui: &mut Ui, dialog: &mut MergeDialog, copy: &MergeCopy, comparison: 
                             &[("number", Arg::from(change + 1))],
                         );
 
-                        let picked = dialog.picks(copy).get(change).copied().unwrap_or_default();
+                        let picked = picks.get(change).copied().unwrap_or_default();
                         let options = [(Pick::Keep, keep.as_ref()), (Pick::Take, take.as_ref())];
                         let salt = ("toolbox_gui::home::merges::pick", copy.as_str(), change);
 
                         if let Some(pick) = segmented(ui, salt, &name, &options, picked).value {
-                            dialog.pick(copy, change, pick);
+                            chosen = Some((change, pick));
                         }
 
                         ui.add_space(ui.tokens().sizes.card_gap);
@@ -201,6 +231,8 @@ fn changes(ui: &mut Ui, dialog: &mut MergeDialog, copy: &MergeCopy, comparison: 
                 }
             }
         });
+
+    chosen
 }
 
 fn same(ui: &mut Ui, lines_of: &[&str], first: bool, last: bool) {
@@ -266,11 +298,18 @@ fn lines(ui: &mut Ui, lines_of: &[&str], mark: char, tone: Tone) {
     });
 }
 
-fn buttons(ui: &mut Ui, dialog: &mut MergeDialog, files: &Files<'_>, comparison: &Comparison<'_>) {
+/// The text to edit when the user asked for the editor.
+fn buttons(
+    ui: &mut Ui,
+    files: &Files<'_>,
+    picks: &[Pick],
+    cached: &mut CachedComparison,
+) -> Option<String> {
     let ctx = ui.ctx().clone();
     let label = |id: &str| i18n::text(&ctx, id);
     let copy = files.copy;
-    let merged = comparison.resolution(dialog.picks(copy));
+    let merged = cached.resolution(picks);
+    let mut editing = None;
 
     ui.horizontal_wrapped(|ui| {
         if pill_button(ui, &label("home-merges-keep-file"), ButtonKind::Soft).clicked() {
@@ -295,14 +334,9 @@ fn buttons(ui: &mut Ui, dialog: &mut MergeDialog, files: &Files<'_>, comparison:
         }
 
         if pill_button(ui, &label("home-merges-edit"), ButtonKind::Ghost).clicked() {
-            let start = match merged {
-                Ok(Resolution::Merged { text }) => text.as_str().to_owned(),
-                Ok(Resolution::KeepCurrent | Resolution::TakeCopy) | Err(_) => {
-                    files.current.unwrap_or_default().to_owned()
-                }
-            };
-
-            dialog.editing = Some((copy.clone(), start));
+            editing = Some(edit_start(merged, files.current, files.copied));
         }
     });
+
+    editing
 }

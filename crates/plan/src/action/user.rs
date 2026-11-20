@@ -26,8 +26,7 @@ pub enum UserAction {
     InstallAur {
         packages: TargetList<PackageName>,
     },
-    /// Builds one pkgbase with makepkg, as the user. The helper installed
-    /// what it needs before, and installs what it built after.
+    /// Builds one pkgbase as the user. The helper installs before and after it.
     BuildAur {
         base: PackageName,
         run: BuildRun,

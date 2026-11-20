@@ -188,6 +188,10 @@ impl Home {
                 self.merges.read(self.merge_copies());
                 Handled::taken()
             }
+            HomeCommand::CloseMerges => {
+                self.merges.stop();
+                Handled::taken()
+            }
             HomeCommand::Merge { copy, choice } => queue(changes, |changes| match choice {
                 Some(choice) => merges::queue(changes, copy.clone(), choice.clone(), snapshot),
                 None => merges::take_back(changes, copy),

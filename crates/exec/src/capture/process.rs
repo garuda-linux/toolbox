@@ -21,8 +21,6 @@ const READ_BYTES: usize = 64 << 10;
 /// are shorter, so a quick program is not held up.
 const LONGEST_PAUSE: Duration = Duration::from_millis(20);
 
-/// How the input went: written before the wait, or by a thread that
-/// answers once it is done.
 enum Written {
     Done(io::Result<()>),
     Apart(Receiver<io::Result<()>>),
@@ -47,8 +45,7 @@ pub fn finish(
     let output = read_tail(child.stdout.take(), policy.limit, cancel, watched);
     let errors = read_tail(child.stderr.take(), policy.error_limit, cancel, None);
 
-    // Inline, the input fits a pipe (`MAX_STDIN_BYTES`), so this write
-    // cannot block on a program that prints before it reads.
+    // Inline input fits a pipe, so this write cannot block on a program that prints first.
     let written = match (child.stdin.take(), policy.stdin) {
         (Some(stdin), Some(input)) if policy.apart => Written::Apart(write_apart(stdin, input)),
         (Some(mut stdin), Some(input)) => Written::Done(stdin.write_all(input)),
@@ -140,9 +137,7 @@ where
     receiver
 }
 
-/// Writes a copy of `input` on a thread and closes the pipe after it.
-/// The thread is left behind like a reader: a stop kills the program, and
-/// its write ends with a broken pipe.
+/// Left behind like a reader: a stop kills the program, which breaks the write.
 fn write_apart(mut stdin: ChildStdin, input: &[u8]) -> Receiver<io::Result<()>> {
     let (sender, receiver) = mpsc::channel();
     let input = input.to_vec();
@@ -158,8 +153,7 @@ fn write_apart(mut stdin: ChildStdin, input: &[u8]) -> Receiver<io::Result<()>> 
             sender.send(written).ok();
         });
 
-    // Without a thread the sender is gone with the closure, and the
-    // caller sees the closed channel as a cancel.
+    // A failed spawn drops the sender, which the caller reads as a cancel.
     drop(writer);
     receiver
 }

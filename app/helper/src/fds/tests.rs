@@ -16,7 +16,6 @@ fn an_inherited_descriptor_is_kept_from_children() {
     assert!(fcntl_getfd(&inherited).unwrap().contains(FdFlags::CLOEXEC));
 }
 
-/// The copy is the request socket, which no program the helper starts may get.
 #[test]
 fn the_copy_of_stdin_is_kept_from_children() {
     let copy = stdin_copy().unwrap();

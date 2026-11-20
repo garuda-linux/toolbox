@@ -60,8 +60,7 @@ pub trait Runner {
         sink: &mut dyn EventSink,
     ) -> Outcome;
 
-    /// Runs `command` with `text` on its standard input, without a PTY.
-    /// No secret: what it prints is reported as it is.
+    /// Without a PTY and without a secret, so what it prints is reported as it is.
     fn check(
         &mut self,
         step: StepId,
@@ -72,8 +71,7 @@ pub trait Runner {
 
     fn finish_requested(&mut self) -> bool;
 
-    /// The account that asked for the run, whose built AUR packages the
-    /// helper may install. Only the helper knows one.
+    /// Only the helper knows the account whose built AUR packages it may install.
     fn caller(&self) -> Option<Caller> {
         None
     }
@@ -336,9 +334,6 @@ fn run_once(
     }
 }
 
-/// An AUR install runs pacman on what it staged, so it needs the runner
-/// and the caller it knows. A merge has the runner check a sudoers text.
-/// Every other builtin is the runner's.
 fn builtin_step(
     step: StepId,
     builtin: &Builtin,
@@ -370,9 +365,7 @@ fn builtin_step(
         reason: *reason,
     };
 
-    let caller = runner.caller();
-
-    aur::install(Path::new(SYSTEM_ROOT), caller, built, |command| {
+    aur::install(Path::new(SYSTEM_ROOT), runner.caller(), built, |command| {
         runner.run(step, command, sink)
     })
     .unwrap_or_else(|error| failure(step, sink, &error.to_string()))

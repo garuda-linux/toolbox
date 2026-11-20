@@ -38,7 +38,6 @@ pub enum MergeError {
     NoBackup,
     #[error(transparent)]
     Write(#[from] WriteError),
-    /// The syntax check did not pass the new text, and how it ended.
     #[error("the syntax check refused the new text")]
     Refused(Outcome),
 }
@@ -112,10 +111,7 @@ pub fn snapshot(root: &Path) -> Option<Command> {
 
 /// # Errors
 ///
-/// [`MergeError`] when pacman lists no such backup file, a file changed,
-/// is no regular text file, `check` refuses the new text
-/// ([`MergeResolve::syntax_check`]), or the system refuses a write. Both
-/// files are untouched then.
+/// [`MergeError`] when the resolve is refused, leaving both files untouched.
 pub fn resolve(
     root: &Path,
     merge: &MergeResolve,
@@ -128,8 +124,6 @@ pub fn resolve(
     resolve_pair(root, merge, check)
 }
 
-/// `check` runs the syntax check through the runner, which reports what
-/// the checker printed.
 pub fn execute(
     root: &Path,
     step: StepId,

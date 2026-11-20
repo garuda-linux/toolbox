@@ -1,13 +1,14 @@
 //! A copy compared with the file in use, which is the old side.
 
+mod comparison;
 #[cfg(test)]
 mod tests;
 
+pub use comparison::{CachedComparison, Comparison, Part};
 use toolbox_plan::{
     ConfigText, CopyKind, Fingerprint, InvalidConfigText, MergeChoice, MergeCopy, Resolution,
 };
 
-use super::configs::{Change, Diff};
 use crate::domains::ConfigMerges;
 use crate::{ChangeSet, Snapshot};
 
@@ -18,16 +19,6 @@ pub enum Pick {
     #[default]
     Keep,
     Take,
-}
-
-/// One stretch of the comparison, each line with its line break.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Part<'text> {
-    Same(Vec<&'text str>),
-    Change {
-        current: Vec<&'text str>,
-        copy: Vec<&'text str>,
-    },
 }
 
 /// How a copy stands against the file it belongs to, for its row.
@@ -44,107 +35,20 @@ pub enum Standing {
     OlderSave,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Comparison<'text> {
-    parts: Vec<Part<'text>>,
-}
-
-impl<'text> Comparison<'text> {
-    pub fn new(current_text: &'text str, copy_text: &'text str) -> Self {
-        let mut parts: Vec<Part<'text>> = Vec::new();
-
-        for line in Diff::new(current_text, copy_text).lines() {
-            match (line.change, parts.last_mut()) {
-                (Change::Same, Some(Part::Same(lines))) => lines.push(line.text),
-                (Change::Same, _) => parts.push(Part::Same(vec![line.text])),
-                (Change::Removed, Some(Part::Change { current, copy: _ })) => {
-                    current.push(line.text);
-                }
-                (Change::Added, Some(Part::Change { current: _, copy })) => copy.push(line.text),
-                (Change::Removed, _) => parts.push(Part::Change {
-                    current: vec![line.text],
-                    copy: Vec::new(),
-                }),
-                (Change::Added, _) => parts.push(Part::Change {
-                    current: Vec::new(),
-                    copy: vec![line.text],
-                }),
-            }
-        }
-
-        Self { parts }
-    }
-
-    pub fn parts(&self) -> &[Part<'text>] {
-        &self.parts
-    }
-
-    pub fn changes(&self) -> usize {
-        self.parts
-            .iter()
-            .filter(|part| {
-                matches!(
-                    part,
-                    Part::Change {
-                        current: _,
-                        copy: _
-                    }
-                )
-            })
-            .count()
-    }
-
-    /// The text with the `n`th change as `picks[n]` says, the current
-    /// lines for a change without a pick.
-    pub fn merged(&self, picks: &[Pick]) -> String {
-        let mut picked = picks.iter();
-        let mut text = String::new();
-
-        for part in &self.parts {
-            let lines = match part {
-                Part::Same(lines) => lines,
-                Part::Change { current, copy } => match picked.next() {
-                    Some(Pick::Take) => copy,
-                    Some(Pick::Keep) | None => current,
-                },
-            };
-
-            text.extend(lines.iter().copied());
-        }
-
-        text
-    }
-
-    /// # Errors
-    ///
-    /// [`InvalidConfigText`] for a merged text that is too large.
-    pub fn resolution(&self, picks: &[Pick]) -> Result<Resolution, InvalidConfigText> {
-        let picked = |wanted: Pick| {
-            (0..self.changes()).all(|index| picks.get(index).copied().unwrap_or_default() == wanted)
-        };
-
-        if picked(Pick::Keep) {
-            return Ok(Resolution::KeepCurrent);
-        }
-
-        if picked(Pick::Take) {
-            return Ok(Resolution::TakeCopy);
-        }
-
-        ConfigText::new(self.merged(picks)).map(|text| Resolution::Merged { text })
-    }
-}
-
 pub fn standing(copy: &MergeCopy, current: Option<&str>, copied: &str) -> Standing {
+    settled(copy, current, copied).unwrap_or_else(|| Standing::Differs {
+        changes: comparison::changes(&comparison::stretches(current.unwrap_or_default(), copied)),
+    })
+}
+
+/// `None` when the lines differ and need a comparison.
+pub fn settled(copy: &MergeCopy, current: Option<&str>, copied: &str) -> Option<Standing> {
     match (copy.kind(), current) {
-        (CopyKind::OlderSave, _) => Standing::OlderSave,
-        (CopyKind::New | CopyKind::Saved | CopyKind::Orig, None) => Standing::CurrentGone,
-        (CopyKind::New | CopyKind::Saved | CopyKind::Orig, Some(current)) if current == copied => {
-            Standing::Same
+        (CopyKind::OlderSave, _) => Some(Standing::OlderSave),
+        (CopyKind::New | CopyKind::Saved | CopyKind::Orig, None) => Some(Standing::CurrentGone),
+        (CopyKind::New | CopyKind::Saved | CopyKind::Orig, Some(current)) => {
+            (current == copied).then_some(Standing::Same)
         }
-        (CopyKind::New | CopyKind::Saved | CopyKind::Orig, Some(current)) => Standing::Differs {
-            changes: Comparison::new(current, copied).changes(),
-        },
     }
 }
 
@@ -163,6 +67,19 @@ pub fn edited(text: &str, current: &str, copied: &str) -> Result<Resolution, Inv
     }
 
     ConfigText::new(text).map(|text| Resolution::Merged { text })
+}
+
+/// A merge that is no [`ConfigText`] starts the editor from the file in use.
+pub fn edit_start(
+    merged: &Result<Resolution, InvalidConfigText>,
+    current: Option<&str>,
+    copied: &str,
+) -> String {
+    match merged {
+        Ok(Resolution::Merged { text }) => text.as_str().to_owned(),
+        Ok(Resolution::TakeCopy) => copied.to_owned(),
+        Ok(Resolution::KeepCurrent) | Err(_) => current.unwrap_or_default().to_owned(),
+    }
 }
 
 pub fn choice(resolution: Resolution, current: Option<&str>, copied: &str) -> MergeChoice {

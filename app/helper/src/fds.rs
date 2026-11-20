@@ -18,9 +18,7 @@ pub fn keep_from_children() {
     close_fds::set_fds_cloexec(FIRST_INHERITED, &[]);
 }
 
-/// A duplicate of stdin that a reader thread may own, which `StdinLock`
-/// cannot be. std duplicates with `F_DUPFD_CLOEXEC`, so no program the
-/// helper starts gets the request socket through it.
+/// An owned, close-on-exec copy of stdin, so a reader thread can hold it.
 pub fn stdin_copy() -> io::Result<File> {
     Ok(File::from(io::stdin().as_fd().try_clone_to_owned()?))
 }

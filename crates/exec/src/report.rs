@@ -16,8 +16,7 @@ pub fn note(step: StepId, sink: &mut dyn EventSink, message: &str, outcome: Outc
     outcome
 }
 
-/// What a program without a terminal printed. The Console is a terminal:
-/// a bare line feed would not return the cursor to the first column.
+/// The Console is a terminal: a bare line feed would not return the cursor to the first column.
 pub fn output(step: StepId, sink: &mut dyn EventSink, text: &str) {
     if !text.is_empty() {
         sink.send(Event::Output {

@@ -16,8 +16,7 @@ fn a_build_run_is_lowercase_letters_and_digits() {
     );
 }
 
-/// The helper joins it to a folder below the user's home, so nothing in
-/// it may leave that folder or read as an option.
+/// The helper joins it to a folder below the user's home.
 #[test]
 fn a_build_run_never_names_another_folder() {
     refused("", Reason::Empty);

@@ -220,10 +220,9 @@ impl SystemBootMenu {
         let mut command = self.helper.read_command(kind);
 
         match pkexec::ask(&mut command, MAX_LINE_BYTES, cancel) {
-            HelperRun::Answered(line) => parse(line.trim_end()).map_or_else(
-                |_not_a_menu| MenuRead::Unknown(HelperError::Unreadable),
-                wrap,
-            ),
+            HelperRun::Answered(line) => {
+                parse(line.trim_end()).map_or(MenuRead::Unknown(HelperError::Unreadable), wrap)
+            }
             HelperRun::Refused(refusal) => MenuRead::Refused(refusal),
             HelperRun::Failed(reason) => MenuRead::Unknown(reason),
             HelperRun::Cancelled => MenuRead::Cancelled,

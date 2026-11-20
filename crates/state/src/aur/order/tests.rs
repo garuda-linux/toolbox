@@ -105,8 +105,7 @@ fn a_missing_package_is_named() {
     assert!(order.repo.is_empty() && order.builds.is_empty());
 }
 
-/// The capture with a build line cut short. A line paru should have
-/// printed whole stops the read, so a broken order never plans.
+/// The octopi-git capture with its build line cut short.
 #[test]
 fn a_cut_line_fails_the_read() {
     let text = OCTOPI_GIT.replace("AUR TARGET octopi-git octopi-git", "AUR TARGET octopi-git");
@@ -114,8 +113,7 @@ fn a_cut_line_fails_the_read() {
     assert!(matches!(parse_order(&text), Err(InvalidOrder::Line(_))));
 }
 
-/// The captures with a role paru does not print. A line left out would
-/// plan the build without what it needs.
+/// An unknown role fails the read rather than dropping its line.
 #[test]
 fn an_unknown_role_fails_the_read() {
     let build = OCTOPI_GIT.replace(
@@ -137,8 +135,7 @@ fn an_invalid_name_fails_the_read() {
     assert!(matches!(parse_order(&text), Err(InvalidOrder::Name(_))));
 }
 
-/// The capture with a line of another kind before it, as a newer paru
-/// might print.
+/// A newer paru may print lines of another kind.
 #[test]
 fn an_unknown_line_is_left_out() {
     let text = format!("NOTE something new\n{FIREFOX}");

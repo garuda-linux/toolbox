@@ -2,8 +2,7 @@ use toolbox_plan::protocol::{Event, Mode, encode};
 
 use super::{FakeLauncher, finished, root_plan, run};
 
-/// The helper takes the caller from the kernel through its stdin, which
-/// only a socket can tell. A pipe names no one.
+/// A pipe names no caller, so the helper's stdin must be a socket.
 #[tokio::test]
 async fn the_helper_gets_a_socket_on_stdin() {
     let done = encode(&Event::Done).unwrap();

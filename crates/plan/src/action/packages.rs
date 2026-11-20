@@ -6,8 +6,7 @@ pub(super) fn install(packages: &TargetList<PackageName>) -> Command {
     pacman(["-S", "--needed", "--noconfirm", "--"]).args(names(packages))
 }
 
-/// Only what is missing, so an installed package named here, even an
-/// outdated one, keeps the reason it was installed for.
+/// Only the missing names, so an installed package keeps its install reason.
 pub(super) fn install_dependencies(packages: &TargetList<PackageName>) -> Invocation {
     Invocation::RunWithUnmetFrom {
         test: pacman(["-T", "--"]).args(names(packages)),

@@ -14,8 +14,7 @@ const CURRENT: &str = "root ALL=(ALL:ALL) ALL\n";
 const NEW: &str = "root ALL=(ALL:ALL) ALL\n@includedir /etc/sudoers.d\n";
 const VISUDO: &str = "visudo -c -f -";
 
-/// A stand-in for the runner's check: it keeps each command and text
-/// and answers with `answer`.
+/// Stands in for the runner's check, recording what it was asked.
 struct Checks {
     seen: Vec<(String, String)>,
     answer: Outcome,
@@ -47,7 +46,6 @@ fn refused() -> Outcome {
     }
 }
 
-/// The test system with `/etc/sudoers` and its `.pacnew` beside it.
 fn sudoers() -> TempDir {
     let root = system();
     fs::write(root.path().join("etc/sudoers"), CURRENT).unwrap();

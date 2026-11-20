@@ -3,7 +3,7 @@ use std::collections::BTreeSet;
 use toolbox_plan::{ConfigText, Fingerprint, MergeChoice, MergeCopy, Resolution};
 
 use super::{ConfigMerges, MergeCopies};
-use crate::domain::Summary;
+use crate::domain::{Domain as _, Summary};
 use crate::test_support::{commands, views};
 use crate::{ChangeSet, Snapshot, SummaryCode, plan};
 
@@ -109,5 +109,36 @@ fn each_change_names_the_copy_and_its_file() {
                 "/etc/pacman.conf"
             )
         )]
+    );
+}
+
+/// A `.pacnew` is pacman's copy and only kept, the saved ones are discarded.
+#[test]
+fn keeping_the_file_removes_a_saved_copy_as_a_discard() {
+    let codes: Vec<(&str, SummaryCode)> = [
+        "/etc/pacman.conf.pacnew",
+        "/etc/pacman.conf.pacsave",
+        "/etc/pacman.conf.pacsave.2",
+        "/etc/pacman.conf.pacorig",
+    ]
+    .into_iter()
+    .map(|path| {
+        let summary = ConfigMerges::summary(&copy(path), &choice(Resolution::KeepCurrent));
+
+        (path, summary.code)
+    })
+    .collect();
+
+    assert_eq!(
+        codes,
+        [
+            ("/etc/pacman.conf.pacnew", SummaryCode::ConfigMergeKeep),
+            ("/etc/pacman.conf.pacsave", SummaryCode::ConfigMergeDiscard),
+            (
+                "/etc/pacman.conf.pacsave.2",
+                SummaryCode::ConfigMergeDiscard
+            ),
+            ("/etc/pacman.conf.pacorig", SummaryCode::ConfigMergeDiscard),
+        ]
     );
 }

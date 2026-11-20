@@ -6,7 +6,7 @@ mod edit;
 use std::collections::BTreeMap;
 
 use egui::{Context, Id, Label, Layout, ScrollArea, Ui, vec2};
-use toolbox_core::features::merges::Pick;
+use toolbox_core::features::merges::{CachedComparison, Pick};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{DialogWidth, ModalWrapper, NavLook, Tone, banner, nav_row, rich};
 use toolbox_gui_kit::{UiExt as _, icons};
@@ -30,11 +30,23 @@ pub struct MergeDialog {
     shown: usize,
     picks: BTreeMap<MergeCopy, Vec<Pick>>,
     editing: Option<(MergeCopy, String)>,
+    /// Built again only when a text changed, never once per frame.
+    compared: BTreeMap<MergeCopy, CachedComparison>,
 }
 
 impl MergeDialog {
-    fn picks(&self, copy: &MergeCopy) -> &[Pick] {
-        self.picks.get(copy).map_or(&[], Vec::as_slice)
+    fn compare(&mut self, copy: &MergeCopy, current: &str, copied: &str) {
+        let held = self
+            .compared
+            .get(copy)
+            .is_some_and(|cached| cached.comparison().holds(current, copied));
+
+        if !held {
+            self.compared.insert(
+                copy.clone(),
+                CachedComparison::new(current.to_owned(), copied.to_owned()),
+            );
+        }
     }
 
     fn pick(&mut self, copy: &MergeCopy, index: usize, pick: Pick) {

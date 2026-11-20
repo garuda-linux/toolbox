@@ -38,7 +38,6 @@ fn a_missing_package_is_an_answer_not_a_failure() {
     assert_eq!(order.missing.len(), 1);
 }
 
-/// The answer for another package says nothing about the asked one.
 #[test]
 fn a_missing_line_about_another_package_alone_fails() {
     let (_folder, fake) = fake_program(MISSING_STDOUT, "", code(MISSING_CODE));
@@ -49,8 +48,6 @@ fn a_missing_line_about_another_package_alone_fails() {
     ));
 }
 
-/// The octopi-git capture with a missing dependency added and paru's exit
-/// code for a missing name: the asked package is still in the order.
 #[test]
 fn a_missing_dependency_beside_the_asked_build_is_an_answer() {
     let text = format!("{OCTOPI_GIT_STDOUT}MISSING no-such-package-toolbox\n");
@@ -60,8 +57,7 @@ fn a_missing_dependency_beside_the_asked_build_is_an_answer() {
     assert_eq!(order.missing.len(), 1);
 }
 
-/// The octopi-git capture without its target line, with paru's exit code
-/// for a missing name.
+/// The octopi-git capture without its target line.
 #[test]
 fn a_missing_line_without_the_asked_build_fails() {
     let text = format!(

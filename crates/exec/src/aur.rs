@@ -1,8 +1,7 @@
-//! What makepkg built as the user, made ready for `pacman -U` as root. The
-//! run's folder is reached from the user's home without following a link,
-//! every folder on the way and every file must be the user's own and
-//! closed to other users, and the files are copied into a folder of root's
-//! before pacman reads them, so nothing can be swapped after the check.
+//! Makes what makepkg built ready for `pacman -U` as root. The run's folder is
+//! reached without following a link, every folder and file on the way must be
+//! the user's own and closed to others, and the files are copied into root's
+//! store so nothing is swapped after the check.
 
 #[cfg(test)]
 mod tests;
@@ -38,7 +37,6 @@ const GROUP_OR_OTHERS_WRITE: u32 = 0o022;
 
 const PACKAGE_MODE: Mode = Mode::from_raw_mode(0o644);
 
-/// What follows a package's arch, before its compression.
 const PACKAGE_SUFFIX: &str = ".pkg.tar";
 
 /// The endings `PKGEXT` may give a package. A signature or a half written
@@ -47,7 +45,6 @@ const COMPRESSIONS: [&str; 9] = [
     "", ".zst", ".xz", ".gz", ".bz2", ".lz4", ".lzo", ".lz", ".Z",
 ];
 
-/// [`toolbox_plan::procedure::Builtin::InstallBuilt`] without its step.
 #[derive(Clone, Copy, Debug)]
 pub struct Install<'step> {
     pub run: &'step BuildRun,
@@ -106,7 +103,7 @@ pub fn package_of(file: &str) -> Option<&str> {
 ///
 /// # Errors
 ///
-/// [`StageError`] when there is no caller or the files cannot be staged.
+/// [`StageError`] when there is no caller or staging fails.
 pub fn install(
     root: &Path,
     caller: Option<Caller>,
@@ -146,12 +143,11 @@ fn hold_store(root: &Path) -> Result<OwnedFd, StageError> {
     }
 }
 
-/// The home folder of `uid` as `/etc/passwd` below `root` names it,
-/// relative to `root`.
+/// The home of `uid` as `/etc/passwd` below `root` names it, relative to `root`.
 ///
 /// # Errors
 ///
-/// [`StageError::NoAccount`] when no entry has `uid`, or the read error.
+/// [`StageError::NoAccount`] when no entry has `uid`.
 pub fn home_of(root: &Path, uid: u32) -> Result<PathBuf, StageError> {
     let passwd = lossy(fs::read(root.join(PASSWD))?);
 
@@ -161,15 +157,13 @@ pub fn home_of(root: &Path, uid: u32) -> Result<PathBuf, StageError> {
         .ok_or(StageError::NoAccount(uid))
 }
 
-/// Copies the one file `run` built for each of `packages` from the run's
-/// folder below `home` (relative to `root`) into root's store, and returns
-/// the copies' paths as seen from `root`. The store holds no copy of an
-/// earlier run afterwards.
+/// Copies the one file `run` built per package from the run's folder below
+/// `home` into root's store, and returns the copies as seen from `root`.
 ///
 /// # Errors
 ///
-/// [`StageError`] when a folder or file is not `uid`'s own or others may
-/// write it, a link is on the way, or a package has no file or more than one.
+/// [`StageError`] when a folder or file is not `uid`'s own, is writable by
+/// others or is a link, or a package has no single file.
 pub fn stage(
     root: &Path,
     uid: u32,
@@ -216,8 +210,8 @@ pub fn unstage(root: &Path, run: &BuildRun) -> Result<(), StageError> {
 ///
 /// # Errors
 ///
-/// [`StageError`] when the store holds anything but folders of regular
-/// files, or something cannot be removed.
+/// [`StageError`] when the store holds anything but run folders of regular
+/// files, or removal fails.
 pub fn empty_store(root: &Path) -> Result<(), StageError> {
     let Some(store) = open_store(root)? else {
         return Ok(());
@@ -255,11 +249,9 @@ fn entries(dir: &OwnedFd) -> io::Result<Vec<CString>> {
 }
 
 fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError> {
-    let shown = || name.to_string_lossy().into_owned();
-
     match rustix::fs::statat(store, name, AtFlags::SYMLINK_NOFOLLOW) {
         Ok(stat) if FileType::from_raw_mode(stat.st_mode) == FileType::Directory => {}
-        Ok(_) => return Err(StageError::NoRunFolder(shown())),
+        Ok(_) => return Err(StageError::NoRunFolder(name.to_string_lossy().into_owned())),
         Err(Errno::NOENT) => return Ok(()),
         Err(error) => return Err(error.into()),
     }

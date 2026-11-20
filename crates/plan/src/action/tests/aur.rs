@@ -35,8 +35,7 @@ fn repo_dependencies_install_as_dependencies() {
     );
 }
 
-/// The helper finds the files itself below the home of the user who owns
-/// its stdin socket, so the request carries the run and the names, never a path.
+/// The request carries the run and the names, never a path.
 #[test]
 fn built_packages_install_through_the_helper_from_the_run() {
     let action = RootAction::InstallBuilt {

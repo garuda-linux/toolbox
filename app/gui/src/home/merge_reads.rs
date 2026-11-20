@@ -1,8 +1,11 @@
 //! Reads for Home's merge dialog, off the frame. Only when the dialog
 //! opens, as a root-only file asks for the password.
 
+#[cfg(test)]
+mod tests;
+
 use std::sync::Arc;
-use std::sync::atomic::AtomicBool;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use tokio::runtime::Handle;
 use toolbox_gui_kit::Loadable;
@@ -23,6 +26,8 @@ pub struct MergeReads {
 pub struct Merges {
     reads: Option<MergeReads>,
     pairs: Loadable<Vec<MergePair>>,
+    /// The running read's, so a closed dialog leaves no password prompt.
+    cancel: Arc<AtomicBool>,
 }
 
 impl std::fmt::Debug for MergeReads {
@@ -60,13 +65,15 @@ impl Merges {
             return;
         };
 
+        self.stop();
+        self.cancel = Arc::default();
         self.pairs.start_loading();
 
         let source = Arc::clone(&reads.source);
+        let cancel = Arc::clone(&self.cancel);
         reads.lane.blocking(
             "pairs",
             move || {
-                let cancel = Arc::new(AtomicBool::new(false));
                 copies
                     .iter()
                     .map(|copy| read_pair(source.as_ref(), copy, &cancel))
@@ -74,6 +81,10 @@ impl Merges {
             },
             |result| result.map_err(|error| error.to_string()),
         );
+    }
+
+    pub fn stop(&self) {
+        self.cancel.store(true, Ordering::Relaxed);
     }
 
     pub fn take(&mut self) {

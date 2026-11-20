@@ -156,7 +156,6 @@ fn a_deptest_with_everything_met_answers_nothing() {
     );
 }
 
-/// pacman ends with 127 only when it names what is missing.
 #[test]
 fn a_deptest_with_code_127_and_no_name_fails() {
     deptest(&script("exit 127")).unwrap_err();

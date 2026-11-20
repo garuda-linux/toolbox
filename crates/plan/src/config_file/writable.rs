@@ -4,8 +4,10 @@
 //! rules, pacman hooks) are shown and never written. Writable entries, such
 //! as `/etc/pacman.conf`, `/etc/modprobe.d` and `/etc/default/grub`, reach
 //! root too, and are trusted because the user confirms each write through
-//! polkit. A fetch takes what the catalog names and nothing else, as `/etc`
-//! holds secrets no deny list can know in advance.
+//! polkit. A fetch takes what the catalog names, as `/etc` holds secrets
+//! no deny list can know in advance. The one addition is pacman's backup
+//! files with a copy beside them, as a merge writes them even when this
+//! table lacks them (`toolbox_exec::is_fetchable`).
 //!
 //! The tables are written out here because the helper links no TOML.
 //! `toolbox-catalog` refuses a writable root-owned entry missing from them

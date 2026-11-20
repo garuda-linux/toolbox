@@ -27,6 +27,7 @@ impl App {
             | HomeCommand::DismissProblem
             | HomeCommand::Refresh
             | HomeCommand::ReadMerges
+            | HomeCommand::CloseMerges
             | HomeCommand::Merge { copy: _, choice: _ } => {}
         }
     }

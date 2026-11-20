@@ -107,8 +107,7 @@ pub(super) fn unless_protected(
     )
 }
 
-/// Each line must be one of the names `test` asked about, as they become
-/// arguments of a root `pacman -S`.
+/// Each line must be a name `test` asked about, as they become root `pacman -S` arguments.
 pub(super) fn unmet(
     step: StepId,
     test: &Command,

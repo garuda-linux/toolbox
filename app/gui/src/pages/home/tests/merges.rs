@@ -195,3 +195,22 @@ fn the_card_offers_review_and_meld() {
             .is_some()
     );
 }
+
+#[test]
+fn closing_the_dialog_stops_its_read() {
+    let mut harness = opened(vec![pair(Some(current()))]);
+    harness.state().fixture.sent();
+
+    harness.query_all_by_label("Close").last().unwrap().click();
+    harness.run();
+
+    assert_eq!(
+        harness.state().fixture.sent(),
+        [Command::from(HomeCommand::CloseMerges)]
+    );
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Dialog, "Configuration files to merge")
+            .is_none()
+    );
+}

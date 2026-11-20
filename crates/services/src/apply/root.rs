@@ -160,8 +160,7 @@ fn missing_secret(request: &Request) -> Option<StepId> {
         .map(|step| step.id)
 }
 
-/// The helper's stdin is a socket, not a pipe: the kernel names the user
-/// on its other end, whose built AUR packages the helper may install.
+/// A socket, not a pipe: the helper reads the caller's identity from it.
 fn start(launcher: &dyn Launcher) -> Result<(Child, UnixStream), NotStarted> {
     let mut command = launcher.command();
     let program = command

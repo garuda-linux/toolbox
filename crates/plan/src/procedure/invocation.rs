@@ -16,8 +16,8 @@ pub enum Invocation {
         query: Command,
         run: Command,
     },
-    /// Runs `test`, `pacman -T` of the asked names, then `run` with every
-    /// line it prints as an extra argument. Skipped when it prints nothing.
+    /// Runs `run` with each line `test` prints as an argument. Skipped when
+    /// `test` prints nothing.
     RunWithUnmetFrom {
         test: Command,
         run: Command,

@@ -1,5 +1,4 @@
-//! The build order of one AUR package, as `paru -Po --aur <name>` prints
-//! it for the user, without root.
+//! The build order of one AUR package from `paru -Po --aur <name>`, read without root.
 
 #[cfg(test)]
 mod tests;
@@ -11,13 +10,11 @@ use super::Paru;
 use crate::error::ProbeError;
 
 pub trait AurOrderSource: Send + Sync {
-    /// The repo packages `package` needs and the AUR packages to build for
-    /// it, in order.
+    /// The repo packages and AUR builds `package` needs, in order.
     ///
     /// # Errors
     ///
-    /// [`ProbeError::Unavailable`] without paru or as root, a failed
-    /// [`ProbeError`] when paru fails or prints a broken order.
+    /// [`ProbeError::Unavailable`] without paru or as root, else paru's failure.
     fn order(&self, package: &PackageName) -> Result<AurOrder, ProbeError>;
 }
 

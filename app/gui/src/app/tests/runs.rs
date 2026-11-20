@@ -54,8 +54,7 @@ fn a_refused_plan_never_takes_the_run_of_the_one_before() {
     );
 }
 
-/// The helper would refuse a second plan, so Apply says why it waits
-/// instead of offering a click that only brings the busy notice.
+/// The helper refuses a second plan, so Apply says why it waits.
 #[test]
 fn apply_waits_while_a_plan_runs() {
     let mut harness = Harness::builder().build_eframe(|cc| App::new(cc, Setup::default()));

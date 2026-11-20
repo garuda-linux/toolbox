@@ -1,6 +1,6 @@
-//! AUR packages: paru resolves and fetches, makepkg builds as the user, the
-//! helper installs the built files. No path crosses to root: the helper
-//! joins these folders to the home of the user who owns its stdin socket.
+//! AUR packages: paru fetches, makepkg builds as the user, the helper installs.
+//! No path crosses to root, so the helper joins these folders to the user
+//! who owns its stdin socket.
 
 use serde::{Deserialize, Serialize};
 

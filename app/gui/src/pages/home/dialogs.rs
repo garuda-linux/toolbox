@@ -37,6 +37,7 @@ pub fn show(
         && super::merges::show(dialog, ctx, context)
     {
         page.merges = None;
+        context.commands.send(HomeCommand::CloseMerges);
     }
 }
 

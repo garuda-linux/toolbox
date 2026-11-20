@@ -207,7 +207,6 @@ impl PtyRunner {
         }
     }
 
-    /// Whether a cancel came before the next program starts.
     fn cancelled_before(&mut self) -> bool {
         self.take_answers(None);
         self.cancelled
@@ -285,8 +284,7 @@ impl Runner for PtyRunner {
         feed(step, command, self.environment, input, sink)
     }
 
-    /// See [`check::check`]. The stop flag ends it as it ends a query, an
-    /// [`Answer::Cancel`] is only read once it returned.
+    /// See [`check::check`]. The stop flag ends it as it ends a query.
     fn check(
         &mut self,
         step: StepId,

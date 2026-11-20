@@ -190,6 +190,8 @@ pub enum HomeCommand {
     DismissProblem,
     /// Reads both files of every copy pacman left, for the merge dialog.
     ReadMerges,
+    /// The merge dialog closed, so a read behind the password prompt stops.
+    CloseMerges,
     /// Queues what happens to a copy, or takes it back with `None`.
     Merge {
         copy: MergeCopy,

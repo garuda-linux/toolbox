@@ -186,10 +186,9 @@ pub fn open_folder(root: &Path, folder: &str) -> Result<OwnedFd, ReadError> {
         error
             .raw_os_error()
             .map(rustix::io::Errno::from_raw_os_error)
-            .map_or_else(
-                || ReadError::Failed(error),
-                |errno| Unreadable::from(errno).into(),
-            )
+            .map_or(ReadError::Failed(error), |errno| {
+                Unreadable::from(errno).into()
+            })
     })
 }
 

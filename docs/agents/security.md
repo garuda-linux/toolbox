@@ -29,19 +29,19 @@ The app refuses to start as root.
   environment: `PATH` is `/usr/local/sbin:/usr/local/bin:/usr/bin`
   (`SYSTEM_PATH`, `crates/exec/src/pty_runner.rs`), the locale fixed.
 - `Runner::feed` is for secrets only ([Secrets](#secrets)).
-  `Runner::check` gives visudo a plain text on pipes, used for nothing
+  `Runner::check` pipes plain text to visudo and is used for nothing
   else (`crates/exec/src/check.rs`). Its output is not scrubbed. Its
-  stdin is written by its own thread (`Policy::written_apart`), so no
-  pipe size limits the text. The stop flag and 120 s end it.
+  stdin has a writer thread of its own (`Policy::written_apart`), so no
+  pipe size limit applies. The stop flag and 120 s end it.
 - Only a development build looks for a missing program elsewhere, in
   `/run/current-system/sw/bin` and `/run/wrappers/bin`, never in the
   caller's `PATH` (`crates/exec/src/located.rs`).
 - A closed stdin interrupts the program and skips the rest. Every client
   keeps stdin open until the `done` event.
-- The app's stdin of `apply` is a socket pair it makes. The helper takes
-  the caller from `SO_PEERCRED` of stdin (`app/helper/src/read.rs`).
-  Root, a system account and `nobody` are no caller. A pipe names none,
-  and then `InstallBuilt` fails.
+- Stdin of `apply` is a socket pair the app makes. The helper takes the
+  caller from its `SO_PEERCRED` (`app/helper/src/read.rs`). Root, a system
+  account and `nobody` are no caller. A pipe names none, so `InstallBuilt`
+  fails.
 - SIGTERM and SIGHUP interrupt the program, skip the rest and still run
   the `Invocation::Always` part. Programs run in their own session and
   never get the helper's signal. SIGINT is ignored, because Ctrl+C reaches
@@ -136,8 +136,8 @@ paru resolves and fetches, `makepkg` builds as the user, the helper
 installs what was built (`crates/exec/src/aur.rs`). The request carries a
 `BuildRun` and package names, never a path.
 
-- The caller comes from `SO_PEERCRED` of stdin, its home from
-  `/etc/passwd`.
+- The caller is the peer of stdin ([The helper](#the-helper)). The home
+  is the one `/etc/passwd` names for it.
 - The run folder `~/.cache/garuda-toolbox/aur-built/<run>` is reached
   from the home without following a link. Every folder on the way and
   every file must be the caller's own and not writable by group or
@@ -145,10 +145,14 @@ installs what was built (`crates/exec/src/aur.rs`). The request carries a
 - A file is matched by the package name in its file name, ending in
   `.pkg.tar` and nothing or a known compression. A `.sig` beside it is no
   package. Each package needs exactly one file.
-- The content is not checked: whoever passed the password installs what
-  that user built.
-- Before each stage the helper empties the whole store
-  `/var/cache/garuda-toolbox/aur`, other runs' folders too. A store entry
+- The helper does not look inside a package. Whoever passed the password
+  installs what that user built.
+- The helper holds an exclusive `flock` on the store
+  `/var/cache/garuda-toolbox/aur` from before the stage until pacman
+  ended. A second helper fails its step (`StageError::Busy`) and touches
+  nothing.
+- Before each stage the helper empties the whole store, other runs'
+  folders too. A store entry
   that is no folder, or a run folder that holds anything but regular
   files, fails the step. Nothing is followed or recursed into.
 - The files are copied into root's `/var/cache/garuda-toolbox/aur/<run>`
@@ -158,19 +162,16 @@ installs what was built (`crates/exec/src/aur.rs`). The request carries a
   upgrade keeps the reason pacman has.
 - `InstallDependencies` runs `pacman -T` first and passes only the names
   it prints to `-S --asdeps`, so an installed package keeps its reason.
-  Each line must be a `PackageName` it was asked about. Exit 127 with
-  names is an answer of this query alone (`QueryKind::Deptest`).
+  Each line must be a `PackageName` it was asked about. Only this query
+  takes exit 127 with names as an answer (`QueryKind::Deptest`).
 
 Limits:
 
 - A symlinked `~/.cache` or `/home` is refused.
 - An account without an `/etc/passwd` entry (systemd-homed, LDAP) is
-  refused. For those the app is to plan the old `paru --sudo pkexec`
-  path. That planner is not built yet.
-- The helper holds an exclusive `flock` on the store from before the
-  stage until pacman ended. A second helper fails its step
-  (`StageError::Busy`) and touches nothing. The copy has no size limit, as
-  pacman's own cache has none.
+  refused. The app is to plan the old `paru --sudo pkexec` path for
+  both, which is not built yet.
+- A copy has no size limit, as pacman's own cache has none.
 
 ## Files the helper writes
 
@@ -332,9 +333,9 @@ keeps the mode. A missing file is never created.
   the current file runs no check.
 - A refused text or a missing `/usr/bin/visudo` fails the step. Both
   files stay untouched.
-- `is_writable` is not asked. A merge writes every backup file pacman
-  lists, also `read_only` ones and files outside the write table, such as
-  `/etc/sudoers`, `/etc/passwd` and `/etc/group`. That is intended.
+- A merge does not ask `is_writable`. By design it writes every backup
+  file pacman lists, also `read_only` ones and files outside the write
+  table, such as `/etc/sudoers`, `/etc/passwd` and `/etc/group`.
 - `fetch` hands out copies and their backup files under the same check
   (`is_fetchable`).
 - `SnapshotBeforeMerges` runs snapper only where it and

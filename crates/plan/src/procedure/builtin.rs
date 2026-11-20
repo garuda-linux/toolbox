@@ -83,10 +83,10 @@ pub enum Builtin {
     /// [`Builtin::WriteConfigFile`] for a file in the user's home. Runs only
     /// in the app, as the user: the helper has no home to write.
     WriteHomeFile(HomeWrite),
-    /// Copies the files `run` built for `packages` from the calling user's
-    /// [`AUR_BUILT`] folder into [`AUR_STORE`], then `pacman -U`s the
-    /// copies. Fails unless every folder on the way belongs to that user
-    /// and no one else may write it, and every package has exactly one file.
+    /// Copies the built files of `packages` from the caller's [`AUR_BUILT`]
+    /// folder to [`AUR_STORE`], then `pacman -U`s the copies. Fails unless
+    /// every folder on the way belongs to the caller alone and each package
+    /// has one file.
     InstallBuilt {
         run: BuildRun,
         packages: TargetList<PackageName>,

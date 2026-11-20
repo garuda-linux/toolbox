@@ -148,10 +148,8 @@ impl<'input> Policy<'input> {
         self
     }
 
-    /// The input is written by a thread of its own, so it may be longer
-    /// than a pipe holds and the wait sees the deadline and a cancel while
-    /// a program has not read it yet. That thread gets a copy, which is
-    /// never overwritten: never for a secret.
+    /// A thread writes a copy, so the input may exceed a pipe and a deadline or
+    /// cancel still ends the wait. The copy is not wiped, so never for a secret.
     #[must_use = "a policy is only described, nothing runs"]
     pub const fn written_apart(mut self) -> Self {
         self.apart = true;

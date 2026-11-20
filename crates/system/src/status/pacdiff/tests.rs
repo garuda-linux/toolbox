@@ -7,8 +7,8 @@ use crate::ProbeError;
 use crate::test_support::fake_program;
 
 /// `pacdiff -o` as root in the Lima VM.
-const PACDIFF: &str = include_str!("fixtures/pacdiff-o.stdout");
-const PACDIFF_CODE: &str = include_str!("fixtures/pacdiff-o.code");
+const PACDIFF: &str = include_str!("fixtures/lima/pacdiff-o.stdout");
+const PACDIFF_CODE: &str = include_str!("fixtures/lima/pacdiff-o.code");
 
 struct Listed(Vec<PathBuf>);
 

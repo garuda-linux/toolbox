@@ -11,7 +11,6 @@ use super::{OCTOPI, octopi, passwd_with_caller, staged, system, uid};
 use crate::aur::{StageError, empty_store, install};
 
 /// A crash between the stage and the cleanup leaves a run folder behind.
-/// The next stage takes it away, whichever run it was.
 #[test]
 fn leftovers_of_another_run_are_gone_after_a_stage() {
     let (root, folder) = system();
@@ -41,9 +40,8 @@ fn a_missing_or_empty_store_is_nothing_to_empty() {
     assert!(root.path().join(AUR_STORE).exists());
 }
 
-/// Only the helper writes the store, and a run folder holds only regular
-/// files. Anything else was put there by someone else, so it stays for a
-/// person to look at.
+/// Anything but regular files in a run folder is not the helper's, so it stays
+/// for a person to look at.
 #[test]
 fn a_folder_inside_a_run_folder_fails() {
     let root = tempfile::tempdir().unwrap();
@@ -110,8 +108,6 @@ fn try_lock(store: &Path) -> Result<File, Errno> {
     Ok(folder)
 }
 
-/// Two helpers would empty each other's copies between the stage and
-/// pacman, so the second one leaves the store alone.
 #[test]
 fn a_store_another_helper_holds_installs_nothing() {
     let (root, folder) = system();
