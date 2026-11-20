@@ -91,8 +91,13 @@ fn keep_memory_private() {
 }
 
 fn run() -> ExitCode {
-    let mut input = BufReader::new(std::io::stdin());
+    // A pipe names no peer: such a run installs no AUR package it did not build.
+    let caller = read::caller_of(std::io::stdin()).ok();
     let mut sink = StdoutSink;
+    let mut input = match fds::stdin_copy() {
+        Ok(stdin) => BufReader::new(stdin),
+        Err(error) => return reject(&mut sink, &format!("cannot read stdin: {error}")),
+    };
 
     let mut request = match read_request(&mut input) {
         Ok(request) => request,
@@ -121,8 +126,9 @@ fn run() -> ExitCode {
         return reject(&mut sink, &reason.to_string());
     }
 
-    let mut runner =
-        PtyRunner::new(spawn_answer_reader(input), Environment::Clean).stop_on(stop_on_signals());
+    let mut runner = PtyRunner::new(spawn_answer_reader(input), Environment::Clean)
+        .stop_on(stop_on_signals())
+        .for_caller(caller);
 
     if apply(request.mode, &request.steps, &mut runner, &mut sink) {
         ExitCode::SUCCESS

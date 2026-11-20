@@ -2,7 +2,7 @@
 mod tests;
 
 use std::io::{self, Read, Write as _};
-use std::process::Child;
+use std::process::{Child, ChildStdin};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver, RecvTimeoutError};
@@ -20,6 +20,13 @@ const READ_BYTES: usize = 64 << 10;
 /// The longest pause between two looks at the program. The first ones
 /// are shorter, so a quick program is not held up.
 const LONGEST_PAUSE: Duration = Duration::from_millis(20);
+
+/// How the input went: written before the wait, or by a thread that
+/// answers once it is done.
+enum Written {
+    Done(io::Result<()>),
+    Apart(Receiver<io::Result<()>>),
+}
 
 struct Watch<'flags> {
     cancel: &'flags AtomicBool,
@@ -40,11 +47,12 @@ pub fn finish(
     let output = read_tail(child.stdout.take(), policy.limit, cancel, watched);
     let errors = read_tail(child.stderr.take(), policy.error_limit, cancel, None);
 
-    // The input fits a pipe (`MAX_STDIN_BYTES`), so this write cannot
-    // block on a program that prints before it reads.
+    // Inline, the input fits a pipe (`MAX_STDIN_BYTES`), so this write
+    // cannot block on a program that prints before it reads.
     let written = match (child.stdin.take(), policy.stdin) {
-        (Some(mut stdin), Some(input)) => stdin.write_all(input),
-        _ => Ok(()),
+        (Some(stdin), Some(input)) if policy.apart => Written::Apart(write_apart(stdin, input)),
+        (Some(mut stdin), Some(input)) => Written::Done(stdin.write_all(input)),
+        _ => Written::Done(Ok(())),
     };
 
     let watch = Watch {
@@ -132,6 +140,30 @@ where
     receiver
 }
 
+/// Writes a copy of `input` on a thread and closes the pipe after it.
+/// The thread is left behind like a reader: a stop kills the program, and
+/// its write ends with a broken pipe.
+fn write_apart(mut stdin: ChildStdin, input: &[u8]) -> Receiver<io::Result<()>> {
+    let (sender, receiver) = mpsc::channel();
+    let input = input.to_vec();
+
+    let writer = thread::Builder::new()
+        .name("capture-stdin".to_owned())
+        .spawn(move || {
+            let written = stdin.write_all(&input);
+
+            drop(stdin);
+
+            // Nobody waits after a stop.
+            sender.send(written).ok();
+        });
+
+    // Without a thread the sender is gone with the closure, and the
+    // caller sees the closed channel as a cancel.
+    drop(writer);
+    receiver
+}
+
 /// Returns once the program ended, leaving it unreaped. A program that
 /// ended wins over a cancel, so it is never reported as cancelled.
 fn wait(child: &Child, watch: &Watch<'_>) -> Result<(), CaptureError> {
@@ -159,11 +191,15 @@ fn wait(child: &Child, watch: &Watch<'_>) -> Result<(), CaptureError> {
 /// before the leader is reaped, so no id is reused in between.
 fn collect(
     [output, errors]: [&Receiver<Tail>; 2],
-    written: io::Result<()>,
+    written: Written,
     policy: &Policy<'_>,
     watch: &Watch<'_>,
 ) -> Result<(Vec<u8>, Vec<u8>, bool), CaptureError> {
     let (group, cancel, end) = (watch.group, watch.cancel, watch.end);
+    let written = match written {
+        Written::Done(written) => written,
+        Written::Apart(writer) => receive(&writer, group, cancel, end)?,
+    };
 
     // A program that exits without reading closes the pipe. Its exit code
     // and its message say why, the broken pipe adds nothing.
@@ -218,12 +254,12 @@ fn stop(mut child: Child, grace: Option<Duration>) {
 /// The tail of one pipe. The program has ended, but what it left running
 /// in its `group` may hold the pipe open: the deadline and a cancel end
 /// that wait too, kill the group and leave the reader behind.
-fn receive(
-    tail: &Receiver<Tail>,
+fn receive<T>(
+    tail: &Receiver<T>,
     group: Pid,
     cancel: &AtomicBool,
     end: Option<Instant>,
-) -> Result<Tail, CaptureError> {
+) -> Result<T, CaptureError> {
     loop {
         let stopped = match tail.recv_timeout(LONGEST_PAUSE) {
             Ok(tail) => return Ok(tail),

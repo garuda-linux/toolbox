@@ -54,6 +54,27 @@ fn a_refused_plan_never_takes_the_run_of_the_one_before() {
     );
 }
 
+/// The helper would refuse a second plan, so Apply says why it waits
+/// instead of offering a click that only brings the busy notice.
+#[test]
+fn apply_waits_while_a_plan_runs() {
+    let mut harness = Harness::builder().build_eframe(|cc| App::new(cc, Setup::default()));
+    harness.run();
+    harness.state_mut().console.take(Report::PlanStarted {
+        plan: PlanId::new(1),
+        steps: Vec::new(),
+    });
+
+    assert_eq!(harness.state().apply_held(), Some("changes-wait-running"));
+
+    harness.state_mut().console.take(Report::PlanFinished {
+        plan: PlanId::new(1),
+        succeeded: true,
+    });
+
+    assert_ne!(harness.state().apply_held(), Some("changes-wait-running"));
+}
+
 #[test]
 fn a_journal_while_a_plan_runs_is_the_services_pages_refusal() {
     let mut harness = Harness::builder().build_eframe(|cc| App::new(cc, Setup::default()));

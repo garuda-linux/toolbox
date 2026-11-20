@@ -11,7 +11,7 @@ use toolbox_plan::protocol::{Answer, Event, Outcome, TerminalSize};
 use toolbox_plan::{HomePath, Password, StepId, UserConfigEdit, UserName};
 use toolbox_pty::{DEFAULT_SIZE, Exit, PtyCommand, Session};
 
-use super::{Environment, Guard, PtyRunner, pty_command};
+use super::{Environment, Guard, PtyRunner, QueryKind, pty_command};
 use crate::apply::Runner as _;
 use crate::test_support::printed;
 
@@ -295,7 +295,9 @@ fn a_missing_program_fails_its_query() {
 
     // Without `pacman` the question fails. With it, usage text and exit
     // code 1 are no empty answer either.
-    runner.query(&Command::new(Program::Pacman)).unwrap_err();
+    runner
+        .query(&Command::new(Program::Pacman), QueryKind::Listing)
+        .unwrap_err();
 }
 
 #[test]

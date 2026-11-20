@@ -144,3 +144,7 @@ pub fn delete_group(group: &GroupName) -> Vec<Invocation> {
         run(Command::new(Program::Groupdel).args(["--", group.as_str()])),
     ]
 }
+
+pub(super) fn gpasswd(flag: &str, user: &UserName, group: &GroupName) -> Command {
+    Command::new(Program::Gpasswd).args([flag, user.as_str(), "--", group.as_str()])
+}

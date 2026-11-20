@@ -4,13 +4,26 @@ use std::sync::atomic::AtomicBool;
 
 use toolbox_plan::procedure::{Command, Program};
 
-use super::{MAX_QUERY_BYTES, empty_miss, run};
+use super::{MAX_QUERY_BYTES, QueryKind, empty_miss, run};
 use crate::pty_runner::Environment;
 
 const SHELL: &str = "/bin/sh";
 
+/// `pacman -T -- cmake qt6-tools` in the Garuda Lima VM, which has neither.
+const UNMET: &str = include_str!("fixtures/lima/pacman-t-unmet.stdout");
+const UNMET_CODE: &str = include_str!("fixtures/lima/pacman-t-unmet.code");
+/// `pacman -T -- pacman bash` in the same VM.
+const MET: &str = include_str!("fixtures/lima/pacman-t-met.stdout");
+const MET_CODE: &str = include_str!("fixtures/lima/pacman-t-met.code");
+
 fn query(command: &Command, cancel: &Arc<AtomicBool>) -> io::Result<Vec<String>> {
-    run(SHELL, command, Environment::Clean, cancel)
+    run(
+        SHELL,
+        command,
+        QueryKind::Listing,
+        Environment::Clean,
+        cancel,
+    )
 }
 
 fn script(script: &str) -> Command {
@@ -80,7 +93,14 @@ fn an_answer_past_the_cap_fails() {
     ));
 
     // Inherited, so `head` is found on a system without `/usr/bin`.
-    let error = run(SHELL, &command, Environment::Inherited, &Arc::default()).unwrap_err();
+    let error = run(
+        SHELL,
+        &command,
+        QueryKind::Listing,
+        Environment::Inherited,
+        &Arc::default(),
+    )
+    .unwrap_err();
 
     assert!(error.to_string().contains("more than"), "{error}");
 }
@@ -97,10 +117,53 @@ fn a_missing_program_is_not_found() {
     let error = run(
         "/nonexistent/pacman",
         &script(""),
+        QueryKind::Listing,
         Environment::Clean,
         &Arc::default(),
     )
     .unwrap_err();
 
     assert_eq!(error.kind(), io::ErrorKind::NotFound);
+}
+
+fn deptest(command: &Command) -> io::Result<Vec<String>> {
+    run(
+        SHELL,
+        command,
+        QueryKind::Deptest,
+        Environment::Clean,
+        &Arc::default(),
+    )
+}
+
+fn printing(output: &str, code: &str) -> Command {
+    script(&format!("printf '%s' '{output}'; exit {}", code.trim()))
+}
+
+#[test]
+fn a_deptest_answers_its_unmet_names_with_code_127() {
+    assert_eq!(
+        deptest(&printing(UNMET, UNMET_CODE)).unwrap(),
+        ["cmake", "qt6-tools"]
+    );
+}
+
+#[test]
+fn a_deptest_with_everything_met_answers_nothing() {
+    assert_eq!(
+        deptest(&printing(MET, MET_CODE)).unwrap(),
+        Vec::<String>::new()
+    );
+}
+
+/// pacman ends with 127 only when it names what is missing.
+#[test]
+fn a_deptest_with_code_127_and_no_name_fails() {
+    deptest(&script("exit 127")).unwrap_err();
+    deptest(&script("exit 1")).unwrap_err();
+}
+
+#[test]
+fn code_127_is_no_answer_of_any_other_query() {
+    query(&printing(UNMET, UNMET_CODE), &Arc::default()).unwrap_err();
 }

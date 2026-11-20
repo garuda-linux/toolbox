@@ -2,6 +2,7 @@ use super::{
     CopyKind, InvalidMergeCopy, MergeChoice, MergeCopy, MergeResolve, Resolution, backup_files,
     lists_backup,
 };
+use crate::procedure::Program;
 use crate::testing::merge::{PACMAN_FILES, SUDO_FILES};
 use crate::{ConfigFilePath, ConfigText, Fingerprint};
 
@@ -149,6 +150,90 @@ fn the_console_says_what_happens_to_both_files() {
     assert_eq!(
         shown(merged(), true),
         "write /etc/pacman.conf (7 bytes, merged with /etc/pacman.conf.pacnew), the old one kept as /var/lib/garuda-toolbox/backups/etc/pacman.conf, then rm /etc/pacman.conf.pacnew"
+    );
+}
+
+fn resolve(path: &str, resolution: Resolution, current: bool) -> MergeResolve {
+    MergeResolve {
+        copy: copy(path),
+        choice: choice(resolution, current),
+    }
+}
+
+#[test]
+fn only_text_put_in_place_of_a_sudoers_file_is_checked() {
+    let cases = [
+        ("/etc/sudoers.pacnew", Resolution::TakeCopy, true, true),
+        ("/etc/sudoers.pacnew", Resolution::TakeCopy, false, true),
+        ("/etc/sudoers.pacnew", merged(), true, true),
+        ("/etc/sudoers.pacsave", Resolution::TakeCopy, true, true),
+        (
+            "/etc/sudoers.d/10-x.pacnew",
+            Resolution::TakeCopy,
+            true,
+            true,
+        ),
+        ("/etc/sudoers.d/10-x.pacnew", merged(), true, true),
+        (
+            "/etc/sudoers.d/a/b.pacnew",
+            Resolution::TakeCopy,
+            true,
+            false,
+        ),
+        ("/etc/sudoers.pacnew", Resolution::KeepCurrent, true, false),
+        (
+            "/etc/sudoers.d/10-x.pacnew",
+            Resolution::KeepCurrent,
+            true,
+            false,
+        ),
+        ("/etc/pacman.conf.pacnew", Resolution::TakeCopy, true, false),
+        ("/etc/pacman.conf.pacnew", merged(), true, false),
+        (
+            "/etc/sudoers.conf.pacnew",
+            Resolution::TakeCopy,
+            true,
+            false,
+        ),
+    ];
+
+    for (path, resolution, current, checked) in cases {
+        let found = resolve(path, resolution.clone(), current).syntax_check();
+
+        assert_eq!(found.is_some(), checked, "{path} {resolution:?}");
+    }
+}
+
+#[test]
+fn visudo_checks_the_text_on_its_standard_input() {
+    let check = resolve("/etc/sudoers.pacnew", Resolution::TakeCopy, true)
+        .syntax_check()
+        .unwrap();
+
+    assert_eq!(check.program(), Program::Visudo);
+    assert_eq!(Program::Visudo.path(), "/usr/bin/visudo");
+    assert_eq!(check.arguments(), ["-c", "-f", "-"]);
+}
+
+#[test]
+fn the_console_says_a_sudoers_file_is_checked_first() {
+    let shown = |path, resolution, current| resolve(path, resolution, current).command();
+
+    assert_eq!(
+        shown("/etc/sudoers.pacnew", Resolution::TakeCopy, false),
+        "mv /etc/sudoers.pacnew /etc/sudoers, if visudo -c accepts the new text"
+    );
+    assert_eq!(
+        shown("/etc/sudoers.d/10-x.pacnew", Resolution::TakeCopy, true),
+        "replace /etc/sudoers.d/10-x with /etc/sudoers.d/10-x.pacnew, the old one kept as /var/lib/garuda-toolbox/backups/etc/sudoers.d/10-x, if visudo -c accepts the new text"
+    );
+    assert_eq!(
+        shown("/etc/sudoers.pacnew", merged(), true),
+        "write /etc/sudoers (7 bytes, merged with /etc/sudoers.pacnew), the old one kept as /var/lib/garuda-toolbox/backups/etc/sudoers, then rm /etc/sudoers.pacnew, if visudo -c accepts the new text"
+    );
+    assert_eq!(
+        shown("/etc/sudoers.pacnew", Resolution::KeepCurrent, true),
+        "rm /etc/sudoers.pacnew"
     );
 }
 

@@ -101,3 +101,23 @@ fn a_watch_reads_until_ctrl_c_and_ends_with_0() {
         "09:00  all good\n09:00  3 updates\n"
     );
 }
+git commit --no-verify -F - <<'EOF'
+feat(aur): the helper installs what makepkg built
+
+paru asked for the password once per pacman call. Now the plan can
+build as the user and install through the helper in one apply.
+
+- RootAction::InstallDependencies: pacman -T names the unmet packages,
+only those go to pacman -S --asdeps
+- RootAction::InstallBuilt: the helper takes the caller from
+SO_PEERCRED of its stdin socket, checks the run folder below the
+caller's home, copies the packages into a locked store of root and
+runs pacman -U on the copies
+- UserAction::BuildAur and the paru -Po order parser, tested against
+captures from the Lima VM
+- InstallReason::Keep leaves the install reason to pacman on upgrades
+- Runner::check feeds plain text to a program. A sudoers merge must
+pass visudo -c before it is written
+- Apply waits while a run is in progress
+- the helper reads a close-on-exec copy of stdin
+EOF

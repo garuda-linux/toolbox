@@ -6,8 +6,8 @@ use serde::{Deserialize, Serialize};
 use super::{TargetList, UnitOperation, UnitScope, network, on_units, run};
 use crate::procedure::{Builtin, Command, Invocation, Program};
 use crate::{
-    ConfigReload, EditCopy, Editor, HomeWrite, HopLimit, HostName, PackageName, PingCount,
-    PingTimeout, UnitName, UserConfigEdit,
+    BuildRun, ConfigReload, EditCopy, Editor, HomeWrite, HopLimit, HostName, PackageName,
+    PingCount, PingTimeout, UnitName, UserConfigEdit,
 };
 
 /// Enough history to see why a unit failed without flooding the Console.
@@ -25,6 +25,12 @@ pub enum UserAction {
     /// Console before it builds.
     InstallAur {
         packages: TargetList<PackageName>,
+    },
+    /// Builds one pkgbase with makepkg, as the user. The helper installed
+    /// what it needs before, and installs what it built after.
+    BuildAur {
+        base: PackageName,
+        run: BuildRun,
     },
     EnableUserUnits {
         units: TargetList<UnitName>,
@@ -93,6 +99,10 @@ impl UserAction {
             Self::InstallAur { packages } => vec![run(Command::new(Program::Paru)
                 .args(["--sudo", "pkexec", "-S", "--aur", "--"])
                 .args(packages.iter().map(|package| package.as_str().to_owned())))],
+            Self::BuildAur { base, run } => vec![Invocation::Builtin(Builtin::BuildAur {
+                base: base.clone(),
+                run: run.clone(),
+            })],
             Self::EnableUserUnits { units } => on_units(["--user", "enable", "--now"], units),
             Self::DisableUserUnits { units } => on_units(["--user", "disable", "--now"], units),
             Self::ControlUserUnits { operation, units } => {

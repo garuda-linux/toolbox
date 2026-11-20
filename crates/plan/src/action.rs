@@ -23,14 +23,17 @@ pub use unit::{UnitOperation, UnitScope};
 pub use update::{RemoteAction, Upgrader};
 pub use user::UserAction;
 
-use self::packages::{install, refresh_keyring, remote, remove, remove_orphans, upgrade};
+use self::packages::{
+    install, install_built, install_dependencies, refresh_keyring, remote, remove, remove_orphans,
+    upgrade,
+};
 use crate::procedure::{Builtin, Command, Invocation, Program};
 use crate::sdboot::LoaderChange;
 use crate::{
-    ConfigWrite, DkmsBuild, DnsProvider, FullName, GarudaUpdateFlag, GroupName, GrubSettings,
-    HomeChange, HomeFolder, InstalledSystem, KernelModule, KernelParameters, LocaleEntry,
-    LocaleName, MergeResolve, Mirrorlist, NewUser, PackageName, Password, PlymouthTheme,
-    RepairWork, ShellPath, UnitName, UserName, WifiBackend,
+    BuildRun, ConfigWrite, DkmsBuild, DnsProvider, FullName, GarudaUpdateFlag, GroupName,
+    GrubSettings, HomeChange, HomeFolder, InstallReason, InstalledSystem, KernelModule,
+    KernelParameters, LocaleEntry, LocaleName, MergeResolve, Mirrorlist, NewUser, PackageName,
+    Password, PlymouthTheme, RepairWork, ShellPath, UnitName, UserName, WifiBackend,
 };
 
 /// Work that needs root. Runs in `garuda-toolbox-helper`.
@@ -42,6 +45,15 @@ pub enum RootAction {
     },
     RemovePackages {
         packages: TargetList<PackageName>,
+    },
+    /// What an AUR build needs from the repositories.
+    InstallDependencies {
+        packages: TargetList<PackageName>,
+    },
+    InstallBuilt {
+        run: BuildRun,
+        packages: TargetList<PackageName>,
+        reason: InstallReason,
     },
     UpgradeSystem {
         upgrader: Upgrader,
@@ -289,6 +301,12 @@ impl RootAction {
         match self {
             Self::InstallPackages { packages } => vec![run(install(packages))],
             Self::RemovePackages { packages } => vec![remove(packages)],
+            Self::InstallDependencies { packages } => vec![install_dependencies(packages)],
+            Self::InstallBuilt {
+                run: built,
+                packages,
+                reason,
+            } => vec![install_built(built, packages, *reason)],
             Self::UpgradeSystem { upgrader } => vec![run(upgrade(*upgrader))],
             Self::CleanPackageCache => vec![run(Command::new(Program::Paccache).arg("-ruk0"))],
             Self::RemoveOrphans => vec![remove_orphans()],
@@ -303,8 +321,10 @@ impl RootAction {
             Self::ControlUnits { operation, units } => on_units([operation.as_str()], units),
             Self::MaskUnits { units } => on_units(["mask"], units),
             Self::UnmaskUnits { units } => on_units(["unmask"], units),
-            Self::AddToGroup { user, group } => vec![run(gpasswd("-a", user, group))],
-            Self::RemoveFromGroup { user, group } => vec![run(gpasswd("-d", user, group))],
+            Self::AddToGroup { user, group } => vec![run(accounts::gpasswd("-a", user, group))],
+            Self::RemoveFromGroup { user, group } => {
+                vec![run(accounts::gpasswd("-d", user, group))]
+            }
             Self::SetShell { user, shell } => settings::set_shell(user, shell),
             Self::SetDns { provider } => settings::set_dns(*provider),
             Self::SetHblock { enabled } => settings::set_hblock(*enabled),
@@ -377,8 +397,4 @@ fn systemctl<const N: usize>(args: [&str; N]) -> Command {
 /// The `--` keeps a unit name from being read as an option.
 fn on_units<const N: usize>(verbs: [&str; N], units: &TargetList<UnitName>) -> Vec<Invocation> {
     vec![run(systemctl(verbs).arg("--").args(names(units)))]
-}
-
-fn gpasswd(flag: &str, user: &UserName, group: &GroupName) -> Command {
-    Command::new(Program::Gpasswd).args([flag, user.as_str(), "--", group.as_str()])
 }

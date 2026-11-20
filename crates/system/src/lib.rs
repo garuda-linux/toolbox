@@ -85,9 +85,9 @@ pub use settings::{EtcSettings, SettingsSource};
 #[cfg(any(test, feature = "selftest"))]
 pub use status::FoundCopies;
 pub use status::{
-    AurUpdateSource, Checkupdates, GarudaHealth, HealthIssue, HealthLevel, HealthSource,
-    MergeSource, Pacdiff, PacmanLog, Paru, PendingUpdate, RecentLogSource, Status, StatusSources,
-    UpdateLogSource, UpdateSource, merge_copies, probe_status,
+    AurOrderSource, AurUpdateSource, Checkupdates, GarudaHealth, HealthIssue, HealthLevel,
+    HealthSource, MergeSource, Pacdiff, PacmanLog, Paru, PendingUpdate, RecentLogSource, Status,
+    StatusSources, UpdateLogSource, UpdateSource, merge_copies, probe_status,
 };
 pub use toolbox_exec::locate_editor;
 pub use units::{FailedUnitSource, Systemctl, UnitSource};

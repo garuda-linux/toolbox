@@ -1,3 +1,5 @@
+mod build_run;
+
 use proptest::prelude::*;
 
 use super::{InvalidName, NameKind, Reason};

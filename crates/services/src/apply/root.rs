@@ -4,10 +4,12 @@
 #[cfg(test)]
 mod tests;
 
+use std::os::fd::OwnedFd;
 use std::process::{ExitStatus, Stdio};
 
 use tokio::io::{AsyncBufReadExt as _, AsyncWriteExt as _, BufReader};
-use tokio::process::{Child, ChildStdin};
+use tokio::net::UnixStream;
+use tokio::process::Child;
 use tokio::task::JoinHandle;
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::protocol::{Answer, Event, Mode, Request, decode, encode};
@@ -52,8 +54,8 @@ pub async fn run(steps: &[Step<RootAction>], run: &mut Run<'_>, launcher: &dyn L
         return false;
     }
 
-    let mut child = match start(launcher) {
-        Ok(child) => child,
+    let (mut child, mut stdin) = match start(launcher) {
+        Ok(started) => started,
         Err(error) => {
             run.reporter
                 .helper_failed(HelperFailure::Start, error.to_string());
@@ -61,7 +63,7 @@ pub async fn run(steps: &[Step<RootAction>], run: &mut Run<'_>, launcher: &dyn L
         }
     };
 
-    let (Some(mut stdin), Some(stdout)) = (child.stdin.take(), child.stdout.take()) else {
+    let Some(stdout) = child.stdout.take() else {
         run.reporter
             .helper_failed(HelperFailure::NoPipes, String::new());
         return false;
@@ -158,24 +160,36 @@ fn missing_secret(request: &Request) -> Option<StepId> {
         .map(|step| step.id)
 }
 
-fn start(launcher: &dyn Launcher) -> Result<Child, NotStarted> {
+/// The helper's stdin is a socket, not a pipe: the kernel names the user
+/// on its other end, whose built AUR packages the helper may install.
+fn start(launcher: &dyn Launcher) -> Result<(Child, UnixStream), NotStarted> {
     let mut command = launcher.command();
-    command
-        .stdin(Stdio::piped())
+    let program = command
+        .as_std()
+        .get_program()
+        .to_string_lossy()
+        .into_owned();
+
+    let failed = |source| NotStarted {
+        program: program.clone(),
+        source,
+    };
+
+    let (ours, theirs) = std::os::unix::net::UnixStream::pair().map_err(failed)?;
+    ours.set_nonblocking(true).map_err(failed)?;
+    let ours = UnixStream::from_std(ours).map_err(failed)?;
+
+    let child = command
+        .stdin(Stdio::from(OwnedFd::from(theirs)))
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         // Reaches pkexec while it still asks. The root helper cannot be
         // signalled by the user: it ends because its stdin closes.
         .kill_on_drop(true)
         .spawn()
-        .map_err(|source| NotStarted {
-            program: command
-                .as_std()
-                .get_program()
-                .to_string_lossy()
-                .into_owned(),
-            source,
-        })
+        .map_err(failed)?;
+
+    Ok((child, ours))
 }
 
 /// An unreadable line is none. While too much output is unread it waits,
@@ -277,7 +291,7 @@ fn forward_stderr(child: &mut Child) -> Option<JoinHandle<String>> {
 }
 
 /// A failed write means the helper is gone. Its exit tells the rest.
-async fn send<T>(stdin: &mut ChildStdin, message: &T)
+async fn send<T>(stdin: &mut UnixStream, message: &T)
 where
     T: serde::Serialize + Sync,
 {
@@ -288,7 +302,7 @@ where
     write(stdin, line.as_bytes()).await;
 }
 
-async fn write(stdin: &mut ChildStdin, bytes: &[u8]) {
+async fn write(stdin: &mut UnixStream, bytes: &[u8]) {
     if let Err(error) = stdin.write_all(bytes).await {
         tracing::debug!("cannot write to the helper: {error}");
     }
@@ -297,7 +311,7 @@ async fn write(stdin: &mut ChildStdin, bytes: &[u8]) {
 /// The secret of every step that needs one, each on its own line after
 /// the request and outside its JSON, so no encoder, decoder or log on
 /// either side handles it. A dry run sends none.
-async fn send_secrets(stdin: &mut ChildStdin, request: &Request) {
+async fn send_secrets(stdin: &mut UnixStream, request: &Request) {
     let needed = request.secret_steps();
     for step in &request.steps {
         if !needed.contains(&step.id) {

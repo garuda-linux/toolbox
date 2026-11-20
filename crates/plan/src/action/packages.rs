@@ -1,9 +1,30 @@
 use super::{RemoteAction, TargetList, Upgrader, names};
-use crate::PackageName;
-use crate::procedure::{Command, Invocation, Program};
+use crate::procedure::{Builtin, Command, Invocation, Program};
+use crate::{BuildRun, InstallReason, PackageName};
 
 pub(super) fn install(packages: &TargetList<PackageName>) -> Command {
     pacman(["-S", "--needed", "--noconfirm", "--"]).args(names(packages))
+}
+
+/// Only what is missing, so an installed package named here, even an
+/// outdated one, keeps the reason it was installed for.
+pub(super) fn install_dependencies(packages: &TargetList<PackageName>) -> Invocation {
+    Invocation::RunWithUnmetFrom {
+        test: pacman(["-T", "--"]).args(names(packages)),
+        run: pacman(["-S", "--needed", "--asdeps", "--noconfirm", "--"]),
+    }
+}
+
+pub(super) fn install_built(
+    run: &BuildRun,
+    packages: &TargetList<PackageName>,
+    reason: InstallReason,
+) -> Invocation {
+    Invocation::Builtin(Builtin::InstallBuilt {
+        run: run.clone(),
+        packages: packages.clone(),
+        reason,
+    })
 }
 
 /// `-Rn` without `-s`, so each round removes only names the helper

@@ -2,6 +2,8 @@
 //! that must not reach the display. `toolbox-aur` builds it, the Packages
 //! page and the command line read it.
 
+pub mod order;
+
 use serde::{Deserialize, Serialize};
 use toolbox_plan::PackageName;
 use toolbox_text::OutsideText;

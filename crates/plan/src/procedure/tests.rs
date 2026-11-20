@@ -81,3 +81,16 @@ fn a_command_leaves_out_the_note_its_display_keeps() {
         format!("rm /{DATABASE_LOCK}  # only while pacman is not running")
     );
 }
+
+#[test]
+fn unmet_targets_from_a_test_show_as_command_substitution() {
+    let invocation = Invocation::RunWithUnmetFrom {
+        test: Command::new(Program::Pacman).args(["-T", "--", "cmake"]),
+        run: Command::new(Program::Pacman).arg("-S"),
+    };
+
+    assert_eq!(
+        invocation.to_string(),
+        "pacman -S $(pacman -T -- cmake)  # only the packages pacman -T names as missing, so an installed one keeps its install reason"
+    );
+}

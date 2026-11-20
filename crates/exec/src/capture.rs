@@ -28,7 +28,8 @@ use crate::pty_runner::Environment;
 pub const MAX_ERROR_BYTES: usize = 64 << 10;
 
 /// `PIPE_BUF`, what every pipe holds even when the user's pipes were
-/// shrunk. Input is written before the wait, so it must never block.
+/// shrunk. Input is written before the wait, so it must never block,
+/// unless it is [`Policy::written_apart`].
 pub const MAX_STDIN_BYTES: usize = 4096;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -39,6 +40,7 @@ pub struct Policy<'input> {
     error_limit: usize,
     cap_is_error: bool,
     stdin: Option<&'input [u8]>,
+    apart: bool,
     identified: bool,
 }
 
@@ -102,6 +104,7 @@ impl<'input> Policy<'input> {
             error_limit: MAX_ERROR_BYTES,
             cap_is_error: false,
             stdin: None,
+            apart: false,
             identified: false,
         }
     }
@@ -142,6 +145,16 @@ impl<'input> Policy<'input> {
     #[must_use = "a policy is only described, nothing runs"]
     pub const fn fed(mut self, input: &'input [u8]) -> Self {
         self.stdin = Some(input);
+        self
+    }
+
+    /// The input is written by a thread of its own, so it may be longer
+    /// than a pipe holds and the wait sees the deadline and a cancel while
+    /// a program has not read it yet. That thread gets a copy, which is
+    /// never overwritten: never for a secret.
+    #[must_use = "a policy is only described, nothing runs"]
+    pub const fn written_apart(mut self) -> Self {
+        self.apart = true;
         self
     }
 
@@ -252,9 +265,10 @@ pub fn run_captured(
     policy: &Policy<'_>,
     cancel: &Arc<AtomicBool>,
 ) -> Result<Exited, CaptureError> {
-    if policy
-        .stdin
-        .is_some_and(|input| input.len() > MAX_STDIN_BYTES)
+    if !policy.apart
+        && policy
+            .stdin
+            .is_some_and(|input| input.len() > MAX_STDIN_BYTES)
     {
         return Err(CaptureError::Failed(io::Error::new(
             io::ErrorKind::InvalidInput,

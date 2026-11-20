@@ -22,6 +22,10 @@ pub const SNAPPER_ROOT_CONFIG: &str = "etc/snapper/configs/root";
 
 const BACKUP_SECTION: &str = "%BACKUP%";
 
+const SUDOERS: &str = "/etc/sudoers";
+
+const SUDOERS_D: &str = "/etc/sudoers.d/";
+
 const MERGE_WHY: &str =
     "only when pacman lists the file as a backup file and neither file changed meanwhile";
 
@@ -206,7 +210,7 @@ impl MergeResolve {
         let original = &self.copy.original;
         let backup = original.backup();
 
-        match (&self.choice.resolution, self.choice.current) {
+        let command = match (&self.choice.resolution, self.choice.current) {
             (Resolution::KeepCurrent, _) => format!("rm {copy}"),
             (Resolution::TakeCopy, None) => format!("mv {copy} {original}"),
             (Resolution::TakeCopy, Some(_)) => {
@@ -216,7 +220,29 @@ impl MergeResolve {
                 "write {original} ({} bytes, merged with {copy}), the old one kept as /{backup}, then rm {copy}",
                 text.as_str().len()
             ),
+        };
+
+        match self.syntax_check() {
+            Some(check) => format!(
+                "{command}, if {} -c accepts the new text",
+                check.program().name()
+            ),
+            None => command,
         }
+    }
+
+    /// The check the new text must pass before it takes the file's place.
+    /// sudo refuses every rule while one of its files does not parse, so
+    /// a broken sudoers file would take away the way to repair it.
+    pub fn syntax_check(&self) -> Option<Command> {
+        let puts_text = !matches!(self.choice.resolution, Resolution::KeepCurrent);
+        let original = self.copy.original.as_str();
+        let sudoers = original == SUDOERS
+            || original
+                .strip_prefix(SUDOERS_D)
+                .is_some_and(|name| !name.contains('/'));
+
+        (puts_text && sudoers).then(|| Command::new(Program::Visudo).args(["-c", "-f", "-"]))
     }
 
     pub const fn why() -> &'static str {

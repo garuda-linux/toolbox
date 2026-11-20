@@ -36,6 +36,7 @@ const MAX_CHARSET_CHARS: usize = 32;
 /// The kernel's `MODULE_NAME_LEN` is 56 with the final NUL.
 const MAX_KERNEL_MODULE_CHARS: usize = 55;
 const MAX_DKMS_CHARS: usize = 64;
+const MAX_BUILD_RUN_CHARS: usize = 32;
 const MAX_KERNEL_RELEASE_CHARS: usize = 64;
 const MAX_HOST_CHARS: usize = 253;
 
@@ -50,8 +51,11 @@ pub type DkmsModuleName = Name<DkmsModuleRule>;
 pub type DkmsVersion = Name<DkmsVersionRule>;
 pub type KernelRelease = Name<KernelReleaseRule>;
 pub type HostName = Name<HostRule>;
+/// The folder of one AUR build run below `~/.cache/garuda-toolbox/aur-built`.
+pub type BuildRun = Name<BuildRunRule>;
 
 pub struct PackageRule;
+pub struct BuildRunRule;
 pub struct UnitRule;
 /// Users and groups share shadow-utils' rule but stay distinct types, so a
 /// user can never be passed where a group belongs.
@@ -85,6 +89,16 @@ impl Rule for PackageRule {
         check_characters(value, |character| {
             character.is_ascii_alphanumeric() || "@._+-".contains(character)
         })
+    }
+}
+
+impl Rule for BuildRunRule {
+    const KIND: NameKind = NameKind::BuildRun;
+
+    fn check(value: &str) -> Result<(), Reason> {
+        let lower = |character: char| character.is_ascii_lowercase() || character.is_ascii_digit();
+        check_shape(value, MAX_BUILD_RUN_CHARS, lower)?;
+        check_characters(value, lower)
     }
 }
 

@@ -2,6 +2,7 @@ mod budget;
 mod finish;
 mod secrets;
 mod size;
+mod stdin;
 
 use std::path::Path;
 use std::sync::Arc;

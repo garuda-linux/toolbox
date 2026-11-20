@@ -3,11 +3,12 @@ use std::io;
 
 use toolbox_plan::procedure::{Builtin, Command, Program};
 use toolbox_plan::protocol::{Failure, Outcome};
-use toolbox_plan::{EditCopy, Editor, SecretInput, StepId, UserAction};
+use toolbox_plan::{ConfigText, EditCopy, Editor, SecretInput, StepId, UserAction};
 
 use super::super::targets::repeated;
 use super::super::{Procedure, run_once};
 use super::FakeRunner;
+use crate::QueryKind;
 use crate::apply::{EventSink, Runner};
 
 #[test]
@@ -67,7 +68,7 @@ fn a_failing_query_fails_its_step() {
             Outcome::Succeeded
         }
 
-        fn query(&mut self, _command: &Command) -> io::Result<Vec<String>> {
+        fn query(&mut self, _command: &Command, _kind: QueryKind) -> io::Result<Vec<String>> {
             Err(io::Error::other("pacman is not installed"))
         }
 
@@ -89,6 +90,16 @@ fn a_failing_query_fails_its_step() {
             _step: StepId,
             _command: &Command,
             _input: &SecretInput,
+            _sink: &mut dyn EventSink,
+        ) -> Outcome {
+            Outcome::Succeeded
+        }
+
+        fn check(
+            &mut self,
+            _step: StepId,
+            _command: &Command,
+            _text: &ConfigText,
             _sink: &mut dyn EventSink,
         ) -> Outcome {
             Outcome::Succeeded

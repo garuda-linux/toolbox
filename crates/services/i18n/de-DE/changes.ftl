@@ -37,6 +37,7 @@ change-unfinished = Nicht abgeschlossen
 changes-wait-read = Übernehmen wartet, bis das System gelesen ist.
 changes-wait-locks = Übernehmen wartet auf den Sperrstatus der Konten. Die Seite Benutzer und Gruppen meldet, wenn er nicht gelesen werden kann.
 changes-wait-aur = Übernehmen wartet auf die Paketliste des AUR. Die Seite Pakete meldet, wenn sie nicht gelesen werden kann.
+changes-wait-running = Übernehmen wartet, bis die laufenden Änderungen abgeschlossen sind.
 changes-unread-locks = Übernehmen wartet: Der Sperrstatus der Konten konnte nicht gelesen werden.
 changes-unread-aur = Übernehmen wartet: Die Paketliste des AUR konnte nicht gelesen werden.
 
@@ -45,6 +46,7 @@ changes-unread-aur = Übernehmen wartet: Die Paketliste des AUR konnte nicht gel
 change-account-lock = Konto { $name } sperren
 change-account-unlock = Konto { $name } entsperren
 change-clean-package-cache = Paket-Cache leeren
+change-config-merge-discard = { $file } beibehalten und Sicherung { $copy } löschen
 change-config-merge-keep = { $file } beibehalten und { $copy } löschen
 change-config-merge-take = { $file } durch { $copy } ersetzen
 change-config-merge-write = { $copy } in { $file } übernehmen

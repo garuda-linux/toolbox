@@ -5,11 +5,11 @@ apply everywhere.
 
 ## Who runs what
 
-| Runs as             | What                                                                                                                                                                                                                               |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User                | the app, probes, user units and journals, user configuration files, `paru` (asks for root itself with `--sudo pkexec`), the editor, `rfkill`, `ping`, `traceroute`, `lsblk`, `bootctl list --json=short` where the ESP is readable |
-| Root, through D-Bus | login1 `Reboot`, systemd1. Both check polkit themselves                                                                                                                                                                            |
-| Root, helper        | everything else, as typed `RootAction`s, one `pkexec` per apply                                                                                                                                                                    |
+| Runs as             | What                                                                                                                                                                                                                                                                         |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User                | the app, probes, user units and journals, user configuration files, `paru` (asks for root itself with `--sudo pkexec`), `paru -Po` and `makepkg` of an AUR build, the editor, `rfkill`, `ping`, `traceroute`, `lsblk`, `bootctl list --json=short` where the ESP is readable |
+| Root, through D-Bus | login1 `Reboot`, systemd1. Both check polkit themselves                                                                                                                                                                                                                      |
+| Root, helper        | everything else, as typed `RootAction`s, one `pkexec` per apply, `pacman -U` of what the user built ([AUR installs](#aur-installs))                                                                                                                                          |
 
 The app refuses to start as root.
 
@@ -28,11 +28,20 @@ The app refuses to start as root.
 - Programs run as argv at their fixed path (`Program::path`) with a clean
   environment: `PATH` is `/usr/local/sbin:/usr/local/bin:/usr/bin`
   (`SYSTEM_PATH`, `crates/exec/src/pty_runner.rs`), the locale fixed.
+- `Runner::feed` is for secrets only ([Secrets](#secrets)).
+  `Runner::check` gives visudo a plain text on pipes, used for nothing
+  else (`crates/exec/src/check.rs`). Its output is not scrubbed. Its
+  stdin is written by its own thread (`Policy::written_apart`), so no
+  pipe size limits the text. The stop flag and 120 s end it.
 - Only a development build looks for a missing program elsewhere, in
   `/run/current-system/sw/bin` and `/run/wrappers/bin`, never in the
   caller's `PATH` (`crates/exec/src/located.rs`).
 - A closed stdin interrupts the program and skips the rest. Every client
   keeps stdin open until the `done` event.
+- The app's stdin of `apply` is a socket pair it makes. The helper takes
+  the caller from `SO_PEERCRED` of stdin (`app/helper/src/read.rs`).
+  Root, a system account and `nobody` are no caller. A pipe names none,
+  and then `InstallBuilt` fails.
 - SIGTERM and SIGHUP interrupt the program, skip the rest and still run
   the `Invocation::Always` part. Programs run in their own session and
   never get the helper's signal. SIGINT is ignored, because Ctrl+C reaches
@@ -120,6 +129,48 @@ compiled in, so no missing file can empty it.
   protected main package is allowed: its switch stays on.
 - A pacman group name expands in the helper. The app blocks it only
   because it is no installed package.
+
+## AUR installs
+
+paru resolves and fetches, `makepkg` builds as the user, the helper
+installs what was built (`crates/exec/src/aur.rs`). The request carries a
+`BuildRun` and package names, never a path.
+
+- The caller comes from `SO_PEERCRED` of stdin, its home from
+  `/etc/passwd`.
+- The run folder `~/.cache/garuda-toolbox/aur-built/<run>` is reached
+  from the home without following a link. Every folder on the way and
+  every file must be the caller's own and not writable by group or
+  others.
+- A file is matched by the package name in its file name, ending in
+  `.pkg.tar` and nothing or a known compression. A `.sig` beside it is no
+  package. Each package needs exactly one file.
+- The content is not checked: whoever passed the password installs what
+  that user built.
+- Before each stage the helper empties the whole store
+  `/var/cache/garuda-toolbox/aur`, other runs' folders too. A store entry
+  that is no folder, or a run folder that holds anything but regular
+  files, fails the step. Nothing is followed or recursed into.
+- The files are copied into root's `/var/cache/garuda-toolbox/aur/<run>`
+  (0644) before `pacman -U`, so no file can be swapped after the check.
+  The run's folder is removed after pacman, whatever pacman did.
+- `InstallReason::Keep` passes no `--asdeps` or `--asexplicit`, so an
+  upgrade keeps the reason pacman has.
+- `InstallDependencies` runs `pacman -T` first and passes only the names
+  it prints to `-S --asdeps`, so an installed package keeps its reason.
+  Each line must be a `PackageName` it was asked about. Exit 127 with
+  names is an answer of this query alone (`QueryKind::Deptest`).
+
+Limits:
+
+- A symlinked `~/.cache` or `/home` is refused.
+- An account without an `/etc/passwd` entry (systemd-homed, LDAP) is
+  refused. For those the app is to plan the old `paru --sudo pkexec`
+  path. That planner is not built yet.
+- The helper holds an exclusive `flock` on the store from before the
+  stage until pacman ended. A second helper fails its step
+  (`StageError::Busy`) and touches nothing. The copy has no size limit, as
+  pacman's own cache has none.
 
 ## Files the helper writes
 
@@ -212,6 +263,9 @@ helper. No editor runs as root.
 - A write must also pass `ConfigFilePath::is_writable`
   (`crates/plan/src/config_file/writable.rs`). `toolbox-catalog` refuses a
   writable entry missing there, `catalog-validate` a line no entry needs.
+  The one exception is a merge of pacman's copies: `ResolveMerge` writes
+  any backup file pacman lists, also one outside the table
+  ([Merges](#merges-of-pacmans-copies)).
 - A fetch must also pass `ConfigFilePath::is_readable`: the write table or
   `READABLE_CONFIG_FILES` and `READABLE_CONFIG_FOLDERS`
   (`crates/plan/src/config_file/readable.rs`). That file is generated by
@@ -219,7 +273,8 @@ helper. No editor runs as root.
   `--check` fails when it is stale. The asked path is checked before any
   look at the file (exit 2), the real path after the links (`outside`).
   The deny list stays the second check.
-- A `read_only = true` entry is a view only. The helper refuses a write.
+- A `read_only = true` entry is a view only. The helper refuses a write,
+  except a merge of pacman's copy of it.
 - `toolbox_exec::config_file::resolve` follows symlinks by hand (at most
   40). The asked path, every followed link and the result must each be a
   `ConfigFilePath`. A dangling link or a circle is refused.
@@ -271,6 +326,15 @@ keeps the mode. A missing file is never created.
   (`MergeChoice::fits`, checked on decode).
 - Writes go through `write_real` (backup, owner and mode kept). A copy
   without its file is renamed in with `RENAME_NOREPLACE`.
+- Text that takes the place of `/etc/sudoers` or a file directly in
+  `/etc/sudoers.d/` passes `visudo -c -f -` first, after the fingerprints
+  and before the write or rename (`MergeResolve::syntax_check`). Keeping
+  the current file runs no check.
+- A refused text or a missing `/usr/bin/visudo` fails the step. Both
+  files stay untouched.
+- `is_writable` is not asked. A merge writes every backup file pacman
+  lists, also `read_only` ones and files outside the write table, such as
+  `/etc/sudoers`, `/etc/passwd` and `/etc/group`. That is intended.
 - `fetch` hands out copies and their backup files under the same check
   (`is_fetchable`).
 - `SnapshotBeforeMerges` runs snapper only where it and

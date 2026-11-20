@@ -9,13 +9,15 @@ use std::sync::mpsc::{Receiver, RecvTimeoutError, TryRecvError};
 use std::time::{Duration, Instant};
 use std::{io, thread};
 
+pub use query::QueryKind;
 use toolbox_plan::procedure::{Builtin, Command};
 use toolbox_plan::protocol::{Answer, Event, Outcome};
-use toolbox_plan::{SecretInput, StepId};
+use toolbox_plan::{Caller, ConfigText, SecretInput, StepId};
 use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, PtyCommand, Session, TerminalSize};
 
 use crate::apply::{EventSink, Runner};
 use crate::builtin::{self, SYSTEM_ROOT};
+use crate::check;
 use crate::feed::feed;
 use crate::report::{ended, failure, note};
 
@@ -66,6 +68,8 @@ pub struct PtyRunner {
     guard: Guard,
     /// The user's home for edits of their config files, `None` in the helper.
     home: Option<PathBuf>,
+    /// Who started the helper, as the kernel names the peer of its stdin.
+    caller: Option<Caller>,
     /// Set from outside to cancel like [`Answer::Cancel`]: the helper's
     /// signal handlers, which can do no more than set a flag.
     stop: Option<Arc<AtomicBool>>,
@@ -82,6 +86,7 @@ impl PtyRunner {
             finishing: false,
             guard: Guard::Cancellable,
             home: None,
+            caller: None,
             stop: None,
         }
     }
@@ -91,6 +96,13 @@ impl PtyRunner {
     #[must_use = "builder methods return the changed runner"]
     pub fn with_home(mut self, home: PathBuf) -> Self {
         self.home = Some(home);
+        self
+    }
+
+    /// The account whose built AUR packages the helper may install.
+    #[must_use = "builder methods return the changed runner"]
+    pub const fn for_caller(mut self, caller: Option<Caller>) -> Self {
+        self.caller = caller;
         self
     }
 
@@ -195,6 +207,12 @@ impl PtyRunner {
         }
     }
 
+    /// Whether a cancel came before the next program starts.
+    fn cancelled_before(&mut self) -> bool {
+        self.take_answers(None);
+        self.cancelled
+    }
+
     fn execute(&mut self, step: StepId, command: &Command, sink: &mut dyn EventSink) -> Outcome {
         let mut session = match Session::spawn(&pty_command(
             &crate::located::program(command.program(), self.environment),
@@ -217,9 +235,7 @@ impl PtyRunner {
 
 impl Runner for PtyRunner {
     fn run(&mut self, step: StepId, command: &Command, sink: &mut dyn EventSink) -> Outcome {
-        self.take_answers(None);
-
-        if self.cancelled {
+        if self.cancelled_before() {
             return Outcome::Cancelled;
         }
 
@@ -238,11 +254,11 @@ impl Runner for PtyRunner {
 
     /// See [`query::run`]. The stop flag ends it, an [`Answer::Cancel`]
     /// is only read once it returned.
-    fn query(&mut self, command: &Command) -> io::Result<Vec<String>> {
+    fn query(&mut self, command: &Command, kind: QueryKind) -> io::Result<Vec<String>> {
         let cancel = self.stop.clone().unwrap_or_default();
 
         let program = crate::located::program(command.program(), self.environment);
-        query::run(program, command, self.environment, &cancel)
+        query::run(program, command, kind, self.environment, &cancel)
     }
 
     fn builtin(&mut self, step: StepId, builtin: &Builtin, sink: &mut dyn EventSink) -> Outcome {
@@ -262,13 +278,34 @@ impl Runner for PtyRunner {
         input: &SecretInput,
         sink: &mut dyn EventSink,
     ) -> Outcome {
-        self.take_answers(None);
-
-        if self.cancelled {
+        if self.cancelled_before() {
             return Outcome::Cancelled;
         }
 
         feed(step, command, self.environment, input, sink)
+    }
+
+    /// See [`check::check`]. The stop flag ends it as it ends a query, an
+    /// [`Answer::Cancel`] is only read once it returned.
+    fn check(
+        &mut self,
+        step: StepId,
+        command: &Command,
+        text: &ConfigText,
+        sink: &mut dyn EventSink,
+    ) -> Outcome {
+        if self.cancelled_before() {
+            return Outcome::Cancelled;
+        }
+
+        let cancel = self.stop.clone().unwrap_or_default();
+        let checked = check::check(command, self.environment, text, &cancel);
+
+        check::report(step, command, check::CHECK_DEADLINE, checked, sink)
+    }
+
+    fn caller(&self) -> Option<Caller> {
+        self.caller
     }
 
     fn finish_requested(&mut self) -> bool {

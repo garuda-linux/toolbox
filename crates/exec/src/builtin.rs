@@ -38,7 +38,7 @@ pub use user_config::edit_user_config;
 use self::accounts::require_free_home;
 use crate::apply::EventSink;
 use crate::report::{failure, note};
-use crate::{config_file, merge, repair, secure};
+use crate::{config_file, repair, secure};
 
 pub const PROC: &str = "proc";
 pub const SYSTEM_ROOT: &str = "/";
@@ -105,7 +105,6 @@ pub fn execute(
         Builtin::RequireFreeHome(who, folder) => require_free_home(root, step, who, folder, sink),
         Builtin::RequireSafeHome(folder) => accounts::require_safe_home(root, step, folder, sink),
         Builtin::WriteConfigFile(write) => config_file::execute(root, step, write, sink),
-        Builtin::ResolveMerge(resolve) => merge::execute(root, step, resolve, sink),
         Builtin::WriteHomeFile(write) => home_write(home, step, write, sink),
         Builtin::EditModprobeBlacklist { module, on } => changed(
             step,
@@ -130,6 +129,13 @@ pub fn execute(
         Builtin::RebuildInitramfs { root: _ }
         | Builtin::RebuildUkis { root: _ }
         | Builtin::SnapshotBeforeMerges
+        | Builtin::ResolveMerge(_)
+        | Builtin::InstallBuilt {
+            run: _,
+            packages: _,
+            reason: _,
+        }
+        | Builtin::BuildAur { base: _, run: _ }
         | Builtin::RepairBootLoader { system: _, work: _ } => failure(step, sink, NEEDS_RUNNER),
     }
 }

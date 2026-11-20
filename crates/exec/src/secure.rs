@@ -16,14 +16,14 @@ use rustix::fs::{AtFlags, FileType, Mode, OFlags, ResolveFlags};
 use rustix::io::Errno;
 use toolbox_fs::{Owner, Permissions, Replace};
 
-const DIR_FLAGS: OFlags = OFlags::DIRECTORY
+pub const DIR_FLAGS: OFlags = OFlags::DIRECTORY
     .union(OFlags::RDONLY)
     .union(OFlags::NOFOLLOW)
     .union(OFlags::CLOEXEC);
 
 const RESOLVE: ResolveFlags = ResolveFlags::NO_SYMLINKS.union(ResolveFlags::BENEATH);
 
-const READ_FLAGS: OFlags = OFlags::RDONLY
+pub const READ_FLAGS: OFlags = OFlags::RDONLY
     .union(OFlags::NOFOLLOW)
     .union(OFlags::CLOEXEC);
 

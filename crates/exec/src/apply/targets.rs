@@ -9,6 +9,7 @@ use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{PackageName, StepId, protection};
 
 use super::{EventSink, Runner};
+use crate::QueryKind;
 use crate::report::{failure, note};
 
 /// Rounds until the query names nothing new to remove. A protected
@@ -25,7 +26,7 @@ pub(super) fn repeated(
     let mut last = Vec::new();
 
     loop {
-        let targets = match targets(step, query, runner, sink) {
+        let targets = match targets(step, query, QueryKind::Listing, runner, sink) {
             Ok(targets) => targets,
             Err(failed) => return failed,
         };
@@ -81,7 +82,7 @@ pub(super) fn unless_protected(
     runner: &mut dyn Runner,
     sink: &mut dyn EventSink,
 ) -> Outcome {
-    let targets = match targets(step, preview, runner, sink) {
+    let targets = match targets(step, preview, QueryKind::Listing, runner, sink) {
         Ok(targets) => targets,
         Err(failed) => return failed,
     };
@@ -106,14 +107,51 @@ pub(super) fn unless_protected(
     )
 }
 
+/// Each line must be one of the names `test` asked about, as they become
+/// arguments of a root `pacman -S`.
+pub(super) fn unmet(
+    step: StepId,
+    test: &Command,
+    run: &Command,
+    runner: &mut dyn Runner,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    let unmet = match targets(step, test, QueryKind::Deptest, runner, sink) {
+        Ok(unmet) => unmet,
+        Err(failed) => return failed,
+    };
+
+    if let Some(stranger) = unmet
+        .iter()
+        .find(|name| !test.arguments().iter().any(|asked| asked == name.as_str()))
+    {
+        return failure(
+            step,
+            sink,
+            &format!("{test} named {stranger}, which it was not asked about"),
+        );
+    }
+
+    if unmet.is_empty() {
+        return Outcome::Skipped;
+    }
+
+    runner.run(
+        step,
+        &run.clone().args(unmet.iter().map(PackageName::as_str)),
+        sink,
+    )
+}
+
 fn targets(
     step: StepId,
     query: &Command,
+    kind: QueryKind,
     runner: &mut dyn Runner,
     sink: &mut dyn EventSink,
 ) -> Result<Vec<PackageName>, Outcome> {
     let lines = runner
-        .query(query)
+        .query(query, kind)
         .map_err(|error| failure(step, sink, &format!("{query} failed: {error}")))?;
 
     lines

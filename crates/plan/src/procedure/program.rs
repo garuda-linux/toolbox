@@ -36,6 +36,7 @@ pub enum Program {
     KernelInstallUki,
     Less,
     LocaleGen,
+    Makepkg,
     Mkinitcpio,
     Modprobe,
     Mount,
@@ -57,6 +58,7 @@ pub enum Program {
     Useradd,
     Userdel,
     Usermod,
+    Visudo,
     // The editors of `crate::Editor`, which only user steps run.
     Emacs,
     Helix,
@@ -71,6 +73,10 @@ pub enum Program {
 }
 
 impl Program {
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one arm per program, a new program fails to compile until it names its path"
+    )]
     pub const fn path(self) -> &'static str {
         match self {
             Self::Bootctl => "/usr/bin/bootctl",
@@ -99,6 +105,7 @@ impl Program {
             Self::KernelInstallUki => "/usr/lib/garuda/kernel-install-uki",
             Self::Less => "/usr/bin/less",
             Self::LocaleGen => "/usr/bin/locale-gen",
+            Self::Makepkg => "/usr/bin/makepkg",
             Self::Mkinitcpio => "/usr/bin/mkinitcpio",
             Self::Modprobe => "/usr/bin/modprobe",
             Self::Mount => "/usr/bin/mount",
@@ -120,6 +127,7 @@ impl Program {
             Self::Useradd => "/usr/bin/useradd",
             Self::Userdel => "/usr/bin/userdel",
             Self::Usermod => "/usr/bin/usermod",
+            Self::Visudo => "/usr/bin/visudo",
             Self::Emacs => "/usr/bin/emacs",
             Self::Helix => "/usr/bin/helix",
             Self::Joe => "/usr/bin/joe",

@@ -52,9 +52,11 @@ that part cannot be read, remove the change from the list.
 The [Console](console.md) opens over the page. Its step list shows every
 step with its command, and the terminal shows what the programs print.
 When everything ran, the Console's header says **All changes applied** and
-the applied changes leave the queue. A step that found nothing to do, such
-as a file that already is as wanted, shows **Nothing to do**, and the
-header then says how many steps had nothing to do.
+the applied changes leave the queue. Changes you queue while it runs wait
+for the next apply: **Apply** is greyed out until the run is done. A step
+that found nothing to do, such as a file that already is as wanted, shows
+**Nothing to do**, and the header then says how many steps had nothing to
+do.
 
 > **Note:** If a step fails, the steps after it do not run. The header says
 > **Stopped before all changes were applied** and the failed step

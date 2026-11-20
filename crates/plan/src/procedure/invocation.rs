@@ -16,6 +16,12 @@ pub enum Invocation {
         query: Command,
         run: Command,
     },
+    /// Runs `test`, `pacman -T` of the asked names, then `run` with every
+    /// line it prints as an extra argument. Skipped when it prints nothing.
+    RunWithUnmetFrom {
+        test: Command,
+        run: Command,
+    },
     /// Runs `preview`, whose lines name every package `run` removes, and
     /// fails the step without running `run` when one is protected.
     RunUnlessItRemovesProtected {
@@ -60,6 +66,9 @@ impl Invocation {
     pub const fn why(&self) -> Option<&'static str> {
         match self {
             Self::RunWithTargetsFrom { query: _, run: _ } => Some("again until it prints nothing"),
+            Self::RunWithUnmetFrom { test: _, run: _ } => Some(
+                "only the packages pacman -T names as missing, so an installed one keeps its install reason",
+            ),
             Self::Always(_)
             | Self::Cleanup {
                 command: _,
@@ -90,7 +99,10 @@ impl Invocation {
                 leftover: _,
             }
             | Self::Feed { command, input: _ } => fmt::Display::fmt(command, out),
-            Self::RunWithTargetsFrom { query, run } => write!(out, "{run} $({query})"),
+            Self::RunWithTargetsFrom { query: test, run }
+            | Self::RunWithUnmetFrom { test, run } => {
+                write!(out, "{run} $({test})")
+            }
             Self::Builtin(builtin) if shown == Shown::WithNotes => fmt::Display::fmt(builtin, out),
             Self::Builtin(builtin) => builtin.write_command(out, shown),
         }

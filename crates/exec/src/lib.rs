@@ -4,8 +4,10 @@
 //! behave the same in the Console.
 
 mod apply;
+mod aur;
 mod builtin;
 mod capture;
+mod check;
 mod config_file;
 mod feed;
 mod initramfs;
@@ -31,6 +33,6 @@ pub use config_file::{
 };
 pub use located::{editor as locate_editor, program as locate_program};
 pub use merge::{MergeError, Resolved, is_backup, is_fetchable, resolve as resolve_merge};
-pub use pty_runner::{Environment, PtyRunner};
+pub use pty_runner::{Environment, PtyRunner, QueryKind};
 pub use repair::{PreflightError, preflight};
 pub use sdboot::sdboot_menu;

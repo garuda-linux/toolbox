@@ -1,3 +1,5 @@
+mod aur;
+
 use super::testing::{shown, shown_user, units};
 use super::{RemoteAction, RootAction, TargetList, Upgrader, UserAction};
 use crate::procedure::{Builtin, Invocation};

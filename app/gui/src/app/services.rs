@@ -167,6 +167,10 @@ impl App {
     /// checked a restored change fails closed. A read that failed says
     /// so, as the Changes popover then offers to read it again.
     pub(super) fn apply_held(&self) -> Option<&'static str> {
+        if self.console.running() {
+            return Some("changes-wait-running");
+        }
+
         if self.first_read() {
             return Some("changes-wait-read");
         }

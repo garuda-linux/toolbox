@@ -1,15 +1,20 @@
+mod sudoers;
+
 use std::fs;
 use std::os::unix::fs::{PermissionsExt as _, symlink};
+use std::path::Path;
 
 use tempfile::TempDir;
-use toolbox_plan::procedure::Builtin;
+use toolbox_plan::procedure::Command;
 use toolbox_plan::protocol::Outcome;
 use toolbox_plan::testing::merge::{PACMAN_FILES, SUDO_FILES};
-use toolbox_plan::{Fingerprint, MergeChoice, MergeCopy, MergeResolve, Resolution};
+use toolbox_plan::{
+    ConfigText, Fingerprint, MergeChoice, MergeCopy, MergeResolve, Resolution, StepId,
+};
 
-use super::{MergeError, Resolved, is_backup, is_fetchable, resolve, snapshot};
+use super::{MergeError, Resolved, execute, is_backup, is_fetchable, resolve, snapshot};
 use crate::config_file::WriteError;
-use crate::test_support::{BACKUPS, assert_failed, path, run_builtin, text};
+use crate::test_support::{BACKUPS, assert_failed, path, printed, text};
 
 const CURRENT: &str = "#Color\nParallelDownloads = 5\n";
 const NEW: &str = "Color\nParallelDownloads = 5\n";
@@ -41,11 +46,21 @@ fn system() -> TempDir {
 }
 
 fn merge(copy: &str, resolution: Resolution, current: Option<&str>) -> MergeResolve {
+    merge_of(copy, NEW, resolution, current)
+}
+
+/// The resolve of `copy` as the user saw it holding `copied`.
+fn merge_of(
+    copy: &str,
+    copied: &str,
+    resolution: Resolution,
+    current: Option<&str>,
+) -> MergeResolve {
     MergeResolve {
         copy: MergeCopy::new(copy).unwrap(),
         choice: MergeChoice {
             resolution,
-            copy: Fingerprint::of(NEW.as_bytes()),
+            copy: Fingerprint::of(copied.as_bytes()),
             current: current.map(|content| Fingerprint::of(content.as_bytes())),
         },
     }
@@ -53,6 +68,28 @@ fn merge(copy: &str, resolution: Resolution, current: Option<&str>) -> MergeReso
 
 fn pacnew(resolution: Resolution) -> MergeResolve {
     merge("/etc/pacman.conf.pacnew", resolution, Some(CURRENT))
+}
+
+fn no_check(command: &Command, _text: &ConfigText) -> Outcome {
+    panic!("{command} ran for a file that needs no check")
+}
+
+fn unchecked(root: &Path, merge: &MergeResolve) -> Result<Resolved, MergeError> {
+    resolve(root, merge, no_check)
+}
+
+/// Runs the step below `root` and returns how it ended and what it printed.
+fn executed(root: &Path, merge: &MergeResolve) -> (Outcome, String) {
+    let mut events = Vec::new();
+    let outcome = execute(
+        root,
+        StepId::new(1),
+        merge,
+        &mut events,
+        |command, text, _| no_check(command, text),
+    );
+
+    (outcome, printed(&events))
 }
 
 fn read(root: &TempDir, file: &str) -> Option<String> {
@@ -73,7 +110,7 @@ fn keeping_the_current_file_removes_the_copy_only() {
     let root = system();
 
     assert_eq!(
-        resolve(root.path(), &pacnew(Resolution::KeepCurrent)).unwrap(),
+        unchecked(root.path(), &pacnew(Resolution::KeepCurrent)).unwrap(),
         Resolved::Removed
     );
     assert_eq!(read(&root, "etc/pacman.conf").as_deref(), Some(CURRENT));
@@ -92,7 +129,7 @@ fn taking_the_copy_keeps_the_mode_and_backs_the_old_file_up() {
     };
 
     assert_eq!(
-        resolve(root.path(), &pacnew(Resolution::TakeCopy)).unwrap(),
+        unchecked(root.path(), &pacnew(Resolution::TakeCopy)).unwrap(),
         Resolved::Written
     );
     assert_eq!(read(&root, "etc/pacman.conf").as_deref(), Some(NEW));
@@ -108,7 +145,7 @@ fn taking_the_copy_keeps_the_mode_and_backs_the_old_file_up() {
 fn a_merged_text_takes_the_files_place() {
     let root = system();
     let merged = "Color\nParallelDownloads = 10\n";
-    let resolved = resolve(
+    let resolved = unchecked(
         root.path(),
         &pacnew(Resolution::Merged { text: text(merged) }),
     );
@@ -123,7 +160,7 @@ fn a_copy_without_its_file_moves_into_its_place() {
     let root = system();
     fs::remove_file(root.path().join("etc/pacman.conf")).unwrap();
 
-    let resolved = resolve(
+    let resolved = unchecked(
         root.path(),
         &merge("/etc/pacman.conf.pacnew", Resolution::TakeCopy, None),
     );
@@ -137,7 +174,7 @@ fn a_file_that_changed_since_the_comparison_stays() {
     let root = system();
     fs::write(root.path().join("etc/pacman.conf"), "edited meanwhile\n").unwrap();
 
-    let resolved = resolve(root.path(), &pacnew(Resolution::TakeCopy));
+    let resolved = unchecked(root.path(), &pacnew(Resolution::TakeCopy));
 
     assert!(matches!(
         resolved,
@@ -152,7 +189,7 @@ fn a_copy_of_a_file_no_package_backs_up_is_refused() {
     fs::create_dir_all(root.path().join("etc/pacman.d")).unwrap();
     fs::write(root.path().join("etc/pacman.d/mirrorlist.pacnew"), NEW).unwrap();
 
-    let resolved = resolve(
+    let resolved = unchecked(
         root.path(),
         &merge(
             "/etc/pacman.d/mirrorlist.pacnew",
@@ -172,7 +209,7 @@ fn a_copy_that_is_a_symlink_is_refused() {
     fs::write(root.path().join("etc/elsewhere"), NEW).unwrap();
     symlink("elsewhere", root.path().join("etc/pacman.conf.pacnew")).unwrap();
 
-    let resolved = resolve(root.path(), &pacnew(Resolution::KeepCurrent));
+    let resolved = unchecked(root.path(), &pacnew(Resolution::KeepCurrent));
 
     assert!(matches!(
         resolved,
@@ -186,10 +223,7 @@ fn the_step_fails_and_says_why_when_a_file_changed() {
     let root = system();
     fs::write(root.path().join("etc/pacman.conf.pacnew"), "other\n").unwrap();
 
-    let (outcome, printed) = run_builtin(
-        root.path(),
-        &Builtin::ResolveMerge(pacnew(Resolution::KeepCurrent)),
-    );
+    let (outcome, printed) = executed(root.path(), &pacnew(Resolution::KeepCurrent));
 
     assert_failed(outcome);
     assert!(
@@ -201,10 +235,7 @@ fn the_step_fails_and_says_why_when_a_file_changed() {
 #[test]
 fn the_step_names_the_backup_after_a_write() {
     let root = system();
-    let (outcome, printed) = run_builtin(
-        root.path(),
-        &Builtin::ResolveMerge(pacnew(Resolution::TakeCopy)),
-    );
+    let (outcome, printed) = executed(root.path(), &pacnew(Resolution::TakeCopy));
 
     assert_eq!(outcome, Outcome::Succeeded);
     assert!(

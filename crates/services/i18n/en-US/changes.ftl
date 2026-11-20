@@ -39,6 +39,7 @@ change-unfinished = Did not finish
 changes-wait-read = Apply waits until the system has been read.
 changes-wait-locks = Apply waits for the lock state of the accounts. The Users and groups page says when it cannot be read.
 changes-wait-aur = Apply waits for the package list of the AUR. The Packages page says when it cannot be read.
+changes-wait-running = Apply waits until the changes being applied are done.
 # Why Apply is disabled after a read failed, for example when the password
 # prompt was closed. The popover shows it with a Read again button.
 changes-unread-locks = Apply waits: the lock state of the accounts could not be read.
@@ -49,6 +50,7 @@ changes-unread-aur = Apply waits: the package list of the AUR could not be read.
 change-account-lock = Lock the account { $name }
 change-account-unlock = Unlock the account { $name }
 change-clean-package-cache = Clean the package cache
+change-config-merge-discard = Keep { $file }, delete the saved copy { $copy }
 change-config-merge-keep = Keep { $file }, remove { $copy }
 change-config-merge-take = Replace { $file } with { $copy }
 change-config-merge-write = Merge { $copy } into { $file }

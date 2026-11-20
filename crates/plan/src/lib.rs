@@ -7,6 +7,7 @@ mod validated;
 
 mod account;
 mod action;
+mod aur;
 mod bounded;
 mod component;
 mod config_file;
@@ -46,6 +47,7 @@ pub use action::{
     EmptyTargetList, LoaderRefusal, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope,
     Upgrader, UserAction, boot_loader_steps,
 };
+pub use aur::{AUR_BUILT, AUR_STORE, InstallReason, PARU_CLONE};
 pub use bounded::{Bounded, OutOfRange};
 pub use config_file::{
     CONFIG_ROOTS, ConfigEntryLocation, ConfigFilePath, ConfigText, ConfigWrite, FetchAnswer,
@@ -72,8 +74,8 @@ pub use merge::{
 };
 pub use mirrorlist::{InvalidMirrorlist, Mirrorlist, SAMPLE_MIRRORS};
 pub use name::{
-    ADMIN_GROUPS, BootloaderId, Charset, DiskDevice, DkmsModuleName, DkmsVersion, GroupName,
-    GrubPicture, GrubThemeFile, HostName, InvalidName, KernelModule, KernelParameter,
+    ADMIN_GROUPS, BootloaderId, BuildRun, Charset, DiskDevice, DkmsModuleName, DkmsVersion,
+    GroupName, GrubPicture, GrubThemeFile, HostName, InvalidName, KernelModule, KernelParameter,
     KernelRelease, KnownPackage, LoaderDefault, LoaderEntryId, LocaleName, MenuEntryId, Name,
     NameKind, PackageName, PartitionDevice, PlymouthTheme, Reason, Rule, UnitName, UserName,
     VolumeDevice,

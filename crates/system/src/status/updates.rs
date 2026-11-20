@@ -1,11 +1,13 @@
 //! Pending updates from the repositories (`checkupdates`) and the AUR
 //! (`paru -Qua`). Both print `name old -> new`, one update per line.
 
+mod order;
 #[cfg(test)]
 mod tests;
 
 use std::ffi::OsString;
 
+pub use order::AurOrderSource;
 use toolbox_exec::{Environment, locate_program};
 use toolbox_plan::PackageName;
 use toolbox_plan::procedure::Program;
@@ -128,6 +130,16 @@ impl Paru {
             refuse_root: false,
         }
     }
+
+    /// Runs paru with `args` as the user, never as root.
+    fn run(&self, args: &[&str], skipped: &str) -> Result<command::Finished, ProbeError> {
+        if self.refuse_root && rustix::process::geteuid().is_root() {
+            tracing::warn!("paru is not run as root, {skipped}");
+            return Err(ProbeError::Unavailable);
+        }
+
+        command::run(&self.program, args)
+    }
 }
 
 impl Default for Paru {
@@ -141,12 +153,7 @@ impl AurUpdateSource for Paru {
     /// means none. paru also exits with 1 when the AUR cannot be reached,
     /// then it says `error:` on stderr.
     fn pending_aur(&self) -> Result<Vec<PendingUpdate>, ProbeError> {
-        if self.refuse_root && rustix::process::geteuid().is_root() {
-            tracing::warn!("paru is not run as root, AUR updates are not checked");
-            return Err(ProbeError::Unavailable);
-        }
-
-        let finished = command::run(&self.program, &["-Qua"])?;
+        let finished = self.run(&["-Qua"], "AUR updates are not checked")?;
         let complained = finished
             .stderr
             .lines()

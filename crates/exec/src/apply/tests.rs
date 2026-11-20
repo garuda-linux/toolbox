@@ -2,6 +2,7 @@ mod panics;
 mod secrets;
 
 mod cleanup;
+mod dependencies;
 mod extra;
 mod finish;
 mod orphans;
@@ -13,9 +14,10 @@ use std::io;
 
 use toolbox_plan::procedure::{Builtin, Command};
 use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, Request};
-use toolbox_plan::{RootAction, SecretInput, Step, StepId};
+use toolbox_plan::{ConfigText, RootAction, SecretInput, Step, StepId};
 
 use super::{EventSink, Runner, apply};
+use crate::QueryKind;
 
 #[derive(Default)]
 struct FakeRunner {
@@ -66,8 +68,11 @@ impl Runner for FakeRunner {
         self.outcomes.pop_front().unwrap_or(Outcome::Succeeded)
     }
 
-    fn query(&mut self, command: &Command) -> io::Result<Vec<String>> {
-        self.ran.push(format!("query: {command}"));
+    fn query(&mut self, command: &Command, kind: QueryKind) -> io::Result<Vec<String>> {
+        self.ran.push(match kind {
+            QueryKind::Listing => format!("query: {command}"),
+            QueryKind::Deptest => format!("deptest: {command}"),
+        });
         Ok(self.queries.pop_front().unwrap_or_default())
     }
 
@@ -85,6 +90,18 @@ impl Runner for FakeRunner {
     ) -> Outcome {
         self.ran.push(format!("feed: {command}"));
         self.fed.push(input.expose().to_vec());
+        self.outcomes.pop_front().unwrap_or(Outcome::Succeeded)
+    }
+
+    fn check(
+        &mut self,
+        _step: StepId,
+        command: &Command,
+        text: &ConfigText,
+        _sink: &mut dyn EventSink,
+    ) -> Outcome {
+        self.ran.push(format!("check: {command}"));
+        self.fed.push(text.as_str().as_bytes().to_vec());
         self.outcomes.pop_front().unwrap_or(Outcome::Succeeded)
     }
 }

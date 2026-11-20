@@ -38,6 +38,21 @@ pub enum MergeError {
     NoBackup,
     #[error(transparent)]
     Write(#[from] WriteError),
+    /// The syntax check did not pass the new text, and how it ended.
+    #[error("the syntax check refused the new text")]
+    Refused(Outcome),
+}
+
+impl From<io::Error> for MergeError {
+    fn from(error: io::Error) -> Self {
+        Self::Write(error.into())
+    }
+}
+
+impl From<ReadError> for MergeError {
+    fn from(error: ReadError) -> Self {
+        Self::Write(error.into())
+    }
 }
 
 /// Whether a package's `files` list below `root` names `original` as a
@@ -98,26 +113,37 @@ pub fn snapshot(root: &Path) -> Option<Command> {
 /// # Errors
 ///
 /// [`MergeError`] when pacman lists no such backup file, a file changed,
-/// is no regular text file, or the system refuses a write. Both files are
-/// untouched then.
-pub fn resolve(root: &Path, merge: &MergeResolve) -> Result<Resolved, MergeError> {
-    if !is_backup(root, merge.copy.original()).map_err(WriteError::from)? {
+/// is no regular text file, `check` refuses the new text
+/// ([`MergeResolve::syntax_check`]), or the system refuses a write. Both
+/// files are untouched then.
+pub fn resolve(
+    root: &Path,
+    merge: &MergeResolve,
+    check: impl FnOnce(&Command, &ConfigText) -> Outcome,
+) -> Result<Resolved, MergeError> {
+    if !is_backup(root, merge.copy.original())? {
         return Err(MergeError::NoBackup);
     }
 
-    Ok(resolve_pair(root, merge)?)
+    resolve_pair(root, merge, check)
 }
 
+/// `check` runs the syntax check through the runner, which reports what
+/// the checker printed.
 pub fn execute(
     root: &Path,
     step: StepId,
     merge: &MergeResolve,
     sink: &mut dyn EventSink,
+    check: impl FnOnce(&Command, &ConfigText, &mut dyn EventSink) -> Outcome,
 ) -> Outcome {
     let copy = merge.copy.path();
     let original = merge.copy.original();
+    let resolved = resolve(root, merge, |command, text| {
+        check(command, text, &mut *sink)
+    });
 
-    match resolve(root, merge) {
+    match resolved {
         Ok(Resolved::Removed) => note(step, sink, &format!("removed {copy}"), Outcome::Succeeded),
         Ok(Resolved::Moved) => note(
             step,
@@ -146,6 +172,12 @@ pub fn execute(
                 "{copy} or {original} changed since they were compared, so both stay as they are"
             ),
         ),
+        Err(MergeError::Refused(outcome)) => note(
+            step,
+            sink,
+            &format!("visudo refused the new text of {original}, so both files stay as they are"),
+            outcome,
+        ),
         Err(MergeError::Write(WriteError::Failed(error))) => {
             failure(step, sink, &format!("cannot resolve {copy}: {error}"))
         }
@@ -155,7 +187,11 @@ pub fn execute(
     }
 }
 
-fn resolve_pair(root: &Path, merge: &MergeResolve) -> Result<Resolved, WriteError> {
+fn resolve_pair(
+    root: &Path,
+    merge: &MergeResolve,
+    check: impl FnOnce(&Command, &ConfigText) -> Outcome,
+) -> Result<Resolved, MergeError> {
     let (folder, copy_name) = merge.copy.path().split();
     let (_, name) = merge.copy.original().split();
     let dir = open_folder(root, folder)?;
@@ -169,7 +205,7 @@ fn resolve_pair(root: &Path, merge: &MergeResolve) -> Result<Resolved, WriteErro
     if copied.fingerprint() != merge.choice.copy
         || current.as_ref().map(ConfigText::fingerprint) != merge.choice.current
     {
-        return Err(WriteError::Changed);
+        return Err(WriteError::Changed.into());
     }
 
     let (wanted, mark) = match (&merge.choice.resolution, merge.choice.current) {
@@ -177,15 +213,24 @@ fn resolve_pair(root: &Path, merge: &MergeResolve) -> Result<Resolved, WriteErro
             secure::remove_file(&dir, copy_name)?;
             return Ok(Resolved::Removed);
         }
-        (Resolution::TakeCopy, None) => {
-            rustix::fs::renameat_with(&dir, copy_name, &dir, name, RenameFlags::NOREPLACE)
-                .map_err(io::Error::from)?;
-            rustix::fs::fsync(&dir).map_err(io::Error::from)?;
-            return Ok(Resolved::Moved);
+        (Resolution::Merged { text: _ }, None) => return Err(WriteError::Changed.into()),
+        (Resolution::TakeCopy, mark) => (copied, mark),
+        (Resolution::Merged { text }, Some(mark)) => (text.clone(), Some(mark)),
+    };
+
+    if let Some(command) = merge.syntax_check() {
+        let outcome = check(&command, &wanted);
+
+        if outcome != Outcome::Succeeded {
+            return Err(MergeError::Refused(outcome));
         }
-        (Resolution::Merged { text: _ }, None) => return Err(WriteError::Changed),
-        (Resolution::TakeCopy, Some(mark)) => (copied, mark),
-        (Resolution::Merged { text }, Some(mark)) => (text.clone(), mark),
+    }
+
+    let Some(mark) = mark else {
+        rustix::fs::renameat_with(&dir, copy_name, &dir, name, RenameFlags::NOREPLACE)
+            .map_err(io::Error::from)?;
+        rustix::fs::fsync(&dir).map_err(io::Error::from)?;
+        return Ok(Resolved::Moved);
     };
 
     write_real(root, merge.copy.original(), &wanted, mark)?;

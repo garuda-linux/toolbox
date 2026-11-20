@@ -2,20 +2,23 @@ use std::collections::BTreeSet;
 
 use crate::sdboot::{LoaderChange, LoaderSetting, LoaderTimeout};
 use crate::{
-    BootloaderId, ConfigFilePath, ConfigText, ConfigWrite, DiskDevice, DkmsBuild, DkmsModuleName,
-    DkmsVersion, DnsProvider, Fingerprint, FullName, GarudaUpdateFlag, GroupName, GrubSetting,
-    GrubSettings, HomeChange, HomeDirectory, HomeFolder, InstalledSystem, KernelModule,
-    KernelParameters, KernelRelease, LocaleEntry, LocaleName, MergeChoice, MergeCopy, MergeResolve,
-    Mirrorlist, NewHome, NewUser, NewUserParts, PackageName, PartitionDevice, Password,
-    PlymouthTheme, RemoteAction, RepairRoot, RepairWork, Resolution, RootAction, RootLayout,
-    ShellPath, TargetList, UnitName, UnitOperation, Upgrader, UserName, VolumeDevice, WifiBackend,
+    BootloaderId, BuildRun, ConfigFilePath, ConfigText, ConfigWrite, DiskDevice, DkmsBuild,
+    DkmsModuleName, DkmsVersion, DnsProvider, Fingerprint, FullName, GarudaUpdateFlag, GroupName,
+    GrubSetting, GrubSettings, HomeChange, HomeDirectory, HomeFolder, InstallReason,
+    InstalledSystem, KernelModule, KernelParameters, KernelRelease, LocaleEntry, LocaleName,
+    MergeChoice, MergeCopy, MergeResolve, Mirrorlist, NewHome, NewUser, NewUserParts, PackageName,
+    PartitionDevice, Password, PlymouthTheme, RemoteAction, RepairRoot, RepairWork, Resolution,
+    RootAction, RootLayout, ShellPath, TargetList, UnitName, UnitOperation, Upgrader, UserName,
+    VolumeDevice, WifiBackend,
 };
 
 /// Every kind [`kind`] names. Written by hand, so a variant missing here
 /// fails [`every_root_action_variant_has_a_sample`].
-const KINDS: [&str; 49] = [
+const KINDS: [&str; 51] = [
     "install-packages",
     "remove-packages",
+    "install-dependencies",
+    "install-built",
     "upgrade-system",
     "clean-package-cache",
     "remove-orphans",
@@ -76,6 +79,12 @@ fn kind(action: &RootAction) -> &'static str {
     match action {
         RootAction::InstallPackages { packages: _ } => "install-packages",
         RootAction::RemovePackages { packages: _ } => "remove-packages",
+        RootAction::InstallDependencies { packages: _ } => "install-dependencies",
+        RootAction::InstallBuilt {
+            run: _,
+            packages: _,
+            reason: _,
+        } => "install-built",
         RootAction::UpgradeSystem { upgrader: _ } => "upgrade-system",
         RootAction::CleanPackageCache => "clean-package-cache",
         RootAction::RemoveOrphans => "remove-orphans",
@@ -196,6 +205,14 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         },
         RootAction::RemovePackages {
             packages: packages(),
+        },
+        RootAction::InstallDependencies {
+            packages: packages(),
+        },
+        RootAction::InstallBuilt {
+            run: BuildRun::new("1a2b").unwrap(),
+            packages: packages(),
+            reason: InstallReason::Explicit,
         },
         RootAction::UpgradeSystem {
             upgrader: Upgrader::Pacman,

@@ -2,10 +2,11 @@ use super::root_actions::every_root_action;
 use crate::procedure::{Builtin, Command, Invocation, Program, initramfs_rebuilds, uki_rebuilds};
 use crate::{Editor, EspPlace, InstalledLoader, boot_loader_steps};
 
-/// The programs a root action must never run: the AUR helper runs as the
+/// The programs a root action must never run: the AUR helper and makepkg run as the
 /// user, and the editors belong to user steps only.
 fn never_as_root(program: Program) -> bool {
-    program == Program::Paru || Editor::ALL.iter().any(|editor| editor.program() == program)
+    matches!(program, Program::Paru | Program::Makepkg)
+        || Editor::ALL.iter().any(|editor| editor.program() == program)
 }
 
 /// The programs of one step. A builtin that runs programs of its own is
@@ -19,7 +20,11 @@ fn programs(invocation: &Invocation) -> Vec<Program> {
             leftover: _,
         }
         | Invocation::Feed { command, input: _ } => vec![command.program()],
-        Invocation::RunWithTargetsFrom {
+        Invocation::RunWithUnmetFrom {
+            test: first,
+            run: second,
+        }
+        | Invocation::RunWithTargetsFrom {
             query: first,
             run: second,
         }
@@ -38,6 +43,13 @@ fn builtin_programs(builtin: &Builtin) -> Vec<Program> {
         }
         Builtin::RebuildUkis { root: _ } => uki_rebuilds().iter().map(Command::program).collect(),
         Builtin::SnapshotBeforeMerges => vec![crate::merge::snapshot().program()],
+        Builtin::InstallBuilt {
+            run: _,
+            packages: _,
+            reason: _,
+        } => vec![Program::Pacman],
+        Builtin::BuildAur { base: _, run: _ } => vec![Program::Makepkg],
+        Builtin::ResolveMerge(merge) => merge.syntax_check().iter().map(Command::program).collect(),
         Builtin::RepairBootLoader { system, work } => loaders()
             .into_iter()
             .flat_map(|loader| boot_loader_steps(system, work, loader).unwrap_or_default())
@@ -59,7 +71,6 @@ fn builtin_programs(builtin: &Builtin) -> Vec<Program> {
         | Builtin::RequireSafeHome(_)
         | Builtin::RequireUserGroup(_)
         | Builtin::WriteConfigFile(_)
-        | Builtin::ResolveMerge(_)
         | Builtin::WriteHomeFile(_)
         | Builtin::EditModprobeBlacklist { module: _, on: _ }
         | Builtin::EditGrubDefaults(_)

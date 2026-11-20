@@ -4194,6 +4194,9 @@
     "changes-wait-aur": {
       "string": "Apply waits for the package list of the AUR. The Packages page says when it cannot be read."
     },
+    "changes-wait-running": {
+      "string": "Apply waits until the changes being applied are done."
+    },
     "changes-unread-locks": {
       "string": "Apply waits: the lock state of the accounts could not be read.",
       "developer_comment": "Why Apply is disabled after a read failed, for example when the password\nprompt was closed. The popover shows it with a Read again button."
@@ -4209,6 +4212,9 @@
     },
     "change-clean-package-cache": {
       "string": "Clean the package cache"
+    },
+    "change-config-merge-discard": {
+      "string": "Keep {file}, delete the saved copy {copy}"
     },
     "change-config-merge-keep": {
       "string": "Keep {file}, remove {copy}"

@@ -24,6 +24,25 @@ pub const MAX_QUERY_BYTES: usize = 8 << 20;
 /// waits for a lock or a device would hold the helper without an end.
 pub const QUERY_DEADLINE: Duration = Duration::from_mins(2);
 
+/// Which ends of a query are an answer.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum QueryKind {
+    /// Exit code 0, or an [`empty_miss`].
+    Listing,
+    /// `pacman -T`: exit code 0 when every name is met, 127 with the
+    /// unmet names.
+    Deptest,
+}
+
+impl QueryKind {
+    fn answered(self, code: Option<i32>, lines: &[String], quiet: bool) -> bool {
+        match self {
+            Self::Listing => code == Some(0_i32) || empty_miss(code, quiet),
+            Self::Deptest => code == Some(0_i32) || (code == Some(127_i32) && !lines.is_empty()),
+        }
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 enum QueryError {
     #[error("{command} printed more than {limit} bytes")]
@@ -40,8 +59,8 @@ enum QueryError {
 
 /// Runs `command` with `program` in place of its own (a parameter so
 /// tests can run a stand-in) and returns its output lines. A failure
-/// counts as nothing found only where [`empty_miss`] says so, otherwise
-/// it keeps the program's own words.
+/// counts as an answer only where `kind` says so, otherwise it keeps the
+/// program's own words.
 ///
 /// # Errors
 ///
@@ -50,6 +69,7 @@ enum QueryError {
 pub fn run(
     program: impl AsRef<std::ffi::OsStr>,
     command: &Command,
+    kind: QueryKind,
     environment: Environment,
     cancel: &Arc<AtomicBool>,
 ) -> io::Result<Vec<String>> {
@@ -94,7 +114,7 @@ pub fn run(
         .collect();
 
     let quiet = lines.is_empty() && captured.errors.trim().is_empty();
-    if captured.code == Some(0_i32) || empty_miss(captured.code, quiet) {
+    if kind.answered(captured.code, &lines, quiet) {
         return Ok(lines);
     }
 

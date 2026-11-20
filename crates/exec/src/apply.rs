@@ -11,11 +11,11 @@ use std::path::Path;
 
 use toolbox_plan::procedure::{Builtin, Command, Invocation};
 use toolbox_plan::protocol::{Event, Failure, Leftover, Mode, Outcome};
-use toolbox_plan::{RootAction, SecretInput, Step, StepId, UserAction};
+use toolbox_plan::{Caller, ConfigText, RootAction, SecretInput, Step, StepId, UserAction};
 
 use crate::builtin::SYSTEM_ROOT;
 use crate::report::{failure, note};
-use crate::{initramfs, merge, repair, uki};
+use crate::{QueryKind, aur, initramfs, merge, repair, uki};
 
 pub trait Procedure {
     fn procedure(&self) -> Vec<Invocation>;
@@ -46,8 +46,8 @@ pub trait Runner {
 
     /// # Errors
     ///
-    /// When the command cannot start or fails.
-    fn query(&mut self, command: &Command) -> io::Result<Vec<String>>;
+    /// When the command cannot start or ends in a way `kind` takes as no answer.
+    fn query(&mut self, command: &Command, kind: QueryKind) -> io::Result<Vec<String>>;
 
     fn builtin(&mut self, step: StepId, builtin: &Builtin, sink: &mut dyn EventSink) -> Outcome;
 
@@ -60,7 +60,23 @@ pub trait Runner {
         sink: &mut dyn EventSink,
     ) -> Outcome;
 
+    /// Runs `command` with `text` on its standard input, without a PTY.
+    /// No secret: what it prints is reported as it is.
+    fn check(
+        &mut self,
+        step: StepId,
+        command: &Command,
+        text: &ConfigText,
+        sink: &mut dyn EventSink,
+    ) -> Outcome;
+
     fn finish_requested(&mut self) -> bool;
+
+    /// The account that asked for the run, whose built AUR packages the
+    /// helper may install. Only the helper knows one.
+    fn caller(&self) -> Option<Caller> {
+        None
+    }
 }
 
 pub fn apply<A>(
@@ -132,6 +148,10 @@ fn program_name(procedure: &[Invocation]) -> &'static str {
             | Invocation::Run(command)
             | Invocation::RunWithTargetsFrom {
                 query: _,
+                run: command,
+            }
+            | Invocation::RunWithUnmetFrom {
+                test: _,
                 run: command,
             }
             | Invocation::RunUnlessItRemovesProtected {
@@ -265,6 +285,7 @@ fn run_once(
         Invocation::RunWithTargetsFrom { query, run } => {
             targets::repeated(step, query, run, runner, sink)
         }
+        Invocation::RunWithUnmetFrom { test, run } => targets::unmet(step, test, run, runner, sink),
         Invocation::RunUnlessItRemovesProtected { preview, run } => {
             targets::unless_protected(step, preview, run, runner, sink)
         }
@@ -299,7 +320,7 @@ fn run_once(
                 Err(error) => failure(step, sink, &error.to_string()),
             }
         }
-        Invocation::Builtin(builtin) => runner.builtin(step, builtin, sink),
+        Invocation::Builtin(builtin) => builtin_step(step, builtin, runner, sink),
         Invocation::Feed {
             command,
             input: Some(input),
@@ -313,6 +334,48 @@ fn run_once(
             &format!("the secret for {} did not arrive", command.program().name()),
         ),
     }
+}
+
+/// An AUR install runs pacman on what it staged, so it needs the runner
+/// and the caller it knows. A merge has the runner check a sudoers text.
+/// Every other builtin is the runner's.
+fn builtin_step(
+    step: StepId,
+    builtin: &Builtin,
+    runner: &mut dyn Runner,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    if let Builtin::ResolveMerge(resolve) = builtin {
+        return merge::execute(
+            Path::new(SYSTEM_ROOT),
+            step,
+            resolve,
+            sink,
+            |command, text, sink| runner.check(step, command, text, sink),
+        );
+    }
+
+    let Builtin::InstallBuilt {
+        run,
+        packages,
+        reason,
+    } = builtin
+    else {
+        return runner.builtin(step, builtin, sink);
+    };
+
+    let built = aur::Install {
+        run,
+        packages,
+        reason: *reason,
+    };
+
+    let caller = runner.caller();
+
+    aur::install(Path::new(SYSTEM_ROOT), caller, built, |command| {
+        runner.run(step, command, sink)
+    })
+    .unwrap_or_else(|error| failure(step, sink, &error.to_string()))
 }
 
 fn rebuilt(

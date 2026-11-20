@@ -13,6 +13,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use toolbox_plan::InvalidName;
+use toolbox_state::aur::order::InvalidOrder;
 use toolbox_state::bootrepair::InvalidListing;
 
 /// Every failure but [`ProbeError::Unavailable`] reads `probe failed: `
@@ -117,6 +118,8 @@ pub enum InvalidValue {
     Name(#[from] InvalidName),
     #[error(transparent)]
     Listing(#[from] InvalidListing),
+    #[error(transparent)]
+    Order(#[from] InvalidOrder),
 }
 
 impl ProbeError {

@@ -12,7 +12,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use toolbox_plan::procedure::Command;
-use toolbox_plan::protocol::{Event, Outcome};
+use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{SecretInput, StepId};
 
 use crate::apply::EventSink;
@@ -79,14 +79,7 @@ fn report(
     let printed = [output.stdout.as_slice(), output.stderr.as_slice()].concat();
     let text = input.scrub(&String::from_utf8_lossy(&printed));
 
-    if !text.is_empty() {
-        // The Console is a terminal: a bare line feed would not return
-        // the cursor to the first column.
-        sink.send(Event::Output {
-            step,
-            data: text.replace("\r\n", "\n").replace('\n', "\r\n"),
-        });
-    }
+    crate::report::output(step, sink, &text);
 
     if output.status.success() {
         Outcome::Succeeded

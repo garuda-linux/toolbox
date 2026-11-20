@@ -21,8 +21,8 @@ pub use disk::{BootloaderId, DiskDevice, PartitionDevice, VolumeDevice};
 pub use known::KnownPackage;
 pub use loader::{LoaderDefault, LoaderEntryId};
 pub use rules::{
-    ADMIN_GROUPS, Charset, DkmsModuleName, DkmsVersion, GroupName, HostName, KernelModule,
-    KernelRelease, LocaleName, PackageName, UnitName, UserName,
+    ADMIN_GROUPS, BuildRun, Charset, DkmsModuleName, DkmsVersion, GroupName, HostName,
+    KernelModule, KernelRelease, LocaleName, PackageName, UnitName, UserName,
 };
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -53,6 +53,7 @@ pub enum NameKind {
     BootloaderId,
     LoaderEntry,
     LoaderDefault,
+    BuildRun,
 }
 
 impl fmt::Display for NameKind {
@@ -81,6 +82,7 @@ impl fmt::Display for NameKind {
             Self::BootloaderId => "boot loader name",
             Self::LoaderEntry => "systemd-boot entry",
             Self::LoaderDefault => "systemd-boot default entry",
+            Self::BuildRun => "AUR build run",
         })
     }
 }
