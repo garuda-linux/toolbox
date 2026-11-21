@@ -1,11 +1,15 @@
 //! Placeholders shaped like the rows a page is loading, in place of a
-//! spinner (spotifast's skeletons). They are drawn once and do not
-//! move, so a wait asks for no frames.
+//! spinner (spotifast's skeletons). A light band sweeps across them, so
+//! a long wait still shows that something works. With less motion asked
+//! for, or out of sight, the bars stand still and ask for no frames.
+
+mod shine;
 
 use egui::{
-    Color32, Context, CornerRadius, Id, Painter, Rect, Response, Role, Sense, Stroke, Ui, Vec2,
-    WidgetInfo, pos2, vec2,
+    Color32, Context, Id, Painter, Rect, Response, Role, Sense, Stroke, Ui, Vec2, WidgetInfo, pos2,
+    vec2,
 };
+use shine::{band_middle, paint_shine};
 
 use super::TileSize;
 use super::card::DIVIDER;
@@ -21,7 +25,7 @@ const MAX_BAR: f32 = 420.0;
 const TITLE_BAR: f32 = 12.0;
 const DETAIL_BAR: f32 = 9.0;
 const CONTROL: Vec2 = super::switch::SIZE;
-const BAR_RADIUS: u8 = 4;
+const BAR_RADIUS: f32 = 4.0;
 
 /// The rows a [`skeleton_list`] stands in for.
 #[derive(Clone, Copy, Debug)]
@@ -37,6 +41,8 @@ pub struct SkeletonRows {
 #[derive(Clone, Copy)]
 struct RowLook {
     fill: Color32,
+    /// The band's light and where its middle is, while it sweeps.
+    band: Option<(Color32, f32)>,
     /// From the row's ends to its parts.
     padding: f32,
     /// The leading tile's edge, if the rows have one.
@@ -85,6 +91,7 @@ pub fn skeleton_list(ui: &mut Ui, rows: SkeletonRows, name: &str) -> Response {
     let room = (padding.x.mul_add(-3.0, rect.width()) - CONTROL.x - indent).clamp(0.0, MAX_BAR);
     let look = RowLook {
         fill: tokens.hover,
+        band: band_middle(ui, rect).map(|middle| (tokens.shimmer, middle)),
         padding: padding.x,
         tile,
         indent,
@@ -110,11 +117,19 @@ pub fn skeleton_list(ui: &mut Ui, rows: SkeletonRows, name: &str) -> Response {
 
 fn paint_row(painter: &Painter, row: Rect, index: usize, look: RowLook) {
     let middle = row.center().y;
-    let fill = look.fill;
+    let bar = |rect: Rect, radius: f32| {
+        painter.rect_filled(rect, radius, look.fill);
+        if let Some((light, at)) = look.band {
+            paint_shine(painter, rect, radius, at, light);
+        }
+    };
+
     if let Some(edge) = look.tile {
         let at = pos2(row.left() + look.padding, middle - edge / 2.0);
-        let square = Rect::from_min_size(at, vec2(edge, edge));
-        painter.rect_filled(square, CornerRadius::same(TILE_RADIUS), fill);
+        bar(
+            Rect::from_min_size(at, vec2(edge, edge)),
+            f32::from(TILE_RADIUS),
+        );
     }
 
     let left = row.left() + look.padding + look.indent;
@@ -133,9 +148,9 @@ fn paint_row(painter: &Painter, row: Rect, index: usize, look: RowLook) {
         CONTROL,
     );
 
-    painter.rect_filled(title, CornerRadius::same(BAR_RADIUS), fill);
-    painter.rect_filled(detail, CornerRadius::same(BAR_RADIUS), fill);
-    painter.rect_filled(control, CONTROL.y / 2.0, fill);
+    bar(title, BAR_RADIUS);
+    bar(detail, BAR_RADIUS);
+    bar(control, CONTROL.y / 2.0);
 }
 
 fn share(index: usize, bar: usize) -> f32 {

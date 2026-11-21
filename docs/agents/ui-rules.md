@@ -143,7 +143,10 @@ Rules for pages, gui-kit widgets and the command line's output.
   sends what the header's **Read again** and F5 send.
 - A page that waits for its main content shows skeleton rows in the card
   shape of the rows to come (`widgets::skeleton_list`), named by what is
-  read. Three dots are only for a short wait inside a loaded page.
+  read. A lighter `shimmer` band sweeps them in one phase for the whole
+  list (`motion::SHIMMER_PERIOD`). Out of sight or with less motion asked
+  for, the bars stand still and ask for no frames. Three dots are only
+  for a short wait inside a loaded page.
 - Cut text ends in "…" and shows whole in a tooltip and to screen readers.
 - Copy buttons only on technical values (versions, addresses, device
   paths, UUIDs).
