@@ -34,6 +34,10 @@ done
 
 out=target/garuda-selftest
 binary=$out/garuda-toolbox
+merge_fixtures=(
+  crates/system/src/packages/pacman_conf/fixtures/pacman.conf
+  crates/plan/src/testing/locales/fixtures/locale.gen
+)
 mkdir -p "$out"
 
 # shellcheck source=scripts/arch-image.sh
@@ -126,6 +130,12 @@ in_box mkdir -p /tmp/toolbox/scripts /tmp/toolbox/tests/selftest /tmp/toolbox/da
 "$engine" cp scripts/selftest.sh "$name:/tmp/toolbox/scripts/"
 "$engine" cp tests/selftest/configs "$name:/tmp/toolbox/tests/selftest/"
 "$engine" cp data/catalog "$name:/tmp/toolbox/data/"
+
+for fixture in "${merge_fixtures[@]}"; do
+  in_box mkdir -p "/tmp/toolbox/$(dirname "$fixture")"
+  "$engine" cp "$fixture" "$name:/tmp/toolbox/$fixture"
+done
+
 in_box chown -R selftest: /tmp/toolbox
 
 status=0
