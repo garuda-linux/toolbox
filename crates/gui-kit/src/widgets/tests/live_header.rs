@@ -4,7 +4,7 @@
 use egui::{Color32, Rect, Sense, Ui, pos2, vec2};
 
 use super::page_layout;
-use crate::testing::{blurred_rects, harness};
+use crate::testing::{blurred_rects, harness, scroll};
 
 /// A page of tall blocks, red and blue in turn, under a one-line header.
 fn striped_page() -> egui_kittest::Harness<'static> {
@@ -56,18 +56,6 @@ fn redness(harness: &mut egui_kittest::Harness<'static>, band: Rect) -> i64 {
             i64::from(red) - i64::from(blue)
         })
         .sum()
-}
-
-fn scroll(harness: &mut egui_kittest::Harness<'static>, points: f32) {
-    harness.event(egui::Event::PointerMoved(pos2(200.0, 200.0)));
-    harness.event(egui::Event::MouseWheel {
-        unit: egui::MouseWheelUnit::Point,
-        delta: vec2(0.0, -points),
-        modifiers: egui::Modifiers::NONE,
-        phase: egui::TouchPhase::Move,
-        source: egui::MouseWheelSource::Unknown,
-    });
-    harness.run();
 }
 
 #[test]

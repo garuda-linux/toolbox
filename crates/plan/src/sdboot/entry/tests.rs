@@ -1,5 +1,6 @@
 use super::{EntryKind, LoaderEntry, entry_id};
-use crate::sdboot::{LoaderSettings, SdBootMenu, sections};
+use crate::sdboot::{LoaderSettings, SdBootMenu};
+use crate::testing::sdboot::{section, uki as entry};
 use crate::{KernelRelease, LoaderEntryId};
 
 /// The first bytes of the Garuda Lima image's UKIs, up to the end of
@@ -9,28 +10,6 @@ const FALLBACK: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_E
 
 fn id(value: &str) -> LoaderEntryId {
     LoaderEntryId::new(value).unwrap()
-}
-
-fn section(image: &[u8], name: &str) -> String {
-    let found = sections(image)
-        .into_iter()
-        .find(|section| section.name == name)
-        .unwrap();
-
-    let start = usize::try_from(found.offset).unwrap();
-
-    let end = start + usize::try_from(found.size).unwrap();
-
-    String::from_utf8(image[start..end].to_vec()).unwrap()
-}
-
-fn entry(file: &str, image: &[u8]) -> LoaderEntry {
-    LoaderEntry::uki(
-        file,
-        &section(image, ".osrel"),
-        Some(&section(image, ".uname")),
-    )
-    .unwrap()
 }
 
 /// The image's UKI before its first boot was blessed, and after.

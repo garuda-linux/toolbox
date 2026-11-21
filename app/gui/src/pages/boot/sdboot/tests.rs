@@ -11,9 +11,8 @@ use toolbox_core::domains::{BootLoader, KernelCmdline, SdBootKernel};
 use toolbox_core::features::boot::Flag;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::kernels::KernelReleases;
-use toolbox_plan::sdboot::{
-    LoaderEntry, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu, sections,
-};
+use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
+use toolbox_plan::testing::sdboot::uki;
 use toolbox_plan::{KernelRelease, LoaderDefault, PackageName};
 use toolbox_services::boot_menu::Menu;
 use toolbox_system::{Host, MenuRead};
@@ -30,27 +29,6 @@ const KERNEL_CMDLINE: &str = toolbox_state::testing::boot::KERNEL_CMDLINE;
 const LIVE_CMDLINE: &str = toolbox_plan::testing::host::LIVE_PROC_CMDLINE;
 const UKI: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_EFI_HEAD;
 const FALLBACK: &[u8] = toolbox_plan::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_EFI_HEAD;
-
-fn section(image: &[u8], name: &str) -> String {
-    let found = sections(image)
-        .into_iter()
-        .find(|section| section.name == name)
-        .unwrap();
-
-    let start = usize::try_from(found.offset).unwrap();
-    let end = start + usize::try_from(found.size).unwrap();
-
-    String::from_utf8(image[start..end].to_vec()).unwrap()
-}
-
-fn uki(file: &str, image: &[u8]) -> LoaderEntry {
-    LoaderEntry::uki(
-        file,
-        &section(image, ".osrel"),
-        Some(&section(image, ".uname")),
-    )
-    .unwrap()
-}
 
 fn image_menu(conf: &str) -> Menu {
     Menu::Read(MenuRead::SdBoot(SdBootMenu {

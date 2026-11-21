@@ -3,7 +3,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 use super::super::{ButtonKind, ModalWrapper, confirm_buttons};
-use crate::testing::harness;
+use crate::testing::{focused, harness};
 
 fn page() -> Harness<'static, bool> {
     let mut harness = harness(600.0, 400.0).build_ui_state(
@@ -32,14 +32,6 @@ fn page() -> Harness<'static, bool> {
 
     harness.run();
     harness
-}
-
-fn focused(harness: &Harness<'static, bool>) -> Option<String> {
-    let node = harness
-        .query_all(egui_kittest::kittest::by())
-        .find(|node| node.accesskit_node().is_focused())?;
-
-    node.accesskit_node().label()
 }
 
 fn open_by_keyboard(harness: &mut Harness<'static, bool>) {

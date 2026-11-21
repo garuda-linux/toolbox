@@ -1,6 +1,7 @@
 use super::{InvalidLoaderChange, LoaderChange, LoaderSetting};
 use crate::LoaderDefault;
-use crate::sdboot::{LoaderEntry, LoaderSettings, LoaderTimeout, sections};
+use crate::sdboot::{LoaderEntry, LoaderSettings, LoaderTimeout};
+use crate::testing::sdboot::{section, uki};
 
 /// `/efi/loader/loader.conf` of the Garuda Lima image, and the lines
 /// garuda-common-settings' config agent rule appends to it.
@@ -12,27 +13,6 @@ const FALLBACK: &[u8] = crate::testing::sdboot::GARUDA_7_3_1_1_GARUDA_FALLBACK_E
 
 fn change(settings: Vec<LoaderSetting>) -> LoaderChange {
     LoaderChange::new(settings).unwrap()
-}
-
-fn section(image: &[u8], name: &str) -> String {
-    let found = sections(image)
-        .into_iter()
-        .find(|section| section.name == name)
-        .unwrap();
-
-    let start = usize::try_from(found.offset).unwrap();
-    let end = start + usize::try_from(found.size).unwrap();
-
-    String::from_utf8(image[start..end].to_vec()).unwrap()
-}
-
-fn uki(file: &str, image: &[u8]) -> LoaderEntry {
-    LoaderEntry::uki(
-        file,
-        &section(image, ".osrel"),
-        Some(&section(image, ".uname")),
-    )
-    .unwrap()
 }
 
 #[test]

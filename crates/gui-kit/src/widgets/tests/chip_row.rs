@@ -1,10 +1,10 @@
 use egui::accesskit::Role;
 use egui::{Key, Modifiers, Ui};
 use egui_kittest::Harness;
-use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use egui_kittest::kittest::Queryable as _;
 
 use super::super::chips;
-use crate::testing::harness;
+use crate::testing::{focused, harness};
 
 const OPTIONS: [(Scope, &str); 3] = [
     (Scope::One, "One"),
@@ -63,14 +63,6 @@ fn narrow() -> Harness<'static, Option<Scope>> {
 
     harness.run();
     harness
-}
-
-fn focused(harness: &Harness<'static, Option<Scope>>) -> Option<String> {
-    let node = harness
-        .query_all(egui_kittest::kittest::by())
-        .find(|node| node.accesskit_node().is_focused())?;
-
-    node.accesskit_node().label()
 }
 
 fn press(harness: &mut Harness<'static, Option<Scope>>, key: Key) {

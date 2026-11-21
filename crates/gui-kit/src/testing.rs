@@ -354,3 +354,28 @@ pub fn spoken_words(node: &egui_kittest::Node<'_>) -> String {
         .or_else(|| node.value())
         .unwrap_or_default()
 }
+
+/// The label of the node that has the keyboard focus, if one has.
+pub fn focused<State>(harness: &egui_kittest::Harness<'_, State>) -> Option<String> {
+    use egui_kittest::kittest::NodeT as _;
+
+    let node = harness
+        .query_all(egui_kittest::kittest::by())
+        .find(|node| node.accesskit_node().is_focused())?;
+
+    node.accesskit_node().label()
+}
+
+/// Turns the mouse wheel by `points` with the pointer at (200, 200) and
+/// runs the harness until it settles.
+pub fn scroll<State>(harness: &mut egui_kittest::Harness<'_, State>, points: f32) {
+    harness.event(egui::Event::PointerMoved(egui::pos2(200.0, 200.0)));
+    harness.event(egui::Event::MouseWheel {
+        unit: egui::MouseWheelUnit::Point,
+        delta: egui::vec2(0.0, -points),
+        modifiers: egui::Modifiers::NONE,
+        phase: egui::TouchPhase::Move,
+        source: egui::MouseWheelSource::Unknown,
+    });
+    harness.run();
+}

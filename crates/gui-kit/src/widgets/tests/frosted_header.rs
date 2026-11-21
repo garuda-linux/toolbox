@@ -2,7 +2,7 @@ use egui::Ui;
 use egui_kittest::kittest::Queryable as _;
 
 use super::page_layout;
-use crate::testing::{fill_under, filled_rects, harness, lines_in, textured_rects};
+use crate::testing::{fill_under, filled_rects, harness, lines_in, scroll, textured_rects};
 use crate::tokens;
 
 fn long_page() -> egui_kittest::Harness<'static, u32> {
@@ -37,18 +37,6 @@ fn long_page() -> egui_kittest::Harness<'static, u32> {
 
     harness.run();
     harness
-}
-
-fn scroll(harness: &mut egui_kittest::Harness<'static, u32>, points: f32) {
-    harness.event(egui::Event::PointerMoved(egui::pos2(200.0, 200.0)));
-    harness.event(egui::Event::MouseWheel {
-        unit: egui::MouseWheelUnit::Point,
-        delta: egui::vec2(0.0, -points),
-        modifiers: egui::Modifiers::NONE,
-        phase: egui::TouchPhase::Move,
-        source: egui::MouseWheelSource::Unknown,
-    });
-    harness.run();
 }
 
 fn header_band(harness: &egui_kittest::Harness<'static, u32>) -> egui::Rect {

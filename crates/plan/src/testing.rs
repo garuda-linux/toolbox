@@ -1,4 +1,4 @@
-//! Captures other crates' tests read, by the module path that parses them.
+//! Captures and helpers other crates' tests read, by the module path that parses them.
 
 pub mod account;
 pub mod accounts;

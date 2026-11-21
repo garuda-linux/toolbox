@@ -1,8 +1,8 @@
 use egui::Ui;
-use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use egui_kittest::kittest::Queryable as _;
 
 use super::page_layout;
-use crate::testing::{harness, painted_text};
+use crate::testing::{focused, harness, painted_text};
 
 fn page() -> egui_kittest::Harness<'static, u8> {
     let mut harness = harness(400.0, 300.0).build_ui_state(
@@ -26,14 +26,6 @@ fn page() -> egui_kittest::Harness<'static, u8> {
 
     harness.run();
     harness
-}
-
-fn focused(harness: &egui_kittest::Harness<'static, u8>) -> Option<String> {
-    let node = harness
-        .query_all(egui_kittest::kittest::by())
-        .find(|node| node.accesskit_node().is_focused())?;
-
-    node.accesskit_node().label()
 }
 
 fn tab(harness: &mut egui_kittest::Harness<'static, u8>) {
