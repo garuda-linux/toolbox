@@ -164,10 +164,7 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
             &[("name", Arg::from(&title))],
         );
 
-        let chosen = pill_button(ui, &choose, ButtonKind::Soft);
-        let label = choose_name.into_owned();
-        ui.ctx()
-            .accesskit_node_builder(chosen.id, |node| node.set_label(label));
+        let chosen = pill_button(ui, &choose, ButtonKind::Soft).accessible_name(choose_name);
 
         if chosen.clicked() {
             context.commands.send(BootCommand::Choose {

@@ -92,11 +92,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, choice: Selection) {
                 &[("name", Arg::from(&name))],
             );
 
-            let pressed = pill_button(ui, &collect, ButtonKind::Soft);
-
-            let label = spoken.into_owned();
-            ui.ctx()
-                .accesskit_node_builder(pressed.id, |node| node.set_label(label));
+            let pressed = pill_button(ui, &collect, ButtonKind::Soft).accessible_name(spoken);
 
             if pressed.clicked() {
                 context.commands.send(DiagnosticsCommand::Collect(choice));

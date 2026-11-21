@@ -41,13 +41,10 @@ pub fn show(ui: &mut Ui, row: &Row, marked: bool, width: f32) -> Response {
 
     // The caps are painted, so the name says the shortcut as the text
     // did before.
-    if let Some(shortcut) = &row.shortcut {
-        let label = format!("{} {shortcut}", row.name);
-        ui.ctx()
-            .accesskit_node_builder(response.id, |node| node.set_label(label));
+    match &row.shortcut {
+        Some(shortcut) => response.accessible_name(format!("{} {shortcut}", row.name)),
+        None => response,
     }
-
-    response
 }
 
 fn tile<'row>(ui: &Ui, row: &Row) -> Atom<'row> {

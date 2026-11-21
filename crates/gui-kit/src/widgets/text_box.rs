@@ -103,9 +103,5 @@ fn boxed(
         response.has_focus(),
     );
 
-    let label = name.to_owned();
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label(label));
-
-    response
+    response.accessible_name(name)
 }

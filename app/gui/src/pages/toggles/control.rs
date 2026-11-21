@@ -148,14 +148,11 @@ fn button(ui: &mut Ui, shown: Shown<'_>) -> egui::Response {
     .into_owned();
 
     let width = button_width(ui);
-    let response = ui
-        .enabled_ui(shown.enabled, |ui| {
-            pill_button_at_least(ui, &text, ButtonKind::Soft, width)
-        })
-        .inner;
-
-    ctx.accesskit_node_builder(response.id, |node| node.set_label(name));
-    response
+    ui.enabled_ui(shown.enabled, |ui| {
+        pill_button_at_least(ui, &text, ButtonKind::Soft, width)
+    })
+    .inner
+    .accessible_name(name)
 }
 
 /// The width of the widest button text, which every row button takes.

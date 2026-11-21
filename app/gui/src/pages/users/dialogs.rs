@@ -166,10 +166,7 @@ fn field_with(
 ) -> Response {
     let tokens = ui.tokens();
     title(ui, label);
-    let response = edit(ui);
-    let name = label.to_owned();
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label(name));
+    let response = edit(ui).accessible_name(label);
 
     // A problem looks as the note of a setting row does (`setting_row`).
     let (note, weight, color) = problem
@@ -201,17 +198,15 @@ pub fn check_with_note(ui: &mut Ui, on: bool, label: &str, detail: &str) -> bool
 /// The search over the groups of a dialog, named for screen readers.
 pub fn group_search(ui: &mut Ui, search: &mut String) {
     let hint = i18n::text(ui.ctx(), "users-groups-search-hint").into_owned();
-    let field = text_field(
+    let name = i18n::text(ui.ctx(), "users-groups-search").into_owned();
+    text_field(
         ui,
         TextEdit::singleline(search)
             .hint_text(hint)
             .desired_width(f32::INFINITY)
             .align(egui::Align2::LEFT_CENTER),
-    );
-
-    let name = i18n::text(ui.ctx(), "users-groups-search").into_owned();
-    ui.ctx()
-        .accesskit_node_builder(field.id, |node| node.set_label(name));
+    )
+    .accessible_name(name);
 }
 
 /// Why a dialog's button waits while a plan runs, `None` while it may run.

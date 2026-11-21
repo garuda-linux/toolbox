@@ -110,10 +110,8 @@ fn parameters(
                     .hint_text(i18n::text(&ctx, "boot-parameter-hint"))
                     .desired_width(FIELD_WIDTH)
                     .align(egui::Align2::LEFT_CENTER),
-            );
-
-            ui.ctx()
-                .accesskit_node_builder(field.id, |node| node.set_label(name));
+            )
+            .accessible_name(name);
 
             let entered = field.lost_focus() && ui.input(|input| input.key_pressed(Key::Enter));
             if entered {

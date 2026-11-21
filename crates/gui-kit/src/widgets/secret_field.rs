@@ -46,8 +46,7 @@ pub fn secret_field(ui: &mut Ui, text: &mut SecretText, texts: SecretTexts<'_>) 
     };
 
     let (response, toggled) = field(ui, edit, parts);
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label(texts.name));
+    let response = response.accessible_name(texts.name);
 
     if toggled {
         ui.data_mut(|data| data.insert_temp(flag, !revealed));

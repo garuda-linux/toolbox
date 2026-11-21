@@ -90,8 +90,7 @@ pub fn search_field(
         response.mark_changed();
     }
 
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label(texts.name));
+    response = response.accessible_name(texts.name);
 
     if cleared {
         text.clear();

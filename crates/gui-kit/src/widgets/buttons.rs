@@ -100,11 +100,7 @@ pub fn pill_button(ui: &mut Ui, text: &str, kind: ButtonKind) -> Response {
 
 /// Screen readers hear `name`, for a row of buttons that would all say "Edit" or "Wiki".
 pub fn named_pill_button(ui: &mut Ui, text: &str, kind: ButtonKind, name: &str) -> Response {
-    let response = pill(ui, text, kind, false, 0.0);
-    let name = name.to_owned();
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label(name));
-    response
+    pill(ui, text, kind, false, 0.0).accessible_name(name)
 }
 
 /// For a button whose text changes (Review and Hide), so what sits beside it stays put.

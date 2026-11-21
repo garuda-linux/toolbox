@@ -98,9 +98,7 @@ fn field(ui: &mut Ui) {
         .desired_width(160.0)
         .align(Align2::LEFT_CENTER);
 
-    let response = text_field(ui, edit);
-    ui.ctx()
-        .accesskit_node_builder(response.id, |node| node.set_label("Name"));
+    text_field(ui, edit).accessible_name("Name");
 }
 
 #[test]

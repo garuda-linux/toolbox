@@ -218,10 +218,9 @@ fn text_field_shown(focused: bool) -> Harness<'static, String> {
                 TextEdit::singleline(text)
                     .desired_width(200.0)
                     .align(Align2::LEFT_CENTER),
-            );
+            )
+            .accessible_name("Name");
 
-            ui.ctx()
-                .accesskit_node_builder(response.id, |node| node.set_label("Name"));
             if focused {
                 response.request_focus();
             }

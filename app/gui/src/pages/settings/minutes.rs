@@ -35,11 +35,8 @@ impl MinutesField {
             ui,
             TextEdit::singleline(&mut text).desired_width(width),
             unit,
-        );
-
-        let label = name.to_owned();
-        ui.ctx()
-            .accesskit_node_builder(response.id, |node| node.set_label(label));
+        )
+        .accessible_name(name);
 
         if response.changed() {
             self.typed = Some(text.0);

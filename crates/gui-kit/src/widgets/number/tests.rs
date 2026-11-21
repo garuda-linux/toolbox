@@ -139,9 +139,7 @@ fn a_text_field_with_a_unit_centres_the_two_as_well() {
     let mut harness = harness(300.0, 80.0).build_ui(|ui| {
         let mut text = "60".to_owned();
         let edit = TextEdit::singleline(&mut text).desired_width(WIDTH);
-        let response = text_field_with_unit(ui, edit, "min");
-        ui.ctx()
-            .accesskit_node_builder(response.id, |node| node.set_label("Minutes"));
+        text_field_with_unit(ui, edit, "min").accessible_name("Minutes");
     });
 
     harness.run();
