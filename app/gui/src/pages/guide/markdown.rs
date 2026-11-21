@@ -6,16 +6,18 @@ mod spans;
 mod table;
 
 use egui::{
-    Align, Color32, CornerRadius, Frame, Label, Layout, Margin, RichText, ScrollArea, Sense,
-    TextStyle, Ui, vec2,
+    Align, Color32, CornerRadius, Frame, Label, Layout, Margin, ScrollArea, Sense, TextStyle, Ui,
+    vec2,
 };
+use toolbox_gui_kit::code::{CodeJob, Ink};
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, Weight};
 use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS};
-use toolbox_gui_kit::widgets::{
-    TileSize, Tone, icon_button, icon_button_width, paint_status_tile, rich,
-};
+use toolbox_gui_kit::widgets::{TileSize, Tone, corner_button, paint_status_tile, rich};
 use toolbox_gui_kit::{UiExt as _, icons};
-use toolbox_guide::{Block, Callout, CalloutKind, Code, Heading, List};
+use toolbox_guide::{
+    Block, Callout, CalloutKind, Code, ConsoleLine, Heading, List, Word, command_words,
+    console_lines,
+};
 
 use super::Jump;
 use crate::i18n;
@@ -24,6 +26,7 @@ use crate::i18n;
 const MARKER_WIDTH: f32 = 26.0;
 const PAGE_TITLE: f32 = 1.8;
 const MINOR: f32 = 1.15;
+const CODE_PADDING: i8 = 12;
 
 #[derive(Debug)]
 pub(super) struct Reader<'target> {
@@ -135,36 +138,60 @@ fn items(ui: &mut Ui, list: &List, reader: &mut Reader<'_>) {
     }
 }
 
-/// The copy button sits beside the code rather than over it, so it never
-/// hides the end of a long line.
 fn code_block(ui: &mut Ui, code: &Code, reader: &mut Reader<'_>) {
     let tokens = ui.tokens();
     let alt = i18n::text(ui.ctx(), "guide-copy-code");
-    Frame::new()
+    let block = Frame::new()
         .fill(tokens.field)
         .corner_radius(CornerRadius::same(RADIUS))
-        .inner_margin(Margin::same(12))
+        .inner_margin(Margin::same(CODE_PADDING))
         .show(ui, |ui| {
             ui.set_width(ui.available_width());
-            ui.horizontal_top(|ui| {
-                let gap = ui.spacing().item_spacing.x;
-                let room = ui.available_width() - icon_button_width(ui) - gap;
-                ui.allocate_ui(vec2(room.max(0.0), 0.0), |ui| {
-                    // The text box keeps its full width, so the copy button
-                    // sits at the right edge whatever the code's length.
-                    ui.set_min_width(room.max(0.0));
-                    ScrollArea::horizontal().show(ui, |ui| {
-                        let text = RichText::new(&code.text).monospace().color(tokens.text);
-                        ui.add(Label::new(text).extend());
-                    });
-                });
-
-                if icon_button(ui, icons::EDIT_COPY, &alt).clicked() {
-                    ui.ctx().copy_text(code.text.clone());
-                    reader.copied = true;
-                }
+            ScrollArea::horizontal().show(ui, |ui| {
+                ui.add(Label::new(code_job(ui, code)).extend());
             });
-        });
+        })
+        .response
+        .rect;
+
+    let line = ui.text_style_height(&TextStyle::Monospace);
+    let line_middle = block.top() + f32::from(CODE_PADDING) + line / 2.0;
+    if corner_button(ui, block, line_middle, icons::EDIT_COPY, &alt).clicked() {
+        ui.ctx().copy_text(code.text.clone());
+        reader.copied = true;
+    }
+}
+
+fn code_job(ui: &Ui, code: &Code) -> egui::text::LayoutJob {
+    let mut job = CodeJob::new(ui);
+    match code.language.as_deref() {
+        Some("json") => job.highlighted(ui, &code.text, "json"),
+        Some("console") => {
+            for line in console_lines(&code.text) {
+                match line {
+                    ConsoleLine::Command { prompt, command } => {
+                        job.inked(prompt, Ink::Dim);
+                        for (word, text) in command_words(command) {
+                            job.inked(text, ink(word));
+                        }
+                    }
+                    ConsoleLine::Output(output) => job.plain(output),
+                }
+            }
+        }
+        Some(_) | None => job.plain(&code.text),
+    }
+
+    job.finish()
+}
+
+const fn ink(word: Word) -> Ink {
+    match word {
+        Word::Program => Ink::Function,
+        Word::Flag => Ink::Keyword,
+        Word::Value => Ink::String,
+        Word::Key | Word::Plain => Ink::Plain,
+    }
 }
 
 /// A note or warning in the look of a banner, a quote on a quiet fill.

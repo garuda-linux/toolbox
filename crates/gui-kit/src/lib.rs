@@ -7,6 +7,7 @@
 // runs past the default limit.
 #![recursion_limit = "256"]
 
+pub mod code;
 pub mod desktop;
 pub mod fonts;
 pub mod frost;

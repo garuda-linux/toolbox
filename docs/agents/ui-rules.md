@@ -151,6 +151,10 @@ Rules for pages, gui-kit widgets and the command line's output.
 - Cut text ends in "…" and shows whole in a tooltip and to screen readers.
 - Copy buttons only on technical values (versions, addresses, device
   paths, UUIDs).
+- A guide code block's copy button is the small button over its top right
+  corner (`widgets::corner_button`). It fades in while the pointer is on
+  the block or the button holds the focus, and stays in the Tab order
+  and the accessibility tree while hidden. Code runs under it.
 
 ## Shell
 

@@ -10,6 +10,7 @@
 #[cfg(test)]
 mod tests;
 
+pub mod console;
 mod guide;
 pub mod links;
 pub mod markdown;
@@ -22,6 +23,7 @@ mod built_in {
 
 use std::sync::LazyLock;
 
+pub use console::{ConsoleLine, Word, command_words, console_lines};
 pub use guide::{Guide, GuidePart, Outline, Page};
 pub use links::broken_links;
 pub use markdown::{

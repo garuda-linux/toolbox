@@ -3,6 +3,7 @@
     reason = "tests build desktop palettes from literal colours"
 )]
 
+mod code;
 mod letter_softness;
 mod letters;
 mod lights;

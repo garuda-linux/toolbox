@@ -5,6 +5,7 @@
 //! tokens decide the steps between surfaces and the contrast of text, so
 //! the app keeps its depth and stays readable on any desktop theme.
 
+mod code;
 mod frost;
 pub mod letters;
 mod shades;
@@ -20,6 +21,7 @@ pub use letters::{LETTER_HUES, LetterTiles};
 pub use sizes::Sizes;
 pub use tiles::{Hue, Tile, Tiles, page_hue, set_page_hue};
 
+pub use self::code::CodeInks;
 use self::frost::{thin, veil};
 use self::shades::{shades, shimmer, top_light, track_hover};
 use crate::palette::Palette;
@@ -86,6 +88,7 @@ pub struct Tokens {
     pub terminal_glass: Color32,
     /// Program colours, moved in lightness until they read on the terminal and its glass.
     pub terminal_ansi: Ansi,
+    pub code: CodeInks,
     /// The pane colour, see-through only as far as text on it stays readable.
     pub frost: Color32,
     /// Thin neutral black or white, so the blur shows and casts no tint.
@@ -170,6 +173,7 @@ impl Tokens {
             terminal,
             terminal_glass,
             terminal_ansi,
+            code: CodeInks::derive(&terminal_ansi, palette, [text, surfaces.field]),
             frost: surfaces.frost(text, sidebar, accent),
             header_scrim,
             frost_raised: veil(card, secondary),

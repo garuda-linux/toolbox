@@ -12,6 +12,7 @@ mod check;
 mod check_row;
 mod chip;
 mod choice;
+mod corner_button;
 mod dim;
 mod empty;
 mod field;
@@ -69,6 +70,7 @@ pub use chip::{
     status_dot_then, tag, toggle_chips,
 };
 pub use choice::Choice;
+pub use corner_button::corner_button;
 pub use dim::{dim_opacity, dim_picture, dimmed};
 pub use empty::{empty_state, empty_state_action, empty_state_with};
 pub use field::{forget_text, text_field, text_field_with_unit};

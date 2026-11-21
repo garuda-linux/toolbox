@@ -7,6 +7,7 @@ mod chevron;
 mod chip_row;
 mod choices;
 mod contrast;
+mod corner_button;
 mod cut;
 mod dialog_edges;
 mod dialog_focus;
