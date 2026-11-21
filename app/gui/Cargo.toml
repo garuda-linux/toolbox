@@ -22,6 +22,8 @@ required-features = ["testing"]
 
 [features]
 selftest = ["dep:kittest", "dep:image", "toolbox-services/selftest", "toolbox-system/selftest"]
+# Dev only, scripts/inspect.sh: lets egui_mcp read and drive the running window.
+inspection = ["eframe/inspection"]
 profiling = ["dep:tracing-tracy", "dep:tracy-client", "dep:tracy-client-sys"]
 testing = ["dep:egui_kittest", "toolbox-gui-kit/testing", "toolbox-services/testing", "toolbox-system/testing"]
 
