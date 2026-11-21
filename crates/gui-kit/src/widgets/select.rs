@@ -1,8 +1,10 @@
 mod options;
 
+use std::f32::consts::PI;
+
 use egui::{
-    Align, Color32, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response, Role, ScrollArea,
-    Sense, Ui, WidgetInfo, pos2, vec2,
+    Align, Color32, Event, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response, Role,
+    ScrollArea, Sense, Ui, Vec2, WidgetInfo, pos2, vec2,
 };
 #[cfg(test)]
 pub(super) use options::option_fill;
@@ -13,6 +15,7 @@ use super::press::{Pointer, hover_amount};
 use super::text::cut;
 use super::{Choice, focus_ring, line, rich};
 use crate::fonts::{BODY, Weight};
+use crate::motion::{self, Timing};
 use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT};
 use crate::ui_ext::icon_image;
 use crate::{icons, tokens};
@@ -187,6 +190,7 @@ impl<'a> Select<'a> {
 
         // Read after the list ran, which opens or closes it this frame.
         let open = Popup::is_id_open(ui.ctx(), Popup::default_response_id(&response));
+        paint_chevron(ui, &response, open);
         ui.ctx()
             .accesskit_node_builder(response.id, |node| node.set_expanded(open));
         Choice {
@@ -327,12 +331,61 @@ fn paint_pill(
         .with_clip_rect(text)
         .galley(pos2(text.left(), text_top), galley, ink);
 
+    focus_ring(ui, response, CONTROL_RADIUS);
+    was_cut
+}
+
+fn paint_chevron(ui: &Ui, pill: &Response, open: bool) {
+    let turn = Timing::both(motion::CHEVRON_TURN);
+    let id = pill.id.with("chevron");
+
+    // A key that opened or closed the list jumps, a click turns. A key
+    // pressed while a click's turn runs leaves that turn alone.
+    let was_open = ui.data_mut(|data| {
+        let key = id.with("open");
+        let was = data.get_temp::<bool>(key);
+        data.insert_temp(key, open);
+        was
+    });
+
+    let toggled = was_open.is_some_and(|was| was != open);
+    let keyed = toggled
+        && ui.input(|input| {
+            input.events.iter().any(|event| {
+                matches!(
+                    event,
+                    Event::Key {
+                        pressed: true,
+                        key: _,
+                        physical_key: _,
+                        repeat: _,
+                        modifiers: _,
+                    }
+                )
+            })
+        });
+
+    if keyed {
+        motion::settle(ui.ctx(), id, open);
+    }
+
+    let turned = motion::presence(ui.ctx(), id, open, turn);
+    let rect = pill.rect;
+    if !ui.is_rect_visible(rect) {
+        return;
+    }
+
     let chevron = Rect::from_center_size(
         pos2(rect.right() - PADDING_X - CHEVRON / 2.0, rect.center().y),
         vec2(CHEVRON, CHEVRON),
     );
 
-    icon_image(ui, icons::GO_DOWN, tokens.secondary).paint_at(ui, chevron);
-    focus_ring(ui, response, CONTROL_RADIUS);
-    was_cut
+    let image = icon_image(ui, icons::GO_DOWN, tokens::current(ui.ctx()).secondary);
+    let image = if turned > 0.0 {
+        image.rotate(turned * PI, Vec2::splat(0.5))
+    } else {
+        image
+    };
+
+    image.paint_at(ui, chevron);
 }

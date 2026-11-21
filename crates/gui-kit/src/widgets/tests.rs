@@ -3,6 +3,7 @@ mod action_row_tile;
 mod banner;
 mod centred;
 mod check_row;
+mod chevron;
 mod chip_row;
 mod choices;
 mod contrast;
