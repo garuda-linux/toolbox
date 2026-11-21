@@ -25,6 +25,13 @@ fn launch_with_look() -> (
 }
 
 #[test]
+fn a_launched_app_has_read_the_system() {
+    let harness = launch(Setup::default());
+
+    assert!(!harness.state().awaits_first_read());
+}
+
+#[test]
 fn first_frame_uses_the_fallback_palette() {
     let harness = launch(Setup::default());
 

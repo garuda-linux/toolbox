@@ -1,5 +1,6 @@
 use std::collections::BTreeSet;
 use std::sync::OnceLock;
+use std::time::{Duration, Instant};
 
 use egui::accesskit::Role;
 use egui::{Event, Key, Modifiers, PointerButton, Pos2, Rect, Vec2};
@@ -57,14 +58,33 @@ pub fn launch_with(
     setup: Setup,
     fill: fn(Setup, &egui::Context) -> Setup,
 ) -> Harness<'static, App> {
+    let sampled = setup.snapshot.is_none();
     let mut harness = builder.build_eframe(move |cc| {
         let setup = finish_reads(fill(setup, &cc.egui_ctx), &cc.egui_ctx);
         App::new(cc, setup)
     });
 
     harness.run();
+    if sampled {
+        await_sample_read(&mut harness);
+    }
+
     harness
 }
+
+/// `run` stops at the first frame that only asks for a later one, which
+/// the loading dots do while the sample read still runs on a busy machine.
+fn await_sample_read(harness: &mut Harness<'static, App>) {
+    let deadline = Instant::now() + Duration::from_secs(10);
+    while harness.state().awaits_first_read() {
+        assert!(Instant::now() < deadline, "the sample read took over 10 s");
+        std::thread::sleep(Duration::from_millis(20));
+        harness.step();
+    }
+
+    harness.run();
+}
+
 /// A reader the test does not give finishes at once, as on a system with
 /// nothing to read. Without one a page would wait for its read forever,
 /// and its Read again would spin.

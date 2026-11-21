@@ -163,6 +163,12 @@ impl App {
         self.snapshot.is_some() && self.reading.get().is_none()
     }
 
+    /// Whether the first read of the system has not ended yet.
+    #[cfg(feature = "testing")]
+    pub fn awaits_first_read(&self) -> bool {
+        self.first_read()
+    }
+
     /// Why Apply waits, as the id of its text. A guard that has not
     /// checked a restored change fails closed. A read that failed says
     /// so, as the Changes popover then offers to read it again.
