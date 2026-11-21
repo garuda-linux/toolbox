@@ -461,6 +461,10 @@ user's, and an apply still asks for the password.
   changes only how the list marks the change.
   At most 64 questions wait for the app (`instance::WAITING_ASKS`), the
   next is refused as `too-many`. Every edit that lands shows a toast.
+- `com.canonical.dbusmenu` (the global menu, `crates/appmenu`) runs on its
+  own connection under its unique name. An event only runs the action of
+  an enabled item it names, and no item applies the queue: File opens
+  the review. Clear asks in the window first.
 - Nothing on the bus applies the queue. Refusals cross as fixed codes.
 
 ## Network

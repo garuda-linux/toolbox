@@ -1,6 +1,7 @@
 //! A library beside `main.rs`, so the tests build the same [`App`] the binary runs.
 
 mod app;
+pub mod appmenu;
 pub mod artwork;
 pub mod boot;
 pub mod bootrepair;

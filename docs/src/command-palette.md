@@ -82,6 +82,30 @@ the next start.
 The **Setup Assistant** has two more: `Alt+Right` goes to the next step and
 `Alt+Left` goes back.
 
+## Use the global menu on Plasma
+
+On Plasma, the window also offers its commands as a global menu. It shows
+where Plasma shows application menus: behind the application menu button
+of the title bar, or in a **Global Menu** widget on a panel. Other desktops
+show no global menu, and the window works the same without it.
+
+| Menu     | Entries                                                                      |
+| -------- | ---------------------------------------------------------------------------- |
+| **File** | **Review and apply…**, **Remove all changes…**, **Quit**                     |
+| **View** | **Expanded sidebar**, **Console**, **Zoom in**, **Zoom out**, **Reset zoom** |
+| **Go**   | **Search this page**, **Command palette**, then the pages of the sidebar     |
+| **Help** | **Help for this page**                                                       |
+
+**Review and apply…** opens the list of queued changes. Click **Apply**
+there to apply them. No menu entry applies changes by itself, because any
+program of your session can choose a menu entry. **Review and apply…** and
+**Remove all changes…** are dimmed while no change waits. **Go** marks the
+open page, **View** whether the sidebar shows the page names and whether
+the **Console** is open. Entries show their shortcut.
+
+The global menu belongs to the window. The command line has no
+counterpart.
+
 ## See also
 
 - [The Console](console.md)

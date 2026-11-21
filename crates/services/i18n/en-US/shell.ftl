@@ -44,6 +44,20 @@ command-zoom-in-tooltip = Show everything in the window larger, up to 150 %
 command-zoom-out-tooltip = Show everything in the window smaller, down to 80 %
 command-zoom-reset-tooltip = Show everything in the window at its normal size again
 
+# The global menu, which Plasma shows in the title bar or a panel. The
+# titles of its menus.
+appmenu-file = File
+appmenu-view = View
+appmenu-go = Go
+appmenu-help = Help
+# Opens the list of queued changes, where they are applied. A dialog
+# follows, hence the dots.
+appmenu-review-and-apply = Review and apply…
+# Asks before it removes every queued change.
+appmenu-clear-changes = Remove all changes…
+# A check item: the sidebar shows the page names.
+appmenu-sidebar-expanded = Expanded sidebar
+
 # Notes at the top right of the page about background results.
 toast-name = Notification
 toast-plan-succeeded = Your changes were applied.

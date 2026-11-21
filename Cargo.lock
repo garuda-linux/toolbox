@@ -5578,6 +5578,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "009dbb7700f11c55ef83aebbe4c0e9cf1f1ac0844bd8d6f00dc38f302026e13a"
 
 [[package]]
+name = "toolbox-appmenu"
+version = "6.3.0"
+dependencies = [
+ "futures-lite",
+ "parking_lot",
+ "raw-window-handle",
+ "serde",
+ "thiserror 2.0.21",
+ "tokio",
+ "wayland-client",
+ "wayland-protocols-plasma",
+ "zbus 6.3.0",
+]
+
+[[package]]
 name = "toolbox-aur"
 version = "6.3.0"
 dependencies = [
@@ -5740,6 +5755,7 @@ dependencies = [
  "strum",
  "tempfile",
  "tokio",
+ "toolbox-appmenu",
  "toolbox-aur",
  "toolbox-calendar",
  "toolbox-catalog",
@@ -6396,6 +6412,7 @@ version = "1.29.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c14b15dffa2f4bd712103e857140aa04a4f2ff6e955c77d7eb8e53ee02a3b64"
 dependencies = [
+ "getrandom 0.4.3",
  "js-sys",
  "serde_core",
  "wasm-bindgen",

@@ -16,6 +16,7 @@ use egui::{
 };
 use kittest::{AccessKitNode, NodeT, Queryable as _, State};
 
+use super::menu::{self, Answer};
 use super::step::Step;
 
 pub const RESULT_FILE: &str = "result";
@@ -33,6 +34,7 @@ pub struct Runner {
     patience: Duration,
     dir: PathBuf,
     shot: Option<Receiver<Arc<ColorImage>>>,
+    menu: Option<Answer>,
     /// The verdict of a failed step, written once the shot of the window
     /// at the failure is saved.
     failed: Option<String>,
@@ -84,6 +86,7 @@ impl Runner {
             patience,
             dir,
             shot: None,
+            menu: None,
             failed: None,
             finished: false,
         }
@@ -159,6 +162,7 @@ impl Runner {
                 done_if(self.find(role, label).is_some_and(|target| target.disabled))
             }
             Step::Shot(name) => self.shoot(ctx, name),
+            Step::MenuClick { label, takes } => self.menu_click(ctx, label, takes),
         }
     }
 
@@ -274,6 +278,31 @@ impl Runner {
         self.shot = None;
         match save(&self.dir.join(format!("{name}.png")), &image) {
             Ok(()) => Outcome::Done,
+            Err(reason) => Outcome::Failed(reason),
+        }
+    }
+
+    fn menu_click(&mut self, ctx: &Context, label: &'static str, takes: bool) -> Outcome {
+        ctx.request_repaint();
+        let Some(answer) = &self.menu else {
+            match menu::click(ctx, label) {
+                Some(Ok(answer)) => self.menu = Some(answer),
+                Some(Err(reason)) => return Outcome::Failed(reason),
+                None => {}
+            }
+
+            return Outcome::Waiting;
+        };
+
+        let Ok(clicked) = answer.try_recv() else {
+            return Outcome::Waiting;
+        };
+
+        self.menu = None;
+        match clicked {
+            Ok(took) if took == takes => Outcome::Done,
+            Ok(true) => Outcome::Failed(format!("the menu item {label:?} took the click")),
+            Ok(false) => Outcome::Failed(format!("no enabled menu item {label:?}")),
             Err(reason) => Outcome::Failed(reason),
         }
     }

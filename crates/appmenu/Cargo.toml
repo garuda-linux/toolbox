@@ -1,0 +1,29 @@
+[package]
+name = "toolbox-appmenu"
+description = "Garuda Toolbox's global menu: com.canonical.dbusmenu on the session bus, tied to the window"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+
+[features]
+# A menu client as Plasma's, for the self-test.
+client = []
+
+[dependencies]
+parking_lot.workspace = true
+raw-window-handle.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+wayland-client.workspace = true
+wayland-protocols-plasma.workspace = true
+zbus = { workspace = true, features = ["proxy", "service"] }
+
+[dev-dependencies]
+futures-lite.workspace = true
+tokio = { workspace = true, features = ["macros", "rt"] }
+zbus = { workspace = true, features = ["p2p", "proxy"] }
+
+[lints]
+workspace = true

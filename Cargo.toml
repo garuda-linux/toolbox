@@ -15,6 +15,7 @@ publish = false
 ignored = ["epaint-color-fonts", "tracy-client", "tracy-client-sys", "winit-csd"]
 
 [workspace.dependencies]
+toolbox-appmenu = { path = "crates/appmenu" }
 toolbox-aur = { path = "crates/aur" }
 toolbox-news = { path = "crates/news" }
 toolbox-catalog = { path = "crates/catalog" }
@@ -112,6 +113,8 @@ tracing-log = { version = "0.2", default-features = false, features = ["log-trac
 # Pinned to the parking_lot eframe, arboard and alacritty_terminal link, so it is one copy.
 parking_lot = "=0.12.5"
 quick-xml = { version = "0.42", default-features = false }
+# `std`: its HandleError is an Error only with it.
+raw-window-handle = { version = "0.6", features = ["std"] }
 pulldown-cmark = { version = "0.13", default-features = false }
 regex = "1"
 rustix = "1"
@@ -128,6 +131,9 @@ toml = "1"
 tree-sitter = "0.27"
 tree-sitter-rust = "0.24"
 zbus = { version = "6", default-features = false, features = ["tokio"] }
+# `system`: winit's display is libwayland's, which only the system backend can share.
+wayland-client = { version = "0.31", features = ["system"] }
+wayland-protocols-plasma = { version = "0.3", features = ["client"] }
 
 # Unwinding stays on so a panicking service ends only its own task.
 [profile.release]

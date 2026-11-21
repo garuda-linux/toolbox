@@ -98,8 +98,9 @@ vulkan=()
 
 [ -z "${TOOLBOX_TEST_VULKAN:-}" ] || vulkan=("VK_DRIVER_FILES=$TOOLBOX_TEST_VULKAN")
 
+# A session bus of its own, which the global menu suite clicks through.
 env -u DISPLAY -u DBUS_SESSION_BUS_ADDRESS WAYLAND_DISPLAY=selftest "${vulkan[@]}" \
-  timeout "$run_timeout" "$binary" "${flags[@]}" >"$dir/out.log" 2>&1 || status=$?
+  timeout "$run_timeout" dbus-run-session -- "$binary" "${flags[@]}" >"$dir/out.log" 2>&1 || status=$?
 
 verdict=$(cat "$dir/shots/result" 2>/dev/null || echo "FAIL: no verdict (exit $status), see $dir/out.log")
 # Read by scripts/selftest-junit.sh.

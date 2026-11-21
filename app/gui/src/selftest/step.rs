@@ -28,6 +28,12 @@ pub enum Step {
         label: &'static str,
     },
     Shot(&'static str),
+    /// Clicks the global menu's item of that label over the session bus.
+    /// `takes: false` expects no enabled item of it.
+    MenuClick {
+        label: &'static str,
+        takes: bool,
+    },
 }
 
 impl Step {
@@ -106,6 +112,19 @@ impl Step {
             },
             Self::Text(text),
         ]
+    }
+
+    #[must_use = "a step does nothing until a suite runs it"]
+    pub const fn menu_click(label: &'static str) -> Self {
+        Self::MenuClick { label, takes: true }
+    }
+
+    #[must_use = "a step does nothing until a suite runs it"]
+    pub const fn menu_refuses(label: &'static str) -> Self {
+        Self::MenuClick {
+            label,
+            takes: false,
+        }
     }
 
     #[must_use = "a step does nothing until a suite runs it"]

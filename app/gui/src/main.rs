@@ -292,6 +292,7 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         power: Some(power),
         launcher: Some(starter),
         maintenance: Some(maintenance(&handle, mode)),
+        menu_bar: Some(toolbox_gui::appmenu::on_session_bus(handle.clone())),
         network: Some(network(&handle, mode)),
         packages: Some(packages(&handle, mode)),
         users: Some(helper.users),

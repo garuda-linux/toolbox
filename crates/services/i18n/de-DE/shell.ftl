@@ -44,6 +44,14 @@ command-zoom-in-tooltip = Gesamte Oberfläche vergrößern, bis 150 %
 command-zoom-out-tooltip = Gesamte Oberfläche verkleinern, bis 80 %
 command-zoom-reset-tooltip = Gesamte Oberfläche wieder in Originalgröße anzeigen
 
+appmenu-file = Datei
+appmenu-view = Ansicht
+appmenu-go = Gehe zu
+appmenu-help = Hilfe
+appmenu-review-and-apply = Prüfen und übernehmen…
+appmenu-clear-changes = Alle Änderungen verwerfen…
+appmenu-sidebar-expanded = Ausgeklappte Seitenleiste
+
 # Notes at the top right of the page about background results.
 toast-name = Benachrichtigung
 toast-plan-succeeded = Die Änderungen wurden übernommen.

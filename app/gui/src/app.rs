@@ -2,6 +2,7 @@
 //! frame loop.
 
 mod answers;
+mod appmenu;
 mod bootrepair;
 mod closing;
 mod commands;
@@ -132,6 +133,7 @@ pub struct App {
     /// Notes about background results, drawn over the page.
     toasts: Toasts,
     prefs: Preferences,
+    menu_bar: Option<crate::appmenu::Shown>,
 }
 
 impl Default for State {
@@ -190,6 +192,7 @@ impl App {
             look: setup.look,
             fonts: (None, None, false),
             glyphs: None,
+            menu_bar: crate::appmenu::Shown::start(setup.menu_bar, cc, &sender),
             sender,
             receiver,
             palette: Palette::default(),
@@ -296,6 +299,7 @@ impl eframe::App for App {
         self.take_reports(ctx);
         self.answer_queue(ctx);
         self.guard_close(ctx);
+        self.follow_menu_bar(ctx);
         zoom::keep_smallest_window(ctx);
         self.run_all(ctx, Self::pressed(ctx));
     }

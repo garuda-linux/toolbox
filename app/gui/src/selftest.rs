@@ -6,6 +6,7 @@
 //! feature.
 
 mod about;
+mod appmenu;
 mod boot;
 mod bootrepair;
 mod components;
@@ -18,6 +19,7 @@ mod home;
 mod kernels;
 mod locales;
 mod maintenance;
+pub mod menu;
 mod network;
 mod packages;
 mod runner;
@@ -46,7 +48,7 @@ const SUITE_VARIABLE: &str = "GARUDA_TOOLBOX_SELFTEST_SUITE";
 /// How long one step may wait. A cold first read of the system is slow.
 const PATIENCE: Duration = Duration::from_secs(60);
 
-const SUITES: [(&str, Suite); 21] = [
+const SUITES: [(&str, Suite); 22] = [
     ("home", home::steps),
     ("setup", setup::steps),
     ("components", components::steps),
@@ -68,6 +70,7 @@ const SUITES: [(&str, Suite); 21] = [
     ("settings", settings::steps),
     ("guide", guide::steps),
     ("about", about::steps),
+    ("appmenu", appmenu::steps),
 ];
 
 /// Suites that need what only the Arch runner has, such as pacman's

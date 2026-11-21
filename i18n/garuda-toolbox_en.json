@@ -8196,6 +8196,31 @@
     "command-zoom-reset-tooltip": {
       "string": "Show everything in the window at its normal size again"
     },
+    "appmenu-file": {
+      "string": "File",
+      "developer_comment": "The global menu, which Plasma shows in the title bar or a panel. The\ntitles of its menus."
+    },
+    "appmenu-view": {
+      "string": "View"
+    },
+    "appmenu-go": {
+      "string": "Go"
+    },
+    "appmenu-help": {
+      "string": "Help"
+    },
+    "appmenu-review-and-apply": {
+      "string": "Review and apply…",
+      "developer_comment": "Opens the list of queued changes, where they are applied. A dialog\nfollows, hence the dots."
+    },
+    "appmenu-clear-changes": {
+      "string": "Remove all changes…",
+      "developer_comment": "Asks before it removes every queued change."
+    },
+    "appmenu-sidebar-expanded": {
+      "string": "Expanded sidebar",
+      "developer_comment": "A check item: the sidebar shows the page names."
+    },
     "toast-name": {
       "string": "Notification",
       "developer_comment": "Notes at the top right of the page about background results."

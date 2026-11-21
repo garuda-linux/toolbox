@@ -9,6 +9,7 @@ use toolbox_system::{Facts, Status};
 
 use super::PreferencesSetup;
 use crate::apply::ApplyHandle;
+use crate::appmenu::StartMenuBar;
 use crate::boot::BootSetup;
 use crate::bootrepair::BootRepairSetup;
 use crate::catalogs::Catalogs;
@@ -101,6 +102,8 @@ pub struct Setup {
     pub arrivals: Option<Arc<Arrivals>>,
     /// The Maintenance page's ranking and reset. `None` does neither.
     pub maintenance: Option<MaintenanceSetup>,
+    /// Starts the global menu with the window. `None` shows none.
+    pub menu_bar: Option<StartMenuBar>,
     pub preferences: PreferencesSetup,
 }
 
@@ -128,6 +131,7 @@ impl Default for Setup {
             version: FIXED_VERSION,
             dry_run: false,
             maintenance: None,
+            menu_bar: None,
             diagnostics: None,
             output_share: None,
             commands: None,

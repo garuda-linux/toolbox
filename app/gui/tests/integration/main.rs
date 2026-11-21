@@ -5,6 +5,7 @@
 // as the tests themselves do.
 #![cfg(test)]
 
+mod appmenu;
 mod boot;
 mod bootrepair;
 mod captured;
