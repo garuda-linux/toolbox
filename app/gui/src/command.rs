@@ -60,6 +60,9 @@ pub enum UiCommand {
     /// Opens the user guide on the page about the open one. F1, without
     /// Ctrl, as in other desktop apps.
     Help,
+    ZoomIn,
+    ZoomOut,
+    ZoomReset,
     Quit,
 }
 
@@ -258,13 +261,16 @@ pub struct CommandBus {
 
 impl UiCommand {
     /// The commands besides page navigation, in palette order.
-    pub const ACTIONS: [Self; 7] = [
+    pub const ACTIONS: [Self; 10] = [
         Self::Apply,
         Self::ToggleSidebar,
         Self::ToggleConsole,
         Self::OpenPalette,
         Self::FocusSearch,
         Self::Help,
+        Self::ZoomIn,
+        Self::ZoomOut,
+        Self::ZoomReset,
         Self::Quit,
     ];
 
@@ -279,6 +285,9 @@ impl UiCommand {
             Self::ClearChanges => "command-clear-changes",
             Self::FocusSearch => "command-focus-search",
             Self::Help => "command-help",
+            Self::ZoomIn => "command-zoom-in",
+            Self::ZoomOut => "command-zoom-out",
+            Self::ZoomReset => "command-zoom-reset",
             Self::Quit => "command-quit",
         }
     }
@@ -296,6 +305,9 @@ impl UiCommand {
             Self::ClearChanges => "command-clear-changes-tooltip",
             Self::FocusSearch => "command-focus-search-tooltip",
             Self::Help => "command-help-tooltip",
+            Self::ZoomIn => "command-zoom-in-tooltip",
+            Self::ZoomOut => "command-zoom-out-tooltip",
+            Self::ZoomReset => "command-zoom-reset-tooltip",
             Self::Quit => "command-quit-tooltip",
         }
     }

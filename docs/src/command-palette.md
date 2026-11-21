@@ -39,7 +39,7 @@ moment. AUR packages show only while the AUR is turned on in **Settings**.
 | An AUR package          | **AUR**, and **Installed** when it is        | Opens the package on **Packages**                         |
 
 The commands are **Apply changes**, **Review changes** (only while changes
-wait), **Remove all changes**, **Search this page**, **Help for this page**, **Toggle sidebar**, **Toggle console** and
+wait), **Remove all changes**, **Search this page**, **Help for this page**, **Toggle sidebar**, **Toggle console**, **Zoom in**, **Zoom out**, **Reset zoom** and
 **Quit**. They run at once, as
 their shortcut would. **Remove all changes** asks first. Pages, operations,
 apps and packages only open. They never change anything by themselves.
@@ -66,10 +66,14 @@ These keys work on every page.
 | `Ctrl+1` to `Ctrl+9` | Opens the first nine pages of the sidebar             |
 | `F5`                 | Reads the open page again, as its **Read again** does |
 | `F1`                 | Opens the [User guide](guide.md) on the open page     |
+| `Ctrl++`, `Ctrl+=`   | Shows everything in the window larger, up to 150 %    |
+| `Ctrl+-`             | Shows everything in the window smaller, down to 80 %  |
+| `Ctrl+0`             | Shows everything at its normal size again             |
 | `Ctrl+q`             | Quits the app. Queued changes are kept                |
 | `Ctrl+Tab`           | Leaves the terminal in the **Console**                |
 
-`F5` does nothing on a page without **Read again**.
+`F5` does nothing on a page without **Read again**. The zoom is kept for
+the next start.
 
 > **Note:** While the terminal of the **Console** has the keyboard focus,
 > keys go to the running program instead. An editor that runs there needs

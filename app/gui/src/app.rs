@@ -68,6 +68,7 @@ use crate::snapshot::{Reading, SnapshotHandle};
 use crate::toggle_pages::TogglePages;
 use crate::units::Units;
 use crate::users::Users;
+use crate::zoom::{self, Zoom};
 use crate::{profiling, shell, waking};
 
 /// What survives a restart. Everything else is rebuilt from the system.
@@ -83,6 +84,7 @@ struct State {
     recent: Vec<PageId>,
     /// The Setup Assistant reached its end once.
     setup_finished: bool,
+    zoom: Zoom,
 }
 
 pub struct App {
@@ -142,6 +144,7 @@ impl Default for State {
             motion: MotionChoice::default(),
             recent: Vec::new(),
             setup_finished: false,
+            zoom: Zoom::default(),
         }
     }
 }
@@ -233,6 +236,7 @@ impl App {
         app.apply_language(&cc.egui_ctx);
         app.apply_palettes(&cc.egui_ctx);
         app.apply_choices(&cc.egui_ctx);
+        zoom::install(&cc.egui_ctx, app.state.zoom);
         crate::page_ui::offer_boot_repair(&cc.egui_ctx, app.services.boot_repair.offered());
         app
     }
@@ -292,6 +296,7 @@ impl eframe::App for App {
         self.take_reports(ctx);
         self.answer_queue(ctx);
         self.guard_close(ctx);
+        zoom::keep_smallest_window(ctx);
         self.run_all(ctx, Self::pressed(ctx));
     }
 

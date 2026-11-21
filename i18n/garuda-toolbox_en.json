@@ -8151,6 +8151,15 @@
     "command-clear-changes": {
       "string": "Remove all changes"
     },
+    "command-zoom-in": {
+      "string": "Zoom in"
+    },
+    "command-zoom-out": {
+      "string": "Zoom out"
+    },
+    "command-zoom-reset": {
+      "string": "Reset zoom"
+    },
     "command-apply-tooltip": {
       "string": "Run every queued change now, with one password"
     },
@@ -8177,6 +8186,15 @@
     },
     "command-help-tooltip": {
       "string": "Open the user guide on the page about the open one"
+    },
+    "command-zoom-in-tooltip": {
+      "string": "Show everything in the window larger, up to 150 %"
+    },
+    "command-zoom-out-tooltip": {
+      "string": "Show everything in the window smaller, down to 80 %"
+    },
+    "command-zoom-reset-tooltip": {
+      "string": "Show everything in the window at its normal size again"
     },
     "toast-name": {
       "string": "Notification",

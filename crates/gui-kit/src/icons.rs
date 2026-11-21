@@ -159,8 +159,11 @@ pub const VIEW_REFRESH: Icon = bundled!("view-refresh");
 pub const VIEW_TASK: Icon = bundled!("view-task");
 pub const VIEW_VISIBLE: Icon = bundled!("view-visible");
 pub const WINDOW_CLOSE: Icon = bundled!("window-close");
+pub const ZOOM_IN: Icon = bundled!("zoom-in");
+pub const ZOOM_ORIGINAL: Icon = bundled!("zoom-original");
+pub const ZOOM_OUT: Icon = bundled!("zoom-out");
 
-pub const ALL: [Icon; 98] = [
+pub const ALL: [Icon; 101] = [
     APPLICATIONS_DEVELOPMENT,
     APPLICATIONS_GAMES,
     APPLICATIONS_GRAPHICS,
@@ -259,6 +262,9 @@ pub const ALL: [Icon; 98] = [
     VIEW_TASK,
     VIEW_VISIBLE,
     WINDOW_CLOSE,
+    ZOOM_IN,
+    ZOOM_ORIGINAL,
+    ZOOM_OUT,
 ];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

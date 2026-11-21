@@ -8,6 +8,7 @@ use crate::command::{AppCommand, Command, DiscoverCommand, PackagesCommand, Sent
 use crate::page::PageId;
 use crate::page_service::Owner;
 use crate::page_ui;
+use crate::zoom::Zoom;
 
 impl App {
     /// Runs every command that reached the app this frame: the shortcuts
@@ -73,12 +74,20 @@ impl App {
             }
             UiCommand::ReviewChanges => self.changes_ui.open = true,
             UiCommand::FocusSearch => toolbox_gui_kit::widgets::request_search_focus(ctx),
+            UiCommand::ZoomIn => self.zoom(ctx, Zoom::larger(self.state.zoom)),
+            UiCommand::ZoomOut => self.zoom(ctx, Zoom::smaller(self.state.zoom)),
+            UiCommand::ZoomReset => self.zoom(ctx, Zoom::default()),
             UiCommand::Help => {
                 let (file, anchor) = self.state.page.guide_topic();
                 self.pages.show_guide(file, anchor);
                 self.run_ui(ctx, UiCommand::Navigate(PageId::Guide));
             }
         }
+    }
+
+    fn zoom(&mut self, ctx: &egui::Context, zoom: Zoom) {
+        self.state.zoom = zoom;
+        zoom.apply(ctx);
     }
 
     /// The one way to another page, also for a page or a service that asks

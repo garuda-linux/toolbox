@@ -28,6 +28,9 @@ command-quit = Beenden
 command-focus-search = Diese Seite durchsuchen
 command-help = Hilfe zu dieser Seite
 command-clear-changes = Alle Änderungen verwerfen
+command-zoom-in = Vergrößern
+command-zoom-out = Verkleinern
+command-zoom-reset = Originalgröße
 command-apply-tooltip = Alle vorgemerkten Änderungen jetzt übernehmen. Das Passwort wird nur einmal abgefragt
 command-toggle-sidebar-tooltip = Seitennamen in der Seitenleiste ein- oder ausblenden
 command-toggle-console-tooltip = Konsole mit der Ausgabe des letzten Vorgangs ein- oder ausblenden
@@ -37,6 +40,9 @@ command-clear-changes-tooltip = Alle vorgemerkten Änderungen verwerfen. Das lä
 command-quit-tooltip = Garuda Toolbox beenden. Vorgemerkte Änderungen bleiben erhalten
 command-focus-search-tooltip = Cursor in das Suchfeld der aktuellen Seite setzen
 command-help-tooltip = Handbuch zur aktuellen Seite öffnen
+command-zoom-in-tooltip = Gesamte Oberfläche vergrößern, bis 150 %
+command-zoom-out-tooltip = Gesamte Oberfläche verkleinern, bis 80 %
+command-zoom-reset-tooltip = Gesamte Oberfläche wieder in Originalgröße anzeigen
 
 # Notes at the top right of the page about background results.
 toast-name = Benachrichtigung

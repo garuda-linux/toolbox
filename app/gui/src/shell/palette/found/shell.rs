@@ -29,6 +29,9 @@ fn command_look(command: UiCommand) -> (Section, Look) {
         UiCommand::ToggleConsole => icons::UTILITIES_TERMINAL,
         UiCommand::OpenPalette | UiCommand::FocusSearch => icons::SYSTEM_SEARCH,
         UiCommand::ReviewChanges | UiCommand::ClearChanges => icons::VIEW_PIM_TASKS,
+        UiCommand::ZoomIn => icons::ZOOM_IN,
+        UiCommand::ZoomOut => icons::ZOOM_OUT,
+        UiCommand::ZoomReset => icons::ZOOM_ORIGINAL,
         UiCommand::Quit => icons::WINDOW_CLOSE,
     };
 

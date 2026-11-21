@@ -55,3 +55,4 @@ mod toasts;
 mod toolbar;
 mod tweaks;
 mod users;
+mod zoom;

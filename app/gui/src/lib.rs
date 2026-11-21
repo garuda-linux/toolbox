@@ -50,6 +50,7 @@ pub mod toggle_pages;
 pub mod units;
 pub mod users;
 pub mod waking;
+pub mod zoom;
 
 pub use app::{App, FIXED_VERSION, PreferencesSetup, Setup};
 pub use toolbox_services::{apply, diagnostics, log_folder, page, programs, queue};

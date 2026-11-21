@@ -203,7 +203,7 @@ fn run(
         viewport: egui::ViewportBuilder::default()
             .with_app_id(APP_ID)
             .with_inner_size([1400.0, 960.0])
-            .with_min_inner_size([640.0, 480.0]),
+            .with_min_inner_size(toolbox_gui::zoom::SMALLEST_WINDOW),
         renderer: eframe::Renderer::Wgpu,
         persist_window: true,
         ..Default::default()

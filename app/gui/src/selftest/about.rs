@@ -1,6 +1,8 @@
 //! The About page: the hero, the facts and the links show, the system
 //! details are copied, and the exorcist answers in a dialog that Escape
-//! closes. No link is clicked, a run must not open the browser.
+//! closes. Ctrl+Plus zooms the window, Ctrl+Minus stops at the smallest
+//! zoom and Ctrl+0 resets it. No link is clicked, a run must not open
+//! the browser.
 
 use egui::Key;
 
@@ -22,5 +24,16 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("about-exorcist"),
         Step::press(Key::Escape),
         Step::WaitGone("Issue tracker"),
+        Step::shortcut(Key::Plus),
+        Step::wait("Copy system details"),
+        Step::Shot("about-zoomed"),
+        Step::shortcut(Key::Minus),
+        Step::shortcut(Key::Minus),
+        Step::shortcut(Key::Minus),
+        Step::shortcut(Key::Minus),
+        Step::wait("Copy system details"),
+        Step::Shot("about-zoom-smallest"),
+        Step::shortcut(Key::Num0),
+        Step::wait("Copy system details"),
     ]
 }

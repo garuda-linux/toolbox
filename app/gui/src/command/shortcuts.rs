@@ -23,10 +23,14 @@ const PAGE_KEYS: [Key; 9] = [
 /// them again.
 static BOUND: LazyLock<Vec<(KeyboardShortcut, UiCommand)>> = LazyLock::new(|| {
     let pages = PageId::ALL.into_iter().map(UiCommand::Navigate);
+
+    // `+` needs Shift on a US keyboard, so browsers zoom in on Ctrl+= too.
+    let zoom_in = KeyboardShortcut::new(Modifiers::COMMAND, Key::Equals);
     let bound = UiCommand::ACTIONS
         .into_iter()
         .chain(pages)
         .filter_map(|command| Some((command.shortcut()?, command)))
+        .chain([(zoom_in, UiCommand::ZoomIn)])
         .collect();
 
     ranked(bound)
@@ -44,6 +48,9 @@ impl UiCommand {
             Self::ToggleConsole => Key::J,
             Self::OpenPalette => Key::K,
             Self::FocusSearch => Key::F,
+            Self::ZoomIn => Key::Plus,
+            Self::ZoomOut => Key::Minus,
+            Self::ZoomReset => Key::Num0,
             Self::Help => return Some(KeyboardShortcut::new(Modifiers::NONE, Key::F1)),
             Self::ReviewChanges | Self::ClearChanges => return None,
             Self::Quit => Key::Q,

@@ -28,6 +28,9 @@ command-quit = Quit
 command-focus-search = Search this page
 command-help = Help for this page
 command-clear-changes = Remove all changes
+command-zoom-in = Zoom in
+command-zoom-out = Zoom out
+command-zoom-reset = Reset zoom
 command-apply-tooltip = Run every queued change now, with one password
 command-toggle-sidebar-tooltip = Show or hide the page names in the sidebar
 command-toggle-console-tooltip = Show or hide the console with the output of the last run
@@ -37,6 +40,9 @@ command-clear-changes-tooltip = Remove every queued change. This cannot be undon
 command-quit-tooltip = Close Garuda Toolbox. Queued changes are kept
 command-focus-search-tooltip = Put the cursor into the search of the open page
 command-help-tooltip = Open the user guide on the page about the open one
+command-zoom-in-tooltip = Show everything in the window larger, up to 150 %
+command-zoom-out-tooltip = Show everything in the window smaller, down to 80 %
+command-zoom-reset-tooltip = Show everything in the window at its normal size again
 
 # Notes at the top right of the page about background results.
 toast-name = Notification

@@ -91,6 +91,7 @@ constants of `crates/gui-kit/src/icons.rs`, bundled in
 | Non-interactive pacman      | `DIALOG_OK`                                   | Tweaks Garuda Update "Non-interactive pacman" row                         |
 | Disk space check            | `DRIVE_HARDDISK`                              | Tweaks Garuda Update "Skip disk space check" row                          |
 | Installed kernels           | `CHECKBOX`                                    | Kernels "Installed" heading and its rows                                  |
+| Zoom in, out, reset         | `ZOOM_IN`, `ZOOM_OUT`, `ZOOM_ORIGINAL`        | palette commands                                                          |
 | Kernels to install          | `FOLDER_DOWNLOAD`                             | Kernels "Available" heading and its rows                                  |
 
 Page glyphs reused for their topic: `DRIVE_HARDDISK_ROOT` (Config Files
