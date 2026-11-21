@@ -17,7 +17,7 @@ impl Tone {
     }
 
     /// Information is the accent, a neutral note the secondary text.
-    const fn status_colour(self, tokens: &Tokens) -> Color32 {
+    pub(super) const fn status_colour(self, tokens: &Tokens) -> Color32 {
         match self {
             Self::Accent => tokens.accent,
             Self::Neutral => tokens.secondary,

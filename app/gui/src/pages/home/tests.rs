@@ -1,3 +1,4 @@
+mod disk_meter;
 mod live;
 mod lost;
 mod merges;

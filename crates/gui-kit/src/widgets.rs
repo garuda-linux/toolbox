@@ -26,6 +26,7 @@ pub(crate) mod list;
 mod loading;
 mod mark_word;
 mod menu;
+mod meter;
 mod metric;
 mod modal;
 mod nav;
@@ -88,6 +89,7 @@ use list::text_line_height;
 pub use list::{ListItem, RowHeights, RowList, RowState, Rows, row_height, text_block_height};
 pub use loading::{loading_indicator, loading_label};
 pub use menu::{menu_action, menu_button, menu_heading, menu_item};
+pub use meter::meter;
 pub use metric::{MetricKind, MetricText, metric};
 pub use modal::{
     Asked, Confirmation, DialogWidth, ModalOutcome, ModalWrapper, Pending, Question,

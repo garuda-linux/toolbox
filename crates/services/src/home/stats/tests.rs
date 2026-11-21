@@ -3,7 +3,7 @@ use toolbox_system::{
     DiskSpace, Facts, HealthIssue, HealthLevel, PackageCount, PendingUpdate, ProbeError,
 };
 
-use super::{Figure, Standing, Stat, Tile, tiles};
+use super::{Figure, Standing, Stat, Tile, tiles, used_share};
 use crate::home::Overview;
 use crate::home::tests::{DAY, GB, now, quiet};
 
@@ -98,4 +98,29 @@ fn a_check_that_failed_leaves_its_tile_unknown() {
         standings(&tiles(Some(&overview), Some(&read))),
         [Standing::Unknown; 4]
     );
+}
+
+#[test]
+fn only_the_disk_tile_carries_the_share_in_use() {
+    let status = quiet();
+    let read = facts(200 * GB);
+    let overview = Overview::of(&status, now());
+    let shown = tiles(Some(&overview), Some(&read));
+
+    assert_eq!(shown.map(|tile| tile.used), [None, Some(0.6), None, None]);
+    assert_eq!(tiles(None, None)[1].used, None, "not read yet");
+}
+
+#[test]
+fn the_share_in_use_is_the_room_not_free_of_the_whole() {
+    assert_eq!(used_share(100 * GB, 400 * GB), Some(0.75));
+    assert_eq!(used_share(0, 400 * GB), Some(1.0));
+    assert_eq!(used_share(400 * GB, 400 * GB), Some(0.0));
+}
+
+#[test]
+fn a_disk_without_size_has_no_share_and_more_free_than_whole_none_in_use() {
+    assert_eq!(used_share(0, 0), None);
+    assert_eq!(used_share(5 * GB, 0), None);
+    assert_eq!(used_share(600 * GB, 500 * GB), Some(0.0));
 }

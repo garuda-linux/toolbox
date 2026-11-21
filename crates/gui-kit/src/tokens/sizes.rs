@@ -43,6 +43,8 @@ pub struct Sizes {
     /// one-line row's.
     pub icon_tile: f32,
     pub icon_tile_small: f32,
+    pub icon_tile_large: f32,
+    pub meter_height: f32,
     /// A row's 32 px picture and the title beside it, on every page alike.
     pub picture_gap: f32,
     /// Home's logo and the greeting beside it.
@@ -160,6 +162,8 @@ impl Sizes {
         text_to_control: 16.0,
         icon_tile: 36.0,
         icon_tile_small: 28.0,
+        icon_tile_large: 48.0,
+        meter_height: 4.0,
         picture_gap: 10.0,
         logo_gap: 18.0,
         corner_inset: vec2(28.0, 24.0),

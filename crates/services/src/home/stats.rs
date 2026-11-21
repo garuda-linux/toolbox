@@ -43,11 +43,13 @@ pub enum Figure {
     Days(u64),
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Tile {
     pub stat: Stat,
     pub figure: Figure,
     pub standing: Standing,
+    /// The share of the disk in use, from 0 to 1, on the Disk tile alone.
+    pub used: Option<f32>,
 }
 
 impl Stat {
@@ -75,12 +77,34 @@ pub fn tiles(overview: Option<&Overview<'_>>, facts: Option<&Facts>) -> [Tile; 4
             Stat::LastUpdate => last_update(overview),
         };
 
+        let used = match stat {
+            Stat::Disk => facts
+                .and_then(|facts| facts.disk.as_ref().ok())
+                .and_then(|disk| used_share(disk.free, disk.total)),
+            Stat::Updates | Stat::Health | Stat::LastUpdate => None,
+        };
+
         Tile {
             stat,
             figure,
             standing,
+            used,
         }
     })
+}
+
+/// `None` for a disk of no size. A file system that reports more free
+/// than its whole counts as empty.
+pub fn used_share(free: u64, total: u64) -> Option<f32> {
+    const STEPS: u16 = 10_000;
+    if total == 0 {
+        return None;
+    }
+
+    let used = u128::from(total.saturating_sub(free));
+    let steps = used * u128::from(STEPS) / u128::from(total);
+    let steps = u16::try_from(steps).unwrap_or(STEPS);
+    Some(f32::from(steps) / f32::from(STEPS))
 }
 
 fn updates(overview: Option<&Overview<'_>>) -> (Figure, Standing) {

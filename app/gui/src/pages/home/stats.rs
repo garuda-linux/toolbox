@@ -2,11 +2,13 @@
 //! green while it is fine, and opens the Maintenance tab that acts on it.
 
 use egui::accesskit::Role;
-use egui::{Align, CursorIcon, Frame, Layout, Response, Sense, Stroke, Ui, UiBuilder, WidgetInfo};
+use egui::{Align, CursorIcon, Frame, Layout, Response, Sense, Ui, UiBuilder, WidgetInfo};
 use toolbox_cli::output::size;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
-use toolbox_gui_kit::widgets::{TileSize, Tone, focus_ring, rich, status_tile};
+use toolbox_gui_kit::widgets::{
+    TileSize, Tone, focus_ring, light_rim, meter, paint_top_light, rich, status_tile,
+};
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_services::home::Overview;
 use toolbox_services::home::stats::{Figure, Standing, Stat, Tile, tiles};
@@ -70,13 +72,7 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
         Standing::Unknown => Tone::Neutral,
     };
 
-    // White on near white needs a rim, a dark card stands off by its fill.
-    let rim = if ui.visuals().dark_mode {
-        Stroke::NONE
-    } else {
-        Stroke::new(1.0, tokens.outline)
-    };
-
+    let rim = light_rim(ui, tokens.outline);
     let response = ui
         .scope_builder(
             UiBuilder::new()
@@ -93,7 +89,7 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
                 };
 
                 ui.set_width(width);
-                Frame::new()
+                let shown = Frame::new()
                     .fill(fill)
                     .stroke(rim)
                     .corner_radius(CARD_RADIUS)
@@ -110,7 +106,17 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
                             egui::Label::new(rich(ui, &value, Weight::Bold, SECTION, tokens.text))
                                 .truncate(),
                         );
+
+                        // Every tile keeps the bar's line, so the row stays even.
+                        let warn = tile.standing == Standing::Attention;
+                        meter(
+                            ui,
+                            tile.used,
+                            if warn { Tone::Warning } else { Tone::Accent },
+                        );
                     });
+
+                paint_top_light(ui.painter(), shown.response.rect, CARD_RADIUS);
             },
         )
         .response;
