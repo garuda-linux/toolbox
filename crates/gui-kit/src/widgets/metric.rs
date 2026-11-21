@@ -6,6 +6,7 @@ use egui::{Color32, CursorIcon, Frame, Response, Role, Sense, Ui, UiBuilder, Wid
 
 use super::card::light_rim;
 use super::press::Pointer;
+use super::top_light::paint_top_light;
 use super::{focus_ring, rich, text_line_height};
 use crate::fonts::{SECTION, SMALL, TITLE, Weight};
 use crate::theme::CARD_RADIUS;
@@ -70,7 +71,7 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
                 Pointer::Rest
             };
 
-            Frame::new()
+            let shown = Frame::new()
                 .fill(lit(&tokens, fill, pointer))
                 .stroke(rim)
                 .corner_radius(CARD_RADIUS)
@@ -94,6 +95,8 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
                         }
                     });
                 });
+
+            paint_top_light(ui.painter(), shown.response.rect, CARD_RADIUS);
         })
         .response;
 

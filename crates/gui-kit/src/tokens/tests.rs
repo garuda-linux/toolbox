@@ -5,6 +5,7 @@
 
 mod letter_softness;
 mod letters;
+mod lights;
 mod scrim;
 mod sidebar;
 mod terminal_glass;
@@ -15,7 +16,7 @@ use egui::{Color32, Theme};
 use super::{Tokens, contrast};
 use crate::palette::Palette;
 
-fn lightness(color: Color32) -> u16 {
+pub(super) fn lightness(color: Color32) -> u16 {
     u16::from(color.r()) + u16::from(color.g()) + u16::from(color.b())
 }
 

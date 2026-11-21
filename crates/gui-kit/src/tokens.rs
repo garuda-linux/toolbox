@@ -21,7 +21,7 @@ pub use sizes::Sizes;
 pub use tiles::{Hue, Tile, Tiles, page_hue, set_page_hue};
 
 use self::frost::{thin, veil};
-use self::shades::{shades, track_hover};
+use self::shades::{shades, shimmer, top_light, track_hover};
 use crate::palette::Palette;
 use crate::terminal_colors::Ansi;
 
@@ -79,6 +79,8 @@ pub struct Tokens {
     pub error_hover: Color32,
     pub error_pressed: Color32,
     pub track_hover: Color32,
+    pub top_light: Color32,
+    pub shimmer: Color32,
     pub terminal: Color32,
     /// Thin neutral black or white, so the blur casts no tint and output stays readable.
     pub terminal_glass: Color32,
@@ -100,6 +102,10 @@ pub struct Tokens {
 }
 
 impl Tokens {
+    #[expect(
+        clippy::too_many_lines,
+        reason = "one line per token, which groups would only hide"
+    )]
     pub fn derive(palette: &Palette, theme: Theme) -> Self {
         let (base, ink) = (palette.window, palette.text);
         let surfaces = Surfaces::of(base, ink, theme);
@@ -159,6 +165,8 @@ impl Tokens {
             error_hover,
             error_pressed,
             track_hover: track_hover(theme, surfaces.pressed, text),
+            top_light: top_light(theme, card),
+            shimmer: shimmer(theme, surfaces.hover, card),
             terminal,
             terminal_glass,
             terminal_ansi,

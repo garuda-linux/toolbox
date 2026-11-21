@@ -99,6 +99,11 @@ Rules for pages, gui-kit widgets and the command line's output.
 - A Soft button on a dialog takes `field_on_raised`. Dialogs dim the
   window under them with `scrim`.
 - Frosted surfaces: see [Frost](architecture.md#frost).
+- Cards and the metric and stat tiles have a 1 px `outline` rim in light
+  themes only (`widgets::light_rim`). In dark themes they, the raised
+  menus, popovers, notes and dialogs show a 1 px `top_light` line along
+  their top edge instead, which fades out down both top corners
+  (`widgets::paint_top_light`).
 - The window is opaque. `sidebar` is `window` under `header_scrim`, so
   sidebar and header band read as one surface.
 - Icons follow [icons.md](icons.md). Row, link and section icons sit in a

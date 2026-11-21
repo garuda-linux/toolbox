@@ -2,17 +2,23 @@ use egui::epaint::{RectShape, Shadow};
 use egui::{Color32, CornerRadius, Frame, InnerResponse, Margin, Rect, Shape, Stroke, Ui, vec2};
 
 use crate::tokens;
+use crate::widgets::paint_top_light;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Glass {
     frame: Frame,
     tint: Color32,
+    lit: bool,
 }
 
 impl Glass {
     #[must_use = "a glass does nothing until shown"]
     pub const fn new(frame: Frame, tint: Color32) -> Self {
-        Self { frame, tint }
+        Self {
+            frame,
+            tint,
+            lit: false,
+        }
     }
 
     #[must_use = "a glass does nothing until shown"]
@@ -23,7 +29,13 @@ impl Glass {
             .inner_margin(margin)
             .shadow(ui.visuals().popup_shadow);
 
-        Self::new(frame, super::raised(ui.ctx()))
+        Self::new(frame, super::raised(ui.ctx())).lit()
+    }
+
+    #[must_use = "a glass does nothing until shown"]
+    pub const fn lit(mut self) -> Self {
+        self.lit = true;
+        self
     }
 
     /// The frame to hand to a container that draws it itself, such as a
@@ -59,6 +71,10 @@ impl Glass {
 
         ui.painter()
             .set(slot, RectShape::filled(rect, corners, self.tint));
+        if self.lit {
+            paint_top_light(ui.painter(), rect, corners);
+        }
+
         inner
     }
 }

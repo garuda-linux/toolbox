@@ -52,6 +52,7 @@ mod text;
 mod text_box;
 mod text_link;
 mod tile;
+mod top_light;
 
 pub use action_row::ActionRow;
 pub use banner::banner;
@@ -60,7 +61,7 @@ pub use buttons::{
     pill_button_at_least, pill_width, refresh_button, refresh_button_busy, right_buttons,
     sidebar_button,
 };
-pub use card::{card, card_row, card_row_with, padded_card};
+pub use card::{card, card_row, card_row_with, light_rim, padded_card};
 pub use check_row::{CHECK_ROW_HEIGHT, CheckRowTexts, check_row, check_row_with_line};
 pub use chip::{
     Tone, chip, chips, counted_chips, link_tag, named_chips, queued_tag, status_dot,
@@ -117,3 +118,4 @@ pub use text::{line, mono_small, rich};
 pub use text_box::{text_box, text_box_at, text_box_filling};
 pub use text_link::{counted_disclosure, disclosure, text_button, text_link};
 pub use tile::link_tile;
+pub use top_light::paint_top_light;

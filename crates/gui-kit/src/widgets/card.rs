@@ -7,6 +7,7 @@ use egui::{
 
 use super::list::memory;
 use super::press::{Pointer, hover_amount};
+use super::top_light::paint_top_light;
 use crate::theme::{CARD_RADIUS, RADIUS};
 use crate::tokens;
 
@@ -15,7 +16,7 @@ pub(super) const DIVIDER: f32 = 1.0;
 
 pub fn card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
     let tokens = tokens::current(ui.ctx());
-    Frame::new()
+    let shown = Frame::new()
         .fill(tokens.card)
         .stroke(light_rim(ui, tokens.outline))
         .corner_radius(CornerRadius::same(CARD_RADIUS))
@@ -23,7 +24,10 @@ pub fn card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R>
             ui.set_width(ui.available_width());
             ui.spacing_mut().item_spacing.y = 0.0;
             body(ui)
-        })
+        });
+
+    paint_top_light(ui.painter(), shown.response.rect, CARD_RADIUS);
+    shown
 }
 
 /// A [`card`] with the card padding round its body.
@@ -41,8 +45,9 @@ pub fn padded_card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResp
 }
 
 /// A 1 px rim of `colour` in light themes only, where white on near
-/// white needs one. Dark themes set a surface off by its fill alone.
-pub(super) fn light_rim(ui: &Ui, colour: Color32) -> Stroke {
+/// white needs one. Dark themes set a surface off by its fill and the
+/// light along its top ([`paint_top_light`]) instead.
+pub fn light_rim(ui: &Ui, colour: Color32) -> Stroke {
     if ui.visuals().dark_mode {
         Stroke::NONE
     } else {

@@ -259,7 +259,7 @@ fn glass(ctx: &Context) -> Glass {
         .inner_margin(tokens.sizes.popover_padding)
         .shadow(ctx.global_style().visuals.popup_shadow);
 
-    Glass::new(frame, frost::raised(ctx))
+    Glass::new(frame, frost::raised(ctx)).lit()
 }
 
 /// `list` is the list's height before it scrolls. Returns the height the

@@ -236,6 +236,24 @@ pub fn blurred_rects<State>(harness: &egui_kittest::Harness<'_, State>) -> Vec<e
         .collect()
 }
 
+pub fn top_lights<'frame, State>(
+    harness: &'frame egui_kittest::Harness<'_, State>,
+) -> Vec<&'frame egui::epaint::Mesh> {
+    let light = crate::tokens::current(&harness.ctx).top_light;
+    painted(harness)
+        .into_iter()
+        .filter_map(|shape| {
+            if let egui::Shape::Mesh(mesh) = shape
+                && mesh.vertices.iter().any(|vertex| vertex.color == light)
+            {
+                Some(&**mesh)
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
 /// Every shape the last frame painted, those inside a `Shape::Vec`
 /// included, in paint order.
 pub(crate) fn painted<'frame, State>(

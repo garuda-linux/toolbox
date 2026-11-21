@@ -14,6 +14,7 @@ pub use pending::Pending;
 pub use question::{Asked, Question, question};
 
 use super::buttons::mark_raised_surface;
+use super::top_light::paint_top_light;
 use super::{ButtonKind, icon_button, pill_button, pill_width, rich};
 use crate::fonts::{BODY, SECTION, Weight};
 use crate::theme::POPOVER_RADIUS;
@@ -173,7 +174,8 @@ impl<'a> ModalWrapper<'a> {
             .corner_radius(CornerRadius::same(POPOVER_RADIUS))
             .shadow(style.visuals.popup_shadow);
 
-        backdrop(ctx, area.layer());
+        let layer = area.layer();
+        backdrop(ctx, layer);
         let last_size = AreaState::load(ctx, self.id).and_then(|state| state.size);
         focus::shown(ctx, self.id);
 
@@ -205,6 +207,12 @@ impl<'a> ModalWrapper<'a> {
 
                 content(ui)
             });
+
+        paint_top_light(
+            &ctx.layer_painter(layer),
+            modal.response.rect,
+            frame.corner_radius,
+        );
 
         // egui places an area by the size it had last frame, so a dialog whose
         // content grew or shrank would show one frame off the centre.

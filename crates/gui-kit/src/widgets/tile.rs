@@ -5,6 +5,7 @@ use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
 use super::list::text_line_height;
 use super::press::Pointer;
 use super::text::{cut, cut_lines};
+use super::top_light::paint_top_light;
 use super::{focus_ring, rich};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::icons::{self, Icon};
@@ -43,6 +44,7 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
         rim,
         StrokeKind::Inside,
     );
+    paint_top_light(ui.painter(), rect, CARD_RADIUS);
 
     // The same inset as a card's rows, so a tile's icon lines up with
     // theirs in one column.

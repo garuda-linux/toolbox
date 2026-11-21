@@ -31,3 +31,18 @@ pub(super) fn track_hover(theme: Theme, pressed: Color32, text: Color32) -> Colo
         Theme::Light => mix(pressed, text, 0.12),
     }
 }
+
+/// A light card carries a rim instead, so it keeps the card's own colour.
+pub(super) fn top_light(theme: Theme, card: Color32) -> Color32 {
+    match theme {
+        Theme::Dark => mix(card, Color32::WHITE, 0.1),
+        Theme::Light => card,
+    }
+}
+
+pub(super) fn shimmer(theme: Theme, bars: Color32, card: Color32) -> Color32 {
+    match theme {
+        Theme::Dark => mix(bars, Color32::WHITE, 0.08),
+        Theme::Light => mix(bars, card, 0.6),
+    }
+}

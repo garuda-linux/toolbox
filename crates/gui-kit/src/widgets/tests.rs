@@ -53,6 +53,7 @@ mod text_box;
 mod text_link;
 mod text_to_control;
 mod title_gap;
+mod top_light;
 mod wrapped_title;
 
 use egui::accesskit::Role;
