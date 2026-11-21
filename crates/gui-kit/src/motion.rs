@@ -160,3 +160,10 @@ pub fn keyboard_marked(ui: &egui::Ui) -> bool {
 fn seen_id(id: Id) -> Id {
     id.with("toolbox_gui_kit::motion::seen")
 }
+
+/// Focus plays no part: a window beside the focused one is still seen.
+#[must_use = "it only answers a question"]
+pub fn window_in_sight(input: &egui::InputState) -> bool {
+    let viewport = input.viewport();
+    viewport.minimized != Some(true) && viewport.occluded != Some(true)
+}

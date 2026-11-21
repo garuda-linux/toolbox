@@ -10,7 +10,7 @@ use egui::{Rect, Response, Role, Sense, TextStyle, Ui, WidgetInfo, pos2, vec2};
 use super::line;
 use super::mark_word::mark_and_word;
 use crate::fonts::{BODY, Weight};
-use crate::{theme, tokens};
+use crate::{motion, theme, tokens};
 
 /// About thirty frames a second are enough for dots, the display's rate
 /// would only cost power.
@@ -51,13 +51,14 @@ fn dots_size(height: f32) -> egui::Vec2 {
     vec2(height * 1.6, height)
 }
 
-/// With less motion asked for, the dots stand still and ask for no frames.
+/// With less motion asked for, or in a minimized or covered window, the
+/// dots stand still and ask for no frames.
 fn paint_dots(ui: &Ui, rect: Rect) {
     if !ui.is_rect_visible(rect) {
         return;
     }
 
-    let still = theme::reduced_motion(ui.ctx());
+    let still = theme::reduced_motion(ui.ctx()) || !ui.input(motion::window_in_sight);
     if !still {
         ui.ctx().request_repaint_after(FRAME);
     }

@@ -5,12 +5,18 @@
 mod caps;
 pub mod desktop;
 mod gpu;
+mod pointer;
+mod repaints;
+mod shimmer;
 
 pub use caps::{
     baseline, cap_off_centre, capitals_top, deep_descent_font, last_baseline_within, test_fonts,
 };
 use egui_kittest::HarnessBuilder;
 use egui_kittest::kittest::Queryable as _;
+pub use pointer::{click_at, scroll, wheel_at};
+pub use repaints::{Cover, Repaints, cover, repaints_once_settled};
+pub use shimmer::{freeze_shimmer, shimmer_frozen};
 
 use crate::fonts::{FontFile, Weight};
 
@@ -60,6 +66,7 @@ pub fn harness_with_font<State>(
             }
 
             crate::frost::install(ctx, state);
+            freeze_shimmer(ctx, true);
         })
 }
 
@@ -333,34 +340,6 @@ pub fn press_until<State>(
     false
 }
 
-pub fn click_at<State>(harness: &mut egui_kittest::Harness<'_, State>, at: egui::Pos2) {
-    let press = |pressed| egui::Event::PointerButton {
-        pos: at,
-        button: egui::PointerButton::Primary,
-        pressed,
-        modifiers: egui::Modifiers::NONE,
-    };
-
-    harness.event(egui::Event::PointerMoved(at));
-    harness.event(press(true));
-    harness.step();
-    harness.event(press(false));
-    harness.run();
-}
-
-/// Turns the wheel at `at`. A negative `delta` scrolls the content up.
-pub fn wheel_at<State>(harness: &mut egui_kittest::Harness<'_, State>, at: egui::Pos2, delta: f32) {
-    harness.event(egui::Event::PointerMoved(at));
-    harness.event(egui::Event::MouseWheel {
-        unit: egui::MouseWheelUnit::Point,
-        delta: egui::vec2(0.0, delta),
-        modifiers: egui::Modifiers::NONE,
-        phase: egui::TouchPhase::Move,
-        source: egui::MouseWheelSource::Unknown,
-    });
-    harness.run();
-}
-
 /// What a screen reader says for `node`: its label, or the value egui
 /// gives a label's text.
 pub fn spoken_words(node: &egui_kittest::Node<'_>) -> String {
@@ -382,18 +361,4 @@ pub fn focused<State>(harness: &egui_kittest::Harness<'_, State>) -> Option<Stri
         .find(|node| node.accesskit_node().is_focused())?;
 
     node.accesskit_node().label()
-}
-
-/// Turns the mouse wheel by `points` with the pointer at (200, 200) and
-/// runs the harness until it settles.
-pub fn scroll<State>(harness: &mut egui_kittest::Harness<'_, State>, points: f32) {
-    harness.event(egui::Event::PointerMoved(egui::pos2(200.0, 200.0)));
-    harness.event(egui::Event::MouseWheel {
-        unit: egui::MouseWheelUnit::Point,
-        delta: egui::vec2(0.0, -points),
-        modifiers: egui::Modifiers::NONE,
-        phase: egui::TouchPhase::Move,
-        source: egui::MouseWheelSource::Unknown,
-    });
-    harness.run();
 }

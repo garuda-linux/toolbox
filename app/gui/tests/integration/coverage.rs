@@ -1,6 +1,7 @@
 //! Pictures of every page at the smallest window, in light, and with the keyboard focus on its first control.
 
 mod german;
+mod idle;
 
 use egui::{Key, Theme};
 use egui_kittest::kittest::Queryable as _;

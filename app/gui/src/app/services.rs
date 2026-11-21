@@ -298,6 +298,5 @@ impl UnprobedReads for PageReads<'_> {
 /// stays that of the last shown frame. The raw input and the viewport are
 /// current.
 pub(super) fn looked_at(input: &egui::InputState) -> bool {
-    let viewport = input.viewport();
-    input.raw.focused && viewport.minimized != Some(true) && viewport.occluded != Some(true)
+    input.raw.focused && toolbox_gui_kit::motion::window_in_sight(input)
 }

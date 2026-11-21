@@ -10,7 +10,7 @@ use super::super::{
     ButtonKind, card, dimmed, empty_state, empty_state_action, loading_indicator, pill_button,
     skeleton_rows,
 };
-use crate::testing::harness;
+use crate::testing::{Cover, cover, harness, repaints_once_settled};
 use crate::{UiExt as _, icons, theme};
 
 fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
@@ -22,7 +22,7 @@ fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
 }
 
 #[test]
-fn skeleton_rows_are_one_named_node_that_asks_for_no_frames() {
+fn skeleton_rows_are_one_named_node_paced_below_the_display() {
     let mut harness = harness(600.0, 400.0).build_ui(|ui| {
         card(ui, |ui| skeleton_rows(ui, 5, 68.0, "Reading the services…"));
     });
@@ -38,7 +38,7 @@ fn skeleton_rows_are_one_named_node_that_asks_for_no_frames() {
             .query_by_role_and_label(Role::ProgressIndicator, "Reading the services…")
             .is_some()
     );
-    assert_eq!(repaint_delay(&harness), Duration::MAX);
+    assert!(repaint_delay(&harness) > Duration::ZERO, "no busy loop");
 }
 
 #[test]
@@ -173,4 +173,44 @@ fn loading_dots_beside_their_words_leave_the_words_one_node() {
         harness.query_by_role(Role::ProgressIndicator).is_none(),
         "no unnamed progress node"
     );
+}
+
+#[test]
+fn loading_dots_ask_for_frames_only_while_they_move() {
+    for less_motion in [false, true] {
+        let mut harness = harness(400.0, 100.0).build_ui(|ui| {
+            loading_dots(ui);
+        });
+
+        theme::set_reduced_motion(&harness.ctx, less_motion);
+        let repaints = repaints_once_settled(&mut harness);
+
+        assert_eq!(repaints.is_empty(), less_motion, "{repaints:?}");
+    }
+}
+
+#[test]
+fn loading_dots_in_a_covered_window_ask_for_no_frames() {
+    for how in [Cover::Minimized, Cover::Occluded] {
+        let mut harness = harness(400.0, 100.0).build_ui(|ui| {
+            loading_dots(ui);
+        });
+
+        cover(&mut harness, how);
+        let repaints = repaints_once_settled(&mut harness);
+
+        assert!(repaints.is_empty(), "{how:?}: {repaints:?}");
+    }
+}
+
+#[test]
+fn loading_dots_in_a_shown_window_without_the_focus_still_move() {
+    let mut harness = harness(400.0, 100.0).build_ui(|ui| {
+        loading_dots(ui);
+    });
+
+    harness.input_mut().focused = false;
+    let repaints = repaints_once_settled(&mut harness);
+
+    assert!(!repaints.is_empty());
 }
