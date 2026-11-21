@@ -39,6 +39,8 @@ let
         pkgs.commitizen
         pkgs.git-cliff
         pkgs.weston
+        # H.264 for `KITTEST_RECORD`, the headless build has libx264 without the X and SDL players.
+        pkgs.ffmpeg-headless
         pkgs.kdePackages.breeze-icons
         devLoop
         treefmtWrapper

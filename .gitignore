@@ -16,6 +16,7 @@ result-*
 **/tests/snapshots/**/*.new.png
 docs/src/images/*.new.png
 **/tests/snapshots/**/*.old.png
+**/tests/snapshots/recordings/
 
 /reference/
 

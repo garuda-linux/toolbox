@@ -155,3 +155,23 @@ breaks the system, starts from it again.
 changes. Debug builds read catalogs from the checkout. On NixOS the
 package, pacman and Garuda probes report "not available": test real
 behaviour on Arch.
+
+In a debug build F12 shows egui's debug aids: the rect and size of the widget under the pointer, where the next widget goes, and the pointer's hits (`app/gui/src/debug_overlay.rs`).
+
+`KITTEST_RECORD=1 cargo nextest run ...` records every kittest harness
+of the run to `tests/snapshots/recordings/<test>_<n>.mp4` of its crate
+(git-ignored), `KITTEST_RECORD=open` to a temporary file it then opens.
+It needs `ffmpeg` with libx264, which the dev shell has.
+
+### Live inspection
+
+`scripts/inspect.sh [app arguments]` builds the app with the dev-only
+feature `inspection` and starts it with `EGUI_INSPECTION=1`. The window
+then serves the `egui_inspection` protocol on `127.0.0.1:5719`, without
+authentication: its AccessKit tree, input events, screenshots and
+resizes.
+
+The `egui-mcp` server of the `egui_mcp` crate connects to that address
+with its `attach` tool. Installing it and registering it with an agent
+is left to the user. Screenshots need a visible window. The feature
+stays out of the default features, the package and CI.
