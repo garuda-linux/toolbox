@@ -192,3 +192,16 @@ pub fn button<'harness, State>(
 ) -> egui_kittest::Node<'harness> {
     harness.get_by_role_and_label(Role::Button, name)
 }
+
+pub fn press_ctrl(harness: &mut Harness<'_, App>, key: Key) {
+    harness.key_press_modifiers(Modifiers::COMMAND, key);
+    harness.run();
+}
+
+pub fn focus_terminal(harness: &mut Harness<'_, App>) {
+    press_ctrl(harness, Key::J);
+    harness
+        .get_by_role_and_label(Role::Terminal, "Console output")
+        .click();
+    harness.run();
+}

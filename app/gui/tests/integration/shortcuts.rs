@@ -1,18 +1,13 @@
+use egui::Key;
 use egui::accesskit::{Role, Toggled};
-use egui::{Key, Modifiers};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_gui::{App, Setup};
 
-use crate::common::{launch, launch_in, palette};
+use crate::common::{focus_terminal, launch, launch_in, palette, press_ctrl as press};
 use crate::shell::SETUP;
 
 const PALETTE: &str = "Command palette";
-
-fn press(harness: &mut Harness<'_, App>, key: Key) {
-    harness.key_press_modifiers(Modifiers::COMMAND, key);
-    harness.run();
-}
 
 #[test]
 fn ctrl_b_toggles_the_sidebar() {
@@ -246,11 +241,7 @@ fn the_console_header_names_how_to_leave_its_terminal() {
 #[test]
 fn app_shortcuts_leave_the_keys_to_the_focused_terminal() {
     let mut harness = launch(Setup::default());
-    press(&mut harness, Key::J);
-    harness
-        .get_by_role_and_label(Role::Terminal, "Console output")
-        .click();
-    harness.run();
+    focus_terminal(&mut harness);
 
     press(&mut harness, Key::K);
     press(&mut harness, Key::B);
@@ -290,4 +281,32 @@ fn f1_opens_the_guide_on_the_page_it_was_pressed_on() {
             == Some("Install a kernel"))
     );
     assert!(harness.query_by_label("Open Kernels").is_some());
+}
+
+#[cfg(debug_assertions)]
+#[test]
+fn f12_flips_the_debug_overlay_also_over_a_dialog() {
+    use toolbox_gui::debug_overlay::showing;
+
+    let mut harness = launch(Setup::default());
+    harness.key_press(Key::F12);
+    harness.run();
+    assert!(showing(&harness.ctx));
+
+    press(&mut harness, Key::K);
+    harness.key_press(Key::F12);
+    harness.run();
+    assert!(!showing(&harness.ctx), "the palette is open");
+}
+
+#[cfg(debug_assertions)]
+#[test]
+fn a_focused_terminal_keeps_f12() {
+    let mut harness = launch(Setup::default());
+    focus_terminal(&mut harness);
+
+    harness.key_press(Key::F12);
+    harness.run();
+
+    assert!(!toolbox_gui::debug_overlay::showing(&harness.ctx));
 }

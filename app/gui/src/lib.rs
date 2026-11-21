@@ -9,6 +9,8 @@ pub mod command;
 pub mod configs;
 pub mod console;
 pub mod dates;
+#[cfg(debug_assertions)]
+pub mod debug_overlay;
 pub mod desktop;
 pub mod home;
 pub mod i18n;

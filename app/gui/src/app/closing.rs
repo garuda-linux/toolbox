@@ -69,7 +69,11 @@ impl App {
     /// The shortcuts pressed this frame. A program in the Console gets
     /// every key, Ctrl+Tab leaves it.
     pub(super) fn pressed(ctx: &Context) -> Vec<UiCommand> {
-        if terminal_view::owns_keys(ctx) {
+        let terminal_owns_keys = terminal_view::owns_keys(ctx);
+        #[cfg(debug_assertions)]
+        crate::debug_overlay::follow_f12(ctx, terminal_owns_keys);
+
+        if terminal_owns_keys {
             return Vec::new();
         }
 
