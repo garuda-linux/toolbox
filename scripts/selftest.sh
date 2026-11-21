@@ -43,6 +43,8 @@ export XDG_DATA_HOME="$dir/data"
 export XDG_RUNTIME_DIR="$dir/runtime" XDG_CURRENT_DESKTOP=
 export GARUDA_TOOLBOX_HELPER=dry-run
 export GARUDA_TOOLBOX_SELFTEST_DIR="$dir/shots" GARUDA_TOOLBOX_SELFTEST_SUITE="$suite"
+# Mesa's FIFO presents under headless weston wait about 13 s a frame on CI.
+export MESA_VK_WSI_PRESENT_MODE=immediate
 
 # Made here, not in git, because many users' ignore files leave these out.
 configs="$dir/configs"
