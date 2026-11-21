@@ -1,34 +1,29 @@
 //! What a page shows instead of its list: nothing to show, or a list
 //! that could not be read with a way to read it again.
 
-use egui::{Label, Response, Ui, vec2};
+use egui::{Label, Response, Ui};
 
-use super::icon_tile::TileSize;
+use super::icon_tile::{TileSize, icon_tile};
 use super::status_tile::status_tile;
 use super::{ButtonKind, Tone, pill_button, rich};
 use crate::fonts::{BODY, Weight};
 use crate::icons::Icon;
 use crate::tokens;
-use crate::ui_ext::icon_image;
 
-/// The empty state's icon is this many times a body line.
-const ICON_SCALE: f32 = 2.2;
 /// A title a little larger than body text, as a heading of the state.
 const TITLE_SCALE: f32 = 1.15;
 
-/// `icon` above `title` and `body`, centred in the page. A state glyph
-/// shows as its status mark, any other icon dimmed. The icon only
-/// adorns the title, so screen readers skip it.
+/// `icon` above `title` and `body`, centred in the page, on a large tile:
+/// a state glyph as its status mark, any other icon in the page's hue.
+/// The icon only adorns the title, so screen readers skip it.
 pub fn empty_state(ui: &mut Ui, icon: Icon, title: &str, body: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
     ui.add_space(tokens.sizes.block_gap);
     ui.vertical_centered(|ui| {
         if let Some(tone) = Tone::of_state_glyph(icon) {
-            _ = status_tile(ui, TileSize::Row, tone);
+            _ = status_tile(ui, TileSize::Large, tone);
         } else {
-            let side = ui.text_style_height(&egui::TextStyle::Body) * ICON_SCALE;
-            let (rect, _) = ui.allocate_exact_size(vec2(side, side), egui::Sense::hover());
-            icon_image(ui, icon, tokens.dim).paint_at(ui, rect);
+            _ = icon_tile(ui, TileSize::Large, icon);
         }
 
         ui.add_space(tokens.sizes.control_gap);

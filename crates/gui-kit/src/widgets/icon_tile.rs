@@ -6,17 +6,19 @@
 use egui::{CornerRadius, Rect, Ui, vec2};
 
 use crate::icons::Icon;
-use crate::theme::{SMALL_TILE_RADIUS, TILE_RADIUS};
+use crate::theme::{LARGE_TILE_RADIUS, SMALL_TILE_RADIUS, TILE_RADIUS};
 use crate::tokens::{self, Tile};
 use crate::ui_ext::icon_image;
 
 const GLYPH_SHARE: f32 = 0.56;
 
-/// A tile's size: beside a row's title and detail, or beside one line.
+/// A tile's size: beside a row's title and detail, beside one line, or
+/// alone above an empty state's title.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TileSize {
     Row,
     Line,
+    Large,
 }
 
 impl TileSize {
@@ -26,6 +28,7 @@ impl TileSize {
         match self {
             Self::Row => sizes.icon_tile,
             Self::Line => sizes.icon_tile_small,
+            Self::Large => sizes.icon_tile_large,
         }
     }
 
@@ -33,6 +36,7 @@ impl TileSize {
         match self {
             Self::Row => TILE_RADIUS,
             Self::Line => SMALL_TILE_RADIUS,
+            Self::Large => LARGE_TILE_RADIUS,
         }
     }
 }

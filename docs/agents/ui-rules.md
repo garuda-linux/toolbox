@@ -108,7 +108,8 @@ Rules for pages, gui-kit widgets and the command line's output.
   sidebar and header band read as one surface.
 - Icons follow [icons.md](icons.md). Row, link and section icons sit in a
   `widgets::icon_tile` in the open page's group hue, set by the shell (`tokens::set_page_hue`). Pages never pick one.
-  Rows with a status keep
+  An empty state's icon sits on a large tile of that hue
+  (`TileSize::Large`). Rows with a status keep
   the status wash.
 - An app without a picture, or while it loads, shows a letter tile (`widgets::paint_letter_tile`). Its hue comes from
   the package name, so

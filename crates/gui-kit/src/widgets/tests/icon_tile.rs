@@ -84,6 +84,32 @@ fn link_tiles_and_link_rows_set_their_icon_on_the_page_tile() {
 }
 
 #[test]
+fn an_empty_state_sets_its_icon_on_a_large_tile_of_the_page_hue() {
+    let mut harness = harness(600.0, 300.0).build_ui(|ui| {
+        set_page_hue(ui.ctx(), Hue::Green);
+        _ = empty_state(ui, icons::SYSTEM_SEARCH, "No matches", "Try another word.");
+    });
+
+    harness.run();
+    let tokens = tokens::current(&harness.ctx);
+    let tile = tokens.tiles.of(Hue::Green);
+    let square = filled_rect(&harness, tile.fill);
+    assert_square(square, "an empty state");
+
+    let square = square.unwrap_or(egui::Rect::NOTHING);
+    assert!(
+        (square.width() - tokens.sizes.icon_tile_large).abs() < 0.5,
+        "{square:?}"
+    );
+    assert!(
+        tinted_rects(&harness, tile.ink)
+            .into_iter()
+            .any(|glyph| square.contains_rect(glyph)),
+        "the glyph sits on the tile in its ink"
+    );
+}
+
+#[test]
 fn without_a_page_hue_the_tile_is_the_accent() {
     let mut harness = harness(600.0, 200.0).build_ui(|ui| {
         SectionHeading::new(icons::RUN_BUILD, "Installed", "").show(ui);
@@ -157,4 +183,21 @@ fn unread_states_empty_states_and_status_rows_use_the_same_tile() {
 
 fn harness_of(draw: impl FnMut(&mut egui::Ui) + 'static) -> egui_kittest::Harness<'static> {
     harness(800.0, 300.0).build_ui(draw)
+}
+
+#[test]
+fn a_state_glyph_takes_the_large_tile_as_any_other_empty_state_icon() {
+    let mut harness = harness_of(|ui| {
+        _ = empty_state(ui, icons::DIALOG_ERROR, "Nothing was read", "");
+    });
+
+    harness.run();
+    let tokens = tokens::current(&harness.ctx);
+    let (tile, _) = Tone::Error.status_mark(&tokens);
+    let square = filled_rect(&harness, tile.fill).unwrap_or(egui::Rect::NOTHING);
+
+    assert!(
+        (square.width() - tokens.sizes.icon_tile_large).abs() < 0.5,
+        "{square:?}"
+    );
 }

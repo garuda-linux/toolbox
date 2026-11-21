@@ -24,6 +24,7 @@ pub const POPOVER_RADIUS: u8 = 16;
 pub const TILE_RADIUS: u8 = 10;
 /// The tile behind a section's icon, [`crate::tokens::Sizes::icon_tile_small`].
 pub const SMALL_TILE_RADIUS: u8 = 8;
+pub const LARGE_TILE_RADIUS: u8 = 12;
 /// Buttons, the select, the search field and segmented controls.
 ///
 /// Controls keep to three heights: 24 for tags, switches and the small
