@@ -44,5 +44,5 @@ async fn clicked(service: &str, label: &str) -> Result<bool, String> {
 }
 
 fn id() -> Id {
-    Id::new("toolbox_gui::selftest::menu")
+    Id::unique("toolbox_gui::selftest::menu")
 }

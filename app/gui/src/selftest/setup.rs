@@ -35,7 +35,7 @@ pub fn steps() -> Vec<Step> {
         Step::click("Hide the Console"),
         Step::click("Review and Apply"),
         Step::click("Remove All…"),
-        Step::click("Remove All"),
+        Step::click("Remove Change"),
         Step::wait("Success!"),
         Step::Shot("setup-success"),
         Step::click("Finish Setup"),
