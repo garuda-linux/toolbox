@@ -36,18 +36,18 @@ mounts. systemd calls all of them "units".
   come first, then those that are starting, stopping or reloading, then the
   running ones grouped by what they do, then the stopped ones. Services in
   the same state stay in the order of their names.
-- **Read again** (the round arrow beside the tabs, or `F5`) reads the list
+- **Read Again** (the round arrow beside the tabs, or `F5`) reads the list
   again.
 
 The list follows changes as they happen, also when something outside the
 app starts or stops a service.
 
-Each row shows the service's description first and its file name below.
-Hover over a row, or move the keyboard focus to it, to see both in full.
-Beside the name, a coloured dot and a word say whether the service runs (**Running**, **Stopped**, **Failed**, …). The
-**At boot** switch at the
-right says whether it starts at boot. Services that cannot simply be
-switched on at boot say why instead:
+Each row shows the service's description first and its file name below. Hover
+over a row, or move the keyboard focus to it, to see both in full. Beside the
+name, a coloured dot and a word say whether the service runs (**Running**,
+**Stopped**, **Failed**, …). The **At boot** switch at the right says whether it
+starts at boot. Services that cannot simply be switched on at boot say why
+instead:
 
 | Word                | Meaning                                                       |
 | ------------------- | ------------------------------------------------------------- |
@@ -91,7 +91,7 @@ Console:
 | **Stop**      | Stops it now. Greyed out while it is stopped       |
 | **Restart**   | Stops and starts it                                |
 | **Reload**    | Asks a running service to reload its configuration |
-| **Show logs** | The last 500 lines of its log                      |
+| **Show Logs** | The last 500 lines of its log                      |
 
 Two changes go into the queue, like Components, and **Apply** makes them
 with one password for everything queued:
@@ -120,11 +120,12 @@ systemd-logind) asks first, with the risk named and a red button.
 - **The services could not be read** means the request failed for another
   reason.
 
-**Retry** tries again. When a list was read before, it stays and the reason
-shows in a banner above it, with **Read again**. **No service matches.** means the search or the
-picked chip hides everything. When the search finds services under **All**, a button such as **Show all 3 matches**
-picks **All** and keeps the
-search. The ✕ in the search field empties it.
+**Read Again** under the message tries again. When a list was read before,
+it stays and the reason shows in a banner above it, with **Read Again**.
+**No service matches.** means the search or the picked chip hides
+everything. When the search finds services under **All**, a button such as
+**Show All 3 Matches** picks **All** and keeps the search. The ✕ in the
+search field empties it.
 
 Screen readers announce a failed service, and the state of the service the
 keyboard is on whenever it changes.

@@ -15,23 +15,23 @@ shows that category alone. The number on each chip counts the apps your
 system can install.
 
 Every row shows the app's icon, its name and up to two lines of its
-description, with the **⋯** menu and a button at the right: **Install**, or **Remove** for an app that says
-**Installed**. Point at a cut description
-to read it whole.
+description, with the **⋯** menu and a button at the right: **Install**, or
+**Remove** for an app that says **Installed**. Point at a cut description to
+read it whole. Click a row to open the app's details, see
+[Open an app's details](#open-an-apps-details).
 
 ## Search
 
-To find an app, type in **Search apps…** at the top. The search looks at
-the names, descriptions and package names of the apps the chosen chip
-shows. With **All** it looks through every category, and the results show
-under the heading of their category, for example Firefox under **Internet**. While you search, the number on each chip
-counts its
-matches, and a chip still picks its category. Clear the field to see the
-whole category again.
+To find an app, type in **Search apps…** at the top. The search looks at the
+names, descriptions and package names of the apps the chosen chip shows. With
+**All** it looks through every category, and the results show under the heading
+of their category, for example Firefox under **Internet**. While you search, the
+number on each chip counts its matches, and a chip still picks its category.
+Clear the field to see the whole category again.
 
 When nothing matches, the page says so, quotes your search text and
 explains what the search looks at. When the picked category has no match
-but others do, the page names the category and offers **Show all** with
+but others do, the page names the category and offers **Show All** with
 the number of matches. It shows every category and keeps the search.
 
 ## Sort the list
@@ -47,11 +47,29 @@ category.
 With **Selected first** an app moves to the top as soon as you queue it, and
 back down when you queue its removal.
 
+## Open an app's details
+
+Click a row to open the app's details beside the list. With the keyboard,
+select the row and press `Enter`. The details show the app's picture, its
+name and its whole description, the packages it installs with the
+repository of each, its website and the **Install** or **Remove** button.
+
+- To close the details, press `Escape`. The list then takes the full width
+  again.
+- In a narrow window the details replace the list. Click **Back** or press
+  `Escape` to show the list again.
+- With the details open, `Up` and `Down` move to the next or previous app,
+  and its details replace the open ones.
+
+Beside the details a row shows only its icon, its name and one line of its
+description. Its button and its **⋯** menu are in the details instead.
+
 ## Install or remove an app
 
-1. Click **Install** or **Remove** on the row. Nothing changes yet: the row
-   says **Installs with Apply** or **Removes with Apply**.
-2. Click **Take back** to take the change out of the queue.
+1. Click **Install** or **Remove** on the row, or in the app's details.
+   Nothing changes yet: the row says **Installs with Apply** or **Removes
+   with Apply**.
+2. Click **Take Back** to take the change out of the queue.
 3. Apply the queue, see [Review and apply changes](applying.md).
 
 When it worked, the rows follow the installed packages and the queue is
@@ -62,19 +80,22 @@ empty.
 
 ## Open an app's website
 
-The **⋯** button of a row (**More for** and the app's name) holds **Open
-website**, which opens the site in your web browser. With the keyboard,
-select the row and press the `Menu` key. Only `https` sites from the app's
-list are opened.
+With the list at full width, the **⋯** button of a row (**More for** and the
+app's name) holds **Open Website**, which opens the site in your web browser.
+With the keyboard, select the row and press the `Menu` key. The details of an
+app hold **Open Website** too, under **Website**. Only `https` sites from the
+app's list are opened.
 
 ## Use the keyboard
 
-| Key             | What it does                                                   |
-| --------------- | -------------------------------------------------------------- |
-| `Tab`           | Moves between the search, the chips, the sort box and the list |
-| `Up` and `Down` | Move through the apps of one category                          |
-| `Space`         | Presses the selected app's button                              |
-| `Menu`          | Opens the selected app's menu                                  |
+| Key             | What it does                                                                |
+| --------------- | --------------------------------------------------------------------------- |
+| `Tab`           | Moves between the search, the chips, the sort box, the list and the details |
+| `Up` and `Down` | Move through the apps of one category, and the open details follow          |
+| `Enter`         | Opens the selected app's details                                            |
+| `Escape`        | Closes the details                                                          |
+| `Space`         | Presses the selected app's button                                           |
+| `Menu`          | Opens the selected app's menu                                               |
 
 ## Why some apps are missing
 
@@ -101,10 +122,9 @@ so you can still remove it. Categories without such apps are hidden.
 
 ## Where the icons come from
 
-A row shows the icon your icon theme has for the package. When the theme
-has none, it shows the picture from the AppStream data of the repositories (the `archlinux-appstream-data` package), and
-otherwise a generic package
-icon.
+A row shows the icon your icon theme has for the package. When the theme has
+none, it shows the picture from the AppStream data of the repositories (the
+`archlinux-appstream-data` package), and otherwise a generic package icon.
 
 ## See also
 

@@ -21,14 +21,14 @@ come first.
 - Type in the search field to filter by language, country, locale or
   character set, for example `german`, `de_` or `ISO-8859`. Upper and lower
   case do not matter.
-- **UTF-8 only** (on by default) hides the other character sets. Enabled locales
+- **UTF-8 Only** (on by default) hides the other character sets. Enabled locales
   show whatever their character set.
-- **Enabled only** shows the enabled locales and the ones queued to be
+- **Enabled Only** shows the enabled locales and the ones queued to be
   enabled.
 
 Each row shows the language and the country of the locale in English, for
-example `German (Germany)`, with the locale and its character set below it (`de_DE.UTF-8, UTF-8`) and **Enabled** or
-**Disabled**. The row of the locale
+example `German (Germany)`, with the locale and its character set below it
+(`de_DE.UTF-8, UTF-8`) and **Enabled** or **Disabled**. The row of the locale
 your system language uses ends with `system language`.
 
 The names come from the locale definitions that glibc installs below
@@ -75,14 +75,14 @@ are. The new language applies from your next login.
 
 Some programs ship their translations, dictionaries or help in separate
 packages, such as `firefox-i18n-de`, `libreoffice-fresh-de` or `hunspell-de`.
-The **Language packs** tab lists the packs that fit your enabled locales (queued ones included) and belong to a program
-you have installed.
+The **Language Packs** tab lists the packs that fit your enabled locales (queued
+ones included) and belong to a program you have installed.
 
 - Flip a pack's switch (or select it and press `Space`) to queue its
   installation. Flip an installed pack's switch to queue its removal. A
   pack whose removal would also remove a package the system needs stays,
   and a message above the list names that package.
-- **Queue all missing** queues every listed pack that is neither installed
+- **Queue All Missing** queues every listed pack that is neither installed
   nor queued. The count beside it, **Missing**, counts exactly these.
 - **Sort by** orders the packs by **Package** (the default), **Program** (the
   installed program a pack belongs to), **Language** or **Selected first**
@@ -100,7 +100,7 @@ language and region (`-pt-br`, `-en_us`), with or without `-i18n`, `-l10n`,
 ## When a list stays empty
 
 The round arrow at the top right reads the lists again. An empty list
-under a search offers **Clear search**.
+under a search offers **Clear Search**.
 
 | Message                                             | Meaning                                                         |
 | --------------------------------------------------- | --------------------------------------------------------------- |

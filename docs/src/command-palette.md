@@ -14,15 +14,14 @@ so you can reach them with the keyboard alone.
 
 Press `Esc` to close the palette without choosing.
 
-Without a text the palette lists the pages and commands. Once you type, an
+With no text, the palette lists the pages and commands. Once you type, an
 entry shows when its name holds the text, an app or a package also when its
-description does. Upper and lower
-case do not matter. Each group shows its best five entries: an exact name
-first, then names that start with the text, then names that hold it, then
-entries found by their description. The group with the best entry comes
-first. A group with more ends with **Show all**: for apps and packages it
-opens their page searched for the text, for the others it shows the whole
-group in the palette. When nothing fits, the list stays empty.
+description does. Upper and lower case do not matter. Each group shows its
+best five entries: an exact name first, then names that start with the text,
+then names that hold it, then entries found by their description. The group
+with the best entry comes first. A group with more ends with **Show All**: for
+apps and packages it opens their page searched for the text, for the others it
+shows the whole group in the palette. When nothing fits, the list stays empty.
 
 Packages are read when the palette opens, so the first look may take a
 moment. AUR packages show only while the AUR is turned on in **Settings**.
@@ -38,11 +37,12 @@ moment. AUR packages show only while the AUR is turned on in **Settings**.
 | A package               | its repository, and **Installed** when it is | Opens the package on **Packages**                         |
 | An AUR package          | **AUR**, and **Installed** when it is        | Opens the package on **Packages**                         |
 
-The commands are **Apply changes**, **Review changes** (only while changes
-wait), **Remove all changes**, **Search this page**, **Help for this page**, **Toggle sidebar**, **Toggle console**, **Zoom in**, **Zoom out**, **Reset zoom** and
-**Quit**. They run at once, as
-their shortcut would. **Remove all changes** asks first. Pages, operations,
-apps and packages only open. They never change anything by themselves.
+The commands are **Apply Changes**, **Review Changes** (only while changes
+wait), **Remove All Changes**, **Search This Page**, **Help for This Page**,
+**Toggle Sidebar**, **Toggle Console**, **Zoom In**, **Zoom Out**, **Reset
+Zoom** and **Quit**. They run at once, as their shortcut would. **Remove All
+Changes** asks first. Pages, operations, apps and packages only open. They never
+change anything by themselves.
 
 ### Keys in the palette
 
@@ -64,7 +64,7 @@ These keys work on every page.
 | `Ctrl+j`             | Shows or hides the **Console**                        |
 | `Ctrl+f`             | Puts the cursor into the search of the open page      |
 | `Ctrl+1` to `Ctrl+9` | Opens the first nine pages of the sidebar             |
-| `F5`                 | Reads the open page again, as its **Read again** does |
+| `F5`                 | Reads the open page again, as its **Read Again** does |
 | `F1`                 | Opens the [User guide](guide.md) on the open page     |
 | `Ctrl++`, `Ctrl+=`   | Shows everything in the window larger, up to 150 %    |
 | `Ctrl+-`             | Shows everything in the window smaller, down to 80 %  |
@@ -72,7 +72,7 @@ These keys work on every page.
 | `Ctrl+q`             | Quits the app. Queued changes are kept                |
 | `Ctrl+Tab`           | Leaves the terminal in the **Console**                |
 
-`F5` does nothing on a page without **Read again**. The zoom is kept for
+`F5` does nothing on a page without **Read Again**. The zoom is kept for
 the next start.
 
 > **Note:** While the terminal of the **Console** has the keyboard focus,
@@ -91,15 +91,15 @@ show no global menu, and the window works the same without it.
 
 | Menu     | Entries                                                                      |
 | -------- | ---------------------------------------------------------------------------- |
-| **File** | **Review and apply…**, **Remove all changes…**, **Quit**                     |
-| **View** | **Expanded sidebar**, **Console**, **Zoom in**, **Zoom out**, **Reset zoom** |
-| **Go**   | **Search this page**, **Command palette**, then the pages of the sidebar     |
-| **Help** | **Help for this page**                                                       |
+| **File** | **Review and Apply…**, **Remove All Changes…**, **Quit**                     |
+| **View** | **Expanded Sidebar**, **Console**, **Zoom In**, **Zoom Out**, **Reset Zoom** |
+| **Go**   | **Search This Page**, **Command Palette**, then the pages of the sidebar     |
+| **Help** | **Help for This Page**                                                       |
 
-**Review and apply…** opens the list of queued changes. Click **Apply**
+**Review and Apply…** opens the list of queued changes. Click **Apply**
 there to apply them. No menu entry applies changes by itself, because any
-program of your session can choose a menu entry. **Review and apply…** and
-**Remove all changes…** are dimmed while no change waits. **Go** marks the
+program of your session can choose a menu entry. **Review and Apply…** and
+**Remove All Changes…** are dimmed while no change waits. **Go** marks the
 open page, **View** whether the sidebar shows the page names and whether
 the **Console** is open. Entries show their shortcut.
 

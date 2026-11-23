@@ -1,15 +1,15 @@
 # Packages
 
 **Packages** lists every package of the repositories in `/etc/pacman.conf`
-and every installed package, with a page of details for each one. Use it
-to install or remove a package by name. For a curated pick of
-apps, see [App Catalog](discover.md).
+and every installed package. The details of the package you pick show
+beside the list. Use it to install or remove a package by name. For a
+curated pick of apps, see [App Catalog](discover.md).
 
 ## Before you start
 
 The page reads pacman's package databases as they are. It never syncs
 them, so it is as fresh as the last system update. When the databases
-cannot be read, the page says so and offers **Read again**. While the AUR
+cannot be read, the page says so and offers **Read Again**. While the AUR
 is turned on, the **AUR** chip is then picked and still works. The other
 chips are greyed out and show no number.
 
@@ -30,15 +30,19 @@ The chips above the list pick what it shows:
 found, so both show the same number. Until the check for updates has
 answered, the chip shows no number and its list says **Checking for
 updates…**. When the check failed, the list says **Updates could not be
-checked.** with **Read again**.
+checked.** with **Read Again**.
 
 To narrow the list, type in **Search packages** at the top. The search
 looks at names and descriptions under the chip that is picked. While you
 search, the number on each chip counts its matches. When nothing matches,
-the page says so and offers **Clear search**.
+the page says so and offers **Clear Search**.
 
-Every row shows the package's icon, its name, one line of its description,
-then its repository, version and installed size. Next to the name:
+Every row shows the package's icon, its name, its tags and one line of its
+description. In the full-width list a second small line shows its
+repository, version and installed size, such as `extra · 3.0-1 · 12.3 MiB`
+(the installed version for an installed package). While the details of a
+package are open, the narrow list beside them leaves that line out, and the
+details show the same facts. Next to the name:
 
 - **Dependency** marks a package pulled in by another one.
 - **Not from a repository** marks an installed package no configured
@@ -51,9 +55,10 @@ then its repository, version and installed size. Next to the name:
 
 ## Install a package
 
-1. Find the package, then click **Install** in its row.
-2. The row says **Installs with Apply**. Click **Take back** to take it out
-   of the queue.
+1. Find the package and click its row. Its details open beside the list.
+2. Click **Install** in the details. The row and the details say
+   **Installs with Apply**. Click **Take Back** to take it out of the
+   queue.
 3. Apply the queue, see [Review and apply changes](applying.md).
 
 When it worked, the row says **Installed** and the queue is empty. pacman
@@ -61,7 +66,7 @@ installs the package with `pacman -S --needed`.
 
 ## Remove a package
 
-1. Click **Remove** in the package's row or on its details.
+1. Open the package and click **Remove** in its details.
 2. A question names the dependencies that go along: the ones the package
    pulled in that nothing else needs. Click **Remove** to queue the
    removal, or **Cancel**.
@@ -92,11 +97,11 @@ most once a day: when the chip or an `--aur` command reads the list and the
 last try is a day old. A failed download also waits a day. Nothing else is
 asked from the AUR, and nothing is downloaded while the AUR is off.
 
-Each AUR row shows the name with an **AUR** tag, one line of the
-description, the version and the votes. **Out of date** marks a package
-someone flagged. The search looks at names, descriptions and keywords. The
-exact name comes first, then names that start with what you typed, then the
-rest, each part by popularity.
+Each AUR row shows the name with an **AUR** tag and one line of the description.
+Its version and votes show in the details. **Out of date** marks a package
+someone flagged. The search looks at names, descriptions and keywords. The exact
+name comes first, then names that start with what you typed, then the rest, each
+part by popularity.
 
 The details of an AUR package show the maintainer, votes, popularity,
 dates, licenses, the website and a link to the package's **AUR page** at
@@ -105,7 +110,7 @@ AUR package also shows its files and history.
 
 To install a package from the AUR:
 
-1. Click **Install** in its row or on its details.
+1. Click the package in the list, then **Install** in its details.
 2. A question says the package is built from a community script on your
    computer. Click **Install** to queue it, or **Cancel**.
 3. The row says **Builds with Apply**. Apply the queue.
@@ -120,10 +125,14 @@ An installed AUR package is removed like any other package, see
 
 ## See a package's details
 
-Click a row, or select it and press `Space`, to open its details on one
-page. The arrow at the right of each row shows that it opens. **←
-Packages** (or `Esc`) goes back to the list. On the details, **Install**
-is the main button of the page.
+Click a row to show its details beside the list. The selected row is
+highlighted, and the details change with each step of the arrow keys. The
+details hold the package's button: **Install** when it is not installed,
+**Remove** when it is, and **Take Back** while a change waits in the
+queue.
+
+On a narrow window the details take the whole page, and **← Packages** goes
+back to the list.
 
 The details come in cards:
 
@@ -134,16 +143,17 @@ The details come in cards:
 - At the right: what it depends on, the installed packages that require it
   and its optional dependencies with what each adds, each with its count.
   A long list shows its first 12 names. **+N more** shows the rest.
-- **Files:** folded at first, with the number of files. **Copy list**
+- **Files:** folded at first, with the number of files. **Copy List**
   puts every path on the clipboard, one per line. Installed packages only.
 - **History:** the newest 5 changes pacman made to the package. **Show
   all** lists every one the log still holds.
 
 In a narrow window the right card moves under the left one.
 
-Click a name in a dependency list to open that package. The back button
-then names the package you came from, so **←** walks back through the
-chain to the list. A name that no repository offers and no installed
+Click a name in a dependency list to open that package. The back button above
+the details then names the package you came from, so **←** walks back through
+the chain. Once the chain is walked, **Esc** closes the details, and on a narrow
+window the list shows again. A name that no repository offers and no installed
 package provides shows as plain text.
 
 The website opens in your browser, only when it is an `http` or `https`
@@ -158,7 +168,7 @@ older change of the package does not show there.
 A mirror drops a package file once a newer build replaces it. When your
 package databases are older than the mirror, pacman asks for the old file
 and the mirror answers 404 (`failed retrieving file`). The Console then
-shows a warning under the steps with **Update the system and try again**.
+shows a warning under the steps with **Update the System and Try Again**.
 It runs one plan: a full system update, which syncs the databases, then
 the same install. You type your password once.
 
@@ -167,11 +177,11 @@ the same install. You type your password once.
 | Key             | What it does                                                                                       |
 | --------------- | -------------------------------------------------------------------------------------------------- |
 | `Tab`           | Moves between the search, the chips and the list, and through the links and buttons of the details |
-| `Up` and `Down` | Move through the list                                                                              |
+| `Up` and `Down` | Move through the list, and show the details of the row they reach                                  |
 | `Space`         | Opens the details of the selected package                                                          |
 | `Enter`         | Opens the package of a focused name, or presses a focused button                                   |
-| `Esc`           | Goes back one package, then to the list                                                            |
-| `F5`            | Reads the packages again (**Read again**)                                                          |
+| `Esc`           | Goes back one package, then closes the details (on a narrow window, shows the list)                |
+| `F5`            | Reads the packages again (**Read Again**)                                                          |
 
 ## On the command line
 

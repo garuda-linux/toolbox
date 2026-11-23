@@ -6,7 +6,7 @@ mail apps, development tools, games, graphics, input methods, kernels,
 office suites, video tools, virtualization and more. At the end you review
 your choices and install them all at once.
 
-Open it from the sidebar or from **Next steps** on Home. You can also
+Open it from the sidebar or from **Next Steps** on Home. You can also
 start the app with `garuda-toolbox --setup-assistant`, which opens
 the assistant directly.
 
@@ -14,17 +14,16 @@ the assistant directly.
 
 ## Pick your apps
 
-1. The first page explains what happens and how many categories there are.
-   Click **Next**.
-2. Each step shows the apps of one category as rows with an icon, a name
-   and a short description. Click **Install** on a row to pick the app.
-   The row says **Installs with Apply**, and **Take back** drops the pick.
-3. Click **Next** to go on, also when you want nothing from a category. **Back** returns to the step before. Your picks
-   stay.
-4. To go straight to a category, open the list between **Back** and **Next** and choose it. The list holds **Welcome**,
-   every category with
-   its number and the **Summary**, and always shows where you are. Your
-   picks stay here too.
+1. The first page explains what happens and how many categories there are. Click
+   **Next**.
+2. Each step shows the apps of one category as rows with an icon, a name and a
+   short description. Click **Install** on a row to pick the app. The row says
+   **Installs with Apply**, and **Take Back** drops the pick.
+3. Click **Next** to go on, also when you want nothing from a category. **Back**
+   returns to the step before. Your picks stay.
+4. To go straight to a category, open the list between **Back** and **Next** and
+   choose it. The list holds **Welcome**, every category with its number and the
+   **Summary**, and always shows where you are. Your picks stay here too.
 
 **Back**, the list and **Next** stay at the bottom of the page, also when a
 category has more apps than fit, so you can reach them without scrolling.
@@ -46,7 +45,7 @@ and its row says **Removes with Apply**. It is removed together with the
 rest when you apply.
 
 > **Note:** Removing an app also removes the dependencies nothing else
-> needs. Click **Take back** before you apply to keep the app.
+> needs. Click **Take Back** before you apply to keep the app.
 
 ## What comes along with an app
 
@@ -70,28 +69,27 @@ way round. When the other branch is installed, it is queued for removal.
 
 ## Check the summary and apply
 
-1. The **Summary** step lists **Apps to install**, **Apps to remove** and **Services to enable**, each with a count and
-   the names.
-2. Click **Review and apply**. **Review** opens with every queued change,
-   also those you queued on other pages. The changes pill is hidden on every
-   step, so **Review and apply** is the one way to apply here.
-3. Click **Apply**. The app asks for your password once and installs,
-   removes and enables everything in the Console. See
+1. The **Summary** step lists **Apps to install**, **Apps to remove** and
+   **Services to enable**, each with a count and the names.
+2. Click **Review and Apply**. **Review** opens with every queued change, also
+   those you queued on other pages. The footer is hidden on every step, so
+   **Review and Apply** is the one way to apply here.
+3. Click **Apply**. The app asks for your password once and installs, removes
+   and enables everything in the Console. See
    [Review and apply changes](applying.md).
 
-When the apply worked and the queue is empty again, the assistant shows **Success!** and recommends a restart.
-**Restart…** restarts the computer
-after one more question. **Finish setup** returns to Home. Below them,
-links open the **Garuda forum**, the **Garuda Linux wiki** and the **Arch Linux wiki** in your web browser. The changes
-pill stays hidden on
-this page.
+When the apply worked and the queue is empty again, the assistant shows
+**Success!** and recommends a restart. **Restart…** restarts the computer after
+one more question. **Finish Setup** returns to Home. Below them, links open the
+**Garuda forum**, the **Garuda Linux wiki** and the **Arch Linux wiki** in your
+web browser. The footer stays hidden on this page.
 
 When every pick was already in place, the page says so instead of calling
 the system ready. In test mode it says that nothing was installed or
 changed.
 
-When you picked nothing, the Summary says so and the button reads **Finish**. It shows **Success!** without changing
-anything.
+When you picked nothing, the Summary says so and the button reads **Finish**. It
+shows **Success!** without changing anything.
 
 When a step of the apply fails, the Console shows the error and the
 assistant stays where it was. What did not run stays in the queue, so you
@@ -101,7 +99,7 @@ can fix the cause and apply again from **Review**.
 
 | Key         | What it does                                  |
 | ----------- | --------------------------------------------- |
-| `Alt+Right` | **Next**, on the Summary **Review and apply** |
+| `Alt+Right` | **Next**, on the Summary **Review and Apply** |
 | `Alt+Left`  | **Back**                                      |
 | `Tab`       | Moves through the rows and the buttons        |
 | `Space`     | Presses the button of the selected row        |

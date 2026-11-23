@@ -98,13 +98,12 @@ set-default` is `kernels default`, `locales set-system` is `locales
 system`, and `apps uninstall`, `kernels uninstall` and `packages
 uninstall` are the `remove` commands.
 
-Every `list` takes `--search <text>`, which keeps the rows whose name or
-shown name holds the text, upper or lower case alike. Some lists take
-filters of their own: `services list --running`, `--failed`,
-`--enabled`, `--disabled`, `--masked` or `--dead`, `toggle list --on` or `--off`, `apps list --installed`,
+Every `list` takes `--search <text>`, which keeps the rows whose name or shown
+name holds the text, upper or lower case alike. Some lists take filters of their
+own: `services list --running`, `--failed`, `--enabled`, `--disabled`,
+`--masked` or `--dead`, `toggle list --on` or `--off`, `apps list --installed`,
 `kernels list --installed` and `locales list --enabled`. Filters apply to
-`--json` too. The title still counts the whole list and says how many
-are shown.
+`--json` too. The title still counts the whole list and says how many are shown.
 
 On a terminal, lists and `show` commands open in a pager:
 `$GARUDA_TOOLBOX_PAGER`, else `$PAGER`, else `less -FRX`, which quits at
@@ -356,7 +355,7 @@ $ garuda-toolbox maintenance reset bash fish
 
 `maintenance list` prints every task and repair of the Maintenance page
 with its id, and marks those that are not available here and those that
-ask first. `maintenance run <id>` runs one now, as its **Run now** button
+ask first. `maintenance run <id>` runs one now, as its **Run Now** button
 does. The repairs that reinstall packages or throw settings away (marked
 "asks first") want their id typed instead of `y`, or `--yes`.
 
@@ -365,7 +364,7 @@ mirrors**: `rate-mirrors` ranks the mirrors by speed, then the fastest are
 saved as root. Without `rate-mirrors` its package is installed first.
 Ranking takes a few minutes.
 
-`maintenance reset list` prints the **Application settings** that
+`maintenance reset list` prints the **Application Settings** that
 `/etc/skel` holds, each with the files in your home folder it replaces.
 `maintenance reset <id>...` lists those files, asks, and copies Garuda's
 defaults over them. Each replaced file is kept as a backup beside it.
@@ -384,16 +383,16 @@ $ garuda-toolbox users remove guest --delete-home
 $ garuda-toolbox groups add media
 ```
 
-`users add` creates the account and sets its password at once. The
-password is never an argument: it is asked twice on the terminal without
-echo, or read from the first line of standard input with
-`--password-stdin`. `--admin` puts the account into `wheel`, and is
-refused on a system without that group, as the page offers no **Administrator** switch there. `--group`
-into further groups. `users edit` changes the full name, the login shell (one of `/etc/shells`), the groups and the home
-folder. `lock` and
-`unlock` lock and unlock the password. `remove` keeps the home folder
-unless `--delete-home`, which wants the account's name typed. The account
-running the command can be neither locked nor removed, as on the page.
+`users add` creates the account and sets its password at once. The password is
+never an argument: it is asked twice on the terminal without echo, or read from
+the first line of standard input with `--password-stdin`. `--admin` puts the
+account into `wheel`, and is refused on a system without that group, as the page
+offers no **Administrator** switch there. `--group` into further groups.
+`users edit` changes the full name, the login shell (one of `/etc/shells`), the
+groups and the home folder. `lock` and `unlock` lock and unlock the password.
+`remove` keeps the home folder unless `--delete-home`, which wants the account's
+name typed. The account running the command can be neither locked nor removed,
+as on the page.
 
 ### Languages
 
@@ -510,7 +509,7 @@ $ garuda-toolbox network traceroute garudalinux.org
 `drivers allow` lets it load again. `drivers load` and `drivers unload`
 do it now, until the next start, as the driver's **Load** and **Unload**
 buttons do. `public-address` asks geoip.kde.org,
-as the page's **Show public address** does, and nothing is kept. `ping` and
+as the page's **Show Public Address** does, and nothing is kept. `ping` and
 `traceroute` run in the terminal and change nothing.
 
 ### System Tweaks
@@ -563,19 +562,19 @@ $ garuda-toolbox settings set start-at-login on
 $ garuda-toolbox settings set dark-scheme nord
 ```
 
-`setup apply` turns several of the assistant's choices on in one plan, as
-its summary does. `settings` reads and writes the app's own settings:
-`language` (a code or `system`), `start-at-login`, `update-check` (minutes
-or `never`), `user-services`, `copy-reports`, `log-level`, `dark-scheme`
-and `light-scheme` (a colour scheme of that mode, such as `nord` or
+`setup apply` turns several of the assistant's choices on in one plan, as its
+summary does. `settings` reads and writes the app's own settings: `language` (a
+code or `system`), `start-at-login`, `update-check` (minutes or `never`),
+`user-services`, `copy-reports`, `blur-desktop`, `log-level`, `dark-scheme` and
+`light-scheme` (a colour scheme of that mode, such as `nord` or
 `catppuccin-latte`, or `system` for the desktop's colours).
 `settings get <setting>` prints one value, with `--json` as the object
 `settings list --json` holds for it, such as
-`{"schema": 1, "id": "language", "value": "system"}`. The window and the
-command line share one settings file. The window takes a change made here
-at its next start. Close a running window first: a change made in its
-Settings page writes its own values over the file. Theme and motion are
-kept with the window and only changed there.
+`{"schema": 1, "id": "language", "value": "system"}`. The window and the command
+line share one settings file. The window takes a change made here at its next
+start. Close a running window first: a change made in its Settings page writes
+its own values over the file. Theme and motion are kept with the window and only
+changed there.
 
 ## Output options
 
@@ -642,24 +641,23 @@ the same values on every system.
 with `"schema": 1`, the version of its field names. A later version that
 renames a field raises it. The field names follow one pattern:
 
-- `id` is what a row is known by, the name the commands take: a unit, a
-  switch, an app, a package, a kernel, a locale, an account, a group, a
-  setting, a page, a guide page, a DKMS module, a driver, a configuration
-  file, a disk of Boot Repair, a change in the queue or a check of
-  `doctor`, such as `polkit-agent`.
-- `name` is the English display name of a row that has one besides its
-  id, such as a switch, a locale, a page, a configuration file, an
-  account (its full name, empty when it has none) or a check of `doctor`.
-- `state` names a row's current condition in one word, such as
-  `installed` for a DKMS module (dkms's own words). A fact of `status`
-  has a `state` too, which tells whether it could be read: `ok` with its
-  `value`, `unavailable` when this system does not have it, or `failed`
-  with its `cause`, the words of what failed.
-- States that need more than one word, or a yes or no, have names of
-  their own: `on` for switches and apps (`true`, `false`, or `null` when
-  it could not be read), `active` and `sub_state` for services (systemd's own words, such as `active` and `running`) and
-  `result` for
-  the checks of `doctor` (`ok`, `problem`, `optional` or `unknown`).
+- `id` is what a row is known by, the name the commands take: a unit, a switch,
+  an app, a package, a kernel, a locale, an account, a group, a setting, a page,
+  a guide page, a DKMS module, a driver, a configuration file, a disk of Boot
+  Repair, a change in the queue or a check of `doctor`, such as `polkit-agent`.
+- `name` is the English display name of a row that has one besides its id, such
+  as a switch, a locale, a page, a configuration file, an account (its full
+  name, empty when it has none) or a check of `doctor`.
+- `state` names a row's current condition in one word, such as `installed` for a
+  DKMS module (dkms's own words). A fact of `status` has a `state` too, which
+  tells whether it could be read: `ok` with its `value`, `unavailable` when this
+  system does not have it, or `failed` with its `cause`, the words of what
+  failed.
+- States that need more than one word, or a yes or no, have names of their own:
+  `on` for switches and apps (`true`, `false`, or `null` when it could not be
+  read), `active` and `sub_state` for services (systemd's own words, such as
+  `active` and `running`) and `result` for the checks of `doctor` (`ok`,
+  `problem`, `optional` or `unknown`).
 
 For example, `status --json`:
 

@@ -12,15 +12,15 @@ Each row is one thing: a package, a system service or a group your
 account belongs to.
 
 - A package row has a button. **Install** queues the package, an installed
-  package says **Installed** and offers **Remove**. The row then says **Installs with Apply** or **Removes with Apply**,
-  and the button reads **Take back**.
-- A service or group row has a button too. **Enable** queues turning it
-  on, a row that is on says **Enabled** and offers **Disable**. The row says **Turns on with
-  Apply** or **Turns off with Apply**. Click the button again to take the
-  change out of the queue.
+  package says **Installed** and offers **Remove**. The row then says **Installs
+  with Apply** or **Removes with Apply**, and the button reads **Take Back**.
+- A service or group row has a button too. **Enable** queues turning it on, a
+  row that is on says **Enabled** and offers **Disable**. The row says **Turns
+  on with Apply** or **Turns off with Apply**. Click the button again to take
+  the change out of the queue.
 - `Space` on a selected row does what its button does.
-- The **⋯** button of a row holds **Open website** where the entry has one
-  and **Copy name**.
+- The **⋯** button of a row holds **Open Website** where the entry has one and
+  **Copy Name**.
 - Changes wait in the queue until you apply them, see
   [Review and apply changes](applying.md).
 
@@ -37,7 +37,7 @@ above the rows when it refuses a click. The administrator groups `wheel` and
 The chips above the rows show one section at a time. **All** shows every
 section. Type in **Search this page…** to keep only the rows whose name or
 description holds the text. When the picked chip has no match but other
-sections do, the page names the section and offers **Show all** with the
+sections do, the page names the section and offers **Show All** with the
 number of matches. It shows every section and keeps the search.
 
 ## Entries that need another one
@@ -61,7 +61,7 @@ example "The state of 12 entries could not be read, so their switches may
 show the wrong state". The app could not read that part of the system, for
 example the package list on a system without pacman. The chips and section
 headings then count "?/8" instead of how many are on. You can still queue a
-change. Click **Read again** in the warning to read the system again.
+change. Click **Read Again** in the warning to read the system again.
 
 ## Why a row is missing
 

@@ -1,6 +1,6 @@
 # User guide
 
-**User guide** shows this guide inside the app. Open it at the bottom of
+**User Guide** shows this guide inside the app. Open it at the bottom of
 the sidebar, between **Settings** and **About**, or press `F1` on any page
 to open the guide page about it.
 
@@ -16,17 +16,18 @@ The page shows three parts:
 | ---------------------- | ---------------------------------------------------------------------------------------------------- |
 | The list at the left   | Every page of the guide under its part: **Basics**, **Install**, **System**, **Care**, **Reference** |
 | The page in the middle | The open page, with its part and title at the top                                                    |
-| **On this page**       | The headings of the open page, the one you read marked. It shows in a wide window only               |
+| **On This Page**       | The headings of the open page, the one you read marked. It shows in a wide window only               |
 
 1. Click a page in the list at the left.
-2. Click a heading under **On this page** to go to it.
+2. Click a heading under **On This Page** to go to it.
 
 A link in the text opens the guide page it names, or the web page in your
 browser. At the end of each page, the links with arrows open the page
 before and after it.
 
-Click a picture, or focus it with `Tab` and press `Enter`, to see it as
-large as the window allows. A click on the large picture, `Esc` or **Close** lead back to the page.
+Click a picture, or focus it with `Tab` and press `Enter`, to see it as large as
+the window allows. A click on the large picture, `Esc` or **Close** lead back to
+the page.
 
 ## Open the page the guide explains
 
@@ -45,7 +46,7 @@ the words you typed. Empty the search to see the open page again.
 
 ## Help for the open page
 
-Press `F1` on any page, or pick **Help for this page** in the
+Press `F1` on any page, or pick **Help for This Page** in the
 [command palette](command-palette.md). The guide opens on the page about
 the page you were on. **Settings** and **About** share one guide page.
 

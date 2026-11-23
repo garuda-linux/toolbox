@@ -2,8 +2,8 @@
 
 The **Maintenance** page updates and cleans up packages, refreshes mirrors
 and resets application settings. Open it with **Maintenance** in the
-sidebar. It has three tabs at the top right: **Common**, **Reset settings**
-and **Repairs**. The round arrow beside them, **Read again** (or `F5`),
+sidebar. It has three tabs at the top right: **Common**, **Reset Settings**
+and **Repairs**. The round arrow beside them, **Read Again** (or `F5`),
 checks which tools are installed and reads the system again, for example
 after you installed a tool elsewhere.
 
@@ -11,7 +11,7 @@ after you installed a tool elsewhere.
 
 ## Update and clean up
 
-The rows under **Package care** on **Common** change the system:
+The rows under **Package Care** on **Common** change the system:
 
 | Row                        | What it does                                                                              |
 | -------------------------- | ----------------------------------------------------------------------------------------- |
@@ -23,11 +23,11 @@ The rows under **Package care** on **Common** change the system:
 
 Each row has two buttons:
 
-- **Queue** and the action, for example **Queue update** or **Queue
+- **Queue** and the action, for example **Queue Update** or **Queue
   removal**, puts the row into the queue, so it runs with your other
-  changes. The button then says **Remove from queue**. Click it to take the
+  changes. The button then says **Remove from Queue**. Click it to take the
   row out of the queue again.
-- **Run now** runs it at once and shows the **Console**.
+- **Run Now** runs it at once and shows the **Console**.
 
 Queued rows run in a fixed order, whatever order you queued them in: the
 keyring and the lock first, then the update. The clean-up runs after all
@@ -50,10 +50,10 @@ for the end and a note at the top says so.
 ## Open a tool
 
 The rows under **Tools** on **Common** open tools in their own window. When a
-tool is missing, its button says **Install and open…** and the row says that
-the installation starts at once. Click it: the installation runs in the **Console** and asks for your password, and the
-tool opens when the
-installation succeeded. For **Refresh Chaotic-AUR mirrors** the ranking starts instead.
+tool is missing, its button says **Install and Open…** and the row says that the
+installation starts at once. Click it: the installation runs in the **Console**
+and asks for your password, and the tool opens when the installation succeeded.
+For **Refresh Chaotic-AUR mirrors** the ranking starts instead.
 
 | Row                             | Tool                                                         |
 | ------------------------------- | ------------------------------------------------------------ |
@@ -91,15 +91,15 @@ also in the log file, see [Settings and About](settings.md).
 
 ## Reset application settings
 
-**Reset settings** puts the settings of applications back to Garuda's
+**Reset Settings** puts the settings of applications back to Garuda's
 defaults from `/etc/skel`. Only applications whose defaults exist on your
 system are listed.
 
 1. Tick the applications, for example **Fish** or **Kvantum**. Under each
    name, **Replaces** names the files of your home it resets. A long list
    ends in "…". Point at the row to read all of it.
-2. Click **Reset selected…**.
-3. Read the list of files in **Reset 2 settings?** (the number is how many
+2. Click **Reset Selected…**.
+3. Read the list of files in **Reset 2 Settings?** (the number is how many
    you ticked) and click **Reset**.
 
 ![The question before a reset, with the file of the home that gets replaced](images/maintenance-reset.png)
@@ -122,28 +122,28 @@ password.
 | ---------------------------------- | ------------------------------------ |
 | **System health check**            | `garuda-health`                      |
 | **Repair system health**           | `garuda-health --fix`                |
-| **Reset package manager settings** | `garuda-update remote fix`           |
-| **Reset keyring**                  | `garuda-update remote keyring`       |
-| **Full reset**                     | `garuda-update remote fullfix`       |
-| **Reset audio**                    | `garuda-update remote reset-audio`   |
+| **Reset Package Manager Settings** | `garuda-update remote fix`           |
+| **Reset Keyring**                  | `garuda-update remote keyring`       |
+| **Full Reset**                     | `garuda-update remote fullfix`       |
+| **Reset Audio**                    | `garuda-update remote reset-audio`   |
 | **Reset Snapper**                  | `garuda-update remote reset-snapper` |
-| **Reinstall packages**             | `garuda-update remote reinstall`     |
+| **Reinstall Packages**             | `garuda-update remote reinstall`     |
 
-> **Warning:** **Full reset** and **Reinstall packages** reinstall every
+> **Warning:** **Full Reset** and **Reinstall Packages** reinstall every
 > package. This takes a long time and downloads a large amount of data.
 
-**Reset package manager settings**, **Full reset**, **Reset audio**, **Reset Snapper** and **Reinstall packages** ask
-first. The question says
+**Reset Package Manager Settings**, **Full Reset**, **Reset Audio**,
+**Reset Snapper** and **Reinstall Packages** ask first. The question says
 what is lost, for example that **Reset Snapper** deletes every snapshot.
-The red button with the repair's name runs it. **Cancel** or `Esc` leaves
+The button with the repair's name runs it. **Cancel** or `Esc` leaves
 the system as it is.
 
-Every row is shown. A row whose program is missing is greyed out and says
-what it needs, for example **Needs garuda-update**. One note above the rows
-names every missing package, `garuda-health`, `garuda-update` or both, and
-offers to install them all with one button, for example **Install garuda-health, garuda-update**. The installation
-starts at once in
-the Console and asks for your password. The rows unlock once it is done.
+Every row is shown. A row whose program is missing is greyed out and says what
+it needs, for example **Needs garuda-update**. One note above the rows names
+every missing package, `garuda-health`, `garuda-update` or both, and offers to
+install them all with one button, for example **Install garuda-health,
+garuda-update**. The installation starts at once in the Console and asks for
+your password. The rows unlock once it is done.
 
 ## See also
 

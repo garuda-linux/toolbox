@@ -22,26 +22,26 @@ shows you what changed, and only then is the file replaced.
 
 ## Before you start
 
-Editing a file needs a terminal editor. The app uses the editor named
-in `$VISUAL` or `$EDITOR` when it is one of micro, nano, vim, nvim, vi, helix (`hx`), emacs, ne, joe or mcedit. Anything
-else in these variables is ignored.
-Without a usable choice the app takes the first installed one of micro, nano
-and vi. The app looks for the editor in `/usr/bin` first, then in the
-folders of your `$PATH`. Garuda Linux ships micro.
+Editing a file needs a terminal editor. The app uses the editor named in
+`$VISUAL` or `$EDITOR` when it is one of micro, nano, vim, nvim, vi, helix
+(`hx`), emacs, ne, joe or mcedit. Anything else in these variables is ignored.
+Without a usable choice the app takes the first installed one of micro, nano and
+vi. The app looks for the editor in `/usr/bin` first, then in the folders of
+your `$PATH`. Garuda Linux ships micro.
 
 ## Find a file
 
 - Type in the search field. The search looks at names, paths, descriptions and
   the files of folders, for example `grub`, `/etc/pacman` or `kwinrc`.
-- **Read again** (the round arrow at the top, or `F5`) looks for the files of
+- **Read Again** (the round arrow at the top, or `F5`) looks for the files of
   the list on your system again, for example after you installed a program.
-  A search that finds nothing offers **Clear search**.
+  A search that finds nothing offers **Clear Search**.
 
 Each row shows the name, the path and at most one status line, such as who
 may save it. Hover over a row to see what the file is for and, for a link, the
-file it leads to. **Open wiki page** in the **⋯** menu at the right of the
+file it leads to. **Open Wiki Page** in the **⋯** menu at the right of the
 row opens the matching page of the Arch wiki in your browser. For a file of
-your home folder the menu also has **Open in app**. A screen
+your home folder the menu also has **Open in App**. A screen
 reader names the menu button `More actions for <name>`.
 
 ## Open a folder of files
@@ -49,11 +49,11 @@ reader names the menu button `More actions for <name>`.
 Some rows are folders, such as `/etc/modprobe.d` or `~/.config/systemd/user`.
 They show how many files they hold.
 
-1. Click **Show the files** in the row (or select the row and press `Space` or
-   `Enter`). **Hide the files** hides them again.
+1. Click **Show the Files** in the row (or select the row and press `Space` or
+   `Enter`). **Hide the Files** hides them again.
 2. The files of the folder appear below it, each with its own **Edit**
    or **View** button. Where the folder has a wiki page, each file
-   has the **⋯** menu with **Open wiki page** too. What the files are for is
+   has the **⋯** menu with **Open Wiki Page** too. What the files are for is
    said once, on the row of the folder (screen readers read it on every
    file).
 
@@ -72,7 +72,7 @@ Click **Edit** in its row (or select the row and press `Enter`). It works like
 A file that is a link, for example one a dotfile manager keeps, is written
 where the link leads, and the link stays.
 
-To use a graphical editor instead, choose **Open in app** in the **⋯** menu of
+To use a graphical editor instead, choose **Open in App** in the **⋯** menu of
 the row. The file opens in the default app of your desktop for that file type,
 as if you had opened it from the file manager.
 
@@ -82,17 +82,17 @@ as if you had opened it from the file manager.
 2. When your account may not read the file (for example `/boot/grub/grub.cfg`),
    a password dialog asks for an administrator. Most files in `/etc` can be read
    without one.
-3. The **Console** opens with your editor on a copy of the file. Change what
-   you want, save and quit the editor. Until you do, the Console shows
+3. The **Console** opens with your editor on a copy of the file. Change what you
+   want, save and quit the editor. Until you do, the Console shows
    `Save and quit the editor to go on.` above the editor.
 4. The page comes back with the dialog `Save the changes to <file>?`. It shows
-   every changed line with a few lines around it, under a heading such as **Lines 3 to 6**: added lines start with `+`
-   on a green row, removed lines
-   with `-` on a red row. Two columns at the left number each line, in the
-   file as it is and in your edited copy. It also names the file that will be written when that is another one (see
-   [Files that are links](#files-that-are-links)).
-5. Click **Save**. A password dialog asks for an administrator, and the
-   Console shows the write.
+   every changed line with a few lines around it, under a heading such as
+   **Lines 3 to 6**: added lines start with `+` on a green row, removed lines
+   with `-` on a red row. Two columns at the left number each line, in the file
+   as it is and in your edited copy. It also names the file that will be written
+   when that is another one (see [Files that are links](#files-that-are-links)).
+5. Click **Save**. A password dialog asks for an administrator, and the Console
+   shows the write.
 
 When it worked, the page says `Saved <file>. The previous version is kept as
 <backup>.`
@@ -101,14 +101,14 @@ The other buttons of the dialog:
 
 | Button            | What it does                                                       |
 | ----------------- | ------------------------------------------------------------------ |
-| **Edit again**    | Opens the editor on your copy again, with your changes in it       |
-| **Discard…**      | Asks **Discard your edits?**, then drops them and removes the copy |
-| **Compare again** | After a failed save: shows your edit against the file as it is now |
+| **Edit Again**    | Opens the editor on your copy again, with your changes in it       |
+| **Discard…**      | Asks **Discard Your Edits?**, then drops them and removes the copy |
+| **Compare Again** | After a failed save: shows your edit against the file as it is now |
 
-The × at the top right is **Close and keep the edits**.
+The × at the top right is **Close and Keep the Edits**.
 
 Closing the dialog keeps your changes. The page then says that they wait for
-your review, and **Review changes** opens the dialog again.
+your review, and **Review Changes** opens the dialog again.
 
 When you quit the editor without changing anything, the page says that the
 file was not changed, and nothing is written.
@@ -153,7 +153,7 @@ One file can be edited at a time, and the **Edit** buttons of the other rows
 are off meanwhile. The page shows which file is open, with two buttons:
 
 - **Show Console** goes back to the editor.
-- **Cancel edit** stops the editor and removes the copy. Nothing is written.
+- **Cancel Edit** stops the editor and removes the copy. Nothing is written.
 
 ### Where the previous version is kept
 
@@ -183,8 +183,8 @@ count as a second configuration.
 - A link stays a link. The file it leads to is replaced.
 - When the file changed on disk after you opened it (a package update, another
   editor), the save is refused and the file stays as it is. Your edit is kept:
-  the dialog opens again, and **Compare again** shows your edit against the
-  file as it is now. Then **Save** it, or use **Edit again** to bring the
+  the dialog opens again, and **Compare Again** shows your edit against the
+  file as it is now. Then **Save** it, or use **Edit Again** to bring the
   other changes in.
 
 ## Files that are only shown
@@ -217,11 +217,10 @@ save there gives whatever the file names the rights of root. Use
 who may administer the system or what runs as root, so it is only shown
 here. Change it in a terminal with sudo.`
 
-The text cannot be changed in the dialog. Select a part of it with the mouse,
-or with `Shift` and the arrow keys, and copy it with `Ctrl+c`. **Copy all** copies the whole text to the clipboard.
-**Close** or `Esc`
-closes the dialog, and the text goes with it. Nothing is written and
-nothing is queued.
+The text cannot be changed in the dialog. Select a part of it with the mouse, or
+with `Shift` and the arrow keys, and copy it with `Ctrl+c`. **Copy All** copies
+the whole text to the clipboard. **Close** or `Esc` closes the dialog, and the
+text goes with it. Nothing is written and nothing is queued.
 
 When the row is a link, the dialog shows the text of the file the link leads
 to and says `<file> is a link. This is the text of the file it leads to,
@@ -244,7 +243,7 @@ When the text cannot be shown, the dialog says why instead:
 | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `Only shown here: …` in the row              | See [Files that are only shown](#files-that-are-only-shown)                                              |
 | `Not edited here: …` in the row              | The file is a link to something the app does not edit. See [Files that are links](#files-that-are-links) |
-| `… was replaced by a link while it was read` | The file changed into a link in that moment. Click **Read again** and try again                          |
+| `… was replaced by a link while it was read` | The file changed into a link in that moment. Click **Read Again** and try again                          |
 | A file is missing from the list              | It does not exist on your system, or it is in a folder your account may not look into                    |
 | `… is larger than 1 MiB`                     | Larger files are not handed out                                                                          |
 | `… is no text file`                          | The file is not UTF-8 text                                                                               |

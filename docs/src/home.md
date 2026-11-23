@@ -18,31 +18,31 @@ then says **Not known**).
 Click a tile, or focus it with `Tab` and press `Enter` or `Space`, to open
 the tab that acts on it.
 
-**System status** lists only what needs your attention. When nothing
+**System Status** lists only what needs your attention. When nothing
 does, a card says how many checks passed and names them.
 
 ![The Home page with the stat tiles, System status, News and Next steps](images/home.png)
 
 ## Status cards
 
-Each card has one button at its right. A card with more to offer has a **⋯** button beside it that opens the rest. In a
-narrow window they sit
-under its text.
+Each card has one button at its right. A card with more to offer has a **⋯**
+button beside it that opens the rest. In a narrow window they sit under its
+text.
 
 | Card                                                                 | Shown when                                                                         | Buttons                                                         |
 | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| **2 updates available**                                              | The repositories have newer packages (`checkupdates`)                              | **Update now**, in **⋯** **Queue update** and **Show packages** |
-| **One AUR update available**                                         | AUR packages have newer versions (`paru -Qua`)                                     | **Update in Console**, in **⋯** **Show packages**               |
-| **The last update is overdue**                                       | The last update is more than 14 days old, no updates known                         | **Update now**                                                  |
-| **Configuration files to merge**                                     | `.pacnew` or `.pacsave` files wait (`pacdiff -o`)                                  | **Review…**, in **⋯** **Open in meld**                          |
+| **2 updates available**                                              | The repositories have newer packages (`checkupdates`)                              | **Update Now**, in **⋯** **Queue Update** and **Show Packages** |
+| **One AUR update available**                                         | AUR packages have newer versions (`paru -Qua`)                                     | **Update in Console**, in **⋯** **Show Packages**               |
+| **The last update is overdue**                                       | The last update is more than 14 days old, no updates known                         | **Update Now**                                                  |
+| **Configuration Files to Merge**                                     | `.pacnew` or `.pacsave` files wait (`pacdiff -o`)                                  | **Review…**, in **⋯** **Open in meld**                          |
 | **Disk space is low**                                                | Less than a tenth of `/` is free, or less than 10 GB                               | **Open Maintenance**                                            |
 | **A service failed**                                                 | A system service stopped with an error, named in the card                          | **Show in Services**                                            |
-| **Orphans and package cache**                                        | A package is no longer needed, or the cache holds over 5 GB                        | **Queue clean-up**, then **Don't clean up** to take it back     |
+| **Orphans and Package Cache**                                        | A package is no longer needed, or the cache holds over 5 GB                        | **Queue Clean-up**, then **Don't Clean Up** to take it back     |
 | **garuda-health found warnings** or **garuda-health found problems** | `garuda-health` reports LOW issues (warnings), or HIGH or CRITICAL ones (problems) | **Fix**, or **Show in Console** when it cannot fix them         |
 | **Restart to finish the update**                                     | The running kernel or system libraries were replaced                               | **Restart…** asks first, then restarts                          |
 
 On a disk of 100 GB or less the limit is a tenth of it, and on a bigger
-disk it is 10 GB. **Queue clean-up** queues removing the orphans and
+disk it is 10 GB. **Queue Clean-up** queues removing the orphans and
 cleaning the package cache, as [Maintenance](maintenance.md) does. Both
 run with your other changes after you review them.
 
@@ -58,21 +58,21 @@ it removes or replaces a file you edited, it keeps your version as
 merge**.
 
 1. Click **Review…**.
-1. For each change, pick **Keep current** or **Take new** (**Take saved**
-   for a `.pacsave`). Every change starts at **Keep current**.
-1. Click **Queue the merge**. To queue the whole file instead, click
-   **Keep current file** or **Use new file** (**Restore saved file** for a
-   `.pacsave`). To change the merged text by hand, click **Edit result…**.
+1. For each change, pick **Keep Current** or **Take New** (**Take Saved**
+   for a `.pacsave`). Every change starts at **Keep Current**.
+1. Click **Queue the Merge**. To queue the whole file instead, click
+   **Keep Current File** or **Use New File** (**Restore Saved File** for a
+   `.pacsave`). To change the merged text by hand, click **Edit Result…**.
 1. Apply your changes.
 
-A queued file shows **queued** in the list. **Take back** removes it from
+A queued file shows **queued** in the list. **Take Back** removes it from
 the queue.
 
 | Copy                             | Actions                                                         |
 | -------------------------------- | --------------------------------------------------------------- |
-| Same as the file in use          | **Remove the copy**                                             |
-| File in use is gone              | **Use new file** or **Restore saved file**, **Remove the copy** |
-| Older save (`.pacsave.1` and up) | **Remove the copy**                                             |
+| Same as the file in use          | **Remove the Copy**                                             |
+| File in use is gone              | **Use New File** or **Restore Saved File**, **Remove the Copy** |
+| Older save (`.pacsave.1` and up) | **Remove the Copy**                                             |
 
 Files only root may read, such as `/etc/sudoers`, ask for your password.
 The dialog leaves out copies of files that hold secrets, such as
@@ -87,13 +87,14 @@ To merge from a terminal, see `garuda-toolbox merges` in
 
 ## See which packages will be updated
 
-Open the **⋯** menu of either update card and click **Show packages**. **Pending updates** lists every package with the
-installed and the new
-version, for example
-`linux-zen` with `6.13.8.zen1-1 → 6.14.1.zen1-1`. Repository packages come
-first. Packages from the AUR follow and are marked **AUR**.
+Open the **⋯** menu of either update card and click **Show Packages**.
+**Pending Updates** lists every package with the installed and the new
+version, for example `linux-zen` with `6.13.8.zen1-1 → 6.14.1.zen1-1`.
+Repository packages come first. Packages from the AUR follow and are
+marked **AUR**.
 
-The list is as fresh as the last check. Click **Read again** beside **System status** to renew it.
+The list is as fresh as the last check. Click **Read Again** beside
+**System Status** to renew it.
 
 ## Update AUR packages
 
@@ -106,19 +107,19 @@ changes and answer, also in an editor paru opens.
 
 ## When a check fails
 
-A message says how many checks could not run, and the card of passed
-checks does not show. **Show details** names each check with the reason
-the system gave, and **Read again** runs the checks once more. When the
-update check failed, for example without a network, one message reads **The update check failed.** with **Read again**.
+A message says how many checks could not run, and the card of passed checks does
+not show. **Show Details** names each check with the reason the system gave, and
+**Read Again** runs the checks once more. When the update check failed, for
+example without a network, one message reads **The update check failed.** with
+**Read Again**.
 
 ## When the status is checked
 
 - When the app starts.
 - After every apply, successful or not.
-- With **Read again** beside **System status**, or `F5`.
-- Every hour while the app runs. Change this under **Settings** → **Time between checks**, or turn **Check for updates
-  automatically**
-  off.
+- With **Read Again** beside **System Status**, or `F5`.
+- Every hour while the app runs. Change this under **Settings** → **Time
+  between checks**, or turn **Check for updates automatically** off.
 
 Each check downloads the package lists into a temporary folder and asks
 the AUR, so it needs the network. It never changes the installed system.
@@ -136,21 +137,28 @@ to do something by hand around an update is marked **Manual step**: on
 Arch the posts whose title says "manual intervention", on Garuda the
 posts of the forum's Maintenance announcements.
 
-Click a title to open the post in your browser. **Garuda forum** and **Arch news** beside the heading open all posts of
-each site. The app asks
-each site at most every six hours and keeps its posts, so they show
-without a network too.
+Click a title to open the post in your browser. **Garuda forum** and **Arch
+news** beside the heading open all posts of each site. The app asks each site at
+most every six hours and keeps its posts, so they show without a network too.
 
 ## Next steps
 
-Below the news, **Next steps** offers up to three cards on one line:
-**Review changes** while changes wait, **Setup Assistant** until you have
-gone through it once (not on a live system), then **Maintenance** and **Diagnostics**. In a narrow window they wrap onto
-more lines.
+Below the news, **Next Steps** offers up to three cards on one line. It
+takes them in this order and shows the first three that apply:
+
+1. **Review Changes**, while changes wait.
+1. **Setup Assistant**, until you have gone through it once. A live system
+   never shows it.
+1. **Maintenance**.
+1. **Diagnostics**.
+
+With changes waiting and the Setup Assistant still to do,
+**Diagnostics** is left out. With neither, only **Maintenance** and
+**Diagnostics** show. In a narrow window the cards wrap onto more lines.
 Every other page is in the sidebar. The links to Garuda Linux's websites
 and community are on **About**.
 
-**Recently used** shows the last three pages you opened. Click one to go
+**Recently Used** shows the last three pages you opened. Click one to go
 back to it.
 
 ## Notifications
@@ -160,15 +168,15 @@ notification says whether it worked.
 
 ## On the live ISO
 
-Started from the live ISO, Home shows **Live system** instead of the
+Started from the live ISO, Home shows **Live System** instead of the
 status:
 
-- **Install Garuda Linux** → **Start installer** opens the installer. It
+- **Install Garuda Linux** → **Start Installer** opens the installer. It
   asks for your password. When the installer cannot start, a red note
   above the cards says **The installer could not start:** with the reason.
 - When the live system's tools could not be looked for, a message says
-  so above the cards. **Read again** looks once more.
-- **Repair an installed system** → **Open in Console** asks for your
+  so above the cards. **Read Again** looks once more.
+- **Repair an Installed System** → **Open in Console** asks for your
   password and opens a root shell inside the Garuda Linux installed on
   this computer, in the Console. Repair what you need there, for example
   reinstall a package or update GRUB. Type `exit` to leave it.

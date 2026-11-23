@@ -8,7 +8,8 @@ tools, controller drivers, games and emulators.
 ## Find an entry
 
 Type in **Search this page…** above the rows. Only the rows whose name or
-description holds the text stay. **Nothing matches the search** with **Clear search** appears when none does.
+description holds the text stay. **Nothing matches the search** with **Clear
+Search** appears when none does.
 
 ## Install or remove a gaming app
 
@@ -18,7 +19,7 @@ installed one says **Installed**.
 1. Click **Install** or **Remove** on the row, or press `Space` on it.
    Nothing changes yet: the row says **Installs with Apply** or **Removes
    with Apply**.
-2. Click **Take back** to take the change out of the queue.
+2. Click **Take Back** to take the change out of the queue.
 3. Apply the queue, see [Review and apply changes](applying.md).
 
 ## Rows that install more than one package
@@ -34,7 +35,7 @@ that build. Some rows name a `-git` package themselves, for example
 
 ## Open a game's website
 
-Many games, such as **0 A.D.**, have **Open website** in the **⋯** menu of
+Many games, such as **0 A.D.**, have **Open Website** in the **⋯** menu of
 their row (**Actions for** and the game's name). It opens the game's site
 in your web browser without changing the queue. With the keyboard, select
 the row and press the `Menu` key. Only `https` sites from the app's own

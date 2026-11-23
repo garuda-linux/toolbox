@@ -36,14 +36,14 @@ nothing to change.
    small start-up system the kernel loads first) again.
 
 To undo a change before you apply, set the old value again or remove the
-change from the list behind **Review** on the changes pill. To undo it
+change from the list behind **Review** in the footer. To undo it
 afterwards, set the old value and apply once more, or copy
 `/etc/default/grub.bak` back with the **Config Files** page and run
 `grub-mkconfig -o /boot/grub/grub.cfg` as root.
 
 ## Choose the entry that boots by default
 
-**Default entry** under **Boot menu** lists the entries of the boot menu.
+**Default entry** under **Boot Menu** lists the entries of the boot menu.
 Entries inside a submenu name it, for example
 `Garuda Linux, with Linux linux-lts (in Advanced options for Garuda Linux)`.
 
@@ -56,7 +56,7 @@ an update changes the order of the menu.
 The boot menu (`/boot/grub/grub.cfg`) can usually be read by the administrator
 only. The app reads only the titles and ids of the entries, after your
 password. When that is refused, the list stays empty and the text
-below it says so. **Read again** at the top right, or `F5`, asks once more.
+below it says so. **Read Again** at the top right, or `F5`, asks once more.
 
 The list holds the entries GRUB shows on this computer. Some entries are only
 in the menu of a UEFI machine (**UEFI Firmware Settings**) or only in that of a
@@ -68,12 +68,12 @@ An entry the file names but the menu does not have shows as written, with
 
 ### Coming from the Kernels page
 
-**Set as default…** on an installed kernel of the [Kernels](kernels.md) page
+**Set as Default…** on an installed kernel of the [Kernels](kernels.md) page
 opens this page with a note above the settings that names the kernel and
 offers its entry. Nothing is queued yet:
 
-- **Queue as default** queues the kernel's entry. Then apply the queue.
-- **Do not change** closes the note and leaves the default as it is.
+- **Queue as Default** queues the kernel's entry. Then apply the queue.
+- **Do Not Change** closes the note and leaves the default as it is.
 - Picking another entry in **Default entry** yourself queues that one, as
   always.
 
@@ -108,7 +108,7 @@ it `grub-mkconfig` finds no other system.
 
 ## Change kernel parameters
 
-**Parameters passed to the kernel** under **Kernel parameters** lists the
+**Parameters passed to the kernel** under **Kernel Parameters** lists the
 words of `GRUB_CMDLINE_LINUX_DEFAULT`, one chip per parameter. The four
 parameters with their own switch below show on the switches instead.
 
@@ -175,9 +175,10 @@ splash works there in a limited way.
 
 Under **Appearance**:
 
-- **GRUB background picture** is a PNG, JPEG or TGA picture behind the menu (`GRUB_BACKGROUND`).
-- **GRUB theme** is the `theme.txt` file of a GRUB theme (`GRUB_THEME`),
-  usually below `/usr/share/grub/themes`. A theme brings its own background.
+- **GRUB background picture** is a PNG, JPEG or TGA picture behind the menu
+  (`GRUB_BACKGROUND`).
+- **GRUB theme** is the `theme.txt` file of a GRUB theme (`GRUB_THEME`), usually
+  below `/usr/share/grub/themes`. A theme brings its own background.
 
 For each of them:
 
@@ -207,29 +208,30 @@ unlocked. Pick a file on a partition GRUB can read, for example below
 
 ## On systemd-boot
 
-New Garuda installs start with systemd-boot and one unified kernel image (UKI) per kernel, built with the kernel command
-line inside. The page tells
-the two boot loaders apart by what started the system, so a GRUB left on the
-disk does not count.
+New Garuda installs start with systemd-boot and one unified kernel image (UKI)
+per kernel, built with the kernel command line inside. The page tells the two
+boot loaders apart by what started the system, so a GRUB left on the disk does
+not count.
 
-The **Boot menu** card changes `loader/loader.conf` on the EFI system
+The **Boot Menu** card changes `loader/loader.conf` on the EFI system
 partition:
 
 - **Default entry**: the entry that starts when you do not pick another. A
   kernel is saved by its kind, not its version (`garuda-*-garuda.efi`), so it
   stays the default after kernel updates. Snapshot entries of snapper are not
   offered, because they disappear when snapper deletes the snapshot.
-- **Set as default…** on the [Kernels](kernels.md) page opens the same note
-  as on GRUB, see [Coming from the Kernels page](#coming-from-the-kernels-page).
-  It offers the kernel's image, saved by its kind like the default entry. A
-  kernel without an image yet shows **systemd-boot has no image of the
-  kernel … yet**. The fallback image is never offered.
-- **Remember the last entry**: starts the entry you picked last time (`default @saved`). Switching it off goes back to
-  the first entry.
+- **Set as Default…** on the [Kernels](kernels.md) page opens the same note as
+  on GRUB, see [Coming from the Kernels page](#coming-from-the-kernels-page). It
+  offers the kernel's image, saved by its kind like the default entry. A kernel
+  without an image yet shows **systemd-boot has no image of the kernel … yet**.
+  The fallback image is never offered.
+- **Remember the last entry**: starts the entry you picked last time
+  (`default @saved`). Switching it off goes back to the first entry.
 - **Menu timeout**: systemd-boot's default, a number of seconds, **The menu
   waits for a key**, or **Hidden unless a key is held at start**.
-- **Edit entries at boot**, **Entries systemd-boot finds itself** and **Firmware settings entry**: three segments,
-  **Default**, **On** and **Off**. **Default** removes the line so systemd-boot decides.
+- **Edit entries at boot**, **Entries systemd-boot finds itself** and **Firmware
+  settings entry**: three segments, **Default**, **On** and **Off**. **Default**
+  removes the line so systemd-boot decides.
 
 Applying changes only the queued lines. Every other line stays, also the
 ones garuda-common-settings adds, and the old file stays beside it as
@@ -245,10 +247,10 @@ none of these files.
 
 ### Change kernel parameters on systemd-boot
 
-**Kernel parameters** works as described in
-[Change kernel parameters](#change-kernel-parameters), with the chips, **New parameter** and the four switches. It
-writes `/etc/kernel/cmdline`
-instead of `/etc/default/grub`.
+**Kernel Parameters** works as described in
+[Change kernel parameters](#change-kernel-parameters), with the chips, **New
+parameter** and the four switches. It writes `/etc/kernel/cmdline` instead of
+`/etc/default/grub`.
 
 - `root=`, `rootflags=` and `rw` have no remove button. Without them the
   system finds no root file system to start.

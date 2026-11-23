@@ -63,7 +63,7 @@ The dialog was cancelled or closed.
 
 **Solution**
 
-1. Click **Apply** on the changes pill again and enter the password.
+1. Click **Apply** in the footer again and enter the password.
 
 ## A step failed
 
@@ -110,7 +110,7 @@ SSH, user services cannot be read at all.
 1. Point at or focus the **i** button after the message in the status bar.
    It lists each part with the error the system gave, for example
    `/etc/kernel/install.conf: Permission denied`.
-2. Fix the cause, then click **Read again** in the message, or press `F5`.
+2. Fix the cause, then click **Read Again** in the message, or press `F5`.
 3. The round arrow in the status bar reads the whole system again.
 
 When the boot loader itself cannot be read, the Boot Options page shows
@@ -139,7 +139,7 @@ This is no error.
 **Symptoms**
 
 - On [Home](home.md), a figure says **Could not check**, and a message says
-  how many checks could not run. **Show details** names each check, for
+  how many checks could not run. **Show Details** names each check, for
   example the repository updates, and the reason.
 
 **Cause**
@@ -149,7 +149,7 @@ internet connection.
 
 **Solution**
 
-1. Click **Read again** beside **System status** once the network works.
+1. Click **Read Again** beside **System Status** once the network works.
 2. When it keeps failing, open [Diagnostics](diagnostics.md) and collect
    the system information for a forum post.
 
@@ -177,9 +177,10 @@ the code to `~/.local/state/garuda-toolbox/crash.log`. Once the file reaches
 
 **Symptoms**
 
-- The window shows only **Garuda Toolbox is not installed completely** and **Quit**.
-- `garuda-toolbox doctor` reports `/usr/share/garuda-toolbox/catalog is
-missing`.
+- The window shows only **Garuda Toolbox Is Not Installed Completely** and
+  **Quit**.
+- `garuda-toolbox doctor` reports
+  `/usr/share/garuda-toolbox/catalog is missing`.
 
 **Cause**
 

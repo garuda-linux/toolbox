@@ -4,7 +4,7 @@ The **Console** shows the programs the app runs, as a full terminal. You can
 type into it, so programs that ask a question or open an editor work there,
 for example the diff review of AUR packages.
 
-Open it with `Ctrl+j` or with **Toggle console** in the command palette. The
+Open it with `Ctrl+j` or with **Toggle Console** in the command palette. The
 app also opens it when you apply changes or run an operation with **Run
 now**.
 
@@ -25,8 +25,9 @@ blurred. After a finished run, opening another page hides the Console.
 ## See how an apply goes
 
 While changes are applied, the line above the terminal says **Applying
-changes…** and the step list marks the running step. Each step says **Waiting**, **Running**, **Done**, **Nothing to
-do**, **Cancelled** or **Failed** with its exit code.
+changes…** and the step list marks the running step. Each step says **Waiting**,
+**Running**, **Done**, **Nothing to do**, **Canceled** or **Failed** with its
+exit code.
 
 ## See how an apply ended
 
@@ -34,12 +35,13 @@ When the apply ends, the line above the terminal says how it went:
 
 - **All changes applied**.
 - **Applied, 2 steps had nothing to do** when some steps found their part
-  already done, for example a file already as wanted or no orphans to
-  remove. **Nothing needed to change** when no step had work.
-- **Test mode: nothing was changed** in test mode, where no step runs.
-  Every step then says **Not run (test mode)**.
-- **Stopped before all changes were applied** when a step failed or the
-  password was refused. Changes that did not run stay in the queue, so **Apply** runs them again.
+  already done, for example a file already as wanted or no orphans to remove.
+  **Nothing needed to change** when no step had work.
+- **Test mode: nothing was changed** in test mode, where no step runs. Every
+  step then says **Not run (test mode)**.
+- **Stopped before all changes were applied** when a step failed or the password
+  was refused. Changes that did not run stay in the queue, so **Apply** runs
+  them again.
 
 When the update replaced the running kernel or system libraries,
 [Home](home.md) offers **Restart…**.
@@ -86,10 +88,10 @@ run.
 Once changes ran, the Console's header has a **⋯** button (**Console output
 actions** for screen readers). Its menu holds:
 
-- **Copy output** copies everything the programs printed, as plain text.
+- **Copy Output** copies everything the programs printed, as plain text.
   A short note at the top right confirms it.
-- **Share output…** uploads it, see below.
-- **Clear output** empties the terminal and the step list, and the Console
+- **Share Output…** uploads it, see below.
+- **Clear Output** empties the terminal and the step list, and the Console
   says **No changes are being applied** again. It also hides the link of an
   earlier upload.
 
@@ -104,20 +106,21 @@ opens your browser. Select the address and copy it.
 
 To show the output to someone who helps you, upload it:
 
-1. Open the **⋯** menu and click **Share output…**.
-2. The dialog shows the exact text that will be sent, with your user name,
-   host name, home folder and public addresses replaced as on
-   [Diagnostics](diagnostics.md#what-the-upload-replaces). Read it and
-   search it for anything else you do not want to share. A program that
-   writes on meanwhile does not change it.
-3. Click **Upload**. One row in the Console says **Uploaded.**, with **Copy link** and **Hide**. Its **⋯** menu holds
-   **Open in browser**, **Copy delete link** and **Delete now…**.
+1. Open the **⋯** menu and click **Share Output…**.
+2. The dialog shows the exact text that will be sent, with your user name, host
+   name, home folder and public addresses replaced as on
+   [Diagnostics](diagnostics.md#what-the-upload-replaces). Read it and search it
+   for anything else you do not want to share. A program that writes on
+   meanwhile does not change it.
+3. Click **Upload**. One row in the Console says **Uploaded.**, with **Copy
+   Link** and **Hide**. Its **⋯** menu holds **Open in Browser**, **Copy Delete
+   Link** and **Delete Now…**.
 
 The upload works like the one on [Diagnostics](diagnostics.md#share-a-report):
-the text goes to `bin.garudalinux.org`, encrypted on your computer, and
-the server deletes it after one month. Nothing is sent before you click **Upload**. **Cancel** sends nothing. With
-**Copy reports to the
-clipboard** on in Settings, the link goes to the clipboard by itself.
+the text goes to `bin.garudalinux.org`, encrypted on your computer, and the
+server deletes it after one month. Nothing is sent before you click **Upload**.
+**Cancel** sends nothing. With **Copy reports to the clipboard** on in Settings,
+the link goes to the clipboard by itself.
 
 > **Note:** Anyone who has the link can read the output. Programs print
 > names, paths and package lists, so read the text before you upload it.

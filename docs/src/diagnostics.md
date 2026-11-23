@@ -12,10 +12,10 @@ computer unless you upload a report yourself.
 
 ## Collect a report
 
-Under **Reports** each report has a row that says what it holds. Click **Collect** in the row of the report you want.
-The page says what is being
+Under **Reports** each report has a row that says what it holds. Click
+**Collect** in the row of the report you want. The page says what is being
 collected meanwhile, and the report appears below. While a report shows, the
-rows fold into **Collect another report**. Click it to unfold them.
+rows fold into **Collect Another Report**. Click it to unfold them.
 
 A long report scrolls in its own box, which fills the window. Long lines
 break at the box's edge. Its header line names the report, the time it was
@@ -23,7 +23,7 @@ collected (in UTC) and how many lines it has, followed by these controls:
 
 - **Search the report** shows only the lines that hold the text you type, in
   any case. Its **×** shows every line again.
-- **Copy report** and **Share report…**, see below.
+- **Copy Report** and **Share Report…**, see below.
 
 | Report                 | What it collects                                                                        | Program                                                                      |
 | ---------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
@@ -37,21 +37,21 @@ collected (in UTC) and how many lines it has, followed by these controls:
 
 Things to know:
 
-- The report shows the colours a program uses in a terminal, for example red
-  for failed units and errors in the journal, in the colours of your desktop
-  theme. `garuda-inxi` and pacman's log have none. What you copy or upload
-  is always plain text without colours.
-- Starting another collector cancels the one that runs. **Cancel**, shown in
-  the running report's row instead of **Collect**, stops it without starting
-  a new one. A **Full report** says which part it is at, for example **Collecting
+- The report shows the colours a program uses in a terminal, for example red for
+  failed units and errors in the journal, in the colours of your desktop theme.
+  `garuda-inxi` and pacman's log have none. What you copy or upload is always
+  plain text without colours.
+- Starting another collector cancels the one that runs. **Cancel**, shown in the
+  running report's row instead of **Collect**, stops it without starting a new
+  one. A **Full report** says which part it is at, for example **Collecting
   Journal (3 of 6)…**.
-- A report is at most 2 MiB per collector. Of a longer output only the end
-  is kept, and the first line of the report says so.
-- Reports are in English, whatever language the app uses, so people who help
-  can read them.
-- A program that ends with an error but printed something still gives a
-  report. Its error text and `Exit code:` follow at the end. `garuda-health`
-  does this whenever it finds a problem.
+- A report is at most 2 MiB per collector. Of a longer output only the end is
+  kept, and the first line of the report says so.
+- Reports are in English, whatever language the app uses, so people who help can
+  read them.
+- A program that ends with an error but printed something still gives a report.
+  Its error text and `Exit code:` follow at the end. `garuda-health` does this
+  whenever it finds a problem.
 
 ### When you are asked for your password
 
@@ -85,10 +85,10 @@ the same, and the other parts are still collected.
 
 ## Copy a report
 
-Click **Copy report** in the report's header line. **Copy report** and **Share report…** show once a report is there. A
-short note at the top right of the
-window confirms the copy. The copy is plain text without colours, ready to
-paste into a forum post.
+Click **Copy Report** in the report's header line. **Copy Report** and **Share
+Report…** show once a report is there. A short note at the top right of the
+window confirms the copy. The copy is plain text without colours, ready to paste
+into a forum post.
 
 To copy every finished report without a click, switch on **Copy reports to
 the clipboard** in [Settings](settings.md). The link of an uploaded report is
@@ -97,7 +97,7 @@ then copied too. Its delete link is never copied by itself.
 > **Note:** On some Wayland desktops a window can only write to the clipboard
 > while it has the focus, and the app cannot tell when a copy did not arrive.
 > When a report finished while you were in another window and nothing pastes,
-> click **Copy report** again.
+> click **Copy Report** again.
 
 ## Share a report
 
@@ -105,19 +105,19 @@ Sharing uploads the report to Garuda's PrivateBin at `bin.garudalinux.org`
 and gives you a link to post in the forum.
 
 1. Collect a report.
-2. Click **Share report…**.
-3. Read the text in the **Upload this report?** dialog. It is exactly what
+2. Click **Share Report…**.
+3. Read the text in the **Upload This Report?** dialog. It is exactly what
    will be uploaded: plain text without colours, with the values that name
    you or this computer replaced (see below). The dialog says how many were
    replaced. Type in **Search the text** to mark every match, for example
-   of a name, and **Next match** to jump to the next one.
+   of a name, and **Next Match** to jump to the next one.
 4. Click **Upload**. **Cancel** uploads nothing.
 
 ![The question before an upload, with the text that goes out](images/diagnostics-upload.png)
 
 When the upload is done, one line above the report says **Uploaded.** with
-its buttons. **Copy link** copies the link, **Hide** removes it. The **⋯**
-button, **More link actions**, holds **Open in browser**, which opens the
+its buttons. **Copy Link** copies the link, **Hide** removes it. The **⋯**
+button, **More link actions**, holds **Open in Browser**, which opens the
 paste, and the delete link (see below).
 
 > **Warning:** Anyone who has the whole link can read the report. The report
@@ -129,7 +129,7 @@ paste, and the delete link (see below).
 ### What the upload replaces
 
 Before the dialog opens, the Toolbox replaces these values in the text it
-uploads. The report on the page and **Copy report** keep them.
+uploads. The report on the page and **Copy Report** keep them.
 
 | Value                                                  | Placeholder                   |
 | ------------------------------------------------------ | ----------------------------- |
@@ -154,11 +154,11 @@ that two lines name the same disk. Private addresses such as
 Each upload also has a delete link: opening it removes the report from the
 server. It waits in the **⋯** menu of the **Uploaded.** line.
 
-- **Delete now…** asks **Delete the report from the server?** first. **Delete** then opens the delete link in your
-  browser. The server removes
-  the report at once, and the link to the report stops working for everyone.
-  The page takes both links away.
-- **Copy delete link** copies it, so you can keep it and delete the report
+- **Delete Now…** asks **Delete the Report from the Server?** first. **Delete**
+  then opens the delete link in your browser. The server removes the report at
+  once, and the link to the report stops working for everyone. The page takes
+  both links away.
+- **Copy Delete Link** copies it, so you can keep it and delete the report
   later, for example when your forum topic is solved.
 
 The delete link cannot be used to read the report, but anyone who has it can
@@ -171,7 +171,7 @@ until it expires.
 
 When the upload fails, a red message above the report says why, with what
 the network or the server said in brackets. The report stays on the page,
-so you can try again with **Share report…** or copy it. **Dismiss** hides
+so you can try again with **Share Report…** or copy it. **Dismiss** hides
 the message.
 
 | Message                                                                                                   | What to do                                                                                                                                                   |
@@ -192,8 +192,8 @@ $ garuda-toolbox --page diagnostics --action inxi
 ```
 
 `--action` takes `inxi`, `garuda-health`, `systemd-analyze`, `journalctl`,
-`pacman`, `dmesg` or `all`. When the app is already running, its window asks
-to come to the front and opens the page. It runs the collector only when the window
+`pacman`, `dmesg` or `all`. When the app is already running, its window asks to
+come to the front and opens the page. It runs the collector only when the window
 was already in front, because a collector may ask for a password. Otherwise
 click **Collect** in the collector's row. An upload never starts this way.
 

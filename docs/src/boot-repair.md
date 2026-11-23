@@ -61,7 +61,7 @@ set to **In the subvolume @ (Garuda's layout)**. Choose **At the top of the
 file system** only for a system that was installed on btrfs without
 subvolumes, or for an encrypted partition that holds another file system.
 
-**Read again** (the round arrow at the top, or `F5`) reads the disks again, for
+**Read Again** (the round arrow at the top, or `F5`) reads the disks again, for
 example after you plugged in a disk or unmounted a partition.
 
 ## Reinstall the boot loader
@@ -73,11 +73,11 @@ Use this when the computer does not find a boot loader at all, shows a
    - started through UEFI: the partition under **EFI system partition**,
    - started the legacy way: the disk under **Disk for the boot loader**.
      Choose the disk the computer starts from.
-2. Click **Reinstall the boot loader…**.
+2. Click **Reinstall the Boot Loader…**.
 3. Read the dialog. It names the partition or disk the boot loader is written
    to and the system it is installed for.
 4. For a locked system, enter its passphrase.
-5. Click **Reinstall the boot loader** and enter an administrator's password.
+5. Click **Reinstall the Boot Loader** and enter an administrator's password.
 
 On a GRUB system the repair installs GRUB and then writes the boot menu
 again. Its boot entry in the firmware's boot menu is called `Garuda`. On a
@@ -90,9 +90,9 @@ A legacy start installs GRUB only.
 Use this when the boot loader starts but its menu is empty, lacks a kernel
 you installed or still lists one you removed.
 
-1. Click **Build the boot files again…**.
+1. Click **Build the Boot Files Again…**.
 2. Read the dialog and, for a locked system, enter its passphrase.
-3. Click **Build the boot files again** and enter an administrator's
+3. Click **Build the Boot Files Again** and enter an administrator's
    password.
 
 On a GRUB system only `/boot/grub/grub.cfg` of the chosen system is written.
@@ -145,9 +145,8 @@ Afterwards the page says how it went:
 
 - **The running system uses the disk of this partition, so it cannot be
   repaired from here.** Something from that disk is mounted, for example
-  because you opened it in the file manager. Unmount it and click **Read again**. The disk the live system itself runs
-  from is never written
-  to.
+  because you opened it in the file manager. Unmount it and click **Read
+  Again**. The disk the live system itself runs from is never written to.
 - **No EFI system partition was found on a disk that is free, so no boot
   loader can be installed. The boot menu of a GRUB system can still be
   written again.** The live system was started through UEFI, but no free
@@ -161,10 +160,10 @@ Afterwards the page says how it went:
   loader, or **Where the system lies** names the wrong place.
 - A volume inside an encrypted partition (LVM on LUKS) only shows once the
   partition is unlocked. Unlock it in the file manager or with
-  `cryptsetup open`, then click **Read again**.
+  `cryptsetup open`, then click **Read Again**.
 
-For anything this page does not cover, **Repair an installed system** on **Home** opens a root shell inside the
-installed system, see
+For anything this page does not cover, **Repair an Installed System** on
+**Home** opens a root shell inside the installed system, see
 [Home and system status](home.md#on-the-live-iso).
 
 ## Test mode

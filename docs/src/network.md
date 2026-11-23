@@ -4,14 +4,15 @@
 manages network drivers, lists network hardware and runs connection tests.
 It has four tabs: **Status**, **Drivers**, **Hardware** and **Tools**.
 
-**Read again** (the round arrow beside the tabs, or `F5`) reads everything
+**Read Again** (the round arrow beside the tabs, or `F5`) reads everything
 again. The page also reads again after every run in the Console.
 
 ![The Network page with its Status tab](images/network.png)
 
 ## Check the connection
 
-The **Status** tab starts with **Connection**, with **Radios** and **Services** below it.
+The **Status** tab starts with **Connection**, with **Radios** and **Services**
+below it.
 
 | Line               | What it shows                                                      |
 | ------------------ | ------------------------------------------------------------------ |
@@ -34,27 +35,26 @@ The answer comes from NetworkManager's own connectivity check. Garuda
 Toolbox sends no test packets by itself. On a system that uses another
 network manager the line stays **Unknown**.
 
-**Router** and **Interface** show **None** without a default route and **Not available** when the `ip` program is
-missing.
+**Router** and **Interface** show **None** without a default route and **Not
+available** when the `ip` program is missing.
 
-Below **Connection** each active Ethernet or Wi-Fi interface has a card,
-titled with its connection's name. A card lists the interface, its IPv4
-and IPv6 addresses, the DNS servers for it, its MAC address, and for a
-wire the link speed or for Wi-Fi the network name and the signal, such as **Good (57 %)**. Each address, server and MAC
-address has a copy button.
-The cards come from NetworkManager and update when it reports a change.
-Without NetworkManager no card shows. Bridges, VPN tunnels and disconnected
-interfaces have no card.
+Below **Connection** each active Ethernet or Wi-Fi interface has a card, titled
+with its connection's name. A card lists the interface, its IPv4 and IPv6
+addresses, the DNS servers for it, its MAC address, and for a wire the link
+speed or for Wi-Fi the network name and the signal, such as **Good (57 %)**.
+Each address, server and MAC address has a copy button. The cards come from
+NetworkManager and update when it reports a change. Without NetworkManager no
+card shows. Bridges, VPN tunnels and disconnected interfaces have no card.
 
 ## Show the public address
 
 Your public address is the one the internet sees, usually the address of
 your router.
 
-1. Click **Show public address**.
-2. The address appears under **Public address**. **Copy** puts it on
-   the clipboard. **Hide** in the **⋯** menu beside it takes it off the
-   page again.
+1. Click **Show Public Address**.
+2. The address appears under **Public address**. The copy button beside
+   it, **Copy Public Address**, puts it on the clipboard. **Hide** in the
+   **⋯** menu beside it takes it off the page again.
 
 > **Note:** The click sends one request to `geoip.kde.org`, KDE's own
 > service. That service sees your address. Garuda Toolbox reads only the
@@ -62,7 +62,7 @@ your router.
 > sent.
 
 **Could not be found out** means there was no answer, for example without
-an internet connection. **Try again** asks once more.
+an internet connection. **Try Again** asks once more.
 
 ## Switch Wi-Fi, Bluetooth and flight mode
 
@@ -101,11 +101,11 @@ for your position. To make a service start at every boot, use
 
 ## Manage network drivers
 
-The **Drivers** tab lists the network drivers (kernel modules) of the
-running kernel. Search by name with the field under the tabs, or narrow
-the list with the two rows of chips: one for the state and one for the kind (**Ethernet**, **Wireless**, **Bluetooth**
-or **Other**). **All** in a row
-shows every driver again.
+The **Drivers** tab lists the network drivers (kernel modules) of the running
+kernel. Search by name with the field under the tabs, or narrow the list with
+the two rows of chips: one for the state and one for the kind (**Ethernet**,
+**Wireless**, **Bluetooth** or **Other**). **All** in a row shows every driver
+again.
 
 | State                   | Meaning                                                  |
 | ----------------------- | -------------------------------------------------------- |
@@ -129,7 +129,7 @@ fails: load the driver with `modprobe` in a terminal there.
 
 ### Keep a driver from loading
 
-1. Open the **⋯** menu of the driver's row and click **Queue blacklist**.
+1. Open the **⋯** menu of the driver's row and click **Queue Blacklist**.
    The row shows **Queued: add to the blacklist**.
 2. Apply the queue (see [Review and apply changes](applying.md)).
 
@@ -138,8 +138,8 @@ Garuda Toolbox adds the driver to its own file
 does not load the driver by itself. A driver that is loaded stays loaded
 until you click **Unload** or restart.
 
-To undo it, click **Queue removal from blacklist** in the same menu and
-apply. While a change waits in the queue, **Take back** in the menu
+To undo it, click **Queue Removal from Blacklist** in the same menu and
+apply. While a change waits in the queue, **Take Back** in the menu
 removes it from the queue.
 
 Some drivers are blacklisted by other files, for example by a package
@@ -154,9 +154,9 @@ or edit a file in `/etc/modprobe.d` yourself in
 kernel are not on the disk. That is normal right after a kernel update:
 restart the computer first.
 
-**No driver matches** means the search or the filters hide every driver. **Clear filters** empties the search field and
-shows all states and kinds.
-When the drivers could not be read, **Read again** reads them again.
+**No driver matches** means the search or the filters hide every driver. **Clear
+Filters** empties the search field and shows all states and kinds. When the
+drivers could not be read, **Read Again** reads them again.
 
 ## List network hardware
 
@@ -166,48 +166,48 @@ information. A USB device counts as Bluetooth when one of its interfaces
 has the Bluetooth class in `/sys/bus/usb/devices`, even when its name says
 only "Wireless", as with the Bluetooth part of a MediaTek MT7922 card.
 
-- **Copy this line** on a row copies that device's line.
-- **Copy all** copies every line.
+- **Copy This Line** on a row copies that device's line.
+- **Copy All** copies every line.
 
 When a list is missing, the tab says which program is not installed:
 `lspci` comes with the package `pciutils`, `lsusb` with `usbutils`. When
 no device is listed at all, the empty list says so. Otherwise a note
-above the list does. When a program failed, **Read again** reads the devices
+above the list does. When a program failed, **Read Again** reads the devices
 again. A short note at the top right confirms each copy.
 
 ## Test a connection
 
-On the **Tools** tab under **Connection tests**:
+On the **Tools** tab under **Connection Tests**:
 
 1. Enter a name or an IP address in **Host**. It starts with
    `garudalinux.org`.
 2. For a ping, set **Number of pings** (1 to 100) and **Timeout in
-   seconds** (1 to 60), then click **Run ping** under the form.
+   seconds** (1 to 60), then click **Run Ping** under the form.
 3. For the route to the host, set **Most hops (for traceroute)** (1 to 255)
-   and click **Run traceroute** beside it.
+   and click **Run Traceroute** beside it.
 
-Both run with your own rights and show their output in the Console. Click **Cancel** there to stop one early. Once a
-test ended, a note under the
-buttons says whether it finished or ended with an error. While the Console
-is closed, **Show Console** in the note opens it.
+Both run with your own rights and show their output in the Console. Click
+**Cancel** there to stop one early. Once a test ended, a note under the buttons
+says whether it finished or ended with an error. While the Console is closed,
+**Show Console** in the note opens it.
 
 When the host is not a name or address, the buttons are greyed out and
 the **Host** row says **Enter a host name or an IP address, for example
 garudalinux.org.**
 
-**Run traceroute** is greyed out while the package `traceroute` is not
+**Run Traceroute** is greyed out while the package `traceroute` is not
 installed, and the tab says so. Install it with your package manager.
 
 ## Share the connection as a Wi-Fi hotspot
 
-Under **Wi-Fi hotspot** on the **Tools** tab:
+Under **Wi-Fi Hotspot** on the **Tools** tab:
 
-- **Queue hotspot tool** puts the package `linux-wifi-hotspot` into the
+- **Queue Hotspot Tool** puts the package `linux-wifi-hotspot` into the
   queue. Apply the queue to install it.
-- **Open hotspot** starts the tool in its own window once it is installed.
+- **Open Hotspot** starts the tool in its own window once it is installed.
 
 When the installed packages could not be read, the button is greyed out and
-a note under it says so. **Read again** reads them again.
+a note under it says so. **Read Again** reads them again.
 
 ## See also
 

@@ -34,9 +34,9 @@ The sidebar on the left lists the pages in three groups:
 Home sits above the groups, Settings and About below them. Boot Repair
 shows only on the Garuda live system. **Search** at the top of the sidebar
 opens the [command palette](command-palette.md). The button beside the
-app's name collapses the sidebar to its icons.
+search field collapses the sidebar to its icons.
 
-Changes you make wait in the queue. The changes pill at the bottom right
+Changes you make wait in the queue. The footer under the page
 counts them, see [Review and apply changes](applying.md). The
 [Console](console.md) shows what the programs print while changes are
 applied.
@@ -49,7 +49,7 @@ The keys that work on every page are listed in
 A page reads parts of the system when the app starts and after every apply:
 installed packages, services, accounts, settings files. When one of them
 cannot be read, the page says so in a message at the top, with **Read
-again**. The page then shows that part as not known.
+Again**. The page then shows that part as not known.
 The status bar at the bottom of the window lists what could not be read,
 for example **Some parts of the system could not be read: user services**.
 
@@ -57,7 +57,7 @@ A part the system does not have at all, such as GRUB on a machine with
 another boot loader, is not an error. The page says **not available**
 instead.
 
-Click **Read again** once the cause is fixed.
+Click **Read Again** once the cause is fixed.
 [Troubleshooting](troubleshooting.md#something-could-not-be-read) explains
 the common causes.
 

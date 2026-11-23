@@ -83,19 +83,18 @@ out too. The section shows only where `garuda-update` is installed.
 
 ## Turn system tweaks on or off
 
-Below the choices, rows in the sections **Common**, **Performance**, **Powersaving** and **Right click emulation** work
-like the
-[Components](components.md) page: each row is a package or a service, its
-switch shows whether it is on, and flipping it queues the change.
-Examples are `profile-sync-daemon`, `ananicy-cpp`, `thermald` and
-`power-profiles-daemon`.
+Below the choices, rows in the sections **Common**, **Performance**,
+**Powersaving** and **Right Click Emulation** work like the
+[Components](components.md) page: each row is a package or a service, its switch
+shows whether it is on, and flipping it queues the change. Examples are
+`profile-sync-daemon`, `ananicy-cpp`, `thermald` and `power-profiles-daemon`.
 
 A service row needs its package first. Its switch stays greyed out and the
 row says **Needs …** until the package is on or queued.
 
 ## Change settings of your desktop and apps
 
-The **Desktop and apps** section edits configuration files in your home
+The **Desktop and Apps** section edits configuration files in your home
 folder:
 
 | Card                            | What it changes                                                                                                                   |
@@ -123,10 +122,9 @@ once. Restart Discord after changing its switch.
 ## When the state could not be read
 
 A warning at the top says how many entries it concerns, with **Read
-again**. The app could not read that part of the system, for example the
+Again**. The app could not read that part of the system, for example the
 package list on a system without pacman, or a configuration file it may not
-read.
-You can still queue a change.
+read. You can still queue a change.
 
 ## See also
 

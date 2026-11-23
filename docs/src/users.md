@@ -19,43 +19,43 @@ password is never kept in the queue. See
 The **Users** tab shows one row per account with its user name, full name,
 user ID, home folder, login shell and groups. Every row has **Edit…** and
 a button with three dots at its right. The dots open the other actions:
-**Set password…**, locking, **Groups…** and **Remove…**. Right-click a row
+**Set Password…**, locking, **Groups…** and **Remove…**. Right-click a row
 for the same actions.
 
 With the keyboard, press `Tab` to reach the list and pick a row with the
 arrow keys. `Enter` opens **Edit…**, the `Menu` key or `Shift+F10` opens
 the other actions, and `Tab` moves on to the buttons of the row.
 
-- **Regular users only** (on at first) shows the accounts of people: user
-  IDs from 1000 to 60000. Click the chip to also see the accounts of the system
-  and its services. The line beside it counts both, for example
+- **Regular Users Only** (on at first) shows the accounts of people: user IDs
+  from 1000 to 60000. Click the chip to also see the accounts of the system and
+  its services. The line beside it counts both, for example
   `Showing 2 of 56 accounts`.
 - **You** marks the account you are logged in with.
 - **Locked** marks an account whose password is locked.
 - **System** marks an account of the system or of a service: every account
   outside the user IDs 1000 to 60000.
-- The search field finds users by user name, user ID, full name, home
-  folder, login shell and group, without regard to upper and lower case.
-  The button at its end clears it. When nobody matches, the page says so.
-- **Sort by** at the right of the search field sorts by **User name**, **User ID** (at
-  first), **Full name**, **Home folder** or **Login shell**.
-  Accounts with the same value stay in the order of their names, and an
-  empty full name or shell comes last.
-- **Read again** (the round arrow at the top of the page, or `F5`) reads the
-  accounts and the lock state again, for example after you changed an
-  account in a terminal.
+- The search field finds users by user name, user ID, full name, home folder,
+  login shell and group, without regard to upper and lower case. The button at
+  its end clears it. When nobody matches, the page says so.
+- **Sort by** at the right of the search field sorts by **User name**, **User
+  ID** (at first), **Full name**, **Home folder** or **Login shell**. Accounts
+  with the same value stay in the order of their names, and an empty full name
+  or shell comes last.
+- **Read Again** (the round arrow at the top of the page, or `F5`) reads the
+  accounts and the lock state again, for example after you changed an account in
+  a terminal.
 
 The lock state is kept in `/etc/shadow`, which only root may read. The app
 reads it as root, after your password, and gets nothing but the user names
 and whether each is locked, never a password hash. When it cannot be read,
 a message above the list says that it does not know which accounts are
-locked, and why. **Read again** asks again. Until then the lock entry
+locked, and why. **Read Again** asks again. Until then the lock entry
 in a row's menu reads **Lock: state not known** and cannot be clicked: the
 app cannot tell whether another administrator could still log in.
 
 ## Add a user
 
-1. Click **Add user…**.
+1. Click **Add User…**.
 2. Optionally enter a **Full name**. While you type it, the **User name**
    below follows its first word in lowercase, with umlauts and accents
    spelled in plain letters: `Jürgen Groß` proposes `juergen`.
@@ -71,7 +71,7 @@ app cannot tell whether another administrator could still log in.
    system. This puts the user into the group `wheel`. The box is missing when
    the system has no such group.
 
-   The other fields are optional and wait under **More options**. Open it to
+   The other fields are optional and wait under **More Options**. Open it to
    change any of them.
 
 6. Optionally pick a **Login shell**. **System default** leaves the choice to
@@ -86,10 +86,10 @@ app cannot tell whether another administrator could still log in.
    system account one below 1000. A number another account has is refused.
 9. Tick **No home folder** for an account that needs no files of its own,
    and **System account** for the account of a service. A system account is
-   hidden by **Regular users only**.
+   hidden by **Regular Users Only**.
 10. Tick the other groups the user should be in beside its own one. The
     search field above the list finds a group by name.
-11. Click **Add user now** and enter your own password when asked. The account
+11. Click **Add User Now** and enter your own password when asked. The account
     is made right away and does not wait in the queue. While the button is
     greyed out, the text beside it says what it waits for, such as "Enter a
     password."
@@ -103,16 +103,17 @@ why one failed. Afterwards the new user appears in the list.
 
 When the account could not be added, for example because you closed the
 password question, the dialog opens again with everything you entered except
-the two passwords. Enter them again and click **Add user now** once more, or **Cancel**.
+the two passwords. Enter them again and click **Add User Now** once more,
+or **Cancel**.
 
 > **Note:** Adding a user is not offered while changes are being applied.
 > Wait until they are done.
 
 ## Set a password
 
-1. Click the three dots on the user's row, then **Set password…**.
+1. Click the three dots on the user's row, then **Set Password…**.
 2. Enter the new password twice.
-3. Click **Set password now** and enter your own password when asked.
+3. Click **Set Password Now** and enter your own password when asked.
 
 The page stays open. A message above the list says that the password is
 being set, then whether it worked. **Show Console** opens the Console with
@@ -121,22 +122,22 @@ with the new password from then on.
 
 ### Passwords are never stored
 
-A password you type goes straight from the dialog to the program that sets it (`chpasswd`), on that program's input. It
-is not written to the queue, the
-saved queue file, the Console, the log or the command line of any program,
-and the dialog empties its fields when it closes. A password cannot hold a
-line break or another control character and is at most 512 bytes long.
+A password you type goes straight from the dialog to the program that sets it
+(`chpasswd`), on that program's input. It is not written to the queue, the saved
+queue file, the Console, the log or the command line of any program, and the
+dialog empties its fields when it closes. A password cannot hold a line break or
+another control character and is at most 512 bytes long.
 
 ## Lock or unlock an account
 
-Open the menu with the three dots on the user's row and click **Queue lock**
-or **Queue unlock**, then apply the queue. The entry follows the account:
-a locked account offers **Queue unlock**. Click **Don't lock** or **Don't unlock** in the same menu to take it back
-before that. Your own
-account has no lock entry.
+Open the menu with the three dots on the user's row and click **Queue Lock** or
+**Queue Unlock**, then apply the queue. The entry follows the account: a locked
+account offers **Queue Unlock**. Click **Don't Lock** or **Don't Unlock** in the
+same menu to take it back before that. Your own account has no lock entry.
 
-Locking disables the password (`usermod -L`). The user can no longer log in
-with it. Other ways in, such as an SSH key, keep working. Unlocking (`usermod -U`) brings the old password back.
+Locking disables the password (`usermod -L`). The user can no longer log in with
+it. Other ways in, such as an SSH key, keep working. Unlocking (`usermod -U`)
+brings the old password back.
 
 > **Note:** An account that never had a password cannot be unlocked. Set a
 > password instead.
@@ -150,7 +151,7 @@ with it. Other ways in, such as an SSH key, keep working. Unlocking (`usermod -U
    every group at once, because that would also make the user an
    administrator and give it the groups of the system. The search field
    above the list finds a group by name.
-3. Click **Queue changes**, then apply the queue.
+3. Click **Queue Changes**, then apply the queue.
 
 Each change runs `gpasswd -a` or `gpasswd -d`. It takes effect at the user's
 next login.
@@ -159,14 +160,14 @@ next login.
 
 1. Click **Edit…** on the user's row.
 2. Change the **Full name** or pick another **Login shell**.
-3. Click **Queue changes**, then apply the queue.
+3. Click **Queue Changes**, then apply the queue.
 
 The full name cannot hold a colon, comma, equals sign, quotation mark or line
 break. Room and phone numbers that the account has beside the name stay as
 they are.
 
 What you change in one **Edit…** dialog queues together or not at all. When
-one part is refused, **Queue changes** stays greyed out and the text beside
+one part is refused, **Queue Changes** stays greyed out and the text beside
 it says why. The home folder of an account that cannot move it, such as your
 own, shows the reason in place of its field.
 
@@ -179,7 +180,7 @@ own, shows the reason in place of its field.
 3. Decide about the files with **Move the files to the new folder**, which
    shows once the path differs from the current one. The dialog says below
    it what will happen.
-4. Click **Queue changes**, then apply the queue.
+4. Click **Queue Changes**, then apply the queue.
 
 | **Move the files to the new folder** | What applying does (`usermod`)                                                                                  |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
@@ -206,9 +207,9 @@ folder again takes the change back.
    else is in it, and its group memberships.
 3. Tick **Also delete the home folder** when the user's files should go too.
    It is off each time you open the dialog.
-4. Click **Queue removal**, then apply the queue.
+4. Click **Queue Removal**, then apply the queue.
 
-Click **Unqueue removal** on the row to take the removal back before you
+Click **Unqueue Removal** on the row to take the removal back before you
 apply.
 
 > **Warning:** With **Also delete the home folder** every file in the home
@@ -220,21 +221,20 @@ Other changes queued for the user are dropped when you queue its removal.
 
 ## Add or remove a group
 
-The **Groups** tab lists every group with its group ID and members. Its
-search field finds groups by name, group ID and member, and **Sort by** at
-its right sorts them by **Group name**, **Group ID** (at first) or **Most members**. A group that is only queued has no
-group ID yet and comes
-last by ID.
+The **Groups** tab lists every group with its group ID and members. Its search
+field finds groups by name, group ID and member, and **Sort by** at its right
+sorts them by **Group name**, **Group ID** (at first) or **Most members**. A
+group that is only queued has no group ID yet and comes last by ID.
 
-To add one, click **Add group…**, enter a **Group name** (the same rules as
-for user names) and click **Queue group**. The new group shows as **New**
+To add one, click **Add Group…**, enter a **Group name** (the same rules as
+for user names) and click **Queue Group**. The new group shows as **New**
 right away, and users can be put into it before you apply.
 
-To remove one, click the button at the end of its row and confirm with **Queue removal**. Its members leave it. Files
-that belong to the group keep
-its number as their group. The same button takes a queued group or a queued
-removal back. System groups and the primary group of a user have no such
-button, because their removal would be refused.
+To remove one, click the button at the end of its row and confirm with **Queue
+Removal**. Its members leave it. Files that belong to the group keep its number
+as their group. The same button takes a queued group or a queued removal back.
+System groups and the primary group of a user have no such button, because their
+removal would be refused.
 
 ## What the page refuses
 

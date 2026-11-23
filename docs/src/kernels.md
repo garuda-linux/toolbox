@@ -24,12 +24,12 @@ kernel: 6.14.0-zen1-1-zen**. Installed kernels come first, then **Available**.
 | Part                          | Meaning                                                                                                               |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | **Running**                   | The kernel the system booted with                                                                                     |
-| **Default**                   | The kernel the boot menu starts first. Its row has no **Set as default…** button, and it can show next to **Running** |
+| **Default**                   | The kernel the boot menu starts first. Its row has no **Set as Default…** button, and it can show next to **Running** |
 | `6.14.1.arch1-1 from core`    | The version and the repository pacman takes the kernel from                                                           |
 | `installed 6.14.0.arch1-1`    | The installed version, shown when the repository has another one                                                      |
 | `6.15rc1-1, in no repository` | An installed kernel that none of your repositories offers any more                                                    |
 | **Headers missing**           | The matching headers package is not installed. **Headers install with Apply** once it waits in the queue              |
-| **DKMS modules**              | The DKMS modules of this kernel, see [Build missing DKMS modules](#build-missing-dkms-modules)                        |
+| **DKMS Modules**              | The DKMS modules of this kernel, see [Build missing DKMS modules](#build-missing-dkms-modules)                        |
 
 A kernel counts as one when its package name starts with `linux` and the same
 repository has a `-headers` package of the same version beside it. That
@@ -42,15 +42,16 @@ packages.
    `linux-lts`. The row then says **Installs with Apply**.
 2. Apply the queue.
 
-The kernel and its headers are installed together. Click **Take back**
+The kernel and its headers are installed together. Click **Take Back**
 to take a queued kernel back.
 
 ## Remove a kernel
 
-1. Click **Remove** on an installed kernel. The row then says **Removes with Apply**.
+1. Click **Remove** on an installed kernel. The row then says **Removes with
+   Apply**.
 2. Apply the queue.
 
-The headers go with the kernel. Click **Take back** to take a queued
+The headers go with the kernel. Click **Take Back** to take a queued
 removal back.
 
 > **Warning:** A system without a kernel does not boot. The **Remove**
@@ -69,10 +70,10 @@ removal back.
 
 ## Boot a kernel by default
 
-1. Click **Set as default…** on an installed kernel.
+1. Click **Set as Default…** on an installed kernel.
 2. [Boot Options](boot-options.md) opens with a note that offers the boot
    menu entry of that kernel. Nothing is queued yet.
-3. Click **Queue as default** there, then apply the queue. **Do not change**
+3. Click **Queue as Default** there, then apply the queue. **Do Not Change**
    leaves the default entry as it was.
 
 The button shows on installed kernels that are not queued for removal and
@@ -99,11 +100,11 @@ boot loader.
 DKMS modules such as the NVIDIA or VirtualBox drivers are built from source
 for each kernel, and that needs the kernel's headers.
 
-- Click **Queue headers** on a kernel that shows **Headers missing**, or
-- click **Queue all headers** at the top to queue the headers of every
+- Click **Queue Headers** on a kernel that shows **Headers missing**, or
+- click **Queue All Headers** at the top to queue the headers of every
   installed kernel that lacks them.
 
-Then apply the queue. **Don't install headers** takes the headers back.
+Then apply the queue. **Don't Install Headers** takes the headers back.
 
 ## Build missing DKMS modules
 
@@ -119,16 +120,16 @@ modules** to open it. A kernel with a module left to build shows it open.
 | `broken`               | dkms cannot use the module's source any more   |
 | `missing`              | dkms knows the module, but not for this kernel |
 
-1. Click **Queue module builds** on the kernel, or **Queue all builds** at
+1. Click **Queue Module Builds** on the kernel, or **Queue All Builds** at
    the top for all kernels.
 2. Apply the queue.
 
 Each build runs `dkms install <module>/<version> -k <kernel>` and shows its
 output in the [Console](console.md). Builds run after the packages of the same
-apply, so headers queued together with a build are there in time. **Don't build modules** takes the builds of a kernel
-back.
+apply, so headers queued together with a build are there in time. **Don't Build
+Modules** takes the builds of a kernel back.
 
-**Read again** (or `F5`) reads the kernels and asks dkms again, for example
+**Read Again** (or `F5`) reads the kernels and asks dkms again, for example
 after you installed a driver outside the app. The app also asks again after
 every apply.
 
@@ -144,7 +145,7 @@ every apply.
 | **Kernels are not available on this system**                 | pacman's package databases could not be read (not an Arch system)          |
 | **No kernels found**                                         | The repositories offer no kernel. Update the package databases             |
 | **dkms is not installed, so there are no modules to build.** | Nothing on this system uses DKMS                                           |
-| **dkms could not list its modules.**                         | `dkms status` failed. Run it in a terminal to see why, then **Read again** |
+| **dkms could not list its modules.**                         | `dkms status` failed. Run it in a terminal to see why, then **Read Again** |
 
 ## See also
 
