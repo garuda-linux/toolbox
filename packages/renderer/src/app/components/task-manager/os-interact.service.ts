@@ -922,7 +922,8 @@ export class OsInteractService {
   private async getGarudaUpdateConfig(): Promise<Map<string, boolean>> {
     const config = new Map<string, boolean>();
     try {
-      const content = await this.readPrivilegedFile('/etc/garuda/garuda-update/config');
+      const configPath = '/etc/garuda/garuda-update/config';
+      const content = await readTextFile(this.chrootPath ? await pathResolve(this.chrootPath, configPath) : configPath);
       for (const line of content.split('\n')) {
         const trimmed = line.trim();
         if (!trimmed || trimmed.startsWith('#')) continue;
