@@ -125,6 +125,8 @@ signal-hook = { version = "0.4", default-features = false }
 strum = { version = "0.28", default-features = false, features = ["derive"] }
 tempfile = "3"
 thiserror = "2"
+# The X11 path talks to the window manager directly, as winit does.
+x11rb = "0.13"
 proptest = "1"
 tokio = { version = "1", default-features = false }
 toml = "1"
@@ -133,6 +135,7 @@ tree-sitter-rust = "0.24"
 zbus = { version = "6", default-features = false, features = ["tokio"] }
 # `system`: winit's display is libwayland's, which only the system backend can share.
 wayland-client = { version = "0.31", features = ["system"] }
+wayland-protocols = { version = "0.32", features = ["client", "staging"] }
 wayland-protocols-plasma = { version = "0.3", features = ["client"] }
 
 # Unwinding stays on so a panicking service ends only its own task.

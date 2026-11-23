@@ -5611,6 +5611,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "toolbox-backdrop"
+version = "6.3.0"
+dependencies = [
+ "raw-window-handle",
+ "thiserror 2.0.21",
+ "tracing",
+ "wayland-client",
+ "wayland-protocols",
+ "wayland-protocols-plasma",
+ "x11rb",
+]
+
+[[package]]
 name = "toolbox-calendar"
 version = "6.3.0"
 
