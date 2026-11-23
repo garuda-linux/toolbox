@@ -127,6 +127,7 @@ pub fn set(
         SettingKey::UserServices => settings.services.show_user_units = switch(value)?,
         SettingKey::CopyReports => settings.diagnostics.copy_to_clipboard = switch(value)?,
         SettingKey::Aur => settings.packages.show_aur = switch(value)?,
+        SettingKey::BlurDesktop => settings.window.blur_desktop = switch(value)?,
         SettingKey::LogLevel => {
             settings.general.log_level = log_level(value).map_err(SettingError::Word)?;
         }
@@ -158,6 +159,7 @@ pub fn value(settings: &Settings, key: SettingKey, autostart: bool) -> String {
         SettingKey::UserServices => switch(settings.services.show_user_units),
         SettingKey::CopyReports => switch(settings.diagnostics.copy_to_clipboard),
         SettingKey::Aur => switch(settings.packages.show_aur),
+        SettingKey::BlurDesktop => switch(settings.window.blur_desktop),
         SettingKey::LogLevel => log_level_name(settings.general.log_level).to_owned(),
         SettingKey::DarkScheme => scheme_name(settings.colours.dark_scheme.as_ref()),
         SettingKey::LightScheme => scheme_name(settings.colours.light_scheme.as_ref()),
@@ -217,6 +219,7 @@ const fn key_name(key: SettingKey) -> &'static str {
         SettingKey::UserServices => "user-services",
         SettingKey::CopyReports => "copy-reports",
         SettingKey::Aur => "aur",
+        SettingKey::BlurDesktop => "blur-desktop",
         SettingKey::LogLevel => "log-level",
         SettingKey::DarkScheme => "dark-scheme",
         SettingKey::LightScheme => "light-scheme",

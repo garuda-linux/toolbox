@@ -247,7 +247,9 @@ fn wanted(names: Names, words: &[String]) -> Option<Names> {
             Some(_) | None => None,
         },
         Names::SettingValues => match after_set(words) {
-            Some("start-at-login" | "user-services" | "copy-reports") => Some(Names::OnOff),
+            Some("start-at-login" | "user-services" | "copy-reports" | "blur-desktop") => {
+                Some(Names::OnOff)
+            }
             Some("log-level") => Some(Names::LogLevels),
             Some("dark-scheme") => Some(Names::ColourSchemes { dark: true }),
             Some("light-scheme") => Some(Names::ColourSchemes { dark: false }),

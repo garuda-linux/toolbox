@@ -12,6 +12,7 @@ fn every_setting_reads_back_what_it_was_set_to() {
         (SettingKey::UserServices, "on"),
         (SettingKey::CopyReports, "on"),
         (SettingKey::Aur, "on"),
+        (SettingKey::BlurDesktop, "off"),
         (SettingKey::LogLevel, "debug"),
         (SettingKey::DarkScheme, "nord"),
         (SettingKey::LightScheme, "catppuccin-latte"),
@@ -84,7 +85,7 @@ fn the_list_holds_every_setting_with_its_value() {
     settings.packages.show_aur = true;
 
     let listed = rows(&settings, true);
-    assert_eq!(listed.len(), 9);
+    assert_eq!(listed.len(), 10);
     assert!(
         listed
             .iter()
@@ -133,7 +134,7 @@ fn the_settings_list_has_a_summary_and_a_hint() {
 
     let listed = rows(&Settings::default(), false);
     let listing = setting_listing(&listed);
-    assert_eq!(listing.summary.as_deref(), Some("9"));
+    assert_eq!(listing.summary.as_deref(), Some("10"));
     assert!(listing.hint.unwrap().contains("settings set"));
 }
 

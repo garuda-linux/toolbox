@@ -80,7 +80,7 @@ fn a_setting_an_older_version_wrote_is_ignored_without_a_problem() {
 
     let written = toml::to_string(&loaded.settings).unwrap();
     assert!(!written.contains("appearance"), "{written}");
-    assert!(!written.contains("blur"), "{written}");
+    assert!(!written.contains("blur = "), "{written}");
 }
 
 #[test]
@@ -363,5 +363,19 @@ fn a_bad_scheme_id_follows_the_desktop_and_keeps_the_rest() {
     assert_eq!(
         loaded.settings.colours.light_scheme,
         Some(SchemeId::new("nord-light").unwrap())
+    );
+}
+
+#[test]
+fn the_desktop_blur_is_off_unless_the_file_turns_it_on() {
+    let on = load("[window]\nblur_desktop = true\n");
+
+    assert!(on.problem.is_none());
+    assert!(on.settings.window.blur_desktop);
+    assert!(
+        !load("[general]\nlog_level = \"info\"\n")
+            .settings
+            .window
+            .blur_desktop
     );
 }

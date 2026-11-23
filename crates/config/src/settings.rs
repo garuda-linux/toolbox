@@ -18,6 +18,9 @@
 //! automatic = true       # false: only when the user asks
 //! refresh = "1h"         # 5m to 24h, such as 45m or 3h, kept while off
 //!
+//! [window]
+//! blur_desktop = false   # the desktop behind the window, where the compositor blurs it
+//!
 //! [colours]
 //! dark_scheme = "nord"   # missing: the desktop's colours
 //! light_scheme = "catppuccin-latte"
@@ -46,7 +49,17 @@ pub struct Settings {
     pub services: Services,
     pub packages: Packages,
     pub status: Status,
+    pub window: Window,
     pub colours: Colours,
+}
+
+/// The window's look. The blur behind it is off by default.
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(default)]
+pub struct Window {
+    /// Where the compositor can blur what lies behind the window. Off
+    /// keeps the window opaque.
+    pub blur_desktop: bool,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]

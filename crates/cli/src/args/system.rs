@@ -245,6 +245,9 @@ pub enum SettingKey {
     CopyReports,
     /// The Packages page lists the AUR, downloaded once a day: on or off.
     Aur,
+    /// The window's background shows the blurred desktop behind it, where
+    /// the compositor can blur it: on or off.
+    BlurDesktop,
     /// How much the log file holds: error, warn, info, debug, trace.
     LogLevel,
     /// The colours of the dark theme: a dark colour scheme such as `nord`,
