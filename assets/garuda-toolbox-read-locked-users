@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /usr/bin/awk -F: '$2 ~ /^!/ { print $1 }' /etc/shadow

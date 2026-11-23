@@ -1,0 +1,2 @@
+#!/bin/bash
+exec /usr/bin/cat /boot/grub/grub.cfg

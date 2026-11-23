@@ -26,9 +26,7 @@
       <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv1">cat</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv2">/etc/default/grub</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-read-grub</annotate>
   </action>
   <action id="org.garudalinux.toolbox.read-grub-cfg">
     <description>Read GRUB bootloader configuration</description>
@@ -39,9 +37,7 @@
       <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv1">cat</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv2">/boot/grub/grub.cfg</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-read-grub-cfg</annotate>
   </action>
   <action id="org.garudalinux.toolbox.read-shadow">
     <description>Read account lock status</description>
@@ -52,9 +48,7 @@
       <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv1">cat</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv2">/etc/shadow</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-read-locked-users</annotate>
   </action>
   <action id="org.garudalinux.toolbox.read-pacman-log">
     <description>Read pacman log</description>
@@ -65,8 +59,6 @@
       <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-pty-wrapper</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv1">cat</annotate>
-    <annotate key="org.freedesktop.policykit.exec.argv2">/var/log/pacman.log</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/garuda-toolbox-read-pacman-log</annotate>
   </action>
 </policyconfig>
