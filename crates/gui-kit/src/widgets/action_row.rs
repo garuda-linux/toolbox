@@ -1,4 +1,4 @@
-use egui::{Id, Label, Sense, Ui, Vec2, pos2, vec2};
+use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, pos2, vec2};
 
 use super::icon_tile::{TileSize, paint_icon};
 use super::layout::{self, raised_column, remember_width};
@@ -302,12 +302,20 @@ fn actions_beside(
     // below the cursor are allocated, so the controls after the words keep
     // the rest of the row, as `raised` allocates them.
     let (mut column, room_rect) = raised_column(ui, (rise, room), row.with("actions"));
+
+    // Centred on the tallest control of the last frame, so a note before a
+    // button sits on the button's middle.
+    let line_height = height_was.unwrap_or(0.0);
     let taken = column
-        .horizontal_top(|controls| {
-            controls.spacing_mut().item_spacing =
-                Vec2::splat(tokens::current(controls.ctx()).sizes.control_gap);
-            actions(controls);
-        })
+        .allocate_ui_with_layout(
+            vec2(column.available_width(), line_height),
+            Layout::left_to_right(Align::Center),
+            |controls| {
+                controls.spacing_mut().item_spacing =
+                    Vec2::splat(tokens::current(controls.ctx()).sizes.control_gap);
+                actions(controls);
+            },
+        )
         .response
         .rect;
 

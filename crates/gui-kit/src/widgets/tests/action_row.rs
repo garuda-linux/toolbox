@@ -322,3 +322,28 @@ fn a_stacked_row_starts_its_actions_at_the_words_left_edge() {
         title.left()
     );
 }
+
+/// A note before a push button among the actions sits on the button's
+/// middle, not on its top.
+#[test]
+fn a_note_beside_an_action_is_centred_on_the_button() {
+    let mut harness = harness(700.0, 120.0).build_ui(|ui| {
+        card_row(ui, false, |ui| {
+            ActionRow::new(icons::SYSTEM_RUN, "Reset Snapper")
+                .detail("Delete every snapshot")
+                .show(ui, |ui| {
+                    ui.label("Needs garuda-health");
+                    _ = pill_button(ui, "Run", ButtonKind::Soft);
+                });
+        });
+    });
+
+    harness.run();
+    let note = harness.get_by_label("Needs garuda-health").rect();
+    let button = harness.get_by_role_and_label(Role::Button, "Run").rect();
+
+    assert!(
+        (note.center().y - button.center().y).abs() < 1.0,
+        "note {note:?}, button {button:?}"
+    );
+}
