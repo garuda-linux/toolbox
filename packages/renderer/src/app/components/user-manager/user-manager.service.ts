@@ -279,10 +279,10 @@ export class UserManagerService {
    * Refresh the current state of users and groups from the system.
    */
   async update(): Promise<void> {
-    const [passwdResult, groupResult, shadowResult] = await Promise.all([
+    const [passwdResult, groupResult, lockedResult] = await Promise.all([
       this.taskManagerService.executeAndWaitBash('getent passwd'),
       this.taskManagerService.executeAndWaitBash('getent group'),
-      this.taskManagerService.executeAndWaitBash(`pkexec cat /etc/shadow`),
+      this.taskManagerService.executeAndWaitBash('pkexec /usr/libexec/garuda-toolbox-read-locked-users'),
     ]);
 
     if (passwdResult.code !== 0) {
@@ -291,15 +291,14 @@ export class UserManagerService {
     if (groupResult.code !== 0) {
       this.logger.warn(`getent group failed: ${groupResult.stderr}`);
     }
-    if (shadowResult.code !== 0) {
-      this.logger.warn(`Failed to read shadow: ${shadowResult.stderr}`);
+    if (lockedResult.code !== 0) {
+      this.logger.warn(`Failed to read locked users: ${lockedResult.stderr}`);
     }
 
     const lockedUsers = new Set<string>();
-    for (const line of shadowResult.stdout.split('\n')) {
-      if (!line.trim()) continue;
-      const [username, hash] = line.split(':');
-      if (hash?.startsWith('!')) lockedUsers.add(username);
+    for (const line of lockedResult.stdout.split('\n')) {
+      const username = line.trim();
+      if (username) lockedUsers.add(username);
     }
 
     const users = new Map<string, ManagedUser>();

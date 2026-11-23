@@ -195,7 +195,7 @@ export class SystemStatusService {
    */
   private async checkLastUpdate(): Promise<void> {
     const result: ChildProcess<string> = await this.taskManagerService.executeAndWaitBash(
-      "pkexec cat /var/log/pacman.log | grep '\\[ALPM\\] transaction completed' | tail -n 1",
+      "pkexec /usr/libexec/garuda-toolbox-read-pacman-log | grep '\\[ALPM\\] transaction completed' | tail -n 1",
     );
 
     if (result.code === 0) {

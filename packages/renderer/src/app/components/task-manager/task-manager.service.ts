@@ -299,7 +299,7 @@ export class TaskManagerService {
    */
   private wrapPkexec(command: string): string {
     let newCommand = command;
-    if (newCommand.includes('pkexec ') && !newCommand.includes('garuda-toolbox-pty-wrapper')) {
+    if (newCommand.includes('pkexec ') && !newCommand.includes('pkexec /usr/libexec/garuda-toolbox-')) {
       newCommand = newCommand.replaceAll('pkexec ', 'pkexec /usr/libexec/garuda-toolbox-pty-wrapper ');
     }
     return newCommand;

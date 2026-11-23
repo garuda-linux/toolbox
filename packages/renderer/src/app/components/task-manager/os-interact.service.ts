@@ -20,6 +20,11 @@ import {
   readTextFile,
 } from '../../electron-services/electron-api-utils';
 
+const PASSWORDLESS_READ_HELPERS: Record<string, string> = {
+  '/etc/default/grub': '/usr/libexec/garuda-toolbox-read-grub',
+  '/boot/grub/grub.cfg': '/usr/libexec/garuda-toolbox-read-grub-cfg',
+};
+
 @Service()
 export class OsInteractService {
   private readonly configService = inject(ConfigService);
@@ -613,7 +618,8 @@ export class OsInteractService {
 
   async readPrivilegedFile(virtualPath: string): Promise<string> {
     const hostPath = this.chrootPath ? await pathResolve(this.chrootPath, virtualPath) : virtualPath;
-    const cmd = `pkexec cat "${hostPath}"`;
+    const helper = this.chrootPath ? undefined : PASSWORDLESS_READ_HELPERS[hostPath];
+    const cmd = helper ? `pkexec ${helper}` : `pkexec cat "${hostPath}"`;
     const result = await this.taskManagerService.executeAndWaitBash(cmd);
     if (result.code === 0) return result.stdout;
     throw new Error(`Failed to read privileged file ${hostPath}: ${result.stderr || 'Unknown error'}`);
