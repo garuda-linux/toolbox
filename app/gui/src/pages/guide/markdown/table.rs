@@ -1,7 +1,10 @@
 //! A guide table in a frame: a rule under its header row, then zebra
 //! stripes that run from edge to edge of the frame.
 
-use egui::{CornerRadius, Frame, Grid, Margin, Rect, ScrollArea, Shape, Stroke, Ui, pos2, vec2};
+use egui::{
+    Align, CornerRadius, Frame, Layout, Margin, Rect, ScrollArea, Shape, Stroke, Ui, UiBuilder,
+    pos2, vec2,
+};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::Weight;
 use toolbox_gui_kit::theme::RADIUS;
@@ -17,6 +20,8 @@ const GAP: egui::Vec2 = vec2(20.0, 10.0);
 /// Above the first row and below the last, half of [`GAP`] as the rows
 /// have between them.
 const ROW_PAD: i8 = 5;
+/// The frame's outline, which takes its width from the cells' room.
+const OUTLINE: f32 = 1.0;
 
 /// The stripes are painted after the rows are measured, so they run into the
 /// frame's margin.
@@ -28,40 +33,57 @@ pub(super) fn show(ui: &mut Ui, table: &Table, reader: &mut Reader<'_>) {
     // The cells share the pane's width, so the table wraps instead of
     // running sideways, up to a cell's `CELL_WIDTH`.
     let counted = f32::from(u16::try_from(columns.max(1)).unwrap_or(u16::MAX));
-    let beside = 2.0_f32.mul_add(SIDE, GAP.x * (counted - 1.0));
-    let room = ((ui.available_width() - beside) / counted).clamp(0.0, CELL_WIDTH);
+    let beside = 2.0_f32.mul_add(SIDE + OUTLINE, GAP.x * (counted - 1.0));
+
+    // Whole points, so the columns never overflow the frame by a fraction
+    // and make room for a scroll bar.
+    let room = ((ui.available_width() - beside) / counted)
+        .floor()
+        .clamp(0.0, CELL_WIDTH);
+
     let mut bottoms = Vec::new();
     reader.in_table = true;
 
     let half_gap = GAP.y / 2.0;
     let framed = Frame::new()
-        .stroke(Stroke::new(1.0, tokens.outline))
+        .stroke(Stroke::new(OUTLINE, tokens.outline))
         .corner_radius(CornerRadius::same(RADIUS))
         .inner_margin(Margin::symmetric(0, ROW_PAD))
         .show(ui, |ui| {
+            // Laid out by hand: egui's Grid centres a cell in a row height
+            // from the last frame, so wrapped cells start at different tops.
             ScrollArea::horizontal().show(ui, |ui| {
-                Grid::new("table").spacing(GAP).show(ui, |ui| {
-                    let rows = std::iter::once(&table.head).chain(&table.rows);
-                    for (at, row) in rows.enumerate() {
-                        let weight = if at == 0 {
-                            Weight::SemiBold
-                        } else {
-                            Weight::Regular
-                        };
+                ui.spacing_mut().item_spacing.y = 0.0;
+                let start = ui.cursor().min;
+                let mut top = start.y;
+                let rows = std::iter::once(&table.head).chain(&table.rows);
+                for (at, row) in rows.enumerate() {
+                    let weight = if at == 0 {
+                        Weight::SemiBold
+                    } else {
+                        Weight::Regular
+                    };
 
-                        let bottom = row
-                            .iter()
-                            .enumerate()
-                            .map(|(column, cell)| {
-                                let sides = (column == 0, column + 1 == columns);
-                                cell_text(ui, cell, weight, (sides, room), reader)
-                            })
-                            .fold(f32::MIN, f32::max);
-
-                        bottoms.push(bottom);
-                        ui.end_row();
+                    if at > 0 {
+                        top += GAP.y;
                     }
-                });
+
+                    let mut left = start.x + SIDE;
+                    let mut bottom = top;
+                    for cell in row {
+                        let slot = Rect::from_min_size(pos2(left, top), vec2(room, 0.0));
+                        bottom = bottom.max(cell_text(ui, cell, weight, slot, reader));
+                        left += room + GAP.x;
+                    }
+
+                    let right = left - GAP.x + SIDE;
+                    ui.advance_cursor_after_rect(Rect::from_min_max(
+                        pos2(start.x, top),
+                        pos2(right, bottom),
+                    ));
+                    bottoms.push(bottom);
+                    top = bottom;
+                }
             });
         });
 
@@ -121,30 +143,18 @@ fn backdrop_shapes(ui: &Ui, frame: Rect, edges: &[f32]) -> Vec<Shape> {
     shapes
 }
 
-/// One cell's spans, with the frame's margin before the first column and
-/// after the last. Returns the cell's bottom.
-fn cell_text(
-    ui: &mut Ui,
-    cell: &[Span],
-    weight: Weight,
-    ((first, last), room): ((bool, bool), f32),
-    reader: &mut Reader<'_>,
-) -> f32 {
-    ui.horizontal_top(|ui| {
-        ui.spacing_mut().item_spacing.x = 0.0;
-        if first {
-            ui.add_space(SIDE);
-        }
-
-        ui.vertical(|ui| {
-            ui.set_max_width(room);
+/// One cell's spans from the top left of `at`, wrapped at its width.
+/// Returns the cell's bottom.
+fn cell_text(ui: &mut Ui, cell: &[Span], weight: Weight, at: Rect, reader: &mut Reader<'_>) -> f32 {
+    ui.scope_builder(
+        UiBuilder::new()
+            .max_rect(at)
+            .layout(Layout::top_down(Align::Min)),
+        |ui| {
+            ui.set_max_width(at.width());
             spans::show(ui, cell, weight, reader);
-        });
-
-        if last {
-            ui.add_space(SIDE);
-        }
-    })
+        },
+    )
     .response
     .rect
     .bottom()

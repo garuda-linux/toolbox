@@ -42,6 +42,10 @@ pub(super) fn show(
     if state.fresh {
         area = area.vertical_scroll_offset(0.0);
         state.fresh = false;
+
+        // The first pass of a page does not know yet whether its scroll bar
+        // takes room, so it is drawn again before anyone sees it.
+        ui.ctx().request_discard("a newly shown guide page");
     }
 
     let mut reader = Reader::new(state.target.as_deref());
