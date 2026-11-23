@@ -70,3 +70,32 @@ fn find_file(dir: &Path, file: &OsStr) -> Option<PathBuf> {
 
     folders.iter().find_map(|folder| find_file(folder, file))
 }
+
+/// The URI `icon` draws from in `theme`'s vendored Tela copy.
+fn drawn_from(icon: toolbox_gui_kit::icons::Icon, theme: Theme) -> String {
+    let icons = for_theme(theme);
+    match icon
+        .image(Some(&icons), egui::Color32::WHITE)
+        .source(&egui::Context::default())
+    {
+        egui::ImageSource::Bytes { uri, bytes: _ } | egui::ImageSource::Uri(uri) => {
+            uri.into_owned()
+        }
+        egui::ImageSource::Texture(_) => String::new(),
+    }
+}
+
+/// The empty states of Network, Languages and others draw `help-about`,
+/// which Tela circle has only as a colour app icon.
+#[test]
+fn tela_circle_leaves_help_about_to_the_bundled_glyph_and_keeps_its_own_actions() {
+    use toolbox_gui_kit::icons::{GO_HOME, HELP_ABOUT};
+
+    for theme in [Theme::Dark, Theme::Light] {
+        assert_eq!(
+            drawn_from(HELP_ABOUT, theme),
+            "bytes://icons/bundled/help-about.svg"
+        );
+        assert!(drawn_from(GO_HOME, theme).starts_with("bytes://icons/theme/Tela-circle-"));
+    }
+}

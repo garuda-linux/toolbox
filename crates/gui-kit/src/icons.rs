@@ -31,7 +31,7 @@ pub use self::colour::{
 use self::ink::inked_image;
 use self::loader::THEME_URI;
 pub use self::loader::{ThemeLoader, warm};
-use self::mask::mask;
+use self::mask::{mask, paints_in_colours};
 pub use self::picture::picture_uri;
 
 macro_rules! bundled {
@@ -205,6 +205,11 @@ impl Icon {
         self.tinted
     }
 
+    /// A monochrome action icon, which asks the theme for its plain name.
+    fn is_action(&self) -> bool {
+        self.tinted && self.theme == self.name
+    }
+
     /// The colour icon a row draws for this glyph (`colour::of_row`), or
     /// the glyph itself where Breeze has no colour file for it.
     #[must_use = "the row icon is what gets drawn"]
@@ -257,9 +262,17 @@ impl ThemeIcons {
     /// A glyph's file is a mask: white where it paints, so the tint leaves
     /// only shape and alpha (a symbolic shield would keep a green check). A
     /// colour icon keeps its colours, and a `currentColor` part of it takes
-    /// the ink, as in the bundled copies.
+    /// the ink, as in the bundled copies. An action icon drops a colour
+    /// file, so its bundled glyph is drawn.
     pub fn insert(&mut self, icon: Icon, file: Arc<[u8]>) {
         let text = String::from_utf8_lossy(&file);
+
+        // Tela circle has `help-about` only as a colour app icon, whose
+        // mask would be a blot of the tint.
+        if icon.is_action() && paints_in_colours(&text) {
+            return;
+        }
+
         let svg = if icon.tinted {
             Arc::from(mask(&text).into_bytes())
         } else {
