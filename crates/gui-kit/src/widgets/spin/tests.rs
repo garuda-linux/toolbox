@@ -91,6 +91,28 @@ fn the_number_and_its_unit_are_painted_between_the_steppers() {
     assert!(painted_text_within(&harness, "s", number).is_some());
 }
 
+/// The number and its unit sit on the face's middle, as the text of a
+/// dropdown or a search field beside it does.
+#[test]
+fn the_number_and_its_unit_centre_in_the_face() {
+    let harness = shown(5);
+    let input = tokens::current(&harness.ctx).input;
+    let face = filled_rects(&harness, input)
+        .into_iter()
+        .max_by(|one, other| one.area().total_cmp(&other.area()))
+        .expect("the field paints its face");
+
+    for text in ["5", "s"] {
+        let shape = painted_text_within(&harness, text, face).expect("painted in the face");
+        let middle = shape.pos.y + shape.galley.rect.center().y;
+        assert!(
+            (middle - face.center().y).abs() < 0.5,
+            "{text:?} centres at {middle}, the face at {}",
+            face.center().y
+        );
+    }
+}
+
 #[test]
 fn the_steppers_step_by_one_and_stop_at_the_range() {
     let mut harness = shown(9);

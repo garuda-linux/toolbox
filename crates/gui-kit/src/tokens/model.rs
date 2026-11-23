@@ -43,7 +43,8 @@ pub struct Tokens {
     /// The chosen tab's pill: the input fill, or the crust over the glass.
     pub chosen_tab: Color32,
     /// Darkly's line edit fill, the view colour (`QPalette::Base`,
-    /// darklystyle.cpp:4097). A button's fill is [`Self::field`] instead.
+    /// darklystyle.cpp:4097). Push buttons and dropdowns take
+    /// [`Self::input`].
     pub view: Color32,
     /// The fill of a text field: the view colour, stepped toward the text
     /// as a card is where the view is the window colour.

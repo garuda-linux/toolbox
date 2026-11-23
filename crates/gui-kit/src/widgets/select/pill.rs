@@ -1,20 +1,19 @@
-//! The closed pill of a dropdown, painted as Darkly's push button, with
+//! The closed pill of a dropdown, painted as the app's push button, with
 //! its chevron.
 
 use std::f32::consts::PI;
 
 use egui::{Color32, Event, Rect, Response, Ui, Vec2, pos2, vec2};
 
-use super::super::buttons::look::push_shadow;
+use super::super::buttons::{ButtonKind, FaceState, paint_push_face};
 use super::super::focus::focus_from_keyboard;
-use super::super::press::{Pointer, hover_amount};
+use super::super::press::Pointer;
 use super::super::rich;
 use super::super::text::cut;
 use super::options::{SWATCH_GAP, SWATCH_WIDTH, paint_swatch};
 use crate::fonts::{BODY, Weight};
 use crate::motion::{self, Timing};
-use crate::theme::CONTROL_RADIUS;
-use crate::tokens::{Tokens, darkly, mix};
+use crate::tokens::mix;
 use crate::ui_ext::icon_image;
 use crate::{icons, tokens};
 
@@ -31,9 +30,10 @@ pub const FRAME: f32 = 2.0;
 /// How far the arrow moves from the text toward the view colour, as Darkly's
 /// combo arrow mixes it (`mix(text, base, 0.15)`).
 const ARROW_SHADE: f32 = 0.15;
-/// Draws the pill as Darkly's push button, see [`button_fill`]. `sunken`
-/// is whether the list is open, which Darkly draws as pressed. Returns
-/// whether `shown` was cut to fit.
+/// Draws the pill as a Soft push button, as Darkly draws a combo box with
+/// `renderButtonFrame` (darklyhelper.cpp:811-885). `sunken` is whether
+/// the list is open, which Darkly draws as pressed. Returns whether
+/// `shown` was cut to fit.
 pub(super) fn paint_pill(
     ui: &Ui,
     response: &Response,
@@ -48,17 +48,23 @@ pub(super) fn paint_pill(
     let tokens = tokens::current(ui.ctx());
     let frame = rect.shrink(FRAME);
     let pointer = Pointer::of(response);
+    let focused = focus_from_keyboard(ui, response) && ui.is_enabled();
     let lit = focus_from_keyboard(ui, response) || sunken;
 
-    // An open box shadows as a pressed one, as Darkly draws it.
-    if ui.is_enabled() {
-        let shadow_pointer = if sunken { Pointer::Pressed } else { pointer };
-        let shadow = push_shadow(&tokens, shadow_pointer, lit);
-        ui.painter().add(shadow.as_shape(frame, CONTROL_RADIUS));
-    }
+    // An open box draws as a pressed one, as Darkly draws it.
+    let fill = if sunken {
+        tokens.button_pressed
+    } else {
+        ButtonKind::Soft.now(ui, response, &tokens)
+    };
 
-    let fill = button_fill(ui, response, pointer, sunken, &tokens);
-    ui.painter().rect_filled(frame, CONTROL_RADIUS, fill);
+    let state = FaceState {
+        sunken: sunken || pointer == Pointer::Pressed,
+        pointer,
+        focused,
+    };
+
+    paint_push_face(ui, frame, fill, state);
 
     let before = swatch.map_or(0.0, |colours| {
         paint_swatch(ui, rect.left() + TEXT_INSET, rect.center().y, colours);
@@ -96,32 +102,6 @@ pub(super) fn paint_pill(
         .galley(pos2(text.left(), text_top), galley, ink);
 
     was_cut
-}
-
-/// Darkly's `buttonBackgroundColor` and `renderButtonFrame` for a combo
-/// box (darklyhelper.cpp:260-282, 811-850): the Button colour at rest, the
-/// focus colour after keyboard focus only, lighter under the pointer, and
-/// the pressed colour while pressed or open. The focus colour lightens by
-/// 15 % and then 2 % under the pointer.
-fn button_fill(
-    ui: &Ui,
-    response: &Response,
-    pointer: Pointer,
-    sunken: bool,
-    tokens: &Tokens,
-) -> Color32 {
-    if pointer == Pointer::Pressed || sunken {
-        return tokens.button_pressed;
-    }
-
-    let (rest, hovered) = if focus_from_keyboard(ui, response) {
-        let focus = tokens.focus_fill;
-        (focus, darkly::lighter(darkly::lighter(focus, 1.15), 1.02))
-    } else {
-        (tokens.field, tokens.button_hover)
-    };
-
-    rest.lerp_to_gamma(hovered, hover_amount(ui, response, pointer))
 }
 
 pub(super) fn paint_chevron(ui: &Ui, pill: &Response, open: bool) {

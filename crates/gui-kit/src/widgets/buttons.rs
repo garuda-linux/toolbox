@@ -70,6 +70,15 @@ pub enum ButtonKind {
     Danger,
 }
 
+/// What a raised face shows. `sunken` draws it pressed, as a press or an
+/// open dropdown list does. The ripple follows the pointer's own press.
+#[derive(Clone, Copy, Debug)]
+pub(super) struct FaceState {
+    pub(super) sunken: bool,
+    pub(super) pointer: Pointer,
+    pub(super) focused: bool,
+}
+
 impl ButtonKind {
     /// The fill a button rests on: Darkly's button colour, or the default
     /// button's grey, which takes the place of the accent.
@@ -118,7 +127,7 @@ impl ButtonKind {
     }
 
     /// A press shows at once, as the finger expects it.
-    fn now(self, ui: &Ui, response: &Response, tokens: &Tokens) -> Color32 {
+    pub(super) fn now(self, ui: &Ui, response: &Response, tokens: &Tokens) -> Color32 {
         let pointer = Pointer::of(response);
         let focused = focus_from_keyboard(ui, response) && ui.is_enabled();
         if pointer == Pointer::Pressed {
@@ -204,33 +213,17 @@ fn pill(ui: &mut Ui, text: &str, kind: ButtonKind, width: f32, icon: Option<Icon
             face
         };
 
-        let lit = kind.raised() && ui.is_enabled();
-        if lit {
+        if kind.raised() {
+            let state = FaceState {
+                sunken: pointer == Pointer::Pressed,
+                pointer,
+                focused,
+            };
+
+            paint_push_face(ui, face, fill, state);
+        } else {
             ui.painter()
-                .add(push_shadow(&tokens, pointer, focused).as_shape(face, CONTROL_RADIUS));
-        }
-
-        ui.painter()
-            .rect_filled(face, CornerRadius::same(CONTROL_RADIUS), fill);
-
-        // The edge of a raised button at rest and under the pointer, as a
-        // field draws it. A focus or press fill replaces it.
-        if kind.raised() && !focused && pointer != Pointer::Pressed {
-            ui.painter().rect_stroke(
-                face,
-                CornerRadius::same(CONTROL_RADIUS),
-                Stroke::new(1.0, faded(ui, tokens.card_outline, ui.is_enabled())),
-                StrokeKind::Inside,
-            );
-        }
-
-        if lit {
-            paint_button_top_light(ui.painter(), face, CONTROL_RADIUS);
-        }
-
-        if kind.raised() && pointer == Pointer::Pressed {
-            ui.painter()
-                .rect_filled(face, CONTROL_RADIUS, press_overlay(&tokens));
+                .rect_filled(face, CornerRadius::same(CONTROL_RADIUS), fill);
         }
 
         // The icon and the text are centred together, as Breeze lays them out.
@@ -253,6 +246,45 @@ fn pill(ui: &mut Ui, text: &str, kind: ButtonKind, width: f32, icon: Option<Icon
     }
 
     response
+}
+
+/// The face of a raised push button or a closed dropdown, `face` being
+/// the widget less its frame, filled with `fill`: its shadow, the card
+/// outline at rest and under the pointer, the top light and the ripple.
+pub(super) fn paint_push_face(ui: &Ui, face: Rect, fill: Color32, state: FaceState) {
+    let tokens = tokens::current(ui.ctx());
+    let painter = ui.painter();
+    let enabled = ui.is_enabled();
+    let shadow_pointer = if state.sunken {
+        Pointer::Pressed
+    } else {
+        state.pointer
+    };
+
+    if enabled {
+        let shadow = push_shadow(&tokens, shadow_pointer, state.focused);
+        painter.add(shadow.as_shape(face, CONTROL_RADIUS));
+    }
+
+    painter.rect_filled(face, CornerRadius::same(CONTROL_RADIUS), fill);
+
+    // The edge a field draws too. A focus or press fill replaces it.
+    if !state.focused && !state.sunken {
+        painter.rect_stroke(
+            face,
+            CornerRadius::same(CONTROL_RADIUS),
+            Stroke::new(1.0, faded(ui, tokens.card_outline, enabled)),
+            StrokeKind::Inside,
+        );
+    }
+
+    if enabled {
+        paint_button_top_light(painter, face, CONTROL_RADIUS);
+    }
+
+    if state.pointer == Pointer::Pressed {
+        painter.rect_filled(face, CONTROL_RADIUS, press_overlay(&tokens));
+    }
 }
 
 /// A push button's height in `ui`: its text plus 18 px. A line that holds

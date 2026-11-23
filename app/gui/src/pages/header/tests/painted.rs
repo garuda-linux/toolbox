@@ -46,6 +46,12 @@ fn shapes<'frame, S>(harness: &'frame Harness<'_, S>) -> Vec<&'frame Shape> {
 /// What the eye takes for a shape: a shadow is a soft halo under the
 /// control, a clear rect without a stroke shows nothing.
 fn seen(shape: &Shape) -> Option<Rect> {
+    // A push button's top light is a feathered mesh inside its face, and
+    // its feathering reaches past the face by a fraction of a pixel.
+    if matches!(shape, Shape::Mesh(_)) {
+        return None;
+    }
+
     if let Shape::Rect(rect) = shape {
         let unseen = rect.fill.a() == 0 && rect.stroke.is_empty();
         if rect.blur_width > 0.0 || unseen {

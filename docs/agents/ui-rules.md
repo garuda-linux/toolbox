@@ -148,7 +148,7 @@ Rules for pages, gui-kit widgets and the command line's output.
   a ring of `accent_tint` at 60 % 1 px out from the fill and a shadow of
   blur 7, 1 px down, in `control_shadow` (`focus::field_halo`). It shows
   from a click too.
-- Text reaches 4.5:1 on every fill it sits on. Push buttons and text
+- Text reaches 4.5:1 on every fill it sits on. Push buttons, dropdowns and text
   fields draw a 1 px `card_outline` at rest, which reads at least 1.1:1
   against the window and the card (`tokens/tests/cards.rs`). Text fields
   draw Darkly's line edit: a fill (`tokens.input`, the View stepped toward
@@ -161,7 +161,8 @@ Rules for pages, gui-kit widgets and the command line's output.
   fill `button_pressed`. The shadow is 1 px down, in `control_shadow`,
   blurred 3 at rest, 6 on hover or focus and 2 while pressed
   (`buttons::look::push_blur`). A Ghost button has no outline and no
-  shadow.
+  shadow. A closed dropdown is a Soft push button with the same face
+  (`buttons::paint_push_face`), and its open list draws it pressed.
 - Check boxes are 16 px boxes with 5 px corners and no frame. On, they
   fill with `accent_tint` and the tick is `on_tint`.
 - A field's glyph, unit and buttons are atoms of its `TextEdit`

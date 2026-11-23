@@ -1,6 +1,7 @@
 //! The closed dropdown as Darkly draws a non-editable combo box: a push
-//! button, inset two pixels from its widget, with a control radius and
-//! no rim (darklystyle.cpp:7736-7800, darklyhelper.cpp:811-850).
+//! button, inset two pixels from its widget, with a control radius
+//! (darklystyle.cpp:7736-7800, darklyhelper.cpp:811-850). It keeps the
+//! card outline the app's push buttons add.
 
 use egui::accesskit::Role;
 use egui::{Color32, Key, Rect, Shape, Theme};
@@ -8,7 +9,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::Select;
-use crate::testing::{harness, rim_colours_around};
+use crate::testing::{harness, painted, rim_colours_around};
 use crate::theme::CONTROL_RADIUS;
 use crate::tokens::{self, darkly};
 
@@ -44,22 +45,57 @@ fn button(harness: &Harness<'_>) -> Option<(Color32, u8)> {
     })
 }
 
+/// Whether the last frame drew a push button's light along a top edge.
+fn button_light(harness: &Harness<'_>) -> bool {
+    let light = tokens::current(&harness.ctx).button_top_light;
+    painted(harness).into_iter().any(|shape| {
+        matches!(shape, Shape::Mesh(mesh)
+            if mesh.vertices.iter().any(|vertex| vertex.color == light))
+    })
+}
+
+/// The pill is the app's push button: its fill, its card outline and,
+/// on a dark window, its top light.
 #[test]
-fn a_closed_combo_box_at_rest_is_a_field_button_with_no_rim() {
+fn a_closed_combo_box_at_rest_is_a_push_button() {
     for theme in [Theme::Dark, Theme::Light] {
         let harness = closed(theme);
         let tokens = tokens::current(&harness.ctx);
 
         assert_eq!(
             button(&harness),
-            Some((tokens.field, CONTROL_RADIUS)),
+            Some((tokens.input, CONTROL_RADIUS)),
             "{theme:?}"
         );
-        assert!(
-            rim_colours_around(&harness, pill(&harness).center()).is_empty(),
-            "{theme:?}: the pill has a rim"
+        assert_eq!(
+            rim_colours_around(&harness, pill(&harness).center()),
+            vec![tokens.card_outline],
+            "{theme:?}: the pill keeps the card outline"
         );
+        assert_eq!(button_light(&harness), theme == Theme::Dark, "{theme:?}");
     }
+}
+
+/// The focus fill and the open list's pressed fill replace the outline,
+/// as they do on a push button.
+#[test]
+fn a_focused_or_open_combo_box_drops_its_outline() {
+    let mut focused = closed(Theme::Dark);
+    keyboard_focus(&mut focused);
+    assert!(
+        rim_colours_around(&focused, pill(&focused).center()).is_empty(),
+        "the focus fill keeps an outline"
+    );
+
+    let mut open = closed(Theme::Dark);
+    open.get_by_role_and_label(Role::ComboBox, LABEL).click();
+    open.run();
+    open.hover_at(egui::pos2(390.0, 110.0));
+    open.run();
+    assert!(
+        rim_colours_around(&open, pill(&open).center()).is_empty(),
+        "the open list keeps an outline"
+    );
 }
 
 #[test]

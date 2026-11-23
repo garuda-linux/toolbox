@@ -75,7 +75,13 @@ pub fn spin_field(
     );
 
     let down = up.translate(vec2(0.0, half));
-    let text = Rect::from_min_max(inner.min, pos2(column.left(), inner.bottom()));
+
+    // The number keeps the frame's height, which is the field's own, so
+    // its text centres on the face instead of overflowing the inset fill.
+    let text = Rect::from_min_max(
+        pos2(inner.left(), frame.top()),
+        pos2(column.left(), frame.bottom()),
+    );
 
     let (least, most) = (*range.start(), *range.end());
     if stepper(
