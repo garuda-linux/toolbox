@@ -3,7 +3,7 @@
 # system has shows only once it is mounted, so the texts name both.
 
 page-boot-repair-subtitle = Install the boot loader of a system that does not start again, or build its boot files again.
-repair-refresh = Read again
+repair-refresh = Read Again
 repair-asks-first = Each repair asks first and names the partition and the disk it writes to. A GRUB system with /boot on a partition of its own, or with its EFI system partition somewhere else than /boot/efi, is not repaired here.
 repair-test-mode = Test mode: this page is meant for the live system and shows here only because Garuda Toolbox was started with --boot-repair. Nothing is written to a disk the running system uses.
 repair-dismiss = Dismiss
@@ -47,8 +47,8 @@ repair-target-disk = Disk for the boot loader
 repair-target-disk-detail = GRUB is written to the first sectors of this disk. Choose the disk the computer starts from.
 repair-no-esp = No EFI system partition was found on a disk that is free, so no boot loader can be installed. The boot menu of a GRUB system can still be written again.
 repair-no-disk = No free disk was found, so GRUB cannot be installed.
-repair-reinstall = Reinstall the boot loader…
-repair-regenerate = Build the boot files again…
+repair-reinstall = Reinstall the Boot Loader…
+repair-regenerate = Build the Boot Files Again…
 
 repair-running = The repair is running. The Console shows its output.
 repair-succeeded = The repair finished without an error. Restart the computer without the live medium to try the installed system.
@@ -57,10 +57,10 @@ repair-busy = Another task was running, so the repair did not start. Try again w
 repair-show-console = Show Console
 
 # The confirm dialog.
-repair-reinstall-title = Reinstall the boot loader?
-repair-regenerate-title = Build the boot files again?
-repair-reinstall-confirm = Reinstall the boot loader
-repair-regenerate-confirm = Build the boot files again
+repair-reinstall-title = Reinstall the Boot Loader?
+repair-regenerate-title = Build the Boot Files Again?
+repair-reinstall-confirm = Reinstall the Boot Loader
+repair-regenerate-confirm = Build the Boot Files Again
 repair-cancel = Cancel
 # The labels of the dialog's list of what the repair writes where.
 repair-fact-writes = Writes

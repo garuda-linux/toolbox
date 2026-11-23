@@ -2,16 +2,16 @@
 # and the language packs of installed programs, all queued for Apply.
 
 page-locales-subtitle = The languages, number and date formats this system can use, and translations for your programs.
-locales-refresh = Read again
+locales-refresh = Read Again
 locales-tabs = Languages tabs
 locales-tab-locales = Locales
-locales-tab-packs = Language packs
+locales-tab-packs = Language Packs
 locales-queued = Changes with Apply
 
 locales-search = Search locales and packs
-locales-search-hint = Search locales and packs…
-locales-filter-utf8 = UTF-8 only
-locales-filter-enabled = Enabled only
+locales-search-hint = Search…
+locales-filter-utf8 = UTF-8 Only
+locales-filter-enabled = Enabled Only
 locales-list = Locales
 locales-reading = Reading the locales…
 locales-none = No locale matches
@@ -44,13 +44,13 @@ locales-packs-intro =
        *[other] { $count } packs are not installed.
     }
 locales-packs-intro-plain = Language packs for your enabled locales and installed programs.
-locales-packs-add-missing = Queue all missing
+locales-packs-add-missing = Queue All Missing
 locales-packs-sort = Sort language packs
 locales-packs-sort-package = Package
 locales-packs-sort-program = Program
 locales-packs-sort-language = Language
 locales-packs-sort-selected = Selected first
-locales-packs-list = Language packs
+locales-packs-list = Language Packs
 locales-packs-reading = Reading the language packs…
 locales-packs-none = No language packs found
 locales-packs-none-detail = No installed program has a language pack for an enabled locale.

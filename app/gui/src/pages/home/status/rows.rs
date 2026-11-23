@@ -2,7 +2,7 @@ use egui::Ui;
 use toolbox_cli::output::size;
 use toolbox_core::features::maintenance::page::{PageTool, operations};
 use toolbox_core::features::maintenance::{Operation, RunNow, Tool, upgrade_queued};
-use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, Tone, pill_button, text_button, text_link};
+use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, pill_button, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitName;
 use toolbox_services::home::Overview;
@@ -36,7 +36,7 @@ pub(super) fn updates(
     };
 
     let queue = i18n::text(&ctx, queue);
-    ActionRow::new(icons::SYSTEM_SOFTWARE_UPDATE, Tone::Neutral, &title)
+    ActionRow::new(icons::SYSTEM_SOFTWARE_UPDATE, &title)
         .detail(&detail)
         .show_with_body(
             ui,
@@ -71,7 +71,7 @@ pub(super) fn aur(
     let count = overview.aur_updates;
     let title = i18n::text_with(&ctx, "home-aur-updates", &[("count", Arg::from(count))]);
     let detail = i18n::text(&ctx, "home-aur-detail");
-    ActionRow::new(icons::PACKAGE, Tone::Neutral, &title)
+    ActionRow::new(icons::PACKAGE, &title)
         .detail(&detail)
         .show_with_body(
             ui,
@@ -99,7 +99,7 @@ pub(super) fn stale(ui: &mut Ui, context: &PageContext<'_>) {
     run_row(
         ui,
         context,
-        (icons::CHRONOMETER, Tone::Warning),
+        icons::CHRONOMETER,
         ["home-stale", "home-stale-detail", "home-update-now"],
         RunNow::UpgradeSystem,
     );
@@ -121,7 +121,7 @@ pub(super) fn merges(
         .map(|file| file.display().to_string())
         .collect();
 
-    ActionRow::new(icons::VCS_DIFF, Tone::Warning, &title)
+    ActionRow::new(icons::VCS_DIFF, &title)
         .detail(&files.join("\n"))
         .show(ui, |ui| {
             ui.horizontal(|ui| {
@@ -150,14 +150,14 @@ pub(super) fn health(
     level: HealthLevel,
 ) {
     let ctx = ui.ctx().clone();
-    let (title, icon, tone) = if level >= HealthLevel::High {
-        ("home-health-errors", icons::DIALOG_ERROR, Tone::Error)
+    let (title, icon) = if level >= HealthLevel::High {
+        ("home-health-errors", icons::DIALOG_ERROR)
     } else {
-        ("home-health-warnings", icons::DIALOG_WARNING, Tone::Warning)
+        ("home-health-warnings", icons::DIALOG_WARNING)
     };
 
     let detail = overview.health_messages.join("\n");
-    ActionRow::new(icon, tone, &i18n::text(&ctx, title))
+    ActionRow::new(icon, &i18n::text(&ctx, title))
         .detail(&detail)
         .show(ui, |ui| {
             let (id, run) = if overview.health_fixable {
@@ -176,7 +176,7 @@ pub(super) fn restart(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "home-restart");
     let detail = i18n::text(&ctx, "home-restart-detail");
-    ActionRow::new(icons::SYSTEM_REBOOT, Tone::Warning, &title)
+    ActionRow::new(icons::SYSTEM_REBOOT, &title)
         .detail(&detail)
         .show(ui, |ui| {
             let restart = i18n::text(&ctx, "home-restart-button");
@@ -197,7 +197,7 @@ pub(super) fn disk(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "home-disk");
     let detail = i18n::text(&ctx, "home-disk-detail");
-    ActionRow::new(icons::DIALOG_WARNING, Tone::Warning, &title)
+    ActionRow::new(icons::DIALOG_WARNING, &title)
         .detail(&detail)
         .show(ui, |ui| {
             let open = i18n::text(&ctx, "home-disk-button");
@@ -221,7 +221,7 @@ pub(super) fn services(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvi
         .map(UnitName::as_str)
         .collect();
 
-    ActionRow::new(icons::DIALOG_ERROR, Tone::Error, &title)
+    ActionRow::new(icons::DIALOG_ERROR, &title)
         .detail(&units.join("\n"))
         .show(ui, |ui| {
             let open = i18n::text(&ctx, "home-services-button");
@@ -256,7 +256,7 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
         .iter()
         .any(|row| row.queued && cleanup.contains(&row.operation));
 
-    ActionRow::new(icons::EDIT_CLEAR_ALL, Tone::Neutral, &title)
+    ActionRow::new(icons::EDIT_CLEAR_ALL, &title)
         .detail(&detail)
         .show(ui, |ui| {
             let id = if queued {

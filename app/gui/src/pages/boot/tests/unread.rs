@@ -44,8 +44,7 @@ fn grub_menu(read: MenuRead) -> super::Shown {
     page(grub_system(), Boot::showing(Menu::Read(read), None, None))
 }
 
-/// The file is read, only the menu is not: one banner over the card with
-/// its own Read again, the default entry row keeps its description.
+/// The file reads, the menu does not: one banner with its own Read again.
 #[test]
 fn a_grub_menu_that_could_not_be_read_says_so_in_a_banner() {
     let mut harness = grub_menu(MenuRead::Refused(Refusal::Denied));
@@ -80,7 +79,7 @@ fn a_grub_menu_no_read_can_reach_has_no_second_read_again() {
     );
     assert_eq!(
         harness
-            .query_all_by_role_and_label(Role::Button, "Read again")
+            .query_all_by_role_and_label(Role::Button, "Read Again")
             .count(),
         1
     );

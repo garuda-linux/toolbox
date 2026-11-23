@@ -35,6 +35,7 @@ fn mean_chroma(id: &str) -> f32 {
 
 #[test]
 fn every_scheme_s_letters_read_on_tiles_set_apart() {
+    let mut below_target = Vec::new();
     for scheme in shipped().schemes() {
         let tokens = tokens_of(scheme);
         let name = scheme.id().as_str();
@@ -43,10 +44,14 @@ fn every_scheme_s_letters_read_on_tiles_set_apart() {
         for index in 0..LETTER_HUES {
             let tile = letters.of(index);
             let ratio = contrast(tile.ink, tile.fill);
-            assert!(ratio >= 4.5, "{name} hue {index}: letter {ratio:.2}:1");
+            if ratio < 4.5 {
+                below_target.push(format!("{name} hue {index}: {ratio:.2}:1"));
+            }
 
             let apart = contrast(tile.fill, tokens.card);
-            assert!(apart >= 1.5, "{name} hue {index}: {apart:.2}:1 on the card");
+            if apart < 1.5 {
+                below_target.push(format!("{name} hue {index}: {apart:.2}:1 on the card"));
+            }
         }
 
         let hues: Vec<f32> = fills(&tokens)
@@ -63,6 +68,8 @@ fn every_scheme_s_letters_read_on_tiles_set_apart() {
             }
         }
     }
+
+    assert!(below_target.is_empty(), "{below_target:#?}");
 }
 
 #[test]

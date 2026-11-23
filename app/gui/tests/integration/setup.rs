@@ -13,7 +13,7 @@ use toolbox_gui::page::PageId;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 
-use crate::common::{Fixture, HEIGHT, installing, packages, window};
+use crate::common::{Fixture, HEIGHT, installing, packages, queued_shown, window};
 use crate::discover::source_catalogs;
 use crate::look::look_for;
 use crate::system::first_read;
@@ -74,20 +74,20 @@ fn assistant_with_on(queued: ChangeSet, theme: Theme) -> Fixture {
 }
 
 #[test]
-fn the_start_option_opens_the_welcome_with_the_offered_steps() {
+fn the_start_option_opens_the_welcome_without_repeating_the_page_title() {
     let mut fixture = assistant();
     let harness = fixture.harness();
 
     assert!(
         harness
-            .query_by_label("Welcome to the Setup Assistant")
+            .query_all_by_label_contains("Nothing is installed until you apply")
+            .next()
             .is_some()
     );
     assert!(
         harness
-            .query_all_by_label_contains("There is 1 category.")
-            .next()
-            .is_some()
+            .query_by_label("Welcome to the Setup Assistant")
+            .is_none()
     );
 }
 
@@ -126,7 +126,7 @@ fn a_pick_reaches_the_queue_and_the_summary() {
 fn the_success_page_offers_no_second_apply() {
     let mut fixture = assistant_with(installing(&["htop"]));
     let harness = fixture.harness();
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(harness));
 
     harness
         .get_by_role_and_label(Role::ComboBox, "Go to step")
@@ -138,7 +138,7 @@ fn the_success_page_offers_no_second_apply() {
     harness.run();
 
     assert!(harness.query_by_label("Success!").is_some());
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(harness));
 }
 
 fn summary_with_a_pick(harness: &mut Harness<'static, App>) {
@@ -154,21 +154,21 @@ fn on_the_summary_the_queue_shows_only_for_the_review() {
     summary_with_a_pick(harness);
 
     assert!(harness.query_by_label("Apps to install: 1").is_some());
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(harness));
 
-    harness.get_by_label("Review and apply").click();
+    harness.get_by_label("Review and Apply").click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_some());
-    assert!(harness.query_by_label("Remove all…").is_some());
+    assert!(queued_shown(harness));
+    assert!(harness.query_by_label("Remove All…").is_some());
 
     harness.get_by_label("Hide").click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(harness));
 
     harness.get_by_label("Back").click();
     harness.run();
     assert!(
-        harness.query_by_label("change queued").is_none(),
+        !queued_shown(harness),
         "a step shows no second Apply beside Next"
     );
 }

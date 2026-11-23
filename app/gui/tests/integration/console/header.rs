@@ -37,7 +37,7 @@ fn the_queue_list_opened_again_paints_above_the_console() {
         harness.run_steps(SETTLE);
     }
 
-    let title = harness.get_by_label("Queued changes").rect().center();
+    let title = harness.get_by_label("Queued Changes").rect().center();
     let list = harness.ctx.layer_id_at(title).expect("the list's layer");
     let painted: Vec<egui::LayerId> = harness.ctx.memory(|memory| memory.layer_ids().collect());
     let at = |layer| painted.iter().position(|painted| *painted == layer);

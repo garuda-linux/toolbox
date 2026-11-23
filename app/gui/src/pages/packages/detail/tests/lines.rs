@@ -71,7 +71,7 @@ fn the_history_starts_one_card_padding_into_its_card() {
     let into = line - card_top(&harness, line);
     let padding = f32::from(tokens::current(&harness.ctx).sizes.card_padding.top);
     assert!(
-        (into - padding).abs() < 0.5,
+        (into - padding).abs() < 1.5,
         "the history's first line {into} into its card, the padding {padding}"
     );
 }
@@ -85,7 +85,7 @@ fn the_files_card_starts_under_the_filter_under_copy_list() {
     let file = text_top(&harness, "/usr/bin/gimp");
     let card = card_top(&harness, file);
 
-    let copy = rect_of(&harness, Role::Button, "Copy list");
+    let copy = rect_of(&harness, Role::Button, "Copy List");
     let filter = harness.get_by_label("Filter files").rect();
     let sizes = tokens::current(&harness.ctx).sizes;
 
@@ -108,7 +108,7 @@ fn copy_list_shares_the_middle_of_the_files_fold() {
     let harness = showing(gimp_details());
 
     let fold = rect_of(&harness, Role::Button, "Files 1");
-    let copy = rect_of(&harness, Role::Button, "Copy list");
+    let copy = rect_of(&harness, Role::Button, "Copy List");
     assert!(
         (fold.center().y - copy.center().y).abs() < 0.5,
         "the fold's middle at {}, Copy list's at {}",

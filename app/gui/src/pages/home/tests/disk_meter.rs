@@ -45,7 +45,7 @@ fn the_disk_tile_fills_its_bar_with_the_share_in_use() {
     let tokens = tokens::current(&harness.ctx);
 
     let (track, used) = match (
-        inside(&harness, tokens.field).as_slice(),
+        inside(&harness, tokens.text.gamma_multiply(0.3)).as_slice(),
         inside(&harness, tokens.accent).as_slice(),
     ) {
         ([track], [used]) => (*track, *used),
@@ -85,7 +85,7 @@ fn every_tile_keeps_the_room_of_the_bar() {
 }
 
 #[test]
-fn a_dark_tile_has_the_light_along_its_top() {
+fn a_dark_tile_is_a_frame_without_a_light() {
     let mut harness = with_free(200 * GB);
     harness.ctx.set_theme(Theme::Dark);
     harness.run();
@@ -99,5 +99,5 @@ fn a_dark_tile_has_the_light_along_its_top() {
         })
         .count();
 
-    assert_eq!(lit, 1);
+    assert_eq!(lit, 0);
 }

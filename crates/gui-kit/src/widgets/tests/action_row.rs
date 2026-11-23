@@ -2,9 +2,9 @@ use egui::Rect;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::{ActionRow, ButtonKind, Tone, pill_button};
+use super::super::{ActionRow, ButtonKind, actions_stacked, card_row, pill_button};
 use crate::icons;
-use crate::testing::harness;
+use crate::testing::{baseline, capitals_top, harness};
 
 #[test]
 fn a_row_without_actions_ends_with_its_words() {
@@ -12,7 +12,7 @@ fn a_row_without_actions_ends_with_its_words() {
         |ui, drawn: &mut Rect| {
             *drawn = ui
                 .scope(|ui| {
-                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Apps to install: 1")
+                    ActionRow::new(icons::CHECKMARK, "Apps to install: 1")
                         .detail("Strawberry Player")
                         .show_without_actions(ui);
                 })
@@ -30,7 +30,7 @@ fn a_row_without_actions_ends_with_its_words() {
 
 fn task_row(width: f32) -> egui_kittest::Harness<'static> {
     let mut harness = harness(width, 300.0).build_ui(|ui| {
-        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system")
+        ActionRow::new(icons::CHECKMARK, "Update the system")
             .detail("Installs the newest versions of every package.")
             .show(ui, |ui| {
                 _ = pill_button(ui, "Run now", ButtonKind::Soft);
@@ -87,7 +87,7 @@ fn a_narrow_row_puts_its_action_under_the_text_at_the_left() {
 #[test]
 fn several_actions_stay_on_one_line_beside_the_words() {
     let mut harness = harness(900.0, 300.0).build_ui(|ui| {
-        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Updates available")
+        ActionRow::new(icons::CHECKMARK, "Updates available")
             .detail("Update now in the Console, or queue the update.")
             .show(ui, |ui| {
                 for name in ["Update now", "Queue update", "Show packages"] {
@@ -113,7 +113,7 @@ fn several_actions_stay_on_one_line_beside_the_words() {
 #[test]
 fn actions_beside_the_words_keep_the_order_they_were_added_in() {
     let mut harness = harness(700.0, 300.0).build_ui(|ui| {
-        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "AUR updates available").show(ui, |ui| {
+        ActionRow::new(icons::CHECKMARK, "AUR updates available").show(ui, |ui| {
             _ = pill_button(ui, "Update in Console", ButtonKind::Soft);
             _ = pill_button(ui, "Show packages", ButtonKind::Soft);
         });
@@ -156,7 +156,7 @@ fn spaced() -> (Rect, Rect, Rect, Rect) {
 
     let mut harness = harness(700.0, 300.0).build_ui(move |ui| {
         crate::tokens::set_page_hue(ui.ctx(), crate::tokens::Hue::Green);
-        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system")
+        ActionRow::new(icons::CHECKMARK, "Update the system")
             .detail(detail)
             .show(ui, |ui| {
                 _ = pill_button(ui, "Run now", ButtonKind::Soft);
@@ -164,12 +164,12 @@ fn spaced() -> (Rect, Rect, Rect, Rect) {
     });
 
     harness.run();
-    let fill = crate::tokens::current(&harness.ctx)
-        .tiles
-        .of(crate::tokens::Hue::Green)
-        .fill;
+    harness.run();
+    let badge = crate::testing::textured_rects(&harness)
+        .first()
+        .copied()
+        .expect("the icon is painted");
 
-    let badge = crate::testing::filled_rect(&harness, fill).expect("the tile is painted");
     let title = harness.get_by_label("Update the system").rect();
     let detail = harness.get_by_label(detail).rect();
     let button = harness
@@ -197,14 +197,17 @@ fn the_words_start_one_picture_gap_right_of_the_tile() {
     );
 }
 
+/// The words' column ends `text_to_control` before the actions. A wrapped
+/// detail may end short of that column, so the gap is a minimum.
 #[test]
 fn the_actions_keep_their_gap_from_the_words() {
     let (_, _, detail, button) = spaced();
     let gap = button.left() - detail.right();
+    let wanted = crate::tokens::Sizes::DEFAULT.text_to_control;
 
     assert!(
-        gap >= 14.0 - 0.5,
-        "the wrapped detail ends {gap} before the button"
+        gap >= wanted - 0.5,
+        "the wrapped detail ends {gap} before the button, the gap is {wanted}"
     );
 }
 
@@ -213,7 +216,7 @@ fn row_height(queued: &'static str) -> f32 {
         move |ui, drawn: &mut Rect| {
             *drawn = ui
                 .scope(|ui| {
-                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system")
+                    ActionRow::new(icons::CHECKMARK, "Update the system")
                         .detail("Installs the newest versions of every package.")
                         .queued(queued)
                         .show(ui, |ui| {
@@ -244,31 +247,78 @@ fn a_queued_row_is_as_tall_as_one_at_rest() {
 fn a_tall_row_keeps_its_actions_on_the_title_line() {
     let mut results = egui_kittest::SnapshotResults::new();
     let mut harness = harness(700.0, 300.0).build_ui(|ui| {
-        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "linux")
-            .detail(
-                "This kernel runs right now, so it stays. Restart with another kernel to \
+        card_row(ui, true, |ui| {
+            ActionRow::new(icons::CHECKMARK, "linux")
+                .detail(
+                    "This kernel runs right now, so it stays. Restart with another kernel to \
                  remove it, and pick the new one in the boot menu after the next restart. \
                  Until then the running kernel keeps its modules and its headers, so a \
                  rebuild after an update still finds what it needs.",
-            )
-            .show(ui, |ui| {
-                _ = pill_button(ui, "Set as default…", ButtonKind::Soft);
-                _ = pill_button(ui, "Remove", ButtonKind::Soft);
-            });
+                )
+                .show(ui, |ui| {
+                    _ = pill_button(ui, "Set as default…", ButtonKind::Soft);
+                    _ = pill_button(ui, "Remove", ButtonKind::Soft);
+                });
+        });
     });
 
     harness.run();
     results.add(harness.try_snapshot("widgets/action_row_tall"));
 
-    let title = harness.get_by_label("linux").rect();
+    // The action centres on the middle of the title's capitals.
+    let capitals = f32::midpoint(
+        capitals_top(&harness, "linux").expect("the title is painted"),
+        baseline(&harness, "linux").expect("the title is painted"),
+    );
+
     let action = harness
         .get_by_role_and_label(Role::Button, "Set as default…")
         .rect();
 
     assert!(
-        (action.top() - title.top()).abs() < 4.0,
-        "the action starts at {}, the title at {}",
-        action.top(),
-        title.top(),
+        (action.center().y - capitals).abs() <= 1.0,
+        "the action centre is {}, the title's capitals centre {capitals}",
+        action.center().y,
+    );
+}
+
+/// A stacked row's actions start at the words' left edge, so a slot that only
+/// keeps room beside the words is left out of them.
+#[test]
+fn a_stacked_row_starts_its_actions_at_the_words_left_edge() {
+    let row = egui::Id::unique("a stacked row");
+    let mut harness = harness(300.0, 200.0).build_ui(move |ui| {
+        card_row(ui, true, |ui| {
+            ActionRow::new(icons::CHECKMARK, "linux")
+                .row(row)
+                .detail(
+                    "A detail long enough that the words need the whole width of this card \
+                     before the actions can sit beside them.",
+                )
+                .show(ui, |ui| {
+                    if !actions_stacked(ui, row) {
+                        ui.add_space(70.0);
+                    }
+
+                    _ = pill_button(ui, "Remove", ButtonKind::Soft);
+                });
+        });
+    });
+
+    harness.run();
+    harness.run();
+
+    let title = harness.get_by_label("linux").rect();
+    let remove = harness.get_by_role_and_label(Role::Button, "Remove").rect();
+
+    assert!(
+        remove.top() > title.bottom(),
+        "the actions sit under the words"
+    );
+    assert!(
+        (remove.left() - title.left()).abs() < 1.0,
+        "Remove starts at {} and the words at {}",
+        remove.left(),
+        title.left()
     );
 }

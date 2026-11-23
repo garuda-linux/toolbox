@@ -11,7 +11,7 @@ use std::sync::Arc;
 
 use egui::FontDefinitions;
 use toolbox_gui_kit::desktop::look::{Look, Sources};
-use toolbox_gui_kit::fonts::{self, FontFile};
+use toolbox_gui_kit::fonts::{self, FontFile, UiFaces};
 use toolbox_gui_kit::icons::ThemeIcons;
 
 use self::icon_files::AppIcons;
@@ -22,7 +22,7 @@ pub struct DesktopLook {
     pub look: Look,
     /// Shared, as each look change hands the frame a copy and the fonts
     /// are megabytes.
-    pub ui_fonts: Arc<[FontFile]>,
+    pub ui_fonts: Arc<UiFaces>,
     pub fixed_font: Option<Arc<FontFile>>,
     pub emoji_font: Option<Arc<FontFile>>,
     pub icons: Option<Arc<ThemeIcons>>,

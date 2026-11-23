@@ -12,7 +12,7 @@ use egui::accesskit::Role;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
-    PropertyTexts, card, link_row, link_tile, property_list, text_link,
+    PropertyTexts, card, link_row_at_least, link_tile, property_list, property_text_rise, text_link,
 };
 
 use super::header::title_header;
@@ -91,6 +91,8 @@ const COMMUNITY: [(&str, &str); 5] = [
 
 const SIDE_BY_SIDE: f32 = 640.0;
 const TILE_WIDTH: f32 = 280.0;
+/// The taller top card's height of the last pass. One About page shows at a time.
+const TOP_CARDS: &str = "toolbox_gui::about::top_cards";
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct AboutPage {
@@ -112,7 +114,7 @@ impl PageView for AboutPage {
         if ui.available_width() >= SIDE_BY_SIDE {
             // Both cards take the taller one's height of the last pass, so
             // the pair ends on one line.
-            let id = ui.make_persistent_id("about-top-cards");
+            let id = egui::Id::unique(TOP_CARDS);
             let tallest = ui.data(|data| data.get_temp::<f32>(id)).unwrap_or(0.0);
             let drawn = ui.columns(2, |columns| {
                 let [left, right] = columns else {
@@ -129,7 +131,7 @@ impl PageView for AboutPage {
                 let help = card(right, |column| {
                     column.set_min_height(tallest);
                     column
-                        .scope(|column| help(column, called))
+                        .scope(|column| help(column, called, tallest))
                         .response
                         .rect
                         .height()
@@ -138,14 +140,17 @@ impl PageView for AboutPage {
                 facts.inner.max(help.inner)
             });
 
-            if (drawn - tallest).abs() > 0.5 {
+            // Any change counts: at two pixels per point one pixel is half a
+            // point. The measure ignores the minimum height, so the next
+            // pass settles.
+            if (drawn - tallest).abs() > f32::EPSILON {
                 ui.data_mut(|data| data.insert_temp(id, drawn));
                 ui.ctx().request_repaint();
             }
         } else {
             card(ui, facts);
             ui.add_space(ui.tokens().sizes.card_gap);
-            card(ui, |ui| help(ui, called));
+            card(ui, |ui| help(ui, called, 0.0));
         }
 
         ui.add_space(ui.tokens().sizes.section_gap);
@@ -203,45 +208,68 @@ fn address(ui: &mut Ui, text: &str, url: &str) {
     }
 }
 
-fn help(ui: &mut Ui, called: &mut bool) {
+/// The help rows. Beside the facts they share `tallest`, the card's height,
+/// so they space out as the facts do instead of leaving a band below.
+///
+/// A fact row is its line plus half the gap between facts on either side.
+/// The help rows take that pitch, start half a gap above the first fact and
+/// rise as far as a fact's text sits above its row middle, so each lines up
+/// with the fact beside it.
+fn help(ui: &mut Ui, called: &mut bool, tallest: f32) {
     let ctx = ui.ctx().clone();
-    let padding = ui.tokens().sizes.list_padding;
-    egui::Frame::new().inner_margin(padding).show(ui, |ui| {
+    let sizes = ui.tokens().sizes;
+    let edge = f32::from(sizes.card_padding.top) - sizes.control_gap / 2.0;
+    let rise = property_text_rise(ui);
+    let rows = f32::from(u8::try_from(HELP.len() + 1).unwrap_or(u8::MAX));
+    let least = edge.mul_add(-2.0, tallest) / rows;
+    let margin = egui::Margin {
+        top: 0,
+        bottom: 0,
+        ..sizes.list_padding
+    };
+
+    egui::Frame::new().inner_margin(margin).show(ui, |ui| {
+        ui.add_space(edge - rise);
         for (id, icon, url) in HELP {
-            if link_row(ui, icon, &i18n::text(&ctx, id), Role::Link).clicked() {
+            let text = i18n::text(&ctx, id);
+            if link_row_at_least(ui, icon, &text, Role::Link, least).clicked() {
                 links::open(&ctx, url);
             }
         }
 
         let exorcist = i18n::text(&ctx, "about-exorcist");
-        if link_row(ui, icons::DRAW_CROSS, &exorcist, Role::Button).clicked() {
+        if link_row_at_least(ui, icons::DRAW_CROSS, &exorcist, Role::Button, least).clicked() {
             *called = true;
         }
+
+        ui.add_space(edge + rise);
     });
 }
 
 fn web(ui: &mut Ui) {
-    let ctx = ui.ctx().clone();
-    heading(ui, icons::INTERNET_WEB_BROWSER, "about-web");
-    tiles(ui, None, |ui, width| {
-        for (id, icon, url) in WEB {
-            let title = i18n::text(&ctx, id);
-            let description = i18n::text(&ctx, &format!("{id}-description"));
-            if link_tile(ui, icon, &title, &description, width).clicked() {
-                links::open(&ctx, url);
-            }
-        }
-    });
+    link_tiles(ui, "about-web", WEB);
 }
 
 fn community(ui: &mut Ui) {
+    link_tiles(
+        ui,
+        "about-community",
+        COMMUNITY.map(|(id, url)| (id, icons::DIALOG_MESSAGES, url)),
+    );
+}
+
+fn link_tiles(
+    ui: &mut Ui,
+    heading_id: &str,
+    entries: impl IntoIterator<Item = (&'static str, Icon, &'static str)>,
+) {
     let ctx = ui.ctx().clone();
-    heading(ui, icons::USER_OTHERS, "about-community");
+    heading(ui, heading_id);
     tiles(ui, None, |ui, width| {
-        for (id, url) in COMMUNITY {
+        for (id, icon, url) in entries {
             let title = i18n::text(&ctx, id);
             let description = i18n::text(&ctx, &format!("{id}-description"));
-            if link_tile(ui, icons::DIALOG_MESSAGES, &title, &description, width).clicked() {
+            if link_tile(ui, icon, &title, &description, width).clicked() {
                 links::open(&ctx, url);
             }
         }

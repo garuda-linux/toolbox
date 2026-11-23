@@ -42,13 +42,14 @@ fn a_dialog_has_the_same_margin_on_every_side() {
         .get_by_role_and_label(Role::Button, "Add user now")
         .rect();
 
+    let cancel = harness.get_by_role_and_label(Role::Button, "Cancel").rect();
     let label = harness.get_by_label("User name").rect();
 
     let left = label.left() - dialog.left();
     let sides = [
         ("top", close.top() - dialog.top()),
         ("right of Close", dialog.right() - close.right()),
-        ("right of the buttons", dialog.right() - add.right()),
+        ("right of Cancel", dialog.right() - cancel.right()),
         ("bottom", dialog.bottom() - add.bottom()),
     ];
 

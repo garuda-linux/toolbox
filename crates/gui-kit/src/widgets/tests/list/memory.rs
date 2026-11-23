@@ -3,7 +3,7 @@
 use egui::{IdSalt, Ui};
 
 use super::super::super::list::memory;
-use super::super::super::{ActionRow, ListItem, RowHeights, RowList, Tone, split_row_in};
+use super::super::super::{ActionRow, ListItem, RowHeights, RowList, split_row_in};
 use crate::icons;
 use crate::testing::harness;
 
@@ -52,7 +52,7 @@ fn a_dropped_row_takes_its_action_and_split_sizes_with_it() {
         |ui, (rows, kept_c): &mut (Vec<Row>, (bool, bool))| {
             let heights = RowHeights::Measured { estimate: 30.0 };
             RowList::new("rows", "Rows", heights).show(ui, rows, |ui, row, state| {
-                ActionRow::new(icons::TOOLS, Tone::Neutral, row.0)
+                ActionRow::new(icons::TOOLS, row.0)
                     .row(state.row)
                     .show(ui, |ui| drop(ui.button("Act")));
                 split_row_in(

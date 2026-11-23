@@ -16,6 +16,8 @@ pub struct Palette {
     pub window: Color32,
     /// Text fields, lists and the console, set off from the window.
     pub view: Color32,
+    /// Buttons and text fields. Only KDE names it, `None` derives it.
+    pub button: Option<Color32>,
     pub text: Color32,
     pub accent: Color32,
     pub on_accent: Color32,
@@ -26,6 +28,24 @@ pub struct Palette {
     /// desktops name. They give the letter tiles more of the scheme's hues.
     pub link: Option<Color32>,
     pub visited: Option<Color32>,
+    /// The view's active text colour, which Kirigami's information
+    /// messages take. Only KDE names it, `None` takes the accent.
+    pub active: Option<Color32>,
+    /// The Complementary set, which the passive notes take. Only KDE names
+    /// it, `None` takes the window and the text.
+    pub complementary: Option<Color32>,
+    pub complementary_text: Option<Color32>,
+    /// The view's hover and focus colours, which Darkly draws items, menus
+    /// and button presses with. Only KDE names them, `None` takes the accent.
+    pub decoration_hover: Option<Color32>,
+    pub decoration_focus: Option<Color32>,
+    /// The tooltip's fill and text. Only KDE names them, `None` takes the
+    /// raised surface and the text.
+    pub tooltip: Option<Color32>,
+    pub tooltip_text: Option<Color32>,
+    /// KDE's `[KDE] contrast` on a 0 to 10 scale, which the Shadow shade
+    /// reads. `None` takes KDE's default of 7.
+    pub contrast: Option<i8>,
     /// The icon tiles' hues of one of the app's own schemes. A desktop
     /// names none, so `None` takes Catppuccin's ([`TileHues::of`]).
     pub tiles: Option<TileHues>,
@@ -83,6 +103,7 @@ impl Palette {
         Self {
             window: colour(rgb[0]),
             view: colour(rgb[1]),
+            button: None,
             text: colour(rgb[2]),
             accent: colour(rgb[3]),
             on_accent: colour(rgb[4]),
@@ -91,8 +112,16 @@ impl Palette {
             success: colour(rgb[7]),
             link: None,
             visited: None,
+            active: None,
+            complementary: None,
+            complementary_text: None,
+            decoration_hover: None,
+            decoration_focus: None,
+            tooltip: None,
+            tooltip_text: None,
             tiles: None,
             ansi: None,
+            contrast: None,
         }
     }
 }

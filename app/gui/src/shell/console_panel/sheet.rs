@@ -141,9 +141,13 @@ pub fn show(
 }
 
 /// `frame` with the frost's tint for its fill while the blur lies under it.
+/// With the glass on, the sheet lays no tint over the translucent window.
 fn frosted(ctx: &Context, frame: Frame) -> Frame {
-    if frost::live(ctx) {
-        frame.fill(tokens::current(ctx).frost)
+    let tokens = tokens::current(ctx);
+    if toolbox_gui_kit::theme::translucent(ctx) {
+        frame.fill(tokens.band)
+    } else if frost::live(ctx) {
+        frame.fill(tokens.frost)
     } else {
         frame
     }

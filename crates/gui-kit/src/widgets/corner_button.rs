@@ -45,7 +45,7 @@ pub fn corner_button(
         // The backing keeps a long line scrolled under it from showing through.
         over.painter()
             .rect_filled(rect, CornerRadius::same(CONTROL_RADIUS), tokens.field);
-        paint_small_button(&over, rect, &response, icon, tokens.hover);
+        paint_small_button(&over, rect, &response, icon);
     }
 
     if shown {

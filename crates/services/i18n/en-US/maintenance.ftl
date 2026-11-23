@@ -1,40 +1,40 @@
 
 page-maintenance-subtitle = Keep the system in a good state: updates, cleanups, tools and repairs.
-maintenance-refresh = Read again
+maintenance-refresh = Read Again
 
 maintenance-tabs = Maintenance tabs
 maintenance-tab-common = Common
-maintenance-tab-reset = Reset settings
+maintenance-tab-reset = Reset Settings
 maintenance-tab-repairs = Repairs
 
-maintenance-operations = Package care
+maintenance-operations = Package Care
 maintenance-operations-detail = Queue these to apply them with your other changes, or run one now in the Console.
-maintenance-run-now = Run now
-maintenance-unqueue = Remove from queue
+maintenance-run-now = Run Now
+maintenance-unqueue = Remove from Queue
 maintenance-queued = Runs with Apply
 maintenance-op-upgrade-system = Update system
 maintenance-op-upgrade-system-detail = Update every package, with snapshots and checks when garuda-update is installed.
-maintenance-op-upgrade-system-queue = Queue update
+maintenance-op-upgrade-system-queue = Queue Update
 maintenance-op-remove-orphans = Remove orphans
 maintenance-op-remove-orphans-detail = Remove packages that were installed as dependencies and are no longer needed.
-maintenance-op-remove-orphans-queue = Queue removal
+maintenance-op-remove-orphans-queue = Queue Removal
 maintenance-op-remove-orphans-question = Packages that were installed for others and are no longer needed get removed. The Console lists them and asks once more before anything goes.
 maintenance-op-clean-package-cache = Clean package cache
 maintenance-op-clean-package-cache-detail = Delete cached packages of software that is no longer installed.
-maintenance-op-clean-package-cache-queue = Queue cleanup
+maintenance-op-clean-package-cache-queue = Queue Cleanup
 maintenance-op-clean-package-cache-question = Every cached package of software that is no longer installed is deleted. You cannot go back to those versions afterwards.
 maintenance-op-refresh-keyring = Refresh keyring
 maintenance-op-refresh-keyring-detail = Download the newest keys that prove the packages of the repositories are genuine (the keyring).
-maintenance-op-refresh-keyring-queue = Queue refresh
+maintenance-op-refresh-keyring-queue = Queue Refresh
 maintenance-op-remove-database-lock = Remove the pacman lock
 maintenance-op-remove-database-lock-detail = Delete a lock left behind by an interrupted update. Nothing happens while pacman runs.
 maintenance-op-aur-upgrade-detail = Update the packages built from the AUR with paru, which asks its questions in the terminal.
-maintenance-op-remove-database-lock-queue = Queue unlock
+maintenance-op-remove-database-lock-queue = Queue Unlock
 
 maintenance-tools = Tools
 maintenance-tools-detail = Each tool opens in its own window.
 maintenance-open = Open
-maintenance-install-open = Install and open…
+maintenance-install-open = Install and Open…
 # The dot beside the title of a tool that is not installed.
 maintenance-not-installed = Not installed
 
@@ -42,7 +42,7 @@ maintenance-tool-missing = Installing it starts at once in the Console and asks 
 maintenance-ranker-missing = Needs rate-mirrors. Installing it starts at once in the Console and asks for your password, then the ranking starts.
 maintenance-ranking = Testing the mirrors. This takes up to five minutes. The Console opens when the new list is ready.
 maintenance-ranking-progress = Ranking mirrors, { $time }
-maintenance-ranking-cancel = Stop ranking
+maintenance-ranking-cancel = Stop Ranking
 maintenance-tool-arch-mirrors = Refresh Arch mirrors
 maintenance-tool-arch-mirrors-detail = Choose the fastest Arch Linux mirrors, the servers packages download from, with reflector-simple.
 maintenance-tool-chaotic-mirrors = Refresh Chaotic-AUR mirrors
@@ -64,18 +64,18 @@ maintenance-problem-mirrors-invalid = Ranking gave no usable list of mirrors. Th
 maintenance-problem-busy = Other changes are still being applied, so this did not start. Start it again once they are done.
 maintenance-problem-dismiss = Dismiss
 
-maintenance-reset = Application settings
+maintenance-reset = Application Settings
 maintenance-reset-detail = Choose the applications whose settings go back to Garuda's defaults. Your current files are kept as backups.
 maintenance-reset-empty = No default settings found
 maintenance-reset-empty-detail = This system has no Garuda defaults in /etc/skel.
-maintenance-reset-button = Reset selected…
+maintenance-reset-button = Reset Selected…
 maintenance-reset-busy = Resetting the chosen settings…
 maintenance-reset-done = Settings reset. The old files end in .bak and the date.
 # $names lists the applications, separated by commas.
 maintenance-reset-failed = Some settings could not be reset: { $names }
 maintenance-reset-question = { $count ->
-    [one] Reset 1 setting?
-   *[other] Reset { $count } settings?
+    [one] Reset 1 Setting?
+   *[other] Reset { $count } Settings?
 }
 # $files is the comma list of the home files a reset replaces.
 maintenance-reset-replaces = Replaces { $files }
@@ -97,17 +97,17 @@ maintenance-repair-health-check = System health check
 maintenance-repair-health-check-detail = Look for common problems with garuda-health.
 maintenance-repair-health-fix = Repair system health
 maintenance-repair-health-fix-detail = Let garuda-health fix the common problems it finds.
-maintenance-repair-remote-fix = Reset package manager settings
+maintenance-repair-remote-fix = Reset Package Manager Settings
 maintenance-repair-remote-fix-detail = Reset pacman.conf, the mirror lists and the keyring to Garuda's defaults.
-maintenance-repair-remote-keyring = Reset keyring
+maintenance-repair-remote-keyring = Reset Keyring
 maintenance-repair-remote-keyring-detail = Reset the package signing keys to Garuda's defaults.
-maintenance-repair-remote-full-fix = Full reset
+maintenance-repair-remote-full-fix = Full Reset
 maintenance-repair-remote-full-fix-detail = Reset pacman fully and reinstall every package.
-maintenance-repair-remote-reset-audio = Reset audio
+maintenance-repair-remote-reset-audio = Reset Audio
 maintenance-repair-remote-reset-audio-detail = Reinstall and reset the PipeWire audio configuration.
 maintenance-repair-remote-reset-snapper = Reset Snapper
 maintenance-repair-remote-reset-snapper-detail = Reset Snapper fully and create its configurations again.
-maintenance-repair-remote-reinstall = Reinstall packages
+maintenance-repair-remote-reinstall = Reinstall Packages
 maintenance-repair-remote-reinstall-detail = Reinstall every installed package.
 
 # The question before a repair that reinstalls packages or throws away

@@ -2,8 +2,8 @@
 //! stays there while the group scrolls and gives way to the next heading.
 
 use egui::{CornerRadius, Rect, Ui, UiBuilder, pos2, vec2};
-use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::{page_viewport, section_heading};
+use toolbox_gui_kit::widgets::section_heading;
+use toolbox_gui_kit::{frost, theme, tokens};
 
 use super::app_row::AppGroup;
 
@@ -20,10 +20,10 @@ pub struct Mark {
 /// its own heading has scrolled out. `start` is where the list's content
 /// began this frame.
 pub fn paint(ui: &mut Ui, groups: &[AppGroup], marks: &[Mark], start: f32) {
-    // The painting clip reaches up under the header, so the top edge is the
-    // viewport's.
+    // The list scrolls in its own column, whose clip starts at its top edge,
+    // so the clip is the viewport the heading sticks to.
     let clip = ui.clip_rect();
-    let top = page_viewport(ui.ctx()).map_or_else(|| clip.top(), |view| view.top());
+    let top = clip.top();
     let seen = top - start;
     let Some((index, &mark)) = marks
         .iter()
@@ -44,16 +44,32 @@ pub fn paint(ui: &mut Ui, groups: &[AppGroup], marks: &[Mark], start: f32) {
         .get(index + 1)
         .map_or(f32::INFINITY, |next| next.top - seen - height);
 
+    // The body's own left padding, so the heading lines up with the rows.
+    let padding = f32::from(tokens::current(ui.ctx()).sizes.page_padding.left);
     let at = pos2(clip.left(), top + next.min(0.0));
-    let rect = Rect::from_min_size(at, vec2(clip.width(), height));
-    let surface = tokens::current(ui.ctx()).window;
-    ui.painter().rect_filled(rect, CornerRadius::ZERO, surface);
+    let band = Rect::from_min_size(at, vec2(clip.width(), height));
+
+    // The rows under the heading blur through the header's scrim, as the
+    // page header does. Without the blur the band stays solid, so no row
+    // shows through the heading.
+    let tokens = tokens::current(ui.ctx());
+    let cover = if frost::live(ui.ctx()) {
+        frost::backdrop_within(ui.painter(), band, CornerRadius::ZERO);
+        tokens.header_scrim
+    } else if theme::translucent(ui.ctx()) {
+        tokens.header_scrim
+    } else {
+        tokens.window
+    };
+
+    ui.painter().rect_filled(band, CornerRadius::ZERO, cover);
 
     let Some(group) = groups.get(index) else {
         return;
     };
 
+    let rect = band.shrink2(vec2(padding, 0.0));
     ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
-        section_heading(ui, group.icon, &group.title, &group.count);
+        section_heading(ui, &group.title, &group.count);
     });
 }

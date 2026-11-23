@@ -57,10 +57,11 @@ where
     let current = orders.iter().position(|(each, _)| each == order);
     let label = i18n::text(&ctx, label_id);
     let sort_by = i18n::text(&ctx, "common-sort-by");
+    let width = Select::fitting_width(ui, shown.iter().copied());
     let picked = Select::new(&label, &shown)
         .caption(&sort_by)
         .selected(current)
-        .width(ui.tokens().sizes.sort_width)
+        .width(width)
         .show(ui);
 
     if let Some((picked, _)) = picked.value.and_then(|index| orders.get(index)) {
@@ -84,6 +85,14 @@ pub fn refusal_banner(ui: &mut Ui, tone: Tone, text: &str, dismiss_id: &str) -> 
     let dismissed = banner(ui, tone, text, &[&dismiss]).value == Some(0);
     ui.add_space(ui.tokens().sizes.card_gap);
     dismissed
+}
+
+/// A banner for a read that is partly unread, with Read again when `again`
+/// is set. Returns whether Read again was pressed.
+pub fn read_again_banner(ui: &mut Ui, tone: Tone, text: &str, again: bool) -> bool {
+    let label = i18n::text(ui.ctx(), "common-read-again");
+    let action = again.then_some(&*label);
+    banner(ui, tone, text, action.as_slice()).value == Some(0)
 }
 
 pub fn refused_banner(

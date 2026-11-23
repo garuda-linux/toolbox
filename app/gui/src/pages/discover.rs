@@ -1,34 +1,32 @@
 mod app_row;
 mod chips;
+mod details;
+mod notices;
 mod row;
 mod sticky;
 #[cfg(test)]
 mod tests;
 
-use app_row::AppGroup;
+use app_row::{AppGroup, AppRow};
 use chips::Chips;
-use egui::Ui;
-use toolbox_catalog::LoadProblem;
+use egui::{Key, Modifiers, Ui};
+use notices::notices;
 use toolbox_core::Snapshot;
-use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::discover::{AppOrder, view};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
+use toolbox_gui_kit::widgets::columns::{self, Columns};
 use toolbox_gui_kit::widgets::{
-    RowHeights, RowList, Tone, banner, counted_chips, dimmed, empty_state, empty_state_action,
+    BodyShape, RowHeights, RowList, counted_chips, dimmed, empty_state, empty_state_action,
     page_toolbar, section_heading,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use super::header::{search_beside_sort, title_header};
-use super::rows::{Look, refusal_banner, sort_select};
+use super::header::{search, title_header};
+use super::rows::{Look, sort_select};
 use super::search_empty::search_empty_state;
-use super::toggles::refusal_text;
 use super::{PageContext, PageView, plan_running};
-use crate::command::AppCommand;
 use crate::i18n;
 use crate::i18n::Arg;
-use crate::page::PageId;
-use crate::toggle_pages::TogglePages;
 
 #[derive(Debug, Default)]
 pub struct DiscoverPage {
@@ -37,9 +35,34 @@ pub struct DiscoverPage {
     order: AppOrder,
     rows: RowCache<RowsKey, Vec<AppGroup>>,
     chips: RowCache<ChipsKey, Chips>,
-    /// The title of an app picked in the palette, whose row takes the
-    /// focus once it shows.
-    revealing: Option<String>,
+    detail: RowCache<DetailKey, Option<details::Detail>>,
+    open: Option<Open>,
+    /// Whether the page is too narrow for the list and the details side by
+    /// side, the details then replace the list.
+    narrow: bool,
+    revealing: Option<Reveal>,
+}
+
+#[derive(Clone, Debug)]
+struct Open {
+    id: String,
+}
+
+/// The row to focus once it shows. The palette knows only the title it
+/// searched for, closed details know their app among others of its title.
+#[derive(Clone, Debug)]
+enum Reveal {
+    Titled(String),
+    App(String),
+}
+
+impl Reveal {
+    fn finds(&self, row: &AppRow) -> bool {
+        match self {
+            Self::Titled(title) => row.title == *title,
+            Self::App(id) => row.id == *id,
+        }
+    }
 }
 
 type RowsKey = (AppOrder, Same<Snapshot>, u64, Look);
@@ -48,13 +71,36 @@ type RowsKey = (AppOrder, Same<Snapshot>, u64, Look);
 /// look, never from the picked category or the order.
 type ChipsKey = (Same<Snapshot>, u64, Look);
 
+/// The details of an app come from the system, the queue and the look.
+type DetailKey = (Same<Snapshot>, u64, Look);
+
 impl PageView for DiscoverPage {
+    /// The list and the details each scroll on their own, so the page body
+    /// has no scroll area of its own.
+    fn shape(&self) -> BodyShape {
+        BodyShape::Panes {
+            width: f32::INFINITY,
+        }
+    }
+
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
         self.title(ui, listed(context));
         true
     }
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
+        // Escape closes the details like Back does. A dialog over the page,
+        // such as the command palette, is drawn after it and answers Escape
+        // itself.
+        let dialog = ui.memory(|memory| memory.top_modal_layer().is_some());
+        if self.open.is_some()
+            && !dialog
+            && ui.input_mut(|input| input.consume_key(Modifiers::NONE, Key::Escape))
+        {
+            self.close();
+        }
+
+        self.narrow = columns::is_narrow(ui.available_width());
         self.body(ui, context);
     }
 }
@@ -63,7 +109,22 @@ impl DiscoverPage {
     pub fn reveal(&mut self, title: &str) {
         title.clone_into(&mut self.search);
         self.category = None;
-        self.revealing = Some(title.to_owned());
+        self.revealing = Some(Reveal::Titled(title.to_owned()));
+    }
+
+    fn open(&mut self, opened: Open) {
+        if self.open.as_ref().is_some_and(|open| open.id == opened.id) {
+            return;
+        }
+
+        self.open = Some(opened);
+    }
+
+    /// Closes the details. The list then shows the app's row focused again.
+    fn close(&mut self) {
+        if let Some(open) = self.open.take() {
+            self.revealing = Some(Reveal::App(open.id));
+        }
     }
 
     /// Search and sort show off until the apps are listed.
@@ -75,7 +136,7 @@ impl DiscoverPage {
             |page, ui| {
                 ui.enabled_ui(listed, |ui| {
                     let field = &mut page.search;
-                    _ = search_beside_sort(ui, field, "discover-search", "discover-search-hint");
+                    _ = search(ui, field, "discover-search", "discover-search-hint");
                 });
             },
             |page, ui| {
@@ -102,8 +163,7 @@ impl DiscoverPage {
         notices(ui, context, catalogs.problem.as_ref());
 
         let apps = &catalogs.apps;
-        let look = Look::of(ui);
-        let chips_rest = (Same::of(context.snapshot), context.revision, look.clone());
+        let chips_rest = (Same::of(context.snapshot), context.revision, Look::of(ui));
         let chips = self.chips.get(&[&self.search], chips_rest, || {
             let _build = tracing::trace_span!("build chips").entered();
             let categories =
@@ -116,6 +176,26 @@ impl DiscoverPage {
         ui.enabled_ui(listed(context), |ui| self.filters(ui, &chips, category));
         ui.add_space(ui.tokens().sizes.header_gap);
 
+        let beside = self.open.is_some();
+        Columns::new("discover-columns").open(beside).show(
+            ui,
+            self,
+            |ui, page| page.list(ui, context, &chips, category),
+            |ui, page| details::body(page, ui, context),
+        );
+    }
+
+    /// The apps under the chips and the search, each category under its
+    /// heading, or the state that stands in for them.
+    fn list(
+        &mut self,
+        ui: &mut Ui,
+        context: &PageContext<'_>,
+        chips: &Chips,
+        category: Option<&str>,
+    ) {
+        let look = Look::of(ui);
+        let apps = &context.catalogs.apps.apps;
         let query = view::Query {
             category,
             search: &self.search,
@@ -150,8 +230,15 @@ impl DiscoverPage {
             return;
         }
 
-        if show_groups(ui, context, &groups, self.revealing.as_deref()) {
+        let selected = self.open.as_ref().map(|open| open.id.as_str());
+        let (holds, opened) = show_groups(ui, context, &groups, self.revealing.as_ref(), selected);
+
+        if holds {
             self.revealing = None;
+        }
+
+        if let Some(opened) = opened {
+            self.open(opened);
         }
     }
 
@@ -186,7 +273,6 @@ impl DiscoverPage {
         let ctx = ui.ctx().clone();
         let search = self.search.trim().to_owned();
         if let Some((category, matches)) = elsewhere.filter(|_| !search.is_empty()) {
-            let count = matches;
             let named = [
                 ("category", Arg::from(category.as_str())),
                 ("search", Arg::from(search.as_str())),
@@ -198,7 +284,7 @@ impl DiscoverPage {
             let all = i18n::text_with(
                 &ctx,
                 "discover-show-all-matches",
-                &[("count", Arg::from(count))],
+                &[("count", Arg::from(matches))],
             );
 
             if empty_state_action(ui, icons::SYSTEM_SEARCH, &title, &detail, &all).clicked() {
@@ -227,80 +313,49 @@ fn listed(context: &PageContext<'_>) -> bool {
     context.catalogs.apps.apps.all().next().is_some()
 }
 
-fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>) {
-    let ctx = ui.ctx().clone();
-    if let Some(problem) = problem {
-        let reason = i18n::text(&ctx, &format!("toggles-problem-{}", problem.code));
-        let text = i18n::text_with(
-            &ctx,
-            "discover-problem-reason",
-            &[("reason", Arg::from(&reason))],
-        );
-
-        banner(ui, Tone::Warning, &text, &[]);
-
-        ui.add_space(ui.tokens().sizes.card_gap);
-    }
-
-    let refused = context
-        .service::<TogglePages>()
-        .app_refusal()
-        .and_then(|refused| refusal_text(&ctx, refused));
-
-    if let Some(text) = refused
-        && refusal_banner(ui, Tone::Warning, &text, "toggles-dismiss")
-    {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Discover));
-    }
-
-    // Without the installed packages every switch shows off, and switching
-    // an installed app on would queue nothing.
-    if context.probed && context.snapshot.part::<InstalledPackages>().is_none() {
-        let again = i18n::text(&ctx, "common-read-again");
-        let text = i18n::text(&ctx, "discover-unreadable");
-        if banner(ui, Tone::Warning, &text, &[&again]).value.is_some() {
-            context.commands.send(AppCommand::ReadSystem);
-        }
-
-        ui.add_space(ui.tokens().sizes.card_gap);
-    }
-}
-
 /// A category's name in the user's language, else the catalog's English.
 pub fn category_title(ctx: &egui::Context, id: &str, english: &str) -> String {
     i18n::text_or(ctx, &format!("discover-category-{id}"), english).into_owned()
 }
 
-/// Whether the revealed app is done with, so the page stops asking for it.
+/// Draws the categories under their headings. Returns whether the revealed
+/// app is done with, so the page stops asking for it, and the app whose row
+/// asked for its details. Beside the details the rows are one line tall.
 fn show_groups(
     ui: &mut Ui,
     context: &PageContext<'_>,
     groups: &[AppGroup],
-    revealing: Option<&str>,
-) -> bool {
+    revealing: Option<&Reveal>,
+    selected: Option<&str>,
+) -> (bool, Option<Open>) {
+    let beside = selected.is_some();
+
     // A description of one line makes a shorter row than one of two, so
     // each row is measured and keeps the card row's padding.
-    let heights = RowHeights::Measured {
-        estimate: row::height(ui),
+    let heights = if beside {
+        RowHeights::Fixed(row::compact_height(ui))
+    } else {
+        RowHeights::Measured {
+            estimate: row::height(ui),
+        }
     };
 
     let _rows = tracing::trace_span!("rows").entered();
-    let revealed = revealing.and_then(|title| {
+    let revealed = revealing.and_then(|reveal| {
         groups
             .iter()
             .flat_map(|group| &group.rows)
-            .find(|row| row.title == title)
+            .find(|row| reveal.finds(row))
             .map(|row| row.id.clone())
     });
 
     let start = ui.cursor().top();
     let mut marks = Vec::with_capacity(groups.len());
     let mut holds = false;
+    let mut opened = None;
     for group in groups {
         let top = ui.cursor().top() - start;
-        section_heading(ui, group.icon, &group.title, &group.count);
+        section_heading(ui, &group.title, &group.count);
         let heading_bottom = ui.cursor().top() - start;
         ui.add_space(ui.tokens().sizes.heading_gap);
 
@@ -310,8 +365,14 @@ fn show_groups(
 
         holds |= RowList::new(&group.id, &group.title, heights)
             .reveal(reveal)
+            .selected(selected)
             .show(ui, group.rows.as_slice(), |ui, app, state| {
-                dimmed(ui, context.busy, |ui| row::show(ui, context, app, state));
+                dimmed(ui, context.busy, |ui| {
+                    let asked = row::show(ui, context, app, state, beside);
+                    if asked && opened.is_none() {
+                        opened = Some(Open { id: app.id.clone() });
+                    }
+                });
             });
 
         marks.push(sticky::Mark {
@@ -327,5 +388,5 @@ fn show_groups(
 
     // Asked again until the row holds the focus. An app the list does
     // not show is not waited for.
-    holds || revealed.is_none()
+    (holds || revealed.is_none(), opened)
 }

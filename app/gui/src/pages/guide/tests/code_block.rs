@@ -109,7 +109,7 @@ fn the_copy_button_sits_in_the_blocks_top_right_corner() {
 
     let block = block_rects(&harness)[0];
     let button = harness
-        .get_by_role_and_label(Role::Button, "Copy code")
+        .get_by_role_and_label(Role::Button, "Copy Code")
         .rect();
 
     assert!(block.contains_rect(button), "{button:?} in {block:?}");
@@ -125,7 +125,7 @@ fn a_hovered_block_copies_its_text_and_says_so() {
 
     hover_first(&mut harness);
     harness
-        .query_all_by_role_and_label(Role::Button, "Copy code")
+        .query_all_by_role_and_label(Role::Button, "Copy Code")
         .next()
         .expect("a copy button")
         .click();

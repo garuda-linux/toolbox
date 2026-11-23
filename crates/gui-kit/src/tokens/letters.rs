@@ -12,8 +12,9 @@ use std::array;
 
 use egui::{Color32, Theme};
 
+use super::readability::Ends;
 use super::{Tile, contrast, mix};
-use crate::oklch::{from_oklch, hue_chroma, lightness};
+use crate::oklch::{from_oklch, hue_chroma, lightness, with_lightness};
 use crate::palette::{Palette, letter_hues};
 
 pub const LETTER_HUES: usize = 8;
@@ -39,6 +40,8 @@ const LIGHTNESS_REACH: f32 = 0.03;
 /// it the eight hues blur together, above it most hues leave sRGB at the
 /// tiles' lightness and would differ in strength.
 const CHROMA_SCALE: (f32, f32) = (0.5, 1.5);
+/// How far a tile stands from the card at least (WCAG 1.4.11).
+const TILE_APART: f32 = 1.5;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct LetterTiles {
@@ -46,18 +49,19 @@ pub struct LetterTiles {
 }
 
 impl LetterTiles {
-    /// The letter is white or `text`, whichever reads better on the fill,
-    /// so a desktop text colour that happens to read best is kept.
-    pub(super) fn derive(palette: &Palette, text: Color32, theme: Theme) -> Self {
+    /// The letter is the theme's text, which stands in for white on a fill.
+    pub(super) fn derive(palette: &Palette, card: Color32, ends: Ends, theme: Theme) -> Self {
         let fills = if *palette == Palette::fallback(theme) {
             letter_hues(theme)
         } else {
-            scheme_fills(palette, text, theme)
+            scheme_fills(palette, theme)
         };
+
+        let fills = fills.map(|fill| tile_fill(fill, card, ends));
 
         let tiles = fills.map(|fill| Tile {
             fill,
-            ink: ink_on(fill, text),
+            ink: ink_on(fill, ends),
         });
 
         Self { tiles }
@@ -74,11 +78,11 @@ impl LetterTiles {
 
 /// The scheme's hues first, in the order of [`scheme_hues`], then turns of
 /// the accent, each at the lightness and chroma of [`softness`].
-fn scheme_fills(palette: &Palette, text: Color32, theme: Theme) -> [Color32; LETTER_HUES] {
+fn scheme_fills(palette: &Palette, theme: Theme) -> [Color32; LETTER_HUES] {
     let (light, chroma) = softness(palette, theme);
     let hues = scheme_hues(palette);
 
-    hues.map(|hue| readable(from_oklch(light, chroma, hue), text))
+    hues.map(|hue| from_oklch(light, chroma, hue))
 }
 
 /// The lightness and chroma of every fill: the fallback fills', moved by
@@ -177,23 +181,61 @@ fn farthest_turn(accent: f32, taken: &[f32]) -> f32 {
 }
 
 /// The angle between two hues, 0 to 180.
-fn gap(one: f32, other: f32) -> f32 {
+pub(super) fn gap(one: f32, other: f32) -> f32 {
     let turn = (one - other).rem_euclid(360.0);
     turn.min(360.0 - turn)
 }
 
-/// `fill`, darkened until its letter reaches [`LETTER_CONTRAST`]. A turned
-/// hue at the same OKLCH lightness can sit a little lighter in WCAG terms.
-fn readable(fill: Color32, text: Color32) -> Color32 {
-    (0_u8..=20)
-        .map(|step| mix(fill, Color32::BLACK, f32::from(step) / 40.0))
-        .find(|candidate| contrast(ink_on(*candidate, text), *candidate) >= LETTER_CONTRAST)
+/// `fill`, darkened toward the shadow shade until the theme's text on it
+/// reaches [`LETTER_CONTRAST`]. A turned hue at the same OKLCH lightness can
+/// sit a little lighter in WCAG terms.
+fn readable(fill: Color32, ends: Ends) -> Color32 {
+    toward_shade(fill, ends.shadow)
+        .find(|candidate| reads(*candidate, ends))
+        .or_else(|| (!reads(ends.shadow, ends)).then(|| darker_of_its_hue(fill, ends))?)
         .unwrap_or(fill)
 }
 
-fn ink_on(fill: Color32, text: Color32) -> Color32 {
-    [Color32::WHITE, text]
-        .into_iter()
-        .max_by(|one, other| contrast(*one, fill).total_cmp(&contrast(*other, fill)))
-        .unwrap_or(Color32::WHITE)
+/// `fill` at the nearest lower OKLCH lightness its letter reads on, its hue
+/// kept. KDE's shade of a near-white window is a mid grey that no letter
+/// reads on, so the shadow shade cannot stand for black there.
+fn darker_of_its_hue(fill: Color32, ends: Ends) -> Option<Color32> {
+    let own = lightness(fill);
+    (1_u8..=100)
+        .map(|step| with_lightness(fill, own - f32::from(step) / 100.0))
+        .find(|candidate| reads(*candidate, ends))
+}
+
+fn reads(fill: Color32, ends: Ends) -> bool {
+    contrast(ink_on(fill, ends), fill) >= LETTER_CONTRAST
+}
+
+/// Whichever of the theme's text and window reads better on `fill`, so each
+/// tile takes the ink its own hue needs.
+fn ink_on(fill: Color32, ends: Ends) -> Color32 {
+    if contrast(ends.text, fill) >= contrast(ends.window, fill) {
+        ends.text
+    } else {
+        ends.window
+    }
+}
+
+/// The fill of a tile, darkened toward the shadow shade until its letter
+/// reads and until it stands [`TILE_APART`] from the card, within half way of
+/// the shadow shade. Fallback and scheme tiles take the same darkening.
+fn tile_fill(fill: Color32, card: Color32, ends: Ends) -> Color32 {
+    let lettered = readable(fill, ends);
+    let furthest = toward_shade(lettered, ends.shadow)
+        .find(|candidate| contrast(*candidate, card) >= TILE_APART);
+
+    furthest.unwrap_or_else(|| {
+        toward_shade(lettered, ends.shadow)
+            .max_by(|one, other| contrast(*one, card).total_cmp(&contrast(*other, card)))
+            .unwrap_or(lettered)
+    })
+}
+
+/// `fill` moved toward the shadow shade in steps, half way at the last.
+fn toward_shade(fill: Color32, shadow: Color32) -> impl Iterator<Item = Color32> {
+    (0_u8..=20).map(move |step| mix(fill, shadow, f32::from(step) / 40.0))
 }

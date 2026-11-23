@@ -10,9 +10,8 @@ use toolbox_core::features::discover::package;
 use toolbox_core::features::discover::view::{Group, Shown};
 use toolbox_core::features::toggles::shown::{self as toggled, Control};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
-use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::{ListItem, highlighted};
+use toolbox_gui_kit::widgets::{ListItem, Tone, highlighted};
 use toolbox_plan::PackageName;
 
 use super::category_title;
@@ -26,7 +25,6 @@ use crate::pages::toggles::control as row_control;
 pub struct AppGroup {
     pub id: String,
     pub title: String,
-    pub icon: Icon,
     /// How many apps it lists.
     pub count: String,
     pub rows: Vec<AppRow>,
@@ -40,6 +38,8 @@ pub struct AppRow {
     pub name: String,
     pub title_job: Arc<LayoutJob>,
     pub description: Arc<LayoutJob>,
+    /// The description on one line, for a row beside the details.
+    pub summary: Arc<LayoutJob>,
     pub queued: Option<Cow<'static, str>>,
     /// Why the protected catalog keeps the installed app.
     pub kept: Option<Cow<'static, str>>,
@@ -70,7 +70,6 @@ impl AppGroup {
         Self {
             id: category.id().to_owned(),
             title: category_title(ctx, category.id(), category.title()),
-            icon: icons::named(category.icon()).unwrap_or(icons::PLUGINS),
             count: group.rows.len().to_string(),
             rows: group
                 .rows
@@ -92,6 +91,7 @@ impl AppRow {
 
         let small = fonts::font(ui.style(), Weight::Regular, SMALL);
         let words = highlighted(ui, entry.description(), query, small, tokens.secondary);
+        let summary = row_control::cut_to(words.clone(), 1);
         let description = row_control::cut(words);
         let control = toggled::control(entry.check(), shown.state);
         let queued = shown
@@ -117,6 +117,7 @@ impl AppRow {
             name,
             title_job: Arc::new(title_job),
             description: Arc::new(description),
+            summary: Arc::new(summary),
             queued,
             kept,
             installed,
@@ -127,6 +128,19 @@ impl AppRow {
             menu: i18n::text_with(ctx, "discover-actions", &[("name", Arg::from(&title))])
                 .into_owned(),
             title,
+        }
+    }
+}
+
+impl AppRow {
+    /// What waits for the app or keeps it, beside its name. A queued change
+    /// comes first, then a kept app, then an installed one.
+    pub fn note(&self) -> Option<(&str, Tone)> {
+        match (&self.queued, &self.kept, &self.installed) {
+            (Some(queued), _, _) => Some((queued, Tone::Accent)),
+            (None, Some(kept), _) => Some((kept, Tone::Neutral)),
+            (None, None, Some(installed)) => Some((installed, Tone::Success)),
+            (None, None, None) => None,
         }
     }
 }

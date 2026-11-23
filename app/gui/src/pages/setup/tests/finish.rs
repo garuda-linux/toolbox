@@ -4,7 +4,7 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::ChangeSet;
 
-use super::{page, shows, strawberry, succeeded};
+use super::{WELCOME_NOTE, page, shows, strawberry, succeeded};
 use crate::pages::Plans;
 use crate::pages::setup::Stage;
 
@@ -35,7 +35,7 @@ fn a_step_that_no_longer_lists_starts_over_at_the_welcome() {
         Stage::Step("gone".to_owned()),
     );
 
-    assert!(shows(&harness, "Welcome to the Setup Assistant"));
+    assert!(shows(&harness, WELCOME_NOTE));
 }
 
 #[test]
@@ -72,7 +72,7 @@ fn finish_without_picks_after_an_apply_recommends_no_restart() {
     harness.run();
     assert!(shows(&harness, "A restart is recommended"));
 
-    harness.get_by_label("Finish setup").click();
+    harness.get_by_label("Finish Setup").click();
     harness.run();
     harness.state_mut().page.stage = Stage::Summary;
     harness.run();

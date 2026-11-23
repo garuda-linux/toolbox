@@ -70,7 +70,7 @@ fn queued_changes_come_first_and_push_out_the_last_step() {
         ..PageFixture::default()
     });
 
-    assert!(link(&harness, "Review changes"));
+    assert!(link(&harness, "Review Changes"));
     assert!(link(&harness, "Setup Assistant"));
     assert!(!link(&harness, "Diagnostics"), "only three steps fit");
 }
@@ -82,7 +82,7 @@ fn the_pages_used_last_open_from_their_chips() {
         ..PageFixture::default()
     });
 
-    assert!(harness.query_by_label("Recently used").is_some());
+    assert!(harness.query_by_label("Recently Used").is_some());
     harness
         .get_by_role_and_label(Role::Button, "Network")
         .click();
@@ -98,7 +98,7 @@ fn the_pages_used_last_open_from_their_chips() {
 fn without_pages_used_last_there_is_no_row() {
     let harness = page(PageFixture::default());
 
-    assert!(harness.query_by_label("Recently used").is_none());
+    assert!(harness.query_by_label("Recently Used").is_none());
 }
 
 fn news(posts: Vec<Post>) -> Loadable<News> {
@@ -301,7 +301,7 @@ fn a_part_that_draws_nothing_leaves_a_single_gap() {
         .get_by_role_and_label(Role::Link, "Updates: Not known")
         .rect();
 
-    let next = harness.get_by_label("Next steps").rect();
+    let next = harness.get_by_label("Next Steps").rect();
 
     let gap = toolbox_gui_kit::tokens::current(&harness.ctx)
         .sizes
@@ -328,7 +328,7 @@ fn three_steps_share_one_line() {
         ..PageFixture::default()
     });
 
-    let tops: Vec<f32> = ["Review changes", "Setup Assistant", "Maintenance"]
+    let tops: Vec<f32> = ["Review Changes", "Setup Assistant", "Maintenance"]
         .iter()
         .map(|name| harness.get_by_role_and_label(Role::Link, name).rect().top())
         .collect();
@@ -354,7 +354,11 @@ fn the_summary_is_one_line_of_the_small_size() {
         .map(|part| part.format.font_id.size)
         .collect();
 
-    assert_eq!(sizes, [small, small]);
+    assert!(!sizes.is_empty(), "the summary has no sections");
+    assert!(
+        sizes.iter().all(|size| (*size - small).abs() < 0.01),
+        "{sizes:?}"
+    );
     assert_eq!(shape.galley.rows.len(), 1);
     assert!(harness.query_by_label(SUMMARY).is_some());
 }

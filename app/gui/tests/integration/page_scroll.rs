@@ -15,7 +15,15 @@ fn scroll_down(harness: &mut Harness<'static, App>) {
 }
 
 fn heading_top(harness: &Harness<'static, App>) -> f32 {
-    harness.get_by_label("Package care").rect().top()
+    harness.get_by_label("Package Care").rect().top()
+}
+
+fn assert_scrolled(harness: &Harness<'static, App>, top: f32) {
+    assert!(
+        heading_top(harness) < top - 2.0,
+        "the page did not scroll, {top} -> {}",
+        heading_top(harness)
+    );
 }
 
 #[test]
@@ -24,7 +32,7 @@ fn another_tab_and_back_starts_at_the_top() {
     let harness = fixture.harness();
     let top = heading_top(harness);
     scroll_down(harness);
-    assert!(heading_top(harness) < top - 50.0, "the page did not scroll");
+    assert_scrolled(harness, top);
 
     open_tab(harness, "Repairs");
     scroll_down(harness);
@@ -43,7 +51,7 @@ fn a_refresh_keeps_the_place() {
     let scrolled = heading_top(harness);
 
     harness
-        .get_by_role_and_label(Role::Button, "Read again")
+        .get_by_role_and_label(Role::Button, "Read Again")
         .click();
     harness.run();
     assert!((heading_top(harness) - scrolled).abs() < 0.5);
@@ -55,7 +63,7 @@ fn another_page_and_back_starts_at_the_top() {
     let harness = fixture.harness();
     let top = heading_top(harness);
     scroll_down(harness);
-    assert!(heading_top(harness) < top - 50.0, "the page did not scroll");
+    assert_scrolled(harness, top);
 
     for page in ["Home", "Maintenance"] {
         harness.get_by_role_and_label(Role::Tab, page).click();

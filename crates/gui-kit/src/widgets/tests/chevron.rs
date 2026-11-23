@@ -28,14 +28,21 @@ fn dropdown(less_motion: bool) -> Harness<'static> {
 /// How far the chevron turned, from 0 to π, by the top edge of its glyph:
 /// a turned glyph is a mesh, one at rest a tinted rectangle.
 fn turn(harness: &Harness<'_>) -> f32 {
-    let secondary = tokens::current(&harness.ctx).secondary;
+    // Darkly's arrow of a closed box takes the highlighted text while the
+    // list is open (darklystyle.cpp:7817-7820), and at rest it is the
+    // mix toward the view colour.
+    let tokens = tokens::current(&harness.ctx);
+    let rest = tokens::mix(tokens.text, tokens.view, 0.15);
+
+    // A focused box shows its arrow in the colour that reads on the focus fill.
+    let inks = [rest, tokens.highlighted_text, tokens.on_focus];
     let turned = painted(harness).into_iter().find_map(|shape| {
         let Shape::Mesh(mesh) = shape else {
             return None;
         };
 
         match (mesh.vertices.first(), mesh.vertices.get(1)) {
-            (Some(first), Some(second)) if first.color == secondary => {
+            (Some(first), Some(second)) if inks.contains(&first.color) => {
                 Some((second.pos - first.pos).angle().abs())
             }
             (Some(_) | None, Some(_) | None) => None,
@@ -43,7 +50,11 @@ fn turn(harness: &Harness<'_>) -> f32 {
     });
 
     turned.unwrap_or_else(|| {
-        assert!(!tinted_rects(harness, secondary).is_empty(), "no chevron");
+        assert!(
+            inks.iter()
+                .any(|ink| !tinted_rects(harness, *ink).is_empty()),
+            "no chevron"
+        );
         0.0
     })
 }

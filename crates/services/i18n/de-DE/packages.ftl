@@ -73,10 +73,10 @@ packages-remove-note = Das Entfernen bleibt vorgemerkt. Sobald es läuft, zeigt 
 packages-cancel = Abbrechen
 
 # The -name texts are what screen readers say.
-packages-back = ← Pakete
+packages-back = Pakete
 packages-back-name = Zurück zu den Paketen
 # $package is the package the page was opened from.
-packages-back-to = ← { $package }
+packages-back-to = { $package }
 packages-back-to-name = Zurück zu { $package }
 packages-more = +{ $count } weitere
 packages-more-name = { $count } weitere anzeigen

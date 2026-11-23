@@ -2,32 +2,27 @@ mod layout;
 
 use std::time::Duration;
 
-use egui::ViewportId;
 use egui::accesskit::Role;
+use egui::{Ui, ViewportId};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
-use super::{OFFSET, ToastKind, ToastTexts, Toasts, raise};
+use super::{ToastKind, ToastTexts, Toasts, raise};
 use crate::testing::harness;
 use crate::tokens::Sizes;
 use crate::widgets::{SearchTexts, page_header, page_toolbar, search_field};
 
-/// Around a note's text, at least its frame's inner margin.
-const FRAME_MARGIN: f32 = 14.0;
-
 const TEXTS: ToastTexts<'static> = ToastTexts {
     name: "Notification",
-    close: "Close",
 };
 
+fn draw(ui: &mut Ui, toasts: &mut Toasts) {
+    let page = ui.max_rect();
+    toasts.show(ui.ctx(), page, TEXTS);
+}
+
 fn shown(toasts: Toasts) -> Harness<'static, Toasts> {
-    let mut harness = harness(800.0, 400.0).build_ui_state(
-        |ui, toasts: &mut Toasts| {
-            let page = ui.max_rect();
-            toasts.show(ui.ctx(), page, TEXTS);
-        },
-        toasts,
-    );
+    let mut harness = harness(800.0, 400.0).build_ui_state(draw, toasts);
 
     harness.run_steps(2);
     harness
@@ -46,26 +41,41 @@ fn with(kind: ToastKind, text: &str) -> Toasts {
 }
 
 #[test]
-fn a_note_is_an_alert_with_its_text() {
+fn a_note_is_a_status_message_with_its_text_and_a_failure_an_alert() {
     let harness = shown(with(ToastKind::Info, "The link did not open."));
-
     assert!(
         harness
-            .query_by_role_and_label(Role::Alert, "Notification: The link did not open.")
+            .query_by_role_and_label(Role::Status, "Notification: The link did not open.")
             .is_some()
     );
-    assert!(harness.query_by_label("The link did not open.").is_some());
+
+    let error = shown(with(ToastKind::Error, "Firefox did not start."));
+    assert!(
+        error
+            .query_by_role_and_label(Role::Alert, "Notification: Firefox did not start.")
+            .is_some()
+    );
 }
 
 #[test]
-fn an_info_note_goes_after_four_seconds() {
+fn a_note_goes_after_seven_seconds_as_kirigami_times_it() {
     let mut harness = shown(with(ToastKind::Info, "Copied"));
 
-    // The first frames took a moment already.
-    later(&mut harness, 2.0);
+    later(&mut harness, 5.5);
     assert_eq!(harness.state().texts(), ["Copied"]);
 
-    later(&mut harness, 2.5);
+    later(&mut harness, 1.5);
+    assert!(harness.state().is_empty());
+}
+
+#[test]
+fn an_error_has_no_longer_timeout_than_a_note() {
+    let mut harness = shown(with(ToastKind::Error, "Firefox did not start."));
+
+    later(&mut harness, 5.5);
+    assert_eq!(harness.state().texts(), ["Firefox did not start."]);
+
+    later(&mut harness, 1.5);
     assert!(harness.state().is_empty());
 }
 
@@ -81,7 +91,7 @@ fn a_note_raised_after_an_idle_window_is_still_there_on_its_first_frame() {
 }
 
 #[test]
-fn hovering_an_info_note_keeps_it() {
+fn hovering_a_note_keeps_it() {
     let mut harness = shown(with(ToastKind::Info, "Copied"));
     harness.get_by_label("Copied").hover();
     harness.step();
@@ -92,21 +102,15 @@ fn hovering_an_info_note_keeps_it() {
 }
 
 #[test]
-fn an_error_goes_after_ten_seconds() {
+fn a_click_closes_a_note_and_it_has_no_close_button() {
     let mut harness = shown(with(ToastKind::Error, "Firefox did not start."));
+    assert!(
+        harness
+            .query_by_role_and_label(Role::Button, "Close")
+            .is_none()
+    );
 
-    later(&mut harness, 8.0);
-    assert_eq!(harness.state().texts(), ["Firefox did not start."]);
-
-    later(&mut harness, 2.5);
-    assert!(harness.state().is_empty());
-}
-
-#[test]
-fn an_error_can_be_closed_sooner() {
-    let mut harness = shown(with(ToastKind::Error, "Firefox did not start."));
-
-    harness.get_by_role_and_label(Role::Button, "Close").click();
+    harness.get_by_label("Firefox did not start.").click();
     harness.step();
     later(&mut harness, 0.1);
     later(&mut harness, 0.1);
@@ -114,28 +118,17 @@ fn an_error_can_be_closed_sooner() {
 }
 
 #[test]
-fn an_info_note_has_no_close_button() {
-    let harness = shown(with(ToastKind::Info, "Copied"));
-
-    assert!(
-        harness
-            .query_by_role_and_label(Role::Button, "Close")
-            .is_none()
-    );
-}
-
-#[test]
-fn notes_stack_downward_from_the_top_right() {
-    let mut toasts = with(ToastKind::Error, "First");
-    toasts.add(ToastKind::Error, "Second");
+fn notes_stack_up_from_the_bottom_centre_with_the_newest_on_top() {
+    let mut toasts = with(ToastKind::Info, "First");
+    toasts.add(ToastKind::Info, "Second");
     let harness = shown(toasts);
 
     let first = harness.get_by_label("First").rect();
     let second = harness.get_by_label("Second").rect();
 
-    assert!(second.min.y > first.max.y, "{first:?} {second:?}");
-    assert!(first.min.x > 400.0, "at the right: {first:?}");
-    assert!(first.min.y < 100.0, "{first:?}");
+    assert!(second.max.y < first.min.y, "{first:?} {second:?}");
+    assert!(first.max.y > 360.0, "at the bottom: {first:?}");
+    assert!((first.center().x - 400.0).abs() < 1.0, "{first:?}");
 }
 
 #[test]
@@ -149,7 +142,7 @@ fn a_widget_raises_a_note_through_the_context() {
 }
 
 #[test]
-fn notes_start_beside_the_title_even_with_a_header_and_toolbar() {
+fn notes_sit_at_the_bottom_of_the_page_under_a_header_and_toolbar_too() {
     let mut harness = harness(800.0, 400.0).build_ui_state(
         |ui, (toasts, search): &mut (Toasts, String)| {
             let page = ui.max_rect();
@@ -185,29 +178,13 @@ fn notes_start_beside_the_title_even_with_a_header_and_toolbar() {
 
     harness.run_steps(2);
 
-    let top = harness
+    let bottom = harness
         .get_by_label("The services could not be read.")
         .rect()
-        .min
+        .max
         .y;
 
-    let bare = shown(with(ToastKind::Error, "The services could not be read."));
-    let bare_top = top_of(&bare, "The services could not be read.");
-
-    assert!(
-        (top - bare_top).abs() < 0.5,
-        "the note starts at {top}, on a bare page at {bare_top}"
-    );
-    assert!(bare_top - FRAME_MARGIN < OFFSET.y * 3.0, "{bare_top}");
-}
-
-#[test]
-fn without_a_page_header_notes_keep_to_the_page_top() {
-    let harness = shown(with(ToastKind::Error, "First"));
-
-    let note = harness.get_by_label("First").rect();
-
-    assert!(note.min.y < 70.0, "{note:?}");
+    assert!(bottom > 360.0, "the note ends at {bottom}");
 }
 
 /// Notes drawn at sixty frames a second, so a motion takes frames.
@@ -215,13 +192,7 @@ fn smooth(toasts: Toasts) -> Harness<'static, Toasts> {
     harness(800.0, 400.0)
         .with_step_dt(1.0 / 60.0)
         .with_max_steps(60)
-        .build_ui_state(
-            |ui, toasts: &mut Toasts| {
-                let page = ui.max_rect();
-                toasts.show(ui.ctx(), page, TEXTS);
-            },
-            toasts,
-        )
+        .build_ui_state(draw, toasts)
 }
 
 fn top_of(harness: &Harness<'static, Toasts>, text: &str) -> f32 {
@@ -232,7 +203,7 @@ fn top_of(harness: &Harness<'static, Toasts>, text: &str) -> f32 {
 fn a_new_note_drops_into_place() {
     let mut harness = smooth(Toasts::default());
     harness.run();
-    harness.state_mut().add(ToastKind::Error, "First");
+    harness.state_mut().add(ToastKind::Info, "First");
     harness.step();
     harness.step();
     let entering = top_of(&harness, "First");
@@ -245,11 +216,11 @@ fn a_new_note_drops_into_place() {
 }
 
 #[test]
-fn a_closed_note_fades_before_it_goes() {
-    let mut harness = smooth(with(ToastKind::Error, "First"));
+fn a_clicked_note_fades_before_it_goes() {
+    let mut harness = smooth(with(ToastKind::Info, "First"));
     harness.run();
 
-    harness.get_by_role_and_label(Role::Button, "Close").click();
+    harness.get_by_label("First").click();
     harness.step();
     harness.step();
     assert_eq!(harness.state().texts(), ["First"], "still fading");
@@ -259,19 +230,15 @@ fn a_closed_note_fades_before_it_goes() {
 }
 
 #[test]
-fn the_notes_below_a_closed_one_move_up_rather_than_jump() {
-    let mut toasts = with(ToastKind::Error, "First");
-    toasts.add(ToastKind::Error, "Second");
+fn the_notes_above_a_closed_one_move_down_rather_than_jump() {
+    let mut toasts = with(ToastKind::Info, "First");
+    toasts.add(ToastKind::Info, "Second");
     let mut harness = smooth(toasts);
     harness.run();
-    let below = top_of(&harness, "Second");
+    let above = top_of(&harness, "Second");
     let first = top_of(&harness, "First");
 
-    harness
-        .get_all_by_role_and_label(Role::Button, "Close")
-        .next()
-        .unwrap()
-        .click();
+    harness.get_by_label("First").click();
     while harness.state().texts().len() > 1 {
         harness.step();
     }
@@ -279,8 +246,8 @@ fn the_notes_below_a_closed_one_move_up_rather_than_jump() {
     harness.step();
     let moving = top_of(&harness, "Second");
     assert!(
-        moving < below && moving > first,
-        "{first} < {moving} < {below}"
+        above < moving && moving < first,
+        "{above} < {moving} < {first}"
     );
 
     harness.run();
@@ -292,7 +259,7 @@ fn with_less_motion_a_note_shows_and_goes_at_once() {
     let mut harness = smooth(Toasts::default());
     crate::theme::set_reduced_motion(&harness.ctx, true);
     harness.run();
-    harness.state_mut().add(ToastKind::Error, "First");
+    harness.state_mut().add(ToastKind::Info, "First");
     harness.step();
     harness.step();
     let resting = top_of(&harness, "First");
@@ -303,7 +270,7 @@ fn with_less_motion_a_note_shows_and_goes_at_once() {
     // Only the countdown asks for a frame, no motion does.
     assert!(repaint_delay(&harness) > Duration::from_secs(1));
 
-    harness.get_by_role_and_label(Role::Button, "Close").click();
+    harness.get_by_label("First").click();
     harness.step();
     assert!(harness.state().is_empty());
 }
@@ -317,7 +284,7 @@ fn repaint_delay(harness: &Harness<'static, Toasts>) -> Duration {
 }
 
 #[test]
-fn an_info_note_waits_while_the_window_is_away() {
+fn a_note_waits_while_the_window_is_away() {
     let mut harness = shown(with(ToastKind::Info, "Copied"));
     harness.input_mut().focused = false;
 
@@ -325,12 +292,12 @@ fn an_info_note_waits_while_the_window_is_away() {
     assert_eq!(harness.state().texts(), ["Copied"]);
 
     harness.input_mut().focused = true;
-    later(&mut harness, 4.5);
+    later(&mut harness, 7.5);
     assert!(harness.state().is_empty());
 }
 
 #[test]
-fn an_info_note_still_shows_on_the_frame_the_window_comes_back() {
+fn a_note_still_shows_on_the_frame_the_window_comes_back() {
     let mut harness = shown(with(ToastKind::Info, "Copied"));
     harness.input_mut().focused = false;
     harness.step();
@@ -339,6 +306,23 @@ fn an_info_note_still_shows_on_the_frame_the_window_comes_back() {
     later(&mut harness, 10.0);
     assert_eq!(harness.state().texts(), ["Copied"]);
 
-    later(&mut harness, 4.5);
+    later(&mut harness, 7.5);
     assert!(harness.state().is_empty());
+}
+
+#[test]
+fn at_most_four_notes_stay_open_and_a_fifth_takes_the_place_of_the_oldest() {
+    let mut toasts = Toasts::default();
+    for text in ["one", "two", "three", "four", "five"] {
+        toasts.add(ToastKind::Info, text);
+    }
+
+    let open: Vec<&str> = toasts
+        .shown
+        .iter()
+        .filter(|toast| !toast.leaving())
+        .map(|toast| toast.text.as_str())
+        .collect();
+
+    assert_eq!(open, ["two", "three", "four", "five"]);
 }

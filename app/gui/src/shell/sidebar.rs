@@ -5,22 +5,23 @@
 
 mod density;
 mod edges;
+mod head;
 mod reading;
 
-use egui::{Frame, Panel, Ui, UiBuilder};
-use toolbox_gui_kit::fonts::Weight;
+use egui::{Frame, Margin, Panel, Rect, Ui, UiBuilder, pos2};
 use toolbox_gui_kit::theme::SIDEBAR_WIDTH;
 use toolbox_gui_kit::widgets::{
-    EdgeFade, NAV_INSET, group_label, group_label_height, nav_divider, nav_divider_height, nav_row,
-    rich, sidebar_button,
+    EdgeFade, HIGHLIGHT_TOP, NAV_ICON, group_label, group_label_height, nav_divider,
+    nav_divider_height, nav_row,
 };
-use toolbox_gui_kit::{UiExt as _, icons, motion, tokens};
+use toolbox_gui_kit::{UiExt as _, motion};
 
 use self::density::Density;
 use self::edges::{
     cut_edges, entries_end, list_area, newly_current, reveal, scroll_by, section_hides, side_edge,
+    strength,
 };
-use super::PANE_TITLE;
+use self::head::{keep_entries_right, rail_toggle, search};
 use crate::command::{CommandSender, UiCommand};
 use crate::i18n;
 use crate::page::{Group, PageId};
@@ -38,9 +39,9 @@ struct Listed {
     /// divider or entry hides, so the fade starts there.
     end: Option<f32>,
     /// The open page's entry, which no fade covers.
-    open: Option<egui::Rect>,
+    open: Option<Rect>,
     /// The collapsed rail draws an entry cut by the bottom edge. No fade
-    /// covers it there, its own keeps the half icon in sight.
+    /// covers it there, its own keeps the cut icon in sight.
     cut: bool,
 }
 
@@ -54,9 +55,17 @@ pub fn show(
     commands: &CommandSender,
 ) {
     let tokens = ui.tokens();
-    let frame = Frame::new()
-        .fill(tokens.sidebar)
-        .inner_margin(tokens.sizes.sidebar_padding);
+    let padding = tokens.sizes.sidebar_padding;
+    let frame = Frame::new().fill(tokens.sidebar).inner_margin(padding);
+
+    // An entry's own 2 px margins are its frame's, so the entries reach the
+    // sidebar's edges, as Breeze's item views do. The sidebar's own lines
+    // stay `NAV_INSET` in.
+    let flush = Frame::new().fill(tokens.sidebar).inner_margin(Margin {
+        left: 0,
+        right: 0,
+        ..padding
+    });
 
     let collapsed_panel = Panel::left("sidebar-collapsed")
         .resizable(false)
@@ -73,7 +82,7 @@ pub fn show(
     let expanded_panel = Panel::left(EXPANDED_SALT)
         .resizable(false)
         .show_separator_line(false)
-        .frame(frame)
+        .frame(flush)
         .exact_size(SIDEBAR_WIDTH);
 
     let sizes = tokens.sizes;
@@ -84,95 +93,75 @@ pub fn show(
         expanded_panel,
         |ui, show_labels| {
             ui.name_pane(&i18n::text(ui.ctx(), "pane-sidebar"));
-            title(ui, show_labels, commands);
-            let density = Density::fitting(ui, &sizes, show_labels, ui.available_height());
-            search(ui, density, commands);
+            if !show_labels {
+                rail_toggle(ui, commands);
+            }
+
+            // The reading note is a row of its own below the list, so the
+            // list packs into what it leaves.
+            let reading_row = if reading { sizes.nav_row_height } else { 0.0 };
+            let available = ui.available_height() - reading_row;
+            let density = Density::fitting(ui, &sizes, show_labels, available);
+            search(ui, density, show_labels, commands);
             ui.add_space(density.top_gap);
 
-            // The foot keeps its room first and draws after the list, so
-            // the keyboard meets the pages in the order they show.
-            let label = group_label_height(ui, density.compact);
-            let foot = Panel::bottom("sidebar-app")
-                .show_separator_line(false)
-                .frame(Frame::NONE)
-                .exact_size(density.pages_height(ui.ctx(), label, true))
-                .show(ui, |ui| ui.max_rect())
-                .inner;
-
-            if reading {
-                reading::show(ui, density.row, show_labels);
-            }
-
-            // `cut_edges` lays the fade in the sidebar's own fill, egui's
-            // would come on top.
-            ui.spacing_mut().scroll.fade.strength = 0.0;
-            let height = density.pages_height(ui.ctx(), label, false);
-
-            // Read every frame, also while an app page is open and no entry
-            // of the list is, so a return to the same page reveals it again.
-            if newly_current(ui, current) {
-                ui.data_mut(|data| data.insert_temp(revealing_id(), REVEAL_FRAMES));
-            }
-
-            let list = list_area(ui).show(ui, |ui| {
-                let fade = EdgeFade::of(ui, height, density.row);
-                pages(ui, current, density, commands, Some(fade))
-            });
-
-            if let Some(by) = list.inner.scroll {
-                scroll_by(ui, &list, by);
-            }
-
-            cut_edges(ui, &list, density.row);
-            ui.scope_builder(UiBuilder::new().max_rect(foot), |ui| {
-                _ = pages(ui, current, density, commands, None);
-            });
+            pages_and_foot(ui, density, (current, reading), commands);
         },
     );
     side_edge(ui);
 }
 
-/// The app's name and the collapse toggle, the same at either density.
-fn title(ui: &mut Ui, expanded: bool, commands: &CommandSender) {
-    let ctx = ui.ctx().clone();
-    let tokens = tokens::current(&ctx);
-    let (icon, text_id) = if expanded {
-        (icons::SIDEBAR_COLLAPSE_LEFT, "sidebar-collapse")
-    } else {
-        (icons::SIDEBAR_EXPAND_LEFT, "sidebar-expand")
-    };
+/// The page list and the app's own pages at its foot, with the reading
+/// note beside them.
+fn pages_and_foot(
+    ui: &mut Ui,
+    density: Density,
+    (current, reading): (PageId, bool),
+    commands: &CommandSender,
+) {
+    // The foot keeps its room first and draws after the list, so the
+    // keyboard meets the pages in the order they show.
+    let label = group_label_height(ui, density.compact);
+    let foot = Panel::bottom("sidebar-app")
+        .show_separator_line(false)
+        .frame(Frame::NONE)
+        .exact_size(density.pages_height(ui.ctx(), label, true))
+        .show(ui, |ui| ui.max_rect())
+        .inner;
 
-    ui.horizontal(|ui| {
-        if expanded {
-            ui.add_space(NAV_INSET);
-            ui.label(rich(
-                ui,
-                &i18n::text(&ctx, "app-name"),
-                Weight::Bold,
-                PANE_TITLE,
-                tokens.text,
-            ));
-            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                toggle(ui, icon, &i18n::text(&ctx, text_id), commands);
-            });
-        } else {
-            toggle(ui, icon, &i18n::text(&ctx, text_id), commands);
-        }
+    if reading {
+        reading::show(ui, density.row, density.expanded);
+    }
+
+    // `cut_edges` lays the fade in the sidebar's own fill, egui's would come
+    // on top.
+    ui.spacing_mut().scroll.fade.strength = 0.0;
+    let height = density.pages_height(ui.ctx(), label, false);
+
+    // Read every frame, also while an app page is open and no entry of the
+    // list is, so a return to the same page reveals it again.
+    if newly_current(ui, current) {
+        ui.data_mut(|data| data.insert_temp(revealing_id(), REVEAL_FRAMES));
+    }
+
+    let list = list_area(ui, density.expanded).show(ui, |ui| {
+        keep_entries_right(ui, ui.max_rect().right());
+        let fade = EdgeFade::of(ui, height, density.row);
+        pages(ui, current, density, commands, Some(fade))
     });
-}
 
-fn search(ui: &mut Ui, density: Density, commands: &CommandSender) {
-    ui.add_space(density.top_gap);
-    let search = i18n::text(ui.ctx(), "sidebar-search");
-    if nav_row(ui, page_ui::SEARCH_ICON, &search, false, density.look()).clicked() {
-        commands.send(UiCommand::OpenPalette);
+    if let Some(by) = list.inner.scroll {
+        scroll_by(ui, &list, by);
     }
-}
 
-fn toggle(ui: &mut Ui, icon: icons::Icon, text: &str, commands: &CommandSender) {
-    if sidebar_button(ui, icon, text).clicked() {
-        commands.send(UiCommand::ToggleSidebar);
-    }
+    cut_edges(ui, &list, density.row, density.gap);
+
+    // The list keeps its scroll strip beside the entries when it is
+    // expanded, so the foot ends where the list's entries end.
+    let foot = Rect::from_min_max(foot.min, pos2(list.inner_rect.right(), foot.max.y));
+    ui.scope_builder(UiBuilder::new().max_rect(foot), |ui| {
+        _ = pages(ui, current, density, commands, None);
+    });
 }
 
 /// Every group in the scrolled `list`, its entries faded at a cut edge, or
@@ -227,7 +216,8 @@ fn pages(
             .flatten();
 
         end = end.or(ends);
-        let rows = egui::Rangef::new(ui.cursor().top(), ui.cursor().top() + density.row);
+
+        let rows = highlight_rows(ui.cursor().top(), density.row);
         let name = i18n::text(ui.ctx(), page.text_id());
 
         let opacity = rail_strength(ui, &fade, rows, rail, (page == current, ends, &mut cut));
@@ -247,14 +237,8 @@ fn pages(
         }
     }
 
-    let room = room.unwrap_or(0.0);
-    let stops: Vec<f32> = tops.into_iter().map(|top| top - room).collect();
-    if fade.is_cut() {
-        room_past_the_end(ui, &stops);
-    }
-
     let open = open.filter(|_| !foot);
-    let scroll = open.and_then(|entry| scroll_to_open(ui, &stops, entry));
+    let scroll = scroll_to_stop(ui, &fade, (tops, room), open);
 
     Listed {
         scroll,
@@ -264,21 +248,37 @@ fn pages(
     }
 }
 
-/// How opaque an entry over `rows` draws in the `fade`. The `open` page's
-/// entry keeps full strength unless an edge cuts it. One whose entries
-/// `ends` above something hidden fades as if the edge ran there.
-fn strength(ui: &Ui, fade: &EdgeFade, rows: egui::Rangef, open: bool, ends: Option<f32>) -> f32 {
-    if open && !fade.cuts(rows.min, rows.max) {
-        return 1.0;
+/// How far the list scrolls to show the `open` entry, once the stops are
+/// known. `tops` hold each stop from the list's top, `room` is the room
+/// above the first one at rest.
+fn scroll_to_stop(
+    ui: &mut Ui,
+    fade: &EdgeFade,
+    (tops, room): (Vec<f32>, Option<f32>),
+    open: Option<Rect>,
+) -> Option<f32> {
+    let stops: Vec<f32> = tops
+        .into_iter()
+        .map(|top| top - room.unwrap_or(0.0))
+        .collect();
+
+    if fade.is_cut() {
+        room_past_the_end(ui, &stops);
     }
 
-    let past = ends.map_or(0.0, |ends| ui.clip_rect().bottom() - ends);
-    fade.opacity(rows.min + past, rows.max + past)
+    scroll_to_open(ui, &stops, open?)
+}
+
+/// The span of an entry's highlight in a row `top` down and `row` tall. The
+/// fades judge the entry by its highlight, the part that shows.
+fn highlight_rows(top: f32, row: f32) -> egui::Rangef {
+    egui::Rangef::new(top + HIGHLIGHT_TOP, top + row)
 }
 
 /// [`strength`] of an entry over `rows`, which sets `cut` when the `rail`
-/// draws it cut by the bottom edge. Less than half an icon on the rail
-/// reads as a speck, not as more to follow, so it hides.
+/// draws it cut by the bottom edge. A cut icon with at least a quarter
+/// showing draws faded, so the rail shows that more follows. Less reads as a
+/// speck, so it hides.
 fn rail_strength(
     ui: &Ui,
     fade: &EdgeFade,
@@ -287,12 +287,13 @@ fn rail_strength(
     (open, ends, cut): (bool, Option<f32>, &mut bool),
 ) -> f32 {
     let bottom = ui.clip_rect().bottom();
-    if rail && rows.center() >= bottom - 0.5 {
+    let icon_top = rows.min + (rows.span() - NAV_ICON) / 2.0;
+    if rail && bottom - icon_top < NAV_ICON / 4.0 {
         return 0.0;
     }
 
     *cut |= rail && rows.max > bottom + 0.5;
-    strength(ui, fade, rows, open, ends)
+    strength(ui, fade, rows, (open, ends, rail))
 }
 
 /// A cut list scrolls on by up to one stop past its last entry, so the
@@ -306,7 +307,7 @@ fn room_past_the_end(ui: &mut Ui, stops: &[f32]) {
     ui.allocate_space(egui::vec2(0.0, step.fold(0.0, f32::max)));
 }
 
-fn scroll_to_open(ui: &Ui, stops: &[f32], entry: egui::Rect) -> Option<f32> {
+fn scroll_to_open(ui: &Ui, stops: &[f32], entry: Rect) -> Option<f32> {
     let id = revealing_id();
 
     // The sidebar's layout settles over the first frames, so the entry

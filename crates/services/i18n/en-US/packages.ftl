@@ -1,7 +1,7 @@
 # The Packages page. Package names, descriptions, versions and file
 # paths come from pacman's databases as they are.
 
-packages-refresh = Read again
+packages-refresh = Read Again
 packages-search = Search packages
 packages-search-hint = Search packages…
 packages-loading = Reading the package lists…
@@ -39,7 +39,7 @@ packages-action-name = { $action } { $name }
 
 packages-install = Install
 packages-remove = Remove
-packages-take-back = Take back
+packages-take-back = Take Back
 
 packages-tag-dependency = Dependency
 packages-tag-foreign = Not from a repository
@@ -74,10 +74,10 @@ packages-remove-note = The removal waits in the queue. When it runs, the Console
 packages-cancel = Cancel
 
 # The -name texts are what screen readers say.
-packages-back = ← Packages
+packages-back = Packages
 packages-back-name = Back to Packages
 # $package is the package the page was opened from.
-packages-back-to = ← { $package }
+packages-back-to = { $package }
 packages-back-to-name = Back to { $package }
 # Shows the rest of a list of names.
 packages-more = +{ $count } more
@@ -117,16 +117,16 @@ packages-optional = Optional dependencies
 packages-required-by = Required by
 # The count of installed files follows it, dimmed.
 packages-files = Files
-packages-copy-list = Copy list
+packages-copy-list = Copy List
 packages-files-copied = The file list was copied to the clipboard.
 # What screen readers call the list of files.
 packages-files-list = Installed files
 packages-files-filter = Filter files
-packages-files-filter-clear = Clear the filter
+packages-files-filter-clear = Clear the Filter
 packages-files-none = No file matches “{ $filter }”.
 
 packages-history = History
-packages-history-all = Show all
+packages-history-all = Show All
 packages-history-failed = pacman's log could not be read.
 packages-history-none = No changes found
 packages-history-installed = Installed
@@ -158,7 +158,7 @@ packages-aur-votes = { $count ->
 # The question before an AUR build.
 packages-aur-install-title = Build { $package } from the AUR?
 packages-aur-install-body = Built from a community script on your computer. paru shows the build script in the Console before it builds.
-packages-aur-install-confirm = Build and install
+packages-aur-install-confirm = Build and Install
 
 packages-aur-maintainer = Maintainer
 packages-aur-orphaned = Nobody, orphaned

@@ -27,7 +27,7 @@ fn the_copy_icon_copies_the_address() {
     let mut harness = page_showing(network_with(known));
 
     harness
-        .get_by_role_and_label(Role::Button, "Copy public address")
+        .get_by_role_and_label(Role::Button, "Copy Public Address")
         .click();
     harness.run();
 

@@ -1,8 +1,8 @@
 //! The Settings page: a theme picked and taken back, minutes outside
 //! the limits held to them, the timed checks turned off and on again, and a
 //! color scheme of each mode picked and
-//! System picked after it. The changes go to the run's own settings file,
-//! never the user's.
+//! System picked after it, and the desktop blur switched on and off again.
+//! The changes go to the run's own settings file, never the user's.
 
 use egui::Key;
 use egui::accesskit::Role;
@@ -45,6 +45,10 @@ pub fn steps() -> Vec<Step> {
         Step::Shot("settings-scheme-light"),
         Step::combo("Light color scheme"),
         option("System"),
+        Step::click_checkbox("Blur the desktop behind the window"),
+        Step::Shot("settings-blur-on"),
+        Step::click_checkbox("Blur the desktop behind the window"),
+        Step::Shot("settings-blur-off"),
         Step::click("As the desktop"),
     ]
 }

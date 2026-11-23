@@ -2,6 +2,7 @@
 sidebar-collapse = Collapse sidebar
 sidebar-expand = Expand sidebar
 sidebar-search = Search
+sidebar-search-hint = Search everything
 
 console-title = Console
 console-idle = No changes are being applied
@@ -16,21 +17,21 @@ palette-group-apps = Apps
 palette-group-packages = Packages
 palette-group-aur = AUR
 # The last row of a group that shows only its best rows. $count is how many rows the group has, $page the name of the page that lists them all.
-palette-show-all = Show all { $count } in { $page }
+palette-show-all = Show All { $count } in { $page }
 # The last row of a group that shows only its best rows, which shows the rest right there. $count is how many rows the group has.
-palette-show-all-here = Show all { $count }
-command-apply = Apply changes
-command-toggle-sidebar = Toggle sidebar
-command-toggle-console = Toggle console
-command-open-palette = Command palette
-command-review-changes = Review changes
+palette-show-all-here = Show All { $count }
+command-apply = Apply Changes
+command-toggle-sidebar = Toggle Sidebar
+command-toggle-console = Toggle Console
+command-open-palette = Command Palette
+command-review-changes = Review Changes
 command-quit = Quit
-command-focus-search = Search this page
-command-help = Help for this page
-command-clear-changes = Remove all changes
-command-zoom-in = Zoom in
-command-zoom-out = Zoom out
-command-zoom-reset = Reset zoom
+command-focus-search = Search This Page
+command-help = Help for This Page
+command-clear-changes = Remove All Changes
+command-zoom-in = Zoom In
+command-zoom-out = Zoom Out
+command-zoom-reset = Reset Zoom
 command-apply-tooltip = Run every queued change now, with one password
 command-toggle-sidebar-tooltip = Show or hide the page names in the sidebar
 command-toggle-console-tooltip = Show or hide the console with the output of the last run
@@ -52,11 +53,11 @@ appmenu-go = Go
 appmenu-help = Help
 # Opens the list of queued changes, where they are applied. A dialog
 # follows, hence the dots.
-appmenu-review-and-apply = Review and apply…
+appmenu-review-and-apply = Review and Apply…
 # Asks before it removes every queued change.
-appmenu-clear-changes = Remove all changes…
+appmenu-clear-changes = Remove All Changes…
 # A check item: the sidebar shows the page names.
-appmenu-sidebar-expanded = Expanded sidebar
+appmenu-sidebar-expanded = Expanded Sidebar
 
 # Notes at the top right of the page about background results.
 toast-name = Notification

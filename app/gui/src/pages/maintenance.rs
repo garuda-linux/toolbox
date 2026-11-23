@@ -16,8 +16,8 @@ use toolbox_core::features::maintenance::page::LaunchCause;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
-    ActionRow, ButtonKind, SkeletonRows, Tone, card, pill_button, row_height, section_intro,
-    skeleton_list, text_block_height,
+    ActionRow, ButtonKind, SkeletonRows, Tone, card, pill_button_at_least, push_height, row_height,
+    section_intro, skeleton_list, text_block_height_with,
 };
 use toolbox_system::mirrors::RankProblem;
 
@@ -168,16 +168,16 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
     }
 }
 
-fn heading(ui: &mut Ui, icon: Icon, id: &str) {
+fn heading(ui: &mut Ui, id: &str) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, id);
     let detail = i18n::text(&ctx, &format!("{id}-detail"));
-    section_intro(ui, icon, &title, &detail);
+    section_intro(ui, &title, &detail);
 }
 
 fn row(ui: &mut Ui, icon: Icon, id: &str, detail: &str, actions: impl FnOnce(&mut Ui)) {
     let title = i18n::text(ui.ctx(), id);
-    ActionRow::new(icon, Tone::Neutral, &title)
+    ActionRow::new(icon, &title)
         .detail(detail)
         .show(ui, actions);
 }
@@ -188,16 +188,25 @@ fn waiting(ui: &mut Ui, id: &str, count: usize) {
     let name = i18n::text(ui.ctx(), id);
     let rows = SkeletonRows {
         count,
-        row_height: row_height(ui, text_block_height(ui, 2)),
+        row_height: row_height(ui, text_block_height_with(ui, 2, push_height(ui))),
         leading: true,
     };
 
     card(ui, |ui| skeleton_list(ui, rows, &name));
 }
 
-fn plan_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, kind: ButtonKind) -> bool {
+/// A plan button at least `width` wide, for a column of buttons that share one width.
+fn plan_button_at_least(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    id: &str,
+    kind: ButtonKind,
+    width: f32,
+) -> bool {
     let text = i18n::text(ui.ctx(), id);
-    ui.enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))
-        .inner
-        .clicked()
+    ui.enabled_ui(!context.busy, |ui| {
+        pill_button_at_least(ui, &text, kind, width)
+    })
+    .inner
+    .clicked()
 }

@@ -5,9 +5,16 @@
 //! tokens decide the steps between surfaces and the contrast of text, so
 //! the app keeps its depth and stays readable on any desktop theme.
 
+mod card;
 mod code;
+pub mod darkly;
 mod frost;
+mod glass;
 pub mod letters;
+mod model;
+mod readability;
+mod roles;
+mod shade;
 mod shades;
 pub mod sizes;
 mod terminal;
@@ -16,93 +23,40 @@ mod tests;
 pub mod tiles;
 mod wash;
 
-use egui::{Color32, Context, Id, Rgba, Theme};
+use egui::{Color32, Context, Id, Theme};
 pub use letters::{LETTER_HUES, LetterTiles};
+pub use model::Tokens;
+pub use readability::contrast;
 pub use sizes::Sizes;
 pub use tiles::{Hue, Tile, Tiles, page_hue, set_page_hue};
 
+use self::card::form_border;
+pub use self::card::is_dark_surface;
 pub use self::code::CodeInks;
 use self::frost::{thin, veil};
-use self::shades::{shades, shimmer, top_light, track_hover};
+pub use self::glass::WINDOW_OPACITY;
+use self::readability::{Ends, description, fitted, readable, toward_ends};
+pub use self::roles::Roles;
+use self::shades::{shades, shimmer, top_light};
 use crate::palette::Palette;
-use crate::terminal_colors::Ansi;
 
 const TEXT_CONTRAST: f32 = 7.0;
+/// The line between the rows of a card, as Kirigami's separator at half
+/// opacity: the share of the text mixed into the card.
+pub(crate) const ROW_DIVIDER_SHARE: f32 = 0.085;
 /// WCAG AA for body text.
 const SECONDARY_CONTRAST: f32 = 4.5;
 const LIGHT_SECONDARY_CONTRAST: f32 = 6.0;
 /// WCAG 1.4.11 for text no one reads and the edge of a control.
 pub(crate) const DIM_CONTRAST: f32 = 3.0;
+/// The selection text the desktop names keeps its colour down to this
+/// contrast on the accent, as a selected row's label is body text. Below
+/// it the theme's text or window takes over, fitted to it.
+const SELECTION_LEAST: f32 = SECONDARY_CONTRAST;
 /// The dialog scrim's darkness. The blurred light window turns muddy grey
 /// under more, the dark one needs more to step back behind the dialog.
 const LIGHT_DIALOG_SCRIM: f32 = 0.25;
 const DARK_DIALOG_SCRIM: f32 = 0.45;
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Tokens {
-    pub window: Color32,
-    /// The header's scrim on the window, so sidebar and header read as one surface.
-    pub sidebar: Color32,
-    pub sidebar_text: Color32,
-    /// The sidebar's colour outside its column, on the status bar and the Console sheet.
-    pub pane: Color32,
-    pub card: Color32,
-    pub raised: Color32,
-    pub field: Color32,
-    /// A Soft button's fill on a dialog. The field fill all but melts into
-    /// a dark dialog, a white one already sets it apart.
-    pub field_on_raised: Color32,
-    pub hover: Color32,
-    pub pressed: Color32,
-    pub outline: Color32,
-    pub sidebar_edge: Color32,
-    /// At least 3:1 against the field fill, so a button's shape reads on a banner.
-    pub rim: Color32,
-    pub text: Color32,
-    pub secondary: Color32,
-    pub dim: Color32,
-    pub accent: Color32,
-    pub accent_hover: Color32,
-    pub accent_pressed: Color32,
-    pub tint_pressed: Color32,
-    pub accent_soft: Color32,
-    pub accent_tint: Color32,
-    /// The accent moved until it reads on the tint and on its pressed shade.
-    pub on_tint: Color32,
-    pub on_accent: Color32,
-    /// The accent moved until it reads at 3:1 on every fill it sits on.
-    pub accent_ring: Color32,
-    /// Links and figures in the accent, moved to 4.5:1.
-    pub accent_text: Color32,
-    pub success: Color32,
-    pub warning: Color32,
-    pub error: Color32,
-    pub on_error: Color32,
-    pub error_hover: Color32,
-    pub error_pressed: Color32,
-    pub track_hover: Color32,
-    pub top_light: Color32,
-    pub shimmer: Color32,
-    pub terminal: Color32,
-    /// Thin neutral black or white, so the blur casts no tint and output stays readable.
-    pub terminal_glass: Color32,
-    /// Program colours, moved in lightness until they read on the terminal and its glass.
-    pub terminal_ansi: Ansi,
-    pub code: CodeInks,
-    /// The pane colour, see-through only as far as text on it stays readable.
-    pub frost: Color32,
-    /// Thin neutral black or white, so the blur shows and casts no tint.
-    pub header_scrim: Color32,
-    /// No blur lies behind them, so what is under shows only as a faint ghost.
-    pub frost_raised: Color32,
-    /// Thinner than `frost_raised`, as the blur under it shows through.
-    pub frost_raised_blurred: Color32,
-    /// Over the blurred window under a dialog.
-    pub scrim: Color32,
-    pub shadow: Color32,
-    pub tiles: Tiles,
-    pub sizes: Sizes,
-}
 
 impl Tokens {
     #[expect(
@@ -111,76 +65,152 @@ impl Tokens {
     )]
     pub fn derive(palette: &Palette, theme: Theme) -> Self {
         let (base, ink) = (palette.window, palette.text);
-        let surfaces = Surfaces::of(base, ink, theme);
+        let surfaces = Surfaces::of(palette);
 
         let (card, accent) = (surfaces.card, palette.accent);
-        let text = readable(ink, card, TEXT_CONTRAST);
+        let shadow_shade = shade::shadow_shade(base, palette.contrast);
 
-        let secondary = surfaces.secondary(text, theme);
+        // The text is fitted first toward the raw desktop text, so the ends
+        // the other colours move between are the theme's own text and window.
+        let raw_ends = Ends {
+            text: ink,
+            window: base,
+            shadow: shadow_shade,
+        };
 
-        let (tint, tint_pressed) = tints(card, accent, theme);
-        let header_scrim = surfaces.scrim(theme, [text, secondary]);
+        let text = readable(ink, card, TEXT_CONTRAST, raw_ends);
+
+        let ends = Ends {
+            text,
+            window: base,
+            shadow: shadow_shade,
+        };
+
+        let secondary = surfaces.secondary(text, theme, ends);
+
+        let header_scrim = surfaces.scrim(theme, [text, secondary], ends);
 
         // Text that reads on the window under the scrim reads on this too,
         // as the scrim only moves the window away from the text.
         let sidebar = surfaces.window.blend(header_scrim);
 
         let soft = mix(card, accent, 0.16);
-        let (error, on_error, error_hover, error_pressed) = error_inks(palette.error, &surfaces);
+        let (error, on_error) = error_inks(palette.error, &surfaces, ends);
 
-        let (accent_hover, accent_pressed, terminal, shadow) =
-            shades(theme, accent, &surfaces, base, ink);
+        let (tint_pressed, terminal, shadow) = shades(theme, accent, &surfaces, ends);
 
         let (terminal_glass, terminal_ansi) =
-            surfaces.terminal_look(theme, palette, [text, terminal], sidebar);
+            surfaces.terminal_look(theme, palette, [text, terminal], sidebar, ends);
+
+        let card_outline = mix(surfaces.window, text, 0.25);
+        let control_shadow = darkly::alpha(shadow_shade, 40);
+        let input = card::input_fill(surfaces.window, palette.view, ink);
+        let button_hover = darkly::lighter(input, 1.05);
+        let decoration_focus = palette.decoration_focus.unwrap_or(accent);
+        let highlighted_text = selection_text(palette.on_accent, accent, ends);
+        let focus_fill = text_focus_fill(decoration_focus, text, ends);
+        let on_focus = fitted(
+            text,
+            &[focus_fill, focus_hovered(focus_fill)],
+            SECONDARY_CONTRAST,
+            ends,
+        );
+
+        let tooltip = palette.tooltip.unwrap_or(card);
 
         Self {
             window: surfaces.window,
+            window_glass: surfaces.window,
+            band: surfaces.window,
+            chosen_tab: input,
+            selection: accent,
+            selection_text: highlighted_text,
             sidebar,
-            sidebar_text: secondary,
+            sidebar_fade: sidebar,
+            sidebar_text: text,
             pane: surfaces.pane,
             card,
+            card_glass: card,
+            card_edge: card_outline,
+            card_shadow: control_shadow,
+            row_divider: mix(card, text, ROW_DIVIDER_SHARE),
             raised: card,
             field: surfaces.field,
+            view: palette.view,
+            input,
             field_on_raised: surfaces.field_on_raised,
-            hover: surfaces.hover,
-            pressed: surfaces.pressed,
+            button_hover,
+            button_pressed: darkly::darker(decoration_focus, 1.1),
+            default_button: mix(input, palette.view, 0.7),
+            // Darkly's list hover is the highlight at 0.2 (darklystyle.cpp:4768).
+            item_hover: accent.gamma_multiply(0.2),
+            popup_hover: accent.gamma_multiply(0.2),
+            tint_hover: darkly::lighter(accent, 1.1),
             outline: surfaces.outline,
-            sidebar_edge: surfaces.outline,
-            rim: readable(mix(text, card, 0.5), surfaces.field, DIM_CONTRAST),
+            rule: surfaces.outline,
+            card_outline,
+            separator: darkly::separator(base, text, shadow_shade),
+            sidebar_edge: darkly::sidebar_edge(base, shadow_shade),
+            shadow_shade,
+            rim: readable(mix(text, card, 0.5), surfaces.field, DIM_CONTRAST, ends),
             text,
             secondary,
-            dim: readable(mix(text, card, 0.5), card, DIM_CONTRAST),
+            dim: readable(mix(text, card, 0.5), card, DIM_CONTRAST, ends),
             accent,
-            accent_hover,
-            accent_pressed,
             accent_soft: soft,
-            accent_tint: tint,
+            accent_tint: accent,
             tint_pressed,
-            on_tint: fitted(accent, &[tint, tint_pressed], SECONDARY_CONTRAST),
-            on_accent: readable(palette.on_accent, accent, SECONDARY_CONTRAST),
-            accent_ring: fitted(accent, &surfaces.under(sidebar, tint), DIM_CONTRAST),
-            accent_text: fitted(accent, &[surfaces.window, card, soft], SECONDARY_CONTRAST),
-            success: fitted(palette.success, &surfaces.under_text(), SECONDARY_CONTRAST),
-            warning: fitted(palette.warning, &surfaces.under_text(), SECONDARY_CONTRAST),
+            highlighted_text,
+            on_tint: highlighted_text,
+            on_accent: readable(palette.on_accent, accent, SECONDARY_CONTRAST, ends),
+            decoration_hover: palette.decoration_hover.unwrap_or(accent),
+            decoration_focus,
+            focus_fill,
+            on_focus,
+            tooltip,
+            tooltip_text: readable(
+                palette.tooltip_text.unwrap_or(text),
+                tooltip,
+                TEXT_CONTRAST,
+                ends,
+            ),
+            accent_ring: accent,
+            accent_text: fitted(
+                accent,
+                &[surfaces.window, card, soft],
+                SECONDARY_CONTRAST,
+                ends,
+            ),
+            success: fitted(
+                palette.success,
+                &surfaces.under_text(),
+                SECONDARY_CONTRAST,
+                ends,
+            ),
+            warning: fitted(
+                palette.warning,
+                &surfaces.under_text(),
+                SECONDARY_CONTRAST,
+                ends,
+            ),
+            roles: roles::derive(palette, &surfaces, accent, ink, ends),
             error,
             on_error,
-            error_hover,
-            error_pressed,
-            track_hover: track_hover(theme, surfaces.pressed, text),
-            top_light: top_light(theme, card),
-            shimmer: shimmer(theme, surfaces.hover, card),
+            top_light: top_light(theme, card, ends.light()),
+            button_top_light: darkly::top_highlight(base, ends.light()),
+            shimmer: shimmer(theme, button_hover, ends),
             terminal,
             terminal_glass,
             terminal_ansi,
-            code: CodeInks::derive(&terminal_ansi, palette, [text, surfaces.field]),
+            code: CodeInks::derive(&terminal_ansi, palette, [text, surfaces.field], ends),
             frost: surfaces.frost(text, sidebar, accent),
             header_scrim,
-            frost_raised: veil(card, secondary),
+            frost_raised: veil(card, secondary, [ends.light(), ends.shadow]),
             frost_raised_blurred: thin(card, secondary, &surfaces.under_blur(sidebar, accent)),
-            scrim: dialog_scrim(theme),
+            scrim: dialog_scrim(theme, shadow_shade),
             shadow,
-            tiles: Tiles::derive(card, palette, text, theme),
+            control_shadow,
+            tiles: Tiles::derive(card, palette, ends, theme),
             sizes: Sizes::DEFAULT,
         }
     }
@@ -188,8 +218,7 @@ impl Tokens {
 
 struct Surfaces {
     window: Color32,
-    /// The status bar and the Console sheet: a step lighter than the
-    /// window when dark, the desktop's own colour when light.
+    /// The status bar and the Console sheet: the window colour in both themes.
     pane: Color32,
     card: Color32,
     field: Color32,
@@ -202,18 +231,21 @@ struct Surfaces {
 impl Surfaces {
     /// Descriptions and hints: as [`description`] finds them, then moved
     /// until they read on every fill status words sit on.
-    fn secondary(&self, text: Color32, theme: Theme) -> Color32 {
-        let first = description(text, self.card, self.window, secondary_contrast(theme));
-        fitted(first, &self.under_text(), SECONDARY_CONTRAST)
+    fn secondary(&self, text: Color32, theme: Theme, ends: Ends) -> Color32 {
+        let first = description(
+            text,
+            self.card,
+            self.window,
+            secondary_contrast(theme),
+            ends,
+        );
+
+        fitted(first, &self.under_text(), SECONDARY_CONTRAST, ends)
     }
 
-    /// The sidebar and the status bar follow from the window.
+    /// The fills that status words and descriptions sit on.
     const fn under_text(&self) -> [Color32; 4] {
         [self.card, self.window, self.field, self.hover]
-    }
-
-    const fn under(&self, sidebar: Color32, tint: Color32) -> [Color32; 5] {
-        [self.window, sidebar, self.card, self.field, tint]
     }
 
     /// A blur this wide never leaves a pill-sized accent at full strength.
@@ -229,31 +261,27 @@ impl Surfaces {
         ]
     }
 
-    fn of(base: Color32, ink: Color32, theme: Theme) -> Self {
-        match theme {
-            Theme::Dark => Self {
-                window: mix(base, Color32::BLACK, 0.35),
-                pane: mix(base, Color32::BLACK, 0.2),
-                card: mix(base, Color32::BLACK, 0.08),
-                field: mix(base, ink, 0.03),
-                // Halfway to the hover fill, so a hover still shows a step.
-                field_on_raised: mix(base, ink, 0.055),
-                hover: mix(base, ink, 0.08),
-                pressed: mix(base, ink, 0.14),
-                outline: mix(base, ink, 0.1),
-            },
-            // The window stays near the desktop's colour, so white cards
-            // stand out from it.
-            Theme::Light => Self {
-                window: mix(base, Color32::WHITE, 0.35),
-                pane: base,
-                card: Color32::WHITE,
-                field: mix(base, ink, 0.05),
-                field_on_raised: mix(base, ink, 0.05),
-                hover: mix(base, ink, 0.1),
-                pressed: mix(base, ink, 0.16),
-                outline: mix(base, ink, 0.12),
-            },
+    /// The same mapping in both themes, as the desktop's colours decide the
+    /// light and the dark alike.
+    fn of(palette: &Palette) -> Self {
+        let (base, view, ink) = (palette.window, palette.view, palette.text);
+        let field = palette.button.unwrap_or_else(|| mix(view, ink, 0.03));
+        Self::from_desktop(base, view, field, ink)
+    }
+
+    /// The desktop's own window, view and button colours, as Qt paints
+    /// them. Hover and press step up from the button. A card is Darkly's
+    /// group box fill, see [`darkly::frame_fill`].
+    fn from_desktop(base: Color32, view: Color32, field: Color32, ink: Color32) -> Self {
+        Self {
+            window: base,
+            pane: base,
+            card: card::card_fill(base, view, ink),
+            field,
+            field_on_raised: field,
+            hover: mix(field, ink, 0.06),
+            pressed: mix(field, ink, 0.12),
+            outline: form_border(view, ink),
         }
     }
 }
@@ -282,23 +310,55 @@ pub fn mix(from: Color32, to: Color32, amount: f32) -> Color32 {
     from.lerp_to_gamma(to, amount)
 }
 
-pub fn contrast(first: Color32, second: Color32) -> f32 {
-    let (lighter, darker) = {
-        let (one, other) = (luminance(first), luminance(second));
-        if one > other {
-            (one, other)
-        } else {
-            (other, one)
-        }
-    };
-
-    (lighter + 0.05) / (darker + 0.05)
+/// The fill a focused control with text takes under the pointer: lighter
+/// than its rest fill, as Darkly lightens a focused button.
+fn focus_hovered(fill: Color32) -> Color32 {
+    darkly::lighter(darkly::lighter(fill, 1.15), 1.02)
 }
 
-/// The text of descriptions and hints. Page headers sit on the window,
-/// which light themes draw darker than the cards, so it reads on both.
-fn description(text: Color32, card: Color32, window: Color32, ratio: f32) -> Color32 {
-    readable(readable(mix(text, card, 0.3), card, ratio), window, ratio)
+/// The keyboard focus fill of a control that carries text. The desktop's
+/// focus colour where text moved toward the theme's ends reaches 4.5:1 on
+/// it at rest and under the pointer, else the colour darkened toward the
+/// shadow shade in steps until it does, so light text can sit on it. A text
+/// relit past the ends would take any fill and leave a light text dark.
+fn text_focus_fill(decoration_focus: Color32, text: Color32, ends: Ends) -> Color32 {
+    let reads = |fill: Color32| {
+        [fill, focus_hovered(fill)]
+            .into_iter()
+            .all(|on| toward_ends(text, on, SECONDARY_CONTRAST, ends).is_some())
+    };
+
+    (0..=20_u8)
+        .map(|step| mix(decoration_focus, ends.shadow, f32::from(step) / 20.0))
+        .find(|fill| reads(*fill))
+        .unwrap_or_else(|| mix(decoration_focus, ends.shadow, 1.0))
+}
+
+/// The desktop's selection text where it reads on the accent, else whichever
+/// of the theme's text and window reads better on it, fitted to 4.5:1 where
+/// neither reaches it.
+fn selection_text(on_accent: Color32, accent: Color32, ends: Ends) -> Color32 {
+    if contrast(on_accent, accent) >= SELECTION_LEAST {
+        return on_accent;
+    }
+
+    let better = if contrast(ends.text, accent) >= contrast(ends.window, accent) {
+        ends.text
+    } else {
+        ends.window
+    };
+
+    readable(better, accent, SECONDARY_CONTRAST, ends)
+}
+
+/// The shadow shade in both themes, so the window steps back behind the dialog.
+fn dialog_scrim(theme: Theme, shadow: Color32) -> Color32 {
+    let share = match theme {
+        Theme::Dark => DARK_DIALOG_SCRIM,
+        Theme::Light => LIGHT_DIALOG_SCRIM,
+    };
+
+    shadow.gamma_multiply(share)
 }
 
 /// What secondary text reaches on cards and the window. Light themes keep
@@ -311,70 +371,12 @@ const fn secondary_contrast(theme: Theme) -> f32 {
     }
 }
 
-/// The error colour fitted to every surface text sits on, the text on an
-/// error fill, and that fill under the pointer and pressed.
-fn error_inks(error: Color32, surfaces: &Surfaces) -> (Color32, Color32, Color32, Color32) {
-    let error = fitted(error, &surfaces.under_text(), SECONDARY_CONTRAST);
-    let on_error = readable(surfaces.card, error, SECONDARY_CONTRAST);
-    (
-        error,
-        on_error,
-        mix(error, on_error, 0.12),
-        mix(error, on_error, 0.22),
-    )
-}
-
-fn tints(card: Color32, accent: Color32, theme: Theme) -> (Color32, Color32) {
-    let tint = mix(card, accent, tint_share(theme));
-    (tint, mix(tint, accent, 0.15))
-}
-
-/// How much accent the selection tint takes. Light themes need more to
-/// stand out as much as the dark one.
-const fn tint_share(theme: Theme) -> f32 {
-    match theme {
-        Theme::Dark => 0.10,
-        Theme::Light => 0.27,
-    }
-}
-
-/// Black in both themes, so the window steps back behind the dialog.
-fn dialog_scrim(theme: Theme) -> Color32 {
-    let share = match theme {
-        Theme::Dark => DARK_DIALOG_SCRIM,
-        Theme::Light => LIGHT_DIALOG_SCRIM,
-    };
-
-    Color32::BLACK.gamma_multiply(share)
-}
-
-/// `color` moved until it reaches `ratio` on each of `fills`, which share
-/// a side of the scale, so each move keeps the earlier ones.
-fn fitted(color: Color32, fills: &[Color32], ratio: f32) -> Color32 {
-    fills
-        .iter()
-        .fold(color, |moved, fill| readable(moved, *fill, ratio))
-}
-
-fn readable(color: Color32, background: Color32, ratio: f32) -> Color32 {
-    let target = if luminance(background) > 0.18 {
-        Color32::BLACK
-    } else {
-        Color32::WHITE
-    };
-
-    (0_u8..=20)
-        .map(|step| mix(color, target, f32::from(step) / 20.0))
-        .find(|candidate| contrast(*candidate, background) >= ratio)
-        .unwrap_or(target)
-}
-
-fn luminance(color: Color32) -> f32 {
-    let linear = Rgba::from(color);
-    0.0722_f32.mul_add(
-        linear.b(),
-        0.2126_f32.mul_add(linear.r(), 0.7152 * linear.g()),
-    )
+/// The error colour fitted to every surface text sits on, and the text on
+/// an error fill.
+fn error_inks(error: Color32, surfaces: &Surfaces, ends: Ends) -> (Color32, Color32) {
+    let error = fitted(error, &surfaces.under_text(), SECONDARY_CONTRAST, ends);
+    let on_error = readable(surfaces.card, error, SECONDARY_CONTRAST, ends);
+    (error, on_error)
 }
 
 fn tokens_id() -> Id {

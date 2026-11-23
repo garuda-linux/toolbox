@@ -131,7 +131,7 @@ pub fn body(
     };
 
     let list = i18n::text(&ctx, "packages-filter-aur");
-    let rows = ("packages-aur", list.as_ref());
+    let rows = ("packages-aur", list.as_ref(), true);
     if let Some(package) = super::list::shown_rows(page, ui, context, &shown, rows) {
         page.open(&package, true, context);
     }
@@ -156,13 +156,19 @@ pub fn note(ui: &mut Ui, context: &PageContext<'_>) {
         .stale()
         .then(|| i18n::text(&ctx, "packages-aur-stale"));
 
-    under_chips(ui, |ui| {
-        ui.horizontal_wrapped(|ui| {
-            ui.add(Label::new(rich(ui, &text, Weight::Regular, SMALL, tokens.secondary)).wrap());
+    let again = i18n::text(&ctx, "common-read-again");
 
-            if let Some(stale) = stale {
-                ui.add(Label::new(rich(ui, &stale, Weight::Regular, SMALL, tokens.warning)).wrap());
-            }
-        });
+    // Cut to one line, so the list below keeps its place.
+    under_chips(ui, |ui| {
+        let note = rich(ui, &text, Weight::Regular, SMALL, tokens.secondary);
+        _ = ui.add(Label::new(note).truncate()).on_hover_text(&*text);
     });
+
+    // Its own row, so the banner is not squeezed beside the date.
+    if let Some(stale) = stale {
+        ui.add_space(tokens.sizes.card_gap);
+        if banner(ui, Tone::Warning, &stale, &[again.as_ref()]).value == Some(0) {
+            context.commands.send(PackagesCommand::Refresh);
+        }
+    }
 }

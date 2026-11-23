@@ -1,3 +1,4 @@
+mod footer;
 mod popover;
 
 use egui::accesskit::Role;
@@ -34,17 +35,29 @@ fn review(harness: &mut Harness<'static, App>) {
     harness.run();
 }
 
+fn footer_id() -> egui::Id {
+    egui::Id::unique("toolbox_gui::changes::footer")
+}
+
+/// The footer's area as the last frame laid it out, found by its id.
+fn bar_rect(harness: &Harness<'static, App>) -> Rect {
+    harness
+        .ctx
+        .memory(|memory| memory.area_rect(footer_id()))
+        .expect("the footer")
+}
+
 #[test]
-fn an_empty_queue_shows_no_pill() {
+fn an_empty_queue_shows_no_footer() {
     let harness = app_with(&[]);
 
     assert!(harness.query_by_label_contains("queued").is_none());
 }
 
 #[test]
-fn the_pill_counts_and_its_popover_lists_every_change_in_words() {
+fn the_footer_counts_and_its_popover_lists_every_change_in_words() {
     let mut harness = app_with(&["firefox", "vlc"]);
-    assert!(harness.query_by_label("changes queued").is_some());
+    assert!(harness.query_by_label("2 changes queued").is_some());
     assert!(
         harness.query_by_label("Install firefox").is_none(),
         "closed"
@@ -52,7 +65,7 @@ fn the_pill_counts_and_its_popover_lists_every_change_in_words() {
 
     review(&mut harness);
 
-    assert!(harness.query_by_label("Queued changes").is_some());
+    assert!(harness.query_by_label("Queued Changes").is_some());
     assert!(harness.query_by_label("Install firefox").is_some());
     assert!(harness.query_by_label("Install vlc").is_some());
     assert!(harness.query_by_label("Apply 2 changes").is_some());
@@ -67,7 +80,7 @@ fn one_change_is_removed_by_its_own_button() {
     harness.run();
 
     assert!(harness.query_by_label("Install firefox").is_none());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(harness.query_by_label("1 change queued").is_some());
 }
 
 #[test]
@@ -75,7 +88,7 @@ fn removing_all_asks_first_and_keeping_them_changes_nothing() {
     let mut harness = app_with(&["firefox", "vlc"]);
     review(&mut harness);
 
-    harness.get_by_label("Remove all…").click();
+    harness.get_by_label("Remove All…").click();
     harness.run();
     assert!(
         harness
@@ -83,7 +96,7 @@ fn removing_all_asks_first_and_keeping_them_changes_nothing() {
             .is_some()
     );
 
-    harness.get_by_label("Keep them").click();
+    harness.get_by_label("Keep Them").click();
     harness.run();
     assert!(harness.query_by_label("Install vlc").is_some());
 }
@@ -93,9 +106,9 @@ fn removing_all_after_the_question_empties_the_queue() {
     let mut harness = app_with(&["firefox", "vlc"]);
     review(&mut harness);
 
-    harness.get_by_label("Remove all…").click();
+    harness.get_by_label("Remove All…").click();
     harness.run();
-    harness.get_by_label("Remove all").click();
+    harness.get_by_label("Remove All").click();
     harness.run();
 
     assert!(harness.query_by_label_contains("queued").is_none());
@@ -153,7 +166,7 @@ fn space_on_review_shows_the_popover_at_once() {
 
 fn review_rows(harness: &Harness<'static, App>) -> usize {
     harness
-        .query_all_by_label_contains("Review changes")
+        .query_all_by_label_contains("Review Changes")
         .count()
 }
 
@@ -175,7 +188,7 @@ fn a_palette_row_without_a_shortcut_is_named_by_its_title_alone() {
     palette(&mut harness, "review");
 
     let names: Vec<String> = harness
-        .query_all_by_label_contains("Review changes")
+        .query_all_by_label_contains("Review Changes")
         .filter_map(|node| node.accesskit_node().label())
         .collect();
 
@@ -201,7 +214,7 @@ fn a_click_on_the_palette_row_lets_the_popover_rise() {
 
     // The palette lies over the page, so its row is the last one drawn.
     harness
-        .query_all_by_label_contains("Review changes")
+        .query_all_by_label_contains("Review Changes")
         .last()
         .expect("the palette's row")
         .click();
@@ -210,7 +223,7 @@ fn a_click_on_the_palette_row_lets_the_popover_rise() {
     assert!(first.bottom() > rest.bottom() + 0.5, "{first:?} {rest:?}");
     assert!(
         harness
-            .query_by_role_and_label(Role::TextInput, "Command palette")
+            .query_by_role_and_label(Role::TextInput, "Command Palette")
             .is_none(),
         "the palette's row ran it"
     );
@@ -228,19 +241,6 @@ fn the_one_password_note_is_secondary_text() {
     );
 }
 
-/// The pill's own band below the page, so it never lies over a control.
-#[test]
-fn the_pill_lies_below_the_page_never_over_it() {
-    let harness = app_with(&["firefox"]);
-    let page = harness.get_by_role_and_label(Role::Pane, "Page").rect();
-    let pill = harness.get_by_label("Review").rect();
-
-    assert!(
-        pill.top() >= page.bottom(),
-        "the pill at {pill:?} lies over the page at {page:?}"
-    );
-}
-
 #[test]
 fn an_empty_queue_leaves_the_page_the_whole_height() {
     let with = app_with(&["firefox"]);
@@ -252,7 +252,7 @@ fn an_empty_queue_leaves_the_page_the_whole_height() {
 }
 
 /// With the Console open, the queue is a compact group at the right of its
-/// header, beside Close, without the pill's words.
+/// header, beside Close, without the footer's words.
 #[test]
 fn the_open_console_holds_the_queue_beside_its_close_button() {
     let mut harness = app_with(&["firefox", "vlc"]);
@@ -273,7 +273,7 @@ fn the_open_console_holds_the_queue_beside_its_close_button() {
 }
 
 #[test]
-fn the_pill_keeps_its_width_when_review_turns_into_hide() {
+fn review_keeps_its_width_when_it_turns_into_hide() {
     let mut harness = app_with(&["firefox"]);
     let closed = harness.get_by_role_and_label(Role::Button, "Review").rect();
     review(&mut harness);
@@ -288,9 +288,9 @@ fn the_pill_keeps_its_width_when_review_turns_into_hide() {
 }
 
 #[test]
-fn the_pill_and_its_popover_are_frosted_not_solid() {
+fn the_footer_is_window_coloured_and_the_popover_frosted() {
     let mut harness = app_with(&["firefox"]);
-    let pill = harness.get_by_label("Review").rect();
+    let bar = bar_rect(&harness);
     let frosted = |shown: &Harness<'static, App>, near: Rect| {
         let textured = toolbox_gui_kit::testing::textured_rects(shown);
         toolbox_gui_kit::testing::filled_rects(shown, toolbox_gui_kit::frost::raised(&shown.ctx))
@@ -298,7 +298,15 @@ fn the_pill_and_its_popover_are_frosted_not_solid() {
             .any(|rect| rect.contains_rect(near) && textured.contains(rect))
     };
 
-    assert!(frosted(&harness, pill), "the pill is solid");
+    let window = toolbox_gui_kit::tokens::current(&harness.ctx).window;
+
+    assert!(
+        toolbox_gui_kit::testing::filled_rects(&harness, window)
+            .iter()
+            .any(|rect| rect.contains_rect(bar)),
+        "the footer is not in the window colour"
+    );
+    assert!(!frosted(&harness, bar), "the footer is frosted");
 
     review(&mut harness);
     let open = popover(&harness).expect("the popover opens");
@@ -315,7 +323,7 @@ fn apply_with_a_removal_queued_first_shows_what_goes() {
     harness.run();
 
     assert!(
-        harness.query_by_label("Queued changes").is_some(),
+        harness.query_by_label("Queued Changes").is_some(),
         "the list of changes opens before anything is removed"
     );
 }
@@ -324,12 +332,12 @@ fn apply_with_a_removal_queued_first_shows_what_goes() {
 fn escape_closes_the_list_and_review_is_focused_again() {
     let mut harness = app_with(&["firefox"]);
     review(&mut harness);
-    assert!(harness.query_by_label("Queued changes").is_some());
+    assert!(harness.query_by_label("Queued Changes").is_some());
 
     harness.key_press(Key::Escape);
     harness.run();
 
-    assert!(harness.query_by_label("Queued changes").is_none());
+    assert!(harness.query_by_label("Queued Changes").is_none());
     assert!(harness.get_by_label("Review").is_focused());
 }
 

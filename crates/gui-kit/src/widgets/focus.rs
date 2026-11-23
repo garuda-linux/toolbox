@@ -1,52 +1,44 @@
-//! The one focus ring every painted widget shares, so keyboard users see
-//! where they are on every control alike. Like a browser's
-//! `:focus-visible`, a click focuses without the ring, and the next key
-//! brings it back. A text field keeps its ring after a click too, as a
-//! browser rings a focused text input either way.
+//! Keyboard focus for painted widgets. Darkly draws no focus ring, so a
+//! focused control shows its focus as a fill or a line. Like a browser's
+//! `:focus-visible`, it shows only where Tab, Shift+Tab or an arrow key
+//! moved the focus. A click or the program focuses without showing it.
 
 #[cfg(test)]
 mod tests;
 
 use std::sync::Arc;
 
-use egui::{Context, CornerRadius, Event, Id, Rect, Response, Stroke, StrokeKind, Ui};
+use egui::epaint::RectShape;
+use egui::{
+    Context, CornerRadius, Event, Id, Key, Rect, Response, Shadow, Shape, Stroke, StrokeKind, Ui,
+};
 
-use crate::tokens;
+use super::buttons::look::BLUR_PER_RADIUS;
+use crate::tokens::{self, Tokens};
 
-pub(super) const GAP: u8 = 2;
-
-pub fn focus_ring(ui: &Ui, response: &Response, radius: u8) {
-    if response.has_focus() {
-        ring_around(ui, response.rect, radius);
-    }
+/// Where the keyboard put the focus.
+#[derive(Clone, Copy, Default)]
+struct Keyboard {
+    /// The widget a key moved the focus to, while it still holds it.
+    holder: Option<Id>,
+    /// A key that moves the focus came in this pass. Tab moves it while
+    /// the pass runs and an arrow key once it ends, so the widget it
+    /// lands on is known only in the next pass.
+    moving: bool,
 }
 
-/// The ring around `rect`, for a control whose focus sits on a part of
-/// it.
-pub(super) fn ring_around(ui: &Ui, rect: Rect, radius: u8) {
-    if visible(ui) {
-        field_ring(ui, rect, radius);
-    }
+/// Whether `response` holds the focus and Tab, Shift+Tab or an arrow key
+/// brought it there, as a button's fill shows it. A focus the program or
+/// a click gave shows no fill, whatever keys came before it.
+pub fn focus_from_keyboard(ui: &Ui, response: &Response) -> bool {
+    response.has_focus() && from_keys(ui, response.id)
 }
 
-/// The ring around a text field that holds the focus, shown after a
-/// click as well: where the typing goes matters with the pointer too, and
-/// a caret alone is too thin to find.
-pub(super) fn field_ring(ui: &Ui, rect: Rect, radius: u8) {
-    let accent = tokens::current(ui.ctx()).accent_ring;
-    ui.painter().rect_stroke(
-        rect.expand(f32::from(GAP)),
-        CornerRadius::same(radius.saturating_add(GAP)),
-        Stroke::new(2.0, accent),
-        StrokeKind::Outside,
-    );
-}
-
-/// The ring on `rect`'s own edge while `response` has the focus, for a
-/// box that fills its room to the edge, such as the terminal's frame,
-/// where a ring outside would leave the room.
+/// The ring on `rect`'s own edge while `response` has the focus from the
+/// keyboard, for a box that fills its room to the edge, such as the
+/// Console sheet's drag bar, where a ring outside would leave the room.
 pub fn edge_ring(ui: &Ui, response: &Response, rect: Rect, radius: u8) {
-    if !response.has_focus() || !visible(ui) {
+    if !focus_from_keyboard(ui, response) {
         return;
     }
 
@@ -59,10 +51,48 @@ pub fn edge_ring(ui: &Ui, response: &Response, rect: Rect, radius: u8) {
     );
 }
 
-/// Follows the pointer and the keys at the start of every pass.
+/// Darkly's halo of a focused field (darklyhelper.cpp:1064-1066): a blur
+/// of 7 under the fill's inner edge, then a Highlight ring at 60 % one
+/// pixel out from `fill`, which the field's fill covers inside.
+pub(super) fn field_halo(tokens: &Tokens, fill: Rect, radius: u8) -> [Shape; 2] {
+    let shadow = Shadow {
+        offset: [0, 1],
+        blur: 7 * BLUR_PER_RADIUS,
+        spread: 0,
+        color: tokens.control_shadow,
+    };
+
+    let ring = RectShape::filled(
+        fill.expand(1.0),
+        radius.saturating_add(1),
+        tokens.accent_tint.gamma_multiply(0.6),
+    );
+
+    [
+        Shape::from(shadow.as_shape(fill.shrink(1.0), radius)),
+        Shape::from(ring),
+    ]
+}
+
+/// Darkly's focus of a list item that is not selected: a 1 px Highlight
+/// line along its bottom edge, drawn with no ring while it holds the
+/// focus from the keyboard (darklystyle.cpp:4183-4222). Darkly skips rows
+/// under 10 px wide.
+pub fn item_focus_line(ui: &Ui, response: &Response, rect: Rect, selected: bool) {
+    if selected || rect.width() < 10.0 || !focus_from_keyboard(ui, response) {
+        return;
+    }
+
+    let line = tokens::current(ui.ctx()).accent_tint;
+    ui.painter()
+        .hline(rect.x_range(), rect.bottom() - 0.5, Stroke::new(1.0, line));
+}
+
+/// Follows the pointer, the keys and egui's focus at the start of every
+/// pass.
 ///
-/// A field takes the focus on the press and draws its ring the frames
-/// after, while the button is still held, so a check only where a ring
+/// A field takes the focus on the press and draws its halo the frames
+/// after, while the button is still held, so a check only where a halo
 /// draws would miss the click.
 pub fn install(ctx: &Context) {
     let installed = Id::unique("toolbox_gui_kit::focus::installed");
@@ -75,44 +105,65 @@ pub fn install(ctx: &Context) {
 }
 
 fn follow(ctx: &Context) {
-    let (key, pointer) = ctx.input(|input| {
-        let key = input.events.iter().any(|event| {
-            matches!(
-                event,
-                Event::Key {
-                    pressed: true,
-                    key: _,
-                    physical_key: _,
-                    repeat: _,
-                    modifiers: _,
-                }
-            )
-        });
-
+    let (moving, pointer) = ctx.input(|input| {
         (
-            key,
+            input.events.iter().any(moves_focus),
             input.pointer.any_pressed() || input.pointer.any_released(),
         )
     });
 
-    let shown = match (key, pointer) {
-        (true, _) => Some(true),
-        (false, true) => Some(false),
-        (false, false) => None,
+    let focused = ctx.memory(egui::Memory::focused);
+    let before = ctx.data(|data| data.get_temp::<Keyboard>(keyboard_id()).unwrap_or_default());
+    let holder = if pointer {
+        None
+    } else if before.moving {
+        focused
+    } else {
+        before.holder.filter(|holder| Some(*holder) == focused)
     };
 
-    if let Some(shown) = shown {
-        ctx.data_mut(|data| data.insert_temp(visible_id(), shown));
+    let now = Keyboard {
+        holder,
+        moving: moving && !pointer,
+    };
+
+    ctx.data_mut(|data| data.insert_temp(keyboard_id(), now));
+    if now.moving {
+        ctx.request_repaint();
     }
 }
 
-/// Whether the focus came from the keyboard: a key since the last
-/// click, or no click yet.
-fn visible(ui: &Ui) -> bool {
-    ui.data(|data| data.get_temp::<bool>(visible_id()))
-        .unwrap_or(true)
+/// Tab, Shift+Tab and the plain arrow keys, the keys egui and a widget
+/// group move the focus with.
+fn moves_focus(event: &Event) -> bool {
+    let Event::Key {
+        key,
+        pressed: true,
+        modifiers,
+        physical_key: _,
+        repeat: _,
+    } = event
+    else {
+        return false;
+    };
+
+    let arrow = matches!(
+        key,
+        Key::ArrowUp | Key::ArrowDown | Key::ArrowLeft | Key::ArrowRight
+    );
+
+    if *key == Key::Tab {
+        !modifiers.any() || modifiers.shift_only()
+    } else {
+        arrow && !modifiers.any()
+    }
 }
 
-fn visible_id() -> Id {
-    Id::unique("toolbox_gui_kit::focus::visible")
+fn from_keys(ui: &Ui, id: Id) -> bool {
+    let keyboard = ui.data(|data| data.get_temp::<Keyboard>(keyboard_id()).unwrap_or_default());
+    keyboard.moving || keyboard.holder == Some(id)
+}
+
+fn keyboard_id() -> Id {
+    Id::unique("toolbox_gui_kit::focus::keyboard")
 }

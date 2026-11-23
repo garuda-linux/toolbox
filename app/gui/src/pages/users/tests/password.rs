@@ -7,7 +7,7 @@ use super::from_menu;
 
 #[test]
 fn a_pasted_password_past_the_limit_says_it_was_cut() {
-    let mut harness = from_menu("ada", "Set password…");
+    let mut harness = from_menu("ada", "Set Password…");
 
     let long = "x".repeat(MAX_PASSWORD_BYTES + 40);
     type_into(&mut harness, Role::PasswordInput, "Password", &long);
@@ -23,7 +23,7 @@ fn a_pasted_password_past_the_limit_says_it_was_cut() {
 /// waits.
 #[test]
 fn set_password_now_says_why_it_waits_while_a_plan_runs() {
-    let mut harness = from_menu("ada", "Set password…");
+    let mut harness = from_menu("ada", "Set Password…");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     type_into(
         &mut harness,

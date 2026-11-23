@@ -1,6 +1,6 @@
 
 page-configs-subtitle = Well-known configuration files of the system and your apps.
-configs-refresh = Read again
+configs-refresh = Read Again
 configs-search = Search config files
 configs-search-hint = Search config files…
 configs-search-detail = The search looks at names, paths, descriptions and the files of folders.
@@ -10,17 +10,17 @@ configs-none = None of the listed config files exists on this system
 configs-dismiss = Dismiss
 configs-list = { $section } files
 
-configs-open-in-app = Open in app
+configs-open-in-app = Open in App
 configs-edit = Edit
 configs-view = View
-configs-show-files = Show the files
-configs-hide-files = Hide the files
+configs-show-files = Show the Files
+configs-hide-files = Hide the Files
 # $count is how many files the folder holds.
 configs-files = { $count ->
         [one] 1 file
        *[other] { $count } files
     }
-configs-wiki-open = Open wiki page
+configs-wiki-open = Open Wiki Page
 configs-admin = Saving asks for an administrator password
 configs-read-only = Only shown here: it decides who may administer the system or what runs as root
 # $target is where the link leads.
@@ -65,10 +65,10 @@ configs-status-writing = Writing { $path }…
 configs-status-saved = Saved { $path }. The previous version is kept as { $backup }.
 configs-status-unchanged = { $path } was not changed, so there is nothing to save.
 configs-show-console = Show Console
-configs-cancel-edit = Cancel edit
-configs-review = Review changes
+configs-cancel-edit = Cancel Edit
+configs-review = Review Changes
 
-configs-review-title = Save the changes to { $path }?
+configs-review-title = Save the Changes to { $path }?
 # $target is the file the link leads to.
 configs-review-link = { $path } is a link. Saving writes the file it leads to, { $target }. The link itself stays as it is.
 configs-review-summary = Lines added: { $added }. Lines removed: { $removed }. Saving asks for an administrator's password. The file as it is now is kept as { $backup }.
@@ -76,23 +76,24 @@ configs-review-summary-home = Lines added: { $added }. Lines removed: { $removed
 configs-review-write-failed = { $path } was not written. The Console shows why. When the file changed in the meantime, compare again to see your edit against the file as it is now.
 configs-review-diff = The changes: added lines start with a plus sign, removed lines with a minus sign
 configs-save = Save
-configs-edit-again = Edit again
-configs-compare-again = Compare again
+configs-review-cancel = Cancel
+configs-edit-again = Edit Again
+configs-compare-again = Compare Again
 configs-discard = Discard
 configs-discard-ask = Discard…
-configs-discard-title = Discard your edits?
+configs-discard-title = Discard Your Edits?
 configs-discard-question = Your edits to { $path } are thrown away. The file stays as it was.
-configs-discard-keep = Keep editing
-configs-review-close = Close and keep the edits
+configs-discard-keep = Keep Editing
+configs-review-close = Close and Keep the Edits
 configs-review-lines =
     { $count ->
         [one] Line { $first }
        *[other] Lines { $first } to { $last }
     }
 
-configs-view-title = The text of { $path }
+configs-view-title = The Text of { $path }
 configs-view-link = { $path } is a link. This is the text of the file it leads to, { $target }.
-configs-copy-all = Copy all
+configs-copy-all = Copy All
 configs-copied = Copied to the clipboard.
 configs-close = Close
 # Why a click on a row did nothing.

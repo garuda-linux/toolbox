@@ -1,21 +1,33 @@
-//! The path of a check mark, which a check row strokes in its box.
+//! The box and the path of a check mark, which a check row paints and
+//! strokes in its slot, as Darkly's check box does.
 
-use egui::{Pos2, Rect, vec2};
+use egui::{Color32, Pos2, Rect, vec2};
 
-/// The mark's corners within its square, from the short stroke's start
-/// to the long stroke's end.
-const POINTS: [(f32, f32); 3] = [(0.18, 0.52), (0.42, 0.74), (0.84, 0.28)];
+use super::press::Pointer;
+use crate::tokens::{Tokens, darkly};
 
-/// The mark's path within `rect`, cut at `drawn` (0 to 1) of its length.
+/// The side of the box the mark's points are in, Darkly's frame of 16 px.
+const BOX_SIDE: f32 = 16.0;
+
+/// Darkly's `renderCheckBox` path in its 16 px box: the short stroke from
+/// (5, 8.5) to (7, 11) and the long one up to (12, 5). The mark's shadow is
+/// the same path one pixel lower.
+const MARK: [(f32, f32); 3] = [(5.0, 8.5), (7.0, 11.0), (12.0, 5.0)];
+
+/// Darkly's shadow under the mark, black at 100 of 255.
+const MARK_SHADOW_OPACITY: f32 = 100.0 / 255.0;
+
+/// The mark's path within `rect`, the box, cut at `drawn` (0 to 1) of its
+/// length.
 pub(super) fn partial(rect: Rect, drawn: f32) -> Vec<Pos2> {
-    let [start, knee, end] =
-        POINTS.map(|(x, y)| rect.min + vec2(x * rect.width(), y * rect.height()));
+    let scale = rect.width() / BOX_SIDE;
+    let [start, knee, end] = MARK.map(|(x, y)| rect.min + vec2(x * scale, y * scale));
 
     let strokes = [(start, knee), (knee, end)];
     let lengths = strokes.map(|(from, to)| from.distance(to));
 
     let mut left = lengths.iter().sum::<f32>() * drawn.clamp(0.0, 1.0);
-    let mut points = Vec::with_capacity(POINTS.len());
+    let mut points = Vec::with_capacity(MARK.len());
     points.push(start);
     for ((from, to), length) in strokes.into_iter().zip(lengths) {
         if left >= length {
@@ -32,4 +44,20 @@ pub(super) fn partial(rect: Rect, drawn: f32) -> Vec<Pos2> {
     }
 
     points
+}
+
+/// The fill of a check box as Darkly's `renderCheckBox` paints it: the
+/// Button colour, or the highlight when checked, lighter by a tenth under
+/// the pointer. Darkly draws no frame.
+pub(super) fn box_fill(tokens: &Tokens, on: bool, pointer: Pointer) -> Color32 {
+    let base = if on { tokens.accent_tint } else { tokens.input };
+    if pointer.is_under() {
+        darkly::lighter(base, 1.1)
+    } else {
+        base
+    }
+}
+
+pub(super) fn mark_shadow(tokens: &Tokens) -> Color32 {
+    tokens.shadow_shade.gamma_multiply(MARK_SHADOW_OPACITY)
 }

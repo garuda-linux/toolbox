@@ -51,3 +51,6 @@ settings-log-warn = Warnings and errors
 settings-log-info = Normal
 settings-log-debug = Detailed
 settings-log-trace = Everything
+settings-blur-desktop = Blur the desktop behind the window
+settings-blur-desktop-description = Blurs the desktop behind the window.
+settings-blur-desktop-unavailable = This desktop does not offer blur behind windows.

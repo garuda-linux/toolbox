@@ -1,6 +1,7 @@
 mod controls;
 pub mod focus;
 mod idle;
+mod list;
 mod mirror;
 mod output;
 mod rim;
@@ -13,17 +14,17 @@ pub use sheet::{Place, cover, out};
 mod tests;
 
 use egui::{
-    Align, Color32, Context, CornerRadius, Frame, Id, Label, Layout, Rect, Response, ScrollArea,
-    Ui, UiBuilder, vec2,
+    Align, Context, CornerRadius, Frame, Id, Label, Layout, Rect, Response, Ui, UiBuilder, vec2,
 };
+use list::steps;
 use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
-use toolbox_gui_kit::theme::{CARD_RADIUS, PILL_HEIGHT};
-use toolbox_gui_kit::widgets::{Tone, banner, card, line, rich, status_word};
+use toolbox_gui_kit::theme::CARD_RADIUS;
+use toolbox_gui_kit::widgets::{Tone, banner, push_height, rich, status_word};
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::StepId;
-use toolbox_plan::protocol::{Failure, Mode};
+use toolbox_plan::protocol::Mode;
 
 use crate::apply::Problem;
 use crate::command::{AppCommand, CommandSender, UiCommand};
@@ -54,15 +55,15 @@ pub struct At {
 }
 
 /// Draws the sheet at its place over the page. `pill` draws the queued
-/// changes into the header, right to left beside Close. Returns whether
-/// any of the sheet shows, so the floating pill waits until it is gone.
+/// changes into the header, right to left beside Close. Returns the sheet's
+/// rect while any of it shows, so the footer and the toasts keep clear.
 pub fn show(
     ctx: &Context,
     at: At,
     console: &mut Console,
     commands: &CommandSender,
     pill: impl FnOnce(&mut Ui),
-) -> bool {
+) -> Option<Rect> {
     let _ui = tracing::trace_span!("console ui").entered();
     let At {
         sheet,
@@ -100,7 +101,7 @@ pub fn show(
         commands.send(UiCommand::ToggleConsole);
     }
 
-    shown.rect.is_some()
+    shown.rect
 }
 
 fn ending_word(ctx: &Context, ending: Ending) -> (String, Tone) {
@@ -139,10 +140,9 @@ fn header(
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
 
-    // egui centres each widget on the row as tall as it is so far, so the
-    // row starts as tall as the buttons that come last, or the status
-    // centres on the title's shorter line.
-    let row = vec2(ui.available_width(), PILL_HEIGHT);
+    // The row is as tall as the push buttons it holds, so the title, the
+    // status and the buttons share one middle.
+    let row = vec2(ui.available_width(), push_height(ui));
     ui.allocate_ui_with_layout(row, Layout::left_to_right(Align::Center), |ui| {
         ui.label(rich(
             ui,
@@ -177,15 +177,25 @@ fn header(
             ui.min_rect().y_range(),
         );
 
+        // Shown whole or not at all: a cut hint reads as a broken sentence.
         let hint = i18n::text(&ctx, "console-leave-hint");
-        let builder = UiBuilder::new()
-            .max_rect(room)
-            .layout(Layout::left_to_right(Align::Center));
+        let words = rich(ui, &hint, Weight::Regular, SMALL, tokens.secondary);
 
-        ui.scope_builder(builder, |ui| {
-            let words = rich(ui, &hint, Weight::Regular, SMALL, tokens.secondary);
-            ui.add(Label::new(words).truncate());
-        });
+        let body = egui::TextStyle::Body;
+        let width = egui::WidgetText::from(words.clone()).into_galley(
+            ui,
+            Some(egui::TextWrapMode::Extend),
+            f32::INFINITY,
+            body,
+        );
+
+        if width.size().x <= room.width() {
+            let builder = UiBuilder::new()
+                .max_rect(room)
+                .layout(Layout::left_to_right(Align::Center));
+
+            ui.scope_builder(builder, |ui| ui.add(Label::new(words)));
+        }
     });
     ui.add_space(tokens.sizes.heading_gap);
 }
@@ -231,100 +241,6 @@ fn notices(ui: &mut Ui, console: &Console, editing: bool) {
             );
         }
         None => {}
-    }
-}
-
-fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
-    if steps.is_empty() {
-        return;
-    }
-
-    let tokens = tokens::current(ui.ctx());
-
-    // As wide as the longest outcome in the list, so the commands line up
-    // without a wide gap after a short "Done".
-    let column = steps
-        .iter()
-        .map(|step| {
-            let (words, _) = step_words(ui.ctx(), step.state, dry_run);
-            line(
-                ui,
-                &words,
-                Weight::SemiBold,
-                STATE_SIZE,
-                Color32::PLACEHOLDER,
-            )
-            .size()
-            .x
-        })
-        .fold(0.0, f32::max)
-        + tokens.sizes.control_gap;
-
-    card(ui, |ui| {
-        Frame::new()
-            .inner_margin(tokens.sizes.steps_padding)
-            .show(ui, |ui| {
-                ui.scope(|ui| {
-                    toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
-                    ScrollArea::vertical()
-                        .max_height(STEPS_HEIGHT)
-                        .auto_shrink([false, true])
-                        .show(ui, |ui| {
-                            ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
-                            for step in steps {
-                                let row = ui.horizontal(|ui| {
-                                    ui.allocate_ui(vec2(column, STEP_ROW_HEIGHT), |ui| {
-                                        ui.set_min_width(column);
-                                        step_state(ui, step.state, dry_run);
-                                    });
-                                    let command = rich(
-                                        ui,
-                                        &step.command,
-                                        Weight::Regular,
-                                        SMALL,
-                                        tokens.text,
-                                    )
-                                    .family(egui::FontFamily::Monospace);
-
-                                    ui.add(Label::new(command).truncate());
-                                });
-
-                                follow_running(ui, step, &row.response);
-                            }
-                        });
-                });
-            });
-    });
-    ui.add_space(tokens.sizes.heading_gap);
-}
-
-fn step_state(ui: &mut Ui, state: StepState, dry_run: bool) {
-    let (words, color) = step_words(ui.ctx(), state, dry_run);
-    ui.label(rich(ui, &words, Weight::SemiBold, STATE_SIZE, color));
-}
-
-fn step_words(ctx: &Context, state: StepState, dry_run: bool) -> (String, Color32) {
-    let tokens = tokens::current(ctx);
-    let text = |id: &str| i18n::text(ctx, id).into_owned();
-    match state {
-        StepState::Waiting => (text("step-waiting"), tokens.secondary),
-        StepState::Running => (text("step-running"), tokens.accent),
-        StepState::Succeeded => (text("step-succeeded"), tokens.success),
-        // A real run skips a step that found nothing to do, a test skips
-        // every step.
-        StepState::Skipped if dry_run => (text("step-not-run"), tokens.secondary),
-        StepState::Skipped => (text("step-nothing-to-do"), tokens.secondary),
-        StepState::Cancelled => (text("step-cancelled"), tokens.warning),
-        StepState::Failed(Failure::ExitCode { code }) => (
-            i18n::text_with(ctx, "step-failed-exit", &[("code", Arg::from(code))]).into_owned(),
-            tokens.error,
-        ),
-        StepState::Failed(Failure::Signal { signal }) => (
-            i18n::text_with(ctx, "step-failed-signal", &[("signal", Arg::from(signal))])
-                .into_owned(),
-            tokens.error,
-        ),
-        StepState::Failed(Failure::Unknown) => (text("step-failed-unknown"), tokens.error),
     }
 }
 

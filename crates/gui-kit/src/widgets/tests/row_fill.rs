@@ -80,8 +80,8 @@ fn a_hovered_row_has_the_same_gap_to_the_divider_above_and_below() {
     harness.run();
 
     let theme = tokens::current(&harness.ctx);
-    let fill = filled_rect(&harness, theme.field).expect("a hover fill");
-    let mut lines: Vec<f32> = lines_in(&harness, theme.outline)
+    let fill = filled_rect(&harness, theme.item_hover).expect("a hover fill in item_hover");
+    let mut lines: Vec<f32> = lines_in(&harness, theme.row_divider)
         .iter()
         .map(|[start, _]| start.y)
         .collect();
@@ -126,15 +126,16 @@ fn a_check_row_on_a_card_row_shows_only_the_card_rows_fill() {
     harness.run();
 
     let theme = tokens::current(&harness.ctx);
-    let own = filled_rects(&harness, theme.hover)
+
+    // The card row's fill is the only hover fill under the pointer.
+    let fills = filled_rects(&harness, theme.item_hover)
         .into_iter()
         .filter(|rect| rect.contains(point))
         .count();
 
-    assert_eq!(own, 0, "the check row painted a fill of its own");
-    assert!(
-        filled_rect(&harness, theme.field).is_some(),
-        "no card row fill"
+    assert_eq!(
+        fills, 1,
+        "the check row painted a fill of its own, or none showed"
     );
 }
 
@@ -151,9 +152,9 @@ fn a_row_a_click_does_nothing_on_stays_still_under_the_pointer() {
         harness.get_by_label("Kernel 6.14").hover();
         harness.run();
 
-        let field = tokens::current(&harness.ctx).field;
+        let hover = tokens::current(&harness.ctx).item_hover;
         assert_eq!(
-            filled_rect(&harness, field).is_some(),
+            filled_rect(&harness, hover).is_some(),
             activatable,
             "activatable: {activatable}"
         );

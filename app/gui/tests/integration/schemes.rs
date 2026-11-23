@@ -33,6 +33,7 @@ fn app(theme: Theme, page: PageId, settings: Settings) -> (Harness<'static, App>
         open: Some(page),
         catalogs: crate::discover::source_catalogs(),
         preferences: PreferencesSetup {
+            desktop_blur: false,
             settings,
             store: Some(kept),
             ..PreferencesSetup::default()
@@ -202,6 +203,7 @@ fn the_german_pickers_fit() {
         system_language: "de-DE".parse().unwrap(),
         catalogs: crate::discover::source_catalogs(),
         preferences: PreferencesSetup {
+            desktop_blur: false,
             settings: picked(Some("catppuccin-macchiato"), Some("dracula-alucard")),
             store: Some(store),
             ..PreferencesSetup::default()

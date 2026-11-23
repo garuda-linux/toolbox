@@ -16,6 +16,7 @@ ignored = ["epaint-color-fonts", "tracy-client", "tracy-client-sys", "winit-csd"
 
 [workspace.dependencies]
 toolbox-appmenu = { path = "crates/appmenu" }
+toolbox-backdrop = { path = "crates/backdrop" }
 toolbox-aur = { path = "crates/aur" }
 toolbox-news = { path = "crates/news" }
 toolbox-catalog = { path = "crates/catalog" }

@@ -116,7 +116,7 @@ impl Live {
             ctx,
             state: &self.state,
             pipeline,
-            background: tokens::current(ctx).window,
+            background: tokens::current(ctx).band,
         };
 
         let mut used: Vec<(LayerId, usize)> = Vec::with_capacity(requests.len());

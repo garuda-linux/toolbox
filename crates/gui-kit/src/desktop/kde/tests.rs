@@ -147,3 +147,98 @@ fn an_animation_speed_of_zero_turns_animations_off() {
     assert_eq!(parse(&word).animations, None);
     assert_eq!(parse(&elsewhere).animations, None);
 }
+
+#[test]
+fn the_active_text_colour_is_the_views_foreground_active() {
+    // Breeze's active text is the orange frame of a Kirigami information
+    // message, the view's role and not the button's or the complementary set's.
+    assert_eq!(
+        parse(MOKKA).colors.active,
+        Some(Color32::from_rgb(250, 179, 135))
+    );
+    assert_eq!(parse(SKEL).colors.active, None);
+}
+
+#[test]
+fn the_complementary_set_names_the_notes_background_and_text() {
+    // Kirigami's passive notes take the Complementary set, not the view's.
+    let colors = parse(MOKKA).colors;
+
+    assert_eq!(colors.complementary, Some(Color32::from_rgb(30, 30, 46)));
+    assert_eq!(
+        colors.complementary_text,
+        Some(Color32::from_rgb(205, 214, 244))
+    );
+    assert_eq!(parse(SKEL).colors.complementary, None);
+}
+
+#[test]
+fn darkly_hover_focus_and_tooltip_colours_are_read() {
+    // Darkly's hover and focus come from the View set, its tooltips from the
+    // Tooltip set, all as the scheme names them.
+    let colors = parse(MOKKA).colors;
+
+    assert_eq!(
+        colors.decoration_hover,
+        Some(Color32::from_rgb(180, 190, 254))
+    );
+    assert_eq!(
+        colors.decoration_focus,
+        Some(Color32::from_rgb(203, 166, 247))
+    );
+    assert_eq!(colors.tooltip, Some(Color32::from_rgb(30, 30, 46)));
+    assert_eq!(colors.tooltip_text, Some(Color32::from_rgb(205, 214, 244)));
+
+    let breeze = parse(BREEZE_DARK).colors;
+    assert_eq!(
+        breeze.decoration_hover,
+        Some(Color32::from_rgb(61, 174, 233))
+    );
+    assert_eq!(breeze.tooltip, Some(Color32::from_rgb(41, 44, 48)));
+    assert_eq!(parse(SKEL).colors.tooltip, None);
+}
+
+#[test]
+fn a_tooltip_colour_with_no_spaces_is_read_as_the_same_colour() {
+    // The Mokka capture's tooltip background, its spaces after the commas
+    // taken out. Qt writes both forms.
+    let edited = MOKKA.replace("BackgroundNormal=30, 30, 46", "BackgroundNormal=30,30,46");
+
+    assert_ne!(edited, MOKKA);
+    assert_eq!(
+        parse(&edited).colors.tooltip,
+        Some(Color32::from_rgb(30, 30, 46))
+    );
+}
+
+#[test]
+fn the_contrast_setting_is_read_from_the_kde_group() {
+    // KColorScheme reads `[KDE] contrast` on a 0 to 10 scale, 7 when absent.
+    assert_eq!(parse(MOKKA).colors.contrast, Some(4));
+    assert_eq!(parse(BREEZE_DARK).colors.contrast, Some(4));
+    assert_eq!(parse(SKEL).colors.contrast, None);
+
+    let edited = MOKKA.replace("contrast=4", "contrast=10");
+    assert_ne!(edited, MOKKA);
+    assert_eq!(parse(&edited).colors.contrast, Some(10));
+}
+
+#[test]
+fn a_broken_later_line_keeps_the_earlier_value() {
+    // The Mokka capture with a later layer appended whose window colour and
+    // font are broken, as the kdeglobals layers are read in cascade order.
+    let layered = format!(
+        "{MOKKA}\n[Colors:Window]\nBackgroundNormal=300,0,0\n\
+         [General]\nfont=,10\nfixed=Mono,big\n\
+         [KDE]\ncontrast=high\nAnimationDurationFactor=fast\n"
+    );
+
+    let earlier = parse(MOKKA);
+    let theme = parse(&layered);
+
+    assert_eq!(theme.colors.window, Some(Color32::from_rgb(30, 30, 46)));
+    assert_eq!(theme.font, earlier.font);
+    assert!(theme.font.is_some());
+    assert_eq!(theme.fixed_font, earlier.fixed_font);
+    assert_eq!(theme.colors.contrast, Some(4));
+}

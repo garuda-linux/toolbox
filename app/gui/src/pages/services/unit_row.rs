@@ -118,14 +118,7 @@ impl RowAction<UnitRow> for Control {
     }
 
     fn icon(&self, _item: &UnitRow) -> Option<Icon> {
-        Some(match self.0 {
-            UnitOperation::Start => icons::MEDIA_PLAYBACK_START,
-            UnitOperation::Stop => icons::MEDIA_PLAYBACK_STOP,
-            UnitOperation::Restart => icons::MEDIA_PLAYLIST_REPEAT,
-            // A reload has the unit read its files again, the meaning of
-            // Read again.
-            UnitOperation::Reload => icons::VIEW_REFRESH,
-        })
+        Some(operation_icon(self.0))
     }
 
     fn possible(&self, item: &UnitRow) -> Result<(), &'static str> {
@@ -223,5 +216,17 @@ impl ListItem for UnitRow {
 impl Named for UnitRow {
     fn copied_name(&self) -> &str {
         self.unit.as_str()
+    }
+}
+
+/// The icon of an operation, on its row button and on its question.
+pub(super) const fn operation_icon(operation: UnitOperation) -> Icon {
+    match operation {
+        UnitOperation::Start => icons::MEDIA_PLAYBACK_START,
+        UnitOperation::Stop => icons::MEDIA_PLAYBACK_STOP,
+        UnitOperation::Restart => icons::MEDIA_PLAYLIST_REPEAT,
+        // A reload has the unit read its files again, the meaning of
+        // Read again.
+        UnitOperation::Reload => icons::VIEW_REFRESH,
     }
 }

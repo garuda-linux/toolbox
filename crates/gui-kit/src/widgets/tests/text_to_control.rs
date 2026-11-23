@@ -8,7 +8,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::{
-    ActionRow, ButtonKind, PropertyTexts, Tone, page_header, pill_button, property_list, split_row,
+    ActionRow, ButtonKind, PropertyTexts, page_header, pill_button, property_list, split_row,
 };
 use crate::icons;
 use crate::testing::harness;
@@ -42,7 +42,7 @@ fn button_under(harness: &Harness<'static>, text: &str) -> bool {
 #[test]
 fn an_action_row_keeps_the_gap_before_its_actions() {
     let row = |ui: &mut Ui| {
-        ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system").show(ui, |ui| {
+        ActionRow::new(icons::CHECKMARK, "Update the system").show(ui, |ui| {
             _ = pill_button(ui, "Run now", ButtonKind::Soft);
         });
     };
@@ -75,12 +75,12 @@ fn a_split_row_keeps_the_gap_before_its_controls() {
 #[test]
 fn a_page_title_keeps_the_gap_before_its_controls() {
     let header = |ui: &mut Ui| {
-        page_header(ui, "Services", "What runs and what starts.", 200.0, |ui| {
+        page_header(ui, "Network and connections", "", 200.0, |ui| {
             _ = pill_button(ui, "Run now", ButtonKind::Soft);
         });
     };
 
-    let under = |harness: &Harness<'static>| button_under(harness, "What runs and what starts.");
+    let under = |harness: &Harness<'static>| button_under(harness, "Network and connections");
     assert!(!under(&drawn(Sizes::DEFAULT.text_to_control, header)));
     assert!(under(&drawn(WIDE, header)));
 }

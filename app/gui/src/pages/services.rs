@@ -22,7 +22,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitScope;
 use unit_row::UnitRow;
 
-use super::header::{TabText, TabbedIds, search_beside_sort, tabbed_header_reading};
+use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
 use super::rows::{Look, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, ServiceCommand};
@@ -74,6 +74,11 @@ impl Default for ServicesPage {
 }
 
 impl PageView for ServicesPage {
+    /// A list: the rows take the window's width, as Kirigami's list pages do.
+    fn shape(&self) -> toolbox_gui_kit::widgets::BodyShape {
+        toolbox_gui_kit::widgets::BodyShape::Wide
+    }
+
     fn left(&mut self, ctx: &egui::Context) {
         ask::forget(ctx);
     }
@@ -104,7 +109,7 @@ impl PageView for ServicesPage {
             if let Some(failure) = listed.error() {
                 let said = i18n::text(&ctx, failure_text(*failure, self.scope));
                 let again = i18n::text(&ctx, "common-read-again");
-                if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again).clicked() {
+                if empty_state_action(ui, icons::ERROR, &said, "", &again).clicked() {
                     context.commands.send(ServiceCommand::Refresh(self.scope));
                 }
             } else {
@@ -254,7 +259,7 @@ impl ServicesPage {
             |page, ui| {
                 ui.enabled_ui(listed, |ui| {
                     let field = &mut page.filter.search;
-                    _ = search_beside_sort(ui, field, "services-search", "services-search-hint");
+                    _ = search(ui, field, "services-search", "services-search-hint");
                 });
             },
             |page, ui| {
@@ -293,7 +298,6 @@ impl ServicesPage {
         sort_select(ui, "services-sort", &orders, &mut self.order);
     }
 
-    /// One counted chip per choice.
     fn filters(&mut self, ui: &mut Ui, counts: Counts) {
         let ctx = ui.ctx().clone();
         let labels = Shown::EVERY.map(|shown| {

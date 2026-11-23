@@ -44,6 +44,7 @@ pub struct Roving {
     stop: usize,
     pending: Option<usize>,
     held: Option<usize>,
+    moved: bool,
 }
 
 impl Roving {
@@ -75,6 +76,7 @@ impl Roving {
         }
 
         let mut held = None;
+        let mut moved = false;
         let active = on_stop && !Popup::is_any_open(ui.ctx());
         if active {
             held = Some(stop);
@@ -85,6 +87,7 @@ impl Roving {
                     pending: Some(target),
                 };
                 held = None;
+                moved = true;
             }
         }
 
@@ -95,7 +98,14 @@ impl Roving {
             stop: state.stop,
             pending: state.pending,
             held,
+            moved,
         }
+    }
+
+    /// Whether this frame's keys moved the stop, so the item it now names
+    /// was reached by the keyboard.
+    pub const fn moved(&self) -> bool {
+        self.moved
     }
 
     /// Whether item `index` is the Tab stop, the only focusable item.

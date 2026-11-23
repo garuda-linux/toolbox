@@ -76,7 +76,9 @@ fn the_danger_button_confirms() {
 }
 
 #[test]
-fn cancel_comes_first_in_the_tab_order() {
+fn the_affirmative_answer_comes_first_as_in_kdes_button_layout() {
+    // KDE puts the answer to accept left of Cancel, which stays at the far
+    // right, and Tab reaches them in that order.
     let mut harness = question(800.0, 600.0);
     let buttons: Vec<String> = harness
         .query_all_by_role(Role::Button)
@@ -85,7 +87,17 @@ fn cancel_comes_first_in_the_tab_order() {
 
     let keep = buttons.iter().position(|label| label == "Keep");
     let remove = buttons.iter().position(|label| label == "Remove all");
-    assert!(keep < remove, "{buttons:?}");
+    assert!(remove < keep, "{buttons:?}");
+
+    let remove_rect = harness
+        .get_by_role_and_label(Role::Button, "Remove all")
+        .rect();
+
+    let keep_rect = harness.get_by_role_and_label(Role::Button, "Keep").rect();
+    assert!(
+        remove_rect.right() <= keep_rect.left(),
+        "{remove_rect:?} {keep_rect:?}"
+    );
 
     harness.get_by_role_and_label(Role::Button, "Keep").click();
     harness.run();
@@ -294,5 +306,31 @@ fn the_whole_window_is_blurred_under_a_dialog() {
     assert!(
         crate::testing::blurred_rects(&harness).contains(&window),
         "no blur covers the window"
+    );
+}
+
+#[test]
+fn a_dialog_button_shows_its_standard_icon_before_its_text() {
+    // KDE's dialog buttons show their icons (`ButtonsHaveIcons`): OK for the
+    // affirmative answer and the cancel icon for Cancel.
+    use crate::testing::textured_rects;
+
+    let mut harness = harness(800.0, 400.0).build_ui(|ui| {
+        _ = confirm_buttons(ui, "Cancel", "OK", ButtonKind::Primary);
+    });
+
+    harness.run();
+
+    let ok = harness.get_by_label("OK").rect();
+    let cancel = harness.get_by_label("Cancel").rect();
+    let icons = textured_rects(&harness);
+
+    assert!(
+        icons.iter().any(|icon| ok.contains(icon.center())),
+        "{icons:?}"
+    );
+    assert!(
+        icons.iter().any(|icon| cancel.contains(icon.center())),
+        "{icons:?}"
     );
 }

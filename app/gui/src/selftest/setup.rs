@@ -7,7 +7,9 @@ pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
         Step::tab("Setup Assistant"),
-        Step::wait("Welcome to the Setup Assistant"),
+        Step::wait(
+            "Nothing is installed until you apply your choices at the end. Apps that are already installed show as on, and turning one off removes it.",
+        ),
         Step::Shot("setup"),
         go_to.clone(),
         Step::click("Summary"),
@@ -23,7 +25,7 @@ pub fn steps() -> Vec<Step> {
         Step::click("Summary"),
         Step::wait("Apps to install: 1"),
         Step::Shot("setup-summary"),
-        Step::click("Review and apply"),
+        Step::click("Review and Apply"),
         Step::WaitContaining("strawberry"),
         Step::click("Apply the change"),
         Step::wait("Test mode: nothing was changed"),
@@ -31,12 +33,12 @@ pub fn steps() -> Vec<Step> {
         // next read of a real system would. On the Summary the queue shows
         // only for its review, which the Console would cover.
         Step::click("Hide the Console"),
-        Step::click("Review and apply"),
-        Step::click("Remove all…"),
-        Step::click("Remove all"),
+        Step::click("Review and Apply"),
+        Step::click("Remove All…"),
+        Step::click("Remove All"),
         Step::wait("Success!"),
         Step::Shot("setup-success"),
-        Step::click("Finish setup"),
+        Step::click("Finish Setup"),
         Step::WaitGone("Success!"),
     ]
 }

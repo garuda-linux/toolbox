@@ -26,7 +26,7 @@ fn a_risky_parameter_is_added_after_its_question() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Add the parameter")
+        .get_by_role_and_label(Role::Button, "Add the Parameter")
         .click();
     harness.run();
 
@@ -48,7 +48,7 @@ fn a_confirmed_risky_parameter_leaves_the_field_empty() {
     harness.run();
 
     harness
-        .get_by_role_and_label(Role::Button, "Add the parameter")
+        .get_by_role_and_label(Role::Button, "Add the Parameter")
         .click();
     harness.run();
 

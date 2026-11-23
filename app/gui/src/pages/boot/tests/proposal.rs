@@ -15,7 +15,7 @@ fn the_proposal_answers_sit_in_its_banner() {
         .get_by_label_contains("The menu entry of the kernel linux-garuda can become")
         .rect();
 
-    for answer in ["Queue as default", "Do not change"] {
+    for answer in ["Queue as Default", "Do Not Change"] {
         let button = harness.get_by_label(answer).rect();
 
         assert!(

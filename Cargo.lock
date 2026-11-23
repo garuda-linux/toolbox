@@ -5770,6 +5770,7 @@ dependencies = [
  "tokio",
  "toolbox-appmenu",
  "toolbox-aur",
+ "toolbox-backdrop",
  "toolbox-calendar",
  "toolbox-catalog",
  "toolbox-cli",

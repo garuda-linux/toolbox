@@ -51,3 +51,6 @@ settings-log-warn = Warnungen und Fehler
 settings-log-info = Normal
 settings-log-debug = Ausführlich
 settings-log-trace = Alles
+settings-blur-desktop = Den Desktop hinter dem Fenster weichzeichnen
+settings-blur-desktop-description = Zeichnet den Desktop hinter dem Fenster weich.
+settings-blur-desktop-unavailable = Dieser Desktop bietet keine Weichzeichnung hinter Fenstern.

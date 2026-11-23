@@ -10,7 +10,7 @@ use super::settle::Gate;
 use super::{JAVA, app, succeeding_script, wait_for};
 use crate::system::step_until;
 
-const STOPPING: &str = "Stopping the run";
+const STOPPING: &str = "Stopping the Run";
 
 fn ask_to_close(harness: &mut Harness<'static, App>) {
     harness
@@ -32,10 +32,10 @@ fn a_quit_confirmed_during_a_run_shows_a_stopping_note_until_the_run_ends() {
 
     ask_to_close(&mut harness);
     step_until(&mut harness, "the question", |harness| {
-        harness.query_by_label("Cancel and quit").is_some()
+        harness.query_by_label("Cancel and Quit").is_some()
     });
 
-    harness.get_by_label("Cancel and quit").click();
+    harness.get_by_label("Cancel and Quit").click();
     step_until(&mut harness, "the stopping note", |harness| {
         harness.query_all_by_label(STOPPING).next().is_some()
     });
@@ -56,16 +56,16 @@ fn a_second_close_while_stopping_asks_nothing() {
 
     ask_to_close(&mut harness);
     step_until(&mut harness, "the question", |harness| {
-        harness.query_by_label("Cancel and quit").is_some()
+        harness.query_by_label("Cancel and Quit").is_some()
     });
-    harness.get_by_label("Cancel and quit").click();
+    harness.get_by_label("Cancel and Quit").click();
     harness.step();
 
     ask_to_close(&mut harness);
     harness.step();
     harness.step();
     assert!(
-        harness.query_by_label("Cancel and quit").is_none(),
+        harness.query_by_label("Cancel and Quit").is_none(),
         "the question came back"
     );
     gate.open();

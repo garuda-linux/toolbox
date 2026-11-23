@@ -2,49 +2,75 @@
 //! like the app's own: no outlines, depth from the surface steps, round
 //! corners, quiet scroll bars and short animations.
 
+mod scrollbar;
 #[cfg(test)]
 mod tests;
 
 use egui::style::{ScrollAnimation, ScrollStyle};
 use egui::{Color32, Context, CornerRadius, Shadow, Stroke, Style, Theme, vec2};
+pub use scrollbar::paint_bars;
+use scrollbar::{MIN_LENGTH, STRIP};
 
 use crate::palette::{self, Palette};
 use crate::tokens::{self, Tokens};
 
-/// Rows, hover fills and egui's own widgets.
-pub const RADIUS: u8 = 10;
-/// Buttons, the select and text fields. Filters keep [`PILL_RADIUS`], so a
-/// control reads apart from a chip or the search that narrows a list.
-pub const CONTROL_RADIUS: u8 = RADIUS;
-/// Section cards and the Console's terminal.
-pub const CARD_RADIUS: u8 = 14;
-/// Popovers, menus and sheets.
-pub const POPOVER_RADIUS: u8 = 16;
-/// The tile behind a row's icon, [`crate::tokens::Sizes::icon_tile`].
-pub const TILE_RADIUS: u8 = 10;
-/// The tile behind a section's icon, [`crate::tokens::Sizes::icon_tile_small`].
-pub const SMALL_TILE_RADIUS: u8 = 8;
-pub const LARGE_TILE_RADIUS: u8 = 12;
-/// Buttons, the select, the search field and segmented controls.
+/// Rows and item highlights, and the hover fill behind them: Darkly's
+/// `CornerRadius` of 9 (darkly.kcfg:57), which its item views draw
+/// (darklystyle.cpp:4753).
+pub const RADIUS: u8 = 9;
+/// Buttons, dropdowns and the select.
 ///
-/// Controls keep to three heights: 24 for tags, switches and the small
-/// buttons in a field, this for controls, menu entries and chips, and 40
-/// for check and link rows.
+/// Darkly's `CornerRadius` less the two-pixel frame (darklyhelper.cpp:829).
+/// Text fields take [`FIELD_RADIUS`]. Filters keep [`PILL_RADIUS`], so a
+/// control reads apart from a chip or the search that narrows a list.
+pub const CONTROL_RADIUS: u8 = 7;
+/// Section cards and frames, and the Console's terminal: Darkly's frame,
+/// `CornerRadius` less one (darklyhelper.cpp:466).
+pub const CARD_RADIUS: u8 = 8;
+/// Popovers, menus and sheets: Darkly's `CornerRadius` (darkly.kcfg:57).
+pub const POPOVER_RADIUS: u8 = 9;
+/// Text fields and spin boxes: Darkly's line edit, `CornerRadius` less one
+/// (darklyhelper.cpp:1045).
+pub const FIELD_RADIUS: u8 = 8;
+/// Tabs: the corners of an unchosen tab. The chosen tab is a pill of `RADIUS`.
+pub const TAB_RADIUS: u8 = 8;
+/// Check boxes: half of 9, rounded (darklyhelper.cpp:1275).
+pub const CHECK_RADIUS: u8 = 5;
+/// Tool buttons at rest: 9 less half a frame pen, 8.5 rounded up to 9
+/// (darklyhelper.cpp:908). Sunken ones take 9.
+pub const TOOL_BUTTON_RADIUS: u8 = 9;
+/// The tile behind a row's icon, [`crate::tokens::Sizes::icon_tile`].
+pub const TILE_RADIUS: u8 = 6;
+/// The tile behind a section's icon, [`crate::tokens::Sizes::icon_tile_small`].
+pub const SMALL_TILE_RADIUS: u8 = 5;
+pub const LARGE_TILE_RADIUS: u8 = 8;
+/// The least height of a card row's line and of a banner's action row.
 pub const PILL_HEIGHT: f32 = 32.0;
 /// The round ends of the search field and segmented controls, half of
 /// [`PILL_HEIGHT`].
 pub const PILL_RADIUS: u8 = 16;
 pub const SIDEBAR_WIDTH: f32 = 248.0;
-/// The column the pages' content keeps to on wide windows.
-pub const CONTENT_WIDTH: f32 = 880.0;
+/// Kirigami's `Units.gridUnit` at the default 10 pt font: the font's line
+/// height, rounded up to even.
+pub const GRID_UNIT: f32 = 18.0;
+/// Kirigami's `Units.smallSpacing`.
+pub const SMALL_SPACING: f32 = 4.0;
+/// Kirigami's `Units.largeSpacing`.
+pub const LARGE_SPACING: f32 = 8.0;
 /// How long hovers and switches take to settle, in seconds.
 pub const ANIMATION_TIME: f32 = 0.12;
 
 /// Sets both themes' styles from their desktop palettes, so a switch
 /// between dark and light needs no second call.
 pub fn apply(ctx: &Context, dark: &Palette, light: &Palette) {
-    let dark_tokens = Tokens::derive(dark, Theme::Dark);
-    let light_tokens = Tokens::derive(light, Theme::Light);
+    let glass = translucent(ctx);
+    let tokens_of = |palette: &Palette, theme: Theme| {
+        let tokens = Tokens::derive(palette, theme);
+        if glass { tokens.glass() } else { tokens }
+    };
+
+    let dark_tokens = tokens_of(dark, Theme::Dark);
+    let light_tokens = tokens_of(light, Theme::Light);
     let still = reduced_motion(ctx);
 
     for (theme, tokens) in [(Theme::Dark, &dark_tokens), (Theme::Light, &light_tokens)] {
@@ -66,18 +92,41 @@ pub fn apply(ctx: &Context, dark: &Palette, light: &Palette) {
 /// scrolling to a place then take no time. Applies to the palettes in use
 /// and every later [`apply`].
 pub fn set_reduced_motion(ctx: &Context, on: bool) {
-    if reduced_motion(ctx) == on {
+    set_switch(ctx, reduced_motion_id(), on);
+}
+
+pub fn reduced_motion(ctx: &Context) -> bool {
+    switch(ctx, reduced_motion_id())
+}
+
+/// The window's background is translucent at [`crate::tokens::WINDOW_OPACITY`]
+/// while on, so the blurred desktop shows through it. Applies to the palettes
+/// in use and to every later [`apply`].
+pub fn set_translucent(ctx: &Context, on: bool) {
+    set_switch(ctx, translucent_id(), on);
+}
+
+pub fn translucent(ctx: &Context) -> bool {
+    switch(ctx, translucent_id())
+}
+
+/// Stores a switch and applies the palettes in use again, when it changed.
+fn set_switch(ctx: &Context, id: egui::Id, on: bool) {
+    if switch(ctx, id) == on {
         return;
     }
 
-    ctx.data_mut(|data| data.insert_temp(reduced_motion_id(), on));
+    ctx.data_mut(|data| data.insert_temp(id, on));
     let (dark, light) = palette::both(ctx);
     apply(ctx, &dark, &light);
 }
 
-pub fn reduced_motion(ctx: &Context) -> bool {
-    ctx.data(|data| data.get_temp(reduced_motion_id()))
-        .unwrap_or(false)
+fn switch(ctx: &Context, id: egui::Id) -> bool {
+    ctx.data(|data| data.get_temp(id)).unwrap_or(false)
+}
+
+fn translucent_id() -> egui::Id {
+    egui::Id::unique("toolbox_gui_kit::theme::translucent")
 }
 
 fn reduced_motion_id() -> egui::Id {
@@ -94,18 +143,25 @@ fn write(style: &mut Style, tokens: &Tokens) {
     spacing.interact_size = vec2(40.0, PILL_HEIGHT);
     spacing.menu_margin = sizes.list_padding;
     spacing.window_margin = sizes.popover_padding;
-    let handle = handle_opacity(tokens);
+
+    // egui keeps the strip and the drag, its bar width is the strip so the
+    // drag covers all of it. Its own bar stays invisible, `paint_bars`
+    // draws Darkly's handle and groove over it.
     spacing.scroll = ScrollStyle {
-        bar_width: 8.0,
-        floating_width: 6.0,
-        floating_allocated_width: 0.0,
+        floating: true,
+        bar_width: STRIP,
+        floating_width: STRIP,
+        floating_allocated_width: STRIP,
+        handle_min_length: MIN_LENGTH,
+        bar_inner_margin: 0.0,
+        bar_outer_margin: 0.0,
         dormant_background_opacity: 0.0,
         active_background_opacity: 0.0,
         interact_background_opacity: 0.0,
         dormant_handle_opacity: 0.0,
-        active_handle_opacity: handle,
-        interact_handle_opacity: (handle + 0.2).min(1.0),
-        foreground_color: true,
+        active_handle_opacity: 0.0,
+        interact_handle_opacity: 0.0,
+        foreground_color: false,
         ..ScrollStyle::floating()
     };
 
@@ -126,11 +182,11 @@ fn write_visuals(style: &mut Style, tokens: &Tokens) {
     // egui fades a disabled control as a whole. Its own 0.5 leaves a
     // label at 2.5:1, 0.75 keeps it above 3:1 in light themes.
     visuals.disabled_alpha = 0.75;
-    visuals.panel_fill = tokens.window;
+    visuals.panel_fill = tokens.window_glass;
     visuals.window_fill = tokens.raised;
     visuals.window_stroke = Stroke::new(1.0, tokens.outline);
     visuals.window_corner_radius = CornerRadius::same(POPOVER_RADIUS);
-    visuals.menu_corner_radius = CornerRadius::same(CARD_RADIUS);
+    visuals.menu_corner_radius = CornerRadius::same(POPOVER_RADIUS);
     visuals.window_shadow = shadow(tokens, 10, 30);
     visuals.popup_shadow = shadow(tokens, 6, 20);
     visuals.extreme_bg_color = tokens.field;
@@ -139,8 +195,12 @@ fn write_visuals(style: &mut Style, tokens: &Tokens) {
     visuals.hyperlink_color = tokens.accent_text;
     visuals.error_fg_color = tokens.error;
     visuals.warn_fg_color = tokens.warning;
-    visuals.selection.bg_fill = tokens.accent_soft;
-    visuals.selection.stroke = Stroke::new(2.0, tokens.accent_ring);
+
+    // The selection is the solid highlight with its own text, as Breeze's
+    // item views and text selections paint it. egui draws a selected
+    // widget's text in the stroke's colour.
+    visuals.selection.bg_fill = tokens.accent_tint;
+    visuals.selection.stroke = Stroke::new(1.0, tokens.on_tint);
     visuals.text_cursor.stroke = Stroke::new(2.0, tokens.accent);
     visuals.striped = false;
     visuals.slider_trailing_fill = true;
@@ -153,19 +213,19 @@ fn write_visuals(style: &mut Style, tokens: &Tokens) {
     widgets.noninteractive.weak_bg_fill = tokens.card;
     widgets.noninteractive.bg_stroke = Stroke::new(1.0, tokens.outline);
     widgets.noninteractive.fg_stroke = Stroke::new(1.0, tokens.text);
-    widgets.noninteractive.corner_radius = CornerRadius::same(RADIUS);
+    widgets.noninteractive.corner_radius = CornerRadius::same(CARD_RADIUS);
 
     for (state, fill) in [
         (&mut widgets.inactive, tokens.field),
-        (&mut widgets.hovered, tokens.hover),
-        (&mut widgets.active, tokens.pressed),
-        (&mut widgets.open, tokens.hover),
+        (&mut widgets.hovered, tokens.button_hover),
+        (&mut widgets.active, tokens.button_pressed),
+        (&mut widgets.open, tokens.button_hover),
     ] {
         state.bg_fill = fill;
         state.weak_bg_fill = fill;
         state.bg_stroke = Stroke::new(1.0, edge);
         state.fg_stroke = Stroke::new(1.0, tokens.text);
-        state.corner_radius = CornerRadius::same(RADIUS);
+        state.corner_radius = CornerRadius::same(CONTROL_RADIUS);
         state.expansion = 0.0;
     }
 }
@@ -177,31 +237,6 @@ const fn shadow(tokens: &Tokens, offset: i8, blur: u8) -> Shadow {
         spread: 0,
         color: tokens.shadow,
     }
-}
-
-/// Scroll bars that stay drawn at rest.
-///
-/// For a view whose content runs past its edge and only scrolling shows
-/// the rest, such as a report with long lines. Elsewhere the bars float
-/// and show only while the pointer is near.
-pub const fn show_scroll_bars(style: &mut Style) {
-    let scroll = &mut style.spacing.scroll;
-    scroll.dormant_handle_opacity = scroll.active_handle_opacity;
-    scroll.floating_allocated_width = scroll.bar_width;
-}
-
-/// The handle's share of the text colour: the least that still stands out
-/// 3:1 from the window and the cards, so the bar is quiet but seen.
-fn handle_opacity(tokens: &Tokens) -> f32 {
-    (6_u8..=20)
-        .map(|step| f32::from(step) / 20.0)
-        .find(|&share| {
-            [tokens.window, tokens.card].iter().all(|&surface| {
-                let handle = tokens::mix(surface, tokens.text, share);
-                tokens::contrast(handle, surface) >= tokens::DIM_CONTRAST
-            })
-        })
-        .unwrap_or(1.0)
 }
 
 /// The quietest share of the text colour over the card that stands out

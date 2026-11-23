@@ -53,7 +53,7 @@ fn a_failed_relist_keeps_the_units_that_were_read() {
 
     // The header has its own Read again, the banner one sits below it.
     let banner = harness
-        .query_all_by_role_and_label(Role::Button, "Read again")
+        .query_all_by_role_and_label(Role::Button, "Read Again")
         .max_by(|one, other| one.rect().top().total_cmp(&other.rect().top()))
         .expect("a Read again button");
 

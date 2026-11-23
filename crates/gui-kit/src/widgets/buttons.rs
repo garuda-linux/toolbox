@@ -5,9 +5,10 @@
 //! - Soft is the default.
 //! - One Primary per view at most: the action the view leads to, such as
 //!   Apply. Equal peers stay Soft. A dialog is a view of its own.
-//! - Danger for what cannot be taken back. When a question guards it, the
-//!   button that opens the question stays Soft and the question's answer
-//!   is Danger.
+//! - Danger for what cannot be taken back. KDE has no red button: it is a
+//!   Breeze button, and the destructive icon and the question say what it
+//!   does. So Danger draws as Soft. When a question guards it, the button
+//!   that opens the question stays Soft and the question's answer is Danger.
 //! - Ghost has no fill at rest and reads as a label, so pages do not use
 //!   it for a lone action.
 //! - On every row, item rows (a file, a driver, a user) and task rows (a
@@ -16,23 +17,44 @@
 //!   [`MIN_TEXT_WIDTH`](super::layout::MIN_TEXT_WIDTH) (about 30
 //!   characters), they drop under the words at the left. `split_row` and
 //!   `ActionRow` do this.
+//!
+//! Push and flat icon buttons follow Darkly 0.5.45: a 1 px outline on a
+//! raised face, the face inset 2 px, the focus as the fill, and the sizes of
+//! `pushButtonSizeFromContents` (darklystyle.cpp).
 
 use egui::{
-    Color32, CornerRadius, Id, Rect, Response, Role, Sense, Spinner, Stroke, StrokeKind, Ui,
-    WidgetInfo, vec2,
+    Color32, CornerRadius, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo, pos2,
+    vec2,
 };
 
-use super::card::on_raised;
-use super::press::{Pointer, hover_amount};
-use super::{Choice, focus_ring, line};
+mod flat;
+pub(super) mod look;
+
+pub(super) use flat::paint_small_button;
+pub use flat::{
+    icon_button, icon_button_padding, icon_button_width, refresh_button, refresh_button_busy,
+    sidebar_button,
+};
+use look::{press_overlay, push_fill, push_shadow, push_width, tool_fill};
+
+use super::focus::focus_from_keyboard;
+use super::line;
+use super::press::{Pointer, faded, hover_amount};
+use super::top_light::paint_button_top_light;
 use crate::fonts::{BODY, Weight};
 use crate::icons::Icon;
-use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, RADIUS};
+use crate::theme::CONTROL_RADIUS;
 use crate::tokens::{self, Tokens};
-use crate::ui_ext::icon_image;
 
-const PILL_PADDING_X: f32 = 16.0;
-const ICON_PADDING: f32 = 7.0;
+/// Darkly's `Frame_FrameWidth`, the room round a push button's face.
+const FRAME: f32 = 2.0;
+/// Darkly's `ButtonHeight` (3), the margins above and below (12) and the
+/// frame on both sides (4), one pixel less than their sum of 19, so the
+/// height stays even on the 16 px text.
+pub(super) const BUTTON_EXTRA_HEIGHT: f32 = 18.0;
+const ICON_SIZE: f32 = 16.0;
+/// Darkly's `Button_ItemSpacing`, between a push button's icon and its text.
+const ITEM_SPACING: f32 = 4.0;
 /// A glyph whose picture has no size of its own.
 pub const GLYPH: f32 = 18.0;
 pub(super) const SMALL_BUTTON: f32 = 24.0;
@@ -49,80 +71,114 @@ pub enum ButtonKind {
 }
 
 impl ButtonKind {
-    pub(super) const fn fill(self, tokens: &Tokens, pointer: Pointer) -> Color32 {
-        match (self, pointer) {
-            (Self::Primary, Pointer::Rest) => tokens.accent,
-            (Self::Primary, Pointer::Hovered) => tokens.accent_hover,
-            (Self::Primary, Pointer::Pressed) => tokens.accent_pressed,
-            (Self::Soft, Pointer::Rest) => tokens.field,
-            (Self::Ghost, Pointer::Rest) => Color32::TRANSPARENT,
-            (Self::Soft | Self::Ghost, Pointer::Hovered) => tokens.hover,
-            (Self::Soft | Self::Ghost, Pointer::Pressed) => tokens.pressed,
-            (Self::Danger, Pointer::Rest) => tokens.error,
-            (Self::Danger, Pointer::Hovered) => tokens.error_hover,
-            (Self::Danger, Pointer::Pressed) => tokens.error_pressed,
-        }
-    }
-
-    const fn ink(self, tokens: &Tokens) -> Color32 {
+    /// The fill a button rests on: Darkly's button colour, or the default
+    /// button's grey, which takes the place of the accent.
+    const fn base(self, tokens: &Tokens) -> Color32 {
         match self {
-            Self::Primary => tokens.on_accent,
-            Self::Soft | Self::Ghost => tokens.text,
-            Self::Danger => tokens.on_error,
+            Self::Primary => tokens.default_button,
+            Self::Soft | Self::Danger => tokens.input,
+            Self::Ghost => Color32::TRANSPARENT,
         }
     }
 
-    /// The fill at rest. On a dialog a Soft button takes `field_on_raised`.
-    const fn rest_fill(self, tokens: &Tokens, on_dialog: bool) -> Color32 {
-        if on_dialog && matches!(self, Self::Soft) {
-            tokens.field_on_raised
-        } else {
-            self.fill(tokens, Pointer::Rest)
+    pub(super) fn fill(self, tokens: &Tokens, pointer: Pointer) -> Color32 {
+        self.focused_fill(tokens, pointer, false)
+    }
+
+    fn focused_fill(self, tokens: &Tokens, pointer: Pointer, focused: bool) -> Color32 {
+        match self {
+            // Darkly's flat tool button: the text colour under the pointer,
+            // the focus colour when only the focus holds it.
+            Self::Ghost => tool_fill(tokens, pointer, focused).unwrap_or(Color32::TRANSPARENT),
+            Self::Primary | Self::Soft | Self::Danger => {
+                push_fill(tokens, self.base(tokens), pointer, focused)
+            }
         }
+    }
+
+    /// The fill at rest, for tests that tell the kinds apart by it. Danger
+    /// shares Soft's fill, as KDE has no red button.
+    pub fn rest_fill(self, tokens: &Tokens) -> Color32 {
+        self.fill(tokens, Pointer::Rest)
+    }
+
+    /// Whether the fill under the pointer is the keyboard focus fill, which
+    /// the text reads on. A flat button under the pointer takes the text
+    /// colour's tint instead, and a press keeps the pressed fill.
+    pub(super) fn shows_focus_fill(self, pointer: Pointer, focused: bool) -> bool {
+        focused
+            && match self {
+                Self::Ghost => pointer == Pointer::Rest,
+                Self::Primary | Self::Soft | Self::Danger => pointer != Pointer::Pressed,
+            }
+    }
+
+    const fn raised(self) -> bool {
+        matches!(self, Self::Primary | Self::Soft | Self::Danger)
     }
 
     /// A press shows at once, as the finger expects it.
-    fn fill_now(self, ui: &Ui, response: &Response, tokens: &Tokens) -> Color32 {
+    fn now(self, ui: &Ui, response: &Response, tokens: &Tokens) -> Color32 {
         let pointer = Pointer::of(response);
+        let focused = focus_from_keyboard(ui, response) && ui.is_enabled();
         if pointer == Pointer::Pressed {
-            return self.fill(tokens, pointer);
+            return self.focused_fill(tokens, pointer, focused);
         }
 
         let hover = hover_amount(ui, response, pointer);
-        self.rest_fill(tokens, on_raised_surface(ui))
-            .lerp_to_gamma(self.fill(tokens, Pointer::Hovered), hover)
+        self.focused_fill(tokens, Pointer::Rest, focused)
+            .lerp_to_gamma(self.focused_fill(tokens, Pointer::Hovered, focused), hover)
     }
 }
 
 pub fn pill_button(ui: &mut Ui, text: &str, kind: ButtonKind) -> Response {
-    pill(ui, text, kind, false, 0.0)
+    pill(ui, text, kind, 0.0, None)
 }
 
 /// Screen readers hear `name`, for a row of buttons that would all say "Edit" or "Wiki".
 pub fn named_pill_button(ui: &mut Ui, text: &str, kind: ButtonKind, name: &str) -> Response {
-    pill(ui, text, kind, false, 0.0).accessible_name(name)
+    pill(ui, text, kind, 0.0, None).accessible_name(name)
 }
 
 /// For a button whose text changes (Review and Hide), so what sits beside it stays put.
 pub fn pill_button_at_least(ui: &mut Ui, text: &str, kind: ButtonKind, width: f32) -> Response {
-    pill(ui, text, kind, false, width)
+    pill(ui, text, kind, width, None)
 }
 
-/// For a place whose wash is the button's own fill, as a neutral banner is.
-pub(super) fn rimmed_pill_button(ui: &mut Ui, text: &str, kind: ButtonKind) -> Response {
-    pill(ui, text, kind, true, 0.0)
+/// A button with its standard icon before the text, as KDE's dialog
+/// buttons show theirs (`ButtonsHaveIcons`).
+pub fn pill_button_with_icon(ui: &mut Ui, text: &str, kind: ButtonKind, icon: Icon) -> Response {
+    pill(ui, text, kind, 0.0, Some(icon))
 }
 
-fn pill(ui: &mut Ui, text: &str, kind: ButtonKind, rimmed: bool, width: f32) -> Response {
+/// [`pill_button_with_icon`] at least `width` wide, for a text that changes.
+pub fn pill_button_with_icon_at_least(
+    ui: &mut Ui,
+    text: &str,
+    kind: ButtonKind,
+    width: f32,
+    icon: Icon,
+) -> Response {
+    pill(ui, text, kind, width, Some(icon))
+}
+
+/// How wide [`pill_button_with_icon`] draws `text`, whichever icon it has, for
+/// a layout that places it before drawing.
+pub fn pill_width_with_icon(ui: &Ui, text: &str) -> f32 {
+    let galley = line(ui, text, Weight::Regular, BODY, Color32::PLACEHOLDER);
+    push_width(galley.size().x + icon_run(), 0.0)
+}
+
+/// How far an icon pushes the text right: the icon and the gap after it.
+const fn icon_run() -> f32 {
+    ICON_SIZE + ITEM_SPACING
+}
+
+fn pill(ui: &mut Ui, text: &str, kind: ButtonKind, width: f32, icon: Option<Icon>) -> Response {
     let tokens = tokens::current(ui.ctx());
-
-    // A Soft fill at rest matches the hover fill of the row it sits on.
-    let rimmed = rimmed || (kind == ButtonKind::Soft && on_raised(ui));
-    let galley = line(ui, text, Weight::SemiBold, BODY, Color32::PLACEHOLDER);
-    let size = vec2(
-        PILL_PADDING_X.mul_add(2.0, galley.size().x).max(width),
-        PILL_HEIGHT,
-    );
+    let galley = line(ui, text, Weight::Regular, BODY, Color32::PLACEHOLDER);
+    let run = if icon.is_some() { icon_run() } else { 0.0 };
+    let size = vec2(push_width(galley.size().x + run, width), push_height(ui));
 
     let (rect, response) = ui.allocate_exact_size(size, Sense::click());
     response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), text));
@@ -130,184 +186,99 @@ fn pill(ui: &mut Ui, text: &str, kind: ButtonKind, rimmed: bool, width: f32) -> 
     if ui.is_rect_visible(rect) {
         // A disabled Ui fades the button's own colours, the rule in
         // `press.rs`, so a Ghost stays without a fill.
-        let (fill, ink) = (kind.fill_now(ui, &response, &tokens), kind.ink(&tokens));
-
-        // A focused button shows the ring alone. A rim inside it would
-        // draw a second outline a few points in.
-        let rim = if rimmed && !response.has_focus() {
-            Stroke::new(1.0, tokens.rim)
+        let pointer = Pointer::of(&response);
+        let focused = focus_from_keyboard(ui, &response) && ui.is_enabled();
+        let fill = kind.now(ui, &response, &tokens);
+        let ink = if kind.shows_focus_fill(pointer, focused) {
+            tokens.on_focus
         } else {
-            Stroke::NONE
+            // Darkly draws every push button's text in the text colour,
+            // also on the accent and the danger fill.
+            tokens.text
         };
 
+        let face = rect.shrink(FRAME);
+        let face = if pointer == Pointer::Pressed {
+            face.translate(vec2(0.0, 1.0))
+        } else {
+            face
+        };
+
+        let lit = kind.raised() && ui.is_enabled();
+        if lit {
+            ui.painter()
+                .add(push_shadow(&tokens, pointer, focused).as_shape(face, CONTROL_RADIUS));
+        }
+
         ui.painter()
-            .rect(rect, CONTROL_RADIUS, fill, rim, StrokeKind::Inside);
-        let position = rect.center() - galley.size() / 2.0;
+            .rect_filled(face, CornerRadius::same(CONTROL_RADIUS), fill);
+
+        // The edge of a raised button at rest and under the pointer, as a
+        // field draws it. A focus or press fill replaces it.
+        if kind.raised() && !focused && pointer != Pointer::Pressed {
+            ui.painter().rect_stroke(
+                face,
+                CornerRadius::same(CONTROL_RADIUS),
+                Stroke::new(1.0, faded(ui, tokens.card_outline, ui.is_enabled())),
+                StrokeKind::Inside,
+            );
+        }
+
+        if lit {
+            paint_button_top_light(ui.painter(), face, CONTROL_RADIUS);
+        }
+
+        if kind.raised() && pointer == Pointer::Pressed {
+            ui.painter()
+                .rect_filled(face, CONTROL_RADIUS, press_overlay(&tokens));
+        }
+
+        // The icon and the text are centred together, as Breeze lays them out.
+        let content = galley.size().x + run;
+        let left = content.mul_add(-0.5, rect.center().x);
+        if let Some(icon) = icon {
+            let glyph = Rect::from_center_size(
+                pos2(left + ICON_SIZE / 2.0, rect.center().y),
+                vec2(ICON_SIZE, ICON_SIZE),
+            );
+
+            let theme = crate::icons::theme_in_use(ui.ctx());
+            icon.image(theme.as_deref(), ink)
+                .fit_to_exact_size(vec2(ICON_SIZE, ICON_SIZE))
+                .paint_at(ui, glyph);
+        }
+
+        let position = pos2(left + run, rect.center().y - galley.size().y / 2.0);
         ui.painter().galley(position, galley, ink);
-        focus_ring(ui, &response, CONTROL_RADIUS);
     }
 
     response
+}
+
+/// A push button's height in `ui`: its text plus 18 px. A line that holds
+/// one grows to it (`text_block_height_with`).
+pub fn push_height(ui: &Ui) -> f32 {
+    super::list::text_line_height(ui, Weight::Regular, BODY) + BUTTON_EXTRA_HEIGHT
 }
 
 /// How wide [`pill_button`] draws `text`, for a layout that places it
 /// before drawing.
 pub fn pill_width(ui: &Ui, text: &str) -> f32 {
-    let galley = line(ui, text, Weight::SemiBold, BODY, Color32::PLACEHOLDER);
-    PILL_PADDING_X.mul_add(2.0, galley.size().x)
+    let galley = line(ui, text, Weight::Regular, BODY, Color32::PLACEHOLDER);
+    push_width(galley.size().x, 0.0)
 }
 
-/// One row of pill buttons at the right end of the space. `labels` are the
-/// buttons `add` draws, so the row knows its width before it draws them.
-pub fn right_buttons<R>(ui: &mut Ui, labels: &[&str], add: impl FnOnce(&mut Ui) -> R) -> R {
+/// One row of pill buttons at the right end of the space. `widths` are the
+/// buttons `add` draws, as [`pill_width`] or [`pill_width_with_icon`] gives
+/// them, so the row knows its width before it draws them.
+pub fn right_buttons<R>(ui: &mut Ui, widths: &[f32], add: impl FnOnce(&mut Ui) -> R) -> R {
     ui.horizontal(|ui| {
         let gap = tokens::current(ui.ctx()).sizes.control_gap;
         ui.spacing_mut().item_spacing.x = gap;
-        let width = labels
-            .iter()
-            .map(|label| pill_width(ui, label) + gap)
-            .sum::<f32>()
-            - gap;
+        let width = widths.iter().map(|width| width + gap).sum::<f32>() - gap;
 
         ui.add_space((ui.available_width() - width).max(0.0));
         add(ui)
     })
     .inner
-}
-
-/// How wide an [`icon_button`] is, for a row that makes room for one.
-pub fn icon_button_width(ui: &Ui) -> f32 {
-    let glyph = glyph_size(&icon_image(
-        ui,
-        crate::icons::VIEW_REFRESH,
-        Color32::PLACEHOLDER,
-    ))
-    .x;
-
-    ICON_PADDING.mul_add(2.0, glyph)
-}
-
-/// `name` names it and shows on hover.
-pub fn icon_button(ui: &mut Ui, icon: Icon, name: &str) -> Response {
-    let idle = tokens::current(ui.ctx()).secondary;
-    glyph_button(ui, icon, name, idle, false).on_hover_text(name)
-}
-
-pub fn sidebar_button(ui: &mut Ui, icon: Icon, name: &str) -> Response {
-    let idle = tokens::current(ui.ctx()).sidebar_text;
-    glyph_button(ui, icon, name, idle, false).on_hover_text(name)
-}
-
-/// `spinning` draws a spinner in place of the glyph.
-fn glyph_button(ui: &mut Ui, icon: Icon, name: &str, idle: Color32, spinning: bool) -> Response {
-    let tokens = tokens::current(ui.ctx());
-    let image = icon_image(ui, icon, idle);
-    let glyph = glyph_size(&image);
-    let size = glyph + vec2(ICON_PADDING, ICON_PADDING) * 2.0;
-    let (rect, response) = ui.allocate_exact_size(size, Sense::click());
-    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), name));
-
-    if ui.is_rect_visible(rect) {
-        let pointer = Pointer::of(&response);
-        let hovered = pointer.is_under() || response.has_focus();
-        let fill = match pointer {
-            Pointer::Pressed => Some(tokens.pressed),
-            Pointer::Hovered | Pointer::Rest => hovered.then_some(tokens.hover),
-        };
-
-        if let Some(fill) = fill {
-            ui.painter()
-                .rect_filled(rect, CornerRadius::same(RADIUS), fill);
-        }
-
-        let tint = if hovered { tokens.text } else { idle };
-
-        let glyph_rect = Rect::from_center_size(rect.center(), glyph);
-        if spinning {
-            Spinner::new()
-                .size(glyph.x)
-                .color(tint)
-                .paint_at(ui, glyph_rect);
-        } else {
-            icon_image(ui, icon, tint).paint_at(ui, glyph_rect);
-        }
-
-        focus_ring(ui, &response, RADIUS);
-    }
-
-    response
-}
-
-/// F5 presses it too, so a page is read again from the keyboard alone.
-/// F5 is left to a dialog over the page and to the program in a focused
-/// terminal.
-pub fn refresh_button(ui: &mut Ui, name: &str) -> Choice<()> {
-    refresh_button_busy(ui, name, None)
-}
-
-/// [`refresh_button`] that, while `busy` names the read in progress, spins,
-/// is named `busy` and takes neither a click nor F5, so no second read
-/// starts. It stays enabled, so it keeps the focus.
-pub fn refresh_button_busy(ui: &mut Ui, name: &str, busy: Option<&str>) -> Choice<()> {
-    let spinning = busy.is_some();
-    let name = busy.unwrap_or(name);
-    let idle = tokens::current(ui.ctx()).secondary;
-    let button =
-        glyph_button(ui, crate::icons::VIEW_REFRESH, name, idle, spinning).on_hover_text(name);
-
-    let clicked = button.clicked() && !spinning;
-    let ctx = ui.ctx().clone();
-    let free = !spinning
-        && ui.is_enabled()
-        && ctx.memory(egui::Memory::top_modal_layer).is_none()
-        && !crate::terminal_view::owns_keys(&ctx);
-
-    let pressed =
-        free && ui.input_mut(|input| input.consume_key(egui::Modifiers::NONE, egui::Key::F5));
-
-    Choice {
-        response: button,
-        value: (clicked || pressed).then_some(()),
-    }
-}
-
-/// Marks `ui` as a dialog's surface, so the Soft buttons in it take
-/// `field_on_raised`.
-pub(super) fn mark_raised_surface(ui: &Ui) {
-    ui.data_mut(|data| data.insert_temp(raised_surface_id(ui.scope_id()), true));
-}
-
-fn on_raised_surface(ui: &Ui) -> bool {
-    ui.stack().iter().any(|frame| {
-        ui.data(|data| data.get_temp::<bool>(raised_surface_id(frame.scope_id)))
-            .unwrap_or(false)
-    })
-}
-
-fn raised_surface_id(scope: Id) -> Id {
-    scope.with("toolbox_gui_kit::raised_surface")
-}
-
-pub(super) fn glyph_size(image: &egui::Image<'_>) -> egui::Vec2 {
-    image.size().unwrap_or_else(|| vec2(GLYPH, GLYPH))
-}
-
-pub(super) fn paint_small_button(
-    ui: &Ui,
-    rect: Rect,
-    response: &Response,
-    icon: Icon,
-    lit: Color32,
-) {
-    let tokens = tokens::current(ui.ctx());
-    let shown = response.hovered() || response.has_focus();
-    if shown {
-        ui.painter()
-            .rect_filled(rect, CornerRadius::same(RADIUS), lit);
-    }
-
-    let tint = if shown { tokens.text } else { tokens.secondary };
-    let glyph = Rect::from_center_size(rect.center(), vec2(SMALL_GLYPH, SMALL_GLYPH));
-    icon_image(ui, icon, tint).paint_at(ui, glyph);
-    focus_ring(ui, response, RADIUS);
 }

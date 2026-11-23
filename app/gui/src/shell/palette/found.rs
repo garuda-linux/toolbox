@@ -14,7 +14,6 @@ use toolbox_core::Snapshot;
 use toolbox_core::features::search::Needle;
 use toolbox_core::features::search::ranked::{Ranked, by_best};
 use toolbox_gui_kit::icons::Icon;
-use toolbox_gui_kit::tokens::Hue;
 
 use crate::command::Command;
 use crate::i18n;
@@ -38,7 +37,7 @@ pub enum Section {
 
 #[derive(Clone, Debug)]
 pub enum Look {
-    Glyph(Icon, Hue),
+    Glyph(Icon),
     /// The app's letter tile. `package` keeps its hue, as on Discover.
     Letter {
         package: String,

@@ -16,7 +16,7 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, PreferencesSetup, Setup, snapshot};
 
 use self::source::{Database, Log};
-use crate::common::{Fixture, SMALLEST, TALL, WIDTH, packages, type_into};
+use crate::common::{Fixture, SMALLEST, TALL, WIDTH, packages, queued_shown, type_into};
 use crate::system::{first_read, settle, step_until};
 
 const INSTALLED: [&str; 5] = ["babl", "gegl", "gimp", "leftover", "paru"];
@@ -125,6 +125,13 @@ pub fn open_package(harness: &mut Harness<'static, App>, package: &str, url: &st
     settle(harness);
 }
 
+/// Narrows the window until the list and its details no longer fit side by
+/// side, so the details replace the list with Back.
+pub fn narrow(harness: &mut Harness<'static, App>) {
+    harness.set_size(egui::vec2(SMALLEST.0, TALL));
+    settle(harness);
+}
+
 #[test]
 fn the_list_starts_on_the_installed_packages() {
     let mut fixture = app(Theme::Dark, None);
@@ -146,11 +153,15 @@ fn an_install_from_a_search_waits_in_the_queue() {
     assert!(listed(harness, "inkscape"));
     assert!(!listed(harness, "gimp"));
 
+    harness
+        .get_by_role_and_label(Role::ListItem, "inkscape")
+        .click();
+    harness.run();
     harness.get_by_label("Install inkscape").click();
     harness.run();
 
-    assert!(harness.query_by_label("Installs with Apply").is_some());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(harness.query_all_by_label("Installs with Apply").count() >= 1);
+    assert!(queued_shown(harness));
 }
 
 #[test]
@@ -172,8 +183,35 @@ fn a_removal_names_what_goes_along_and_waits_in_the_queue() {
         .get_by_role_and_label(Role::Button, "Remove")
         .click();
     harness.run();
-    assert!(harness.query_by_label("Take back gimp").is_some());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(harness.query_by_label("Take Back gimp").is_some());
+    assert!(queued_shown(harness));
+}
+
+/// The back button leads the title's row, on the row's centre line, and
+/// is not pressed against the window's top edge.
+#[test]
+fn the_back_button_leads_the_title_row() {
+    let mut fixture = app(Theme::Dark, None);
+    let harness = fixture.harness();
+    open_package(harness, "gimp", "https://www.gimp.org/");
+
+    narrow(harness);
+    let back = harness
+        .get_by_role_and_label(Role::Button, "Back to Packages")
+        .rect();
+
+    let title = harness.get_by_role_and_label(Role::Heading, "gimp").rect();
+
+    assert!(
+        back.right() <= title.left(),
+        "the back button {back:?} is not left of the title {title:?}"
+    );
+
+    assert!(
+        (back.center().y - title.center().y).abs() <= 2.0,
+        "the back button {back:?} is off the title's row {title:?}"
+    );
+    assert!(back.top() >= 4.0, "the back button sits at {back:?}");
 }
 
 #[test]
@@ -197,7 +235,7 @@ fn a_dependency_opens_its_own_page_and_back_returns_to_the_first() {
         harness.query_by_label("https://www.gimp.org/").is_some()
     });
 
-    harness.get_by_label("Back to Packages").click();
+    harness.key_press(egui::Key::Escape);
     harness.run();
     assert!(listed(harness, "gimp"));
 }
@@ -245,4 +283,67 @@ fn snapshots() {
     results.add(deutsch.try_snapshot("packages/list_german"));
     open_package(deutsch, "gimp", "https://www.gimp.org/");
     results.add(deutsch.try_snapshot("packages/detail_german"));
+}
+
+#[test]
+fn at_the_narrowest_two_columns_the_list_and_details_do_not_overlap() {
+    for language in [None, Some("de-DE")] {
+        let mut fixture = app(Theme::Dark, language);
+        let harness = fixture.harness();
+        open_package(harness, "gimp", "https://www.gimp.org/");
+
+        let width = narrowest_two_columns(harness);
+        let line = column_line(harness);
+        let rows: Vec<_> = harness
+            .query_all_by_role(Role::ListItem)
+            .map(|row| row.rect())
+            .collect();
+
+        assert!(
+            rows.len() >= INSTALLED.len(),
+            "{language:?}: at {width} the list shows {rows:?}"
+        );
+
+        for rect in rows {
+            assert!(
+                rect.right() <= line,
+                "{language:?}: at {width} the row {rect:?} crosses the line at {line} into the details"
+            );
+        }
+    }
+}
+
+/// The narrowest window that still lists the packages beside the open
+/// details, found by halving the widths between the smallest and the usual
+/// window.
+fn narrowest_two_columns(harness: &mut Harness<'static, App>) -> f32 {
+    let (mut narrow, mut wide) = (SMALLEST.0, WIDTH);
+    for _ in 0..10_u32 {
+        let middle = f32::midpoint(narrow, wide);
+        harness.set_size(egui::vec2(middle, TALL));
+        settle(harness);
+        if listed(harness, "leftover") {
+            wide = middle;
+        } else {
+            narrow = middle;
+        }
+    }
+
+    harness.set_size(egui::vec2(wide, TALL));
+    settle(harness);
+    wide
+}
+
+/// The x of the line the columns draw between the list and the details,
+/// the vertical line in the separator colour nearest left of the details'
+/// heading. The details column starts a gap right of it.
+fn column_line(harness: &Harness<'static, App>) -> f32 {
+    let heading = harness.get_by_role_and_label(Role::Heading, "gimp").rect();
+    let separator = toolbox_gui_kit::tokens::current(&harness.ctx).separator;
+    toolbox_gui_kit::testing::lines_in(harness, separator)
+        .iter()
+        .filter(|[from, to]| (from.x - to.x).abs() < 0.01 && from.x < heading.left())
+        .map(|[from, _]| from.x)
+        .max_by(f32::total_cmp)
+        .expect("the line between the columns")
 }

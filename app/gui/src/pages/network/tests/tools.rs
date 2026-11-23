@@ -14,7 +14,7 @@ fn pinged(succeeded: bool, console_open: bool) -> Shown {
     tab(&mut harness, "Tools");
     harness.state_mut().fixture.console_open = console_open;
     harness
-        .get_by_role_and_label(Role::Button, "Run ping")
+        .get_by_role_and_label(Role::Button, "Run Ping")
         .click();
     harness.run();
 
@@ -126,7 +126,9 @@ fn a_number_ends_at_the_right_of_its_field() {
 
     let digits = toolbox_gui_kit::testing::painted_text(&harness, "4").expect("painted");
     let end = digits.pos.x + digits.galley.rect.right();
-    let padding = harness.ctx.global_style().spacing.button_padding.x;
+
+    // A field's text keeps Breeze's TextField padding of 6 px to its end.
+    let padding = 6.0;
 
     assert!(
         (field.right() - padding - end).abs() < 1.5,

@@ -5311,6 +5311,21 @@
     },
     "discover-problem-reason": {
       "string": "Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt. {reason}"
+    },
+    "discover-back": {
+      "string": "Zurück"
+    },
+    "discover-back-name": {
+      "string": "Zurück zum App-Katalog"
+    },
+    "discover-details-packages": {
+      "string": "Pakete"
+    },
+    "discover-details-website": {
+      "string": "Webseite"
+    },
+    "discover-package-from": {
+      "string": "{package} aus {repository}"
     }
   },
   "guide": {
@@ -5936,7 +5951,7 @@
       "string": "Locales und Pakete durchsuchen"
     },
     "locales-search-hint": {
-      "string": "Locales und Pakete durchsuchen…"
+      "string": "Suchen…"
     },
     "locales-filter-utf8": {
       "string": "Nur UTF-8"
@@ -6938,13 +6953,13 @@
       "string": "Abbrechen"
     },
     "packages-back": {
-      "string": "← Pakete"
+      "string": "Pakete"
     },
     "packages-back-name": {
       "string": "Zurück zu den Paketen"
     },
     "packages-back-to": {
-      "string": "← {package}"
+      "string": "{package}"
     },
     "packages-back-to-name": {
       "string": "Zurück zu {package}"
@@ -7683,6 +7698,12 @@
     },
     "settings-log-trace": {
       "string": "Alles"
+    },
+    "settings-blur-desktop": {
+      "string": "Den Desktop hinter dem Fenster weichzeichnen"
+    },
+    "settings-blur-desktop-description": {
+      "string": "Zeichnet den Desktop hinter dem Fenster weich."
     }
   },
   "setup": {
@@ -7692,17 +7713,8 @@
     "setup-welcome": {
       "string": "Willkommen"
     },
-    "setup-welcome-title": {
-      "string": "Willkommen beim Einrichtungsassistenten"
-    },
     "setup-welcome-text": {
-      "string": "Gewünschte Apps Kategorie für Kategorie auswählen. Nichts wird installiert, bevor die Auswahl am Ende geprüft und übernommen wurde."
-    },
-    "setup-welcome-steps": {
-      "string": "{count, plural, one {Es gibt 1 Kategorie.} other {Es gibt {count} Kategorien.}} „Weiter“ überspringt eine nicht benötigte Kategorie, „Zurück“ kehrt zu ihr zurück. Über die Liste dazwischen wird jede Kategorie direkt erreicht."
-    },
-    "setup-welcome-installed": {
-      "string": "Bereits installierte Apps sind eingeschaltet. Wird eine ausgeschaltet, wird sie entfernt."
+      "string": "Nichts wird installiert, bevor die Auswahl am Ende übernommen wird. Bereits installierte Apps sind eingeschaltet, eine ausgeschaltete App wird entfernt."
     },
     "setup-unavailable": {
       "string": "Die App-Liste des Einrichtungsassistenten konnte nicht gelesen werden"
@@ -8382,7 +8394,7 @@
       "string": "Benutzer suchen"
     },
     "users-search-hint": {
-      "string": "Benutzer suchen…"
+      "string": "Suchen…"
     },
     "users-search-detail": {
       "string": "Durchsucht Benutzernamen, UIDs, vollständige Namen, Home-Verzeichnisse, Shells und Gruppen."
@@ -8835,7 +8847,7 @@
       "string": "Gruppen suchen"
     },
     "groups-search-hint": {
-      "string": "Gruppen suchen…"
+      "string": "Suchen…"
     },
     "groups-search-detail": {
       "string": "Durchsucht Gruppennamen, GIDs und Mitglieder."

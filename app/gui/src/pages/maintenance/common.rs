@@ -9,7 +9,7 @@ use toolbox_gui_kit::widgets::{
 };
 
 use super::repairs::Asked;
-use super::{heading, plan_button};
+use super::{heading, plan_button_at_least};
 use crate::command::MaintenanceCommand;
 use crate::i18n;
 use crate::i18n::Arg;
@@ -18,7 +18,7 @@ use crate::pages::PageContext;
 
 /// `asking` holds the task whose question is open.
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
-    heading(ui, icons::PACKAGE, "maintenance-operations");
+    heading(ui, "maintenance-operations");
     let rows = operations(context.changes);
     let queue_width = queue_width(ui, &rows);
     card(ui, |ui| {
@@ -34,15 +34,18 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) 
     }
 
     ui.add_space(ui.tokens().sizes.section_gap);
-    heading(ui, icons::TOOLS, "maintenance-tools");
+    heading(ui, "maintenance-tools");
     let Some(programs) = context.home.programs else {
         super::waiting(ui, "maintenance-tools", Tool::ALL.len() + 1);
         return;
     };
 
+    let tool_width = tool_width(ui);
     card(ui, |ui| {
         for (index, tool) in programs.tools.iter().enumerate() {
-            card_row(ui, index == 0, |ui| tool_row(ui, context, tool));
+            card_row(ui, index == 0, |ui| {
+                tool_row(ui, context, (tool, tool_width));
+            });
         }
     });
 }
@@ -63,7 +66,7 @@ fn operation_row(
         "".into()
     };
 
-    ActionRow::new(operation_icon(operation.operation), Tone::Neutral, &title)
+    ActionRow::new(operation_icon(operation.operation), &title)
         .detail(&detail)
         .queued(&queued)
         .show(ui, |ui| {
@@ -93,7 +96,7 @@ fn operation_row(
                 ButtonKind::Soft
             };
 
-            if plan_button(ui, context, "maintenance-run-now", kind) {
+            if plan_button_at_least(ui, context, "maintenance-run-now", kind, 0.0) {
                 Asked::Operation(operation.operation).start(context, asking);
             }
         });
@@ -101,7 +104,7 @@ fn operation_row(
 
 /// A missing tool says so below its own detail, and its button installs
 /// it first.
-fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
+fn tool_row(ui: &mut Ui, context: &PageContext<'_>, (tool, button_width): (&ToolRow, f32)) {
     let ctx = ui.ctx().clone();
     let id = tool.tool.text_id();
     let mut detail = i18n::text(&ctx, &format!("{id}-detail")).into_owned();
@@ -129,7 +132,7 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
     };
 
     let title = i18n::text(&ctx, &id);
-    let words = ActionRow::new(tool_icon(tool.tool), Tone::Neutral, &title).detail(&detail);
+    let words = ActionRow::new(tool_icon(tool.tool), &title).detail(&detail);
     let not_installed = i18n::text(&ctx, "maintenance-not-installed");
     let words = if tool.installed {
         words
@@ -163,7 +166,7 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, tool: &ToolRow) {
             return;
         }
 
-        if plan_button(ui, context, button, ButtonKind::Soft) {
+        if plan_button_at_least(ui, context, button, ButtonKind::Soft, button_width) {
             context
                 .commands
                 .send(MaintenanceCommand::OpenTool(tool.tool));
@@ -202,5 +205,14 @@ fn queue_width(ui: &Ui, rows: &[OperationRow]) -> f32 {
             ]
         })
         .map(|id| pill_width(ui, &i18n::text(ui.ctx(), &id)))
+        .fold(0.0_f32, f32::max)
+}
+
+/// The wider of the Open and the Install and open labels, so the tools' buttons
+/// share one column.
+fn tool_width(ui: &Ui) -> f32 {
+    ["maintenance-open", "maintenance-install-open"]
+        .into_iter()
+        .map(|id| pill_width(ui, &i18n::text(ui.ctx(), id)))
         .fold(0.0_f32, f32::max)
 }

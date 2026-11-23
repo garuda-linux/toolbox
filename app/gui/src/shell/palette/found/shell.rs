@@ -5,17 +5,16 @@ use egui::Context;
 use toolbox_core::features::search::Needle;
 use toolbox_core::features::search::ranked::top;
 use toolbox_gui_kit::icons;
-use toolbox_gui_kit::tokens::Hue;
 
 use super::{Look, Part, Pick, Row, Section};
 use crate::command::{MaintenanceCommand, UiCommand};
 use crate::i18n;
 use crate::page::PageId;
-use crate::page_ui::{GroupLook as _, PageLook as _, listed};
+use crate::page_ui::{PageLook as _, listed};
 use crate::pages::{PageContext, maintenance};
 
 pub fn page_look(page: PageId) -> Look {
-    Look::Glyph(page.icon(), page.group().hue())
+    Look::Glyph(page.icon())
 }
 
 /// The section and tile of a command. A command's glyph is the one its
@@ -35,7 +34,7 @@ fn command_look(command: UiCommand) -> (Section, Look) {
         UiCommand::Quit => icons::WINDOW_CLOSE,
     };
 
-    (Section::Commands, Look::Glyph(glyph, Hue::Accent))
+    (Section::Commands, Look::Glyph(glyph))
 }
 
 pub fn all(ctx: &Context, context: &PageContext<'_>) -> Vec<Row> {

@@ -25,7 +25,7 @@ fn the_review_shows_the_changes_and_saves_on_request() {
     let configs = listed().with(reviewing(), Viewing::default());
     let mut harness = page(configs);
 
-    assert!(shows(&harness, "Save the changes to /etc/default/grub?"));
+    assert!(shows(&harness, "Save the Changes to /etc/default/grub?"));
     assert!(shows(&harness, "+GRUB_TIMEOUT=2"));
     assert!(shows(&harness, "-GRUB_TIMEOUT=5"));
 
@@ -40,7 +40,7 @@ fn a_closed_review_keeps_the_changes_for_later() {
     let configs = listed().with(reviewing(), Viewing::default());
     let mut harness = page(configs);
 
-    harness.get_by_label("Close and keep the edits").click();
+    harness.get_by_label("Close and Keep the Edits").click();
     harness.run();
 
     assert!(shows(
@@ -48,10 +48,10 @@ fn a_closed_review_keeps_the_changes_for_later() {
         "Your changes to /etc/default/grub wait for your review."
     ));
 
-    harness.get_by_label("Review changes").click();
+    harness.get_by_label("Review Changes").click();
     harness.run();
 
-    assert!(shows(&harness, "Save the changes to /etc/default/grub?"));
+    assert!(shows(&harness, "Save the Changes to /etc/default/grub?"));
     assert_eq!(sent(&harness), []);
 }
 
@@ -60,8 +60,8 @@ fn a_guarded_file_is_shown_and_closed() {
     let configs = listed().with(Session::default(), viewing());
     let mut harness = page(configs);
 
-    assert!(shows(&harness, "The text of /etc/sudoers"));
-    assert!(shows(&harness, "Copy all"));
+    assert!(shows(&harness, "The Text of /etc/sudoers"));
+    assert!(shows(&harness, "Copy All"));
 
     harness.query_all_by_label("Close").last().unwrap().click();
     harness.run();
@@ -142,10 +142,10 @@ fn discard_asks_first_and_keeps_the_edits_on_no() {
 
     harness.get_by_label("Discard…").click();
     harness.run();
-    assert!(shows(&harness, "Discard your edits?"));
+    assert!(shows(&harness, "Discard Your Edits?"));
     assert_eq!(sent(&harness), []);
 
-    harness.get_by_label("Keep editing").click();
+    harness.get_by_label("Keep Editing").click();
     harness.run();
     assert_eq!(sent(&harness), []);
 
@@ -293,7 +293,7 @@ fn the_buttons_end_at_the_dialogs_right_edge() {
         ("view", right_edges(&viewed, "Close", "Close")),
         (
             "review",
-            right_edges(&reviewed, "Close and keep the edits", "Save"),
+            right_edges(&reviewed, "Close and Keep the Edits", "Cancel"),
         ),
     ] {
         assert!(
@@ -332,7 +332,7 @@ fn a_file_read_while_its_dialog_shows_stays_centred_as_the_dialog_grows() {
     harness.state_mut().fixture.services.configs = listed().with(Session::default(), viewing());
     harness.step();
 
-    assert_centred(&harness, "The text of /etc/sudoers", "Close", "Close");
+    assert_centred(&harness, "The Text of /etc/sudoers", "Close", "Close");
 }
 
 #[test]
@@ -341,8 +341,8 @@ fn the_review_sits_in_the_windows_centre() {
 
     assert_centred(
         &harness,
-        "Save the changes to /etc/default/grub?",
-        "Close and keep the edits",
+        "Save the Changes to /etc/default/grub?",
+        "Close and Keep the Edits",
         "Save",
     );
 }

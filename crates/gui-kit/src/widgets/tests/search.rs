@@ -1,11 +1,10 @@
+use egui::Rect;
 use egui::accesskit::Role;
-use egui::{Align2, Rect, TextEdit};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::{SearchTexts, request_search_focus, search_field, text_field};
+use super::super::{SearchTexts, push_height, request_search_focus, search_field};
 use crate::testing::{click_at, harness, lines_in};
-use crate::theme::PILL_HEIGHT;
 
 const TEXTS: SearchTexts<'static> = SearchTexts {
     name: "Search services",
@@ -147,7 +146,7 @@ fn pill() -> (Harness<'static, (String, Rect)>, Rect) {
         |ui, (text, pill): &mut (String, Rect)| {
             let left_top = ui.cursor().min;
             search_field(ui, "test-search", text, TEXTS, 300.0);
-            *pill = Rect::from_min_size(left_top, egui::vec2(300.0, PILL_HEIGHT));
+            *pill = Rect::from_min_size(left_top, egui::vec2(300.0, push_height(ui)));
         },
         (String::new(), Rect::NOTHING),
     );
@@ -208,39 +207,4 @@ fn the_pill_adds_no_tab_stop() {
             .get_by_role_and_label(Role::TextInput, "Search services")
             .is_focused()
     );
-}
-
-fn text_field_shown(focused: bool) -> Harness<'static, String> {
-    let mut harness = harness(400.0, 100.0).build_ui_state(
-        move |ui, text: &mut String| {
-            let response = text_field(
-                ui,
-                TextEdit::singleline(text)
-                    .desired_width(200.0)
-                    .align(Align2::LEFT_CENTER),
-            )
-            .accessible_name("Name");
-
-            if focused {
-                response.request_focus();
-            }
-        },
-        "Hello".to_owned(),
-    );
-
-    harness.run();
-    harness
-}
-
-fn node(harness: &Harness<'_, String>) -> Rect {
-    harness
-        .get_by_role_and_label(Role::TextInput, "Name")
-        .rect()
-}
-
-#[test]
-fn a_field_is_as_tall_as_the_pills() {
-    let harness = text_field_shown(false);
-
-    assert!((node(&harness).height() - PILL_HEIGHT).abs() < 0.5);
 }

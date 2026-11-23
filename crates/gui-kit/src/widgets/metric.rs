@@ -6,8 +6,7 @@ use egui::{Color32, CursorIcon, Frame, Response, Role, Sense, Ui, UiBuilder, Wid
 
 use super::card::light_rim;
 use super::press::Pointer;
-use super::top_light::paint_top_light;
-use super::{focus_ring, rich, text_line_height};
+use super::{rich, text_line_height};
 use crate::fonts::{SECTION, SMALL, TITLE, Weight};
 use crate::theme::CARD_RADIUS;
 use crate::tokens::{self, Tokens};
@@ -48,14 +47,14 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
     // its reason stands where the number would.
     let (fill, number, size, muted) = match (kind, value.is_some()) {
         (MetricKind::Primary, true) => (tokens.accent_tint, tokens.on_tint, TITLE, tokens.text),
-        (MetricKind::Primary, false) => (tokens.card, tokens.text, TITLE, tokens.secondary),
-        (MetricKind::Secondary, _) => (tokens.card, tokens.text, SECTION, tokens.secondary),
+        (MetricKind::Primary, false) => (tokens.card_glass, tokens.text, TITLE, tokens.secondary),
+        (MetricKind::Secondary, _) => (tokens.card_glass, tokens.text, SECTION, tokens.secondary),
     };
 
     let spoken = value.unwrap_or(detail);
 
     let height = primary_height(ui);
-    let rim = light_rim(ui, tokens.outline);
+    let rim = light_rim(tokens.card_edge);
 
     let sense = if leads {
         Sense::click()
@@ -66,12 +65,12 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
     let response = ui
         .scope_builder(UiBuilder::new().sense(sense), |ui| {
             let pointer = if leads {
-                Pointer::of_focusable(&ui.response())
+                Pointer::of_keyboard(ui, &ui.response())
             } else {
                 Pointer::Rest
             };
 
-            let shown = Frame::new()
+            Frame::new()
                 .fill(lit(&tokens, fill, pointer))
                 .stroke(rim)
                 .corner_radius(CARD_RADIUS)
@@ -95,8 +94,6 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
                         }
                     });
                 });
-
-            paint_top_light(ui.painter(), shown.response.rect, CARD_RADIUS);
         })
         .response;
 
@@ -106,7 +103,6 @@ pub fn metric(ui: &mut Ui, kind: MetricKind, text: MetricText<'_>, leads: bool) 
         return response;
     }
 
-    focus_ring(ui, &response, CARD_RADIUS);
     if response.hovered() {
         ui.ctx().set_cursor_icon(CursorIcon::PointingHand);
     }

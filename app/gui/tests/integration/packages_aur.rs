@@ -13,8 +13,8 @@ use toolbox_core::features::packages::aur::AurIndex;
 use toolbox_gui::App;
 use toolbox_gui::packages::SampleAur;
 
-use crate::common::{SMALLEST, TALL, WIDTH};
-use crate::packages::{app_with, app_with_aur, listed, open_package};
+use crate::common::{TALL, WIDTH, queued_shown};
+use crate::packages::{app_with, app_with_aur, listed, narrow, open_package};
 use crate::system::{settle, step_until};
 
 /// The sample AUR whose last refresh failed.
@@ -39,12 +39,11 @@ fn aur_list(harness: &mut Harness<'static, App>) {
 
 /// `install` is the button's word in the language shown.
 fn ask_install(harness: &mut Harness<'static, App>, install: &str) {
-    harness.get_by_label(&format!("{install} yay-bin")).click();
+    harness
+        .get_by_role_and_label(Role::ListItem, "yay-bin")
+        .click();
     settle(harness);
-}
-
-fn narrow(harness: &mut Harness<'static, App>) {
-    harness.set_size(egui::vec2(SMALLEST.0, TALL));
+    harness.get_by_label(&format!("{install} yay-bin")).click();
     settle(harness);
 }
 
@@ -62,12 +61,12 @@ fn an_aur_build_asks_first_and_waits_in_the_queue() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Build and install")
+        .get_by_role_and_label(Role::Button, "Build and Install")
         .click();
     harness.run();
 
-    assert!(harness.query_by_label("Builds with Apply").is_some());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(harness.query_all_by_label("Builds with Apply").count() >= 1);
+    assert!(queued_shown(harness));
 }
 
 #[test]
@@ -138,6 +137,11 @@ fn snapshots() {
     results.add(harness.try_snapshot("packages/aur_list_narrow"));
     ask_install(harness, "Install");
     results.add(harness.try_snapshot("packages/aur_install_narrow"));
+
+    // The first Escape closes the question. On this narrow page the details
+    // of yay-bin still replace the list, so the second one returns to it.
+    harness.key_press(egui::Key::Escape);
+    settle(harness);
     harness.key_press(egui::Key::Escape);
     settle(harness);
     open_package(

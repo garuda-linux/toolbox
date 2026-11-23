@@ -173,9 +173,9 @@ fn a_metric_that_leads_somewhere_lights_up_under_the_pointer() {
     harness.run();
     let tokens = tokens::current(&harness.ctx);
 
-    assert_ne!(rest, Some(tokens.hover));
+    assert_ne!(rest, Some(tokens.button_hover));
     assert_eq!(
         crate::testing::fill_under(&harness, inside),
-        Some(tokens.hover)
+        Some(tokens.button_hover)
     );
 }

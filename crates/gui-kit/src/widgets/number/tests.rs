@@ -57,7 +57,7 @@ fn the_digits_end_at_the_right_of_the_field() {
 
     let digits = painted_text(&harness, "5").expect("the number is painted");
     let right = digits.pos.x + digits.galley.rect.right();
-    let padding = harness.ctx.global_style().spacing.button_padding.x;
+    let padding = f32::from(super::super::field::FRAME_WIDTH);
 
     assert!((field.width() - WIDTH).abs() < 1.0, "{}", field.width());
     assert!(

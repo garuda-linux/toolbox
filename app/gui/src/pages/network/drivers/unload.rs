@@ -54,6 +54,7 @@ pub fn question(ctx: &Context, context: &PageContext<'_>) {
         cancel: &cancel,
         confirm: &confirm,
         kind: ButtonKind::Danger,
+        icon: None,
         width: DialogWidth::Small,
     };
 

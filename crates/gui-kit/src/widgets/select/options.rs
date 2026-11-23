@@ -2,19 +2,15 @@
 //! their names.
 
 use egui::{
-    Align, Color32, CornerRadius, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo,
-    pos2, vec2,
+    Align, Color32, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo, pos2, vec2,
 };
 
-use super::super::menu::{ITEM_INSET, LIST_GAP};
-use super::super::press::{Pointer, hover_amount};
+use super::super::menu::{ITEM_INSET, item_height};
+use super::super::press::{ItemLook, Pointer, item_look, paint_item};
 use super::super::text::cut;
-use super::super::{focus_ring, mark_selected, rich};
-use super::OPTION_HEIGHT;
+use super::super::{mark_selected, rich};
 use crate::fonts::{BODY, Weight};
-use crate::theme::RADIUS;
 use crate::tokens;
-use crate::tokens::Tokens;
 
 /// A colour strip before an option's name: three columns, as wide as
 /// tall per column, with the gap to the name.
@@ -30,7 +26,8 @@ pub(super) fn options_in(
     selected: Option<usize>,
     reveal: bool,
 ) -> Option<usize> {
-    list.spacing_mut().item_spacing.y = LIST_GAP;
+    // A list highlight fills its whole cell, so rows touch.
+    list.spacing_mut().item_spacing.y = 0.0;
     let mut picked = None;
     for (index, option) in options.iter().enumerate() {
         let chosen = Some(index) == selected;
@@ -51,27 +48,6 @@ pub(super) fn options_in(
     }
 
     picked
-}
-
-/// An option's fill: the chosen one is tinted at rest, any one shows the
-/// hover and press under the pointer.
-pub(in crate::widgets) fn option_fill(
-    tokens: &Tokens,
-    chosen: bool,
-    pointer: Pointer,
-    hover: f32,
-) -> Color32 {
-    if pointer == Pointer::Pressed {
-        return tokens.pressed;
-    }
-
-    let rest = if chosen {
-        tokens.accent_soft
-    } else {
-        Color32::TRANSPARENT
-    };
-
-    rest.lerp_to_gamma(tokens.hover, hover)
 }
 
 /// The room the colour strips take before each name, none without strips.
@@ -110,30 +86,31 @@ pub(super) fn paint_swatch(ui: &Ui, left: f32, centre_y: f32, colours: [Color32;
     );
 }
 
+/// A popup is opaque with the glass, so an entry under the pointer takes
+/// `popup_hover`, a solid step over the popup, where a list item takes
+/// `item_hover`. The chosen entry keeps the list item's fill.
+fn option_look(tokens: &tokens::Tokens, chosen: bool, pointer: Pointer) -> ItemLook {
+    let look = item_look(tokens, chosen, pointer);
+    if chosen || pointer == Pointer::Rest {
+        look
+    } else {
+        ItemLook {
+            fill: tokens.popup_hover,
+            ..look
+        }
+    }
+}
+
 /// Too wide text is cut, shown whole on hover and to screen readers.
 fn option_row(ui: &mut Ui, text: &str, chosen: bool, swatch: Option<[Color32; 3]>) -> Response {
     let tokens = tokens::current(ui.ctx());
     let width = ui.available_width();
-    let (rect, response) = ui.allocate_exact_size(vec2(width, OPTION_HEIGHT), Sense::click());
+    let (rect, response) = ui.allocate_exact_size(vec2(width, item_height(ui)), Sense::click());
     response.widget_info(|| WidgetInfo::labeled(Role::ListBoxOption, true, text));
     mark_selected(ui, &response, chosen);
 
-    let pointer = Pointer::of(&response);
-    let fill = option_fill(
-        &tokens,
-        chosen,
-        pointer,
-        hover_amount(ui, &response, pointer),
-    );
-
-    ui.painter()
-        .rect_filled(rect, CornerRadius::same(RADIUS), fill);
-
-    let weight = if chosen {
-        Weight::SemiBold
-    } else {
-        Weight::Regular
-    };
+    let pointer = Pointer::of_keyboard(ui, &response);
+    paint_item(ui, rect, option_look(&tokens, chosen, pointer));
 
     let before = swatch.map_or(0.0, |colours| {
         paint_swatch(ui, rect.left() + ITEM_INSET, rect.center().y, colours);
@@ -141,15 +118,20 @@ fn option_row(ui: &mut Ui, text: &str, chosen: bool, swatch: Option<[Color32; 3]
     });
 
     let room = ITEM_INSET.mul_add(-2.0, rect.width() - before).max(0.0);
-    let galley = cut(ui, rich(ui, text, weight, BODY, tokens.text), room);
+    let ink = if chosen || pointer == Pointer::Pressed {
+        tokens.selection_text
+    } else {
+        tokens.text
+    };
+
+    let galley = cut(ui, rich(ui, text, Weight::Regular, BODY, ink), room);
     let was_cut = galley.elided;
     let position = pos2(
         rect.left() + ITEM_INSET + before,
         rect.center().y - galley.size().y / 2.0,
     );
 
-    ui.painter().galley(position, galley, tokens.text);
-    focus_ring(ui, &response, RADIUS);
+    ui.painter().galley(position, galley, ink);
 
     if was_cut {
         response.on_hover_text(text)

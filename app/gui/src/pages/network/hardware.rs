@@ -92,10 +92,11 @@ fn intro(ui: &mut Ui, context: &PageContext<'_>, devices: &[&Device]) {
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let all = text("network-hardware-copy-all");
 
-    // The lines' buttons sit in from the card's edge by its padding.
+    // Inset by the card's padding, as the lines are.
     let padding = ui.tokens().sizes.card_padding;
     let inset = Margin {
         top: padding.top,
+        left: padding.left,
         right: padding.right,
         ..Margin::ZERO
     };

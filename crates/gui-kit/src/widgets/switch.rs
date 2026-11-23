@@ -1,17 +1,32 @@
-//! An on/off switch, the control of every toggle row. It speaks as a
-//! check box, so screen readers announce its state.
+//! An on/off switch, the control of every toggle row. It draws the QQC2
+//! desktop style's switch in Darkly colours: a track in the line edit's
+//! colours with the solid highlight over the part the knob has passed, and
+//! a knob in the field colour. It speaks as a check box, so screen readers
+//! announce its state.
 
 use egui::accesskit::Toggled;
-use egui::{Color32, Response, Role, Sense, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, pos2, vec2};
+use egui::{
+    Color32, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, Vec2, WidgetInfo, pos2, vec2,
+};
 
-use super::focus_ring;
-use super::press::{Pointer, faded, hover_amount};
+use super::focus::focus_from_keyboard;
+use super::press::faded;
 use crate::motion;
-use crate::tokens::{self, DIM_CONTRAST, Tokens, contrast};
+use crate::theme::GRID_UNIT;
+use crate::tokens::{self, Tokens, mix};
 
-pub(super) const SIZE: Vec2 = vec2(40.0, 24.0);
-const TRACK_RADIUS: u8 = 12;
-const KNOB_RADIUS: f32 = 9.0;
+/// `SwitchIndicator.qml` of qqc2-desktop-style: as tall as Kirigami's
+/// grid unit and twice as wide.
+pub(super) const SIZE: Vec2 = vec2(2.0 * GRID_UNIT, GRID_UNIT);
+/// `floor(height / 6)` above and below the track.
+pub(super) const TRACK_MARGIN: f32 = 3.0;
+/// The knob is as tall as the switch and round.
+const KNOB_RADIUS: f32 = GRID_UNIT / 2.0;
+/// Half the track's height, so its ends are round.
+const TRACK_RADIUS: u8 = 6;
+/// Breeze's `frameContrast`, how far the frame moves from the fill toward
+/// the text.
+const FRAME_CONTRAST: f32 = 0.2;
 
 /// A click reports `clicked`, the caller flips its state. A disabled
 /// switch sits inside `add_enabled_ui`, which fades it.
@@ -45,6 +60,32 @@ pub fn tristate_switch(ui: &mut Ui, on: Option<bool>, name: &str) -> Response {
     response
 }
 
+/// The track's fill and frame when `on`, and with `lit` the frame in the
+/// highlight. The highlight laid over a checked track is
+/// [`highlight_colour`].
+pub(super) const fn track_colours(tokens: &Tokens, on: bool, lit: bool) -> (Color32, Color32) {
+    let track = tokens.input;
+    let rim = if on || lit { tokens.accent } else { tokens.rim };
+
+    (track, rim)
+}
+
+/// The highlight over the track as far as the knob has passed, solid when
+/// on and fading in with the knob.
+pub(super) const fn highlight_colour(tokens: &Tokens) -> Color32 {
+    tokens.accent_tint
+}
+
+/// The knob's fill and frame. It takes the highlight when lit.
+pub(super) fn knob_colours(tokens: &Tokens, lit: bool) -> (Color32, Color32) {
+    let rim = if lit { tokens.accent } else { frame(tokens) };
+    (tokens.field, rim)
+}
+
+fn frame(tokens: &Tokens) -> Color32 {
+    mix(tokens.field, tokens.text, FRAME_CONTRAST)
+}
+
 fn paint(ui: &Ui, response: &Response, on: Option<bool>, enabled: bool) {
     let tokens = tokens::current(ui.ctx());
     let rect = response.rect;
@@ -56,61 +97,41 @@ fn paint(ui: &Ui, response: &Response, on: Option<bool>, enabled: bool) {
         motion::settle(ui.ctx(), response.id, on);
     }
 
-    // How far the knob went, and how much of the accent the track took.
-    let (place, lit) = on.map_or((0.5, 0.0), |on| {
-        let progress = ui.ctx().animate_bool_responsive(response.id, on);
-        (progress, progress)
-    });
-
-    let press = Pointer::of(response);
-    let dark = ui.visuals().dark_mode;
-    let (rest_off, hover_off) = if dark {
-        (tokens.hover, tokens.pressed)
-    } else {
-        (tokens.pressed, tokens.track_hover)
-    };
-
-    let hover = hover_amount(ui, response, press);
-    let off = rest_off.lerp_to_gamma(hover_off, hover);
-    let on_fill = tokens.accent.lerp_to_gamma(tokens.accent_hover, hover);
+    let place = on.map_or(0.5, |on| ui.ctx().animate_bool_responsive(response.id, on));
+    let checked = on == Some(true);
+    let lit = enabled && (response.hovered() || focus_from_keyboard(ui, response));
 
     let fade = |color| faded(ui, color, enabled);
-    let track = off.lerp_to_gamma(on_fill, lit);
+    let (track, rim) = track_colours(&tokens, checked, lit);
 
-    // The off track is too close to the card to read as a control in
-    // either theme. The rim melts into the accent as the switch turns on.
-    let rim_colour = tokens.rim.lerp_to_gamma(on_fill, lit);
-    let rim = Stroke::new(1.0, fade(rim_colour));
+    let track_rect = Rect::from_min_max(
+        pos2(rect.left(), rect.top() + TRACK_MARGIN),
+        pos2(rect.right(), rect.bottom() - TRACK_MARGIN),
+    );
+
+    let knob_left = egui::lerp(rect.left()..=(rect.right() - SIZE.y), place);
+    let highlight = Rect::from_min_max(track_rect.min, pos2(knob_left + SIZE.y, track_rect.max.y));
 
     let painter = ui.painter();
-    painter.rect(rect, TRACK_RADIUS, fade(track), rim, StrokeKind::Inside);
+    painter.rect(
+        track_rect,
+        TRACK_RADIUS,
+        fade(track),
+        Stroke::new(1.0, fade(rim)),
+        StrokeKind::Inside,
+    );
 
-    let inset = SIZE.y / 2.0;
-    let knob_x = egui::lerp((rect.left() + inset)..=(rect.right() - inset), place);
-    let (off_knob, on_knob) = knobs(&tokens, dark);
-    let knob = off_knob.lerp_to_gamma(on_knob, lit);
+    if on.is_some() {
+        let colour = highlight_colour(&tokens).gamma_multiply(place);
+        painter.rect_filled(highlight, TRACK_RADIUS, fade(colour));
+    }
 
-    // A light knob on a light track needs an edge, most of all faded, as
-    // a disabled one is. On the accent it melts away.
-    let edge = if dark {
-        Stroke::NONE
-    } else {
-        Stroke::new(1.0, fade(tokens.rim.lerp_to_gamma(knob, lit)))
-    };
-
-    let centre = pos2(knob_x, rect.center().y);
-    painter.circle(centre, KNOB_RADIUS, fade(knob), edge);
-
-    focus_ring(ui, response, TRACK_RADIUS);
-}
-
-/// The knob off and on. One colour in both states while it reads at 3:1
-/// on the accent and its hover shade, else the on knob takes `on_accent`.
-pub(super) fn knobs(tokens: &Tokens, dark: bool) -> (Color32, Color32) {
-    let off = if dark { tokens.text } else { tokens.raised };
-    let holds = [tokens.accent, tokens.accent_hover]
-        .into_iter()
-        .all(|fill| contrast(off, fill) >= DIM_CONTRAST);
-
-    (off, if holds { off } else { tokens.on_accent })
+    let (knob, knob_rim) = knob_colours(&tokens, lit);
+    let centre = pos2(knob_left + KNOB_RADIUS, rect.center().y);
+    painter.circle(
+        centre,
+        KNOB_RADIUS - 0.5,
+        fade(knob),
+        Stroke::new(1.0, fade(knob_rim)),
+    );
 }

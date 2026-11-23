@@ -16,7 +16,7 @@ use tokio::sync::{mpsc, watch};
 use toolbox_gui_kit::desktop::FontSpec;
 use toolbox_gui_kit::desktop::family::Family;
 use toolbox_gui_kit::desktop::look::{Look, Sources};
-use toolbox_gui_kit::fonts::{FontFile, Weight};
+use toolbox_gui_kit::fonts::{FontFile, UiFaces, Weight};
 use toolbox_gui_kit::icons::ThemeIcons;
 
 use super::files::{DesktopFiles, Read, is_look_file};
@@ -31,7 +31,7 @@ const SETTLE: Duration = Duration::from_millis(200);
 
 struct FilesRead {
     files: Read,
-    ui_fonts: Vec<FontFile>,
+    ui_fonts: UiFaces,
     fixed_font: Option<FontFile>,
     emoji_font: Option<Arc<FontFile>>,
     kept: Kept,
@@ -112,7 +112,7 @@ async fn follow(
 
         let look = DesktopLook {
             look: Look::resolve(&sources),
-            ui_fonts: read.ui_fonts.into(),
+            ui_fonts: Arc::new(read.ui_fonts),
             fixed_font: read.fixed_font.map(Arc::new),
             emoji_font: read.emoji_font,
             icons: kept.icons.clone(),
@@ -187,7 +187,7 @@ fn read_files(files: &DesktopFiles, family: Family, kept: Kept) -> FilesRead {
     FilesRead {
         ui_fonts: specs
             .0
-            .map(|spec| weights(&spec, |wanted| find(Some(wanted))))
+            .map(|spec| ui_faces(&spec, |wanted| find(Some(wanted))))
             .unwrap_or_default(),
         fixed_font: find(specs.1),
         emoji_font: emoji_font.clone(),
@@ -237,21 +237,18 @@ fn watch_files(
     Some(watcher)
 }
 
-/// The UI font at each weight the app draws: the desktop's own weight for
-/// regular text, the others as the font has them.
-fn weights(spec: &FontSpec, find: impl Fn(FontSpec) -> Option<FontFile>) -> Vec<FontFile> {
-    Weight::ALL
-        .into_iter()
-        .filter_map(|weight| {
-            let wanted = match weight {
-                Weight::Regular => spec.weight,
-                Weight::Medium | Weight::SemiBold | Weight::Bold => weight.css(),
-            };
-
-            find(FontSpec {
-                weight: wanted,
-                ..spec.clone()
-            })
+/// The UI font at the two steps the app draws: the desktop's own weight for
+/// regular text (KDE's Inter Bold is bold everywhere), and its bold face.
+fn ui_faces(spec: &FontSpec, find: impl Fn(FontSpec) -> Option<FontFile>) -> UiFaces {
+    let face = |weight: u16| {
+        find(FontSpec {
+            weight,
+            ..spec.clone()
         })
-        .collect()
+    };
+
+    UiFaces {
+        regular: face(spec.weight),
+        bold: face(Weight::Bold.css()),
+    }
 }

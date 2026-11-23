@@ -1,4 +1,6 @@
 mod chips;
+mod details;
+mod escape;
 mod gaps;
 mod refusal;
 mod toolbar;
@@ -8,6 +10,7 @@ use std::path::Path;
 
 use egui::accesskit::Role;
 use egui::{Key, Modifiers};
+use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::domains::{InstalledPackages, Packages, SyncPackages};
 use toolbox_core::testing::Queue as _;
@@ -18,23 +21,28 @@ use super::DiscoverPage;
 use crate::catalogs::Catalogs;
 use crate::command::{AppCommand, Command, DiscoverCommand};
 use crate::testing::{
-    PageFixture, assert_header, assert_rows_hold_their_parts, assert_text_beside_picture,
-    body_font, picture_beside, rect_of,
+    PageFixture, PageState, assert_header, assert_rows_hold_their_parts,
+    assert_text_beside_picture, body_font, picture_beside, rect_of,
 };
+
+const DESCRIPTION: &str = "Extensible browser from Mozilla based on Gecko with fast rendering.";
 
 /// The shipped apps, with Firefox and Floorp on offer and nothing
 /// installed.
 fn offered() -> PageFixture {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog");
+    offering(Catalogs::load(&dir), &["firefox", "floorp"])
+}
+
+/// The apps of `catalogs`, with `packages` on offer and nothing installed.
+fn offering(catalogs: Catalogs, packages: &[&str]) -> PageFixture {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(BTreeSet::new()));
-    snapshot.insert(SyncPackages(BTreeSet::from([
-        "firefox".parse().unwrap(),
-        "floorp".parse().unwrap(),
-    ])));
+    let offered = packages.iter().map(|name| name.parse().unwrap());
+    snapshot.insert(SyncPackages(offered.collect()));
 
     PageFixture {
-        catalogs: Catalogs::load(&dir),
+        catalogs,
         ..PageFixture::with_snapshot(snapshot)
     }
 }
@@ -47,6 +55,17 @@ fn searching(title: &str) -> DiscoverPage {
 
 fn searching_firefox() -> DiscoverPage {
     searching("Firefox")
+}
+
+/// The Firefox row of the search, with the keyboard focus on it.
+fn focused_firefox() -> Harness<'static, PageState<DiscoverPage>> {
+    let mut harness = offered().harness(searching_firefox());
+    harness.run();
+    harness
+        .get_by_role_and_label(Role::ListItem, "Firefox")
+        .focus();
+    harness.run();
+    harness
 }
 
 #[test]
@@ -134,7 +153,7 @@ fn a_picked_category_without_a_match_offers_all_matches() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Show all 2 matches")
+        .get_by_role_and_label(Role::Button, "Show All 2 Matches")
         .click();
     harness.run();
 
@@ -208,12 +227,7 @@ fn a_frame_with_the_same_search_builds_no_chips() {
 
 #[test]
 fn space_on_a_focused_app_asks_for_its_install() {
-    let mut harness = offered().harness(searching_firefox());
-    harness.run();
-    harness
-        .get_by_role_and_label(Role::ListItem, "Firefox")
-        .focus();
-    harness.run();
+    let mut harness = focused_firefox();
 
     harness.key_press(Key::Space);
     harness.run();
@@ -229,17 +243,12 @@ fn space_on_a_focused_app_asks_for_its_install() {
 
 #[test]
 fn copy_name_copies_the_app_and_says_so() {
-    let mut harness = offered().harness(searching_firefox());
-    harness.run();
-    harness
-        .get_by_role_and_label(Role::ListItem, "Firefox")
-        .focus();
-    harness.run();
+    let mut harness = focused_firefox();
 
     harness.key_press_modifiers(Modifiers::SHIFT, Key::F10);
     harness.run();
     harness
-        .get_by_role_and_label(Role::MenuItem, "Copy name")
+        .get_by_role_and_label(Role::MenuItem, "Copy Name")
         .click();
     harness.run();
 
@@ -294,8 +303,10 @@ fn the_toolbar_lines_up_with_the_list() {
     );
 
     assert_header(&harness, texts, None, Some(search));
+
+    // The list's frame and the toolbar's dropdown round to one pixel apart.
     assert!(
-        (sort.right() - list.right()).abs() < 0.5,
+        (sort.right() - list.right()).abs() < 1.5,
         "sort {sort:?}, list {list:?}"
     );
     assert!(
@@ -309,7 +320,6 @@ fn an_apps_title_and_description_start_one_picture_gap_right_of_its_picture() {
     let mut harness = offered().harness(searching_firefox());
     harness.run();
 
-    let description = "Extensible browser from Mozilla based on Gecko with fast rendering.";
     let picture = picture_beside(&harness, "Firefox");
-    assert_text_beside_picture(&harness, picture, ("Firefox", description), "Firefox");
+    assert_text_beside_picture(&harness, picture, ("Firefox", DESCRIPTION), "Firefox");
 }

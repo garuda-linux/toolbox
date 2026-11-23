@@ -7,7 +7,7 @@ use toolbox_gui::{App, Setup};
 use crate::common::{focus_terminal, launch, launch_in, palette, press_ctrl as press};
 use crate::shell::SETUP;
 
-const PALETTE: &str = "Command palette";
+const PALETTE: &str = "Command Palette";
 
 #[test]
 fn ctrl_b_toggles_the_sidebar() {
@@ -152,6 +152,7 @@ fn palette_field(harness: &Harness<'_, App>) -> egui::Rect {
 fn the_palette_field_stays_put_as_the_list_shortens() {
     let mut harness = launch(Setup::default());
     press(&mut harness, Key::K);
+    harness.run();
     let full = palette_field(&harness);
 
     harness
@@ -185,9 +186,9 @@ fn a_palette_shortcut_shows_as_keycaps() {
     palette(&mut harness, "console");
 
     let named = harness
-        .query_all_by_label_contains("Toggle console")
+        .query_all_by_label_contains("Toggle Console")
         .filter_map(|node| node.accesskit_node().label())
-        .any(|label| label.starts_with("Toggle console ") && label.ends_with('J'));
+        .any(|label| label.starts_with("Toggle Console ") && label.ends_with('J'));
 
     assert!(named, "the row's name ends in its shortcut");
     assert!(toolbox_gui_kit::testing::painted_text(&harness, "J").is_some());

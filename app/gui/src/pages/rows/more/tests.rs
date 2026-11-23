@@ -46,14 +46,14 @@ fn enter_opens_the_menu_and_an_item_runs() {
     harness.run();
 
     harness
-        .get_by_role_and_label(Role::MenuItem, "Copy name")
+        .get_by_role_and_label(Role::MenuItem, "Copy Name")
         .click();
     harness.run();
 
     assert!(harness.state().open);
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Copy name")
+            .query_by_role_and_label(Role::MenuItem, "Copy Name")
             .is_none()
     );
 }
@@ -64,7 +64,7 @@ fn a_resting_item_does_not_run() {
     harness.get_by_role_and_label(Role::Button, BUTTON).click();
     harness.run();
 
-    let resting = harness.get_by_role_and_label(Role::MenuItem, "Open website");
+    let resting = harness.get_by_role_and_label(Role::MenuItem, "Open Website");
     assert!(resting.accesskit_node().is_disabled());
     resting.click();
     harness.run();
@@ -81,7 +81,7 @@ fn escape_closes_the_menu_and_the_button_keeps_the_focus() {
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Copy name")
+            .query_by_role_and_label(Role::MenuItem, "Copy Name")
             .is_some()
     );
 
@@ -90,7 +90,7 @@ fn escape_closes_the_menu_and_the_button_keeps_the_focus() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Copy name")
+            .query_by_role_and_label(Role::MenuItem, "Copy Name")
             .is_none()
     );
     let button = harness.get_by_role_and_label(Role::Button, BUTTON);

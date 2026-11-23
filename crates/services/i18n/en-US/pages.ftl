@@ -17,7 +17,7 @@ page-maintenance = Maintenance
 page-boot-repair = Boot Repair
 page-diagnostics = Diagnostics
 page-settings = Settings
-page-guide = User guide
+page-guide = User Guide
 page-about = About
 
 group-install = Install

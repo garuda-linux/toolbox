@@ -6,8 +6,8 @@ share-delete-link-copied = Copied the delete link to the clipboard.
 
 # The question before an upload.
 share-upload-question = { $subject ->
-    [report] Upload this report?
-   *[output] Upload this output?
+    [report] Upload This Report?
+   *[output] Upload This Output?
 }
 share-upload-where = The text below goes to bin.garudalinux.org. It is encrypted on this computer, so the server cannot read it, but anyone who has the link can. The server deletes it after one month.
 share-upload-check = Check it for anything else you do not want to share. The search marks every match.
@@ -19,8 +19,8 @@ share-upload-replaced =
     }
 share-upload-search = Search the text
 share-upload-search-hint = Search the text
-share-upload-search-clear = Clear the search
-share-upload-search-next = Next match
+share-upload-search-clear = Clear the Search
+share-upload-search-next = Next Match
 share-upload-search-count = { $current } of { $count }
 share-upload-text = The text that will be uploaded
 share-upload-cancel = Cancel
@@ -31,17 +31,17 @@ share-uploading = { $subject ->
     [report] Uploading the report…
    *[output] Uploading the output…
 }
-share-copy-link = Copy link
+share-copy-link = Copy Link
 # The row after an upload.
 share-uploaded-short = Uploaded.
 share-link-actions = More link actions
-share-open-link = Open in browser
-share-copy-delete-link = Copy delete link
-share-delete-now = Delete now…
+share-open-link = Open in Browser
+share-copy-delete-link = Copy Delete Link
+share-delete-now = Delete Now…
 share-hide = Hide
 share-delete-question = { $subject ->
-    [report] Delete the report from the server?
-   *[output] Delete the output from the server?
+    [report] Delete the Report from the Server?
+   *[output] Delete the Output from the Server?
 }
 share-delete-detail = Nobody can open the link afterwards, you included. Your browser opens the delete link.
 share-delete-cancel = Cancel

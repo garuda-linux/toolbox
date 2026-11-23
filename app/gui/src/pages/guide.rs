@@ -148,7 +148,8 @@ impl PageView for GuidePage {
             self.lightbox = None;
         }
 
-        let full = ui.max_rect();
+        let full = below_purpose(ui);
+
         let reader = PANE_GAP.mul_add(-2.0, full.width() - CONTENTS_WIDTH - OUTLINE_WIDTH);
         let outlined = reader >= READER_MIN;
 
@@ -225,4 +226,13 @@ fn pane<R>(
             body(scrolled)
         })
         .inner
+}
+
+/// The body below the purpose, which the body draws first, so the panes
+/// do not overlap its line.
+fn below_purpose(ui: &Ui) -> Rect {
+    Rect::from_min_max(
+        pos2(ui.max_rect().left(), ui.cursor().top()),
+        ui.max_rect().max,
+    )
 }

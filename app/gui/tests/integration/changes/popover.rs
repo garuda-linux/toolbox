@@ -2,7 +2,7 @@
 
 use egui_kittest::kittest::Queryable as _;
 
-use super::{app_with, queued, review};
+use super::{app_with, bar_rect, footer_id, queued, review};
 use crate::common::{WIDTH, installing, launch_in, pane, pointer_button};
 
 /// A queue too long for the room above the pill keeps a gap to the
@@ -16,7 +16,7 @@ fn a_long_queue_in_a_short_window_keeps_off_the_top_edge() {
     review(&mut harness);
 
     let sizes = toolbox_gui_kit::tokens::current(&harness.ctx).sizes;
-    let title = harness.get_by_label("Queued changes").rect();
+    let title = harness.get_by_label("Queued Changes").rect();
     let least = sizes.popover_gap + f32::from(sizes.popover_padding.top);
 
     assert!(
@@ -26,19 +26,19 @@ fn a_long_queue_in_a_short_window_keeps_off_the_top_edge() {
     );
 }
 
-/// egui raises an area in the first frame it shows, so a pill that comes
+/// egui raises an area in the first frame it shows, so a footer that comes
 /// back while a dialog is open, as when the Console closes, would cover the
 /// dialog's buttons on the dialogs' own layer. It lies under them instead.
 #[test]
-fn the_pill_lies_under_every_dialog() {
+fn the_footer_lies_under_every_dialog() {
     let mut harness = app_with(&["firefox"]);
     review(&mut harness);
 
-    let pill = egui::Id::unique("toolbox_gui::changes::pill");
+    let footer = footer_id();
     let layers: Vec<egui::LayerId> = harness.ctx.memory(|memory| {
         memory
             .layer_ids()
-            .filter(|layer| layer.id == pill)
+            .filter(|layer| layer.id == footer)
             .collect()
     });
 
@@ -58,13 +58,28 @@ fn the_popover_steps_aside_for_the_question_and_comes_back() {
     let mut harness = app_with(&["firefox", "vlc"]);
     review(&mut harness);
 
-    harness.get_by_label("Remove all…").click();
+    harness.get_by_label("Remove All…").click();
     harness.run();
     assert!(pane(&harness, "Changes to apply").is_none());
 
-    harness.get_by_label("Keep them").click();
+    harness.get_by_label("Keep Them").click();
     harness.run();
     assert!(pane(&harness, "Changes to apply").is_some());
+}
+
+/// Review sits in the footer, so the list rises from it and never over it.
+#[test]
+fn the_popover_opens_upward_from_the_footer() {
+    let mut harness = app_with(&["firefox"]);
+    review(&mut harness);
+
+    let bar = bar_rect(&harness);
+    let list = pane(&harness, "Changes to apply").expect("the popover");
+
+    assert!(
+        list.bottom() <= bar.top(),
+        "the list {list:?} lies over the footer {bar:?}"
+    );
 }
 
 #[test]

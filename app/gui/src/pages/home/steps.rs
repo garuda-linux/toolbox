@@ -62,7 +62,7 @@ pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
             card_row(ui, true, |ui| {
                 let title = i18n::text(&ctx, "home-install");
                 let detail = i18n::text(&ctx, "home-install-detail");
-                ActionRow::new(icons::RUN_INSTALL, Tone::Accent, &title)
+                ActionRow::new(icons::RUN_INSTALL, &title)
                     .detail(&detail)
                     .show(ui, |ui| {
                         let start = i18n::text(&ctx, "home-install-button");
@@ -78,7 +78,7 @@ pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
                 run_row(
                     ui,
                     context,
-                    (icons::UTILITIES_TERMINAL, Tone::Neutral),
+                    icons::UTILITIES_TERMINAL,
                     ["home-chroot", "home-chroot-detail", "home-chroot-button"],
                     RunNow::Chroot,
                 );

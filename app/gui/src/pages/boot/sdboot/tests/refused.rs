@@ -28,7 +28,7 @@ fn a_menu_no_read_can_reach_says_why_without_read_again() {
         );
         assert_eq!(
             harness
-                .query_all_by_role_and_label(Role::Button, "Read again")
+                .query_all_by_role_and_label(Role::Button, "Read Again")
                 .count(),
             1,
             "{refusal:?}: only the header's"

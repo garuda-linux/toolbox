@@ -1,63 +1,43 @@
 mod aur;
+mod back;
 mod below;
 mod facts;
 mod relations;
 #[cfg(test)]
 mod tests;
+mod title;
 
 use std::sync::Arc;
 
+use back::Back;
 pub use below::{FileRows, HistoryRows};
-use egui::{Color32, Key, Rect, Sense, Ui, Vec2, pos2, vec2};
+use egui::{Align, Layout, Ui, vec2};
 pub use facts::FactRows;
 pub use relations::TargetRows;
+use title::{title_picture, title_picture_width};
 use toolbox_core::features::packages::PackageDetails;
 use toolbox_core::features::packages::list::Catalog;
-use toolbox_gui_kit::fonts::{self, SMALL, TITLE, Weight};
+use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, empty_state, icon_button_width, loading_indicator, named_pill_button, padded_card,
-    page_header, pill_width, refresh_button_busy, rich, status_dot,
+    ButtonKind, PageHeader, empty_state, icon_button_width, loading_indicator, padded_card,
+    pill_width, refresh_button_busy, rich, status_dot,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::PackageName;
 
 use super::PackagesPage;
 use super::row::{self, Act, PackageRow, Row};
-use crate::artwork::Artwork;
 use crate::command::PackagesCommand;
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::packages::{Details, Packages, Read};
-use crate::pages::rows::{Initial, Look, package_picture};
-use crate::pages::{PageContext, plan_running};
+use crate::pages::PageContext;
+use crate::pages::rows::Look;
 
-/// The content width under which the two columns stack: about a window
-/// of 760 points beside the open sidebar.
-pub const STACK_BELOW: f32 = 560.0;
-
-pub fn header(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
-    let Some(package) = page.open.clone() else {
-        return;
-    };
-
-    if page.open_aur {
-        aur::header(page, ui, context, &package);
-        return;
-    }
-
-    let catalog = catalog(context);
-    let entry = catalog.as_ref().and_then(|catalog| catalog.entry(&package));
-    let shown = catalog
-        .as_deref()
-        .zip(entry)
-        .map(|(catalog, entry)| Row { entry, catalog });
-
-    header_of(page, ui, context, &package, shown);
-}
-
-/// The back button, then the picture, name and description with the
-/// row's button and the facts line once the package is known.
+/// The details' heading: the back button when it leads somewhere, then the
+/// picture, name and description with the row's button and the facts line
+/// once the package is known.
 fn header_of<R>(
     page: &mut PackagesPage,
     ui: &mut Ui,
@@ -67,49 +47,74 @@ fn header_of<R>(
 ) where
     R: PackageRow,
 {
-    back(page, ui, context);
-    ui.add_space(ui.tokens().sizes.card_gap);
-
     let description = shown.as_ref().map_or("", PackageRow::description);
     let button = shown.map(|shown| row::button_text(ui, context, &shown));
+
+    // The row's item spacing follows the button before the card gap does.
     let button_width = button.as_ref().map_or(0.0, |(text, _)| {
-        pill_width(ui, text) + ui.tokens().sizes.card_gap
+        pill_width(ui, text) + ui.spacing().item_spacing.x + ui.tokens().sizes.card_gap
     });
 
+    let trailing = button_width + icon_button_width();
+    let back = Back::new(page, ui, trailing);
+    let back_shown = page.narrow || !page.trail.is_empty();
+
     let mut refresh = false;
-    ui.horizontal_top(|ui| {
-        title_picture(ui, context, package);
-        ui.vertical(|ui| {
-            let width = button_width + icon_button_width(ui);
-            page_header(ui, package.as_str(), description, width, |ui| {
-                if let (Some(shown), Some(button)) = (shown, &button) {
-                    let (text, act) = button;
-                    if row::action(ui, context, &shown, text, strength(*act)) {
-                        shown.act(page, context, *act);
+    let mut pressed = false;
+    ui.horizontal_top(|line| {
+        line.vertical(|column| {
+            let gap = column.tokens().sizes.text_to_control;
+            let before = if back_shown { back.width + gap } else { 0.0 };
+            let lead = before + title_picture_width(column);
+            PageHeader::new(package.as_str(), description)
+                .leading(lead, |leading| {
+                    if back_shown {
+                        let row = leading.tokens().sizes.toolbar_height;
+                        leading.allocate_ui_with_layout(
+                            vec2(back.width, row),
+                            Layout::left_to_right(Align::Center),
+                            |back_ui| pressed = back.show(back_ui),
+                        );
+
+                        leading.add_space(gap);
                     }
 
-                    ui.add_space(ui.tokens().sizes.card_gap);
-                }
+                    title_picture(leading, context, package);
+                })
+                .trailing(trailing, |actions| {
+                    if let (Some(shown), Some(button)) = (shown, &button) {
+                        let (text, act) = button;
+                        if row::action(actions, context, &shown, text, strength(*act)) {
+                            shown.act(page, context, *act);
+                        }
 
-                let name = i18n::text(ui.ctx(), "packages-refresh");
-                let busy = context
-                    .service::<Packages>()
-                    .reading()
-                    .then(|| i18n::text(ui.ctx(), "common-reading").into_owned());
+                        actions.add_space(actions.tokens().sizes.card_gap);
+                    }
 
-                refresh = refresh_button_busy(ui, &name, busy.as_deref())
-                    .value
-                    .is_some();
-            });
+                    let name = i18n::text(actions.ctx(), "packages-refresh");
+                    let busy = context
+                        .service::<Packages>()
+                        .reading()
+                        .then(|| i18n::text(actions.ctx(), "common-reading").into_owned());
+
+                    refresh = refresh_button_busy(actions, &name, busy.as_deref())
+                        .value
+                        .is_some();
+                })
+                .show(column);
 
             if let Some(shown) = shown {
-                facts_line(ui, context, &shown);
+                facts_line(column, context, &shown);
             }
         });
     });
 
     if refresh {
         context.commands.send(PackagesCommand::Refresh);
+    }
+
+    if pressed {
+        page.back(context);
     }
 }
 
@@ -120,58 +125,6 @@ const fn strength(act: Act) -> ButtonKind {
     match act {
         Act::Install => ButtonKind::Primary,
         Act::Remove | Act::TakeBack(_) => ButtonKind::Soft,
-    }
-}
-
-/// It is as tall as the title's line and starts on the top of its
-/// capitals, so it stands as large as the name and level with its letters.
-fn title_picture(ui: &mut Ui, context: &PageContext<'_>, package: &PackageName) {
-    let font = fonts::font(ui.style(), Weight::Bold, TITLE);
-    let capital = ui
-        .painter()
-        .layout_no_wrap("H".to_owned(), font, Color32::PLACEHOLDER);
-
-    let size = capital.rect.height();
-    let top = capital.mesh_bounds.top();
-    let (room, _) = ui.allocate_exact_size(vec2(size, top + size), Sense::hover());
-    let slot = Rect::from_min_size(pos2(room.left(), room.top() + top), Vec2::splat(size));
-    package_picture(
-        ui,
-        context.service::<Artwork>().pictures(),
-        Some(package),
-        Initial::named(package),
-        slot,
-    );
-
-    ui.add_space(ui.tokens().sizes.picture_gap);
-}
-
-/// The removal question answers Escape itself.
-fn back(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
-    let escape_free = page.removing.is_none() && page.installing.is_none();
-    let ctx = ui.ctx().clone();
-    let (text, name) = page.trail.last().map_or_else(
-        || {
-            (
-                i18n::text(&ctx, "packages-back"),
-                i18n::text(&ctx, "packages-back-name"),
-            )
-        },
-        |(previous, _)| {
-            let to = [("package", Arg::from(previous.as_str()))];
-            (
-                i18n::text_with(&ctx, "packages-back-to", &to),
-                i18n::text_with(&ctx, "packages-back-to-name", &to),
-            )
-        },
-    );
-
-    let pressed = named_pill_button(ui, &text, ButtonKind::Soft, &name).clicked();
-    let escape =
-        escape_free && ui.input_mut(|input| input.consume_key(egui::Modifiers::NONE, Key::Escape));
-
-    if pressed || escape {
-        page.back(context);
     }
 }
 
@@ -196,13 +149,20 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
-    plan_running(ui, context);
-    super::list::refusal(ui, context);
-
     if page.open_aur {
+        aur::header(page, ui, context, &package);
         aur::body(page, ui, context, &package);
         return;
     }
+
+    let catalog = catalog(context);
+    let entry = catalog.as_ref().and_then(|catalog| catalog.entry(&package));
+    let shown = catalog
+        .as_deref()
+        .zip(entry)
+        .map(|(catalog, entry)| Row { entry, catalog });
+
+    header_of(page, ui, context, &package, shown);
 
     let Some(details) = context
         .service::<Packages>()
@@ -220,7 +180,6 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         }
         Read::Known(None) => gone(ui, &package),
         Read::Known(Some(info)) => {
-            let catalog = catalog(context);
             columns(ui, page, context, catalog.as_ref(), (details, info));
             if info.installed.is_some() {
                 group_gap(ui);
@@ -263,35 +222,16 @@ fn columns(
     }
 }
 
-/// The facts and the relations, each in its own card, side by side when
-/// there is room. Returns the package whose name was clicked.
+/// The facts and the relations, each in its own card, one under the other.
+/// Returns the package whose name was clicked.
 fn split(
     ui: &mut Ui,
     left: impl FnOnce(&mut Ui),
     right: impl FnOnce(&mut Ui) -> Option<PackageName>,
 ) -> Option<PackageName> {
-    if ui.available_width() < STACK_BELOW {
-        padded_card(ui, left);
-        ui.add_space(ui.tokens().sizes.card_gap);
-        return padded_card(ui, right).inner;
-    }
-
-    let spacing = ui.spacing().item_spacing.x;
-    let mut opened = None;
-    ui.scope(|ui| {
-        // The gap between the columns only, their own rows keep theirs.
-        ui.spacing_mut().item_spacing.x = ui.tokens().sizes.card_gap;
-        ui.columns(2, |columns| {
-            if let [left_ui, right_ui] = columns {
-                left_ui.spacing_mut().item_spacing.x = spacing;
-                right_ui.spacing_mut().item_spacing.x = spacing;
-                padded_card(left_ui, left);
-                opened = padded_card(right_ui, right).inner;
-            }
-        });
-    });
-
-    opened
+    padded_card(ui, left);
+    ui.add_space(ui.tokens().sizes.card_gap);
+    padded_card(ui, right).inner
 }
 
 fn group_gap(ui: &mut Ui) {

@@ -348,3 +348,30 @@ fn controls_that_grow_end_at_the_right_in_their_first_frame() {
         button.right()
     );
 }
+
+/// A status word too long for its title line is cut inside the line, so it
+/// does not run past the row's edge.
+#[test]
+fn a_status_word_is_cut_inside_a_narrow_title_line() {
+    let mut harness = harness(180.0, 200.0).build_ui_state(
+        |ui, placed: &mut (Rect, Rect)| {
+            *placed = title_line(ui, false, |ui| {
+                let line = ui.max_rect();
+                _ = ui.label("toolbox-sample-git");
+                let dot = status_dot(ui, "Out of date since the last build run", Tone::Warning);
+                (line, dot.rect)
+            });
+        },
+        (Rect::NOTHING, Rect::NOTHING),
+    );
+
+    harness.run();
+    let (line, dot) = *harness.state();
+
+    assert!(
+        dot.right() <= line.right() + 0.5,
+        "the status ends at {} past the line at {}",
+        dot.right(),
+        line.right()
+    );
+}

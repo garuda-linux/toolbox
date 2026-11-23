@@ -39,6 +39,11 @@ pub struct ConfigsPage {
 }
 
 impl PageView for ConfigsPage {
+    /// A list: the rows take the window's width, as Kirigami's list pages do.
+    fn shape(&self) -> toolbox_gui_kit::widgets::BodyShape {
+        toolbox_gui_kit::widgets::BodyShape::Wide
+    }
+
     fn left(&mut self, ctx: &egui::Context) {
         review::forget(ctx);
     }

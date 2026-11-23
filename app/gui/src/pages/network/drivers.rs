@@ -11,7 +11,8 @@ use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, Tone, empty_state, empty_state_action, line,
-    named_chips, pill_button, rich, row_height, split_row, status_dot, text_block_height,
+    named_chips, pill_button, push_height, rich, row_height, split_row, status_dot,
+    text_block_height_with,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 pub(super) use unload::forget;
@@ -117,7 +118,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, filter: &mut DriverFilter, r
     }
 
     let name = text("network-drivers-list");
-    let height = row_height(ui, text_block_height(ui, 1));
+    let height = row_height(ui, text_block_height_with(ui, 1, push_height(ui)));
     RowList::new("network-drivers", &name, RowHeights::Fixed(height)).show(
         ui,
         shown.as_slice(),

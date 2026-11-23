@@ -14,7 +14,7 @@ pub fn steps() -> Vec<Step> {
             "Locales are not available on this system",
         ),
         Step::Shot("locales"),
-        Step::radio("Language packs"),
+        Step::radio("Language Packs"),
         Step::WaitContaining("anguage packs"),
         Step::Shot("locales-packs"),
     ]

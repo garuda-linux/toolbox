@@ -144,18 +144,22 @@ fn items_show_the_shortcuts_the_window_answers() {
     let quit = item(&menu, "appmenu-file", UiCommand::Quit)
         .shortcut
         .unwrap();
+
     assert_eq!((quit.modifiers, quit.key), (vec![Modifier::Control], "Q"));
     let zoom = item(&menu, "appmenu-view", UiCommand::ZoomIn)
         .shortcut
         .unwrap();
+
     assert_eq!(zoom.key, "plus");
     let help = item(&menu, "appmenu-help", UiCommand::Help)
         .shortcut
         .unwrap();
+
     assert_eq!((help.modifiers, help.key), (Vec::new(), "F1"));
     let home = item(&menu, "appmenu-go", UiCommand::Navigate(PageId::Home))
         .shortcut
         .unwrap();
+
     assert_eq!(home.key, "1");
     assert_eq!(
         item(&menu, "appmenu-file", UiCommand::ReviewChanges).shortcut,

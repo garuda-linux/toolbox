@@ -22,7 +22,7 @@ use toolbox_system::{
     CallError, DiskSpace, Facts, Host, PackageCount, PendingUpdate, ProbeError, Status,
 };
 
-use crate::common::{TALL, no_note, window};
+use crate::common::{TALL, no_note, queued_shown, window};
 use crate::look::look_for;
 use crate::system::{shows, step_until};
 
@@ -207,20 +207,20 @@ fn updates_queue_and_list_their_packages() {
 
     assert!(harness.query_by_label("2 updates available").is_some());
 
-    harness.get_by_label("Queue update").click();
+    harness.get_by_label("Queue Update").click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(&harness));
 
-    assert!(harness.query_by_label("Don't update").is_some());
+    assert!(harness.query_by_label("Don't Update").is_some());
     harness
-        .query_all_by_label("Show packages")
+        .query_all_by_label("Show Packages")
         .next()
         .expect("the updates row lists its packages")
         .click();
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Pending updates")
+            .query_by_role_and_label(Role::Dialog, "Pending Updates")
             .is_some()
     );
     assert!(harness.query_by_label("paru-bin").is_some());
@@ -229,7 +229,7 @@ fn updates_queue_and_list_their_packages() {
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Pending updates")
+            .query_by_role_and_label(Role::Dialog, "Pending Updates")
             .is_none()
     );
 }
@@ -242,7 +242,7 @@ fn a_refused_restart_says_so() {
     harness.run();
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Restart now?")
+            .query_by_role_and_label(Role::Dialog, "Restart Now?")
             .is_some()
     );
 
@@ -268,7 +268,7 @@ fn a_check_that_failed_shows_its_reason_on_request() {
             .is_some()
     );
 
-    harness.get_by_label("Show details").click();
+    harness.get_by_label("Show Details").click();
     harness.run();
     assert!(
         harness
@@ -281,10 +281,10 @@ fn a_check_that_failed_shows_its_reason_on_request() {
 fn the_live_iso_offers_its_tools_and_leaves_a_failed_start_to_the_launcher() {
     let (mut harness, _runtime, _power) = home(host(true, false), quiet());
 
-    assert!(harness.query_by_label("System status").is_none());
+    assert!(harness.query_by_label("System Status").is_none());
     assert!(
         harness
-            .query_by_label("Repair an installed system")
+            .query_by_label("Repair an Installed System")
             .is_some()
     );
     assert!(
@@ -293,7 +293,7 @@ fn the_live_iso_offers_its_tools_and_leaves_a_failed_start_to_the_launcher() {
             .is_none()
     );
 
-    harness.get_by_label("Start installer").click();
+    harness.get_by_label("Start Installer").click();
     harness.run();
     assert!(
         harness
@@ -373,7 +373,7 @@ fn when_every_check_failed_one_banner_says_it_and_no_all_clear() {
     let (harness, _runtime, _power) = home(host(false, false), status);
 
     assert!(harness.query_by_label_contains("checks passed").is_none());
-    assert!(harness.query_all_by_label("Read again").next().is_some());
+    assert!(harness.query_all_by_label("Read Again").next().is_some());
 }
 
 /// The dry run's news, as the self-test sees them.

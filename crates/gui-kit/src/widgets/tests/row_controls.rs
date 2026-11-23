@@ -9,9 +9,13 @@ use crate::fonts::{BODY, SMALL, Weight};
 use crate::icons;
 use crate::testing::{harness, painted_text};
 use crate::theme::PILL_HEIGHT;
+/// Tabs are a push button high, so they share its 34 px at the test font.
+const SEGMENTED_HEIGHT: f32 = 34.0;
 
 /// The room a focus ring takes outside its control: its gap and stroke.
 const RING: f32 = 4.0;
+/// Darkly's push button at the test font, its text plus 18 px.
+const PUSH_HEIGHT: f32 = 34.0;
 
 type Control = fn(&mut Ui) -> Rect;
 
@@ -113,17 +117,17 @@ fn a_control_in_a_row_is_as_tall_as_outside_one() {
 
 #[test]
 fn a_pill_shaped_control_keeps_the_pill_height_everywhere() {
-    let controls: [(&str, Control); 3] = [
-        ("button", button),
-        ("dropdown", dropdown),
-        ("segmented", choice),
+    let controls: [(&str, Control, f32); 3] = [
+        ("button", button, PUSH_HEIGHT),
+        ("dropdown", dropdown, PUSH_HEIGHT),
+        ("segmented", choice, SEGMENTED_HEIGHT),
     ];
 
     for in_row in [false, true] {
-        for (name, control) in controls {
+        for (name, control, expected) in controls {
             let height = placed(in_row, control).control.height();
             assert!(
-                (height - PILL_HEIGHT).abs() < 0.5,
+                (height - expected).abs() < 0.5,
                 "{name}, in a row {in_row}: {height} tall"
             );
         }
@@ -165,19 +169,20 @@ fn toggle(ui: &mut Ui) -> Rect {
 
 #[test]
 fn a_title_line_in_a_row_is_as_tall_as_a_control_with_or_without_one() {
-    let rows: [(&str, Control); 3] = [
-        ("none", nothing),
-        ("a switch", toggle),
-        ("a button", button),
+    // A line holding a push button grows to it, the others keep the pill.
+    let rows: [(&str, Control, f32); 3] = [
+        ("none", nothing, PILL_HEIGHT),
+        ("a switch", toggle, PILL_HEIGHT),
+        ("a button", button, PUSH_HEIGHT),
     ];
 
     let padding = crate::tokens::Sizes::default().row_padding.y;
 
-    for (name, control) in rows {
+    for (name, control, expected) in rows {
         let (title, row) = titled(control);
         let line = padding.mul_add(-2.0, row.height());
         assert!(
-            (line - PILL_HEIGHT).abs() < 0.5,
+            (line - expected).abs() < 0.5,
             "beside {name}: a {line} tall title line"
         );
         assert!(

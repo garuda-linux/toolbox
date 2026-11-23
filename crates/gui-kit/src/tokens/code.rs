@@ -4,7 +4,8 @@
 use egui::Color32;
 use toolbox_terminal::Color;
 
-use super::{SECONDARY_CONTRAST, readable};
+use super::SECONDARY_CONTRAST;
+use super::readability::{Ends, readable};
 use crate::palette::Palette;
 use crate::terminal_colors::{Ansi, resolve};
 
@@ -24,14 +25,19 @@ pub struct CodeInks {
 }
 
 impl CodeInks {
-    pub(super) fn derive(ansi: &Ansi, palette: &Palette, [text, field]: [Color32; 2]) -> Self {
+    pub(super) fn derive(
+        ansi: &Ansi,
+        palette: &Palette,
+        [text, field]: [Color32; 2],
+        ends: Ends,
+    ) -> Self {
         let ink = |index| {
             let printed = resolve(Color::Indexed(index), ansi, palette);
-            readable(printed, field, SECONDARY_CONTRAST)
+            readable(printed, field, SECONDARY_CONTRAST, ends)
         };
 
         Self {
-            plain: readable(text, field, SECONDARY_CONTRAST),
+            plain: readable(text, field, SECONDARY_CONTRAST, ends),
             keyword: ink(MAGENTA),
             function: ink(BLUE),
             string: ink(GREEN),

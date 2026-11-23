@@ -3,7 +3,7 @@
 
 [[section]]
 id = "launchers"
-title = "Game launchers"
+title = "Game Launchers"
 icon = "games-config-board"
 
 [[section.entry]]
@@ -109,7 +109,7 @@ check = { package = "winetricks" }
 
 [[section]]
 id = "tools"
-title = "Gaming tools"
+title = "Gaming Tools"
 icon = "tools"
 
 [[section.entry]]
@@ -182,7 +182,7 @@ check = { package = "vkbasalt" }
 
 [[section]]
 id = "controllers"
-title = "Controller support"
+title = "Controller Support"
 icon = "input-gamepad"
 
 [[section.entry]]

@@ -39,8 +39,15 @@ pub fn column_caption(ui: &mut Ui) {
     let size = line(ui, &caption, Weight::Regular, SMALL, secondary).size();
     let inset = ui.tokens().sizes.row_padding.x;
     let (room, _) = ui.allocate_exact_size(vec2(ui.available_width(), size.y), Sense::hover());
+
+    // A caption wider than the switches' column stays inside the room, or it
+    // reaches past the row's edge and widens the list beside it.
     let middle = room.right() - inset - SWITCH_WIDTH / 2.0;
-    let at = Rect::from_min_size(pos2(middle - size.x / 2.0, room.top()), size);
+    let left = (middle - size.x / 2.0)
+        .min(room.right() - inset - size.x)
+        .max(room.left());
+
+    let at = Rect::from_min_size(pos2(left, room.top()), size);
 
     ui.put(
         at,

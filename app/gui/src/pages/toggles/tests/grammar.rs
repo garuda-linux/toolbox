@@ -96,7 +96,7 @@ fn a_queued_package_offers_take_back_and_says_it_installs() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Take back PipeWire")
+            .query_by_role_and_label(Role::Button, "Take Back PipeWire")
             .is_some()
     );
     assert!(harness.query_by_label("Installs with Apply").is_some());

@@ -1,23 +1,43 @@
 use egui::{Label, Rect, Ui};
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::action_row::capitals_top;
 use super::super::{
-    ActionRow, ButtonKind, Tone, card, card_row, pill_button, rich, split_row, switch, title_line,
+    ActionRow, ButtonKind, card, card_row, pill_button, rich, split_row, switch, title_line,
 };
+use super::action_row_tile::{ink, row_content};
 use crate::fonts::{SMALL, Weight};
-use crate::icons;
-use crate::testing::{harness, painted_text};
-use crate::tokens::{self, set_page_hue};
+use crate::testing::{harness, painted_text, textured_rects};
+use crate::{icons, tokens};
+
+/// A glyph snaps to whole pixels, so its centre can be half a point off.
+const SNAP: f32 = 1.0;
 
 /// Off by less than this, two centres count as one.
 const SAME: f32 = 0.5;
+
+/// Two centres of text count as one, as the ink of a line is not its box.
+const TEXT: f32 = 1.0;
+
+/// Letters without a descender, so the title's ink bottom is its baseline.
+const TITLE: &str = "Lutris";
 
 #[derive(Clone, Copy)]
 struct Placed {
     title: Rect,
     control: Option<Rect>,
     content: Rect,
+}
+
+/// What an action row drew for `lines` lines of detail.
+#[derive(Clone, Copy)]
+struct Action {
+    badge: Rect,
+    button: Rect,
+    content: Rect,
+    /// The top of the title's capitals and the bottom of the last baseline.
+    ink: (f32, f32),
+    /// The top of the title's capitals and their baseline.
+    capitals: (f32, f32),
 }
 
 fn content_of(ui: &Ui, row: Rect) -> Rect {
@@ -99,10 +119,7 @@ fn a_control_does_not_move_the_title() {
     }
 }
 
-/// The title, button and row content of an action row with `lines` lines
-/// of detail, the capitals' offset below the top of the title text and
-/// the detail's last baseline, read from letters that do not descend.
-fn action(lines: u8) -> (Rect, Rect, Rect, f32, Option<f32>) {
+fn action(lines: u8) -> Action {
     let detail = (0..lines)
         .map(|line| format!("Line {line}"))
         .collect::<Vec<_>>()
@@ -110,36 +127,35 @@ fn action(lines: u8) -> (Rect, Rect, Rect, f32, Option<f32>) {
 
     let shown = detail.clone();
     let mut harness = harness(800.0, 400.0).build_ui_state(
-        move |ui, (content, capitals): &mut (Rect, f32)| {
-            set_page_hue(ui.ctx(), tokens::Hue::Green);
-            card(ui, |ui| {
-                let drawn = card_row(ui, true, |ui| {
-                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system")
-                        .detail(&shown)
-                        .show(ui, |ui| {
-                            _ = pill_button(ui, "Run now", ButtonKind::Soft);
-                        });
-                });
-
-                *content = content_of(ui, drawn.response.rect);
-                *capitals = capitals_top(ui);
-            });
+        move |ui, placed: &mut Action| placed.content = row_content(ui, &shown),
+        Action {
+            badge: Rect::NOTHING,
+            button: Rect::NOTHING,
+            content: Rect::NOTHING,
+            ink: (0.0, 0.0),
+            capitals: (0.0, 0.0),
         },
-        (Rect::NOTHING, 0.0),
     );
 
     harness.run();
-    let shape = painted_text(&harness, "Update the system").expect("the title is painted");
-    let title = shape.galley.rect.translate(shape.pos.to_vec2());
+    let title = painted_text(&harness, TITLE).expect("the title is painted");
+    let last = if lines == 0 { TITLE } else { detail.as_str() };
+    let last = painted_text(&harness, last).expect("the last line is painted");
+    let badge = textured_rects(&harness)
+        .first()
+        .copied()
+        .expect("the icon is painted");
+
     let button = harness
         .get_by_role_and_label(egui::accesskit::Role::Button, "Run now")
         .rect();
 
-    let baseline = painted_text(&harness, &detail)
-        .map(|painted| painted.galley.mesh_bounds.bottom() + painted.pos.y);
-
-    let (content, capitals) = *harness.state();
-    (title, button, content, capitals, baseline)
+    let mut placed = *harness.state();
+    placed.badge = badge;
+    placed.button = button;
+    placed.ink = (ink(&title).0, ink(&last).1);
+    placed.capitals = ink(&title);
+    placed
 }
 
 /// Two buttons stacked, taller than the tile and a one line title.
@@ -148,18 +164,15 @@ fn tall_actions() -> (Rect, Rect) {
         |ui, (content, actions): &mut (Rect, Rect)| {
             card(ui, |ui| {
                 let drawn = card_row(ui, true, |ui| {
-                    ActionRow::new(icons::CHECKMARK, Tone::Neutral, "Update the system").show(
-                        ui,
-                        |ui| {
-                            *actions = ui
-                                .vertical(|ui| {
-                                    _ = pill_button(ui, "Run now", ButtonKind::Soft);
-                                    _ = pill_button(ui, "Later", ButtonKind::Soft);
-                                })
-                                .response
-                                .rect;
-                        },
-                    );
+                    ActionRow::new(icons::CHECKMARK, "Update the system").show(ui, |ui| {
+                        *actions = ui
+                            .vertical(|ui| {
+                                _ = pill_button(ui, "Run now", ButtonKind::Soft);
+                                _ = pill_button(ui, "Later", ButtonKind::Soft);
+                            })
+                            .response
+                            .rect;
+                    });
                 });
 
                 *content = content_of(ui, drawn.response.rect);
@@ -168,6 +181,7 @@ fn tall_actions() -> (Rect, Rect) {
         (Rect::NOTHING, Rect::NOTHING),
     );
 
+    harness.run();
     harness.run();
     *harness.state()
 }
@@ -182,35 +196,43 @@ fn actions_taller_than_the_tile_sit_in_the_middle_of_the_row() {
     );
 }
 
-/// The tile's top is checked against the title's letters in
-/// `action_row_tile`. Words lower than the tile end on a baseline, which
-/// keeps as much room to the row's edge as the capitals do.
+/// As in KDE's form delegates, the icon and the text block (the title's
+/// capitals to the last baseline) centre on the row, and the button does
+/// too while the detail is short enough to keep it beside the words.
 #[test]
-fn an_action_rows_capitals_have_the_room_of_its_last_baseline_and_actions_sit_in_the_middle() {
-    let padding = tokens::Sizes::DEFAULT.row_padding.y;
+fn the_icon_and_the_text_block_centre_on_the_row() {
     for lines in 0..=3 {
-        let (title, button, content, capitals, baseline) = action(lines);
-        let above = title.top() + capitals - (content.top() - padding);
-        let expected = match baseline {
-            Some(baseline) if lines >= 2 => content.bottom() + padding - baseline,
-            _ => padding,
-        };
+        let placed = action(lines);
+        let content = placed.content;
+        let (top, bottom) = placed.ink;
 
+        let icon = (placed.badge.center().y - content.center().y).abs();
         assert!(
-            (above - expected).abs() <= 1.0,
-            "{lines} lines: the capitals start {above} under the row's top, {expected} wanted"
+            icon < SNAP,
+            "{lines} lines: the icon sits {icon} off the row's middle, at {:?}",
+            placed.badge
         );
+
+        let text = (top.midpoint(bottom) - content.center().y).abs();
+        assert!(
+            text < TEXT,
+            "{lines} lines: the text block sits {text} off the row's middle, from {top} to {bottom} in {content:?}"
+        );
+
         if lines < 3 {
             assert!(
-                (button.center().y - content.center().y).abs() < SAME,
-                "{lines} lines: button at {button:?}, row content {content:?}"
+                (placed.button.center().y - content.center().y).abs() < SAME,
+                "{lines} lines: button at {:?}, row content {content:?}",
+                placed.button
             );
         } else {
-            // Title and three lines of description are taller than the rule
-            // allows, so the actions move up to the title line.
+            // Title and three lines of description are taller than the row's
+            // share, so the actions centre on the title's capitals.
+            let (cap_top, baseline) = placed.capitals;
             assert!(
-                (button.top() - title.top()).abs() < 8.0,
-                "{lines} lines: button at {button:?}, title at {title:?}"
+                (placed.button.center().y - f32::midpoint(cap_top, baseline)).abs() < TEXT,
+                "{lines} lines: button at {:?}, title capitals {cap_top}..{baseline}",
+                placed.button
             );
         }
     }

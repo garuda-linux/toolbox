@@ -5,8 +5,8 @@ use egui::{Context, Id, Label, TextEdit, Ui};
 use toolbox_core::features::configs::viewing::{Phase, Viewing};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
-    ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, right_buttons,
-    text_box,
+    ButtonKind, DialogWidth, ModalWrapper, Tone, banner, loading_label, pill_button, pill_width,
+    right_buttons, text_box,
 };
 
 use super::texts;
@@ -115,13 +115,13 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
     let read = viewing.viewed();
     let copy_all = read.map(|_| text("configs-copy-all"));
     let close = text("configs-close");
-    let labels: Vec<&str> = copy_all
+    let widths: Vec<f32> = copy_all
         .iter()
-        .map(String::as_str)
-        .chain([close.as_str()])
+        .map(|copy| pill_width(ui, copy))
+        .chain([pill_width(ui, &close)])
         .collect();
 
-    right_buttons(ui, &labels, |ui| {
+    right_buttons(ui, &widths, |ui| {
         if let (Some(read), Some(copy_all)) = (read, &copy_all)
             && pill_button(ui, copy_all, ButtonKind::Soft).clicked()
         {

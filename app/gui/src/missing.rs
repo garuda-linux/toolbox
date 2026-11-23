@@ -54,7 +54,6 @@ impl eframe::App for MissingCatalog {
         let ctx = ui.ctx().clone();
         let texts = ToastTexts {
             name: &i18n::text(&ctx, "toast-name"),
-            close: &i18n::text(&ctx, "dialog-close"),
         };
 
         self.toasts.show(&ctx, page, texts);
@@ -115,7 +114,7 @@ fn state(ui: &mut Ui, dir: &Path) {
     let gap = tokens::current(&ctx).sizes.card_gap;
     _ = empty_state(
         ui,
-        icons::DIALOG_ERROR,
+        icons::ERROR,
         &text("missing-catalog-title"),
         &text("missing-catalog-body"),
     );

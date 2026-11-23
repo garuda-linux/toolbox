@@ -1,17 +1,17 @@
-use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, vec2};
+use egui::{Id, Label, Sense, Ui, Vec2, pos2, vec2};
 
-use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
-use super::layout::{self, last_descent, raised_column, remember_width};
+use super::icon_tile::{TileSize, paint_icon};
+use super::layout::{self, raised_column, remember_width};
 use super::list::memory::{self, RowMemory};
 use super::{Tone, queued_tag, rich, status_dot};
 use crate::fonts::{self, BODY, SMALL, Weight};
 use crate::icons::Icon;
-use crate::tokens::{self, Tile};
+use crate::tokens;
 
 const WIDTH_REASON: &str = "action_row width";
 const HEIGHT_REASON: &str = "action_row height";
-/// A row whose words are taller than the title and about three lines of
-/// text keeps its actions on the title line.
+/// A row whose words are taller than three title lines and the gap under the
+/// title keeps its actions on the title line.
 const TALL_ROWS: f32 = 3.0;
 
 /// The tile, the words and the actions are centred on the row. A row too
@@ -20,7 +20,6 @@ const TALL_ROWS: f32 = 3.0;
 #[must_use = "a row shows nothing until `show` is called"]
 pub struct ActionRow<'text> {
     icon: Icon,
-    tone: Tone,
     title: &'text str,
     detail: &'text str,
     queued: &'text str,
@@ -31,10 +30,9 @@ pub struct ActionRow<'text> {
 }
 
 impl<'text> ActionRow<'text> {
-    pub const fn new(icon: Icon, tone: Tone, title: &'text str) -> Self {
+    pub const fn new(icon: Icon, title: &'text str) -> Self {
         Self {
             icon,
-            tone,
             title,
             detail: "",
             queued: "",
@@ -114,36 +112,29 @@ impl<'text> ActionRow<'text> {
         let actions_width = known.unwrap_or_default();
         let sizes = tokens::current(ui.ctx()).sizes;
         let (tile_gap, actions_gap) = (sizes.picture_gap, sizes.text_to_control);
-        let edge = TileSize::Row.edge(ui);
+        let edge = TileSize::Row.edge();
         let full = ui.available_width() - edge - tile_gap;
         let fits = layout::beside(full, actions_width, actions_gap);
         let words_room = fits.filter(|_| actions.is_some());
 
-        // The row is as tall as the tile, last frame's words or last frame's
-        // actions. Tile, words and actions all centre on it.
+        // The row is as tall as its tallest part. The tile and the words centre
+        // on it, as in KDE form delegates. Stacked under the words the actions
+        // stay out of that centring.
         let (height_was, words_was) = (kept.actions_height, kept.words);
-        let anchored = words_was.is_some_and(|words| words > TALL_ROWS * title_line(ui));
-
-        // Words that reach below the tile end on a baseline, so the tile and
-        // the capitals come down by up to the last line's descent and leave
-        // as much room above them as under that baseline.
-        let drop = words_was.map_or(0.0, |words| (words - edge).clamp(0.0, last_descent(ui)));
-        let rise = capitals_top(ui) - drop;
+        let anchored = is_anchored(ui, words_was);
+        set_stacked(ui, row, words_room.is_none());
         let raised_id = row.with("raised");
+        let words_height = words_was.unwrap_or_default();
         let actions_height = words_room.and(height_was).unwrap_or_default();
-
-        let words_height = words_was.unwrap_or_default() + drop;
         let line = edge.max(actions_height).max(words_height);
-
-        // Tile and words centre on the row beside the actions, so a single
-        // line of words sits level with the tile and the actions alike.
-        // Only they come down: the actions centre on the line by themselves.
-        let block = edge.max(words_height);
-        let lower = if words_room.is_some() {
-            ((line - block) / 2.0).max(0.0)
+        let block = if words_room.is_some() {
+            line
         } else {
-            0.0
+            edge.max(words_height)
         };
+
+        let words_drop = ((block - words_height) / 2.0).max(0.0);
+        let top = ui.cursor().top();
 
         let drawn = ui.horizontal_top(|ui| {
             ui.spacing_mut().item_spacing.x = tile_gap;
@@ -151,13 +142,13 @@ impl<'text> ActionRow<'text> {
             ui.spacing_mut().item_spacing.x = actions_gap;
             let Some(words_room) = words_room else {
                 let width = ui.available_width();
-                raised(ui, (rise, width), raised_id, |ui| {
-                    self.stacked(ui, (actions, body), (row, known));
+                raised(ui, (-words_drop, width), raised_id, |ui| {
+                    self.stacked(ui, (actions, body), (row, known, words_was));
                 });
                 return slot;
             };
 
-            let words = raised(ui, (rise - lower, words_room), raised_id, |ui| {
+            let words = raised(ui, (-words_drop, words_room), raised_id, |ui| {
                 ui.set_width(words_room);
                 self.words(ui, body);
             });
@@ -166,7 +157,7 @@ impl<'text> ActionRow<'text> {
                 ui,
                 (row, |kept_row: &mut RowMemory| &mut kept_row.words),
                 words_was,
-                words - drop - lower,
+                words - words_drop,
                 HEIGHT_REASON,
             );
 
@@ -183,17 +174,26 @@ impl<'text> ActionRow<'text> {
             slot
         });
 
-        self.badge(ui, drawn.inner.center() + vec2(0.0, drop + lower));
+        let centre = pos2(drawn.inner.center().x, top + block / 2.0);
+        self.badge(ui, centre);
     }
 
     fn stacked(
         self,
         ui: &mut Ui,
         (actions, body): (Option<impl FnOnce(&mut Ui)>, Option<impl FnOnce(&mut Ui)>),
-        (row, known): (Id, Option<f32>),
+        (row, known, words_was): (Id, Option<f32>, Option<f32>),
     ) {
         ui.vertical(|ui| {
             self.words(ui, body);
+            remember_width(
+                ui,
+                (row, |kept_row: &mut RowMemory| &mut kept_row.words),
+                words_was,
+                ui.min_rect().height(),
+                HEIGHT_REASON,
+            );
+
             if let Some(actions) = actions {
                 ui.add_space(tokens::current(ui.ctx()).sizes.caption_gap);
                 let room = ui.available_width();
@@ -208,31 +208,27 @@ impl<'text> ActionRow<'text> {
                 // rather than flip each frame.
                 let rect = drawn.response.rect;
                 let one_line = rect.height() <= ui.spacing().interact_size.y * 1.5;
+
+                // A one line row keeps the width measured beside the words, or
+                // a narrower stacked measure sends it back beside them each frame.
                 let width = if one_line { rect.width() } else { room };
-                remember_width(
-                    ui,
-                    (row, |kept_row: &mut RowMemory| &mut kept_row.actions_width),
-                    known,
-                    width,
-                    WIDTH_REASON,
-                );
+                if !one_line || known.is_none() {
+                    remember_width(
+                        ui,
+                        (row, |kept_row: &mut RowMemory| &mut kept_row.actions_width),
+                        known,
+                        width,
+                        WIDTH_REASON,
+                    );
+                }
             }
         });
     }
 
-    /// The icon's tile: the page's, or a status wash for a row that warns,
-    /// fails or reports success, as that colour carries its meaning.
+    /// The row's icon, plain: its colour icon, or a glyph in the text colour.
+    /// A status row passes its status icon itself.
     fn badge(self, ui: &Ui, centre: egui::Pos2) {
-        let tokens = tokens::current(ui.ctx());
-        let tile = match self.tone {
-            Tone::Accent | Tone::Neutral => page_tile(ui.ctx()),
-            Tone::Warning | Tone::Success | Tone::Error => {
-                let (fill, ink, _) = self.tone.banner(&tokens);
-                Tile { fill, ink }
-            }
-        };
-
-        paint_icon_tile(ui, centre, TileSize::Row, self.icon, tile);
+        paint_icon(ui, centre, TileSize::Row, self.icon.for_row());
     }
 
     fn words(self, ui: &mut Ui, body: Option<impl FnOnce(&mut Ui)>) {
@@ -291,28 +287,33 @@ fn actions_beside(
     actions: impl FnOnce(&mut Ui),
 ) {
     let (row, width_was, height_was) = (measures.row, measures.width, measures.height);
-    let room = vec2(ui.available_width(), 0.0);
+    let room = ui.available_width();
 
-    // A tall row keeps the actions beside its title, not beside its middle.
-    let drop = match height_was {
-        Some(height) if anchored => (capital_height(ui) / 2.0 - height / 2.0).max(0.0),
-        Some(height) => (line - height) / 2.0,
+    // A tall row centres the actions on its title's capitals, which sit
+    // above the middle of the row, so the actions may rise above its top.
+    // A negative rise drops them below the cursor, as `raised` does.
+    let rise = match height_was {
+        Some(height) if anchored => height / 2.0 - capital_middle(ui),
+        Some(height) => (height - line) / 2.0,
         None => 0.0,
     };
 
-    let drawn = ui.allocate_ui_with_layout(room, Layout::top_down(Align::Min), |ui| {
-        ui.add_space(drop);
-
-        ui.horizontal_top(|ui| {
-            ui.spacing_mut().item_spacing =
-                Vec2::splat(tokens::current(ui.ctx()).sizes.control_gap);
-            actions(ui);
+    // Laid out from the raised top, then only the width and the height
+    // below the cursor are allocated, so the controls after the words keep
+    // the rest of the row, as `raised` allocates them.
+    let (mut column, room_rect) = raised_column(ui, (rise, room), row.with("actions"));
+    let taken = column
+        .horizontal_top(|controls| {
+            controls.spacing_mut().item_spacing =
+                Vec2::splat(tokens::current(controls.ctx()).sizes.control_gap);
+            actions(controls);
         })
         .response
-        .rect
-    });
+        .rect;
 
-    let taken = drawn.inner;
+    let below = (column.min_rect().bottom() - room_rect.top()).max(0.0);
+    ui.allocate_exact_size(vec2(taken.width(), below), Sense::hover());
+
     remember_width(
         ui,
         (row, |kept_row: &mut RowMemory| &mut kept_row.actions_width),
@@ -329,47 +330,53 @@ fn actions_beside(
     );
 }
 
+/// Whether the actions of the row `row` sit under its words in this frame,
+/// rather than beside them. Set by the row before its actions are drawn.
+pub fn actions_stacked(ui: &Ui, row: Id) -> bool {
+    ui.data(|data| data.get_temp::<bool>(stacked_id(row)))
+        .unwrap_or(false)
+}
+
+fn is_anchored(ui: &Ui, words_was: Option<f32>) -> bool {
+    let gap = tokens::current(ui.ctx()).sizes.tight_gap;
+    words_was.is_some_and(|words| words > TALL_ROWS.mul_add(title_line(ui), gap))
+}
+
+/// Read by the actions themselves, which may leave out a slot that only
+/// keeps room beside the words.
+fn set_stacked(ui: &Ui, row: Id, stacked: bool) {
+    ui.data_mut(|data| data.insert_temp(stacked_id(row), stacked));
+}
+
+fn stacked_id(row: Id) -> Id {
+    row.with("actions stacked")
+}
+
+/// A capital of the title's font, laid out once for both measures below.
+fn title_capital(ui: &Ui) -> std::sync::Arc<egui::Galley> {
+    ui.painter().layout_no_wrap(
+        "H".to_owned(),
+        fonts::font(ui.style(), Weight::SemiBold, BODY),
+        egui::Color32::PLACEHOLDER,
+    )
+}
+
 /// The line height of the title, the text of a row's first line.
 fn title_line(ui: &Ui) -> f32 {
-    let line = ui.painter().layout_no_wrap(
-        "H".to_owned(),
-        fonts::font(ui.style(), Weight::SemiBold, BODY),
-        egui::Color32::PLACEHOLDER,
-    );
-
-    line.size().y
+    title_capital(ui).size().y
 }
 
-/// The height of a capital of the title, as the centre of a row's title.
-fn capital_height(ui: &Ui) -> f32 {
-    let capital = ui.painter().layout_no_wrap(
-        "H".to_owned(),
-        fonts::font(ui.style(), Weight::SemiBold, BODY),
-        egui::Color32::PLACEHOLDER,
-    );
-
-    capital.mesh_bounds.height()
+/// Where the middle of a title's capitals lies below the top of the title's
+/// line. The line box has room above the capitals, so half the capital's
+/// height is not the middle.
+fn capital_middle(ui: &Ui) -> f32 {
+    let capital = title_capital(ui);
+    f32::midpoint(capital.mesh_bounds.top(), capital.mesh_bounds.bottom())
 }
 
-/// How far below the top of the title's label its capitals start. The
-/// tile starts there, so it meets the letters rather than the line box.
-pub(super) fn capitals_top(ui: &Ui) -> f32 {
-    let capital = ui.painter().layout_no_wrap(
-        "H".to_owned(),
-        fonts::font(ui.style(), Weight::SemiBold, BODY),
-        egui::Color32::PLACEHOLDER,
-    );
-
-    capital.mesh_bounds.top().max(0.0)
-}
-
-/// `body` drawn `rise` points above the cursor in a column `width` wide,
-/// taking room only for what reaches below the cursor. Returns that
-/// height.
-///
-/// The title's line box starts above its capitals. Raising the words by
-/// that much puts the capitals, and so the tile, at the row's top, which
-/// leaves the tile as much room to the card's edge above as below.
+/// `body` drawn `rise` points above the cursor, or below it for a negative
+/// `rise`, in a column `width` wide, taking room only for what reaches
+/// below the cursor. Returns that height, `rise` included.
 fn raised(ui: &mut Ui, (rise, width): (f32, f32), id: Id, body: impl FnOnce(&mut Ui)) -> f32 {
     let (mut child, room) = raised_column(ui, (rise, width), id);
     body(&mut child);

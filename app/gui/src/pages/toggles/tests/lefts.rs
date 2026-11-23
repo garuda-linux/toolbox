@@ -5,9 +5,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::Toggle;
 use toolbox_core::domains::Packages;
 use toolbox_core::testing::Queue as _;
-use toolbox_gui_kit::testing::filled_rects;
-use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::{dim_opacity, page_tile};
+use toolbox_gui_kit::testing::textured_rects;
 use toolbox_plan::PackageName;
 
 use super::super::TogglePage;
@@ -18,16 +16,17 @@ use crate::testing::{PageFixture, PageState, assert_text_beside_picture};
 
 /// Off by less than this, two edges count as one.
 const SAME: f32 = 0.5;
+/// The glyph's edge, Kirigami's smallMedium icon.
+const ICON: f32 = 22.0;
 
 type Page = Harness<'static, PageState<Plain>>;
 
 /// One row to measure: what the search finds it by, its title, its
-/// description, and whether its tile is faded.
+/// description.
 struct Row {
     search: &'static str,
     title: &'static str,
     description: &'static str,
-    faded: bool,
 }
 
 fn page(fixture: PageFixture, search: &str) -> Page {
@@ -38,28 +37,18 @@ fn page(fixture: PageFixture, search: &str) -> Page {
     harness
 }
 
-fn tile_of(harness: &Page, row: &Row) -> Rect {
-    let tokens = tokens::current(&harness.ctx);
-    let fill = page_tile(&harness.ctx).fill;
-    let fill = if row.faded {
-        fill.gamma_multiply(dim_opacity(&tokens))
-    } else {
-        fill
-    };
-
-    // The section heading's icon tile has the same fill and is smaller.
-    let tile = filled_rects(harness, fill)
+/// The picture slot of a row: the square around its centred glyph.
+fn tile_of(harness: &Page) -> Rect {
+    let glyph = textured_rects(harness)
         .into_iter()
-        .find(|rect| (rect.width() - PICTURE_SIZE).abs() < SAME)
-        .expect("the glyph tile is painted");
+        .find(|rect| (rect.width() - ICON).abs() < SAME)
+        .expect("the glyph is painted");
 
-    assert!((tile.width() - PICTURE_SIZE).abs() < SAME, "tile {tile:?}");
-
-    tile
+    Rect::from_center_size(glyph.center(), egui::vec2(PICTURE_SIZE, PICTURE_SIZE))
 }
 
 fn assert_lefts(harness: &Page, row: &Row, state: &str) {
-    let picture = tile_of(harness, row);
+    let picture = tile_of(harness);
     assert_text_beside_picture(harness, picture, (row.title, row.description), state);
 }
 
@@ -80,13 +69,12 @@ fn assert_in_every_state(mut harness: Page, row: &Row) {
 #[test]
 fn a_title_with_a_chip_starts_where_its_description_does_right_of_the_tile() {
     // JamesDSP needs PipeWire, which the empty system lacks, so its title
-    // carries a chip and its tile fades.
+    // carries a chip.
     let row = Row {
         search: "jamesdsp",
         title: "JamesDSP",
         description: "An audio effect processor for adding bass boost, equalizers, and other \
                       effects. It is recommended to try EasyEffects first.",
-        faded: true,
     };
 
     assert_in_every_state(page(shipped(), row.search), &row);
@@ -106,7 +94,6 @@ fn a_queued_title_starts_where_its_description_does() {
         title: "Calf plugins",
         description: "Calf Studio Gear. A high-quality set of audio processing plugins. Install \
                       this to give EasyEffects more professional studio effects.",
-        faded: false,
     };
 
     let harness = page(fixture, row.search);

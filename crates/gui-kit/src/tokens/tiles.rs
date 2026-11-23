@@ -7,7 +7,8 @@
 use egui::{Color32, Context, Id, Theme};
 
 use super::letters::LetterTiles;
-use super::{DIM_CONTRAST, fitted, mix};
+use super::readability::{Ends, fitted};
+use super::{DIM_CONTRAST, mix};
 use crate::palette::{Palette, TileHues};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
@@ -36,13 +37,13 @@ pub struct Tiles {
 }
 
 impl Tiles {
-    pub(super) fn derive(card: Color32, palette: &Palette, text: Color32, theme: Theme) -> Self {
+    pub(super) fn derive(card: Color32, palette: &Palette, ends: Ends, theme: Theme) -> Self {
         let hues = palette.tiles.unwrap_or_else(|| TileHues::of(theme));
         let tile = |hue: Color32| {
             let fill = mix(card, hue, fill_share(theme));
             Tile {
                 fill,
-                ink: fitted(hue, &[fill], DIM_CONTRAST),
+                ink: fitted(hue, &[fill], DIM_CONTRAST, ends),
             }
         };
 
@@ -51,7 +52,7 @@ impl Tiles {
             blue: tile(hues.blue),
             green: tile(hues.green),
             orange: tile(hues.orange),
-            letters: LetterTiles::derive(palette, text, theme),
+            letters: LetterTiles::derive(palette, card, ends, theme),
         }
     }
 

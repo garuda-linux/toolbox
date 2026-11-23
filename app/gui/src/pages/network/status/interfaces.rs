@@ -4,8 +4,8 @@
 
 use egui::Ui;
 use toolbox_core::features::network::{InterfaceCard, Link, Signal, SignalQuality};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{PropertyTexts, SectionHeading, card, property_list};
-use toolbox_gui_kit::{UiExt as _, icons};
 
 use crate::i18n;
 use crate::i18n::Arg;
@@ -36,12 +36,7 @@ fn interface_card(ui: &mut Ui, interface: &InterfaceCard) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
 
-    let icon = match interface.link {
-        Link::Wired { speed: _ } => icons::NETWORK_WIRED,
-        Link::Wireless { ssid: _, signal: _ } => icons::NETWORK_WIRELESS,
-    };
-
-    SectionHeading::new(icon, &interface.connection, "").show(ui);
+    SectionHeading::new(&interface.connection, "").show(ui);
     ui.add_space(ui.tokens().sizes.heading_gap);
 
     let copy = |label: &str| {

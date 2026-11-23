@@ -144,3 +144,15 @@ fn the_down_arrow_walks_into_the_open_list() {
             .is_focused()
     );
 }
+
+#[test]
+fn a_fitting_width_adds_only_the_padding_and_chevron_to_the_widest_option() {
+    let harness = shown(&["English", LONG], 1);
+    let text = painted_text(&harness, LONG).expect("the option is painted");
+    let padding = *harness.state() - text.galley.size().x;
+
+    assert!(
+        (0.0..=40.0).contains(&padding),
+        "{padding} px beyond the option"
+    );
+}

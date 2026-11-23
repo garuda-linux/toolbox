@@ -21,7 +21,7 @@ use super::{NoLead, TogglePage};
 use crate::catalogs::{CatalogId, Catalogs};
 use crate::command::{AppCommand, Command};
 use crate::pages::{PageContext, PageView};
-use crate::testing::{PageFixture, PageState, assert_header, rect_of};
+use crate::testing::{PageFixture, PageState, rect_of};
 
 /// A toggles page without lead sections, as the shell would draw one.
 struct Plain(TogglePage);
@@ -154,11 +154,11 @@ fn a_right_click_offers_the_website_and_the_name() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Open website")
+            .query_by_role_and_label(Role::MenuItem, "Open Website")
             .is_some()
     );
     harness
-        .get_by_role_and_label(Role::MenuItem, "Copy name")
+        .get_by_role_and_label(Role::MenuItem, "Copy Name")
         .click();
     harness.run();
     assert_eq!(harness.state().fixture.sent().len(), 1, "the note");
@@ -172,12 +172,12 @@ fn an_entry_without_a_website_offers_only_its_name() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Copy name")
+            .query_by_role_and_label(Role::MenuItem, "Copy Name")
             .is_some()
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Open website")
+            .query_by_role_and_label(Role::MenuItem, "Open Website")
             .is_none()
     );
 }
@@ -197,15 +197,22 @@ fn a_frame_with_the_same_inputs_builds_no_rows() {
 }
 
 #[test]
-fn the_search_starts_the_toolbar_under_the_header() {
+fn the_search_sits_in_the_header_toolbar_at_the_right() {
     let harness = page(CatalogId::Gaming, "");
     let search = rect_of(&harness, Role::TextInput, "Search this page");
-    let texts = (
-        "Gaming",
-        "Launchers, tools and emulators for playing on Linux. Pick what you want, then apply.",
-    );
+    let title = harness
+        .get_by_role_and_label(Role::Heading, "Gaming")
+        .rect();
 
-    assert_header(&harness, texts, None, Some(search));
+    // KDE apps put the search field beside the title, on its row.
+    assert!(
+        (search.center().y - title.center().y).abs() < 4.0,
+        "the search {search:?} is not on the title's row {title:?}"
+    );
+    assert!(
+        search.left() > title.right(),
+        "the search {search:?} overlaps the title {title:?}"
+    );
 }
 
 /// Each chip's name and its "on/total" count, the All chip first.

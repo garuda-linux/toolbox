@@ -1,33 +1,15 @@
-use egui::epaint::RectShape;
-use egui::{Color32, Rect, Shape};
-use egui_kittest::Harness;
+//! Darkly has no focus ring: a focused push button shows its focus as the
+//! fill, in a row as anywhere else.
+
+use egui::Shape;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::{ButtonKind, card, card_row, pill_button};
 use crate::testing::harness;
-use crate::theme::CONTROL_RADIUS;
 use crate::tokens;
 
-fn stroked(harness: &Harness<'_>, colour: Color32) -> Vec<(RectShape, Rect)> {
-    harness
-        .output()
-        .shapes
-        .iter()
-        .filter_map(|clipped| {
-            if let Shape::Rect(rect) = &clipped.shape
-                && rect.stroke.color == colour
-                && rect.stroke.width > 0.0
-            {
-                Some((rect.clone(), clipped.clip_rect))
-            } else {
-                None
-            }
-        })
-        .collect()
-}
-
-/// A Soft button in a card's row, focused and under the pointer.
-fn focused_in_a_row() -> Harness<'static> {
+#[test]
+fn a_focused_button_in_a_row_is_filled_after_a_key_and_draws_no_ring() {
     let mut harness = harness(400.0, 120.0).build_ui(|ui| {
         card(ui, |ui| {
             card_row(ui, true, |ui| pill_button(ui, "Edit…", ButtonKind::Soft));
@@ -37,46 +19,34 @@ fn focused_in_a_row() -> Harness<'static> {
     harness.run();
     harness.get_by_label("Edit…").focus();
     harness.run();
-    harness.get_by_label("Edit…").hover();
+
+    // The program's focus shows no fill until a key moves it.
+    let tokens = tokens::current(&harness.ctx);
+    let filled_before = harness.output().shapes.iter().any(|clipped| {
+        matches!(&clipped.shape, Shape::Rect(rect) if rect.fill == tokens.decoration_focus)
+    });
+
+    assert!(!filled_before, "no key yet, so no focus fill");
+
+    harness.key_press(egui::Key::ArrowDown);
     harness.run();
-    harness
-}
+    harness.run();
 
-#[test]
-fn a_focus_ring_in_a_row_is_round_and_whole() {
-    let harness = focused_in_a_row();
-    let ring = tokens::current(&harness.ctx).accent_ring;
-    let button = harness.get_by_label("Edit…").rect();
-    let found = stroked(&harness, ring);
-    let [(shape, clip)] = found.as_slice() else {
-        panic!("one ring is painted");
-    };
+    let rings = harness
+        .output()
+        .shapes
+        .iter()
+        .filter(|clipped| {
+            matches!(&clipped.shape, Shape::Rect(rect)
+                if rect.stroke.color == tokens.accent_ring && rect.stroke.width > 0.0)
+        })
+        .count();
 
-    let outer = shape.rect.expand(shape.stroke.width);
-    assert!(clip.contains_rect(outer), "{outer:?} is cut by {clip:?}");
-    assert!(
-        (outer.center() - button.center()).length() < 0.5,
-        "ring {outer:?} around {button:?}"
-    );
+    assert_eq!(rings, 0, "Darkly draws no focus ring");
 
-    // The ring keeps the button's corners at its distance from it.
-    let radius = shape.corner_radius;
-    let gap = (shape.rect.height() - button.height()) / 2.0;
-    let expected = f32::from(CONTROL_RADIUS) + gap;
-    assert!(
-        radius.nw == radius.se && (f32::from(radius.nw) - expected).abs() < 0.5,
-        "corners {radius:?} round a button with {CONTROL_RADIUS} corners {gap} away"
-    );
-}
+    let filled = harness.output().shapes.iter().any(|clipped| {
+        matches!(&clipped.shape, Shape::Rect(rect) if rect.fill == tokens.decoration_focus)
+    });
 
-#[test]
-fn a_focused_button_drops_its_rim_for_the_ring() {
-    let harness = focused_in_a_row();
-    let rim = tokens::current(&harness.ctx).rim;
-    let button = harness.get_by_label("Edit…").rect();
-    let rimmed = stroked(&harness, rim)
-        .into_iter()
-        .any(|(shape, _)| shape.rect == button);
-
-    assert!(!rimmed, "a rim and a ring make two outlines");
+    assert!(filled, "the focus colour fills the button");
 }

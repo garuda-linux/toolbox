@@ -82,7 +82,7 @@ impl PageView for BootRepairPage {
                 State::Failed => {
                     let (title, detail) = (text("repair-failed"), text("repair-failed-detail"));
                     let again = text("common-read-again");
-                    let error = icons::DIALOG_ERROR;
+                    let error = icons::ERROR;
                     if empty_state_action(ui, error, &title, &detail, &again).clicked() {
                         context.commands.send(BootRepairCommand::Refresh);
                     }

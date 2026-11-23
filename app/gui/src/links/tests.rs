@@ -46,7 +46,6 @@ fn window(works: bool, url: &'static str) -> (Harness<'static, Toasts>, Arc<Atom
         |ui, toasts: &mut Toasts| {
             let texts = ToastTexts {
                 name: "Notification",
-                close: "Close",
             };
 
             toasts.show(ui.ctx(), ui.max_rect(), texts);

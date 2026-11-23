@@ -152,7 +152,18 @@ fn the_focused_grip_shows_its_ring_and_tells_its_height() {
     open_console(&mut harness);
     focus_grip(&mut harness);
 
+    // Focus given by the program shows nothing, so the grip is left and
+    // reached again with the keyboard.
+    harness.key_press_modifiers(egui::Modifiers::SHIFT, Key::Tab);
+    harness.run();
+    harness.key_press(Key::Tab);
+    harness.run();
+
     let grip = harness.get_by_role_and_label(Role::Splitter, "Resize the Console");
+    assert!(
+        grip.accesskit_node().is_focused(),
+        "Tab comes back to the grip"
+    );
     let ring = toolbox_gui_kit::tokens::current(&harness.ctx).accent_ring;
     let rect = grip.rect();
     let share = grip.accesskit_node().numeric_value();
@@ -186,12 +197,12 @@ fn escape_with_the_changes_open_closes_them_and_keeps_the_console() {
     open_console(&mut harness);
     harness.get_by_label("Review").click();
     harness.run();
-    assert!(harness.query_by_label("Queued changes").is_some());
+    assert!(harness.query_by_label("Queued Changes").is_some());
 
     harness.key_press(Key::Escape);
     harness.run();
 
-    assert!(harness.query_by_label("Queued changes").is_none());
+    assert!(harness.query_by_label("Queued Changes").is_none());
     assert!(pane(&harness, "Console").is_some());
 }
 

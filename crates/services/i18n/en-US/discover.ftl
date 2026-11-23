@@ -17,8 +17,8 @@ discover-nothing-in-category-detail = Other categories have apps that match.
 # $count is how many apps of every category match the search.
 discover-show-all-matches =
     { $count ->
-        [one] Show the match
-       *[other] Show all { $count } matches
+        [one] Show the Match
+       *[other] Show All { $count } Matches
     }
 discover-none = No apps to show
 discover-none-detail = Apps that the configured repositories do not offer are hidden.
@@ -33,3 +33,9 @@ discover-category-science = Science
 discover-category-security = Security
 discover-category-utilities = Utilities
 discover-problem-reason = Some categories could not be loaded. The others are shown. { $reason }
+
+discover-back = Back
+discover-back-name = Back to App Catalog
+discover-details-packages = Packages
+discover-details-website = Website
+discover-package-from = { $package } from { $repository }

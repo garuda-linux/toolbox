@@ -16,6 +16,7 @@ use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User};
 use toolbox_core::features::users::Refusal;
 use toolbox_core::features::users::run::{PageRun, RunKind};
+use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{GroupName, ShellPath, UserName};
 use toolbox_services::locks::Locks;
@@ -25,7 +26,7 @@ use crate::command::{AppCommand, Command, UserEdit, UsersCommand};
 use crate::page::PageId;
 use crate::page_service::Services;
 use crate::refused::Refused;
-use crate::testing::{PageFixture, PageState, assert_header, button_kind, rect_of};
+use crate::testing::{PageFixture, PageState, assert_header, button_kind, paints_icon, rect_of};
 use crate::users::Users;
 
 type Shown = Harness<'static, PageState<UsersPage>>;
@@ -131,7 +132,7 @@ fn people_show_and_the_service_waits_behind_the_filter() {
     assert!(harness.query_by_label("http").is_none());
 
     harness
-        .get_by_role_and_label(Role::Button, "Regular users only")
+        .get_by_role_and_label(Role::Button, "Regular Users Only")
         .click();
     harness.run();
 
@@ -144,7 +145,7 @@ fn the_menu_queues_a_lock() {
 
     harness.get_by_label("More actions for ada").click();
     harness.run();
-    harness.get_by_label("Queue lock").click();
+    harness.get_by_label("Queue Lock").click();
     harness.run();
 
     assert_eq!(
@@ -228,7 +229,7 @@ fn the_groups_tab_removes_a_group_after_asking() {
 
     harness.get_by_label("Remove video…").click();
     harness.run();
-    harness.get_by_label("Queue removal").click();
+    harness.get_by_label("Queue Removal").click();
     harness.run();
 
     assert_eq!(
@@ -246,13 +247,13 @@ fn the_header_stays_put_and_each_tab_sorts_in_the_toolbar() {
     );
 
     let tab = rect_of(&harness, Role::RadioButton, "Users");
-    let refresh = rect_of(&harness, Role::Button, "Read again");
+    let refresh = rect_of(&harness, Role::Button, "Read Again");
     let search = rect_of(&harness, Role::TextInput, "Search users");
     assert_header(&harness, texts, Some(tab), Some(search));
     let sort = rect_of(&harness, Role::ComboBox, "Sort users");
     assert!(
-        (sort.right() - refresh.right()).abs() < 0.5,
-        "sort {sort:?}, refresh {refresh:?}"
+        sort.right() <= refresh.left(),
+        "sort {sort:?} is not before refresh {refresh:?}"
     );
     assert!(
         (sort.center().y - search.center().y).abs() < 0.5,
@@ -267,13 +268,13 @@ fn the_header_stays_put_and_each_tab_sorts_in_the_toolbar() {
     assert_eq!(rect_of(&harness, Role::RadioButton, "Users"), tab);
     let groups = rect_of(&harness, Role::ComboBox, "Sort groups");
     assert!(
-        (groups.right() - refresh.right()).abs() < 0.5,
-        "sort {groups:?}, refresh {refresh:?}"
+        groups.right() <= refresh.left(),
+        "sort {groups:?} is not before refresh {refresh:?}"
     );
 }
 
 #[test]
-fn removing_a_group_is_offered_softly_and_confirmed_as_danger() {
+fn removing_a_group_is_offered_and_confirmed_softly() {
     let mut harness = page(unlocked());
     harness
         .get_by_role_and_label(Role::RadioButton, "Groups")
@@ -283,14 +284,19 @@ fn removing_a_group_is_offered_softly_and_confirmed_as_danger() {
     assert_eq!(button_kind(&harness, "Remove video…"), ButtonKind::Soft);
     harness.get_by_label("Remove video…").click();
     harness.run();
-    assert_eq!(button_kind(&harness, "Queue removal"), ButtonKind::Danger);
+
+    // KDE has no red button, so a Danger answer draws as Soft (buttons.rs)
+    // and only its delete icon marks it.
+    assert_eq!(button_kind(&harness, "Queue Removal"), ButtonKind::Soft);
+    let answer = rect_of(&harness, Role::Button, "Queue Removal");
+    assert!(paints_icon(&harness, answer, icons::EDIT_DELETE));
 }
 
 #[test]
 fn every_row_offers_edit_and_its_menu_at_its_right() {
     let harness = page(unlocked());
 
-    assert!(harness.query_by_label("Set password…").is_none());
+    assert!(harness.query_by_label("Set Password…").is_none());
     for user in ["ada", "nico"] {
         let edit_name = format!("Edit {user}…");
         let more_name = format!("More actions for {user}");
@@ -323,7 +329,7 @@ fn the_menu_rests_the_password_while_a_plan_runs() {
     harness.run();
     assert!(
         harness
-            .get_by_role_and_label(Role::MenuItem, "Set password…")
+            .get_by_role_and_label(Role::MenuItem, "Set Password…")
             .accesskit_node()
             .is_disabled()
     );

@@ -207,7 +207,7 @@ fn system_and_home_files_are_edited_a_guarded_one_viewed_and_a_home_one_opened_i
         .click();
     harness.run();
     harness
-        .get_by_role_and_label(Role::MenuItem, "Open in app")
+        .get_by_role_and_label(Role::MenuItem, "Open in App")
         .click();
     harness.run();
 
@@ -228,7 +228,7 @@ fn a_folder_shows_its_files_once_opened() {
 
     assert!(!shows(&harness, "audio.conf"));
 
-    harness.get_by_label("Show the files").click();
+    harness.get_by_label("Show the Files").click();
     harness.run();
 
     assert!(shows(&harness, "audio.conf"));
@@ -252,7 +252,7 @@ fn a_search_without_a_match_says_so() {
     // The search field's own clear button and the empty state's one.
     assert_eq!(
         harness
-            .query_all_by_role_and_label(Role::Button, "Clear search")
+            .query_all_by_role_and_label(Role::Button, "Clear Search")
             .count(),
         2
     );
@@ -272,18 +272,6 @@ fn before_the_first_look_placeholder_rows_wait() {
 /// Also true when a dialog's or a row's name repeats the label.
 pub fn shows(harness: &Shown, label: &str) -> bool {
     harness.query_all_by_label(label).next().is_some()
-}
-
-#[test]
-fn a_section_without_a_known_icon_shows_a_plain_text_file() {
-    assert_eq!(
-        super::list::section_icon("no-such-icon").name(),
-        "text-x-generic"
-    );
-    assert_eq!(
-        super::list::section_icon("drive-harddisk-root").name(),
-        "drive-harddisk-root"
-    );
 }
 
 #[test]

@@ -12,11 +12,12 @@ use super::super::{
 use crate::fonts::FontFile;
 use crate::icons;
 use crate::testing::{cap_off_centre, harness_with_font, painted_text, test_fonts, textured_rects};
-use crate::theme::PILL_HEIGHT;
 
 /// How far the middle of a label's capitals may sit from its control's
 /// middle: half a pixel of rounding either way.
 const CENTRED: f32 = 0.75;
+/// A dropdown entry is a Darkly item row, the 16 px text line plus 3 px each side.
+const ITEM_ROW: f32 = 30.0;
 
 const SHELL: &str = "/nix/store/rdxc7wg0r196bf6cicanfgcdkqhq9m9l-fish-4.9/bin/fish";
 
@@ -177,7 +178,7 @@ fn dropdown_entries_are_tall_enough_and_centred() {
         let harness = opened(font, in_row, long_list, (Role::ComboBox, "Login shell"));
         let entry = node_rect(&harness, Role::ListBoxOption, "Bash");
         assert!(
-            entry.height() >= PILL_HEIGHT - CENTRED,
+            entry.height() >= ITEM_ROW - CENTRED,
             "{what}: a {} tall entry",
             entry.height()
         );
@@ -303,8 +304,8 @@ fn a_tags_words_share_the_line_of_the_words_beside_it_and_sit_in_its_middle() {
         );
         let tag = node_rect(&harness, Role::Label, "Linked");
         assert!(
-            (tag.height() - 24.0).abs() < 0.5,
-            "{what}: the tag is {} tall, not 24",
+            (tag.height() - 27.0).abs() < 0.5,
+            "{what}: the tag is {} tall, not 27",
             tag.height()
         );
         assert_centred(&harness, &format!("tag, {what}"), "Linked", tag);

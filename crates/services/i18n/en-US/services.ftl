@@ -15,7 +15,7 @@ services-show-masked = Masked
 services-show-dead = Dead
 services-show-failed = Failed
 services-show-all = All
-services-refresh = Read again
+services-refresh = Read Again
 services-sort = Sort services
 services-sort-name = Name
 services-sort-state = Problems first
@@ -31,8 +31,8 @@ services-none-detail = Change the search or the filters to see more services.
 # A button under "No service matches." that picks the All chip. $count is how many units the search finds there.
 services-show-every =
     { $count ->
-        [one] Show the one match
-       *[other] Show all { $count } matches
+        [one] Show the One Match
+       *[other] Show All { $count } Matches
     }
 # A start, stop or journal did not run, as other changes are being applied.
 services-busy = Other changes are still being applied, so this did not run. Try again once they are done.

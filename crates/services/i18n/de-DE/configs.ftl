@@ -76,6 +76,7 @@ configs-review-summary-home = Hinzugefügte Zeilen: { $added }. Entfernte Zeilen
 configs-review-write-failed = { $path } wurde nicht geschrieben. Den Grund zeigt die Konsole. Wurde die Datei inzwischen geändert, sollte erneut verglichen werden, damit die Änderung mit dem aktuellen Stand abgeglichen wird.
 configs-review-diff = Die Änderungen: hinzugefügte Zeilen beginnen mit einem Pluszeichen, entfernte mit einem Minuszeichen
 configs-save = Speichern
+configs-review-cancel = Abbrechen
 configs-edit-again = Weiter bearbeiten
 configs-compare-again = Erneut vergleichen
 configs-discard = Verwerfen

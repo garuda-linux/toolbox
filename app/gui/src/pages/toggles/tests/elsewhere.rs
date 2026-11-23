@@ -20,7 +20,7 @@ fn a_picked_section_without_a_match_offers_all_matches() {
     );
     assert_eq!(
         harness
-            .query_all_by_role_and_label(Role::Button, "Clear search")
+            .query_all_by_role_and_label(Role::Button, "Clear Search")
             .count(),
         1,
         "only the search field's own clear button shows"
@@ -57,7 +57,7 @@ fn without_a_picked_section_the_empty_state_clears_the_search() {
             .is_some()
     );
     harness
-        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear Search")
         .last()
         .expect("the empty state's Clear search")
         .click();

@@ -63,7 +63,7 @@ fn a_failed_status_read_says_so_with_read_again() {
     });
 
     assert!(harness.query_by_label("Checking the system…").is_none());
-    assert!(harness.query_all_by_label("Read again").count() >= 2);
+    assert!(harness.query_all_by_label("Read Again").count() >= 2);
     assert!(no_note(&harness));
 }
 
@@ -73,9 +73,9 @@ fn failed_checks_offer_their_details_and_to_read_again() {
     status.health = Err(ProbeError::fake("no garuda-health"));
     let (harness, _runtime, _power) = home(host(false, false), status);
 
-    let details = harness.get_by_label("Show details").rect();
+    let details = harness.get_by_label("Show Details").rect();
     let again = harness
-        .query_all_by_label("Read again")
+        .query_all_by_label("Read Again")
         .map(|node| node.rect())
         .max_by(|one, other| one.top().total_cmp(&other.top()))
         .unwrap();

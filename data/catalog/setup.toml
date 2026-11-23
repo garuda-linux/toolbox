@@ -586,7 +586,7 @@ check = { package = "birdfont" }
 
 [[section]]
 id = "input-method"
-title = "Input methods"
+title = "Input Methods"
 icon = "input-keyboard"
 
 [[section.entry]]
@@ -997,7 +997,7 @@ check = { package = "homebank" }
 
 [[section]]
 id = "pkgmngrs"
-title = "Software centers"
+title = "Software Centers"
 icon = "system-software-install"
 
 [[section.entry]]

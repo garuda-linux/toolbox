@@ -1,6 +1,6 @@
 page-boot-subtitle = Applying the changes writes /etc/default/grub, keeps the old file as a backup and builds the boot menu again.
 page-boot-subtitle-sdboot = The settings of systemd-boot and the kernel command line that is built into each kernel image.
-boot-refresh = Read again
+boot-refresh = Read Again
 boot-queued = Changes with Apply
 
 boot-failed = The GRUB settings could not be read
@@ -15,7 +15,7 @@ boot-refused-unavailable = This system has no /etc/default/grub, so there is not
 # The question before a kernel parameter such as init=/bin/sh. $value is the parameter.
 boot-risky-title = Add { $value }?
 boot-risky-body = This parameter opens a root shell at boot or switches a security layer off. Anyone at the computer could then take it over. Add it only if you know why you need it.
-boot-risky-confirm = Add the parameter
+boot-risky-confirm = Add the Parameter
 boot-risky-cancel = Cancel
 boot-refused-custom-command-line = The kernel command line is not changed here. Edit /etc/default/grub on the Config Files page.
 boot-refused-too-many-parameters = The kernel command line is full.
@@ -31,7 +31,7 @@ boot-refused-wrong-type = This is not a file of the right type: { $name }
 boot-refused-invalid = This cannot be used here: { $name }
 boot-dismiss = Dismiss
 
-boot-menu = Boot menu
+boot-menu = Boot Menu
 boot-default = Default entry
 boot-default-known = The menu entry that is booted when you do not pick another.
 boot-default-missing = GRUB has not generated a boot menu yet, so there are no entries to choose from.
@@ -69,11 +69,11 @@ boot-proposal-remember = GRUB boots the entry that was booted last. Switch Remem
 boot-proposal-none = The boot menu has no entry for the kernel { $kernel }. Pick the entry yourself, or generate the menu again by applying any change of this page.
 boot-proposal-sdboot-none = systemd-boot has no image of the kernel { $kernel } yet. Its image is built when the kernel is installed or updated. Pick the entry yourself once it is there.
 boot-proposal-loading = Looking for the boot menu entry of the kernel { $kernel }…
-boot-proposal-queue = Queue as default
-boot-proposal-keep = Do not change
+boot-proposal-queue = Queue as Default
+boot-proposal-keep = Do Not Change
 boot-proposal-close = Close
 
-boot-kernel = Kernel parameters
+boot-kernel = Kernel Parameters
 boot-parameters = Parameters passed to the kernel
 boot-parameters-detail = Each parameter is one word such as nowatchdog or loglevel=3. They are written to GRUB_CMDLINE_LINUX_DEFAULT.
 boot-parameters-none = No parameters.
@@ -101,11 +101,11 @@ boot-plymouth-none = Not available
 boot-background = GRUB background picture
 boot-background-detail = A PNG, JPEG or TGA picture behind the boot menu. A GRUB theme has its own background.
 boot-background-from-theme = Set in /etc/default/grub as GRUB_MENU_PICTURE, which some GRUB themes read. Choose a picture to replace it.
-boot-background-title = Choose a background picture
+boot-background-title = Choose a Background Picture
 boot-background-filter = Pictures
 boot-theme = GRUB theme
 boot-theme-detail = The theme.txt file of a GRUB theme, usually below /usr/share/grub/themes.
-boot-theme-title = Choose a GRUB theme
+boot-theme-title = Choose a GRUB Theme
 boot-theme-filter = GRUB theme
 boot-file-none = None
 # $name is the field's name, such as GRUB theme.

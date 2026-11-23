@@ -1,3 +1,6 @@
+use std::cell::Cell;
+use std::rc::Rc;
+
 use egui::Key;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
@@ -24,7 +27,7 @@ fn a_frame_with_the_same_inputs_builds_no_user_rows() {
     assert!(harness.query_by_label("Ada Lovelace").is_some());
 
     harness
-        .get_by_role_and_label(Role::Button, "Regular users only")
+        .get_by_role_and_label(Role::Button, "Regular Users Only")
         .click();
     harness.run();
     assert_eq!(harness.state().page.users.builds(), built + 1);
@@ -125,7 +128,7 @@ fn an_unknown_lock_state_offers_read_again_on_the_users_tab_only() {
     let banner = "Which accounts are locked is not known";
 
     // The header's button and the banner's.
-    let buttons = || harness.query_all_by_role_and_label(Role::Button, "Read again");
+    let buttons = || harness.query_all_by_role_and_label(Role::Button, "Read Again");
     assert_eq!(buttons().count(), 2);
     buttons().last().unwrap().click();
     harness.run();
@@ -152,7 +155,7 @@ fn the_root_note_stays_inside_its_row() {
     snapshot.insert(accounts);
     let mut harness = page_on(snapshot, unlocked());
     harness
-        .get_by_role_and_label(Role::Button, "Regular users only")
+        .get_by_role_and_label(Role::Button, "Regular Users Only")
         .click();
     harness.run();
 
@@ -165,4 +168,26 @@ fn the_root_note_stays_inside_its_row() {
         .rect();
 
     assert!(row.contains_rect(note), "{note:?} outside {row:?}");
+}
+
+/// The width the controls of a user row reserve, in the English and the
+/// German text.
+#[test]
+fn the_user_row_reserves_only_the_width_its_edit_button_and_menu_take() {
+    for (locale, reserved) in [("en-US", 160.0_f32), ("de-DE", 200.0)] {
+        let width = Rc::new(Cell::new(0.0_f32));
+        let measured = Rc::clone(&width);
+        let mut harness = toolbox_gui_kit::testing::harness(300.0, 100.0)
+            .build_ui(move |ui| measured.set(super::super::row::controls_width(ui, false)));
+
+        let language = locale.parse().expect("a language");
+        crate::i18n::set_language(&harness.ctx, &language);
+        harness.run();
+
+        assert!(
+            width.get() <= reserved,
+            "{locale}: the controls reserve {} px, more than {reserved}",
+            width.get()
+        );
+    }
 }

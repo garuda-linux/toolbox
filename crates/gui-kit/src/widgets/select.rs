@@ -1,29 +1,18 @@
 mod options;
-
-use std::f32::consts::PI;
+pub(super) mod pill;
 
 use egui::{
-    Align, Color32, Event, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response, Role,
-    ScrollArea, Sense, Ui, Vec2, WidgetInfo, pos2, vec2,
+    Align, Color32, Layout, Popup, PopupCloseBehavior, PopupKind, Rect, Response, Role, ScrollArea,
+    Sense, Ui, WidgetInfo, vec2,
 };
-#[cfg(test)]
-pub(super) use options::option_fill;
-use options::{SWATCH_GAP, SWATCH_WIDTH, options_in, paint_swatch, swatch_room};
+use options::{options_in, swatch_room};
+use pill::{CHEVRON, CHEVRON_INSET, TEXT_INSET, paint_chevron, paint_pill};
 
-use super::menu::{ITEM_INSET, MENU_WIDTH, menu_glass};
-use super::press::{Pointer, hover_amount};
-use super::text::cut;
-use super::{Choice, focus_ring, line, rich};
+use super::menu::{ITEM_INSET, MENU_WIDTH, item_height, menu_glass};
+use super::{Choice, line, push_height};
 use crate::fonts::{BODY, Weight};
-use crate::motion::{self, Timing};
-use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT};
-use crate::ui_ext::icon_image;
-use crate::{icons, tokens};
+use crate::tokens;
 
-const PADDING_X: f32 = 14.0;
-const CHEVRON: f32 = 16.0;
-/// An option of the open list, as tall as a pill outside a row.
-pub(super) const OPTION_HEIGHT: f32 = PILL_HEIGHT;
 /// The widest an open list grows for a long option, such as a shell's
 /// whole store path, before it cuts the option.
 pub(super) const LIST_MAX_WIDTH: f32 = MENU_WIDTH * 2.0;
@@ -111,7 +100,7 @@ impl<'a> Select<'a> {
             })
             .fold(0.0, f32::max);
 
-        let chrome = PADDING_X.mul_add(2.0, CHEVRON) + tokens.sizes.text_to_icon;
+        let chrome = TEXT_INSET + CHEVRON_INSET + CHEVRON / 2.0 + tokens.sizes.text_to_icon;
         (widest + chrome).min(LIST_MAX_WIDTH)
     }
 
@@ -119,7 +108,7 @@ impl<'a> Select<'a> {
         self.caption.map_or(self.width, |caption| {
             let tokens = tokens::current(ui.ctx());
             let galley = line(ui, caption, Weight::Regular, BODY, tokens.secondary);
-            galley.size().x + tokens.sizes.control_gap + self.width
+            galley.size().x + tokens.sizes.tight_gap + self.width
         })
     }
 
@@ -132,14 +121,16 @@ impl<'a> Select<'a> {
 
         // Caption first whatever way the row runs, so it reads before the
         // pill it names. The pill carries the name for screen readers.
-        let size = vec2(self.full_width(ui), PILL_HEIGHT);
+        let size = vec2(self.full_width(ui), push_height(ui));
         ui.allocate_ui_with_layout(size, Layout::left_to_right(Align::Center), |ui| {
             ui.spacing_mut().item_spacing.x = 0.0;
             let tokens = tokens::current(ui.ctx());
             let galley = line(ui, caption, Weight::Regular, BODY, tokens.secondary);
             let (rect, _) = ui.allocate_exact_size(galley.size(), Sense::hover());
             ui.painter().galley(rect.min, galley, tokens.secondary);
-            ui.add_space(tokens.sizes.control_gap);
+
+            // A label and its dropdown form one group, closer than toolbar groups.
+            ui.add_space(tokens.sizes.tight_gap);
             self.pill(ui)
         })
         .inner
@@ -162,7 +153,7 @@ impl<'a> Select<'a> {
             .copied()
             .unwrap_or(placeholder);
 
-        let height = PILL_HEIGHT;
+        let height = push_height(ui);
         let (rect, response) = ui.allocate_exact_size(vec2(width, height), Sense::click());
         response.widget_info(|| {
             let mut info = WidgetInfo::labeled(Role::ComboBox, ui.is_enabled(), label);
@@ -179,7 +170,8 @@ impl<'a> Select<'a> {
         // The value is whole for screen readers already, a tooltip shows
         // it whole to the eye when the pill cut it, or its detail.
         let swatch = selected.and_then(|index| swatches.get(index)).copied();
-        let cut = paint_pill(ui, &response, rect, shown, swatch);
+        let sunken = Popup::is_id_open(ui.ctx(), Popup::default_response_id(&response));
+        let cut = paint_pill(ui, &response, rect, shown, (swatch, sunken));
         let response = match (detail, cut) {
             (Some(detail), _) => response.on_hover_ui(|tip| _ = tip.label(detail)),
             (None, true) => response.on_hover_ui(|tip| _ = tip.label(shown)),
@@ -224,7 +216,7 @@ fn list_height(ui: &Ui, pill: Rect) -> f32 {
     let padding = tokens::current(ui.ctx()).sizes.list_padding.sum().y;
     let room = (window.bottom() - pill.bottom()).max(pill.top() - window.top());
     let chrome = LIST_STROKE.mul_add(2.0, PILL_GAP.mul_add(2.0, padding));
-    (room - chrome).max(OPTION_HEIGHT)
+    (room - chrome).max(item_height(ui))
 }
 
 /// The open list under `pill`.
@@ -278,114 +270,4 @@ fn list(
     };
 
     open.inner
-}
-
-/// Draws the pill. Returns whether `shown` was cut to fit.
-fn paint_pill(
-    ui: &Ui,
-    response: &Response,
-    rect: Rect,
-    shown: &str,
-    swatch: Option<[Color32; 3]>,
-) -> bool {
-    if !ui.is_rect_visible(rect) {
-        return false;
-    }
-
-    let tokens = tokens::current(ui.ctx());
-    let pointer = Pointer::of_focusable(response);
-    let fill = if pointer == Pointer::Pressed {
-        tokens.pressed
-    } else {
-        tokens
-            .field
-            .lerp_to_gamma(tokens.hover, hover_amount(ui, response, pointer))
-    };
-
-    // A disabled ui fades it once, see `press.rs`.
-    let ink = tokens.text;
-
-    ui.painter().rect_filled(rect, CONTROL_RADIUS, fill);
-    let before = swatch.map_or(0.0, |colours| {
-        paint_swatch(ui, rect.left() + PADDING_X, rect.center().y, colours);
-        SWATCH_WIDTH + SWATCH_GAP
-    });
-
-    let text = Rect::from_min_max(
-        pos2(rect.left() + PADDING_X + before, rect.top()),
-        pos2(
-            rect.right() - PADDING_X - CHEVRON - tokens.sizes.text_to_icon,
-            rect.bottom(),
-        ),
-    );
-
-    let galley = cut(
-        ui,
-        rich(ui, shown, Weight::Medium, BODY, ink),
-        text.width().max(0.0),
-    );
-
-    let was_cut = galley.elided;
-    let text_top = rect.center().y - galley.size().y / 2.0;
-    ui.painter()
-        .with_clip_rect(text)
-        .galley(pos2(text.left(), text_top), galley, ink);
-
-    focus_ring(ui, response, CONTROL_RADIUS);
-    was_cut
-}
-
-fn paint_chevron(ui: &Ui, pill: &Response, open: bool) {
-    let turn = Timing::both(motion::CHEVRON_TURN);
-    let id = pill.id.with("chevron");
-
-    // A key that opened or closed the list jumps, a click turns. A key
-    // pressed while a click's turn runs leaves that turn alone.
-    let was_open = ui.data_mut(|data| {
-        let key = id.with("open");
-        let was = data.get_temp::<bool>(key);
-        data.insert_temp(key, open);
-        was
-    });
-
-    let toggled = was_open.is_some_and(|was| was != open);
-    let keyed = toggled
-        && ui.input(|input| {
-            input.events.iter().any(|event| {
-                matches!(
-                    event,
-                    Event::Key {
-                        pressed: true,
-                        key: _,
-                        physical_key: _,
-                        repeat: _,
-                        modifiers: _,
-                    }
-                )
-            })
-        });
-
-    if keyed {
-        motion::settle(ui.ctx(), id, open);
-    }
-
-    let turned = motion::presence(ui.ctx(), id, open, turn);
-    let rect = pill.rect;
-    if !ui.is_rect_visible(rect) {
-        return;
-    }
-
-    let chevron = Rect::from_center_size(
-        pos2(rect.right() - PADDING_X - CHEVRON / 2.0, rect.center().y),
-        vec2(CHEVRON, CHEVRON),
-    );
-
-    let image = icon_image(ui, icons::GO_DOWN, tokens::current(ui.ctx()).secondary);
-    let image = if turned > 0.0 {
-        image.rotate(turned * PI, Vec2::splat(0.5))
-    } else {
-        image
-    };
-
-    image.paint_at(ui, chevron);
 }

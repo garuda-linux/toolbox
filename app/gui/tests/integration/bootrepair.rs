@@ -81,10 +81,10 @@ fn the_flag_shows_the_page_in_test_mode_and_a_repair_asks_first() {
     );
 
     harness
-        .get_by_label("Reinstall the boot loader…")
+        .get_by_label("Reinstall the Boot Loader…")
         .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall the boot loader…").click();
+    harness.get_by_label("Reinstall the Boot Loader…").click();
     harness.run();
 
     assert!(
@@ -103,7 +103,7 @@ fn the_progress_banner_shows_while_the_repair_runs() {
     let harness = fixture.harness();
     open(harness);
 
-    harness.get_by_label("Reinstall the boot loader…").click();
+    harness.get_by_label("Reinstall the Boot Loader…").click();
     let field = "Passphrase of the encrypted partition";
     step_until(harness, "the passphrase field", |harness| {
         harness
@@ -119,7 +119,7 @@ fn the_progress_banner_shows_while_the_repair_runs() {
         .type_text("not-a-real-passphrase");
     harness.run();
     harness
-        .query_all_by_label("Reinstall the boot loader")
+        .query_all_by_label("Reinstall the Boot Loader")
         .last()
         .unwrap()
         .click();

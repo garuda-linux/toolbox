@@ -21,6 +21,7 @@ mod diagnostics;
 mod discover;
 mod focus;
 mod gaming;
+mod glass;
 mod guide;
 mod guide_images;
 mod home;

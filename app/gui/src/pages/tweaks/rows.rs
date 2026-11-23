@@ -8,7 +8,7 @@ use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::Tally;
 use toolbox_core::features::tweaks::view::{Choices, Flip, Pick, Read};
 use toolbox_gui_kit::fonts::{BODY, Weight};
-use toolbox_gui_kit::icons::{self, Icon};
+use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
     ListItem, RowHeights, RowList, RowState, Select, dimmed, rich, row_height, section_heading,
     split_row, split_row_in, switch, text_block_height,
@@ -26,10 +26,6 @@ use crate::pages::rows::{SWITCH_WIDTH, picture_height};
 use crate::pages::toggles::shown_count;
 
 const NARROW_CONTROL: f32 = tokens::Sizes::DEFAULT.setting_control_narrow;
-
-/// Each section's glyph, on its heading. Its rows have glyphs of their own.
-const SHELL_NETWORK_GLYPH: Icon = icons::NETWORK_WIRED;
-const GARUDA_UPDATE_GLYPH: Icon = icons::SYSTEM_SOFTWARE_UPDATE;
 
 struct Tweak<T> {
     id: Cow<'static, str>,
@@ -165,7 +161,7 @@ pub fn shell_network(
     let title = i18n::text(&ctx, "tweaks-shell-network");
     let (tally, read) = shell_network_tally(&ctx, choices, query);
     let count = shown_count(&ctx, tally, read).unwrap_or_default();
-    section_heading(ui, SHELL_NETWORK_GLYPH, &title, &count);
+    section_heading(ui, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
     let _rows = tracing::trace_span!("rows").entered();
     RowList::new(super::SHELL_NETWORK, &title, heights(ui)).show(
@@ -238,7 +234,7 @@ pub fn garuda_update(
     let count = shown_count(&ctx, tally, read).unwrap_or_default();
 
     let title = i18n::text(&ctx, "tweaks-garuda-update");
-    section_heading(ui, GARUDA_UPDATE_GLYPH, &title, &count);
+    section_heading(ui, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
     let matching: Vec<Tweak<(GarudaUpdateFlag, Flip)>> = matching
         .into_iter()

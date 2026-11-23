@@ -1,17 +1,17 @@
-//! The queued changes: a pill floating at the bottom right of the page
-//! while there are any, with Apply, and a popover above it that lists
-//! them, each with its own remove button, and removes all after a
-//! question.
+//! The queued changes: a footer toolbar under the page while there are
+//! any, as KDE's footer of a settings module, with the count, Review and
+//! Apply, and a popover above it that lists them, each with its own remove
+//! button, and removes all after a question.
 
-mod badge;
+mod bar;
 mod buttons;
 mod clear;
 mod held;
 mod place;
 
 use egui::{
-    Align2, Area, Context, CornerRadius, Frame, Id, Label, LayerId, Margin, Order, Popup,
-    PopupCloseBehavior, PopupKind, Rect, RectAlign, Stroke, Ui, vec2,
+    Context, CornerRadius, Frame, Id, Label, LayerId, Popup, PopupCloseBehavior, PopupKind, Rect,
+    RectAlign, Stroke, Ui, vec2,
 };
 use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
@@ -21,8 +21,9 @@ use toolbox_gui_kit::theme::POPOVER_RADIUS;
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, icon_button, pill_button, rich, split_row, tag};
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
-use self::badge::badge;
-use self::buttons::{apply_button, apply_pill, review_button, show_console_button};
+use self::bar::count_text;
+pub use self::bar::footer;
+use self::buttons::{apply_button, apply_pill, review_button};
 use self::clear::ask_to_clear;
 use self::held::unread;
 use self::place::{Fit, place};
@@ -31,11 +32,6 @@ use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::i18n::changes::sentence;
-
-/// Under the dialogs' layer, so a dialog's scrim covers the pill as it
-/// covers the page. egui raises an area in the first frame it shows, which
-/// on the dialogs' layer put a returning pill over a dialog's buttons.
-const LAYER: Order = Order::Middle;
 
 #[derive(Debug, Default)]
 pub struct ChangesState {
@@ -55,7 +51,7 @@ pub struct Queued<'view> {
     pub console_open: bool,
 }
 
-fn pill_words(ctx: &Context, count: usize, running: bool) -> String {
+fn count_words(ctx: &Context, count: usize, running: bool) -> String {
     let id = if running {
         "changes-running"
     } else {
@@ -65,38 +61,9 @@ fn pill_words(ctx: &Context, count: usize, running: bool) -> String {
     i18n::text_with(ctx, id, &[("count", Arg::from(count))]).into_owned()
 }
 
-/// In `band`, the room below the page, while the Console is closed.
-pub fn floating(
-    ctx: &Context,
-    band: Rect,
-    queued: Queued<'_>,
-    state: &mut ChangesState,
-    commands: &CommandSender,
-) {
-    if queued.changes.is_empty() {
-        *state = ChangesState::default();
-        return;
-    }
-
-    let inset = tokens::current(ctx).sizes.corner_inset.x;
-    let corner = band.right_center() - vec2(inset, 0.0);
-    let id = Id::unique("toolbox_gui::changes::pill");
-    let pill_rect = Area::new(id)
-        .order(LAYER)
-        .pivot(Align2::RIGHT_CENTER)
-        .fixed_pos(corner)
-        .show(ctx, |ui| pill(ui, queued, state, commands))
-        .response
-        .rect;
-
-    let layer = LayerId::new(LAYER, id);
-    ctx.move_to_top(layer);
-    overlays(ctx, (pill_rect, layer), queued, state, commands);
-}
-
 /// In the Console's header while it is open, so nothing floats over the
-/// rows above it: the count, Review and Apply without the pill's words.
-/// `ui` lays out right to left, beside the header's Close.
+/// rows above it: the count, Review and Apply. `ui` lays out right to
+/// left, beside the header's Close.
 pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, commands: &CommandSender) {
     if queued.changes.is_empty() {
         *state = ChangesState::default();
@@ -104,12 +71,8 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
     }
 
     let ctx = ui.ctx().clone();
-    let count = queued.changes.len().to_string();
     let removes = queued.changes.iter().any(ChangeView::removes);
-    let badge = badge(ui, &count);
-    let words = pill_words(&ctx, queued.changes.len(), queued.running);
-    let label = format!("{count} {words}");
-    badge.widget_info(|| egui::WidgetInfo::labeled(egui::Role::Label, true, &label));
+    let count = ui.label(count_text(ui, queued));
 
     let review = review_button(ui, state);
     let (apply, show) = apply_button(ui, queued.held, commands, removes);
@@ -117,13 +80,13 @@ pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, command
         state.open = true;
     }
 
-    let rect = apply.rect.union(review.rect).union(badge.rect);
+    let rect = apply.rect.union(review.rect).union(count.rect);
     overlays(&ctx, (rect, ui.layer_id()), queued, state, commands);
 }
 
 fn overlays(
     ctx: &Context,
-    pill: (Rect, LayerId),
+    anchor: (Rect, LayerId),
     queued: Queued<'_>,
     state: &mut ChangesState,
     commands: &CommandSender,
@@ -135,7 +98,7 @@ fn overlays(
         console_open: _,
     } = queued;
 
-    // It rises from the pill's side while egui fades it in. Closed, it
+    // It rises from Review while egui fades it in. Closed, it
     // goes at once, and the next opening starts low again. A key's opening
     // does not rise.
     let id = popover_id();
@@ -155,7 +118,7 @@ fn overlays(
         let rise = (1.0 - shown) * motion::POPOVER_RISE;
         popover_at(
             ctx,
-            (pill.0, pill.1, rise),
+            (anchor.0, anchor.1, rise),
             (list, held),
             &mut state.open,
             commands,
@@ -167,46 +130,12 @@ fn overlays(
     }
 }
 
-fn pill(
-    ui: &mut Ui,
-    queued: Queued<'_>,
-    state: &mut ChangesState,
-    commands: &CommandSender,
-) -> Rect {
-    let (count, held) = (queued.changes.len(), queued.held);
-    let removes = queued.changes.iter().any(ChangeView::removes);
-    let ctx = ui.ctx().clone();
-    let tokens = tokens::current(&ctx);
-    let count_text = count.to_string();
-
-    let padding = tokens.sizes.pill_padding;
-    raised(ui, CornerRadius::same(u8::MAX), padding, |ui| {
-        ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-            ui.add_space(tokens.sizes.inset);
-            badge(ui, &count_text);
-            let text = pill_words(&ctx, count, queued.running);
-            ui.label(rich(ui, &text, Weight::SemiBold, BODY, tokens.text));
-            ui.add_space(tokens.sizes.tight_gap);
-            if queued.running && !queued.console_open {
-                show_console_button(ui, commands);
-            } else {
-                review_button(ui, state);
-            }
-
-            // Open, the list carries the one Apply.
-            if !state.open && apply_button(ui, held, commands, removes).1 {
-                state.open = true;
-            }
-        });
-    })
-}
-
-/// The popover above or below `pill`, `rise` points from its resting
-/// place toward the pill. egui closes it on a click beside it and on
+/// The popover above or below `review`, `rise` points from its resting
+/// place toward Review. egui closes it on a click beside it and on
 /// Escape.
 fn popover_at(
     ctx: &Context,
-    (pill, parent, rise): (Rect, LayerId, f32),
+    (review, parent, rise): (Rect, LayerId, f32),
     (list, held): (&[ChangeView], Option<&'static str>),
     open: &mut bool,
     commands: &CommandSender,
@@ -219,7 +148,7 @@ fn popover_at(
 
     // Its own choice of side, as egui's would not shorten the list where
     // neither side has room.
-    let placed = place(pill, ctx.content_rect(), fit, sizes.popover_gap);
+    let placed = place(review, ctx.content_rect(), fit, sizes.popover_gap);
     let (align, toward) = if placed.above {
         (RectAlign::TOP_END, rise)
     } else {
@@ -227,7 +156,7 @@ fn popover_at(
     };
 
     let glass = glass(ctx);
-    let anchor = pill.translate(vec2(0.0, toward));
+    let anchor = review.translate(vec2(0.0, toward));
     let popup = Popup::new(popover_id(), ctx.clone(), anchor, parent)
         .align(align)
         .align_alternatives(&[])
@@ -310,19 +239,16 @@ fn popover(
 
     ui.add_space(tokens.sizes.control_gap);
     let top = ui.cursor().top();
-    ui.painter().hline(
-        ui.max_rect().x_range(),
-        top,
-        Stroke::new(1.0, tokens.outline),
-    );
+    ui.painter()
+        .hline(ui.max_rect().x_range(), top, Stroke::new(1.0, tokens.rule));
     ui.add_space(tokens.sizes.card_gap);
 
-    footer(ui, changes.len(), held, commands);
+    list_footer(ui, changes.len(), held, commands);
     (scrolled.inner_rect.height(), scrolled.content_size.y)
 }
 
 /// Remove all at the left, Apply at the right.
-fn footer(ui: &mut Ui, count: usize, held: Option<&'static str>, commands: &CommandSender) {
+fn list_footer(ui: &mut Ui, count: usize, held: Option<&'static str>, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     ui.horizontal(|ui| {
         let remove_all = i18n::text(&ctx, "changes-remove-all-ask");
@@ -375,7 +301,7 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
 }
 
 /// Whether the popover showed last frame, so a key handled before the
-/// pill draws can leave it to the popover.
+/// footer draws can leave it to the popover.
 pub fn popover_shows(ctx: &Context) -> bool {
     let layer = LayerId::new(PopupKind::Popup.order(), popover_id());
     ctx.memory(|memory| memory.areas().is_visible(&layer))
@@ -383,11 +309,4 @@ pub fn popover_shows(ctx: &Context) -> bool {
 
 fn popover_id() -> Id {
     Id::unique("toolbox_gui::changes::popover")
-}
-
-fn raised(ui: &mut Ui, radius: CornerRadius, margin: Margin, body: impl FnOnce(&mut Ui)) -> Rect {
-    Glass::raised(ui, radius, margin)
-        .show(ui, body)
-        .response
-        .rect
 }

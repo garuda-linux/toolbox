@@ -9,9 +9,9 @@ use std::sync::Arc;
 use egui::{Align, Layout, Ui};
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, EntryRow, Page};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
-use toolbox_gui_kit::widgets::{Select, SpinTexts, Tone, banner, card, spin_field};
-use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_gui_kit::widgets::{Select, SpinTexts, Tone, card, spin_field};
 use toolbox_plan::{GrubKey, GrubTimeout};
 use toolbox_services::boot_menu::Menu;
 use toolbox_system::MenuRead;
@@ -23,7 +23,7 @@ use crate::command::BootCommand;
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::pages::PageContext;
-use crate::pages::rows::Look;
+use crate::pages::rows::{Look, read_again_banner};
 use crate::pages::setting_row::{Words, row, switch_row, wide_control};
 
 /// The timeout's limits, in seconds.
@@ -32,7 +32,7 @@ pub(super) const TIMEOUT_MAX: u32 = 300;
 pub(super) const FIRST_SECONDS: u32 = 5;
 /// The fallback of a remembered default: the first entry.
 const FIRST_ENTRY: &str = "0";
-/// The timeout's spin field: its two round steppers and "300 s" between.
+/// Room for the timeout's spin field, steppers and unit included.
 pub(super) const TIMEOUT_WIDTH: f32 = 120.0;
 /// The mode dropdown with the seconds field beside it.
 const TIMEOUT_CONTROL_WIDTH: f32 = 400.0;
@@ -45,7 +45,7 @@ pub type EntryRows = RowCache<(Same<Menu>, bool, Look), Vec<(String, String)>>;
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut EntryRows) {
     let ctx = ui.ctx().clone();
-    heading(ui, icons::FORMAT_LIST_UNORDERED, "boot-menu");
+    heading(ui, "boot-menu");
     let menu = context.service::<Boot>().menu();
     if unread(menu) {
         unread_banner(ui, context, menu);
@@ -240,10 +240,8 @@ pub(super) fn unread_banner(ui: &mut Ui, context: &PageContext<'_>, menu: &Menu)
         Menu::Read(MenuRead::Refused(Refusal::NoAgent | Refusal::HelperMissing))
     );
 
-    let again = i18n::text(ui.ctx(), "common-read-again");
-    let action = (!futile).then_some(&*again);
     let said = i18n::text(ui.ctx(), &format!("boot-default-{}", menu.as_str()));
-    if banner(ui, Tone::Warning, &said, action.as_slice()).value == Some(0) {
+    if read_again_banner(ui, Tone::Warning, &said, !futile) {
         context.commands.send(BootCommand::Refresh);
     }
 }

@@ -1,8 +1,8 @@
 use egui::accesskit::Role;
-use egui::{CornerRadius, Frame, Label, Margin, Sense, Ui, WidgetInfo};
+use egui::{CornerRadius, Frame, Label, Margin, Sense, Stroke, Ui, WidgetInfo};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
-use toolbox_gui_kit::widgets::{empty_state, focus_ring, highlighted, rich};
+use toolbox_gui_kit::widgets::{empty_state, focus_from_keyboard, highlighted, rich};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_guide::Hit;
 
@@ -50,7 +50,8 @@ fn place(ui: &mut Ui, hit: &Hit, query: &str) -> bool {
     );
 
     let shown = Frame::new()
-        .fill(tokens.card)
+        .fill(tokens.card_glass)
+        .stroke(Stroke::new(1.0, tokens.card_edge))
         .corner_radius(CornerRadius::same(CARD_RADIUS))
         .inner_margin(Margin::symmetric(16, 12))
         .show(ui, |ui| {
@@ -70,16 +71,23 @@ fn place(ui: &mut Ui, hit: &Hit, query: &str) -> bool {
     );
 
     response.widget_info(|| WidgetInfo::labeled(Role::Link, ui.is_enabled(), &title));
-    if response.hovered() {
+    let edge = if focus_from_keyboard(ui, &response) {
+        Some(tokens.decoration_focus)
+    } else if response.hovered() {
+        Some(tokens.outline)
+    } else {
+        None
+    };
+
+    if let Some(edge) = edge {
         ui.painter().rect_stroke(
             shown.response.rect,
             CornerRadius::same(CARD_RADIUS),
-            egui::Stroke::new(1.0, tokens.outline),
+            Stroke::new(1.0, edge),
             egui::StrokeKind::Inside,
         );
     }
 
-    focus_ring(ui, &response, CARD_RADIUS);
     response
         .on_hover_cursor(egui::CursorIcon::PointingHand)
         .clicked()

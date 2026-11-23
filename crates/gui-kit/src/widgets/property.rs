@@ -8,7 +8,7 @@ use egui::{
     Align, Galley, Id, Label, Layout, Pos2, Rect, Role, Sense, Ui, Vec2, WidgetInfo, pos2, vec2,
 };
 
-use super::buttons::{SMALL_BUTTON, paint_small_button};
+use super::buttons::{SMALL_BUTTON, paint_small_button, push_height};
 use super::{line, rich};
 use crate::fonts::{BODY, Weight};
 use crate::toasts::{self, ToastKind};
@@ -80,6 +80,12 @@ impl<'a> PropertyList<'a> {
             value: Value::Widget(Box::new(value)),
         });
     }
+}
+
+/// How far a one-line fact's text sits above the middle of its row: each
+/// row is as tall as the copy button, and its text starts at the top.
+pub fn property_text_rise(ui: &Ui) -> f32 {
+    ((SMALL_BUTTON - ui.text_style_height(&egui::TextStyle::Body)) / 2.0).max(0.0)
 }
 
 /// The rows `body` adds, their labels in one column as wide as the widest.
@@ -177,7 +183,7 @@ fn show_row(
 
         // A control is taller than the label's text, so the label
         // centres on the control's line. Text starts on the label's.
-        let first = shown.height().min(ui.spacing().interact_size.y);
+        let first = shown.height().min(push_height(ui));
         let drop = if widget {
             ((first - column.galley.size().y) / 2.0).max(0.0)
         } else {
@@ -215,8 +221,7 @@ fn show_row(
         return;
     };
 
-    let hover = tokens::current(ui.ctx()).hover;
-    paint_small_button(ui, rect, &response, icons::EDIT_COPY, hover);
+    paint_small_button(ui, rect, &response, icons::EDIT_COPY);
 
     if response.clicked() {
         ui.ctx().copy_text(text);

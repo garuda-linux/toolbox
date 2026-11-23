@@ -1,7 +1,7 @@
 use toolbox_catalog::ToggleCatalog;
 use toolbox_gui_kit::testing::{filled_rect, filled_rects, painted_text, textured_rects};
 use toolbox_gui_kit::tokens::{self, LETTER_HUES};
-use toolbox_gui_kit::widgets::{dim_opacity, hue_of, page_tile};
+use toolbox_gui_kit::widgets::hue_of;
 
 use super::super::entry::tile_package;
 use super::page;
@@ -70,25 +70,5 @@ fn rows_with_and_without_a_picture_start_their_picture_at_one_edge() {
         "pictures start at {} and {}",
         first.left(),
         last.left()
-    );
-}
-
-#[test]
-fn the_tile_of_an_entry_that_waits_for_another_fades_as_its_title() {
-    // JamesDSP needs PipeWire, which the empty system lacks.
-    let harness = page(CatalogId::Components, "jamesdsp");
-    let tokens = tokens::current(&harness.ctx);
-    let tile = page_tile(&harness.ctx);
-    let faded = tile.fill.gamma_multiply(dim_opacity(&tokens));
-
-    assert!(
-        filled_rect(&harness, faded).is_some(),
-        "no faded glyph tile"
-    );
-    assert!(
-        filled_rects(&harness, tile.fill)
-            .iter()
-            .all(|rect| (rect.width() - PICTURE_SIZE).abs() > 0.5),
-        "the tile keeps its full fill"
     );
 }

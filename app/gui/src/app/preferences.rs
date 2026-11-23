@@ -15,6 +15,9 @@ use crate::{i18n, schemes};
 #[derive(Debug, Default)]
 pub struct PreferencesSetup {
     pub settings: Settings,
+    /// The compositor blurs behind the window, see `toolbox_backdrop`. The
+    /// setting then decides whether the background is translucent.
+    pub desktop_blur: bool,
     pub autostart: bool,
     /// `None` keeps every change in memory.
     pub store: Option<Arc<dyn SettingsStore>>,
@@ -103,6 +106,11 @@ impl App {
                 prefs.settings.packages.show_aur = on;
                 prefs.save();
             }
+            SettingsCommand::BlurDesktop(on) => {
+                prefs.settings.window.blur_desktop = on;
+                prefs.save();
+                theme::set_translucent(ctx, on && prefs.desktop_blur);
+            }
             SettingsCommand::LogLevel(level) => {
                 prefs.settings.general.log_level = level;
                 prefs.save();
@@ -154,6 +162,7 @@ pub(super) fn view(
     SettingsView {
         settings: &prefs.setup.settings,
         autostart: prefs.setup.autostart,
+        desktop_blur: prefs.setup.desktop_blur,
         language: prefs
             .setup
             .settings

@@ -3,15 +3,15 @@ mod libraries;
 mod lines;
 
 use egui::accesskit::Role;
-use egui::{Color32, vec2};
+use egui::{Color32, Key};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::packages::OptionalDependency;
 use toolbox_core::features::packages::history::{HistoryAction, HistoryEntry};
-use toolbox_gui_kit::fonts::{self, TITLE, Weight};
-use toolbox_gui_kit::testing::filled_rect;
+use toolbox_gui_kit::fonts::{self, PAGE_TITLE, Weight};
+use toolbox_gui_kit::testing::filled_rects;
 use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::hue_of;
+use toolbox_gui_kit::widgets::{MIN_TEXT_WIDTH, hue_of, icon_button_width};
 
 use super::super::PackagesPage;
 use super::super::tests::{fixture, gimp_details, listed, name};
@@ -59,7 +59,7 @@ fn change(day: u8) -> HistoryEntry {
 }
 
 #[test]
-fn one_page_shows_the_facts_beside_what_the_package_depends_on() {
+fn one_page_shows_the_facts_above_what_the_package_depends_on() {
     let harness = showing(gimp_details());
 
     assert!(
@@ -85,19 +85,7 @@ fn one_page_shows_the_facts_beside_what_the_package_depends_on() {
 
     let facts = rect_of(&harness, Role::Label, "Repository");
     let depends = rect_of(&harness, Role::Heading, "Depends on");
-    assert!(depends.left() > facts.right(), "side by side");
-}
-
-#[test]
-fn a_narrow_page_stacks_the_dependencies_under_the_facts() {
-    let mut harness = showing(gimp_details());
-    harness.set_size(vec2(560.0, 720.0));
-    harness.run();
-
-    let facts = rect_of(&harness, Role::Label, "Repository");
-    let depends = rect_of(&harness, Role::Heading, "Depends on");
-    assert!(depends.top() > facts.bottom(), "stacked");
-    assert!((depends.left() - facts.left()).abs() < 1.0);
+    assert!(depends.top() > facts.bottom(), "stacked under the facts");
 }
 
 #[test]
@@ -127,7 +115,8 @@ fn a_dependency_opens_its_package_and_back_walks_the_chain_to_the_list() {
     harness.run();
     assert_eq!(harness.state().page.open, Some(name("gimp")));
 
-    harness.get_by_label("Back to Packages").click();
+    // Back would only lead to the list here, so Escape leaves the details instead.
+    harness.key_press(Key::Escape);
     harness.run();
     harness.run();
     assert_eq!(harness.state().page.open, None);
@@ -191,7 +180,7 @@ fn the_files_start_folded_and_copy_list_copies_them_all() {
     assert!(harness.query_by_label("/usr/bin/gimp").is_none());
 
     harness
-        .get_by_role_and_label(Role::Button, "Copy list")
+        .get_by_role_and_label(Role::Button, "Copy List")
         .click();
     harness.step();
     let copied = harness.output().platform_output.commands.iter().any(
@@ -228,18 +217,21 @@ fn the_history_opens_with_its_newest_five_lines_and_shows_all_on_request() {
     details.history = Read::Known((1..=7).rev().map(change).collect());
     let mut harness = showing(details);
 
+    // The Show All button sits below the fold of the window at the usual height.
+    harness.set_size(egui::vec2(1024.0, 1600.0));
+    harness.run();
     assert_eq!(expanded(&harness, "History"), Some(true));
     assert!(harness.query_by_label("Upgraded 1.7-1 → 1.8-1").is_some());
     assert!(harness.query_by_label("Upgraded 1.3-1 → 1.4-1").is_some());
     assert!(harness.query_by_label("Upgraded 1.2-1 → 1.3-1").is_none());
 
     harness
-        .get_by_role_and_label(Role::Button, "Show all")
+        .get_by_role_and_label(Role::Button, "Show All")
         .click();
     harness.run();
 
     assert!(harness.query_by_label("Upgraded 1.1-1 → 1.2-1").is_some());
-    assert!(harness.query_by_label("Show all").is_none());
+    assert!(harness.query_by_label("Show All").is_none());
 }
 
 #[test]
@@ -249,7 +241,7 @@ fn a_short_history_has_no_show_all() {
     let harness = showing(details);
 
     assert!(harness.query_by_label("Upgraded 1.1-1 → 1.2-1").is_some());
-    assert!(harness.query_by_label("Show all").is_none());
+    assert!(harness.query_by_label("Show All").is_none());
 }
 
 /// pacman has one description: it is the subtitle under the name, so the
@@ -267,25 +259,11 @@ fn the_description_shows_once_under_the_name() {
 }
 
 #[test]
-fn both_columns_start_on_one_line() {
-    let harness = showing(gimp_details());
-
-    let facts = rect_of(&harness, Role::Label, "Repository");
-    let depends = rect_of(&harness, Role::Heading, "Depends on");
-    assert!(
-        (depends.top() - facts.top()).abs() < 0.5,
-        "the facts start at {}, the dependencies at {}",
-        facts.top(),
-        depends.top()
-    );
-}
-
-#[test]
 fn the_letter_tile_is_as_tall_as_the_title_line_from_its_capitals() {
     let harness = showing(gimp_details());
 
     let title = rect_of(&harness, Role::Heading, "gimp");
-    let font = fonts::font(&harness.ctx.global_style(), Weight::Bold, TITLE);
+    let font = fonts::font(&harness.ctx.global_style(), Weight::Regular, PAGE_TITLE);
     let capital = harness
         .ctx
         .fonts_mut(|fonts| fonts.layout_no_wrap("H".to_owned(), font, Color32::PLACEHOLDER));
@@ -296,8 +274,61 @@ fn the_letter_tile_is_as_tall_as_the_title_line_from_its_capitals() {
         .of(hue_of("gimp"))
         .fill;
 
-    let picture = filled_rect(&harness, fill).expect("gimp has a letter tile");
+    // The list shows the same tile beside its row, so the title's is the one
+    // nearest to the title.
+    let picture = filled_rects(&harness, fill)
+        .into_iter()
+        .min_by(|first, second| {
+            let near = |rect: &egui::Rect| rect.center().distance(title.center());
+            near(first).total_cmp(&near(second))
+        })
+        .expect("gimp has a letter tile");
 
     assert!((picture.height() - capital.rect.height()).abs() < 0.5);
-    assert!((picture.top() - (title.top() + capital.mesh_bounds.top())).abs() < 0.5);
+    assert!(
+        (picture.top() - (title.top() + capital.mesh_bounds.top())).abs() < 0.5,
+        "tile {picture:?}, title {title:?}, capitals at {}",
+        capital.mesh_bounds.top()
+    );
+}
+
+/// On every narrow width the back button keeps its text only while the title
+/// still has its least room beside the controls.
+#[test]
+fn the_back_buttons_text_never_squeezes_the_title() {
+    let mut harness = showing(gimp_details());
+    let gap = tokens::current(&harness.ctx).sizes.text_to_control;
+
+    let mut texts = 0_u32;
+    for width in (400_u16..640).step_by(2) {
+        harness.set_size(egui::vec2(f32::from(width), 480.0));
+        harness.run();
+
+        let Some(back) = harness.query_by_role_and_label(Role::Button, "Back to Packages") else {
+            continue;
+        };
+
+        let back = back.rect();
+        if back.width() <= icon_button_width() + 0.5 {
+            continue;
+        }
+
+        texts += 1;
+        let title = rect_of(&harness, Role::Heading, "gimp");
+        let remove = rect_of(&harness, Role::Button, "Remove gimp");
+        let room = remove.left() - gap - title.left();
+        assert!(
+            room >= MIN_TEXT_WIDTH - 0.5,
+            "at {width}: the title has {room} beside {back:?} and {remove:?}"
+        );
+    }
+
+    assert!(texts > 0, "the back button never shows its text");
+    harness.set_size(egui::vec2(400.0, 480.0));
+    harness.run();
+    let back = rect_of(&harness, Role::Button, "Back to Packages");
+    assert!(
+        back.width() <= icon_button_width() + 0.5,
+        "too narrow for the text"
+    );
 }

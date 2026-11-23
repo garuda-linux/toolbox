@@ -12,16 +12,24 @@ use crate::tokens;
 /// The height of one line of text in `weight` at `scale` times the body.
 pub(in crate::widgets) fn text_line_height(ui: &Ui, weight: Weight, scale: f32) -> f32 {
     let font = fonts::font(ui.style(), weight, scale);
-    ui.ctx().fonts_mut(|fonts| fonts.row_height(&font))
+
+    // Whole points keep a line and the controls centred on it on one pixel grid.
+    ui.ctx().fonts_mut(|fonts| fonts.row_height(&font)).round()
 }
 
 /// A title line, with room for the tags and controls beside it, and
 /// `lines` lines of small text below, as the rows of a card stack them.
 pub fn text_block_height(ui: &Ui, lines: u8) -> f32 {
+    text_block_height_with(ui, lines, 0.0)
+}
+
+/// [`text_block_height`] for a row whose tallest control is `controls`
+/// high, such as a push button, which its title line grows to.
+pub fn text_block_height_with(ui: &Ui, lines: u8, controls: f32) -> f32 {
     // A card row's text is at least as tall as a control, with or without
     // one beside it (`split_row`).
     let text = text_line_height(ui, Weight::SemiBold, BODY);
-    let line = text.max(PILL_HEIGHT);
+    let line = text.max(PILL_HEIGHT).max(controls);
 
     if lines == 0 {
         return line;

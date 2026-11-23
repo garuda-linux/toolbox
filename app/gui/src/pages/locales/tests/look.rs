@@ -34,17 +34,17 @@ fn a_narrow_window_keeps_the_system_language_inside_the_page() {
 }
 
 #[test]
-fn queue_all_missing_has_no_rim_as_the_kernels_banner_buttons() {
+fn queue_all_missing_is_a_breeze_button_with_its_frame_on_the_banner() {
     let mut harness = page(system());
     harness
-        .get_by_role_and_label(Role::RadioButton, "Language packs")
+        .get_by_role_and_label(Role::RadioButton, "Language Packs")
         .click();
     harness.run();
 
-    let button = rect_of(&harness, Role::Button, "Queue all missing");
+    let button = rect_of(&harness, Role::Button, "Queue All Missing");
     let rims = rims_around(&harness, button.center());
     assert!(
-        rims.iter().all(|width| *width == 0.0),
-        "rims of {rims:?} round Queue all missing"
+        rims.iter().any(|width| *width >= 1.0),
+        "no frame of {rims:?} round Queue all missing"
     );
 }

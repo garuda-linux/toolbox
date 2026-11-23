@@ -21,7 +21,7 @@ fn a_meter_fills_its_share_of_the_track() {
     let tokens = tokens::current(&harness.ctx);
     let line = *harness.state();
 
-    let track = filled_rect(&harness, tokens.field).expect("a track");
+    let track = filled_rect(&harness, tokens.text.gamma_multiply(0.3)).expect("a track");
     let filled = filled_rect(&harness, tokens.accent_ring).expect("a filled part");
 
     assert_eq!(track, line);
@@ -48,28 +48,23 @@ fn without_a_share_the_line_keeps_its_height_and_shows_nothing() {
     let tokens = tokens::current(&harness.ctx);
 
     assert!((harness.state().height() - tokens.sizes.meter_height).abs() < 0.01);
-    assert!(filled_rect(&harness, tokens.field).is_none());
+    assert!(filled_rect(&harness, tokens.text.gamma_multiply(0.3)).is_none());
 }
 
 #[test]
 fn a_tiny_share_still_shows_as_a_dot() {
     let harness = shown(Some(0.001), Tone::Accent);
     let tokens = tokens::current(&harness.ctx);
-    let filled = filled_rect(&harness, tokens.accent_ring).expect("a filled part");
+    let filled = filled_rect(&harness, tokens.accent).expect("a filled part");
 
     assert!(filled.width() >= tokens.sizes.meter_height - 0.01);
 }
 
 #[test]
-fn a_fine_meter_fills_in_the_accent_fitted_to_its_track() {
+fn a_fine_meter_fills_in_the_accent() {
     let mut harness = harness(400.0, 100.0).build_ui(|ui| _ = meter(ui, Some(0.5), Tone::Accent));
-
-    // The fallback accent fits already, a ring of its own tells them apart.
-    let mut fitted = tokens::current(&harness.ctx);
-    fitted.accent_ring = fitted.success;
-    tokens::store(&harness.ctx, fitted, fitted);
     harness.run();
 
-    assert!(filled_rect(&harness, fitted.success).is_some());
-    assert!(filled_rect(&harness, fitted.accent).is_none());
+    let tokens = tokens::current(&harness.ctx);
+    assert!(filled_rect(&harness, tokens.accent).is_some());
 }

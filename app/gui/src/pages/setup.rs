@@ -93,7 +93,7 @@ impl PageView for SetupPage {
         self.remember_picks(&ctx, context);
         self.finish_when_applied(context);
         match self.stage.clone() {
-            Stage::Welcome => stages::welcome(ui, steps.len()),
+            Stage::Welcome => stages::welcome(ui),
             Stage::Step(id) => {
                 let step = steps
                     .pairs()

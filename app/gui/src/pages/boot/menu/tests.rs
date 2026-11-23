@@ -23,9 +23,22 @@ fn the_timeout_steppers_sit_inside_the_number_field() {
     let number = rect(Role::SpinButton, "Menu timeout in seconds");
     let more = rect(Role::Button, "One second more");
 
+    // Breeze stacks the arrows in one column at the field's right edge, each
+    // within the field's height.
     assert!(
-        (number.left() - less.right()).abs() < 0.5 && (more.left() - number.right()).abs() < 0.5,
-        "{less:?} {number:?} {more:?}"
+        (less.left() - number.right()).abs() < 0.5 && (more.left() - number.right()).abs() < 0.5,
+        "the arrows leave the number: {less:?} {number:?} {more:?}"
+    );
+    assert!(
+        (more.bottom() - less.top()).abs() < 0.5 || (less.bottom() - more.top()).abs() < 0.5,
+        "the arrows do not stack: {less:?} {more:?}"
+    );
+    assert!(
+        less.top() >= number.top()
+            && more.top() >= number.top()
+            && less.bottom() <= number.bottom()
+            && more.bottom() <= number.bottom(),
+        "the arrows leave the field's height: {less:?} {more:?} {number:?}"
     );
 }
 

@@ -2,14 +2,14 @@ use std::time::Duration;
 
 use egui::accesskit::Role;
 use egui::style::ScrollAnimation;
-use egui::{Key, Rect, ScrollArea, Theme, Ui, ViewportId, pos2, vec2};
+use egui::{Color32, Key, Rect, ScrollArea, Theme, Ui, ViewportId, pos2, vec2};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::buttons::ButtonKind;
 use super::super::check::partial;
-use super::super::chip::chip_fill;
-use super::super::press::Pointer;
+use super::super::chip::chip_look;
+use super::super::press::{ItemLook, Pointer};
 use super::super::{
     ListItem, RowHeights, RowList, after_skeleton, dimmed, hold_content, pill_button,
     skeleton_rows, switch,
@@ -17,7 +17,7 @@ use super::super::{
 use crate::palette::Palette;
 use crate::testing::harness;
 use crate::theme;
-use crate::tokens::Tokens;
+use crate::tokens::{Tokens, darkly, mix};
 
 const FRAME: f32 = 1.0 / 60.0;
 
@@ -33,7 +33,7 @@ impl ListItem for Item {
     }
 }
 
-fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
+pub(super) fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
     harness
         .output()
         .viewport_output
@@ -46,38 +46,87 @@ fn tokens() -> Tokens {
 }
 
 #[test]
-fn a_pressed_pill_takes_the_step_past_its_hover() {
+fn buttons_fill_as_darkly_draws_them_and_have_no_outline() {
     let tokens = tokens();
+    let button = tokens.input;
+
+    assert_eq!(ButtonKind::Soft.fill(&tokens, Pointer::Rest), button);
+    assert_eq!(
+        ButtonKind::Soft.fill(&tokens, Pointer::Hovered),
+        tokens.button_hover
+    );
+    assert_eq!(
+        ButtonKind::Soft.fill(&tokens, Pointer::Pressed),
+        tokens.button_pressed
+    );
 
     assert_eq!(
-        ButtonKind::Primary.fill(&tokens, Pointer::Pressed),
-        tokens.accent_pressed
+        ButtonKind::Primary.fill(&tokens, Pointer::Rest),
+        tokens.default_button
     );
-    for kind in [ButtonKind::Soft, ButtonKind::Ghost] {
-        assert_eq!(kind.fill(&tokens, Pointer::Pressed), tokens.pressed);
-        assert_eq!(kind.fill(&tokens, Pointer::Hovered), tokens.hover);
-    }
-
-    assert_ne!(tokens.accent_pressed, tokens.accent_hover);
+    assert_eq!(
+        ButtonKind::Primary.fill(&tokens, Pointer::Hovered),
+        darkly::lighter(tokens.default_button, 1.05)
+    );
+    assert_eq!(
+        ButtonKind::Primary.fill(&tokens, Pointer::Pressed),
+        tokens.button_pressed
+    );
 }
 
 #[test]
-fn a_pressed_chip_deepens_selected_or_not() {
+fn a_ghost_button_is_a_flat_tool_button_without_a_frame() {
     let tokens = tokens();
 
     assert_eq!(
-        chip_fill(&tokens, tokens.field, false, Pointer::Pressed, 0.0),
-        tokens.pressed
-    );
-    assert_ne!(
-        chip_fill(&tokens, tokens.text, true, Pointer::Pressed, 0.0),
-        tokens.text
+        ButtonKind::Ghost.fill(&tokens, Pointer::Rest),
+        Color32::TRANSPARENT
     );
     assert_eq!(
-        chip_fill(&tokens, tokens.text, true, Pointer::Hovered, 1.0),
-        tokens.text,
-        "a selected chip shows no hover"
+        ButtonKind::Ghost.fill(&tokens, Pointer::Hovered),
+        tokens.text.gamma_multiply(0.1)
     );
+    assert_eq!(
+        ButtonKind::Ghost.fill(&tokens, Pointer::Pressed),
+        tokens.text.gamma_multiply(0.2)
+    );
+}
+
+#[test]
+fn a_chip_looks_as_kirigami_draws_it() {
+    let tokens = tokens();
+    let accent = tokens.accent;
+    let look = |checked, pointer| chip_look(&tokens, accent, checked, pointer);
+
+    assert_eq!(
+        look(false, Pointer::Rest),
+        ItemLook {
+            fill: Color32::TRANSPARENT,
+            frame: mix(tokens.window, tokens.text, 0.2),
+        }
+    );
+    assert_eq!(look(false, Pointer::Hovered).frame, accent);
+    assert_eq!(
+        look(true, Pointer::Rest),
+        ItemLook {
+            fill: accent.gamma_multiply(0.2),
+            frame: accent.gamma_multiply(0.9),
+        }
+    );
+    assert_eq!(
+        look(true, Pointer::Hovered),
+        look(true, Pointer::Rest),
+        "a checked chip keeps its look under the pointer"
+    );
+    for checked in [false, true] {
+        assert_eq!(
+            look(checked, Pointer::Pressed),
+            ItemLook {
+                fill: accent.gamma_multiply(0.3),
+                frame: accent.gamma_multiply(0.7),
+            }
+        );
+    }
 }
 
 fn pill(less_motion: bool) -> Harness<'static> {
@@ -118,7 +167,7 @@ fn with_less_motion_a_pill_hovers_at_once() {
 
 #[test]
 fn the_check_mark_draws_from_its_start_to_its_end() {
-    let rect = Rect::from_min_size(pos2(0.0, 0.0), vec2(20.0, 20.0));
+    let rect = Rect::from_min_size(pos2(0.0, 0.0), vec2(16.0, 16.0));
 
     assert_eq!(partial(rect, 0.0).len(), 1);
     assert_eq!(partial(rect, 1.0).len(), 3);
@@ -286,4 +335,23 @@ fn content_there_from_the_start_and_with_less_motion_shows_at_once() {
     still.step();
     assert!((still.state().1 - 1.0).abs() < f32::EPSILON);
     assert_eq!(repaint_delay(&still), Duration::MAX);
+}
+
+#[test]
+fn a_pill_is_as_wide_as_its_layout_reserves() {
+    for label in ["OK", "Remove", "Update in Console"] {
+        let (drawn, reserved) = (std::cell::Cell::new(0.0), std::cell::Cell::new(0.0));
+        let mut harness = harness(400.0, 80.0).build_ui(|ui| {
+            reserved.set(super::super::buttons::pill_width(ui, label));
+            drawn.set(pill_button(ui, label, ButtonKind::Soft).rect.width());
+        });
+
+        harness.run();
+        drop(harness);
+        let (drawn, reserved) = (drawn.get(), reserved.get());
+        assert!(
+            (drawn - reserved).abs() < 0.5,
+            "{label}: drawn {drawn}, reserved {reserved}"
+        );
+    }
 }

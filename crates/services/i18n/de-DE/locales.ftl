@@ -6,7 +6,7 @@ locales-tab-packs = Sprachpakete
 locales-queued = Wird beim Übernehmen geändert
 
 locales-search = Locales und Pakete durchsuchen
-locales-search-hint = Locales und Pakete durchsuchen…
+locales-search-hint = Suchen…
 locales-filter-utf8 = Nur UTF-8
 locales-filter-enabled = Nur aktivierte
 locales-list = Locales

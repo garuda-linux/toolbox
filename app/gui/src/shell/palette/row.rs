@@ -9,7 +9,7 @@ use egui::{
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::theme::SMALL_TILE_RADIUS;
 use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::{TileSize, line, paint_icon_tile, paint_letter_tile};
+use toolbox_gui_kit::widgets::{TileSize, line, paint_icon, paint_letter_tile};
 
 use super::found::{Look, Row};
 
@@ -25,7 +25,7 @@ pub fn show(ui: &mut Ui, row: &Row, marked: bool, width: f32) -> Response {
     };
 
     let mut button =
-        Button::selectable(marked, (tile(ui, row), row.name.as_str())).min_size(vec2(width, 0.0));
+        Button::selectable(marked, (tile(row), row.name.as_str())).min_size(vec2(width, 0.0));
 
     // egui joins the name and an empty detail with a space, which a
     // screen reader then reads out.
@@ -39,22 +39,26 @@ pub fn show(ui: &mut Ui, row: &Row, marked: bool, width: f32) -> Response {
 
     let response = ui.add(button);
 
-    // The caps are painted, so the name says the shortcut as the text
-    // did before.
+    // The caps are painted, so the accessible name carries the shortcut.
     match &row.shortcut {
         Some(shortcut) => response.accessible_name(format!("{} {shortcut}", row.name)),
         None => response,
     }
 }
 
-fn tile<'row>(ui: &Ui, row: &Row) -> Atom<'row> {
-    let edge = TileSize::Line.edge(ui);
+fn tile<'row>(row: &Row) -> Atom<'row> {
+    let edge = TileSize::Line.edge();
     let size = vec2(edge, edge);
     match &row.look {
-        Look::Glyph(icon, hue) => {
-            let (glyph, painted) = (*icon, tokens::current(ui.ctx()).tiles.of(*hue));
+        Look::Glyph(icon) => {
+            let glyph = *icon;
             Atom::paint(size, move |painting, args| {
-                paint_icon_tile(painting, args.rect.center(), TileSize::Line, glyph, painted);
+                paint_icon(
+                    painting,
+                    args.rect.center(),
+                    TileSize::Line,
+                    glyph.for_row(),
+                );
             })
         }
         Look::Letter { package } => {

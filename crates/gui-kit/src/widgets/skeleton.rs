@@ -86,11 +86,11 @@ pub fn skeleton_list(ui: &mut Ui, rows: SkeletonRows, name: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
     let padding = tokens.sizes.row_padding;
     let painter = ui.painter_at(rect);
-    let tile = leading.then(|| TileSize::Row.edge(ui));
+    let tile = leading.then_some(TileSize::Row.edge());
     let indent = tile.map_or(0.0, |edge| edge + tokens.sizes.picture_gap);
     let room = (padding.x.mul_add(-3.0, rect.width()) - CONTROL.x - indent).clamp(0.0, MAX_BAR);
     let look = RowLook {
-        fill: tokens.hover,
+        fill: tokens.button_hover,
         band: band_middle(ui, rect).map(|middle| (tokens.shimmer, middle)),
         padding: padding.x,
         tile,

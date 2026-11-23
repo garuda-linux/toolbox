@@ -2,6 +2,7 @@
 //! lives on: the display manager, the network, polkit, D-Bus or logind.
 
 use egui::{Context, Id};
+use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{ButtonKind, DialogWidth, Question, question};
 use toolbox_plan::{UnitName, UnitOperation, UnitScope};
 
@@ -27,6 +28,15 @@ impl Pending {
         match self {
             Self::Control(_, _, operation) => super::texts::operation(*operation),
             Self::Mask(..) => "services-mask",
+        }
+    }
+
+    /// The icon of the row button that asks, so the answer wears the same
+    /// picture as the action.
+    pub(super) const fn icon(&self) -> Icon {
+        match self {
+            Self::Control(_, _, operation) => super::unit_row::operation_icon(*operation),
+            Self::Mask(..) => icons::OBJECT_LOCKED,
         }
     }
 
@@ -85,6 +95,7 @@ pub fn show(ctx: &Context, commands: &CommandSender) {
         cancel: &cancel,
         confirm: &verb,
         kind: ButtonKind::Danger,
+        icon: Some(pending.icon()),
         width: DialogWidth::Small,
     };
 

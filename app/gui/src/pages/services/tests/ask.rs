@@ -3,8 +3,10 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
+use toolbox_gui_kit::icons;
 use toolbox_plan::{UnitName, UnitOperation, UnitScope};
 
+use super::super::ask::Pending;
 use super::{ServicesPage, loaded, unit};
 use crate::command::{Command, ServiceCommand};
 
@@ -87,4 +89,17 @@ fn leaving_the_page_drops_the_open_question() {
             .is_none()
     );
     assert_eq!(harness.state().fixture.sent(), []);
+}
+
+/// The answer to a restart wears the restart picture, not the delete one
+/// that a Danger answer carries by default.
+#[test]
+fn the_restart_answer_wears_the_restart_picture() {
+    let restart = Pending::Control(
+        UnitScope::System,
+        UnitName::new("sddm.service").unwrap(),
+        UnitOperation::Restart,
+    );
+
+    assert_eq!(restart.icon(), icons::MEDIA_PLAYLIST_REPEAT);
 }

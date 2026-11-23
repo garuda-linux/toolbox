@@ -1,16 +1,18 @@
 mod body;
+mod purpose;
 
 use std::fmt::Debug;
 use std::hash::{BuildHasher as _, BuildHasherDefault, DefaultHasher, Hash};
 
+pub use body::BodyShape;
 use body::Room;
-pub use body::{BodyShape, viewport as page_viewport};
 use egui::epaint::{Mesh, Vertex, WHITE_UV};
 use egui::{Color32, Rect, ScrollArea, Shape, Ui, UiBuilder, pos2, vec2};
+pub(super) use purpose::stash_purpose;
+use purpose::{take_purpose, with_purpose};
 
 use super::layout::{Redraw, remember};
-use crate::theme::CONTENT_WIDTH;
-use crate::{frost, motion, tokens};
+use crate::{frost, motion, theme, tokens};
 
 /// How far the shadow over a footer reaches, in points.
 const SHADOW_DEPTH: f32 = 8.0;
@@ -38,7 +40,8 @@ impl Remembered {
         Self { id, height }
     }
 
-    /// Redraws this frame when the height changed, so no frame shows the old height.
+    /// Redraws this frame when the height changed, so no frame shows the old
+    /// height.
     fn update(self, ui: &Ui, height: f32, reason: &'static str) {
         remember(
             ui,
@@ -50,7 +53,9 @@ impl Remembered {
     }
 }
 
-/// The header and the footer return whether they drew anything: a page without a header starts its body at the top. `salt` keeps each place's scroll position apart.
+/// The header and the footer return whether they drew anything: a page
+/// without a header starts its body at the top. `salt` keeps each place's
+/// scroll position apart.
 pub fn page_layout_shaped<P, H, B, F>(
     ui: &mut Ui,
     salt: impl Hash + Debug,
@@ -87,7 +92,10 @@ pub fn page_layout_shaped<P, H, B, F>(
     };
 
     let band = Rect::from_min_max(outer.min, pos2(outer.right(), line));
-    let header_layer = blurred_header(ui, band, head, width, |ui| header(page, ui));
+
+    // The band's background spans the window, its controls keep the body's
+    // sides (`header_band`).
+    let header_layer = blurred_header(ui, band, head, f32::INFINITY, |ui| header(page, ui));
 
     let foot = Remembered::of(ui, "page footer");
     let footer_top = outer.bottom() - foot.height;
@@ -102,20 +110,24 @@ pub fn page_layout_shaped<P, H, B, F>(
         page_top: outer.top(),
         floor,
         entered: entry(ui, changed),
+        widest: width,
     };
 
-    let (offset, hidden) = match shape {
+    let body = with_purpose(take_purpose(ui.ctx()), body);
+
+    let hidden = match shape {
         BodyShape::Panes { width: widest } => {
             body::panes(ui, room, widest, |inner| body(page, inner));
-            (0.0, 0.0)
+            0.0
         }
-        BodyShape::Column | BodyShape::Filled => {
+        BodyShape::Column | BodyShape::Filled | BodyShape::Wide => {
             body::scrolled(ui, area, room, |inner| body(page, inner))
         }
     };
 
-    if head.height > 0.0 && offset > 0.5 {
-        let hairline = egui::Stroke::new(1.0, tokens::current(ui.ctx()).outline);
+    // Kirigami's toolbar always shows its separator.
+    if head.height > 0.0 {
+        let hairline = egui::Stroke::new(1.0, tokens::current(ui.ctx()).separator);
         ui.ctx()
             .layer_painter(header_layer)
             .hline(band.x_range(), band.bottom() - 0.5, hairline);
@@ -151,13 +163,6 @@ fn body_reach(ui: &Ui, outer: Rect, line: f32, footer_top: f32) -> (f32, f32) {
     (view, floor)
 }
 
-/// How far the band reaches below the header, so what runs under it
-/// never touches the header's last line.
-fn band_below(ui: &Ui) -> f32 {
-    let sizes = tokens::current(ui.ctx()).sizes;
-    sizes.card_gap.min(sizes.header_gap)
-}
-
 fn blurred_header(
     ui: &Ui,
     band: Rect,
@@ -165,8 +170,6 @@ fn blurred_header(
     width: f32,
     header: impl FnOnce(&mut Ui) -> bool,
 ) -> egui::LayerId {
-    let page_top = f32::from(tokens::current(ui.ctx()).sizes.page_padding.top);
-    let below = band_below(ui);
     let clip = ui.clip_rect();
 
     let shown = egui::Area::new(head.id.with("area"))
@@ -182,11 +185,14 @@ fn blurred_header(
             if head.height > 0.0 {
                 let tokens = tokens::current(area.ctx());
 
-                // Without the blur, no scrim keeps the sharp page under it
-                // from showing, so the band turns solid.
+                // The scrim keeps the header's text readable over the blurred
+                // page. Without that blur the glass scrim is clear, so the band
+                // takes the glass layer, and without the glass it is solid.
                 let cover = if frost::live(area.ctx()) {
                     frost::backdrop_within(area.painter(), band, egui::CornerRadius::ZERO);
                     tokens.header_scrim
+                } else if theme::translucent(area.ctx()) {
+                    tokens.window_glass
                 } else {
                     tokens.window
                 };
@@ -195,8 +201,8 @@ fn blurred_header(
                     .rect_filled(band, egui::CornerRadius::ZERO, cover);
             }
 
-            let drawn = header_band(area, band, page_top, width, header);
-            let height = drawn.map_or(0.0, |bottom| bottom + below - band.top());
+            let drawn = header_band(area, band, 0.0, width, header);
+            let height = drawn.map_or(0.0, |bottom| bottom - band.top());
             head.update(area, height, "the page header changed its height");
             area.allocate_rect(
                 Rect::from_min_size(band.min, vec2(band.width(), head.height)),
@@ -261,24 +267,59 @@ fn header_band(
     width: f32,
     header: impl FnOnce(&mut Ui) -> bool,
 ) -> Option<f32> {
-    let rect = column_rect(ui, outer, top, width);
+    // A scrolling body keeps its strip at the right, so the header's controls
+    // end where the cards end. The body's scroll last frame says whether it
+    // keeps one.
+    let strip = if body::overflowed(ui.ctx()) {
+        ui.spacing().scroll.allocated_width()
+    } else {
+        0.0
+    };
+
+    let beside = Rect::from_min_max(outer.min, pos2(outer.right() - strip, outer.bottom()));
+    let rect = column_rect(ui, beside, top, width);
     let mut band = ui.new_child(UiBuilder::new().max_rect(rect));
     band.set_width(rect.width());
 
     header(&mut band).then(|| band.min_rect().bottom())
 }
 
-pub(super) fn column<R>(ui: &mut Ui, top: f32, bottom: f32, body: impl FnOnce(&mut Ui) -> R) -> R {
+pub(super) fn column<R>(
+    ui: &mut Ui,
+    top: f32,
+    bottom: f32,
+    widest: f32,
+    body: impl FnOnce(&mut Ui) -> R,
+) -> R {
     let outer = ui.available_rect_before_wrap();
-    let rect = column_rect(ui, outer, top, CONTENT_WIDTH);
+    let rect = column_rect(ui, outer, top, widest);
+
+    // Cards in the body take the column's width, so a list's cards fill
+    // the window and a setting page's cards stay in its column.
+    let before = column_width(ui.ctx());
+    ui.ctx()
+        .data_mut(|data| data.insert_temp(column_width_id(), widest));
     let inner = ui.scope_builder(UiBuilder::new().max_rect(rect), |ui| {
         ui.set_width(rect.width());
         body(ui)
     });
 
+    ui.ctx()
+        .data_mut(|data| data.insert_temp(column_width_id(), before));
+
     let end = inner.response.rect.bottom() + bottom;
     ui.advance_cursor_after_rect(Rect::from_min_max(outer.min, pos2(outer.right(), end)));
     inner.inner
+}
+
+/// The widest the page body's column gets, unlimited outside a page.
+pub fn column_width(ctx: &egui::Context) -> f32 {
+    ctx.data(|data| data.get_temp(column_width_id()))
+        .unwrap_or(f32::INFINITY)
+}
+
+fn column_width_id() -> egui::Id {
+    egui::Id::unique("toolbox_gui_kit::page::column_width")
 }
 
 fn column_rect(ui: &Ui, outer: Rect, top: f32, widest: f32) -> Rect {

@@ -21,24 +21,33 @@ const QT5_WEIGHTS: [(u16, u16); 9] = [
     (87, 900),
 ];
 
-/// Unknown or broken lines are skipped.
+/// Unknown and broken lines are skipped. The kdeglobals layers come in
+/// cascade order, so a broken line in a later layer keeps the value an
+/// earlier one named.
 pub fn parse(text: &str) -> DesktopTheme {
     let mut theme = DesktopTheme::default();
     for (group, key, value) in ini::entries(text) {
         match (group, key) {
-            ("General", "font") => theme.font = font(value),
-            ("General", "fixed") => theme.fixed_font = font(value),
+            ("General", "font") => keep(&mut theme.font, font(value)),
+            ("General", "fixed") => keep(&mut theme.fixed_font, font(value)),
             ("Icons", "Theme") if !value.is_empty() => theme.icon_theme = Some(value.to_owned()),
-            ("KDE", "AnimationDurationFactor") => theme.animations = animations(value),
+            ("KDE", "AnimationDurationFactor") => keep(&mut theme.animations, animations(value)),
+            ("KDE", "contrast") => keep(&mut theme.colors.contrast, contrast(value)),
             _ => {
                 if let Some(slot) = color_slot(&mut theme.colors, group, key) {
-                    *slot = color(value);
+                    keep(slot, color(value));
                 }
             }
         }
     }
 
     theme
+}
+
+fn keep<T>(slot: &mut Option<T>, parsed: Option<T>) {
+    if parsed.is_some() {
+        *slot = parsed;
+    }
 }
 
 fn color_slot<'colors>(
@@ -50,13 +59,21 @@ fn color_slot<'colors>(
         ("Colors:Window", "BackgroundNormal") => &mut colors.window,
         ("Colors:Window", "ForegroundNormal") => &mut colors.text,
         ("Colors:View", "BackgroundNormal") => &mut colors.view,
+        ("Colors:Button", "BackgroundNormal") => &mut colors.button,
         ("Colors:View", "ForegroundNegative") => &mut colors.error,
         ("Colors:View", "ForegroundNeutral") => &mut colors.warning,
         ("Colors:View", "ForegroundPositive") => &mut colors.success,
         ("Colors:View", "ForegroundLink") => &mut colors.link,
         ("Colors:View", "ForegroundVisited") => &mut colors.visited,
+        ("Colors:View", "ForegroundActive") => &mut colors.active,
+        ("Colors:Complementary", "BackgroundNormal") => &mut colors.complementary,
+        ("Colors:Complementary", "ForegroundNormal") => &mut colors.complementary_text,
         ("Colors:Selection", "BackgroundNormal") => &mut colors.accent,
         ("Colors:Selection", "ForegroundNormal") => &mut colors.on_accent,
+        ("Colors:View", "DecorationHover") => &mut colors.decoration_hover,
+        ("Colors:View", "DecorationFocus") => &mut colors.decoration_focus,
+        ("Colors:Tooltip", "BackgroundNormal") => &mut colors.tooltip,
+        ("Colors:Tooltip", "ForegroundNormal") => &mut colors.tooltip_text,
         _ => return None,
     };
 
@@ -79,6 +96,12 @@ fn color(value: &str) -> Option<Color32> {
     }
 
     Some(Color32::from_rgba_unmultiplied(red, green, blue, alpha))
+}
+
+/// KDE's contrast, a whole number on the 0 to 10 scale that
+/// `KColorScheme::contrastF` reads.
+fn contrast(value: &str) -> Option<i8> {
+    value.trim().parse::<i8>().ok()
 }
 
 /// KDE's animation speed. 0 turns animations off, any other factor

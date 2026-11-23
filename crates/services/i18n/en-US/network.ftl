@@ -2,7 +2,7 @@
 # network hardware and two connection tests.
 
 page-network-subtitle = The connection, the radios, the network drivers and tests.
-network-refresh = Read again
+network-refresh = Read Again
 network-tabs = Network tabs
 network-tab-status = Status
 network-tab-drivers = Drivers
@@ -28,9 +28,9 @@ network-radio-unknown = State not known
 network-address = Public address
 network-address-asking = Asking…
 network-address-failed = Could not be found out
-network-address-show = Show public address
-network-address-again = Try again
-network-address-copy = Copy public address
+network-address-show = Show Public Address
+network-address-again = Try Again
+network-address-copy = Copy Public Address
 network-address-hide = Hide
 network-address-note = The public address is asked from geoip.kde.org only when you click the button. It is not saved.
 
@@ -84,7 +84,7 @@ network-drivers-unreadable = The drivers of this system could not be read
 network-drivers-none = No network drivers found
 network-drivers-none-detail = The modules of the running kernel are not on the disk. After a kernel update, restart the computer first.
 network-drivers-no-match = No driver matches
-network-drivers-clear = Clear filters
+network-drivers-clear = Clear Filters
 network-driver-other-files = Blacklisted by { $files }. Garuda Toolbox does not change that file.
 network-driver-queued-on = Queued: add to the blacklist
 network-driver-queued-off = Queued: remove from the blacklist
@@ -93,18 +93,18 @@ network-driver-unload = Unload
 network-driver-unload-ask = Unload…
 network-driver-unload-title = Unload { $module }?
 network-driver-unload-question = Every device { $module } runs stops at once. When it runs your network card, the connection drops until you load it again.
-network-driver-unload-keep = Keep it loaded
-network-driver-blacklist = Queue blacklist
-network-driver-allow = Queue removal from blacklist
-network-driver-unqueue = Take back
+network-driver-unload-keep = Keep It Loaded
+network-driver-blacklist = Queue Blacklist
+network-driver-allow = Queue Removal from Blacklist
+network-driver-unqueue = Take Back
 # Why a blacklist click was not queued.
 network-refused-other-file = { $name }: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.
 network-refused-unavailable = The drivers of this system could not be read.
 network-refused-busy = Other changes are still being applied, so this did not run. Try again once they are done.
 
 network-hardware-intro = Network devices as lspci and lsusb list them.
-network-hardware-copy-all = Copy all
-network-hardware-copy-line = Copy this line
+network-hardware-copy-all = Copy All
+network-hardware-copy-line = Copy This Line
 network-hardware-reading = Reading the devices…
 network-hardware-unreadable = No network devices could be listed
 network-hardware-none = No network devices found
@@ -113,17 +113,17 @@ network-hardware-pci-failed = PCI devices are not listed: lspci failed.
 network-hardware-usb-missing = USB devices are not listed: lsusb is not installed (package usbutils).
 network-hardware-usb-failed = USB devices are not listed: lsusb failed.
 network-hardware-queue-pciutils = Queue pciutils
-network-hardware-unqueue-pciutils = Take back pciutils
+network-hardware-unqueue-pciutils = Take Back pciutils
 
-network-tests = Connection tests
+network-tests = Connection Tests
 network-tests-detail = Both tests run with your own rights and show their output in the Console.
 network-host = Host
 network-host-problem = Enter a host name or an IP address, for example garudalinux.org.
 network-pings = Number of pings
 network-timeout = Timeout in seconds
 network-hops = Most hops (for traceroute)
-network-ping = Run ping
-network-traceroute = Run traceroute
+network-ping = Run Ping
+network-traceroute = Run Traceroute
 network-traceroute-missing = Traceroute needs the package traceroute, which is not installed.
 # After a test ran in the Console, under its buttons.
 network-ping-finished = Ping finished. Its output is in the Console.
@@ -131,12 +131,12 @@ network-ping-failed = Ping ended with an error. The Console shows why.
 network-traceroute-finished = Traceroute finished. Its output is in the Console.
 network-traceroute-failed = Traceroute ended with an error. The Console shows why.
 network-show-console = Show Console
-network-hotspot = Wi-Fi hotspot
+network-hotspot = Wi-Fi Hotspot
 network-hotspot-detail = Share this computer's connection with other devices. The hotspot tool opens in its own window.
 network-hotspot-queued-detail = Share this computer's connection with other devices. This needs the package linux-wifi-hotspot, which waits in the queue until you apply it.
-network-hotspot-open = Open hotspot
-network-hotspot-queue = Queue hotspot tool
-network-hotspot-unqueue = Take back
+network-hotspot-open = Open Hotspot
+network-hotspot-queue = Queue Hotspot Tool
+network-hotspot-unqueue = Take Back
 network-hotspot-unknown = The installed packages could not be read, so it is not known whether the hotspot tool is installed. Read again reads them once more.
 # $reason is the system's own words.
 

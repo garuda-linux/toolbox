@@ -36,7 +36,7 @@ fn a_package_is_found_before_its_page_opened_and_opens_its_details() {
 
     harness.key_press(Key::Enter);
     step_until(&mut harness, "the details", |harness| {
-        harness.query_by_label("Back to Packages").is_some()
+        harness.query_by_label("https://www.gegl.org/").is_some()
     });
 }
 
@@ -62,12 +62,12 @@ fn an_aur_package_is_found_only_while_the_aur_is_on() {
 fn more_than_five_packages_end_with_a_row_that_lists_them_all() {
     let (mut harness, _runtime) = launch(Theme::Dark, None, false, Arc::new(SampleAur));
 
-    found(&mut harness, "a", "Show all");
+    found(&mut harness, "a", "Show All");
     harness
         .query_all_by_role(Role::Button)
         .find(|node| {
             node.accesskit_node().label().is_some_and(|label| {
-                label.starts_with("Show all") && label.ends_with("in Packages")
+                label.starts_with("Show All") && label.ends_with("in Packages")
             })
         })
         .expect("the row")

@@ -5,11 +5,11 @@ use egui::{Key, Label, TextEdit, Ui};
 use toolbox_core::features::network::{
     HOTSPOT_PACKAGE, PackageState, TRACEROUTE_PACKAGE, package_state,
 };
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{
     ButtonKind, SectionHeading, Tone, banner, card, number_field, pill_button, rich, text_field,
 };
-use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::{
     DEFAULT_HOPS, DEFAULT_PING_TIMEOUT, DEFAULT_PINGS, DEFAULT_TEST_HOST, HopLimit, HostName,
     PingCount, PingTimeout,
@@ -18,6 +18,7 @@ use toolbox_plan::{
 use crate::command::{NetworkCommand, UiCommand};
 use crate::i18n;
 use crate::pages::PageContext;
+use crate::pages::rows::read_again_banner;
 use crate::pages::setting_row::{Words, row};
 
 const FIELD_WIDTH: f32 = 240.0;
@@ -282,13 +283,16 @@ fn hotspot(ui: &mut Ui, context: &PageContext<'_>) {
 
     if state == PackageState::Unknown {
         ui.add_space(ui.tokens().sizes.card_gap);
-        banner(ui, Tone::Warning, &text("network-hotspot-unknown"), &[]);
+        let unknown = text("network-hotspot-unknown");
+        if read_again_banner(ui, Tone::Warning, &unknown, true) {
+            context.commands.send(NetworkCommand::Refresh);
+        }
     }
 }
 
 /// A section heading with its detail wrapped below, as it can be long.
 fn heading(ui: &mut Ui, title: &str, detail: &str) {
-    SectionHeading::new(icons::NETWORK_CONNECT, title, "").show(ui);
+    SectionHeading::new(title, "").show(ui);
     let secondary = ui.tokens().secondary;
     ui.add(Label::new(rich(ui, detail, Weight::Regular, SMALL, secondary)).wrap());
     ui.add_space(ui.tokens().sizes.heading_gap);

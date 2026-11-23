@@ -120,7 +120,7 @@ fn other_character_sets_show_once_utf8_only_is_off() {
         0
     );
 
-    harness.get_by_label("UTF-8 only").click();
+    harness.get_by_label("UTF-8 Only").click();
     harness.run();
 
     assert_eq!(
@@ -196,7 +196,7 @@ fn the_packs_tab_counts_and_queues_the_missing_packs() {
     let mut harness = page(system());
 
     harness
-        .get_by_role_and_label(Role::RadioButton, "Language packs")
+        .get_by_role_and_label(Role::RadioButton, "Language Packs")
         .click();
     harness.run();
 
@@ -206,7 +206,7 @@ fn the_packs_tab_counts_and_queues_the_missing_packs() {
             .is_some()
     );
 
-    harness.get_by_label("Queue all missing").click();
+    harness.get_by_label("Queue All Missing").click();
     harness.run();
     harness
         .get_by_role_and_label(Role::Button, "Install firefox-i18n-en-us")
@@ -239,26 +239,25 @@ fn the_header_stays_put_and_the_toolbar_holds_search_or_sort() {
     assert_header(&harness, texts, Some(tab), Some(search));
 
     harness
-        .get_by_role_and_label(Role::RadioButton, "Language packs")
+        .get_by_role_and_label(Role::RadioButton, "Language Packs")
         .click();
     harness.run();
 
     assert_eq!(rect_of(&harness, Role::RadioButton, "Locales"), tab);
-    assert_eq!(
-        rect_of(&harness, Role::TextInput, "Search locales and packs"),
-        search,
-        "the toolbar keeps its shape"
-    );
-    let refresh = rect_of(&harness, Role::Button, "Read again");
-
+    let refresh = rect_of(&harness, Role::Button, "Read Again");
     let sort = rect_of(&harness, Role::ComboBox, "Sort language packs");
+    let field = rect_of(&harness, Role::TextInput, "Search locales and packs");
     assert!(
-        (sort.right() - refresh.right()).abs() < 0.5,
-        "sort {sort:?}, refresh {refresh:?}"
+        field.right() <= sort.left(),
+        "search {field:?} is not before the sort {sort:?}"
     );
     assert!(
-        sort.top() > refresh.bottom(),
-        "the sort is not in the toolbar"
+        sort.right() <= refresh.left(),
+        "sort {sort:?} is not before refresh {refresh:?}"
+    );
+    assert!(
+        (sort.center().y - refresh.center().y).abs() < 0.5,
+        "the sort is not on the title row"
     );
 }
 

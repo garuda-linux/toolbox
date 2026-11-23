@@ -36,7 +36,6 @@ fn properties() -> Harness<'static, Toasts> {
                 page,
                 ToastTexts {
                     name: "Notification",
-                    close: "Close",
                 },
             );
         },

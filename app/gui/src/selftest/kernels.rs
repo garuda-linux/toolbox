@@ -16,7 +16,7 @@ pub fn steps() -> Vec<Step> {
         Step::WaitContaining("Running kernel: "),
         Step::WaitGone("Asking dkms for its modules…"),
         Step::Shot("kernels"),
-        Step::click("Read again"),
+        Step::click("Read Again"),
         Step::WaitGone("Reading the system…"),
         Step::WaitGone("Asking dkms for its modules…"),
         Step::Shot("kernels-refreshed"),

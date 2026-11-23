@@ -5,7 +5,7 @@
 //! the window's layout does not jump on every read. A read with nothing
 //! else to say shows in a small note over the page's corner instead.
 
-use egui::{Align2, Area, Context, Frame, Id, Order, Panel, Rect, Ui};
+use egui::{Align2, Area, Context, CornerRadius, Frame, Id, Order, Panel, Rect, Ui, pos2};
 use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::theme::RADIUS;
 use toolbox_gui_kit::widgets::{TileSize, Tone, icon_button, status_tile};
@@ -30,13 +30,34 @@ pub fn show(ui: &mut Ui, reading: &Reading, mode: Mode) -> Option<Rect> {
     }
 
     let padding = ui.tokens().sizes.status_bar_padding;
-    let frame = Frame::new()
-        .fill(tokens::current(ui.ctx()).pane)
-        .inner_margin(padding);
+    let tokens = tokens::current(ui.ctx());
 
     let height = ui
         .data(|data| data.get_temp::<f32>(height_id()))
         .unwrap_or_else(|| ui.spacing().interact_size.y + padding.sum().y);
+
+    // Over the live blur the bar is frosted, as the Console sheet is, so the
+    // page under it blurs. The blur is painted before the panel's own fill.
+    let frosted = toolbox_gui_kit::frost::live(ui.ctx());
+    let area = ui.available_rect_before_wrap();
+    let strip = Rect::from_min_max(
+        pos2(area.left(), area.bottom() - height),
+        area.right_bottom(),
+    );
+
+    let fill = if toolbox_gui_kit::theme::translucent(ui.ctx()) {
+        tokens.band
+    } else if frosted {
+        tokens.frost
+    } else {
+        tokens.pane
+    };
+
+    if frosted {
+        toolbox_gui_kit::frost::backdrop(ui.painter(), strip, CornerRadius::ZERO);
+    }
+
+    let frame = Frame::new().fill(fill).inner_margin(padding);
 
     let shown = Panel::bottom("status")
         .show_separator_line(false)
@@ -47,7 +68,7 @@ pub fn show(ui: &mut Ui, reading: &Reading, mode: Mode) -> Option<Rect> {
     // The pane fill alone hardly parts the bar from a page of the same
     // shade in light.
     let bar = shown.response.rect;
-    let outline = egui::Stroke::new(1.0, ui.tokens().outline);
+    let outline = egui::Stroke::new(1.0, ui.tokens().rule);
     ui.painter().hline(bar.x_range(), bar.top() + 0.5, outline);
     Some(shown.inner)
 }
@@ -112,7 +133,7 @@ fn part(ui: &mut Ui, said: &mut bool) {
         return;
     }
 
-    let outline = tokens::current(ui.ctx()).outline;
+    let outline = tokens::current(ui.ctx()).rule;
     let height = ui.text_style_height(&egui::TextStyle::Body);
     let (rect, _) = ui.allocate_exact_size(egui::vec2(1.0, height), egui::Sense::hover());
     ui.painter().vline(

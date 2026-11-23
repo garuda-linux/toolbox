@@ -17,7 +17,7 @@ fn shown(reason: &'static str) -> egui_kittest::Harness<'static, CommandReceiver
 
 fn read_again(harness: &mut egui_kittest::Harness<'static, CommandReceiver>) -> Vec<Command> {
     harness
-        .get_by_role_and_label(Role::Button, "Read again")
+        .get_by_role_and_label(Role::Button, "Read Again")
         .click();
     harness.run();
     harness.state().drain().map(|sent| sent.command).collect()
@@ -55,7 +55,7 @@ fn a_reason_that_waits_shows_no_button() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Read again")
+            .query_by_role_and_label(Role::Button, "Read Again")
             .is_none()
     );
 }
@@ -74,7 +74,7 @@ fn the_banner_stays_while_the_part_is_read_again() {
 
     harness.run();
     let before = harness
-        .get_by_role_and_label(Role::Button, "Read again")
+        .get_by_role_and_label(Role::Button, "Read Again")
         .rect();
 
     read_again(&mut harness);
@@ -83,7 +83,7 @@ fn the_banner_stays_while_the_part_is_read_again() {
     harness.run();
 
     let during = harness
-        .get_by_role_and_label(Role::Button, "Read again")
+        .get_by_role_and_label(Role::Button, "Read Again")
         .rect();
 
     assert_eq!(during, before);
@@ -102,7 +102,7 @@ fn a_first_wait_shows_no_banner() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Read again")
+            .query_by_role_and_label(Role::Button, "Read Again")
             .is_none()
     );
 }

@@ -19,6 +19,8 @@ use crate::command::{Command, HomeCommand, UiCommand};
 use crate::pages::Plans;
 use crate::testing::{PageFixture, PageState, button_kind};
 
+const WELCOME_NOTE: &str = "Nothing is installed until you apply your choices at the end. Apps that are already installed show as on, and turning one off removes it.";
+
 type Shown = Harness<'static, PageState<SetupPage>>;
 
 fn page(changes: ChangeSet, plans: Plans, stage: Stage) -> Shown {
@@ -72,10 +74,10 @@ fn strawberry() -> ChangeSet {
 }
 
 #[test]
-fn the_welcome_counts_the_steps_and_next_opens_the_first() {
+fn next_opens_the_first_step_from_the_welcome() {
     let mut harness = first();
 
-    assert!(shows(&harness, "There are 16 categories"));
+    assert!(shows(&harness, WELCOME_NOTE));
 
     harness.get_by_label("Next").click();
     harness.run();
@@ -147,7 +149,7 @@ fn the_summary_names_the_picks_and_opens_the_review() {
     assert!(shows(&harness, "Apps to install: 1"));
     assert!(shows(&harness, "Strawberry Player"));
 
-    harness.get_by_label("Review and apply").click();
+    harness.get_by_label("Review and Apply").click();
     harness.run();
 
     assert_eq!(sent(&harness), [Command::from(UiCommand::ReviewChanges)]);
@@ -158,7 +160,7 @@ fn an_apply_that_worked_shows_the_success_page() {
     let harness = page(ChangeSet::default(), succeeded(), Stage::Summary);
 
     assert!(shows(&harness, "Success!"));
-    assert!(shows(&harness, "Finish setup"));
+    assert!(shows(&harness, "Finish Setup"));
     assert!(shows(&harness, "A restart is recommended"));
     assert_eq!(button_kind(&harness, "Restart…"), ButtonKind::Primary);
 }
@@ -166,7 +168,7 @@ fn an_apply_that_worked_shows_the_success_page() {
 fn leads_with_finish_and_no_restart(harness: &Shown) {
     assert!(!shows(harness, "A restart is recommended"));
     assert!(harness.query_by_label("Restart…").is_none());
-    assert_eq!(button_kind(harness, "Finish setup"), ButtonKind::Primary);
+    assert_eq!(button_kind(harness, "Finish Setup"), ButtonKind::Primary);
 }
 
 #[test]
@@ -289,7 +291,7 @@ fn the_step_list_is_centred_under_the_page_whatever_next_says() {
 fn reopening_the_review_after_the_apply_still_leads_to_success() {
     let mut harness = page(strawberry(), succeeded(), Stage::Summary);
 
-    harness.get_by_label("Review and apply").click();
+    harness.get_by_label("Review and Apply").click();
     harness.run();
     harness.state_mut().fixture.changes = ChangeSet::default();
     harness.run();

@@ -1,25 +1,18 @@
 use std::time::Duration;
 
+use egui::Theme;
 use egui::accesskit::Role;
-use egui::{Theme, ViewportId};
+use egui_kittest::SnapshotResults;
 use egui_kittest::kittest::Queryable as _;
-use egui_kittest::{Harness, SnapshotResults};
 
 use super::super::loading::loading_dots;
 use super::super::{
     ButtonKind, card, dimmed, empty_state, empty_state_action, loading_indicator, pill_button,
     skeleton_rows,
 };
+use super::motion::repaint_delay;
 use crate::testing::{Cover, cover, harness, repaints_once_settled};
 use crate::{UiExt as _, icons, theme};
-
-fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
-    harness
-        .output()
-        .viewport_output
-        .get(&ViewportId::ROOT)
-        .map_or(Duration::MAX, |viewport| viewport.repaint_delay)
-}
 
 #[test]
 fn skeleton_rows_are_one_named_node_paced_below_the_display() {
@@ -85,8 +78,7 @@ fn an_unread_state_reports_its_button_centred_under_the_body() {
         |ui, clicked: &mut bool| {
             let title = "The services could not be read";
             let body = "systemd is not reachable.";
-            *clicked |=
-                empty_state_action(ui, icons::DIALOG_ERROR, title, body, "Read again").clicked();
+            *clicked |= empty_state_action(ui, icons::ERROR, title, body, "Read again").clicked();
         },
         false,
     );
@@ -127,12 +119,12 @@ fn feedback_in_both_themes() {
         (Theme::Dark, "widgets/feedback_dark"),
         (Theme::Light, "widgets/feedback_light"),
     ] {
-        let mut harness = harness(640.0, 540.0).with_theme(theme).build_ui(|ui| {
+        let mut harness = harness(640.0, 720.0).with_theme(theme).build_ui(|ui| {
             card(ui, |ui| skeleton_rows(ui, 2, 68.0, "Reading the services…"));
             ui.add_space(12.0);
             _ = empty_state_action(
                 ui,
-                icons::DIALOG_ERROR,
+                icons::ERROR,
                 "The services could not be read",
                 "systemd is not reachable.",
                 "Read again",

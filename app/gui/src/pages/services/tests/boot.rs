@@ -20,9 +20,11 @@ fn one_caption_above_the_switches_says_they_start_units_at_boot() {
         .rect();
 
     assert!(caption.bottom() <= switch.top(), "{caption:?} {switch:?}");
+
+    // The words are centred on the track, one pixel of rounding apart.
     assert!(
-        (caption.center().x - switch.center().x).abs() < 0.5
-            || (caption.right() - switch.right()).abs() < 0.5,
+        (caption.center().x - switch.center().x).abs() < 1.5
+            || (caption.right() - switch.right()).abs() < 1.5,
         "the caption heads the switch column: {caption:?} {switch:?}"
     );
 }

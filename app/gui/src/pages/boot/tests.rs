@@ -135,7 +135,8 @@ fn the_timeout_is_a_pill_field_that_takes_typed_seconds() {
     let field = harness.get_by_role_and_label(Role::SpinButton, name).rect();
     let unit = toolbox_gui_kit::testing::painted_text_within(&harness, "s", field);
 
-    assert!((field.height() - toolbox_gui_kit::theme::PILL_HEIGHT).abs() < 0.5);
+    // A push button's height: the rounded 16 px text line plus 18 px.
+    assert!((field.height() - 34.0).abs() < 0.5, "{}", field.height());
     assert!(unit.is_some(), "no unit inside {field:?}");
 
     harness.get_by_label(name).click();
@@ -223,7 +224,7 @@ fn a_proposed_kernel_is_queued_as_the_default_on_request() {
             .is_some()
     );
 
-    harness.get_by_label("Queue as default").click();
+    harness.get_by_label("Queue as Default").click();
     harness.run();
 
     assert_eq!(
@@ -298,7 +299,8 @@ fn a_file_row_clears_its_file_with_an_inline_button() {
 }
 
 #[test]
-fn the_new_parameter_field_is_as_tall_as_add_and_centred_on_it() {
+fn the_new_parameter_field_is_centred_on_add() {
+    // The field and the push button differ in height, so only their middles align.
     let mut harness = ready();
     harness.get_by_label("New kernel parameter").scroll_to_me();
     harness.run();
@@ -306,12 +308,6 @@ fn the_new_parameter_field_is_as_tall_as_add_and_centred_on_it() {
     let field = harness.get_by_label("New kernel parameter").rect();
     let add = harness.get_by_label("Add").rect();
 
-    assert!(
-        (field.height() - add.height()).abs() < 0.5,
-        "the field is {} tall, Add {}",
-        field.height(),
-        add.height()
-    );
     assert!(
         (field.center().y - add.center().y).abs() < 0.5,
         "the field's middle is at {}, Add's at {}",

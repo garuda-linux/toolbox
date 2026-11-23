@@ -19,6 +19,8 @@ const GTK_VERSIONS: [&str; 2] = ["gtk-4.0", "gtk-3.0"];
 #[derive(Clone, Debug)]
 pub struct DesktopFiles {
     config: PathBuf,
+    /// `XDG_CONFIG_DIRS`, the most important first.
+    config_dirs: Vec<PathBuf>,
     data_home: PathBuf,
     home: PathBuf,
     data_dirs: Vec<PathBuf>,
@@ -51,17 +53,23 @@ impl DesktopFiles {
                 .filter(|path| path.is_absolute())
         };
 
-        let data_dirs = lookup("XDG_DATA_DIRS")
-            .map(|dirs| {
-                std::env::split_paths(&dirs)
-                    .filter(|dir| dir.is_absolute())
-                    .collect::<Vec<_>>()
-            })
-            .filter(|dirs| !dirs.is_empty())
-            .unwrap_or_else(|| vec!["/usr/local/share".into(), "/usr/share".into()]);
+        let dirs = |key: &str, defaults: &[&str]| -> Vec<PathBuf> {
+            lookup(key)
+                .map(|dirs| {
+                    std::env::split_paths(&dirs)
+                        .filter(|dir| dir.is_absolute())
+                        .collect::<Vec<_>>()
+                })
+                .filter(|dirs| !dirs.is_empty())
+                .unwrap_or_else(|| defaults.iter().map(PathBuf::from).collect())
+        };
+
+        let config_dirs = dirs("XDG_CONFIG_DIRS", &["/etc/xdg"]);
+        let data_dirs = dirs("XDG_DATA_DIRS", &["/usr/local/share", "/usr/share"]);
 
         Self {
             config: absolute("XDG_CONFIG_HOME").unwrap_or_else(|| home.join(".config")),
+            config_dirs,
             data_home: absolute("XDG_DATA_HOME").unwrap_or_else(|| home.join(".local/share")),
             home,
             data_dirs,
@@ -73,7 +81,7 @@ impl DesktopFiles {
     pub fn read(&self, family: Family) -> Read {
         match family {
             Family::Kde => Read {
-                desktop: read_text(&self.config.join("kdeglobals")).map(|text| kde::parse(&text)),
+                desktop: self.kdeglobals().map(|text| kde::parse(&text)),
                 prefer_dark: None,
             },
             Family::Gtk => self.read_gtk(),
@@ -81,11 +89,30 @@ impl DesktopFiles {
         }
     }
 
+    /// The `kdeglobals` layers in `KConfig`'s cascade order, the user's file
+    /// last so that its entries win.
+    fn kdeglobals(&self) -> Option<String> {
+        let defaults = self.config.join("kdedefaults");
+        let lower = self
+            .config_dirs
+            .iter()
+            .rev()
+            .filter(|dir| **dir != defaults)
+            .chain(std::iter::once(&defaults));
+
+        let layers: Vec<String> = lower
+            .chain(std::iter::once(&self.config))
+            .filter_map(|dir| read_text(&dir.join("kdeglobals")))
+            .collect();
+
+        (!layers.is_empty()).then(|| layers.join("\n"))
+    }
+
     /// The folders to watch for `family`. The files are replaced by
     /// rename, so their folders are watched, not the files.
     pub fn watched_dirs(&self, family: Family) -> Vec<PathBuf> {
         match family {
-            Family::Kde => vec![self.config.clone()],
+            Family::Kde => vec![self.config.clone(), self.config.join("kdedefaults")],
             Family::Gtk => GTK_VERSIONS
                 .iter()
                 .map(|version| self.config.join(version))

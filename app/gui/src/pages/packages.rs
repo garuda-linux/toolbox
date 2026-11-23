@@ -16,15 +16,17 @@ mod tests;
 
 use std::collections::BTreeSet;
 
-use egui::Ui;
+use egui::{Key, Modifiers, Ui};
 use toolbox_core::features::packages::aur::AurCatalog;
 use toolbox_core::features::packages::list::{Filter, View};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight, font};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
+use toolbox_gui_kit::widgets::columns::{self, Columns};
 use toolbox_plan::PackageName;
 use toolbox_system::ProbeError;
 
-use super::{PageContext, PageView, place_of};
+use super::{PageContext, PageView, place_of, plan_running};
 use crate::command::PackagesCommand;
 
 #[derive(Debug, Default)]
@@ -38,6 +40,9 @@ pub struct PackagesPage {
     /// showed its AUR side, the first one opened from the list first. Back
     /// returns to the last of them.
     trail: Vec<(PackageName, bool)>,
+    /// Whether the page is too narrow for the list and the details side by
+    /// side, the details then replace the list.
+    narrow: bool,
     unfolded: Unfolded,
     view: RowCache<ViewKey, View>,
     aur_view: RowCache<Same<AurCatalog>, Vec<usize>>,
@@ -90,22 +95,37 @@ enum Updates {
 }
 
 impl PageView for PackagesPage {
-    fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
-        if self.open.is_some() {
-            detail::header(self, ui, context);
-        } else {
-            list::header(self, ui, context);
+    /// The list and the details each scroll on their own, so the page
+    /// body has no scroll area of its own.
+    fn shape(&self) -> toolbox_gui_kit::widgets::BodyShape {
+        toolbox_gui_kit::widgets::BodyShape::Panes {
+            width: f32::INFINITY,
         }
+    }
 
+    fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) -> bool {
+        list::header(self, ui, context);
         true
     }
 
     fn ui(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
-        if self.open.is_some() {
-            detail::body(self, ui, context);
-        } else {
-            list::body(self, ui, context);
+        plan_running(ui, context);
+        list::refusal(ui, context);
+        list::top(self, ui, context);
+        ui.add_space(ui.tokens().sizes.header_gap);
+
+        if self.escape_back(ui) {
+            self.back(context);
         }
+
+        self.narrow = columns::is_narrow(ui.available_width());
+        let open = self.open.is_some();
+        Columns::new("packages-columns").open(open).show(
+            ui,
+            self,
+            |ui, page| list::column(page, ui, context),
+            |ui, page| detail::body(page, ui, context),
+        );
 
         remove::dialog(self, ui.ctx(), context);
         aur::install::dialog(self, ui.ctx(), context);
@@ -140,6 +160,11 @@ impl PackagesPage {
     /// Opens the detail page of `package` from the list, its AUR side for
     /// a row of the AUR chip.
     fn open(&mut self, package: &PackageName, aur: bool, context: &PageContext<'_>) {
+        // The arrow keys open a row before Space or a click asks for it again.
+        if self.open.as_ref() == Some(package) && self.open_aur == aur {
+            return;
+        }
+
         self.trail.clear();
         self.show(package, aur, context);
     }
@@ -152,6 +177,26 @@ impl PackagesPage {
         }
 
         self.show(package, aur, context);
+    }
+
+    /// The open package as the list of its side shows it, the AUR's or the
+    /// repositories'. Another side's list has no selected row.
+    fn selection(&self, aur: bool) -> Option<String> {
+        self.open
+            .as_ref()
+            .filter(|_| self.open_aur == aur)
+            .map(|package| package.as_str().to_owned())
+    }
+
+    /// Escape returns from the details like Back does, unless a question
+    /// of the page or a dialog over it, such as the command palette, is
+    /// open. Each answers Escape itself.
+    fn escape_back(&self, ui: &Ui) -> bool {
+        self.open.is_some()
+            && self.removing.is_none()
+            && self.installing.is_none()
+            && ui.memory(|memory| memory.top_modal_layer().is_none())
+            && ui.input_mut(|input| input.consume_key(Modifiers::NONE, Key::Escape))
     }
 
     /// Back to the package the detail page came from, else to the list

@@ -1,4 +1,4 @@
-//! Where the keyboard goes once Apply opened the Console. The pill that
+//! Where the keyboard goes once Apply opened the Console. The footer that
 //! held the focus is gone then, and the next Tab would start over at the
 //! sidebar.
 

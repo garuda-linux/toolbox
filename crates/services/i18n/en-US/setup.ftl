@@ -1,12 +1,6 @@
 page-setup-subtitle = Select the software you would like to install.
 setup-welcome = Welcome
-setup-welcome-title = Welcome to the Setup Assistant
-setup-welcome-text = Pick the apps you want, one category at a time. Nothing is installed until you review and apply your choices at the end.
-setup-welcome-steps = { $count ->
-        [one] There is 1 category.
-       *[other] There are { $count } categories.
-    } Next skips one you do not need, Back returns to it, and the list between them jumps to any category.
-setup-welcome-installed = Apps that are already installed show as on. Turning one off removes it.
+setup-welcome-text = Nothing is installed until you apply your choices at the end. Apps that are already installed show as on, and turning one off removes it.
 setup-unavailable = The Setup Assistant's list of apps could not be read
 setup-none = No app of the list can be installed on this system
 setup-step = Step { $number } of { $count }: { $title }
@@ -25,7 +19,7 @@ setup-install = Apps to install: { $count }
 setup-remove = Apps to remove: { $count }
 setup-units = Services to enable: { $count }
 setup-review-note = Review lists every queued change, also those from other pages. Nothing changes before you apply there.
-setup-review = Review and apply
+setup-review = Review and Apply
 setup-nothing = You picked nothing. Go back to choose apps, or finish without changes.
 setup-finish = Finish
 
@@ -41,7 +35,7 @@ setup-removed = Apps removed: { $count }
 setup-enabled = Services enabled: { $count }
 setup-restart-note = A restart is recommended, so every new program and service starts as it should.
 setup-restart = Restart…
-setup-finish-setup = Finish setup
+setup-finish-setup = Finish Setup
 setup-forum = Garuda forum
 setup-garuda-wiki = Garuda Linux wiki
 setup-arch-wiki = Arch Linux wiki

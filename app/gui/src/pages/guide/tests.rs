@@ -195,11 +195,11 @@ fn a_search_lists_the_places_and_one_opens_at_its_heading() {
 fn a_code_block_copies_its_text_and_says_so() {
     let mut harness = page_on("packages.md");
     harness
-        .get_by_role_and_label(Role::Button, "Copy code")
+        .get_by_role_and_label(Role::Button, "Copy Code")
         .scroll_to_me();
     harness.run();
     harness
-        .get_by_role_and_label(Role::Button, "Copy code")
+        .get_by_role_and_label(Role::Button, "Copy Code")
         .click();
     harness.step();
 
@@ -263,13 +263,13 @@ fn a_search_without_hits_says_so() {
 #[test]
 fn on_this_page_shows_beside_a_wide_reader_only() {
     let mut harness = page_on("kernels.md");
-    assert!(harness.query_by_label("On this page").is_none());
+    assert!(harness.query_by_label("On This Page").is_none());
 
     harness.set_size(egui::vec2(1440.0, 900.0));
     harness.run();
     harness.run();
 
-    assert!(harness.query_by_label("On this page").is_some());
+    assert!(harness.query_by_label("On This Page").is_some());
 }
 
 #[test]

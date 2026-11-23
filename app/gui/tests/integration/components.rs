@@ -16,7 +16,7 @@ use toolbox_gui::catalogs::Catalogs;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 
-use crate::common::{HEIGHT, button, packages, type_into, wheel, window};
+use crate::common::{HEIGHT, button, packages, queued_shown, type_into, wheel, window};
 use crate::discover::source_catalogs;
 use crate::look::look_for;
 use crate::system::first_read;
@@ -103,12 +103,12 @@ fn sections_show_and_a_click_queues_and_takes_back() {
 
     button(&harness, "Install PulseAudio").click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(&harness));
     assert!(harness.query_by_label("Installs with Apply").is_some());
 
-    button(&harness, "Take back PulseAudio").click();
+    button(&harness, "Take Back PulseAudio").click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(&harness));
 }
 
 #[test]
@@ -159,7 +159,7 @@ fn the_search_keeps_matching_entries_and_says_when_none_match() {
     );
 
     harness
-        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear Search")
         .last()
         .expect("the empty state's Clear search")
         .click();
@@ -188,7 +188,7 @@ fn entries_without_a_read_state_are_told_once() {
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Read again")
+            .query_by_role_and_label(Role::Button, "Read Again")
             .is_some()
     );
 
@@ -287,4 +287,33 @@ fn during_a_search_a_chip_counts_its_matches() {
 
     type_into(&mut harness, "Search this page", "jamesdsp");
     assert_eq!(audio(&harness), "Audio 0/1");
+}
+
+/// The header remembers how wide its controls came out. A page with a
+/// narrow header before this one must not leave the search that little room.
+#[test]
+fn the_search_keeps_its_width_after_a_page_with_a_narrower_header() {
+    for before in ["Kernels", "Services"] {
+        let mut harness = crate::common::launch(Setup::default());
+        harness.get_by_role_and_label(Role::Tab, before).click();
+        harness.run();
+        harness
+            .get_by_role_and_label(Role::Tab, "Components")
+            .click();
+        harness.run();
+
+        let wanted = toolbox_gui_kit::tokens::current(&harness.ctx)
+            .sizes
+            .search_width;
+
+        let search = harness
+            .get_by_role_and_label(Role::TextInput, "Search this page")
+            .rect();
+
+        assert!(
+            (search.width() - wanted).abs() < 0.5,
+            "after {before} the search is {} wide",
+            search.width()
+        );
+    }
 }

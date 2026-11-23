@@ -82,7 +82,7 @@ fn tab_from_an_opened_dialog_reaches_close_then_cycles_its_controls() {
 
     assert_eq!(
         order,
-        ["Close", "Keep", "Remove all", "Close"].map(|name| Some(name.to_owned())),
+        ["Close", "Remove all", "Keep", "Close"].map(|name| Some(name.to_owned())),
         "Tab must not stop on the dialog itself again"
     );
 }

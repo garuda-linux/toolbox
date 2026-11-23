@@ -11,7 +11,7 @@ use super::step::Step;
 pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
-        Step::tab("User guide"),
+        Step::tab("User Guide"),
         Step::wait("Search the guide"),
         Step::Shot("guide"),
         Step::tab("Kernels"),

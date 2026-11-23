@@ -137,12 +137,12 @@ fn a_report_shows_its_lines_and_is_shared_after_the_question() {
 
     assert!(harness.query_by_label("kernel: oops").is_some());
 
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Upload this report?")
+            .query_by_role_and_label(Role::Dialog, "Upload This Report?")
             .is_some()
     );
     assert!(
@@ -161,7 +161,7 @@ fn a_report_shows_its_lines_and_is_shared_after_the_question() {
 fn copying_the_report_says_so() {
     let mut harness = page(report());
 
-    harness.get_by_label("Copy report").click();
+    harness.get_by_label("Copy Report").click();
     harness.run();
 
     assert!(matches!(
@@ -192,7 +192,7 @@ fn an_upload_is_one_row_with_the_delete_link_in_its_menu() {
     let mut harness = page(uploaded());
 
     assert!(harness.query_by_label("Uploaded.").is_some());
-    assert!(harness.query_by_label("Delete now…").is_none(), "collapsed");
+    assert!(harness.query_by_label("Delete Now…").is_none(), "collapsed");
 
     // Here and not in the app's snapshots: a real upload's key differs
     // each time.
@@ -200,12 +200,12 @@ fn an_upload_is_one_row_with_the_delete_link_in_its_menu() {
 
     harness.get_by_label("More link actions").click();
     harness.run();
-    harness.get_by_label("Delete now…").click();
+    harness.get_by_label("Delete Now…").click();
     harness.run();
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Delete the report from the server?")
+            .query_by_role_and_label(Role::Dialog, "Delete the Report from the Server?")
             .is_some()
     );
 
@@ -219,7 +219,7 @@ fn an_upload_is_one_row_with_the_delete_link_in_its_menu() {
     install(&harness.ctx, fake);
     harness.get_by_label("More link actions").click();
     harness.run();
-    harness.get_by_label("Delete now…").click();
+    harness.get_by_label("Delete Now…").click();
     harness.run();
     harness
         .get_by_role_and_label(Role::Button, "Delete")
@@ -277,18 +277,18 @@ fn each_row_says_what_its_report_holds() {
 #[test]
 fn copy_report_leads_until_an_upload_then_its_link_does() {
     let harness = page(report());
-    assert_eq!(button_kind(&harness, "Copy report"), ButtonKind::Primary);
+    assert_eq!(button_kind(&harness, "Copy Report"), ButtonKind::Primary);
 
     let shared = page(uploaded());
 
-    assert_eq!(button_kind(&shared, "Copy report"), ButtonKind::Soft);
-    assert_eq!(button_kind(&shared, "Copy link"), ButtonKind::Primary);
+    assert_eq!(button_kind(&shared, "Copy Report"), ButtonKind::Soft);
+    assert_eq!(button_kind(&shared, "Copy Link"), ButtonKind::Primary);
 }
 
 #[test]
 fn the_text_to_upload_sits_in_a_frame_of_its_own() {
     let mut harness = page(report());
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
 
     let preview = harness

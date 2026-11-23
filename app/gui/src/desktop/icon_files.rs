@@ -108,14 +108,13 @@ pub fn app_index(folders: Vec<PathBuf>) -> Arc<Indexed<SystemIcons>> {
 pub fn theme_icons(theme: &str, lookup: &impl IconLookup) -> ThemeIcons {
     let mut icons = ThemeIcons::new(theme);
     for icon in ALL {
-        let file = icon
-            .theme_name()
-            .and_then(|name| lookup.find(theme, &name))
+        let file = lookup
+            .find(theme, icon.theme_name())
             .filter(|path| path.extension().is_some_and(|ending| ending == "svg"))
             .and_then(|path| read_capped(&path));
 
         if let Some(file) = file {
-            icons.insert(icon.name(), Arc::from(file));
+            icons.insert(icon, Arc::from(file));
         }
     }
 

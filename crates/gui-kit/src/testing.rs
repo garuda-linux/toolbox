@@ -18,7 +18,7 @@ pub use pointer::{click_at, scroll, wheel_at};
 pub use repaints::{Cover, Repaints, cover, repaints_once_settled};
 pub use shimmer::{freeze_shimmer, shimmer_frozen};
 
-use crate::fonts::{FontFile, Weight};
+use crate::fonts::{FontFile, UiFaces, Weight};
 
 /// How many keys a test presses to reach a widget before it gives up.
 const REACH_LIMIT: usize = 60;
@@ -57,12 +57,18 @@ pub fn harness_with_font<State>(
         .with_context_setup(move |ctx| {
             crate::install(ctx);
             if let Some(font) = font {
-                let weights = Weight::ALL.map(|weight| FontFile {
-                    weight: weight.css(),
-                    ..font.clone()
-                });
+                let faces = UiFaces {
+                    regular: Some(FontFile {
+                        weight: Weight::Regular.css(),
+                        ..font.clone()
+                    }),
+                    bold: Some(FontFile {
+                        weight: Weight::Bold.css(),
+                        ..font
+                    }),
+                };
 
-                ctx.set_fonts(crate::fonts::definitions(&weights, None));
+                ctx.set_fonts(crate::fonts::definitions(&faces, None));
             }
 
             crate::frost::install(ctx, state);
@@ -177,6 +183,26 @@ pub fn filled_rects<State>(
     rects(harness)
         .filter(|painted| painted.fill == fill)
         .map(|painted| painted.rect)
+        .collect()
+}
+
+/// The opaque colours the last frame filled over `point`, in paint order.
+pub fn opaque_fills_at<State>(
+    harness: &egui_kittest::Harness<'_, State>,
+    point: egui::Pos2,
+) -> Vec<egui::Color32> {
+    painted(harness)
+        .into_iter()
+        .filter_map(|shape| {
+            if let egui::Shape::Rect(rect) = shape
+                && rect.rect.contains(point)
+                && rect.fill.a() == u8::MAX
+            {
+                Some(rect.fill)
+            } else {
+                None
+            }
+        })
         .collect()
 }
 

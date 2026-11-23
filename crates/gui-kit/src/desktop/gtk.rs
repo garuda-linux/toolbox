@@ -32,6 +32,7 @@ pub fn parse(text: &str) -> Colors {
     Colors {
         window: pick(&["window_bg_color", "theme_bg_color"]),
         view: pick(&["view_bg_color", "theme_base_color"]),
+        button: None,
         text: pick(&["window_fg_color", "theme_fg_color"]),
         accent: pick(&["accent_bg_color", "theme_selected_bg_color"]),
         on_accent: pick(&["accent_fg_color", "theme_selected_fg_color"]),
@@ -40,6 +41,14 @@ pub fn parse(text: &str) -> Colors {
         success: pick(&["success_color"]),
         link: None,
         visited: None,
+        active: None,
+        complementary: None,
+        complementary_text: None,
+        decoration_hover: None,
+        decoration_focus: None,
+        tooltip: None,
+        tooltip_text: None,
+        contrast: None,
     }
 }
 

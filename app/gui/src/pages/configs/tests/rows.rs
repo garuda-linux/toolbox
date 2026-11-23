@@ -11,7 +11,7 @@ fn a_frame_with_the_same_inputs_builds_no_config_rows() {
     harness.step();
     assert_eq!(harness.state().page.rows.builds(), built);
 
-    harness.get_by_label("Show the files").click();
+    harness.get_by_label("Show the Files").click();
     harness.run();
     assert_eq!(harness.state().page.rows.builds(), built + 1);
     assert!(super::shows(&harness, "audio.conf"));
@@ -24,7 +24,7 @@ fn a_frame_with_the_same_inputs_builds_no_config_rows() {
 #[test]
 fn the_files_of_an_opened_folder_are_indented_under_it() {
     let mut harness = page(listed());
-    harness.get_by_label("Show the files").click();
+    harness.get_by_label("Show the Files").click();
     harness.run();
 
     // The row's own node starts at the card's edge, its title further in.

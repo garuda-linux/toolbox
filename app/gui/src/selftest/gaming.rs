@@ -13,7 +13,7 @@ pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
         Step::shortcut(Key::Num4),
-        Step::wait("Game launchers"),
+        Step::wait("Game Launchers"),
         Step::Shot("gaming"),
         search_field,
         lutris,

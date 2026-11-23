@@ -1,24 +1,33 @@
 //! The sidebar's entries and the labels of its groups.
 
-use egui::{Color32, CornerRadius, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
+use egui::{Color32, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
-use super::buttons::glyph_size;
-use super::press::Pointer;
+use super::focus::item_focus_line;
+use super::press::{Pointer, item_look, paint_item};
 use super::text::cut;
-use super::{focus_ring, line, rich};
-use crate::fonts::{BODY, CAPTION, Weight};
-use crate::icons::Icon;
-use crate::theme::RADIUS;
+use super::{line, rich};
+use crate::fonts::{BODY, SMALL, Weight};
+use crate::icons::{self, Icon};
 use crate::tokens;
-use crate::ui_ext::icon_image;
 
 /// Entries and headings start their icon and text this far in, and a
 /// sidebar's own lines line up with them.
 pub const NAV_INSET: f32 = 12.0;
+
+/// The sidebar's side inset: the left edge of the search field and of every
+/// item highlight, and the right edge of both. System Settings' item
+/// delegate insets its highlight by 6.
+pub const SIDE_INSET: f32 = 6.0;
+
+/// The highlight's top inset in its row: the 30 point pill sits 6 points
+/// below the row's top, so rows 36 points apart leave 6 between pills.
+pub const HIGHLIGHT_TOP: f32 = 6.0;
+
+/// Kirigami's smallMedium icon, as KDE's sidebar draws its entries.
+pub const ICON: f32 = 22.0;
+
 const ICON_GAP: f32 = 12.0;
-/// The group labels' tracking, in points, as small capitals want.
-const TRACKING: f32 = 0.7;
-const LABEL_SCALE: f32 = CAPTION;
+const LABEL_SCALE: f32 = SMALL;
 /// Above a group label in a sidebar that is not packed.
 const LABEL_ROOM: f32 = 4.0;
 /// How opaque an entry at a cut edge of a scrolled list stays.
@@ -68,6 +77,16 @@ impl EdgeFade {
     /// How opaque an entry `top` to `bottom` draws: whole away from a cut
     /// edge, fading toward one.
     pub fn opacity(&self, top: f32, bottom: f32) -> f32 {
+        self.fade_within(top, bottom, true)
+    }
+
+    /// [`Self::opacity`] for a list whose bottom cut another fill covers, so
+    /// the entries near that edge keep their strength and only the top fades.
+    pub fn opacity_top_only(&self, top: f32, bottom: f32) -> f32 {
+        self.fade_within(top, bottom, false)
+    }
+
+    fn fade_within(&self, top: f32, bottom: f32, below: bool) -> f32 {
         let centre = f32::midpoint(top, bottom);
         let near_top = if self.above {
             (centre - self.view.top()) / self.reach
@@ -75,7 +94,7 @@ impl EdgeFade {
             1.0
         };
 
-        let near_bottom = if self.below {
+        let near_bottom = if self.below && below {
             (self.view.bottom() - centre) / self.reach
         } else {
             1.0
@@ -113,7 +132,7 @@ pub fn nav_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, look: NavLo
     let width = if expanded {
         ui.available_width()
     } else {
-        tokens.sizes.nav_row_height
+        height
     };
 
     let (rect, response) = ui.allocate_exact_size(vec2(width, height), Sense::click());
@@ -123,52 +142,39 @@ pub fn nav_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, look: NavLo
     let mut was_cut = false;
     if ui.is_rect_visible(rect) {
         let pointer = Pointer::of(&response);
-        let hovered = pointer.is_under();
-        let fill = match (pointer, selected) {
-            (Pointer::Pressed, _) => Some(tokens.pressed),
-            (_, true) => Some(tokens.accent_tint),
-            (Pointer::Hovered, false) => Some(tokens.field),
-            (Pointer::Rest, false) => None,
-        };
+        let highlight = highlight_rect(rect);
 
-        if let Some(fill) = fill {
-            ui.painter()
-                .rect_filled(rect, CornerRadius::same(RADIUS), fill);
-        }
+        // The icon and the text centre on the highlight, which starts
+        // `HIGHLIGHT_TOP` below the row's top, not on the row.
+        let middle = highlight.center().y;
+
+        paint_item(ui, highlight, item_look(&tokens, selected, pointer));
+        item_focus_line(ui, &response, highlight, selected);
 
         let ink = if selected {
-            tokens.on_tint
-        } else if hovered {
-            tokens.text
+            tokens.selection_text
         } else {
             tokens.sidebar_text
         };
 
-        let image = icon_image(ui, icon, ink);
-        let glyph = glyph_size(&image);
+        let theme = icons::theme_in_use(ui.ctx());
+        let image = icon.image(theme.as_deref(), ink);
+        let glyph = vec2(ICON, ICON);
         let icon_left = if expanded {
             rect.left() + NAV_INSET
         } else {
             rect.center().x - glyph.x / 2.0
         };
 
-        let glyph_rect =
-            egui::Rect::from_min_size(pos2(icon_left, rect.center().y - glyph.y / 2.0), glyph);
+        let glyph_rect = egui::Rect::from_min_size(pos2(icon_left, middle - glyph.y / 2.0), glyph);
 
         image.paint_at(ui, glyph_rect);
 
         if expanded {
-            let weight = if selected {
-                Weight::SemiBold
-            } else {
-                Weight::Medium
-            };
-
+            let text = rich(ui, label, Weight::Regular, BODY, ink);
             let text_left = glyph_rect.right() + ICON_GAP;
-            was_cut = paint_label(ui, rect, text_left, rich(ui, label, weight, BODY, ink), ink);
+            was_cut = paint_label(ui, rect, (text_left, middle), text, ink);
         }
-
-        focus_ring(ui, &response, RADIUS);
     }
 
     // Collapsed, the label shows nowhere else. Cut, it shows in part.
@@ -179,7 +185,16 @@ pub fn nav_row(ui: &mut Ui, icon: Icon, label: &str, selected: bool, look: NavLo
     }
 }
 
-/// The small capitals above a group of entries. `compact` is the packed
+/// The pill an entry paints inside its `row`: the row's sides inset by
+/// `SIDE_INSET`, its top by `HIGHLIGHT_TOP`.
+pub fn highlight_rect(row: egui::Rect) -> egui::Rect {
+    egui::Rect::from_min_max(
+        row.min + vec2(SIDE_INSET, HIGHLIGHT_TOP),
+        row.max - vec2(SIDE_INSET, 0.0),
+    )
+}
+
+/// The label above a group of entries. `compact` is the packed
 /// sidebar of a short window.
 pub fn group_label(ui: &mut Ui, text: &str, compact: bool) {
     let tokens = tokens::current(ui.ctx());
@@ -194,20 +209,15 @@ pub fn group_label(ui: &mut Ui, text: &str, compact: bool) {
         ui.spacing_mut().interact_size.y = 0.0;
     }
 
-    // The capitals are a look only. Screen readers get the words as
-    // written, and a heading to jump to.
     ui.horizontal(|ui| {
         ui.add_space(NAV_INSET);
-        let shown = ui.label(
-            rich(
-                ui,
-                &text.to_uppercase(),
-                Weight::SemiBold,
-                LABEL_SCALE,
-                tokens.sidebar_text,
-            )
-            .extra_letter_spacing(TRACKING),
-        );
+        let shown = ui.label(rich(
+            ui,
+            text,
+            Weight::SemiBold,
+            LABEL_SCALE,
+            tokens.sidebar_text,
+        ));
 
         super::mark_heading(ui, &shown, text, 2);
     });
@@ -260,19 +270,19 @@ pub(super) fn mark_selected(ui: &Ui, response: &Response, selected: bool) {
     });
 }
 
-/// Paints `text` from `text_left` to the padding of `rect`. Returns
-/// whether it was cut.
+/// Paints `text` from `left` to the padding of `rect`, its line box
+/// centred on `middle`. Returns whether it was cut.
 fn paint_label(
     ui: &Ui,
     rect: egui::Rect,
-    text_left: f32,
+    (left, middle): (f32, f32),
     text: egui::RichText,
     ink: Color32,
 ) -> bool {
-    let room = (rect.right() - NAV_INSET - text_left).max(0.0);
+    let room = (rect.right() - NAV_INSET - left).max(0.0);
     let galley = cut(ui, text, room);
     let was_cut = galley.elided;
-    let at = pos2(text_left, rect.center().y - galley.size().y / 2.0);
+    let at = pos2(left, middle - galley.size().y / 2.0);
     ui.painter().galley(at, galley, ink);
     was_cut
 }

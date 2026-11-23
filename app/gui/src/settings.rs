@@ -52,6 +52,7 @@ pub enum SettingsCommand {
     UserUnits(bool),
     CopyReports(bool),
     Aur(bool),
+    BlurDesktop(bool),
     LogLevel(LogLevel),
 }
 
@@ -175,6 +176,9 @@ impl Drop for FileStore {
 pub struct SettingsView<'a> {
     pub settings: &'a Settings,
     pub autostart: bool,
+    /// The compositor blurs behind the window. Without it the blur setting
+    /// has no effect.
+    pub desktop_blur: bool,
     /// The chosen language's code, `None` while it follows the system.
     pub language: Option<&'a str>,
     pub theme: ThemeChoice,

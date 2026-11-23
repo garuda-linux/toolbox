@@ -240,7 +240,7 @@ fn the_menu_key_opens_the_unit_menu_and_escape_closes_it() {
     harness.key_press(Key::Menu);
     harness.run();
     harness
-        .get_by_role_and_label(Role::MenuItem, "Show logs")
+        .get_by_role_and_label(Role::MenuItem, "Show Logs")
         .click();
     harness.run();
     assert_eq!(
@@ -323,7 +323,7 @@ fn refresh_sits_beside_the_title_and_the_toolbar_holds_search_and_sort() {
     harness.run();
 
     let refresh = harness
-        .get_by_role_and_label(Role::Button, "Read again")
+        .get_by_role_and_label(Role::Button, "Read Again")
         .rect();
 
     let search = harness
@@ -340,11 +340,37 @@ fn refresh_sits_beside_the_title_and_the_toolbar_holds_search_and_sort() {
     assert!(system.right() < refresh.left(), "refresh is not last");
     let sort = rect_of(&harness, Role::ComboBox, "Sort services");
     assert!(
-        (sort.right() - refresh.right()).abs() < 0.5,
-        "sort {sort:?}, refresh {refresh:?}"
+        sort.right() <= refresh.left(),
+        "sort {sort:?} is not before refresh {refresh:?}"
     );
     assert!(
         (sort.center().y - search.center().y).abs() < 0.5,
         "not one toolbar row"
+    );
+}
+
+/// The German switches end where the English ones do, so the list keeps its width.
+#[test]
+fn the_german_list_keeps_the_english_width() {
+    let switch_right = |language: &str| {
+        let mut harness = loaded(vec![sshd()]).harness(ServicesPage::default());
+        let language = language.parse().expect("a language");
+        crate::i18n::set_language(&harness.ctx, &language);
+        harness.run();
+        harness.run();
+
+        harness
+            .query_all_by_role(Role::CheckBox)
+            .map(|node| node.rect().right())
+            .next_back()
+            .expect("a switch")
+    };
+
+    let english = switch_right("en-US");
+    let german = switch_right("de-DE");
+
+    assert!(
+        (german - english).abs() < 0.5,
+        "the German switch ends at {german}, the English at {english}"
     );
 }

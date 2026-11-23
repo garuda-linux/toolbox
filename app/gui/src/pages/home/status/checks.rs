@@ -3,7 +3,7 @@
 
 use egui::Ui;
 use toolbox_gui_kit::icons;
-use toolbox_gui_kit::widgets::{ActionRow, Tone, card, card_row};
+use toolbox_gui_kit::widgets::{ActionRow, card, card_row};
 use toolbox_services::home::Overview;
 
 use crate::i18n;
@@ -24,7 +24,7 @@ pub(super) fn all_clear(ui: &mut Ui, overview: &Overview<'_>) {
 
     card(ui, |ui| {
         card_row(ui, true, |ui| {
-            ActionRow::new(icons::DIALOG_POSITIVE, Tone::Success, &title)
+            ActionRow::new(icons::DIALOG_POSITIVE, &title)
                 .detail(&detail)
                 .show(ui, |_| {});
         });

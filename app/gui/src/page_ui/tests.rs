@@ -24,13 +24,16 @@ fn the_search_entry_has_a_glyph_no_page_has() {
 }
 
 #[test]
-fn no_page_looks_like_the_information_glyph() {
+fn only_about_takes_the_information_glyph() {
     for page in PageId::ALL {
-        assert_ne!(
-            page.icon(),
-            toolbox_gui_kit::icons::HELP_ABOUT,
-            "{page:?} looks like the information glyph"
-        );
+        if page != PageId::About {
+            assert_ne!(
+                page.icon(),
+                toolbox_gui_kit::icons::HELP_ABOUT,
+                "{page:?} looks like the About page's information glyph"
+            );
+        }
+
         assert_ne!(
             page.icon().name(),
             "documentinfo",

@@ -1,13 +1,6 @@
 page-setup-subtitle = Software auswählen, die installiert werden soll.
 setup-welcome = Willkommen
-setup-welcome-title = Willkommen beim Einrichtungsassistenten
-setup-welcome-text = Gewünschte Apps Kategorie für Kategorie auswählen. Nichts wird installiert, bevor die Auswahl am Ende geprüft und übernommen wurde.
-# $count is how many categories there are.
-setup-welcome-steps = { $count ->
-        [one] Es gibt 1 Kategorie.
-       *[other] Es gibt { $count } Kategorien.
-    } „Weiter“ überspringt eine nicht benötigte Kategorie, „Zurück“ kehrt zu ihr zurück. Über die Liste dazwischen wird jede Kategorie direkt erreicht.
-setup-welcome-installed = Bereits installierte Apps sind eingeschaltet. Wird eine ausgeschaltet, wird sie entfernt.
+setup-welcome-text = Nichts wird installiert, bevor die Auswahl am Ende übernommen wird. Bereits installierte Apps sind eingeschaltet, eine ausgeschaltete App wird entfernt.
 setup-unavailable = Die App-Liste des Einrichtungsassistenten konnte nicht gelesen werden
 setup-none = Keine App aus der Liste kann auf diesem System installiert werden
 # $number is the step, $count all of them, $title its category.

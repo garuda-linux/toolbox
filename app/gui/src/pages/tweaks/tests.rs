@@ -131,7 +131,7 @@ fn every_section_counts_what_is_on() {
     harness.run();
 
     let heading = harness
-        .get_by_role_and_label(Role::Heading, "Shell and network")
+        .get_by_role_and_label(Role::Heading, "Shell and Network")
         .rect();
 
     let beside = harness
@@ -159,9 +159,11 @@ fn with_store_shells() -> PageFixture {
 }
 
 #[test]
-fn a_store_path_in_the_shell_list_is_cut_inside_a_tall_centred_entry() {
+fn a_store_path_in_the_shell_list_stays_inside_a_tall_centred_entry() {
     use toolbox_gui_kit::testing::{blurred_rects, cap_off_centre, painted_text_within};
-    use toolbox_gui_kit::theme::PILL_HEIGHT;
+
+    // A dropdown entry is a Darkly item row, the text line plus 3 px each side.
+    const ITEM_ROW: f32 = 30.0;
 
     let mut harness = with_store_shells().harness(TweaksPage::default());
     harness.run();
@@ -193,7 +195,7 @@ fn a_store_path_in_the_shell_list_is_cut_inside_a_tall_centred_entry() {
             popup.contains_rect(entry),
             "{path}: {entry:?} reaches past the list's {popup:?}"
         );
-        assert!(entry.height() >= PILL_HEIGHT - 0.5, "{path}: {entry:?}");
+        assert!(entry.height() >= ITEM_ROW - 0.5, "{path}: {entry:?}");
 
         let text = painted_text_within(&harness, &path, entry).expect("the entry is painted");
         let right = text.pos.x + text.galley.rect.right();
@@ -201,8 +203,14 @@ fn a_store_path_in_the_shell_list_is_cut_inside_a_tall_centred_entry() {
             right <= entry.right(),
             "{path} ends at {right}, past {entry:?}"
         );
+
+        // The list is as wide as its widest entry, up to its maximum, so a
+        // store path that fits is whole and a longer one is cut.
         if path.starts_with("/nix/store") {
-            assert!(text.galley.elided, "{path} is not cut");
+            assert!(
+                text.galley.elided || text.galley.text() == path,
+                "{path} is clipped without an ellipsis"
+            );
         }
 
         let off = cap_off_centre(&harness, &path, entry).expect("the text is painted");
@@ -218,7 +226,7 @@ fn every_chip_counts_what_is_on() {
     let mut harness = shipped().harness(TweaksPage::default());
     harness.run();
 
-    for chip in ["Shell and network 0/1", "All"] {
+    for chip in ["Shell and Network 0/1", "All"] {
         assert!(
             harness
                 .query_all_by_role(Role::Button)

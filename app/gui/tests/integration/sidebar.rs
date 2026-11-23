@@ -1,5 +1,8 @@
 mod cut;
 mod edge;
+mod foot;
+mod head;
+mod highlight;
 mod scroll;
 mod strength;
 
@@ -105,7 +108,7 @@ fn a_collapsed_sidebar_divides_its_named_groups() {
     harness.run();
     harness.run();
 
-    let outline = tokens::current(&harness.ctx).outline;
+    let outline = tokens::current(&harness.ctx).sidebar_edge;
     let install = harness
         .get_by_role_and_label(Role::Tab, "Setup Assistant")
         .rect();
@@ -131,21 +134,40 @@ fn a_collapsed_divider_keeps_six_points_to_the_selected_entry_on_each_side() {
         harness.run();
         harness.run();
 
-        let outline = tokens::current(&harness.ctx).outline;
-        let entries: Vec<_> = sidebar_pages()
+        let outline = tokens::current(&harness.ctx).sidebar_edge;
+        let rows: Vec<(Group, _)> = sidebar_pages()
             .map(|page| {
                 let name = entry_name(&harness, page);
-                harness.get_by_role_and_label(Role::Tab, &name).rect()
+                let rect = harness.get_by_role_and_label(Role::Tab, &name).rect();
+                (page.group(), rect)
             })
             .collect();
 
-        // The hairline of a cut edge spans most of an entry, a divider
-        // less than half of one.
+        let entries: Vec<_> = rows.iter().map(|(_, rect)| *rect).collect();
+
+        // The cut hairline spans most of an entry, a divider less than half.
+        // The list's cut hairline sits above the foot, which has no divider,
+        // so a line above a foot entry is not a group divider.
+        let foot_tops: Vec<f32> = rows
+            .iter()
+            .filter(|(group, _)| *group == Group::App)
+            .map(|(_, rect)| rect.top())
+            .collect();
+
+        let foot_next = |line: f32| {
+            entries
+                .iter()
+                .filter(|entry| entry.top() >= line)
+                .min_by(|one, other| one.top().total_cmp(&other.top()))
+                .is_some_and(|entry| foot_tops.contains(&entry.top()))
+        };
+
         let half = entries[0].width() / 2.0;
         let dividers: Vec<f32> = lines_in(&harness, outline)
             .into_iter()
             .filter(|[left, right]| (left.y - right.y).abs() < 0.5 && right.x - left.x < half)
             .map(|[left, _]| left.y)
+            .filter(|line| !foot_next(*line))
             .collect();
 
         assert!(dividers.len() >= 2, "{height}: {dividers:?}");
@@ -170,8 +192,9 @@ fn a_collapsed_divider_keeps_six_points_to_the_selected_entry_on_each_side() {
 
 #[test]
 fn an_expanded_sidebar_names_its_groups_without_lines() {
-    let harness = app(TALL, false);
-    let outline = tokens::current(&harness.ctx).outline;
+    // At normal spacing nothing is cut, so only a divider could draw a line.
+    let harness = app(964.0, false);
+    let outline = tokens::current(&harness.ctx).sidebar_edge;
     let sidebar = harness
         .get_by_role_and_label(Role::Tab, "Setup Assistant")
         .rect();
@@ -259,19 +282,20 @@ fn packed_heading_gaps(harness: &Harness<'_, App>) -> [(&'static str, f32, f32);
     })
 }
 
-/// The default window's height shows every entry in its normal spacing.
+/// 964 points show every entry in its normal spacing (KDE pitch rows).
 #[test]
-fn a_window_of_960_shows_every_entry_unpacked_without_scrolling() {
-    let harness = app(960.0, false);
+fn a_window_of_964_shows_every_entry_unpacked_without_scrolling() {
+    let harness = app(964.0, false);
     let rect = |page: PageId| {
         harness
             .get_by_role_and_label(Role::Tab, &entry_name(&harness, page))
             .rect()
     };
 
+    // The 6 point top inset of each highlight fills the 36 point pitch, so
+    // the rows touch and no gap remains between their rows.
     let gap = rect(PageId::Components).top() - rect(PageId::Setup).bottom();
-    let normal = tokens::current(&harness.ctx).sizes.nav_gap;
-    assert!((gap - normal).abs() < 0.5, "packed: {gap} between entries");
+    assert!(gap.abs() < 0.5, "packed: {gap} between entries");
 
     assert_unscrolled_and_uncut(&harness);
 }
@@ -284,7 +308,20 @@ fn a_shorter_window_scrolls_with_a_fade_at_the_cut_edge() {
         !in_sight_unscrolled(&harness, PageId::Diagnostics),
         "this test needs a cut list"
     );
-    assert!(fade_drawn(&harness));
+
+    // The entries under the cut draw at full strength, so the cover alone
+    // shows the fade.
+    let bottom = cut::cut_edges(&harness)
+        .into_iter()
+        .fold(f32::MIN, f32::max);
+
+    let fades = cut::fades(&harness);
+    assert!(
+        fades
+            .iter()
+            .any(|fade| (fade.bottom() - bottom).abs() < 1.5),
+        "no cover meets the cut edge at {bottom}, only {fades:?}"
+    );
 }
 
 #[test]
@@ -311,11 +348,24 @@ fn a_packed_group_heading_keeps_ten_above_and_four_below() {
     }
 }
 
-/// The packed list fits a window of 820, which holds the packed headings'
-/// room (10 above, 4 below).
+/// The packed list fits a window of 902, so every entry shows without a
+/// scroll and no fade marks a cut edge.
 #[test]
-fn a_window_of_820_shows_every_entry_packed_without_scrolling() {
-    let harness = app(820.0, false);
+fn a_window_of_902_shows_every_entry_packed_without_scrolling() {
+    let harness = app(902.0, false);
+
+    assert_unscrolled_and_uncut(&harness);
+}
+
+/// The reading note takes a row of the sidebar, so the list packs to make
+/// room for it. Every entry still shows without a scroll.
+#[test]
+fn a_window_of_964_shows_every_entry_while_reading() {
+    let (mut harness, _runtime, _answer, _reads) = crate::system::app_at(964.0);
+    crate::system::step_until(&mut harness, "the reading notice", |harness| {
+        harness.query_all_by_label("Reading the system…").count() == 1
+    });
+    harness.run();
 
     assert_unscrolled_and_uncut(&harness);
 }

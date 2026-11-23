@@ -114,7 +114,7 @@ fn copy_name_copies_and_says_so() {
     let mut harness = menu();
 
     harness
-        .get_by_role_and_label(Role::MenuItem, "Copy name")
+        .get_by_role_and_label(Role::MenuItem, "Copy Name")
         .click();
     harness.step();
     let copied = harness.output().platform_output.commands.iter().any(

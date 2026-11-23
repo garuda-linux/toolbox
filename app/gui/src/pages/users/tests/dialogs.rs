@@ -17,7 +17,7 @@ fn a_new_password_runs_once_both_fields_agree() {
     harness.run();
     harness.get_by_label("More actions for ada").click();
     harness.run();
-    harness.get_by_label("Set password…").click();
+    harness.get_by_label("Set Password…").click();
     harness.run();
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     type_into(
@@ -39,7 +39,7 @@ fn a_new_password_runs_once_both_fields_agree() {
         "Repeat the password",
         "t",
     );
-    harness.get_by_label("Set password now").click();
+    harness.get_by_label("Set Password Now").click();
     harness.run();
 
     assert_eq!(
@@ -61,7 +61,7 @@ fn a_closed_password_dialog_leaves_no_field_state_behind() {
     harness.get_by_label("More actions for ada").click();
     harness.run();
     let before = states(&harness);
-    harness.get_by_label("Set password…").click();
+    harness.get_by_label("Set Password…").click();
     harness.run();
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     type_into(
@@ -85,7 +85,7 @@ fn a_closed_password_dialog_leaves_no_field_state_behind() {
 fn a_taken_name_is_refused_while_it_is_typed() {
     let mut harness = page(unlocked());
 
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
     type_into(&mut harness, Role::TextInput, "User name", "ada");
 
@@ -100,7 +100,7 @@ fn a_taken_name_is_refused_while_it_is_typed() {
 fn a_new_user_is_added_with_the_groups_ticked() {
     let mut harness = page(unlocked());
 
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
     type_into(&mut harness, Role::TextInput, "User name", "grace");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
@@ -110,7 +110,7 @@ fn a_new_user_is_added_with_the_groups_ticked() {
         "Repeat the password",
         "s3cret",
     );
-    harness.get_by_label("More options").click();
+    harness.get_by_label("More Options").click();
     harness.run();
 
     // As Tab reaches it: the box gets the focus and the dialog scrolls the
@@ -123,7 +123,7 @@ fn a_new_user_is_added_with_the_groups_ticked() {
         .get_by_role_and_label(Role::CheckBox, "video")
         .click();
     harness.run();
-    harness.get_by_label("Add user now").click();
+    harness.get_by_label("Add User Now").click();
     harness.run();
 
     let form = NewAccount {
@@ -160,14 +160,14 @@ pub(super) fn type_into(harness: &mut super::Shown, role: Role, label: &str, tex
 #[test]
 fn the_add_dialog_asks_the_required_fields_first_and_says_what_holds_it() {
     let mut harness = page(unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
 
     let top = |shown: &super::Shown, role, label: &str| {
         shown.get_by_role_and_label(role, label).rect().top()
     };
 
-    harness.get_by_label("More options").click();
+    harness.get_by_label("More Options").click();
     harness.run();
     let full_name = top(&harness, Role::TextInput, "Full name");
     let name = top(&harness, Role::TextInput, "User name");
@@ -209,10 +209,10 @@ fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
     let mut harness = page(unlocked());
     harness.set_size(egui::vec2(1024.0, 720.0));
     harness.run();
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
 
-    let confirm = harness.get_by_label("Add user now").rect();
+    let confirm = harness.get_by_label("Add User Now").rect();
     assert!(confirm.bottom() <= 720.0, "{confirm:?}");
 
     for (role, label) in [
@@ -234,7 +234,7 @@ fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
             .query_by_role_and_label(Role::TextInput, "User ID")
             .is_none()
     );
-    harness.get_by_label("More options").click();
+    harness.get_by_label("More Options").click();
     harness.run();
     assert!(
         harness
@@ -246,11 +246,11 @@ fn the_required_fields_fit_and_the_optional_ones_wait_folded() {
 #[test]
 fn more_options_folds_open_behind_a_chevron_on_the_label_column() {
     let mut harness = page(unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
 
     let more = harness
-        .get_by_role_and_label(Role::Button, "More options")
+        .get_by_role_and_label(Role::Button, "More Options")
         .rect();
 
     let column = harness
@@ -270,7 +270,7 @@ fn more_options_folds_open_behind_a_chevron_on_the_label_column() {
             .is_none()
     );
 
-    harness.get_by_label("More options").click();
+    harness.get_by_label("More Options").click();
     harness.run();
 
     assert!(
@@ -299,9 +299,9 @@ fn many_groups_are_rows_of_the_dialogs_own_scrolling_body() {
 
     snapshot.insert(accounts);
     let mut harness = page_on(snapshot, unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
-    harness.get_by_label("More options").click();
+    harness.get_by_label("More Options").click();
     harness.run();
 
     let first = harness
@@ -329,7 +329,7 @@ fn many_groups_are_rows_of_the_dialogs_own_scrolling_body() {
         .get_by_role_and_label(Role::CheckBox, "group19")
         .rect();
 
-    let buttons = harness.get_by_label("Add user now").rect();
+    let buttons = harness.get_by_label("Add User Now").rect();
     assert!(
         shown.bottom() <= buttons.top(),
         "{shown:?} under {buttons:?}"

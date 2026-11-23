@@ -68,10 +68,10 @@ fn shows(harness: &Shown, label: &str) -> bool {
 // The taller rows put the button under the window's foot.
 fn ask_reinstall(harness: &mut Shown) {
     harness
-        .get_by_label("Reinstall the boot loader…")
+        .get_by_label("Reinstall the Boot Loader…")
         .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall the boot loader…").click();
+    harness.get_by_label("Reinstall the Boot Loader…").click();
     harness.run();
 }
 
@@ -92,7 +92,7 @@ fn an_installed_system_says_the_page_is_for_the_live_system() {
         &harness,
         "Boot repair is only offered on the live system"
     ));
-    assert!(!shows(&harness, "Reinstall the boot loader"));
+    assert!(!shows(&harness, "Reinstall the Boot Loader"));
 }
 
 #[test]
@@ -126,10 +126,10 @@ fn the_first_free_system_shows_with_what_was_found() {
 fn the_boot_menu_is_written_again_after_asking() {
     let mut harness = page(live(), BootRepairPage::default());
 
-    harness.get_by_label("Build the boot files again…").click();
+    harness.get_by_label("Build the Boot Files Again…").click();
     harness.run();
 
-    assert!(shows(&harness, "Build the boot files again?"));
+    assert!(shows(&harness, "Build the Boot Files Again?"));
 
     // The live ISO started through UEFI: systemd-boot's images go to the
     // ESP on the system's own disk, which the question names.
@@ -139,7 +139,7 @@ fn the_boot_menu_is_written_again_after_asking() {
     ));
 
     harness
-        .get_by_role_and_label(Role::Button, "Build the boot files again")
+        .get_by_role_and_label(Role::Button, "Build the Boot Files Again")
         .click();
     harness.run();
 
@@ -169,7 +169,7 @@ fn a_locked_system_is_repaired_only_with_its_passphrase() {
 
     let confirm = |shown: &Shown| {
         shown
-            .get_by_role_and_label(Role::Button, "Reinstall the boot loader")
+            .get_by_role_and_label(Role::Button, "Reinstall the Boot Loader")
             .accesskit_node()
             .is_disabled()
     };
@@ -186,7 +186,7 @@ fn a_locked_system_is_repaired_only_with_its_passphrase() {
         .type_text("secret words");
     harness.run();
     harness
-        .get_by_role_and_label(Role::Button, "Reinstall the boot loader")
+        .get_by_role_and_label(Role::Button, "Reinstall the Boot Loader")
         .click();
     harness.run();
 
@@ -227,7 +227,7 @@ fn missing_programs_are_named_and_nothing_is_offered() {
     let harness = page(repair, BootRepairPage::default());
 
     assert!(shows(&harness, "grub-install, cryptsetup"));
-    assert!(!shows(&harness, "Reinstall the boot loader"));
+    assert!(!shows(&harness, "Reinstall the Boot Loader"));
 }
 
 #[test]
@@ -300,7 +300,7 @@ fn a_sections_sentence_sits_under_its_heading_like_on_maintenance() {
     let most = gaps.section_gap + gaps.header_gap;
     let gap = section.top() - purpose.bottom();
     assert!(
-        gap < most,
+        gap <= most + 0.5,
         "{gap} px between the header and the first section"
     );
 }

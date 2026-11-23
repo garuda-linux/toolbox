@@ -2,28 +2,31 @@
 //! target. For a choice that waits for a later button, where a switch
 //! would read as taking effect at once.
 
-use egui::{
-    CornerRadius, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, WidgetInfo, pos2, vec2,
-};
+use egui::{Rect, Response, Role, Sense, Shadow, Stroke, StrokeKind, Ui, WidgetInfo, pos2, vec2};
 
 use super::card::in_card_row;
-use super::check::partial;
+use super::check::{box_fill, mark_shadow, partial};
 use super::painted_row::{PaintedRow, painted_row};
-use super::press::faded;
+use super::press::{Pointer, faded};
 use super::rich;
 use super::text::cut;
+use super::top_light::paint_top_light;
 use crate::fonts::{BODY, SMALL, Weight};
+use crate::theme::CHECK_RADIUS;
 use crate::tokens;
 
 pub const CHECK_ROW_HEIGHT: f32 = 40.0;
 const HEIGHT_WITH_LINE: f32 = 56.0;
-/// How far the target, its hover fill and its ring reach left of the box,
+/// How far the target, its hover fill and its focus fill reach left of the box,
 /// into the margin, so the box lines up with the fields and text of its
 /// column.
 const PADDING_X: f32 = 12.0;
-const BOX: f32 = 18.0;
-const BOX_RADIUS: u8 = 4;
-const GAP: f32 = 12.0;
+/// Darkly's `CheckBox_Size`, the slot the box and its mark fill.
+pub(super) const BOX: f32 = 18.0;
+/// The box sits 1 px into the slot on each side, as Darkly's frame does.
+pub(super) const SQUARE: f32 = BOX - 2.0;
+/// Breeze's `CheckBox_ItemSpacing`, between the slot and the label.
+const GAP: f32 = 4.0;
 
 /// The texts of a [`check_row_with_line`].
 #[derive(Clone, Copy, Debug)]
@@ -124,24 +127,38 @@ fn paint(
     }
 
     let mid = rect.center().y;
-    let square = Rect::from_center_size(pos2(rect.left() + BOX / 2.0, mid), vec2(BOX, BOX));
-
+    let slot = Rect::from_center_size(pos2(rect.left() + BOX / 2.0, mid), vec2(BOX, BOX));
+    let fill = box_fill(&tokens, on, Pointer::of_keyboard(ui, &row.response));
     let painter = ui.painter();
-    let corner = CornerRadius::same(BOX_RADIUS);
-    if on {
-        painter.rect_filled(square, corner, fade(tokens.accent));
-        let mark = partial(square.shrink(2.0), 1.0);
-        painter.line(mark, Stroke::new(2.0, fade(tokens.on_accent)));
-    } else {
+    let square = Rect::from_center_size(slot.center(), vec2(SQUARE, SQUARE));
+    let shadow = Shadow {
+        offset: [0, 1],
+        blur: if on { 4 } else { 2 },
+        spread: 0,
+        color: fade(tokens.control_shadow),
+    };
+
+    painter.add(shadow.as_shape(square, CHECK_RADIUS));
+    painter.rect_filled(square, CHECK_RADIUS, fade(fill));
+    if !on {
         painter.rect_stroke(
             square,
-            corner,
-            Stroke::new(1.5, fade(tokens.secondary)),
+            CHECK_RADIUS,
+            Stroke::new(1.0, fade(tokens.card_outline)),
             StrokeKind::Inside,
         );
     }
 
-    let text_left = square.right() + GAP;
+    paint_top_light(painter, square, CHECK_RADIUS);
+
+    if on {
+        let mark = partial(square, 1.0);
+        let under = partial(square.translate(vec2(0.0, 1.0)), 1.0);
+        painter.line(under, Stroke::new(2.0, fade(mark_shadow(&tokens))));
+        painter.line(mark, Stroke::new(2.0, fade(tokens.highlighted_text)));
+    }
+
+    let text_left = slot.right() + GAP;
     let room = (rect.right() - text_left).max(0.0);
     let label = rich(ui, words.label, Weight::Medium, BODY, fade(tokens.text));
     let galley = cut(ui, label, room);
@@ -166,6 +183,5 @@ fn paint(
         );
     }
 
-    row.paint_ring(ui);
     was_cut
 }

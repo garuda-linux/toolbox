@@ -1,5 +1,5 @@
-//! Which side of its pill the popover opens on, so it never runs into
-//! the window's edge.
+//! Which side of Review the popover opens on, so it never runs into the
+//! window's edge.
 
 use egui::Rect;
 
@@ -21,14 +21,14 @@ pub struct Place {
     pub list: f32,
 }
 
-/// Above the pill when the popover fits there, else below when it fits
+/// Above Review when the popover fits there, else below when it fits
 /// there, else on the roomier side with a shorter list. `gap` is kept to
-/// the pill and to the window's edge.
-pub fn place(pill: Rect, window: Rect, fit: Fit, gap: f32) -> Place {
+/// Review and to the window's edge.
+pub fn place(review: Rect, window: Rect, fit: Fit, gap: f32) -> Place {
     let height = fit.chrome + fit.list.min(fit.most);
     let edges = gap + gap;
-    let above = pill.top() - window.top() - edges;
-    let below = window.bottom() - pill.bottom() - edges;
+    let above = review.top() - window.top() - edges;
+    let below = window.bottom() - review.bottom() - edges;
     if height <= above || (height > below && above >= below) {
         return Place {
             above: true,

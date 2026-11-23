@@ -33,9 +33,37 @@ pub fn search_field(
     texts: SearchTexts<'_>,
     width: f32,
 ) -> Response {
+    search_in(ui, salt, text, texts, width, true)
+}
+
+/// [`search_field`] that never takes a [`request_search_focus`]. A field
+/// drawn before the page's own, such as the sidebar's, leaves that request
+/// for the page's field.
+pub fn search_field_unrequested(
+    ui: &mut Ui,
+    salt: impl AsIdSalt,
+    text: &mut String,
+    texts: SearchTexts<'_>,
+    width: f32,
+) -> Response {
+    search_in(ui, salt, text, texts, width, false)
+}
+
+#[expect(
+    clippy::too_many_arguments,
+    reason = "the two public wrappers differ by one flag, the rest is the field"
+)]
+fn search_in(
+    ui: &mut Ui,
+    salt: impl AsIdSalt,
+    text: &mut String,
+    texts: SearchTexts<'_>,
+    width: f32,
+    takes_request: bool,
+) -> Response {
     let tokens = tokens::current(ui.ctx());
     let id = ui.make_persistent_id(("search", salt));
-    if take_focus_request(ui) {
+    if takes_request && take_focus_request(ui) {
         ui.memory_mut(|memory| memory.request_focus(id));
     }
 
@@ -74,7 +102,6 @@ pub fn search_field(
     let parts = Parts {
         glyph: Some(icons::SYSTEM_SEARCH),
         button: (!text.is_empty()).then_some(clear),
-        pill: true,
         ..Parts::default()
     };
 

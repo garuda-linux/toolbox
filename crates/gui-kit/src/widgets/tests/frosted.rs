@@ -1,4 +1,4 @@
-//! Menus, lists and notes take the frosted look over the live blur: a
+//! Menus and lists take the frosted look over the live blur: a
 //! see-through tint, never the solid raised fill.
 
 use egui::Theme;
@@ -7,7 +7,6 @@ use egui_kittest::kittest::Queryable as _;
 
 use super::super::{Select, menu_button, menu_item};
 use crate::testing::{blurred_rects, filled_rects, harness, textured_rects};
-use crate::toasts::{ToastKind, ToastTexts, Toasts};
 use crate::tokens;
 
 fn frosted(harness: &Harness<'_, impl Sized>) -> bool {
@@ -69,26 +68,4 @@ fn an_open_list_is_frosted() {
         "the list did not open"
     );
     assert!(frosted(&harness), "the list is solid");
-}
-
-#[test]
-fn a_note_is_frosted() {
-    let texts = ToastTexts {
-        name: "Notification",
-        close: "Close",
-    };
-
-    let mut toasts = Toasts::default();
-    toasts.add(ToastKind::Info, "Copied the link.");
-    let mut harness = harness(800.0, 300.0).build_ui_state(
-        move |ui, toasts: &mut Toasts| {
-            let page = ui.max_rect();
-            toasts.show(ui.ctx(), page, texts);
-        },
-        toasts,
-    );
-
-    harness.run_steps(2);
-
-    assert!(frosted(&harness), "the note is solid");
 }

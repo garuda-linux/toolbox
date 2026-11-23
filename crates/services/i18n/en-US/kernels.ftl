@@ -1,7 +1,7 @@
 kernels-subtitle = A kernel you install is used after the next restart, chosen in the boot menu.
 # $release is what `uname -r` prints.
 kernels-running-release = Running kernel: { $release }
-kernels-refresh = Read again
+kernels-refresh = Read Again
 kernels-reading = Reading the kernels…
 kernels-unavailable = Kernels are not available on this system: the package databases of pacman could not be read.
 kernels-none = No kernels found. The repositories offer none: update the package databases on the Maintenance page.
@@ -26,9 +26,9 @@ kernels-running-note = This kernel runs right now, so it stays. Restart with ano
 
 kernels-headers-missing = Headers missing
 kernels-headers-queued = Headers install with Apply
-kernels-queue-headers = Queue headers
-kernels-unqueue-headers = Don't install headers
-kernels-modules = DKMS modules
+kernels-queue-headers = Queue Headers
+kernels-unqueue-headers = Don't Install Headers
+kernels-modules = DKMS Modules
 
 # $module and $version name one DKMS module.
 kernels-module-installed = { $module } { $version }: installed
@@ -36,8 +36,8 @@ kernels-module-built = { $module } { $version }: built, not installed
 kernels-module-broken = { $module } { $version }: broken
 kernels-module-missing = { $module } { $version }: missing
 kernels-module-queued = { $module } { $version }: build queued
-kernels-queue-builds = Queue module builds
-kernels-unqueue-builds = Don't build modules
+kernels-queue-builds = Queue Module Builds
+kernels-unqueue-builds = Don't Build Modules
 
 kernels-dkms-loading = Asking dkms for its modules…
 kernels-dkms-unavailable = dkms is not installed, so there are no modules to build.
@@ -53,8 +53,8 @@ kernels-builds-banner =
         [one] One DKMS module is not built. DKMS builds extra drivers, such as those of NVIDIA or VirtualBox, for each kernel.
        *[other] { $count } DKMS modules are not built. DKMS builds extra drivers, such as those of NVIDIA or VirtualBox, for each kernel.
     }
-kernels-queue-all-headers = Queue all headers
-kernels-queue-all-builds = Queue all builds
+kernels-queue-all-headers = Queue All Headers
+kernels-queue-all-builds = Queue All Builds
 
 # Why a click was not queued. $name is the kernel's package name.
 kernels-refusal-running = { $name } is the kernel that runs right now, so it stays installed.
@@ -63,6 +63,6 @@ kernels-refusal-last-kernel = { $name } is the last installed kernel. Install an
 kernels-dismiss = Dismiss
 
 # The link that opens Boot options with a kernel offered as the default.
-kernels-set-default = Set as default…
+kernels-set-default = Set as Default…
 kernels-set-default-name = Set { $kernel } as the default boot entry
 kernels-version-note = { $version } · { $note }

@@ -1,17 +1,17 @@
 use egui::accesskit::Role;
 use egui::epaint::RectShape;
-use egui::{Color32, Rect, Shape, TextEdit, Theme, Ui};
+use egui::{Color32, TextEdit, Theme, Ui};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
-use super::super::focus::GAP;
 use super::super::{
     SearchTexts, number_field, number_field_with_unit, search_field, text_box, text_field,
     text_field_with_unit,
 };
+use super::top_light::rects_within;
 use crate::testing::{filled_rect, harness, rim_colours_around};
-use crate::theme::{CONTROL_RADIUS, PILL_RADIUS};
-use crate::tokens;
+use crate::theme::FIELD_RADIUS;
+use crate::tokens::{self, Tokens};
 
 const NAME: &str = "The field";
 
@@ -48,17 +48,6 @@ const KINDS: [fn(&mut Ui); 6] = [
     },
 ];
 
-/// The corners of [`KINDS`] in order: every field takes the control
-/// radius, the search keeps its pill (L-05).
-const CORNERS: [u8; 6] = [
-    CONTROL_RADIUS,
-    CONTROL_RADIUS,
-    CONTROL_RADIUS,
-    CONTROL_RADIUS,
-    PILL_RADIUS,
-    CONTROL_RADIUS,
-];
-
 fn named(ui: &Ui, response: &egui::Response) {
     ui.ctx()
         .accesskit_node_builder(response.id, |node| node.set_label(NAME));
@@ -86,81 +75,133 @@ fn shown(kind: fn(&mut Ui), theme: Theme, focused: bool) -> Harness<'static> {
     harness
 }
 
-fn fill_of(harness: &Harness<'_>, focused: bool) -> Rect {
-    let tokens = tokens::current(&harness.ctx);
-    let fill = if focused { tokens.hover } else { tokens.field };
-    filled_rect(harness, fill).expect("the field is filled")
+/// A field at rest is its input fill inside the card outline, the outline
+/// the only frame a field draws.
+#[test]
+fn every_field_at_rest_is_the_input_fill_inside_the_card_outline() {
+    for theme in [Theme::Dark, Theme::Light] {
+        for (index, kind) in KINDS.into_iter().enumerate() {
+            let harness = shown(kind, theme, false);
+            let tokens = tokens::current(&harness.ctx);
+            let field = filled_rect(&harness, tokens.input).expect("the field is filled");
+
+            assert_eq!(
+                rim_colours_around(&harness, field.center()),
+                vec![tokens.card_outline],
+                "{theme:?}: field {index} at rest"
+            );
+        }
+    }
 }
 
-/// Only the fill marks a field at rest, as it looks while typing.
+/// A field at rest casts the shadow shade at 40 of 255 with a Qt blur of 5
+/// (darklyhelper.cpp:1059), and a focused one a Qt blur of 7
+/// (darklyhelper.cpp:1064). egui reads twice the Qt radius.
 #[test]
-fn every_field_at_rest_has_no_line_round_it() {
-    for (index, kind) in KINDS.into_iter().enumerate() {
-        let harness = shown(kind, Theme::Dark, false);
-        let field = fill_of(&harness, false);
+fn a_field_casts_darkly_shadow_at_rest_and_a_wider_one_when_focused() {
+    for theme in [Theme::Dark, Theme::Light] {
+        for (index, kind) in KINDS.into_iter().enumerate() {
+            let rest = shown(kind, theme, false);
+            let tokens = tokens::current(&rest.ctx);
+            assert_eq!(
+                blurs(&rest, tokens.control_shadow),
+                vec![10.0],
+                "{theme:?}: field {index} at rest"
+            );
 
+            let focused = shown(kind, theme, true);
+            assert_eq!(
+                blurs(&focused, tokens.control_shadow),
+                vec![14.0],
+                "{theme:?}: field {index} focused"
+            );
+        }
+    }
+}
+
+/// A focused field keeps its View fill inside a Highlight halo at 60 %,
+/// which shows one pixel out from the fill on each side (darklyhelper.cpp:1066).
+#[test]
+fn a_focused_field_keeps_its_fill_inside_a_highlight_halo() {
+    for theme in [Theme::Dark, Theme::Light] {
+        for (index, kind) in KINDS.into_iter().enumerate() {
+            let harness = shown(kind, theme, true);
+            let tokens = tokens::current(&harness.ctx);
+            let fill = filled_rect(&harness, tokens.input).expect("the field is filled");
+            let halo = filled_rect(&harness, halo_colour(&tokens)).expect("the halo");
+
+            assert!(
+                rim_colours_around(&harness, fill.center()).is_empty(),
+                "{theme:?}: field {index} has a frame"
+            );
+            assert!(
+                (halo.width() - fill.width() - 4.0).abs() < 0.01
+                    && (halo.height() - fill.height() - 4.0).abs() < 0.01,
+                "{theme:?}: field {index} halo is not one pixel out on each side"
+            );
+        }
+    }
+}
+
+/// The fill takes the field radius at rest and one less under the halo,
+/// the halo one more (darklyhelper.cpp:1046, 1066).
+#[test]
+fn a_field_takes_the_field_radius_and_its_halo_steps_out_from_it() {
+    for (index, kind) in KINDS.into_iter().enumerate() {
+        let rest = shown(kind, Theme::Dark, false);
+        let tokens = tokens::current(&rest.ctx);
         assert_eq!(
-            rim_colours_around(&harness, field.center()),
-            [],
-            "field {index}"
+            corners(&rest, tokens.input),
+            Some(FIELD_RADIUS),
+            "rest {index}"
+        );
+
+        let focused = shown(kind, Theme::Dark, true);
+        let focused_tokens = tokens::current(&focused.ctx);
+        assert_eq!(
+            corners(&focused, focused_tokens.input),
+            Some(FIELD_RADIUS - 1),
+            "focused {index}"
+        );
+        assert_eq!(
+            corners(&focused, halo_colour(&tokens)),
+            Some(FIELD_RADIUS + 1),
+            "halo {index}"
         );
     }
 }
 
-#[test]
-fn a_focused_field_shows_only_the_focus_ring() {
-    for (index, kind) in KINDS.into_iter().enumerate() {
-        let harness = shown(kind, Theme::Dark, true);
-        let field = fill_of(&harness, true);
-        let tokens = tokens::current(&harness.ctx);
-
-        assert_eq!(
-            rim_colours_around(&harness, field.center()),
-            vec![tokens.accent_ring],
-            "field {index}"
-        );
-    }
+/// The Highlight at 60 % (darklyhelper.cpp:1066). The Highlight is the
+/// selection's solid accent.
+fn halo_colour(tokens: &Tokens) -> Color32 {
+    tokens.accent_tint.gamma_multiply(0.6)
 }
 
-/// The corner radius of the first rectangle filled `fill` and the first
-/// stroked `ring`.
-fn corners(harness: &Harness<'_>, fill: Color32, ring: Color32) -> (Option<u8>, Option<u8>) {
-    let rects: Vec<&RectShape> = harness
+/// Every rectangle the last frame painted, a field's shapes inside their
+/// group included.
+fn painted_rects(harness: &Harness<'_>) -> Vec<RectShape> {
+    harness
         .output()
         .shapes
         .iter()
-        .filter_map(|clipped| {
-            if let Shape::Rect(rect) = &clipped.shape {
-                Some(rect)
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    let filled = rects.iter().find(|rect| rect.fill == fill);
-    let ringed = rects
-        .iter()
-        .find(|rect| rect.stroke.color == ring && rect.stroke.width > 0.0_f32);
-
-    (
-        filled.map(|rect| rect.corner_radius.nw),
-        ringed.map(|rect| rect.corner_radius.nw),
-    )
+        .flat_map(|clipped| rects_within(&clipped.shape))
+        .collect()
 }
 
-#[test]
-fn a_field_takes_the_control_radius_and_its_ring_follows() {
-    for (index, (kind, radius)) in KINDS.into_iter().zip(CORNERS).enumerate() {
-        let harness = shown(kind, Theme::Dark, true);
-        let tokens = tokens::current(&harness.ctx);
-        let (fill, ring) = corners(&harness, tokens.hover, tokens.accent_ring);
+/// The blur widths of the shadows the last frame painted in `fill`.
+fn blurs(harness: &Harness<'_>, fill: Color32) -> Vec<f32> {
+    painted_rects(harness)
+        .iter()
+        .filter(|rect| rect.fill == fill && rect.blur_width > 0.0)
+        .map(|rect| rect.blur_width)
+        .collect()
+}
 
-        assert_eq!(fill, Some(radius), "field {index}");
-        assert_eq!(
-            ring,
-            Some(radius.saturating_add(GAP)),
-            "the ring of field {index}"
-        );
-    }
+/// The corner radius of the first sharp rectangle the last frame filled
+/// with `fill`.
+fn corners(harness: &Harness<'_>, fill: Color32) -> Option<u8> {
+    painted_rects(harness)
+        .iter()
+        .find(|rect| rect.fill == fill && rect.blur_width == 0.0)
+        .map(|rect| rect.corner_radius.nw)
 }

@@ -9,14 +9,14 @@ use super::step::Step;
 pub fn steps() -> Vec<Step> {
     vec![
         Step::WaitGone("Reading the system…"),
-        Step::menu_refuses("Review and apply…"),
+        Step::menu_refuses("Review and Apply…"),
         Step::menu_click("Kernels"),
         Step::WaitContaining("A kernel you install is used after the next restart"),
         Step::Shot("appmenu-kernels"),
-        Step::menu_click("Expanded sidebar"),
+        Step::menu_click("Expanded Sidebar"),
         Step::wait("Expand sidebar"),
         Step::Shot("appmenu-sidebar-collapsed"),
-        Step::menu_click("Expanded sidebar"),
+        Step::menu_click("Expanded Sidebar"),
         Step::wait("Collapse sidebar"),
     ]
 }

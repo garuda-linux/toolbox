@@ -6,7 +6,8 @@ use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::widgets::{
     ButtonKind, ListItem, RowHeights, RowList, RowState, SectionHeading, card, empty_state,
-    lock_mark, pill_button, rich, row_height, skeleton_rows, split_row_in, text_block_height,
+    lock_mark, pill_button, push_height, rich, row_height, skeleton_rows, split_row_in,
+    text_block_height_with,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
@@ -71,7 +72,7 @@ pub fn show(
 
     let Some(listing) = configs.listing() else {
         let name = text("configs-reading");
-        let height = row_height(ui, text_block_height(ui, 2));
+        let height = row_height(ui, text_block_height_with(ui, 2, push_height(ui)));
         card(ui, |ui| skeleton_rows(ui, SKELETON_ROWS, height, &name));
         return;
     };
@@ -93,8 +94,7 @@ pub fn show(
     }
 
     for section in sections.iter() {
-        let icon = section_icon(&section.icon);
-        SectionHeading::new(icon, &section.title, "").show(ui);
+        SectionHeading::new(&section.title, "").show(ui);
         ui.add_space(ui.tokens().sizes.heading_gap);
         let name = i18n::text_with(
             &ctx,
@@ -103,7 +103,7 @@ pub fn show(
         );
 
         let heights = RowHeights::Measured {
-            estimate: row_height(ui, text_block_height(ui, 2)),
+            estimate: row_height(ui, text_block_height_with(ui, 2, push_height(ui))),
         };
 
         RowList::new(("configs", &section.icon, &section.title), &name, heights).show(
@@ -254,8 +254,7 @@ fn controls(
         action(ui, context, row)
     };
 
-    // A file of the user may also open in the desktop's app for it, for
-    // whoever prefers a graphical editor.
+    // Files of the user can also open in the desktop's app.
     let in_app = !row.admin && row.kind != RowKind::Folder;
     if in_app || !row.url.is_empty() {
         more(ui, name, |ui| {
@@ -334,10 +333,4 @@ fn hover(ctx: &egui::Context, row: &Row) -> String {
 
 fn catalog_text(ctx: &egui::Context, id: &str, english: &str) -> String {
     i18n::text_or(ctx, &format!("catalog-config-files-{id}"), english).into_owned()
-}
-
-/// The catalog's icon of a section, or a plain text file for a name the
-/// app does not bundle.
-pub(super) fn section_icon(name: &str) -> icons::Icon {
-    icons::named(name).unwrap_or(icons::TEXT_X_GENERIC)
 }

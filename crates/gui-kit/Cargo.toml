@@ -30,6 +30,7 @@ libc = { workspace = true, optional = true }
 
 [dev-dependencies]
 toolbox-pty = { workspace = true, features = ["testing"] }
+libc.workspace = true
 egui_kittest.workspace = true
 
 [lints]

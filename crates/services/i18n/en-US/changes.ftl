@@ -1,6 +1,6 @@
 
-changes-title = Queued changes
-# The floating pill at the bottom right. $count is how many.
+changes-title = Queued Changes
+# The count in the footer bar under the page. $count is how many.
 changes-pill =
     { $count ->
         [one] change queued
@@ -23,15 +23,19 @@ changes-apply-all =
 # The button that drops one change, named after it for screen readers.
 changes-remove = Remove “{ $change }”
 # Asks first, hence the ellipsis.
-changes-remove-all-ask = Remove all…
-changes-remove-all = Remove all
+changes-remove-all-ask = Remove All…
+changes-remove-all =
+    { $count ->
+        [one] Remove Change
+       *[other] Remove All
+    }
 changes-remove-all-question =
     { $count ->
         [one] Remove the queued change?
        *[other] Remove all { $count } queued changes?
     }
 changes-apply = Apply
-changes-keep = Keep them
+changes-keep = Keep Them
 # Tag of a change whose last apply stopped before all its steps ended well.
 change-unfinished = Did not finish
 # Why Apply is disabled. A queue restored from an earlier run waits until

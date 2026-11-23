@@ -4,23 +4,30 @@
 use egui::Theme;
 
 use super::super::{Tokens, contrast};
-use super::{every_tokens, laid_on};
+use super::every_tokens;
+use super::frost::laid_on;
 use crate::palette::Palette;
 
+/// The header's scrim is the window colour in a dark theme, as Breeze tints
+/// its header with the window, so it stays near black.
 #[test]
-fn the_scrim_is_neutral_black_in_dark_and_white_in_light() {
+fn the_scrim_is_a_dark_window_tone_in_dark_and_the_window_in_light() {
     for (theme, tokens) in every_tokens() {
         let scrim = tokens.header_scrim;
-        let shade = match theme {
-            Theme::Dark => 0,
-            Theme::Light => scrim.a(),
-        };
+        let rgb = [scrim.r(), scrim.g(), scrim.b()];
 
-        assert_eq!(
-            [scrim.r(), scrim.g(), scrim.b()],
-            [shade; 3],
-            "{theme:?}: {scrim:?} casts a tint"
-        );
+        match theme {
+            Theme::Dark => {
+                let brightest = rgb.iter().max().copied().unwrap_or(0);
+                let spread = brightest - rgb.iter().min().copied().unwrap_or(0);
+                assert!(brightest < 48, "{theme:?}: {scrim:?} is not dark");
+                assert!(spread < 16, "{theme:?}: {scrim:?} tints too far");
+            }
+            Theme::Light => assert!(
+                super::tinted_as(scrim, tokens.window),
+                "{theme:?}: {scrim:?} is not the window colour"
+            ),
+        }
     }
 }
 
@@ -32,7 +39,7 @@ fn the_header_reads_on_the_band_scrim_alone_over_the_apps_own_surfaces() {
             tokens.sidebar,
             tokens.card,
             tokens.field,
-            tokens.hover,
+            tokens.button_hover,
         ];
 
         for backdrop in own {
@@ -69,11 +76,14 @@ fn the_band_scrim_softens_an_accent_glow_and_lets_the_blur_show() {
 }
 
 #[test]
-fn the_dialog_scrim_is_black_and_lighter_over_a_light_window() {
+fn the_dialog_scrim_is_the_shadow_shade_and_lighter_over_a_light_window() {
     let [dark, light] = [Theme::Dark, Theme::Light].map(|theme| {
-        let scrim = Tokens::derive(&Palette::fallback(theme), theme).scrim;
-        assert_eq!([scrim.r(), scrim.g(), scrim.b()], [0; 3], "{theme:?}");
-        scrim.a()
+        let tokens = Tokens::derive(&Palette::fallback(theme), theme);
+        assert!(
+            super::tinted_as(tokens.scrim, tokens.shadow_shade),
+            "{theme:?}"
+        );
+        tokens.scrim.a()
     });
 
     assert!((110..=120).contains(&dark), "dark {dark}");

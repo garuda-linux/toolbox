@@ -1,4 +1,6 @@
+mod columns;
 mod dots;
+mod escape;
 mod gaps;
 mod optional;
 mod remove;
@@ -10,6 +12,7 @@ use std::sync::Arc;
 
 use egui::Key;
 use egui::accesskit::Role;
+use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::domains::{InstalledPackages, Packages as PackagesDomain, SyncPackages};
 use toolbox_core::features::packages::list::{Catalog, Filter};
@@ -33,6 +36,14 @@ use crate::testing::{
 
 pub(super) fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap()
+}
+
+/// Opens the details of `package` by clicking its row, where its buttons are.
+pub(super) fn open_row<S>(harness: &mut Harness<'static, S>, package: &str) {
+    harness
+        .get_by_role_and_label(Role::ListItem, package)
+        .click();
+    harness.run();
 }
 
 pub(super) fn entry(text: &str, installed: Option<InstallReason>, origin: Origin) -> IndexEntry {
@@ -170,15 +181,19 @@ fn install_queues_an_offered_package() {
 
     harness.run();
 
+    open_row(&mut harness, "inkscape");
     harness.get_by_label("Install inkscape").click();
     harness.run();
 
     assert_eq!(
         harness.state().fixture.sent(),
-        [Command::from(PackagesCommand::Toggle {
-            package: name("inkscape"),
-            wish: Toggle::On,
-        })]
+        [
+            Command::from(PackagesCommand::Show(name("inkscape"))),
+            Command::from(PackagesCommand::Toggle {
+                package: name("inkscape"),
+                wish: Toggle::On,
+            })
+        ]
     );
 }
 
@@ -187,9 +202,14 @@ fn remove_asks_first_and_names_what_goes_along() {
     let mut harness = fixture(None).harness(PackagesPage::default());
     harness.run();
 
+    open_row(&mut harness, "gimp");
     harness.get_by_label("Remove gimp").click();
     harness.run();
-    assert!(harness.state().fixture.sent().is_empty(), "queued at once");
+    assert_eq!(
+        harness.state().fixture.sent(),
+        [Command::from(PackagesCommand::Show(name("gimp")))],
+        "nothing queued before the question is answered"
+    );
     assert!(
         harness
             .query_by_label("It takes along 1 dependency that nothing else needs:")
@@ -221,15 +241,19 @@ fn a_queued_wish_is_taken_back_from_its_row() {
     harness.run();
 
     assert!(harness.query_by_label("Removes with Apply").is_some());
-    harness.get_by_label("Take back paru").click();
+    open_row(&mut harness, "paru");
+    harness.get_by_label("Take Back paru").click();
     harness.run();
 
     assert_eq!(
         harness.state().fixture.sent(),
-        [Command::from(PackagesCommand::Toggle {
-            package: name("paru"),
-            wish: Toggle::On,
-        })]
+        [
+            Command::from(PackagesCommand::Show(name("paru"))),
+            Command::from(PackagesCommand::Toggle {
+                package: name("paru"),
+                wish: Toggle::On,
+            }),
+        ]
     );
 }
 
@@ -320,10 +344,10 @@ fn a_larger_desktop_font_makes_taller_rows_that_cut_no_text() {
     body_font(&harness.ctx, 20.0);
     harness.run();
 
-    assert_rows_hold_their_content(&harness, measured(20.0, row::height));
+    assert_rows_hold_their_content(&harness, measured(20.0, |ui| row::height(ui, false)));
 }
 
-pub(super) fn listed<S>(harness: &egui_kittest::Harness<'_, S>, package: &str) -> bool {
+pub(super) fn listed<S>(harness: &Harness<'_, S>, package: &str) -> bool {
     harness
         .query_by_role_and_label(Role::ListItem, package)
         .is_some()

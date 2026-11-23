@@ -111,7 +111,7 @@ fn warming_renders_the_body_text_size_before_any_widget_asks() {
     let harness = crate::testing::harness::<()>(100.0, 100.0).build_ui(|_| {});
     let ctx = &harness.ctx;
     let mut theme = ThemeIcons::new("Papirus");
-    theme.insert(GO_HOME.name(), Arc::from(SQUARE));
+    theme.insert(GO_HOME, Arc::from(SQUARE));
     crate::icons::use_theme(ctx, Some(Arc::new(theme)));
 
     super::warm(ctx);

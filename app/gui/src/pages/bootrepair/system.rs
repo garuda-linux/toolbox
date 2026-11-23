@@ -1,10 +1,10 @@
 use egui::Ui;
 use toolbox_core::features::bootrepair::page::{self, TargetChoice};
 use toolbox_core::features::bootrepair::{Encryption, Firmware, RepairFacts, System};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Select, Tone, banner, card, pill_button, section_intro,
 };
-use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::RootLayout;
 
 use super::dialog::Dialog;
@@ -60,7 +60,7 @@ fn select_row(
 fn installed(ui: &mut Ui, (facts, system): (&RepairFacts, &System), page: &mut BootRepairPage) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    heading(ui, icons::COMPUTER, "repair-system");
+    heading(ui, "repair-system");
     card(ui, |ui| {
         root(ui, (facts, system), page);
         let (firmware, firmware_detail) = texts::firmware(&ctx, facts.firmware);
@@ -123,12 +123,7 @@ fn repair(
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let title = text("repair-work");
-    section_intro(
-        ui,
-        icons::RUN_BUILD_CONFIGURE,
-        &title,
-        &text("repair-asks-first"),
-    );
+    section_intro(ui, &title, &text("repair-asks-first"));
 
     let choices = page::targets(facts);
     let target = page::target(facts, page.target.as_ref(), Some(system));

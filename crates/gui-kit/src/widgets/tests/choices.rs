@@ -181,10 +181,15 @@ fn the_measured_width_is_the_drawn_one() {
     );
 
     harness.run();
-    let field = crate::tokens::current(&harness.ctx).field;
-    let pill = crate::testing::filled_rect(&harness, field).expect("the pill");
 
-    assert!((pill.width() - *harness.state()).abs() < 0.5, "{pill:?}");
+    // The tabs are joined end to end, so the first tab's left edge to the
+    // last tab's right edge is the width the row measured.
+    let left = harness.get_by_label("System").rect().left();
+    let right = harness.get_by_label("User").rect().right();
+    assert!(
+        (right - left - *harness.state()).abs() < 0.5,
+        "{left}..{right}"
+    );
 }
 
 #[test]

@@ -18,10 +18,11 @@ use toolbox_gui::pages::kernels::KernelsPage;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::testing::{PageFixture, PageState};
 use toolbox_gui::{App, Setup, reader, snapshot};
+use toolbox_gui_kit::tokens;
 use toolbox_plan::{KernelRelease, PackageName};
 use toolbox_services::dkms::Dkms;
 
-use crate::common::{TALL, button, packages, window};
+use crate::common::{TALL, button, packages, queued_shown, window};
 use crate::look::look_for;
 use crate::system::{first_read, shows, step_until};
 
@@ -199,12 +200,12 @@ fn a_click_queues_a_kernel_with_its_headers_and_takes_it_back() {
     button(&harness, "Install linux-zen").click();
     harness.run();
     assert!(harness.query_by_label("Installs with Apply").is_some());
-    assert!(harness.query_by_label("changes queued").is_some());
+    assert!(queued_shown(&harness));
 
     // The Changes band covers the page's foot, where the row lies.
-    button(&harness, "Take back linux-zen").scroll_to_me();
+    button(&harness, "Take Back linux-zen").scroll_to_me();
     harness.run();
-    button(&harness, "Take back linux-zen").click();
+    button(&harness, "Take Back linux-zen").click();
     harness.run();
     assert!(harness.query_by_label("Installs with Apply").is_none());
 }
@@ -236,7 +237,7 @@ fn missing_headers_are_offered_and_queue() {
     let (mut harness, _runtime) = kernels(system(true));
     assert!(harness.query_by_label("Headers missing").is_some());
 
-    harness.get_by_label("Queue all headers").click();
+    harness.get_by_label("Queue All Headers").click();
     harness.run();
 
     assert!(
@@ -244,9 +245,9 @@ fn missing_headers_are_offered_and_queue() {
             .query_by_label("Headers install with Apply")
             .is_some()
     );
-    assert!(harness.query_by_label("Queue all headers").is_none());
+    assert!(harness.query_by_label("Queue All Headers").is_none());
 
-    harness.get_by_label("Don't install headers").click();
+    harness.get_by_label("Don't Install Headers").click();
     harness.run();
     assert!(harness.query_by_label("Headers missing").is_some());
 }
@@ -260,7 +261,7 @@ fn a_missing_module_build_queues_from_its_kernel() {
             .is_some()
     );
 
-    harness.get_by_label("Queue module builds").click();
+    harness.get_by_label("Queue Module Builds").click();
     harness.run();
 
     assert!(
@@ -268,7 +269,7 @@ fn a_missing_module_build_queues_from_its_kernel() {
             .query_by_label("vboxhost 7.1.6_OSE: build queued")
             .is_some()
     );
-    assert!(harness.query_by_label("Queue all builds").is_none());
+    assert!(harness.query_by_label("Queue All Builds").is_none());
 }
 
 #[test]
@@ -304,7 +305,7 @@ fn a_click_on_an_offered_kernel_asks_to_install_it() {
 #[test]
 fn the_version_and_the_running_note_are_secondary_text() {
     let harness = page(system(true));
-    let secondary = toolbox_gui_kit::tokens::current(&harness.ctx).secondary;
+    let secondary = tokens::current(&harness.ctx).secondary;
     let colour = |text| toolbox_gui_kit::testing::text_colour(&harness, text);
 
     assert_eq!(colour("6.14.0-4 from core"), Some(secondary));
@@ -319,7 +320,7 @@ fn the_version_and_the_running_note_are_secondary_text() {
 #[test]
 fn a_long_module_line_wraps_and_keeps_the_buttons_in_the_card() {
     let (harness, _runtime) = kernels(system(true));
-    let builds = harness.get_by_label("Queue module builds").rect();
+    let builds = harness.get_by_label("Queue Module Builds").rect();
     let lts = harness
         .get_by_role_and_label(Role::Button, "Remove linux-lts")
         .rect();
@@ -331,8 +332,10 @@ fn a_long_module_line_wraps_and_keeps_the_buttons_in_the_card() {
         lts.left(),
     );
     assert!(
-        lts.right() <= harness.ctx.content_rect().right() - 40.0,
-        "the buttons end at {}, outside the card",
+        lts.right()
+            <= harness.ctx.content_rect().right()
+                - f32::from(tokens::current(&harness.ctx).sizes.page_padding.right),
+        "the buttons end at {}, past the page margin",
         lts.right(),
     );
 }

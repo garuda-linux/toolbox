@@ -15,7 +15,7 @@ const TABS: [&str; 4] = ["Status", "Hardware", "Drivers", "Tools"];
 fn trailing_actions_sit_at_the_heading_and_take_clicks() {
     let mut harness = harness(600.0, 200.0).build_ui_state(
         |ui, clicked: &mut bool| {
-            SectionHeading::new(icons::RUN_BUILD, "Installed", "3 kernels")
+            SectionHeading::new("Installed", "3 kernels")
                 .trailing(80.0, |actions| {
                     if pill_button(actions, "Refresh", ButtonKind::Soft).clicked() {
                         *clicked = true;
@@ -35,10 +35,10 @@ fn trailing_actions_sit_at_the_heading_and_take_clicks() {
     assert!(*harness.state());
 }
 
-/// A header with a search-sized button at the left of the toolbar and a
-/// sort-sized one at the right, in a 600 wide column.
-fn toolbar() -> egui_kittest::Harness<'static> {
-    let mut harness = harness(600.0, 300.0).build_ui(|ui| {
+/// A header with a search-sized button and a sort-sized one in its
+/// toolbar, `width` wide.
+fn toolbar(width: f32) -> egui_kittest::Harness<'static> {
+    let mut harness = harness(width, 300.0).build_ui(|ui| {
         page_header(ui, "Services", "Units of the system.", 0.0, |_| {});
         page_toolbar(
             ui,
@@ -52,24 +52,37 @@ fn toolbar() -> egui_kittest::Harness<'static> {
     harness
 }
 
+/// KDE apps (Discover, Dolphin) put a page's search and sort into its
+/// toolbar, at the right of the title.
 #[test]
-fn the_toolbar_puts_its_ends_at_the_edges_of_the_column() {
-    let harness = toolbar();
+fn the_toolbar_sits_in_the_title_row_at_its_right_end() {
+    let harness = toolbar(600.0);
     let column = harness.ctx.content_rect();
     let search = harness.get_by_role_and_label(Role::Button, "Search").rect();
     let sort = harness.get_by_role_and_label(Role::Button, "Sort").rect();
     let title = harness.get_by_label("Services").rect();
 
-    assert!((search.left() - title.left()).abs() < 0.5);
     assert!(sort.right() <= column.right() + 0.5);
     assert!(
         sort.right() > column.right() - 20.0,
         "sort is not at the right edge"
     );
-    assert!(
-        (search.center().y - sort.center().y).abs() < 0.5,
-        "not one row"
-    );
+    assert!(search.right() <= sort.left(), "search not before the sort");
+    assert!(search.left() > title.right(), "search over the title");
+    for control in [search, sort] {
+        assert!(
+            (control.center().y - title.center().y).abs() < 1.0,
+            "not on the title's row"
+        );
+    }
+}
+
+#[test]
+fn a_toolbar_without_room_beside_the_title_takes_its_own_row() {
+    let harness = toolbar(200.0);
+    let search = harness.get_by_role_and_label(Role::Button, "Search").rect();
+    let title = harness.get_by_label("Services").rect();
+
     assert!(search.top() > title.bottom());
 }
 
@@ -79,7 +92,7 @@ fn an_icon_button_is_as_wide_as_its_width_says() {
     let seen = std::rc::Rc::clone(&widths);
     let mut harness = harness(300.0, 100.0).build_ui(move |ui| {
         let drawn = icon_button(ui, icons::VIEW_REFRESH, "Refresh").rect.width();
-        seen.set((icon_button_width(ui), drawn));
+        seen.set((icon_button_width(), drawn));
     });
 
     harness.run();
@@ -94,7 +107,7 @@ fn tab_row(ui: &mut Ui) {
 }
 
 fn tabs_width(ui: &Ui) -> f32 {
-    super::super::segmented_width(ui, &TABS) + 8.0 + icon_button_width(ui)
+    super::super::segmented_width(ui, &TABS) + 8.0 + icon_button_width()
 }
 
 /// Where a header's title and its refresh button land, with or without
@@ -104,7 +117,7 @@ fn refresh_of(subtitle: &'static str, tabs: bool) -> (egui::Rect, egui::Rect) {
         let width = if tabs {
             tabs_width(ui)
         } else {
-            icon_button_width(ui)
+            icon_button_width()
         };
 
         page_header(ui, "Network", subtitle, width, |ui| {
@@ -190,7 +203,7 @@ fn a_narrow_header_keeps_the_refresh_after_the_tabs() {
 fn page_titles_and_section_titles_are_headings_for_screen_readers() {
     let mut harness = harness(700.0, 300.0).build_ui(|ui| {
         page_header(ui, "Network", "The connection.", 40.0, |_| {});
-        SectionHeading::new(icons::RUN_BUILD, "Radios", "").show(ui);
+        SectionHeading::new("Radios", "").show(ui);
     });
 
     harness.run();
@@ -248,9 +261,9 @@ fn f5_leaves_a_disabled_refresh_button_alone() {
     assert_eq!(*harness.state(), 0);
 }
 
-/// A header `width` wide with four tabs and Refresh, and a purpose long
-/// enough to wrap beside them. Returns the title, the purpose and the tabs.
-fn tabbed_header(width: f32, title: &'static str) -> (egui::Rect, egui::Rect, egui::Rect) {
+/// A header `width` wide with four tabs and Refresh, and a purpose that
+/// is not drawn in the toolbar row. Returns the title and the tabs.
+fn tabbed_header(width: f32, title: &'static str) -> (egui::Rect, egui::Rect) {
     const PURPOSE: &str = "Keep the system in a good state: updates, cleanups, tools and repairs.";
     let mut harness = harness(width, 300.0).build_ui(move |ui| {
         let controls = tabs_width(ui);
@@ -270,30 +283,22 @@ fn tabbed_header(width: f32, title: &'static str) -> (egui::Rect, egui::Rect, eg
                 .rect(),
         );
 
-    (
-        harness.get_by_label(title).rect(),
-        harness.get_by_label(PURPOSE).rect(),
-        tabs,
-    )
+    (harness.get_by_label(title).rect(), tabs)
 }
 
+/// The purpose heads the body ([`page_layout_shaped`]), so the toolbar row
+/// holds the title and the tabs, which fit its height.
 #[test]
-fn the_purpose_runs_under_the_tabs_to_the_column_edge() {
-    let (_, purpose, tabs) = tabbed_header(800.0, "Maintenance");
+fn the_tabs_fit_the_toolbar_row() {
+    let (_, tabs) = tabbed_header(800.0, "Maintenance");
+    let row = crate::tokens::Sizes::DEFAULT.toolbar_height;
 
-    assert!(
-        purpose.right() > tabs.left(),
-        "the purpose {purpose:?} wraps short of the tabs {tabs:?}"
-    );
-    assert!(
-        purpose.top() >= tabs.bottom(),
-        "the purpose {purpose:?} runs into the tabs {tabs:?}"
-    );
+    assert!(tabs.height() <= row, "the tabs {tabs:?} outgrow the row");
 }
 
 #[test]
 fn the_tabs_stay_on_the_title_line_while_the_title_fits_beside_them() {
-    let (title, _, tabs) = tabbed_header(560.0, "Boot");
+    let (title, tabs) = tabbed_header(560.0, "Boot");
 
     assert!(
         (tabs.center().y - title.center().y).abs() < 0.5,
@@ -304,7 +309,7 @@ fn the_tabs_stay_on_the_title_line_while_the_title_fits_beside_them() {
 #[test]
 fn a_section_intro_leaves_no_empty_label() {
     let mut harness = harness(600.0, 200.0).build_ui(|ui| {
-        super::super::section_intro(ui, icons::RUN_BUILD, "Installed", "The kernels on disk.");
+        super::super::section_intro(ui, "Installed", "The kernels on disk.");
     });
 
     harness.run();

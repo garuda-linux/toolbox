@@ -8,7 +8,9 @@ use std::collections::BTreeMap;
 use egui::{Context, Id, Label, Layout, ScrollArea, Ui, vec2};
 use toolbox_core::features::merges::{CachedComparison, Pick};
 use toolbox_gui_kit::fonts::{BODY, Weight};
-use toolbox_gui_kit::widgets::{DialogWidth, ModalWrapper, NavLook, Tone, banner, nav_row, rich};
+use toolbox_gui_kit::widgets::{
+    DialogWidth, ModalWrapper, NavLook, Pending, Tone, banner, nav_row, rich,
+};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::{CopyKind, MergeCopy};
 use toolbox_system::MergePair;
@@ -72,7 +74,7 @@ pub fn show(dialog: &mut MergeDialog, ctx: &Context, context: &PageContext<'_>) 
     let close = i18n::text(ctx, "dialog-close");
     let pairs = context.service::<Home>().merges().pairs();
 
-    ModalWrapper::new(Id::unique("toolbox_gui::home::merges"), &title)
+    let closed = ModalWrapper::new(Id::unique("toolbox_gui::home::merges"), &title)
         .title_bar(&close)
         .width(DialogWidth::Wide)
         .show(ctx, |ui| match pairs.get() {
@@ -98,7 +100,14 @@ pub fn show(dialog: &mut MergeDialog, ctx: &Context, context: &PageContext<'_>) 
                 ui.loading(&i18n::text(ctx, "home-merges-reading"));
             }
         })
-        .closed
+        .closed;
+
+    let cancelled = cancel().get(ctx).is_some();
+    if cancelled {
+        cancel().release(ctx);
+    }
+
+    closed || cancelled
 }
 
 fn body(ui: &mut Ui, dialog: &mut MergeDialog, context: &PageContext<'_>, pairs: &[MergePair]) {
@@ -185,4 +194,10 @@ const fn take_file_id(kind: CopyKind) -> &'static str {
         CopyKind::Saved | CopyKind::OlderSave => "home-merges-restore-file",
         CopyKind::New | CopyKind::Orig => "home-merges-use-file",
     }
+}
+
+/// Cancel closes the dialog and keeps the queued changes, as the title's
+/// close does.
+pub(super) fn cancel() -> Pending<()> {
+    Pending::new(Id::unique("toolbox_gui::home::merges::cancel"))
 }

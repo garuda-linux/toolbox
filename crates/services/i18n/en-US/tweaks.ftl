@@ -1,5 +1,5 @@
 
-tweaks-shell-network = Shell and network
+tweaks-shell-network = Shell and Network
 tweaks-garuda-update = Garuda Update
 tweaks-unavailable = Not available on this system
 tweaks-unread = Could not be read

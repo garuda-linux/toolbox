@@ -1,6 +1,6 @@
 
 page-users-subtitle = Add users, set passwords, lock accounts and change groups.
-users-refresh = Read again
+users-refresh = Read Again
 users-tabs = Users and groups tabs
 users-tab-users = Users
 users-tab-groups = Groups
@@ -9,10 +9,10 @@ users-cancel = Cancel
 users-list-separator = {", "}
 
 users-search = Search users
-users-search-hint = Search users…
+users-search-hint = Search…
 users-search-detail = The search looks at user names, user IDs, full names, home folders, shells and groups.
-users-add = Add user…
-users-regular-only = Regular users only
+users-add = Add User…
+users-regular-only = Regular Users Only
 users-regular-only-detail = Hides the accounts of the system and its services.
 users-sort = Sort users
 users-order-name = User name
@@ -27,7 +27,7 @@ users-unavailable = User accounts are not available
 users-unavailable-detail = /etc/passwd and /etc/group could not be read.
 users-none-regular = No regular users
 users-none-regular-detail = Clear the filter to see the accounts of the system.
-users-show-all = Show all accounts
+users-show-all = Show All Accounts
 users-list = Users
 users-keys = Arrow keys pick an account. Return edits it, the Menu key opens its other actions.
 
@@ -42,18 +42,18 @@ users-detail = User ID { $uid }, home { $home }, shell { $shell }
 users-groups-line = Groups: { $groups }
 users-not-set = not set
 users-edit = Edit…
-users-password = Set password…
+users-password = Set Password…
 # What a screen reader hears for the row button above. $user is the account.
 users-edit-named = Edit { $user }…
 users-more = More actions for { $user }
-users-lock = Queue lock
-users-unlock = Queue unlock
-users-unqueue-lock = Don't lock
-users-unqueue-unlock = Don't unlock
+users-lock = Queue Lock
+users-unlock = Queue Unlock
+users-unqueue-lock = Don't Lock
+users-unqueue-unlock = Don't Unlock
 users-lock-unknown = Lock: state not known
 users-groups = Groups…
 users-remove = Remove…
-users-keep = Unqueue removal
+users-keep = Unqueue Removal
 users-root = Root accounts are not changed here.
 
 users-locks-loading = Asking which accounts are locked…
@@ -116,7 +116,7 @@ users-password-too-long = The password is too long.
 users-password-control-character = The password cannot hold a line break or another control character.
 users-password-mismatch = The two passwords differ.
 
-users-add-title = Add a user
+users-add-title = Add a User
 users-field-name = User name
 users-field-name-hint = Lowercase letters, digits, hyphens and underscores, at most 32 characters.
 users-field-full-name = Full name
@@ -142,8 +142,8 @@ users-other-groups = Other groups beside the user's own one
 users-groups-search = Search groups
 users-groups-search-hint = Search groups…
 users-add-note = The user is created right away. This asks for your own password.
-users-add-confirm = Add user now
-users-add-more = More options
+users-add-confirm = Add User Now
+users-add-more = More Options
 # Beside the grayed out "Add user now": the first thing it waits for.
 users-add-why-no-name = Enter a user name.
 users-add-why-bad-name = The user name cannot be used. The note under it says why.
@@ -158,11 +158,11 @@ users-move-yes = Applying this moves every file from { $old } to { $new }. The n
 users-move-no = Only the entry of the account changes and no file is moved: everything stays in { $old }. { $new } must exist already, or { $user } has no home folder at the next login. { $user } must be logged out when you apply this.
 users-home-current-user = The home folder of the account you are logged in with cannot change while it runs programs.
 users-edit-note = The changes wait in the queue until you apply them.
-users-queue-changes = Queue changes
+users-queue-changes = Queue Changes
 
-users-password-title = Set the password of { $user }
+users-password-title = Set the Password of { $user }
 users-password-note = The password is set right away and asks for your own password. This page shows when it is done. The password is not kept in the queue or in any file of Garuda Toolbox.
-users-password-confirm = Set password now
+users-password-confirm = Set Password Now
 
 users-groups-title = Groups of { $user }
 users-groups-note = Changes wait in the queue until you apply them. They take effect at the user's next login.
@@ -170,7 +170,7 @@ users-choice-detail = { $group } (group ID { $gid }, members: { $members })
 users-choice-primary = { $group } (primary group, group ID { $gid }, members: { $members })
 users-choice-new = { $group } (new group)
 
-users-remove-title = Remove the user { $user }?
+users-remove-title = Remove the User { $user }?
 users-remove-goes = The removal waits in the queue until you apply it. This goes:
 users-remove-account = • The account { $user } and its password
 users-remove-group = • The group { $user }, when the user is its only member
@@ -178,12 +178,12 @@ users-remove-memberships = • Its membership in: { $groups }
 users-remove-home-goes = • The home folder { $home } with every file in it, and the mail spool
 users-remove-home-stays = The home folder { $home } stays on the disk.
 users-remove-delete-home = Also delete the home folder
-users-remove-confirm = Queue removal
+users-remove-confirm = Queue Removal
 
 groups-search = Search groups
-groups-search-hint = Search groups…
+groups-search-hint = Search…
 groups-search-detail = The search looks at group names, group IDs and members.
-groups-add = Add group…
+groups-add = Add Group…
 groups-sort = Sort groups
 groups-order-name = Group name
 groups-order-id = Group ID
@@ -200,15 +200,15 @@ groups-tag-removed = Removal queued
 groups-remove = Remove…
 # What a screen reader hears for the row button above.
 groups-remove-named = Remove { $group }…
-groups-unqueue-new = Don't add
-groups-unqueue-new-named = Don't add { $group }
+groups-unqueue-new = Don't Add
+groups-unqueue-new-named = Don't Add { $group }
 groups-unqueue-removal = Keep
 groups-unqueue-removal-named = Keep { $group }
-groups-remove-title = Remove the group { $group }?
+groups-remove-title = Remove the Group { $group }?
 groups-remove-detail = Its members leave it. Files that belong to the group keep its number as their group. The removal waits in the queue until you apply it.
-groups-remove-confirm = Queue removal
+groups-remove-confirm = Queue Removal
 
-groups-add-title = Add a group
+groups-add-title = Add a Group
 groups-field-name = Group name
 groups-add-note = The group waits in the queue until you apply it. Users can be put into it before that.
-groups-add-confirm = Queue group
+groups-add-confirm = Queue Group

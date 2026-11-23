@@ -70,9 +70,12 @@ fn the_box_starts_where_the_text_fields_above_it_start() {
     harness.run();
     let accent = crate::tokens::current(&harness.ctx).accent;
     let square = crate::testing::filled_rect(&harness, accent).expect("a checked box");
+
     let left = *harness.state();
+
+    // Darkly's slot starts at the column and its box sits 1 px in.
     assert!(
-        (square.left() - left).abs() < 0.5,
+        (square.left() - 1.0 - left).abs() < 0.5,
         "the box starts at {} but the column at {left}",
         square.left()
     );
@@ -120,7 +123,7 @@ fn outside_a_card_the_fill_and_the_target_are_one_rect() {
         .get_by_role_and_label(Role::CheckBox, "Kitty")
         .rect();
 
-    let hover = crate::tokens::current(&harness.ctx).hover;
+    let hover = crate::tokens::current(&harness.ctx).item_hover;
     let fill = crate::testing::filled_rect(&harness, hover).expect("the row is lit");
 
     assert!(

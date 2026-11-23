@@ -2,23 +2,25 @@
 //! `ModalWrapper`: named for screen readers, a title bar with Close,
 //! Escape to leave, and never larger than the window.
 
+mod answers;
 mod focus;
+mod look;
 mod pending;
 mod question;
 
+pub use answers::{confirm_buttons, confirm_buttons_when, confirm_buttons_why};
 use egui::{
-    Align, Align2, AreaState, Color32, Context, CornerRadius, Frame, Id, LayerId, Layout, Margin,
-    Modal, Ui, vec2,
+    Align, Align2, AreaState, Color32, Context, CornerRadius, Id, LayerId, Layout, Modal, Sense,
+    Ui, vec2,
 };
 pub use pending::Pending;
 pub use question::{Asked, Question, question};
 
-use super::buttons::mark_raised_surface;
 use super::top_light::paint_top_light;
-use super::{ButtonKind, icon_button, pill_button, pill_width, rich};
-use crate::fonts::{BODY, SECTION, Weight};
-use crate::theme::POPOVER_RADIUS;
-use crate::{UiExt as _, frost, icons, tokens};
+use super::{icon_button, icon_button_width, rich};
+use crate::fonts::{PAGE_TITLE, Weight};
+use crate::toasts::paint_popup_shadow;
+use crate::{frost, icons, tokens};
 
 const WINDOW_MARGIN: f32 = 20.0;
 /// Where a top-anchored dialog hangs, as a share of the window's height.
@@ -82,13 +84,6 @@ pub struct ModalOutcome<R> {
 pub enum Confirmation {
     Cancelled,
     Confirmed,
-}
-
-#[derive(Clone, Copy)]
-struct Answers<'a> {
-    cancel: &'a str,
-    confirm: &'a str,
-    kind: ButtonKind,
 }
 
 impl<'a> ModalWrapper<'a> {
@@ -163,19 +158,17 @@ impl<'a> ModalWrapper<'a> {
             area = area.anchor(Align2::CENTER_TOP, vec2(0.0, hang));
         }
 
-        let sizes = tokens::current(ctx).sizes;
+        let current = tokens::current(ctx);
+        let sizes = current.sizes;
 
-        // Card padding, not the popup margin, so Close and the buttons keep
-        // the text's room from the edge. Corners and shadow are the menus',
-        // so its menus read as of one kind with it.
+        // Card padding, not the popup margin, keeps the text's room from the
+        // edge. The frame is Kirigami's `Dialog`, the shadow Darkly's popup one.
         let style = ctx.global_style();
-        let frame = Frame::popup(&style)
-            .inner_margin(Margin::same(sizes.card_padding.left))
-            .corner_radius(CornerRadius::same(POPOVER_RADIUS))
-            .shadow(style.visuals.popup_shadow);
+        let frame = look::frame(&style, &current, sizes.card_padding.left);
 
         let layer = area.layer();
         backdrop(ctx, layer);
+        let shadow = ctx.layer_painter(layer).add(egui::Shape::Noop);
         let last_size = AreaState::load(ctx, self.id).and_then(|state| state.size);
         focus::shown(ctx, self.id);
 
@@ -199,7 +192,6 @@ impl<'a> ModalWrapper<'a> {
                 }
 
                 focus::holder(ui, self.id, self.name);
-                mark_raised_surface(ui);
 
                 if let Some(close) = self.close {
                     closed |= title_bar(ui, self.name, close);
@@ -208,11 +200,15 @@ impl<'a> ModalWrapper<'a> {
                 content(ui)
             });
 
-        paint_top_light(
-            &ctx.layer_painter(layer),
+        let painter = ctx.layer_painter(layer);
+        paint_popup_shadow(
+            &painter,
+            shadow,
             modal.response.rect,
             frame.corner_radius,
+            &current,
         );
+        paint_top_light(&painter, modal.response.rect, frame.corner_radius);
 
         // egui places an area by the size it had last frame, so a dialog whose
         // content grew or shrank would show one frame off the centre.
@@ -249,114 +245,33 @@ fn backdrop(ctx: &Context, layer: LayerId) {
     painter.rect_filled(screen, 0.0, tokens::current(ctx).scrim);
 }
 
-/// `cancel` and the `confirm` button of `kind` at the dialog's right, the
-/// confirming one last.
-///
-/// Cancel comes first for the keyboard too, so Tab reaches the safe
-/// answer before the other. A destructive question
-/// passes [`ButtonKind::Danger`].
-pub fn confirm_buttons(
-    ui: &mut Ui,
-    cancel: &str,
-    confirm: &str,
-    kind: ButtonKind,
-) -> Option<Confirmation> {
-    confirm_buttons_when(ui, cancel, confirm, kind, true)
-}
-
-/// [`confirm_buttons`] whose `confirm` is greyed out unless `ready`, for a
-/// form whose fields are not complete yet. Cancel always works.
-pub fn confirm_buttons_when(
-    ui: &mut Ui,
-    cancel: &str,
-    confirm: &str,
-    kind: ButtonKind,
-    ready: bool,
-) -> Option<Confirmation> {
-    let answers = Answers {
-        cancel,
-        confirm,
-        kind,
-    };
-
-    buttons(ui, answers, ready, None)
-}
-
-/// [`confirm_buttons_when`] that says `why` beside the buttons while
-/// `confirm` waits, so a greyed out button never leaves the user guessing.
-pub fn confirm_buttons_why(
-    ui: &mut Ui,
-    cancel: &str,
-    confirm: &str,
-    kind: ButtonKind,
-    why: Option<&str>,
-) -> Option<Confirmation> {
-    let answers = Answers {
-        cancel,
-        confirm,
-        kind,
-    };
-
-    buttons(ui, answers, why.is_none(), why)
-}
-
-fn buttons(
-    ui: &mut Ui,
-    answers: Answers<'_>,
-    ready: bool,
-    why: Option<&str>,
-) -> Option<Confirmation> {
-    let Answers {
-        cancel,
-        confirm,
-        kind,
-    } = answers;
-
-    let tokens = tokens::current(ui.ctx());
-    let sizes = tokens.sizes;
-    ui.add_space(sizes.dialog_gap);
-    ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing.x = sizes.control_gap;
-        let buttons = pill_width(ui, cancel) + sizes.control_gap + pill_width(ui, confirm);
-        let room = (ui.available_width() - buttons - sizes.control_gap).max(0.0);
-        if let Some(why) = why {
-            // As tall as the buttons, so a one-line hint centres on them. The
-            // row's own spacing follows it, no added gap.
-            let text = rich(ui, why, Weight::Regular, BODY, tokens.secondary);
-            let line = Layout::left_to_right(Align::Center);
-            ui.allocate_ui_with_layout(vec2(room, crate::theme::PILL_HEIGHT), line, |ui| {
-                ui.set_width(room);
-                ui.add(egui::Label::new(text).wrap());
-            });
-        } else {
-            ui.add_space(room + sizes.control_gap);
-        }
-
-        if pill_button(ui, cancel, ButtonKind::Soft).clicked() {
-            return Some(Confirmation::Cancelled);
-        }
-
-        ui.enabled_ui(ready, |ui| pill_button(ui, confirm, kind))
-            .inner
-            .clicked()
-            .then_some(Confirmation::Confirmed)
-    })
-    .inner
-}
-
 fn title_bar(ui: &mut Ui, title: &str, close: &str) -> bool {
     let tokens = tokens::current(ui.ctx());
+
+    // As tall as the Close tool button, so Close and the title sit on the
+    // dialog's margin. A horizontal row reads its height before it runs.
     let clicked = ui
-        .horizontal(|ui| {
-            let heading = ui.label(rich(ui, title, Weight::Bold, SECTION, tokens.text));
-            super::mark_heading(ui, &heading, title, 2);
-            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                icon_button(ui, icons::WINDOW_CLOSE, close).clicked()
+        .scope(|ui| {
+            ui.spacing_mut().interact_size.y = icon_button_width();
+            ui.horizontal(|ui| {
+                // Kirigami's dialog title is a level 1 heading in the DemiBold
+                // weight, which the desktop's own weight stands for here.
+                let heading = ui.label(rich(ui, title, Weight::SemiBold, PAGE_TITLE, tokens.text));
+                super::mark_heading(ui, &heading, title, 1);
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    icon_button(ui, icons::WINDOW_CLOSE, close).clicked()
+                })
+                .inner
             })
             .inner
         })
         .inner;
 
+    // Kirigami's dialog header sets the title off from the content with a
+    // rule in the outline colour.
+    ui.add_space(tokens.sizes.tight_gap);
+    let (rule, _) = ui.allocate_exact_size(vec2(ui.available_width(), 1.0), Sense::hover());
+    ui.painter().rect_filled(rule, 0.0, tokens.outline);
     ui.add_space(tokens.sizes.card_gap);
     clicked
 }

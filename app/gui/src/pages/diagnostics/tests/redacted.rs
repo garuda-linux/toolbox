@@ -22,7 +22,7 @@ fn naming(user: &str, plain: &str) -> Page {
 fn the_question_shows_the_redacted_text_and_how_much_was_replaced() {
     let mut harness = page(naming("ada", "login of ada from 8.8.4.4\n"));
 
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
 
     let preview = harness
@@ -45,7 +45,7 @@ fn share_waits_for_the_redacted_text() {
         ..report()
     });
 
-    let share = harness.get_by_label("Share report…");
+    let share = harness.get_by_label("Share Report…");
 
     assert!(
         share.accesskit_node().is_disabled(),
@@ -57,7 +57,7 @@ fn share_waits_for_the_redacted_text() {
 fn the_search_counts_its_matches_in_the_text_to_upload() {
     let mut harness = page(naming("ada", "kernel: oops\nkernel: oops again\n"));
 
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
     harness.get_by_label("Search the text").click();
     harness.run();
@@ -66,7 +66,7 @@ fn the_search_counts_its_matches_in_the_text_to_upload() {
 
     assert!(harness.query_by_label("1 of 2").is_some());
 
-    harness.get_by_label("Next match").click();
+    harness.get_by_label("Next Match").click();
     harness.run();
 
     assert!(harness.query_by_label("2 of 2").is_some());

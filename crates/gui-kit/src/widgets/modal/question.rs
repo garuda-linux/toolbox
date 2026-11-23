@@ -1,6 +1,8 @@
 use egui::{Context, Id, Label};
 
-use super::{Confirmation, DialogWidth, ModalWrapper, confirm_buttons};
+use super::answers::confirm_buttons_iconed;
+use super::{Confirmation, DialogWidth, ModalWrapper};
+use crate::icons::Icon;
 use crate::widgets::ButtonKind;
 
 /// The texts and look of a [`question`]. Every text is already
@@ -13,6 +15,8 @@ pub struct Question<'a> {
     pub cancel: &'a str,
     pub confirm: &'a str,
     pub kind: ButtonKind,
+    /// The affirmative answer's own icon, or the standard one of `kind`.
+    pub icon: Option<Icon>,
     pub width: DialogWidth,
 }
 
@@ -31,7 +35,13 @@ pub fn question(ctx: &Context, id: Id, question: Question<'_>) -> Asked {
         .width(question.width)
         .show(ctx, |ui| {
             ui.add(Label::new(question.body).wrap());
-            confirm_buttons(ui, question.cancel, question.confirm, question.kind)
+            confirm_buttons_iconed(
+                ui,
+                question.cancel,
+                question.confirm,
+                question.kind,
+                question.icon,
+            )
         });
 
     Asked {

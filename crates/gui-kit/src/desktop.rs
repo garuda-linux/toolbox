@@ -20,6 +20,7 @@ use crate::Palette;
 pub struct Colors {
     pub window: Option<Color32>,
     pub view: Option<Color32>,
+    pub button: Option<Color32>,
     pub text: Option<Color32>,
     pub accent: Option<Color32>,
     pub on_accent: Option<Color32>,
@@ -28,6 +29,14 @@ pub struct Colors {
     pub success: Option<Color32>,
     pub link: Option<Color32>,
     pub visited: Option<Color32>,
+    pub active: Option<Color32>,
+    pub complementary: Option<Color32>,
+    pub complementary_text: Option<Color32>,
+    pub decoration_hover: Option<Color32>,
+    pub decoration_focus: Option<Color32>,
+    pub tooltip: Option<Color32>,
+    pub tooltip_text: Option<Color32>,
+    pub contrast: Option<i8>,
 }
 
 /// A font as the desktop names it. The app finds the file.
@@ -55,6 +64,7 @@ impl Colors {
         Palette {
             window: self.window.unwrap_or(base.window),
             view: self.view.unwrap_or(base.view),
+            button: self.button.or(base.button),
             text: self.text.unwrap_or(base.text),
             accent: self.accent.unwrap_or(base.accent),
             on_accent: self.on_accent.unwrap_or(base.on_accent),
@@ -63,6 +73,14 @@ impl Colors {
             success: self.success.unwrap_or(base.success),
             link: self.link.or(base.link),
             visited: self.visited.or(base.visited),
+            active: self.active.or(base.active),
+            complementary: self.complementary.or(base.complementary),
+            complementary_text: self.complementary_text.or(base.complementary_text),
+            decoration_hover: self.decoration_hover.or(base.decoration_hover),
+            decoration_focus: self.decoration_focus.or(base.decoration_focus),
+            tooltip: self.tooltip.or(base.tooltip),
+            tooltip_text: self.tooltip_text.or(base.tooltip_text),
+            contrast: self.contrast.or(base.contrast),
             tiles: base.tiles,
             ansi: base.ansi,
         }

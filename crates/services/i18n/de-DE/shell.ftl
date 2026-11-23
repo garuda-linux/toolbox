@@ -2,6 +2,7 @@
 sidebar-collapse = Seitenleiste einklappen
 sidebar-expand = Seitenleiste ausklappen
 sidebar-search = Suchen
+sidebar-search-hint = Alles durchsuchen
 
 console-title = Konsole
 console-idle = Es werden keine Änderungen übernommen

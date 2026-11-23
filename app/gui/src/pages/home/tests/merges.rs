@@ -74,7 +74,7 @@ fn review_reads_the_files_and_opens_the_dialog() {
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Configuration files to merge")
+            .query_by_role_and_label(Role::Dialog, "Configuration Files to Merge")
             .is_some()
     );
     assert!(
@@ -90,7 +90,7 @@ fn the_whole_new_file_is_queued_with_the_marks_of_both() {
     harness.state().fixture.sent();
 
     harness
-        .get_by_role_and_label(Role::Button, "Use new file")
+        .get_by_role_and_label(Role::Button, "Use New File")
         .click();
     harness.run();
 
@@ -107,19 +107,19 @@ fn a_merge_needs_a_pick_that_takes_a_change() {
 
     assert!(
         harness
-            .get_by_role_and_label(Role::Button, "Queue the merge")
+            .get_by_role_and_label(Role::Button, "Queue the Merge")
             .accesskit_node()
             .is_disabled()
     );
 
     harness
-        .get_by_role_and_label(Role::RadioButton, "Take new")
+        .get_by_role_and_label(Role::RadioButton, "Take New")
         .click();
     harness.run();
     harness.state().fixture.sent();
 
     harness
-        .get_by_role_and_label(Role::Button, "Queue the merge")
+        .get_by_role_and_label(Role::Button, "Queue the Merge")
         .click();
     harness.run();
 
@@ -139,7 +139,7 @@ fn a_copy_without_its_file_offers_to_take_its_place() {
     assert!(harness.query_by_label_contains("is gone").is_some());
 
     harness
-        .get_by_role_and_label(Role::Button, "Use new file")
+        .get_by_role_and_label(Role::Button, "Use New File")
         .click();
     harness.run();
 
@@ -156,12 +156,12 @@ fn a_copy_equal_to_the_file_can_only_go() {
     assert!(harness.query_by_label_contains("the same as").is_some());
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Use new file")
+            .query_by_role_and_label(Role::Button, "Use New File")
             .is_none()
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Remove the copy")
+            .query_by_role_and_label(Role::Button, "Remove the Copy")
             .is_some()
     );
 }
@@ -171,7 +171,7 @@ fn the_dialog_in_dark_and_light() {
     let mut harness = opened(vec![pair(Some(current()))]);
 
     harness
-        .get_by_role_and_label(Role::RadioButton, "Take new")
+        .get_by_role_and_label(Role::RadioButton, "Take New")
         .click();
     harness.run();
 
@@ -194,7 +194,7 @@ fn the_card_offers_review_and_meld() {
     harness.snapshot("home/merges_card_dark");
     assert!(
         harness
-            .query_by_label("More actions for Configuration files to merge")
+            .query_by_label("More actions for Configuration Files to Merge")
             .is_some()
     );
 }
@@ -213,7 +213,27 @@ fn closing_the_dialog_stops_its_read() {
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Configuration files to merge")
+            .query_by_role_and_label(Role::Dialog, "Configuration Files to Merge")
             .is_none()
+    );
+}
+
+/// Cancel ends the first line of the actions, so it centres on the buttons
+/// beside it. A row that wraps must not centre it on both lines.
+#[test]
+fn cancel_centres_on_the_first_line_of_the_actions() {
+    let harness = opened(vec![pair(Some(current()))]);
+
+    let cancel = harness.get_by_role_and_label(Role::Button, "Cancel").rect();
+
+    let keep = harness
+        .get_by_role_and_label(Role::Button, "Keep Current File")
+        .rect();
+
+    assert!(
+        (cancel.center().y - keep.center().y).abs() < 1.0,
+        "Cancel centre {} and Keep Current File centre {}",
+        cancel.center().y,
+        keep.center().y
     );
 }

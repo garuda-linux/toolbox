@@ -20,7 +20,7 @@ use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{GroupName, ShellPath, UserName};
 use toolbox_system::{LockProblem, LockSource, Probe, ProbeError, ProbeIssue};
 
-use crate::common::{HEIGHT, type_into, window};
+use crate::common::{HEIGHT, queued_shown, type_into, window};
 use crate::look::look_for;
 use crate::system::{first_read, settle, step_until};
 
@@ -196,7 +196,7 @@ fn the_helper_is_asked_once_and_a_locked_account_offers_its_unlock() {
     harness.get_by_label("More actions for ada").click();
     harness.run();
 
-    assert!(harness.query_by_label("Queue unlock").is_some());
+    assert!(harness.query_by_label("Queue Unlock").is_some());
     assert_eq!(fixture.helper.0.load(Ordering::SeqCst), 1);
 }
 
@@ -207,11 +207,15 @@ fn a_queued_lock_waits_in_the_queue_and_shows_on_the_row() {
 
     harness.get_by_label("More actions for grace").click();
     harness.run();
-    harness.get_by_label("Queue lock").click();
+    harness.get_by_label("Queue Lock").click();
     harness.run();
 
-    assert!(harness.query_by_label("1 change queued").is_some());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert_eq!(
+        harness.query_all_by_label("1 change queued").count(),
+        2,
+        "the row tag and the footer"
+    );
+    assert!(queued_shown(harness));
 }
 
 #[test]
@@ -223,15 +227,15 @@ fn a_new_group_shows_as_new_before_it_is_applied() {
         .get_by_role_and_label(Role::RadioButton, "Groups")
         .click();
     harness.run();
-    harness.get_by_label("Add group…").click();
+    harness.get_by_label("Add Group…").click();
     harness.run();
     type_into(harness, "Group name", "games");
     harness.run();
-    harness.get_by_label("Queue group").click();
+    harness.get_by_label("Queue Group").click();
     harness.run();
 
     assert!(harness.query_by_label("New").is_some());
-    assert!(harness.query_by_label("Don't add games").is_some());
+    assert!(harness.query_by_label("Don't Add games").is_some());
 }
 
 #[test]
@@ -241,7 +245,7 @@ fn the_password_groups_and_remove_dialogs_are_pictured() {
 
     harness.get_by_label("More actions for ada").click();
     harness.run();
-    harness.get_by_label("Set password…").click();
+    harness.get_by_label("Set Password…").click();
     harness.run();
     harness.snapshot("users/password_dark");
     harness.key_press(egui::Key::Escape);
@@ -282,4 +286,37 @@ fn an_unread_account_list_says_so_on_the_page() {
     });
     settle(harness);
     harness.snapshot("users/error_dark");
+}
+
+/// The header's search field sits beside the sort and the tabs, so at the
+/// usual window width it is narrow. Its hint must fit beside the glyph and the
+/// padding in both languages.
+#[test]
+fn the_search_hint_fits_the_header_field_in_english_and_german() {
+    // The glyph, its gap and the padding on both sides of the field.
+    const CHROME: f32 = 40.0;
+
+    for (language, hint) in [("en-US", "Search…"), ("de-DE", "Suchen…")] {
+        let mut fixture = users();
+        let harness = fixture.harness();
+        let language = language.parse().expect("a language");
+        toolbox_gui::i18n::set_language(&harness.ctx, &language);
+        harness.run();
+
+        let shape = toolbox_gui_kit::testing::painted_text(harness, hint)
+            .unwrap_or_else(|| panic!("{language:?}: the hint {hint:?} is painted"));
+
+        let tokens = toolbox_gui_kit::tokens::current(&harness.ctx);
+        let field = toolbox_gui_kit::testing::filled_rects(harness, tokens.input)
+            .into_iter()
+            .find(|rect| rect.contains(shape.pos))
+            .unwrap_or_else(|| panic!("{language:?}: the hint sits in a field"));
+
+        assert!(
+            shape.galley.size().x <= field.width() - CHROME,
+            "{language:?}: the hint is {} px in a {} px field",
+            shape.galley.size().x,
+            field.width()
+        );
+    }
 }

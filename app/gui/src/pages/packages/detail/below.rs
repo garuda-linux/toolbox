@@ -12,11 +12,10 @@ use toolbox_core::features::packages::detail::{HISTORY_SHOWN, file_list, matchin
 use toolbox_core::features::packages::history::HistoryEntry;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
-use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
     ButtonKind, PropertyTexts, SearchTexts, counted_disclosure, disclosure, loading_indicator,
-    padded_card, pill_button, property_list, rich, search_field,
+    padded_card, pill_button, property_list, push_height, rich, search_field,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_text::OutsideText;
@@ -69,7 +68,7 @@ pub fn files(
     ui.horizontal(|ui| {
         // As tall as Copy list, so the fold centres on the button's middle
         // and not on egui's shorter row.
-        ui.set_min_height(PILL_HEIGHT);
+        ui.set_min_height(push_height(ui));
         if counted_disclosure(ui, &title, &count, page.unfolded.files).clicked() {
             page.unfolded.files = !page.unfolded.files;
         }
@@ -137,9 +136,6 @@ fn file_lines(ui: &mut Ui, files: &[OutsideText], places: &[usize]) {
     let label = i18n::text(ui.ctx(), "packages-files-list");
 
     padded_card(ui, |ui| {
-        // A long list runs past the box's edge, a bar at rest says so.
-        toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
-
         // show_rows counts the spacing of this ui between rows.
         ui.spacing_mut().item_spacing.y = 0.0;
         ScrollArea::vertical()

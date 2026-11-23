@@ -22,7 +22,7 @@ fn clear_filters_brings_back_what_the_chips_hid() {
     assert!(harness.query_by_label("No driver matches").is_some());
 
     harness
-        .get_by_role_and_label(Role::Button, "Clear filters")
+        .get_by_role_and_label(Role::Button, "Clear Filters")
         .click();
     harness.run();
 

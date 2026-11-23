@@ -1,10 +1,12 @@
 //! A tag beside a card row's title: above the next line, its words
 //! inside it, the line below where it is without a tag.
 
+use egui::accesskit::Role;
 use egui::{Label, Rect, Ui};
 use egui_kittest::Harness;
+use egui_kittest::kittest::Queryable as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
-use toolbox_gui_kit::testing::{filled_rect, harness, painted_text};
+use toolbox_gui_kit::testing::{capitals_top, harness, painted_text};
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{Tone, card, card_row, rich, tag, title_line};
 
@@ -63,22 +65,25 @@ fn drawn() -> (Harness<'static, Rows>, Rows) {
     (harness, rows)
 }
 
+/// The tag's own box, which its accessible node carries. Its fill is a
+/// tint of the tone, so it is not looked up by colour.
 fn pill(harness: &Harness<'_, Rows>) -> Rect {
-    let fill = tokens::current(&harness.ctx).accent_soft;
-    filled_rect(harness, fill).expect("the tag is painted")
+    harness.get_by_role_and_label(Role::Label, TAG).rect()
 }
 
 #[test]
 fn a_tag_ends_above_the_next_line() {
     let (harness, _) = drawn();
-    let next = text_rect(&harness, TAGGED_LINE);
+
+    // The next line's box starts above its capitals, so the tag is measured
+    // against the capitals, which is where the eye reads the line.
+    let next = capitals_top(&harness, TAGGED_LINE).expect("the next line is painted");
     let pill = pill(&harness);
 
     assert!(
-        pill.bottom() < next.top(),
-        "the tag ends at {}, the next line starts at {}",
+        pill.bottom() < next,
+        "the tag ends at {}, the next line's capitals start at {next}",
         pill.bottom(),
-        next.top()
     );
 }
 

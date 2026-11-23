@@ -21,6 +21,7 @@ pub fn palette_of(scheme: &ColourScheme) -> Palette {
     Palette {
         window: of(roles.window),
         view: of(roles.view),
+        button: None,
         text: of(roles.text),
         accent: of(roles.accent),
         on_accent: of(roles.on_accent),
@@ -29,6 +30,14 @@ pub fn palette_of(scheme: &ColourScheme) -> Palette {
         success: of(roles.success),
         link: Some(of(roles.link)),
         visited: Some(of(roles.visited)),
+        active: None,
+        complementary: None,
+        complementary_text: None,
+        decoration_hover: None,
+        decoration_focus: None,
+        tooltip: None,
+        tooltip_text: None,
+        contrast: None,
         tiles: Some(TileHues {
             blue: of(tiles.blue),
             green: of(tiles.green),

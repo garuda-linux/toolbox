@@ -1,18 +1,19 @@
 //! One copy against the file in use, with a pick per change.
 
-use egui::{Frame, Label, ScrollArea, Ui};
+use egui::{Align, Frame, Label, Layout, ScrollArea, Ui, vec2};
 use toolbox_core::features::merges::{
     CachedComparison, Comparison, Part, Pick, Standing, choice, edit_start, queued, settled,
 };
-use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Tone, banner, mono_small, pill_button, queued_tag, rich, segmented,
+    ButtonKind, Tone, banner, mono_small, pill_button, pill_button_with_icon, pill_width_with_icon,
+    queued_tag, rich, segmented,
 };
+use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::{ConfigText, MergeCopy, Resolution};
 use toolbox_system::MergePair;
 
-use super::{MergeDialog, take_file_id, take_id};
+use super::{MergeDialog, cancel, take_file_id, take_id};
 use crate::command::HomeCommand;
 use crate::i18n;
 use crate::i18n::Arg;
@@ -311,31 +312,50 @@ fn buttons(
     let merged = cached.resolution(picks);
     let mut editing = None;
 
-    ui.horizontal_wrapped(|ui| {
-        if pill_button(ui, &label("home-merges-keep-file"), ButtonKind::Soft).clicked() {
-            files.queue(Resolution::KeepCurrent);
-        }
+    // Cancel ends the row at its right, as a dialog's buttons do, so the
+    // actions wrap in the room the Cancel leaves.
+    let cancel_text = label("home-cancel");
+    let cancel_room = pill_width_with_icon(ui, &cancel_text) + ui.tokens().sizes.card_gap;
+    ui.horizontal_top(|ui| {
+        let left = (ui.available_width() - cancel_room).max(0.0);
+        ui.allocate_ui(vec2(left, 0.0), |ui| {
+            ui.horizontal_wrapped(|ui| {
+                if pill_button(ui, &label("home-merges-keep-file"), ButtonKind::Soft).clicked() {
+                    files.queue(Resolution::KeepCurrent);
+                }
 
-        if pill_button(ui, &label(take_file_id(copy.kind())), ButtonKind::Soft).clicked() {
-            files.queue(Resolution::TakeCopy);
-        }
+                if pill_button(ui, &label(take_file_id(copy.kind())), ButtonKind::Soft).clicked() {
+                    files.queue(Resolution::TakeCopy);
+                }
 
-        let picked = !matches!(merged, Ok(Resolution::KeepCurrent) | Err(_));
-        let pressed = ui
-            .enabled_ui(picked, |ui| {
-                pill_button(ui, &label("home-merges-queue-picks"), ButtonKind::Primary)
-            })
-            .inner;
+                let picked = !matches!(merged, Ok(Resolution::KeepCurrent) | Err(_));
+                let pressed = ui
+                    .enabled_ui(picked, |ui| {
+                        pill_button(ui, &label("home-merges-queue-picks"), ButtonKind::Primary)
+                    })
+                    .inner;
 
-        if pressed.clicked()
-            && let Ok(resolution) = merged.clone()
-        {
-            files.queue(resolution);
-        }
+                if pressed.clicked()
+                    && let Ok(resolution) = merged.clone()
+                {
+                    files.queue(resolution);
+                }
 
-        if pill_button(ui, &label("home-merges-edit"), ButtonKind::Ghost).clicked() {
-            editing = Some(edit_start(merged, files.current, files.copied));
-        }
+                if pill_button(ui, &label("home-merges-edit"), ButtonKind::Ghost).clicked() {
+                    editing = Some(edit_start(merged, files.current, files.copied));
+                }
+            });
+        });
+
+        // Top aligned: the Cancel sits on the first line, not centred on
+        // the wrapped actions beside it.
+        ui.with_layout(Layout::right_to_left(Align::Min), |ui| {
+            if pill_button_with_icon(ui, &cancel_text, ButtonKind::Soft, icons::DIALOG_CANCEL)
+                .clicked()
+            {
+                cancel().hold(ui.ctx(), ());
+            }
+        });
     });
 
     editing

@@ -16,7 +16,7 @@ pub fn steps() -> Vec<Step> {
         Step::wait("Internet"),
         Step::WaitGone("Checking…"),
         Step::WaitGone("Reading…"),
-        Step::button("Show public address"),
+        Step::button("Show Public Address"),
         Step::WaitContaining("203.0.113.7"),
         Step::Shot("network"),
         Step::WaitContaining("Good (57 %)"),
@@ -36,7 +36,7 @@ pub fn steps() -> Vec<Step> {
         Step::shortcut(Key::A),
         Step::Text("not a host!"),
         Step::WaitContaining("Enter a host name"),
-        Step::disabled_button("Run ping"),
+        Step::disabled_button("Run Ping"),
         Step::Shot("network-tools"),
     ]
 }

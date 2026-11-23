@@ -12,7 +12,7 @@ use egui::{
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::theme::RADIUS;
-use toolbox_gui_kit::widgets::{focus_ring, rich};
+use toolbox_gui_kit::widgets::{focus_from_keyboard, rich};
 use toolbox_guide::Guide;
 
 use super::Jump;
@@ -115,8 +115,8 @@ pub(super) fn entry(ui: &mut Ui, title: &str, selected: bool) -> Response {
     if ui.is_rect_visible(rect) {
         let fill = if selected {
             Some(tokens.accent_tint)
-        } else if response.hovered() {
-            Some(tokens.hover)
+        } else if response.hovered() || focus_from_keyboard(ui, &response) {
+            Some(tokens.item_hover)
         } else {
             None
         };
@@ -134,7 +134,6 @@ pub(super) fn entry(ui: &mut Ui, title: &str, selected: bool) -> Response {
         ui.painter().galley(pos2(at.x, at.y), galley, colour);
     }
 
-    focus_ring(ui, &response, RADIUS);
     let response = response.on_hover_cursor(egui::CursorIcon::PointingHand);
     if cut {
         response.on_hover_text(title)

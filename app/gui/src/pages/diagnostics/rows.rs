@@ -10,7 +10,7 @@ use toolbox_core::features::diagnostics::{Collector, Selection};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{
-    ActionRow, ButtonKind, Tone, card, card_row, disclosure, pill_button, section_intro,
+    ActionRow, ButtonKind, card, card_row, disclosure, pill_button, section_intro,
 };
 use toolbox_services::diagnostics::page::State;
 
@@ -50,7 +50,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, open: &mut bool) {
     } else {
         let title = i18n::text(&ctx, "diagnostics-reports");
         let intro = i18n::text(&ctx, "diagnostics-idle-detail");
-        section_intro(ui, icons::OFFICE_REPORT, &title, &intro);
+        section_intro(ui, &title, &intro);
     }
 
     card(ui, |ui| {
@@ -71,7 +71,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, choice: Selection) {
 
     let running = page.state == State::Running && page.selection == choice.as_str();
 
-    ActionRow::new(icon(choice), Tone::Neutral, &name)
+    ActionRow::new(icon(choice), &name)
         .detail(&detail)
         .show(ui, |ui| {
             if running {

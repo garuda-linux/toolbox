@@ -135,7 +135,7 @@ requires = { all = ["intel-undervolt"] }
 
 [[section]]
 id = "rightclick-emulation"
-title = "Right click emulation"
+title = "Right Click Emulation"
 icon = "input-touchpad"
 
 [[section.entry]]
@@ -146,7 +146,7 @@ check = { package = "rightclick-emulation" }
 
 [[section]]
 id = "desktop-and-apps"
-title = "Desktop and apps"
+title = "Desktop and Apps"
 icon = "desktop"
 
 [[section.entry]]

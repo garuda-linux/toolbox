@@ -6,17 +6,25 @@ mod check_row;
 mod chevron;
 mod chip_row;
 mod choices;
+mod columns;
 mod contrast;
 mod corner_button;
 mod cut;
+mod darkly_buttons;
+mod darkly_controls;
 mod dialog_edges;
 mod dialog_focus;
 mod edge_fade;
+mod edge_rule;
+mod empty;
 mod feedback;
+mod field_height;
 mod field_parts;
 mod field_rim;
 mod focus_order;
+mod focus_text;
 mod footer;
+mod form_column;
 mod frosted;
 mod frosted_header;
 mod heading;
@@ -46,10 +54,11 @@ mod row_centre;
 mod row_controls;
 mod row_fill;
 mod search;
+mod select_look;
 mod select_width;
+mod selected_tag;
 mod selection;
 mod skeleton;
-mod slide;
 mod switch_knob;
 mod switch_rim;
 mod text_box;
@@ -121,7 +130,7 @@ fn page(ui: &mut Ui, state: &mut Gallery) {
         chip(ui, "Audio", Some("2/8"), false);
     });
     ui.add_space(12.0);
-    section_heading(ui, icons::APPLICATIONS_MULTIMEDIA, "Audio", "2/8");
+    section_heading(ui, "Audio", "2/8");
     card(ui, |ui| {
         card_row(ui, true, |ui| {
             ui.horizontal(|ui| {
@@ -167,7 +176,7 @@ fn actions(ui: &mut Ui, state: &mut Gallery) {
 }
 
 fn app(theme: Theme) -> Harness<'static, Gallery> {
-    let mut harness = harness(820.0, 460.0)
+    let mut harness = harness(860.0, 460.0)
         .with_theme(theme)
         .build_ui_state(gallery, Gallery::default());
 

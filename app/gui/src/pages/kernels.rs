@@ -66,6 +66,7 @@ impl PageView for KernelsPage {
 
         let ctx = ui.ctx().clone();
         refusal(ui, context);
+        release_line(ui, context);
 
         let first_load = ui.make_persistent_id("kernels-content");
         if !context.probed {
@@ -119,7 +120,7 @@ fn listing(ui: &mut Ui, context: &PageContext<'_>, built: Option<&Built>) {
     let Some(built) = built else {
         let said = i18n::text(&ctx, "kernels-unavailable");
         let again = i18n::text(&ctx, "common-read-again");
-        if empty_state_action(ui, icons::DIALOG_ERROR, &said, "", &again).clicked() {
+        if empty_state_action(ui, icons::ERROR, &said, "", &again).clicked() {
             context.commands.send(KernelCommand::Refresh);
         }
 
@@ -154,26 +155,30 @@ fn listing(ui: &mut Ui, context: &PageContext<'_>, built: Option<&Built>) {
 }
 
 fn header(ui: &mut Ui, context: &PageContext<'_>) {
-    let ctx = ui.ctx().clone();
     let reading = context.service::<Kernels>().reading();
     let titles = ("page-kernels", "kernels-subtitle");
     if refresh_header_reading(ui, titles, "kernels-refresh", reading) {
         context.commands.send(KernelCommand::Refresh);
     }
+}
 
+/// The running release sits in the body, as Kirigami's pages put their status text.
+fn release_line(ui: &mut Ui, context: &PageContext<'_>) {
+    let ctx = ui.ctx().clone();
     let release = view::release(context.snapshot);
-    if !release.is_empty() {
-        let tokens = tokens::current(&ctx);
-        let text = i18n::text_with(
-            &ctx,
-            "kernels-running-release",
-            &[("release", Arg::from(release))],
-        );
-
-        ui.add_space(ui.tokens().sizes.caption_gap);
-
-        ui.label(rich(ui, &text, Weight::Medium, SMALL, tokens.secondary));
+    if release.is_empty() {
+        return;
     }
+
+    let tokens = tokens::current(&ctx);
+    let text = i18n::text_with(
+        &ctx,
+        "kernels-running-release",
+        &[("release", Arg::from(release))],
+    );
+
+    ui.label(rich(ui, &text, Weight::Medium, SMALL, tokens.secondary));
+    ui.add_space(ui.tokens().sizes.caption_gap);
 }
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
@@ -261,7 +266,7 @@ fn section(ui: &mut Ui, context: &PageContext<'_>, (id, glyph): (&str, Icon), ro
     let ctx = ui.ctx().clone();
     let count = i18n::text_with(&ctx, "kernels-count", &[("count", Arg::from(rows.len()))]);
     let title = i18n::text(&ctx, id);
-    section_heading(ui, glyph, &title, &count);
+    section_heading(ui, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
 
     let heights = RowHeights::Measured {

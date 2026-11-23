@@ -132,7 +132,7 @@ fn a_chosen_file_comes_back_with_its_kind() {
     let source = Arc::new(Source::default());
     let mut boot = boot(&runtime, &source);
 
-    boot.choose(FileKind::Theme, "Choose a GRUB theme", "GRUB theme");
+    boot.choose(FileKind::Theme, "Choose a GRUB Theme", "GRUB theme");
     let picked = settle(&mut boot, |_, picked| picked.is_some()).unwrap();
 
     assert_eq!(picked.kind, FileKind::Theme);
@@ -154,7 +154,7 @@ fn a_second_choose_waits_until_the_open_dialog_is_answered() {
         egui::Context::default(),
     );
 
-    boot.choose(FileKind::Theme, "Choose a GRUB theme", "GRUB theme");
+    boot.choose(FileKind::Theme, "Choose a GRUB Theme", "GRUB theme");
     until("the dialog never opened", || {
         chooser.asked.load(Ordering::SeqCst) == 1
     });
@@ -182,7 +182,7 @@ fn answered(chosen: Chosen) -> bool {
         egui::Context::default(),
     );
 
-    boot.choose(FileKind::Theme, "Choose a GRUB theme", "GRUB theme");
+    boot.choose(FileKind::Theme, "Choose a GRUB Theme", "GRUB theme");
     settle(&mut boot, |boot, _| !boot.choosing());
     boot.chooser_failed()
 }

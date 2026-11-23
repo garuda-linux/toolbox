@@ -1,14 +1,16 @@
+mod text;
+
 use std::borrow::Cow;
 
-use egui::{Context, Label, Sense, Ui, Vec2};
-use toolbox_cli::output::size;
+use egui::{Context, Sense, Ui, Vec2};
+pub use text::repository;
+use text::{optional_tag, origin_line, tags, text};
 use toolbox_core::Toggle;
+use toolbox_core::features::packages::IndexEntry;
 use toolbox_core::features::packages::list::{self, Catalog, Filter, row_state};
-use toolbox_core::features::packages::{IndexEntry, InstallReason, Origin};
-use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowState, Tone, named_pill_button, pill_width, rich, row_height,
-    split_row_in, status_dot, tag, text_block_height, title_line,
+    ButtonKind, ListItem, RowState, Tone, named_pill_button, pill_width, push_height, row_height,
+    split_row_in, tag_on_row, text_block_height, text_block_height_with,
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::PackageName;
@@ -21,7 +23,11 @@ use crate::i18n::Arg;
 use crate::pages::PageContext;
 use crate::pages::rows::{Initial, package_picture, picture_height, picture_slot};
 
+/// The title and the two small lines of a full-width row: the description
+/// and the origin line.
 const LINES: u8 = 2;
+/// The title and the description of a row beside the details.
+const COMPACT_LINES: u8 = 1;
 const INSTALLED: &str = "packages-installed";
 /// As large as a link row's chevron.
 const CHEVRON: f32 = 14.0;
@@ -45,7 +51,7 @@ pub trait PackageRow: ListItem + Copy {
 
     fn act(&self, page: &mut PackagesPage, context: &PageContext<'_>, act: Act);
 
-    fn marks(&self, ui: &mut Ui);
+    fn marks(&self, ui: &mut Ui, selected: bool);
 
     fn description(&self) -> &str;
 
@@ -96,12 +102,12 @@ impl PackageRow for Row<'_> {
         }
     }
 
-    fn marks(&self, ui: &mut Ui) {
+    fn marks(&self, ui: &mut Ui, selected: bool) {
         for id in tags(self.entry) {
-            tag(ui, &i18n::text(ui.ctx(), id), Tone::Neutral);
+            tag_on_row(ui, &i18n::text(ui.ctx(), id), selected);
         }
 
-        optional_tag(ui, self.catalog.optional_for(&self.entry.name));
+        optional_tag(ui, self.catalog.optional_for(&self.entry.name), selected);
     }
 
     fn description(&self) -> &str {
@@ -118,61 +124,16 @@ impl PackageRow for Row<'_> {
     }
 }
 
-pub fn height(ui: &Ui) -> f32 {
-    row_height(
-        ui,
-        text_block_height(ui, LINES).max(picture_height(ui, false)),
-    )
-}
+/// A full-width row keeps its height with its controls, and the row beside
+/// the details has one line less, as its controls are in the details.
+pub fn height(ui: &Ui, compact: bool) -> f32 {
+    let content = if compact {
+        text_block_height(ui, COMPACT_LINES)
+    } else {
+        text_block_height_with(ui, LINES, push_height(ui))
+    };
 
-/// Draws the row. Returns whether it asked to open the detail view: a
-/// click beside the button, or Space on the focused row.
-pub fn show<R>(
-    ui: &mut Ui,
-    context: &PageContext<'_>,
-    page: &mut PackagesPage,
-    row: &R,
-    state: &RowState,
-) -> bool
-where
-    R: PackageRow,
-{
-    let standing = row.state(context);
-    let button = button_of(ui.ctx(), standing);
-    let width = pill_width(ui, &button.0) + ui.spacing().item_spacing.x + CHEVRON;
-
-    // The Installed, Updates and Orphans chips say it of every row already.
-    let word =
-        word_of::<R>(standing).filter(|(id, _)| !(*id == INSTALLED && says_installed(page.filter)));
-
-    split_row_in(
-        ui,
-        state.row,
-        width,
-        |ui| {
-            ui.horizontal_top(|ui| {
-                let at = picture_slot(ui, false);
-                ui.vertical(|ui| text(ui, row, word));
-                let package = row.package();
-                package_picture(
-                    ui,
-                    context.service::<Artwork>().pictures(),
-                    Some(package),
-                    Initial::named(package),
-                    at,
-                );
-            });
-        },
-        |ui| {
-            if action(ui, context, row, &button.0, ButtonKind::Soft) {
-                row.act(page, context, button.1);
-            }
-
-            chevron(ui);
-        },
-    );
-
-    state.toggle
+    row_height(ui, content.max(picture_height(ui, false)))
 }
 
 /// Whether the picked chip lists installed packages only, so their state
@@ -182,15 +143,6 @@ const fn says_installed(filter: Filter) -> bool {
         filter,
         Filter::Installed | Filter::Updates | Filter::Orphans | Filter::Optional
     )
-}
-
-/// Tells that the row opens the package's page, as a link row's does.
-/// The row itself is the target, so the glyph takes no click.
-fn chevron(ui: &mut Ui) {
-    let ink = tokens::current(ui.ctx()).secondary;
-    let (at, _) = ui.allocate_exact_size(Vec2::splat(CHEVRON), Sense::hover());
-    let theme = icons::theme_in_use(ui.ctx());
-    icons::GO_NEXT.image(theme.as_deref(), ink).paint_at(ui, at);
 }
 
 pub fn button_text<R>(ui: &Ui, context: &PageContext<'_>, row: &R) -> (Cow<'static, str>, Act)
@@ -210,9 +162,91 @@ fn button_of(ctx: &Context, state: list::RowState) -> (Cow<'static, str>, Act) {
     (i18n::text(ctx, id), act)
 }
 
+/// Draws the row. Full width it keeps the install or remove button and the
+/// chevron that says it opens. Beside the details it has no button, as the
+/// details hold it, and the arrow keys open a row they reach. Returns whether
+/// the row asked to open its details.
+pub fn show<R>(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    page: &mut PackagesPage,
+    row: &R,
+    state: &RowState,
+) -> bool
+where
+    R: PackageRow,
+{
+    let standing = row.state(context);
+
+    // The installed chips say it of every row already.
+    let word =
+        word_of::<R>(standing).filter(|(id, _)| !(*id == INSTALLED && says_installed(page.filter)));
+
+    if page.open.is_some() {
+        text_and_picture(ui, context, row, word, (state.selected, false));
+        return state.toggle || state.keyed;
+    }
+
+    let button = button_of(ui.ctx(), standing);
+    let width = pill_width(ui, &button.0) + ui.spacing().item_spacing.x + CHEVRON;
+    split_row_in(
+        ui,
+        state.row,
+        width,
+        |ui| text_and_picture(ui, context, row, word, (false, true)),
+        |ui| {
+            if action(ui, context, row, &button.0, ButtonKind::Soft) {
+                row.act(page, context, button.1);
+            }
+
+            chevron(ui);
+        },
+    );
+
+    state.toggle
+}
+
+fn text_and_picture<R>(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    row: &R,
+    word: Option<(&'static str, Tone)>,
+    (selected, origin): (bool, bool),
+) where
+    R: PackageRow,
+{
+    ui.horizontal_top(|ui| {
+        let at = picture_slot(ui, false);
+        ui.vertical(|ui| text(ui, row, word, selected, origin));
+        picture(ui, context, row, at);
+    });
+}
+
+fn picture<R>(ui: &Ui, context: &PageContext<'_>, row: &R, at: egui::Rect)
+where
+    R: PackageRow,
+{
+    let package = row.package();
+    package_picture(
+        ui,
+        context.service::<Artwork>().pictures(),
+        Some(package),
+        Initial::named(package),
+        at,
+    );
+}
+
+/// Tells that the row opens the package's page, as a link row's does.
+/// The row itself is the target, so the glyph takes no click.
+fn chevron(ui: &mut Ui) {
+    let ink = tokens::current(ui.ctx()).secondary;
+    let (at, _) = ui.allocate_exact_size(Vec2::splat(CHEVRON), Sense::hover());
+    let theme = icons::theme_in_use(ui.ctx());
+    icons::GO_NEXT.image(theme.as_deref(), ink).paint_at(ui, at);
+}
+
 /// The row's and the detail header's button. Its name carries the
-/// package, as several rows show the same button text. Whether it was
-/// pressed, as the caller holds the page.
+/// package, as several rows show the same button text.
 #[must_use = "the caller holds the page, so it acts on the press"]
 pub fn action<R>(
     ui: &mut Ui,
@@ -263,120 +297,5 @@ pub const fn undone(wish: Toggle) -> Toggle {
         Toggle::Off
     } else {
         Toggle::On
-    }
-}
-
-fn text<R>(ui: &mut Ui, row: &R, word: Option<(&'static str, Tone)>)
-where
-    R: PackageRow,
-{
-    let ctx = ui.ctx().clone();
-    let tokens = tokens::current(&ctx);
-
-    title_line(ui, false, |ui| {
-        ui.add(
-            Label::new(rich(
-                ui,
-                row.package().as_str(),
-                Weight::SemiBold,
-                BODY,
-                tokens.text,
-            ))
-            .truncate(),
-        );
-
-        row.marks(ui);
-        if let Some((id, tone)) = word {
-            status_dot(ui, &i18n::text(&ctx, id), tone);
-        }
-    });
-
-    // The two small lines stack as one block, as the row's height counts
-    // them.
-    ui.scope(|ui| {
-        ui.spacing_mut().item_spacing.y = 0.0;
-        let detail = row.detail_line(&ctx);
-        for line in [row.description(), detail.as_str()] {
-            ui.add(Label::new(rich(ui, line, Weight::Regular, SMALL, tokens.secondary)).truncate());
-        }
-    });
-}
-
-/// The tags beside the name: pulled in as a dependency, not from a
-/// repository.
-pub fn tags(entry: &IndexEntry) -> impl Iterator<Item = &'static str> {
-    let dependency = entry
-        .installed
-        .as_ref()
-        .is_some_and(|installed| installed.reason == InstallReason::Dependency);
-
-    let foreign = entry.origin == Origin::Foreign;
-
-    [
-        dependency.then_some("packages-tag-dependency"),
-        foreign.then_some("packages-tag-foreign"),
-    ]
-    .into_iter()
-    .flatten()
-}
-
-/// "extra · 3.0-1 · 12.3 MiB", the installed version for an installed
-/// package.
-pub fn origin_line(ctx: &Context, entry: &IndexEntry) -> String {
-    let version = entry
-        .installed
-        .as_ref()
-        .map_or(entry.version.as_str(), |installed| {
-            installed.version.as_str()
-        });
-
-    [
-        repository(ctx, &entry.origin),
-        version.to_owned(),
-        size(entry.size),
-    ]
-    .join(" · ")
-}
-
-pub fn repository(ctx: &Context, origin: &Origin) -> String {
-    match origin {
-        Origin::Repository(repo) => repo.clone(),
-        Origin::Foreign => i18n::text(ctx, "packages-no-repository").into_owned(),
-    }
-}
-
-fn optional_tag(ui: &mut Ui, by: &[PackageName]) {
-    let Some((first, others)) = by.split_first() else {
-        return;
-    };
-
-    let ctx = ui.ctx().clone();
-    let id = if others.is_empty() {
-        "packages-tag-optional-for"
-    } else {
-        "packages-tag-optional-for-more"
-    };
-
-    let args = [
-        ("first", Arg::from(first.as_str())),
-        ("more", Arg::from(others.len())),
-    ];
-
-    let response = tag(ui, &i18n::text_with(&ctx, id, &args), Tone::Neutral);
-
-    if !others.is_empty() {
-        let names = by
-            .iter()
-            .map(PackageName::as_str)
-            .collect::<Vec<_>>()
-            .join(", ");
-
-        let all = i18n::text_with(
-            &ctx,
-            "packages-tag-optional-for-all",
-            &[("names", Arg::from(&names))],
-        );
-
-        _ = response.on_hover_text(all);
     }
 }

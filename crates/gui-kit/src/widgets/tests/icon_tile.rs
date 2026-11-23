@@ -1,203 +1,151 @@
-use egui::Role;
+//! Icons draw plain, as KDE draws them: no tile behind a row, a link or
+//! a status, and the sizes of Kirigami's icons.
 
+use egui::{Color32, Rect, pos2};
+
+use super::super::icon_tile::TileSize;
 use super::super::{
-    ActionRow, SectionHeading, Tone, banner, empty_state, empty_state_action, link_row, link_tile,
+    ActionRow, NavLook, SectionHeading, Tone, empty_state, link_tile, nav_row, paint_status_tile,
 };
-use crate::icons;
-use crate::testing::{circle_fills, filled_rect, harness, tinted_rects};
-use crate::tokens::{self, Hue, set_page_hue};
+use crate::icons::{self, Icon, colour};
+use crate::testing::{circle_fills, filled_rects, harness, textured_rects};
+use crate::tokens::{self, Hue, Sizes, Tokens, set_page_hue};
 
-fn tile_of(hue: Hue, mut draw: impl FnMut(&mut egui::Ui) + 'static) -> (Option<egui::Rect>, bool) {
-    let mut harness = harness(600.0, 200.0).build_ui(move |ui| {
-        set_page_hue(ui.ctx(), hue);
-        draw(ui);
+/// Every fill a tile of any hue or status could paint.
+fn tile_fills(tokens: &Tokens) -> Vec<Color32> {
+    let mut fills: Vec<Color32> = [Hue::Blue, Hue::Green, Hue::Orange]
+        .into_iter()
+        .map(|hue| tokens.tiles.of(hue).fill)
+        .collect();
+
+    fills.extend(
+        [
+            tokens.accent,
+            tokens.secondary,
+            tokens.warning,
+            tokens.success,
+            tokens.error,
+        ]
+        .map(|colour| tokens.status_tile(colour).fill),
+    );
+    fills
+}
+
+fn tiles_painted<State>(harness: &egui_kittest::Harness<'_, State>) -> Vec<Rect> {
+    let tokens = tokens::current(&harness.ctx);
+    tile_fills(&tokens)
+        .into_iter()
+        .flat_map(|fill| filled_rects(harness, fill))
+        .collect()
+}
+
+fn status_icon(tone: Tone) -> Icon {
+    let tokens = Tokens::derive(
+        &crate::Palette::fallback(egui::Theme::Dark),
+        egui::Theme::Dark,
+    );
+
+    tone.status_mark(&tokens).1
+}
+
+#[test]
+fn a_section_heading_draws_no_icon() {
+    let mut harness = harness(600.0, 200.0).build_ui(|ui| {
+        SectionHeading::new("Installed", "3 kernels").show(ui);
     });
 
     harness.run();
-    let tile = tokens::current(&harness.ctx).tiles.of(hue);
-    (
-        filled_rect(&harness, tile.fill),
-        !circle_fills(&harness).is_empty(),
-    )
-}
-
-fn assert_square(rect: Option<egui::Rect>, what: &str) {
-    let rect = rect.unwrap_or_else(|| panic!("{what} paints no tile in the page hue"));
-    assert!(
-        (rect.width() - rect.height()).abs() < 0.5,
-        "{what}: the tile is {rect:?}, not square"
-    );
+    assert_eq!(tiles_painted(&harness), Vec::<Rect>::new());
+    assert_eq!(circle_fills(&harness), Vec::<Color32>::new());
 }
 
 #[test]
-fn a_section_heading_sets_its_icon_on_a_tile_of_the_page_hue() {
-    let (tile, _) = tile_of(Hue::Blue, |ui| {
-        SectionHeading::new(icons::RUN_BUILD, "Installed", "3 kernels").show(ui);
+fn a_row_icon_is_a_plain_colour_icon_on_no_tile() {
+    let mut harness = harness(600.0, 200.0).build_ui(|ui| {
+        set_page_hue(ui.ctx(), Hue::Green);
+        ActionRow::new(icons::NETWORK_WIRED, "Wired").show_without_actions(ui);
     });
 
-    assert_square(tile, "a section heading");
+    harness.run();
+    assert_eq!(tiles_painted(&harness), Vec::<Rect>::new());
 }
 
 #[test]
-fn a_quiet_action_row_takes_the_page_hue_on_a_square_not_a_disc() {
-    for tone in [Tone::Neutral, Tone::Accent] {
-        let (tile, disc) = tile_of(Hue::Green, move |ui| {
-            ActionRow::new(icons::TOOLS, tone, "Clean the cache").show_without_actions(ui);
-        });
-
-        assert_square(tile, "an action row");
-        assert!(!disc, "{tone:?}: the icon still sits on a disc");
-    }
+fn a_row_glyph_takes_its_colour_icon_and_a_colourless_one_keeps_its_glyph() {
+    assert_eq!(icons::NETWORK_WIRED.for_row(), colour::NETWORK_WIRED);
+    assert_eq!(icons::CHECKMARK.for_row(), icons::CHECKMARK);
 }
 
 #[test]
-fn a_warning_row_keeps_its_status_colour() {
+fn icon_sizes_follow_kirigami() {
+    assert_eq!(TileSize::Row.edge(), 22.0);
+    assert_eq!(TileSize::Line.edge(), 22.0);
+}
+
+#[test]
+fn a_link_tile_paints_its_icon_without_a_tile() {
     let mut harness = harness(600.0, 200.0).build_ui(|ui| {
         set_page_hue(ui.ctx(), Hue::Orange);
-        ActionRow::new(icons::SYSTEM_REBOOT, Tone::Warning, "Restart needed")
-            .show_without_actions(ui);
-    });
-
-    harness.run();
-    let tokens = tokens::current(&harness.ctx);
-    assert_square(
-        filled_rect(&harness, tokens.status_tile(tokens.warning).fill),
-        "a warning row",
-    );
-    assert!(filled_rect(&harness, tokens.tiles.of(Hue::Orange).fill).is_none());
-}
-
-#[test]
-fn link_tiles_and_link_rows_set_their_icon_on_the_page_tile() {
-    let (on_tile, disc) = tile_of(Hue::Orange, |ui| {
-        _ = link_tile(ui, icons::TOOLS, "Maintenance", "Keep it clean", 300.0);
-    });
-
-    assert_square(on_tile, "a link tile");
-    assert!(!disc, "a link tile still draws a disc");
-
-    let (on_row, _) = tile_of(Hue::Orange, |ui| {
-        _ = link_row(ui, icons::GLOBE, "Forum", Role::Link);
-    });
-
-    assert_square(on_row, "a link row");
-}
-
-#[test]
-fn an_empty_state_sets_its_icon_on_a_large_tile_of_the_page_hue() {
-    let mut harness = harness(600.0, 300.0).build_ui(|ui| {
-        set_page_hue(ui.ctx(), Hue::Green);
-        _ = empty_state(ui, icons::SYSTEM_SEARCH, "No matches", "Try another word.");
-    });
-
-    harness.run();
-    let tokens = tokens::current(&harness.ctx);
-    let tile = tokens.tiles.of(Hue::Green);
-    let square = filled_rect(&harness, tile.fill);
-    assert_square(square, "an empty state");
-
-    let square = square.unwrap_or(egui::Rect::NOTHING);
-    assert!(
-        (square.width() - tokens.sizes.icon_tile_large).abs() < 0.5,
-        "{square:?}"
-    );
-    assert!(
-        tinted_rects(&harness, tile.ink)
-            .into_iter()
-            .any(|glyph| square.contains_rect(glyph)),
-        "the glyph sits on the tile in its ink"
-    );
-}
-
-#[test]
-fn without_a_page_hue_the_tile_is_the_accent() {
-    let mut harness = harness(600.0, 200.0).build_ui(|ui| {
-        SectionHeading::new(icons::RUN_BUILD, "Installed", "").show(ui);
-    });
-
-    harness.run();
-    let tile = tokens::current(&harness.ctx).tiles.of(Hue::Accent);
-    assert_square(filled_rect(&harness, tile.fill), "a heading without a hue");
-}
-
-fn assert_status_mark<State>(harness: &egui_kittest::Harness<'_, State>, tone: Tone, what: &str) {
-    let tokens = tokens::current(&harness.ctx);
-    let (tile, _) = tone.status_mark(&tokens);
-    let square = filled_rect(harness, tile.fill);
-    assert_square(square, what);
-
-    let square = square.unwrap_or(egui::Rect::NOTHING);
-    let glyph = tinted_rects(harness, tile.ink)
-        .into_iter()
-        .find(|glyph| square.contains_rect(*glyph))
-        .unwrap_or_else(|| panic!("{what}: no glyph in {:?} on its tile", tile.ink));
-
-    let off = glyph.center() - square.center();
-    assert!(
-        off.length() < 0.5,
-        "{what}: the glyph is {off:?} off the tile's middle"
-    );
-}
-
-#[test]
-fn every_banner_marks_its_status_with_the_status_tile() {
-    for tone in [Tone::Accent, Tone::Warning, Tone::Success, Tone::Error] {
-        let mut harness = harness(800.0, 200.0).build_ui(move |ui| {
-            _ = banner(ui, tone, "Two kernels are installed.", &[]);
-        });
-
-        harness.run();
-        assert_status_mark(&harness, tone, &format!("a {tone:?} banner"));
-    }
-}
-
-#[test]
-fn unread_states_empty_states_and_status_rows_use_the_same_tile() {
-    let mut row = harness_of(|ui| {
-        _ = empty_state_action(
+        link_tile(
             ui,
-            icons::DIALOG_ERROR,
-            "The list did not load",
-            "",
-            "Read again",
+            icons::NETWORK_WIRED,
+            "Network",
+            "Wired and wireless",
+            360.0,
         );
     });
 
-    row.run();
-    assert_status_mark(&row, Tone::Error, "an unread state");
-
-    let mut empty = harness_of(|ui| {
-        _ = empty_state(ui, icons::DIALOG_ERROR, "Nothing was read", "");
-    });
-
-    empty.run();
-    assert_status_mark(&empty, Tone::Error, "an error empty state");
-
-    let mut status = harness_of(|ui| {
-        ActionRow::new(icons::DIALOG_WARNING, Tone::Warning, "2 warnings").show_without_actions(ui);
-    });
-
-    status.run();
-    assert_status_mark(&status, Tone::Warning, "a status row");
-}
-
-fn harness_of(draw: impl FnMut(&mut egui::Ui) + 'static) -> egui_kittest::Harness<'static> {
-    harness(800.0, 300.0).build_ui(draw)
+    harness.run();
+    assert_eq!(tiles_painted(&harness), Vec::<Rect>::new());
 }
 
 #[test]
-fn a_state_glyph_takes_the_large_tile_as_any_other_empty_state_icon() {
-    let mut harness = harness_of(|ui| {
-        _ = empty_state(ui, icons::DIALOG_ERROR, "Nothing was read", "");
+fn the_statuses_take_dialog_icons_and_neutral_takes_information() {
+    assert_eq!(status_icon(Tone::Accent).name(), "dialog-information");
+    assert_eq!(status_icon(Tone::Neutral).name(), "dialog-information");
+    assert_eq!(status_icon(Tone::Warning).name(), "dialog-warning");
+    assert_eq!(status_icon(Tone::Success).name(), "dialog-positive");
+    assert_eq!(status_icon(Tone::Error).name(), "dialog-error");
+    assert!(!status_icon(Tone::Error).is_glyph());
+}
+
+#[test]
+fn status_marks_draw_their_icons_without_a_tile() {
+    let mut harness = harness(300.0, 200.0).build_ui(|ui| {
+        paint_status_tile(ui, pos2(40.0, 40.0), TileSize::Line, Tone::Warning);
+        paint_status_tile(ui, pos2(80.0, 40.0), TileSize::Line, Tone::Error);
     });
 
     harness.run();
-    let tokens = tokens::current(&harness.ctx);
-    let (tile, _) = Tone::Error.status_mark(&tokens);
-    let square = filled_rect(&harness, tile.fill).unwrap_or(egui::Rect::NOTHING);
+    assert_eq!(tiles_painted(&harness), Vec::<Rect>::new());
+}
 
+#[test]
+fn a_sidebar_entry_is_item_high_and_its_icon_is_22_points() {
+    let look = NavLook {
+        expanded: true,
+        height: Sizes::DEFAULT.nav_row_height,
+    };
+
+    let mut harness = harness(300.0, 200.0).build_ui(move |ui| {
+        let entry = nav_row(ui, icons::GO_HOME, "Home", true, look);
+        assert!((entry.rect.height() - 36.0).abs() < 0.5, "{entry:?}");
+    });
+
+    harness.run();
+    let icon = textured_rects(&harness).first().copied();
     assert!(
-        (square.width() - tokens.sizes.icon_tile_large).abs() < 0.5,
-        "{square:?}"
+        icon.is_some_and(|rect| (rect.width() - 22.0).abs() < 0.5),
+        "{icon:?}"
     );
+}
+
+#[test]
+fn an_empty_state_draws_its_icon_without_a_tile() {
+    let mut harness = harness(400.0, 400.0).build_ui(|ui| {
+        empty_state(ui, icons::HELP_ABOUT, "Nothing here", "Try again later.");
+    });
+
+    harness.run();
+    assert_eq!(tiles_painted(&harness), Vec::<Rect>::new());
 }

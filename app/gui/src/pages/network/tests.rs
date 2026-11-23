@@ -148,7 +148,7 @@ fn the_status_tab_shows_the_route_and_asks_for_the_address_on_a_click() {
     assert!(harness.query_by_label("192.168.1.1").is_some());
     assert!(harness.query_by_label("wlan0").is_some());
 
-    harness.get_by_label("Show public address").click();
+    harness.get_by_label("Show Public Address").click();
     harness.run();
 
     assert_eq!(
@@ -162,7 +162,7 @@ fn a_known_address_shows_copy_and_keeps_hide_in_the_menu() {
     let known = Address::Known(IpAddr::V4(Ipv4Addr::new(203, 0, 113, 7)));
     let mut harness = page_showing(network_with(known));
 
-    assert!(harness.query_by_label("Copy public address").is_some());
+    assert!(harness.query_by_label("Copy Public Address").is_some());
     assert!(harness.query_by_label("Hide").is_none());
     harness
         .get_by_label("More actions for Public address")
@@ -204,12 +204,12 @@ fn a_driver_the_app_blacklists_can_be_taken_off() {
 
     assert!(
         harness
-            .query_by_label("Queue removal from blacklist")
+            .query_by_label("Queue Removal from Blacklist")
             .is_none()
     );
     harness.get_by_label("More actions for iwlwifi").click();
     harness.run();
-    harness.get_by_label("Queue removal from blacklist").click();
+    harness.get_by_label("Queue Removal from Blacklist").click();
     harness.run();
 
     assert_eq!(
@@ -272,7 +272,7 @@ fn ping_runs_with_the_default_host() {
     let mut harness = page();
     tab(&mut harness, "Tools");
 
-    harness.get_by_label("Run ping").click();
+    harness.get_by_label("Run Ping").click();
     harness.run();
 
     assert_eq!(
@@ -296,7 +296,7 @@ fn traceroute_waits_for_its_package() {
             .is_some()
     );
 
-    harness.get_by_label("Run traceroute").click();
+    harness.get_by_label("Run Traceroute").click();
     harness.run();
 
     assert_eq!(sent(&harness), []);
@@ -371,7 +371,7 @@ fn ping_is_no_stronger_than_the_other_tools() {
     let mut harness = page();
     tab(&mut harness, "Tools");
 
-    assert_eq!(button_kind(&harness, "Run ping"), ButtonKind::Soft);
+    assert_eq!(button_kind(&harness, "Run Ping"), ButtonKind::Soft);
 }
 
 #[test]
@@ -380,7 +380,7 @@ fn a_device_copy_button_looks_like_a_button() {
     tab(&mut harness, "Hardware");
 
     let copy = harness
-        .query_all_by_label("Copy this line")
+        .query_all_by_label("Copy This Line")
         .next()
         .expect("a device row")
         .rect()
@@ -389,6 +389,6 @@ fn a_device_copy_button_looks_like_a_button() {
     let fill = toolbox_gui_kit::testing::fill_under(&harness, copy);
     assert_eq!(
         fill,
-        Some(toolbox_gui_kit::tokens::current(&harness.ctx).field)
+        Some(toolbox_gui_kit::tokens::current(&harness.ctx).input)
     );
 }

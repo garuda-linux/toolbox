@@ -3,11 +3,12 @@ use toolbox_core::domains::SdBootKernel;
 use toolbox_core::features::boot::edit::Edit;
 use toolbox_core::features::boot::view::{self, Page};
 use toolbox_core::features::boot::{Flag, kernel};
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, card, card_row, locked_tag, pill_button, removable_tag, rich, text_field,
+    ButtonKind, card, card_row, locked_tag, pill_button, push_height, removable_tag, rich,
+    text_field,
 };
-use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::menu::flipped;
 use super::{heading, queued, send};
@@ -26,7 +27,7 @@ pub fn show(
 ) -> Option<String> {
     let ctx = ui.ctx().clone();
     let sdboot = kernel(context.snapshot);
-    heading(ui, icons::UTILITIES_TERMINAL, "boot-kernel");
+    heading(ui, "boot-kernel");
     if !page.parameters_editable() {
         let line = view::parameters_line(context.snapshot);
         let id = if sdboot.is_some() {
@@ -102,6 +103,10 @@ fn parameters(
         ui.horizontal_wrapped(|ui| chips(ui, context, page));
         ui.add_space(ui.tokens().sizes.card_gap);
 
+        // The line is as tall as the push button, so the field and it share a
+        // middle. Its height is read when the line starts, so it is set first.
+        let interact = ui.spacing().interact_size.y;
+        ui.spacing_mut().interact_size.y = push_height(ui);
         ui.horizontal(|ui| {
             let name = i18n::text(&ctx, "boot-parameter-new").into_owned();
             let field = text_field(
@@ -126,6 +131,7 @@ fn parameters(
                 added = Some(typed.trim().to_owned());
             }
         });
+        ui.spacing_mut().interact_size.y = interact;
     });
 
     added

@@ -16,7 +16,9 @@ mod texts;
 use egui::Ui;
 use toolbox_core::features::users::run::{PageRun, Retry, RetryStep};
 use toolbox_core::features::users::view::{self, Shown};
-use toolbox_gui_kit::widgets::{Tone, banner, card, empty_state, page_toolbar, skeleton_rows};
+use toolbox_gui_kit::widgets::{
+    Tone, banner, card, empty_state_action, page_toolbar, skeleton_rows,
+};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_services::locks::Locks;
 
@@ -222,7 +224,19 @@ pub fn accounts_ready(
 
     if !view::accounts_known(context.snapshot) {
         let detail = text("users-unavailable-detail");
-        empty_state(ui, icons::HELP_ABOUT, &text(unavailable_id), &detail);
+        let again = text("common-read-again");
+        if empty_state_action(
+            ui,
+            icons::HELP_ABOUT,
+            &text(unavailable_id),
+            &detail,
+            &again,
+        )
+        .clicked()
+        {
+            context.commands.send(UsersCommand::Refresh);
+        }
+
         return false;
     }
 

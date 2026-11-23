@@ -16,7 +16,7 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, UserName, WifiBackend};
 
-use crate::common::{TALL, type_into, window};
+use crate::common::{TALL, queued_shown, type_into, window};
 use crate::discover::source_catalogs;
 use crate::look::look_for;
 use crate::system::first_read;
@@ -100,7 +100,7 @@ fn the_choices_lead_the_catalog() {
     let (harness, _runtime) = tweaks(system());
 
     assert_eq!(
-        harness.query_all_by_label("Shell and network").count(),
+        harness.query_all_by_label("Shell and Network").count(),
         2,
         "the heading and the list it heads, the chip adds its count"
     );
@@ -122,14 +122,14 @@ fn a_dropdown_queues_another_option_and_not_the_current_one() {
     let (mut harness, _runtime) = tweaks(system());
 
     pick(&mut harness, "DNS server", "From your network (default)");
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(&harness));
 
     pick(&mut harness, "DNS server", "Quad9 (9.9.9.9)");
     assert!(harness.query_by_label("Changes with Apply").is_some());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(&harness));
 
     pick(&mut harness, "Login shell", "zsh");
-    assert!(harness.query_by_label("changes queued").is_some());
+    assert!(queued_shown(&harness));
 }
 
 #[test]

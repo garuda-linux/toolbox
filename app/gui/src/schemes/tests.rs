@@ -14,6 +14,24 @@ use toolbox_terminal::Color;
 
 use super::{palette_of, palettes};
 
+/// The contrast checks of one scheme, each miss named by its role.
+struct Contrast<'a> {
+    name: &'a str,
+    found: &'a mut Vec<String>,
+}
+
+impl Contrast<'_> {
+    fn at_least(&mut self, ink: egui::Color32, fills: &[egui::Color32], ratio: f32, what: &str) {
+        for fill in fills {
+            let reached = contrast(ink, *fill);
+            if reached < ratio {
+                self.found
+                    .push(format!("{}: {what} {reached:.2}:1 on {fill:?}", self.name));
+            }
+        }
+    }
+}
+
 fn shipped() -> ColourSchemeCatalog {
     let dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../data/catalog");
     ColourSchemeCatalog::load(&dir).unwrap()
@@ -118,57 +136,72 @@ fn an_unknown_scheme_or_one_of_the_other_mode_keeps_the_desktops() {
 /// Official colours, untuned: the tokens fit every miss to its target.
 #[test]
 fn every_scheme_reaches_the_contrast_targets_after_fitting() {
+    let mut shortfalls = Vec::new();
     for scheme in shipped().schemes() {
-        let tokens = tokens_of(scheme);
-        let name = scheme.id().as_str();
-        let at_least = |ink, fills: &[egui::Color32], ratio: f32, what: &str| {
-            for fill in fills {
-                let reached = contrast(ink, *fill);
-                assert!(
-                    reached >= ratio,
-                    "{name}: {what} {reached:.2}:1 on {fill:?}"
-                );
-            }
-        };
-
-        let surfaces = [tokens.window, tokens.card, tokens.field, tokens.hover];
-        at_least(tokens.text, &[tokens.card], 7.0, "text");
-        at_least(tokens.text, &surfaces, 4.5, "text");
-        at_least(tokens.secondary, &surfaces, 4.5, "secondary");
-        at_least(tokens.dim, &[tokens.card], 3.0, "dim");
-        at_least(tokens.on_accent, &[tokens.accent], 4.5, "on accent");
-        at_least(tokens.on_tint, &[tokens.accent_tint], 4.5, "on tint");
-        at_least(tokens.on_error, &[tokens.error], 4.5, "on error");
-        at_least(
-            tokens.accent_text,
-            &[tokens.window, tokens.card],
-            4.5,
-            "accent text",
-        );
-        at_least(
-            tokens.accent_ring,
-            &[tokens.window, tokens.card, tokens.sidebar],
-            3.0,
-            "ring",
-        );
-
-        for status in [tokens.success, tokens.warning, tokens.error] {
-            at_least(status, &surfaces, 4.5, "status");
-        }
-
-        for hue in [Hue::Accent, Hue::Blue, Hue::Green, Hue::Orange] {
-            let tile = tokens.tiles.of(hue);
-            at_least(tile.ink, &[tile.fill], 3.0, "tile glyph");
-        }
-
-        let terminal = Palette {
-            view: tokens.terminal,
-            ..palette_of(scheme)
-        };
-
-        for index in PRINTED {
-            let printed = resolve(Color::Indexed(index), &tokens.terminal_ansi, &terminal);
-            at_least(printed, &[tokens.terminal], 4.5, "terminal colour");
-        }
+        check_scheme(scheme, &mut shortfalls);
     }
+
+    assert!(shortfalls.is_empty(), "{shortfalls:#?}");
+}
+
+fn check_scheme(scheme: &ColourScheme, found: &mut Vec<String>) {
+    let tokens = tokens_of(scheme);
+
+    let name = scheme.id().as_str();
+    let mut check = Contrast { name, found };
+
+    let surfaces = [
+        tokens.window,
+        tokens.card,
+        tokens.field,
+        tokens.button_hover,
+    ];
+
+    check_text(&mut check, &tokens, &surfaces);
+
+    check_accents(&mut check, &tokens);
+
+    // The focus frame is the accent itself, with no 3:1 fit, so the ring
+    // is not fitted to the surfaces.
+    assert_eq!(tokens.accent_ring, tokens.accent, "{name}: the ring");
+
+    for status in [tokens.success, tokens.warning, tokens.error] {
+        check.at_least(status, &surfaces, 4.5, "status");
+    }
+
+    for hue in [Hue::Accent, Hue::Blue, Hue::Green, Hue::Orange] {
+        let tile = tokens.tiles.of(hue);
+        check.at_least(tile.ink, &[tile.fill], 3.0, "tile glyph");
+    }
+
+    let terminal = Palette {
+        view: tokens.terminal,
+        ..palette_of(scheme)
+    };
+
+    for index in PRINTED {
+        let printed = resolve(Color::Indexed(index), &tokens.terminal_ansi, &terminal);
+        check.at_least(printed, &[tokens.terminal], 4.5, "terminal colour");
+    }
+}
+
+fn check_text(check: &mut Contrast<'_>, tokens: &Tokens, surfaces: &[egui::Color32]) {
+    check.at_least(tokens.text, &[tokens.card], 7.0, "text");
+    check.at_least(tokens.text, surfaces, 4.5, "text");
+
+    check.at_least(tokens.secondary, surfaces, 4.5, "secondary");
+    check.at_least(tokens.dim, &[tokens.card], 3.0, "dim");
+}
+
+fn check_accents(check: &mut Contrast<'_>, tokens: &Tokens) {
+    check.at_least(tokens.on_accent, &[tokens.accent], 4.5, "on accent");
+    check.at_least(tokens.on_tint, &[tokens.accent_tint], 4.5, "on tint");
+
+    check.at_least(tokens.on_error, &[tokens.error], 4.5, "on error");
+    check.at_least(
+        tokens.accent_text,
+        &[tokens.window, tokens.card],
+        4.5,
+        "accent text",
+    );
 }

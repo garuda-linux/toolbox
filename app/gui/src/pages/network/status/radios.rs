@@ -5,8 +5,8 @@ use egui::Ui;
 use toolbox_core::features::network::{
     RadioAccess, RadioKind, RadioSummary, RadioTarget, flight_mode, radio_summary,
 };
+use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{Tone, banner, card};
-use toolbox_gui_kit::{UiExt as _, icons};
 
 use crate::command::NetworkCommand;
 use crate::i18n;
@@ -25,7 +25,7 @@ struct Radio<'a> {
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    heading(ui, icons::PREFERENCES_SYSTEM_BLUETOOTH, "network-radios");
+    heading(ui, "network-radios");
     let status = context.service::<Network>().status();
     let radios = status
         .and_then(|status| status.radios.known())

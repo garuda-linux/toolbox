@@ -1,16 +1,16 @@
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use egui::{CornerRadius, Label, Rect, Ui, Vec2};
+use egui::{Label, Rect, Ui};
 use toolbox_catalog::{Check, ToggleEntry};
 use toolbox_core::Toggle;
 use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::{Control, Entry};
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::icons::{self, Icon};
+use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
-    RowState, Tone, dim_picture, page_tile, paint_letter_tile, queued_tag, row_height, row_menu,
-    split_row_in, status_dot, text_block_height,
+    RowState, TileSize, Tone, dim_picture, paint_icon, paint_letter_tile, queued_tag, row_height,
+    row_menu, split_row_in, status_dot, text_block_height,
 };
 
 use super::catalog_text;
@@ -25,9 +25,6 @@ use crate::pages::PageContext;
 use crate::pages::rows::{
     Initial, PICTURE_RADIUS, actions, picture_height, picture_or_initial, picture_slot,
 };
-
-/// The share of an icon tile's edge its glyph takes, as in gui-kit.
-const GLYPH_SHARE: f32 = 0.56;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Place {
@@ -115,18 +112,10 @@ pub fn show(
     );
 }
 
-/// The glyph on the page's tile. It fills the picture slot rather than an
-/// icon tile's edge, so the row lines up with the rows that have pictures.
+/// The row's icon, plain and centred in the picture slot, so the row
+/// lines up with the rows that have pictures.
 pub fn paint_glyph(ui: &Ui, at: Rect, glyph: Icon) {
-    let tile = page_tile(ui.ctx());
-    ui.painter()
-        .rect_filled(at, CornerRadius::same(PICTURE_RADIUS), tile.fill);
-
-    let theme = icons::theme_in_use(ui.ctx());
-    let edge = at.width() * GLYPH_SHARE;
-    glyph
-        .image(theme.as_deref(), tile.ink)
-        .paint_at(ui, Rect::from_center_size(at.center(), Vec2::splat(edge)));
+    paint_icon(ui, at.center(), TileSize::Row, glyph.for_row());
 }
 
 fn text(ui: &mut Ui, row: &EntryRow) {

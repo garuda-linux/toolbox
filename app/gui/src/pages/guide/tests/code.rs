@@ -14,7 +14,7 @@ fn every_copy_button_sits_at_the_right_edge() {
     harness.run();
 
     let rights: Vec<f32> = harness
-        .query_all_by_label("Copy code")
+        .query_all_by_label("Copy Code")
         .map(|node| node.rect().right())
         .collect();
 

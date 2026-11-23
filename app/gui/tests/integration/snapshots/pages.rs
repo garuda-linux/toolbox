@@ -16,14 +16,14 @@ fn maintenance_page() {
     harness.run();
     results.add(harness.try_snapshot("maintenance/tools_dark"));
 
-    crate::common::open_tab(harness, "Reset settings");
+    crate::common::open_tab(harness, "Reset Settings");
     harness
         .get_by_role_and_label(Role::CheckBox, "Kitty")
         .click();
     harness.run();
     results.add(harness.try_snapshot("maintenance/reset_dark"));
 
-    harness.get_by_label("Reset selected…").click();
+    harness.get_by_label("Reset Selected…").click();
     harness.run();
     results.add(harness.try_snapshot("maintenance/question_dark"));
 
@@ -43,7 +43,7 @@ fn diagnostics_page() {
     crate::diagnostics::collect(harness);
     results.add(harness.try_snapshot("diagnostics/report_dark"));
 
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
     results.add(harness.try_snapshot("diagnostics/question_dark"));
 }
@@ -82,7 +82,7 @@ fn locales_page() {
         .click();
     harness.run();
     harness
-        .get_by_role_and_label(Role::RadioButton, "Language packs")
+        .get_by_role_and_label(Role::RadioButton, "Language Packs")
         .click();
     harness.run();
     results.add(harness.try_snapshot("locales/packs_dark"));
@@ -114,7 +114,7 @@ fn users_page() {
     harness.run();
     results.add(harness.try_snapshot("users/users_dark"));
 
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
     results.add(harness.try_snapshot("users/add_dark"));
 
@@ -140,7 +140,7 @@ fn configs_page() {
     let harness = fixture.harness();
     results.add(harness.try_snapshot("configs/list_dark"));
 
-    harness.get_by_label("Show the files").click();
+    harness.get_by_label("Show the Files").click();
     harness.run();
     results.add(harness.try_snapshot("configs/folder_dark"));
 
@@ -152,7 +152,7 @@ fn configs_page() {
     harness.run();
     harness.query_all_by_label("View").next().unwrap().click();
     crate::system::step_until(harness, "the text", |harness| {
-        harness.query_all_by_label("Copy all").next().is_some()
+        harness.query_all_by_label("Copy All").next().is_some()
     });
     results.add(harness.try_snapshot("configs/view_dark"));
 }
@@ -167,10 +167,10 @@ fn boot_repair_page() {
 
     // The button lies under the window's bottom, where a click misses it.
     harness
-        .get_by_label("Reinstall the boot loader…")
+        .get_by_label("Reinstall the Boot Loader…")
         .scroll_to_me();
     harness.run();
-    harness.get_by_label("Reinstall the boot loader…").click();
+    harness.get_by_label("Reinstall the Boot Loader…").click();
     crate::system::step_until(harness, "the question", |harness| {
         harness
             .query_all_by_label_contains(

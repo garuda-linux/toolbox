@@ -1,6 +1,6 @@
 
 changes-title = Vorgemerkte Änderungen
-# The floating pill at the bottom right. $count is how many.
+# The count in the footer bar under the page. $count is how many.
 changes-pill =
     { $count ->
         [one] Änderung vorgemerkt

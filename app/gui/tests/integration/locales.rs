@@ -16,7 +16,7 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{LocaleEntry, LocaleName};
 
-use crate::common::{Fixture, TALL, packages, window};
+use crate::common::{Fixture, TALL, packages, queued_shown, window};
 use crate::look::look_for;
 use crate::system::first_read;
 
@@ -103,10 +103,10 @@ fn a_new_locale_brings_its_language_packs() {
         .get_by_role_and_label(Role::Button, "Enable German (Germany)")
         .click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(harness));
 
     harness
-        .get_by_role_and_label(Role::RadioButton, "Language packs")
+        .get_by_role_and_label(Role::RadioButton, "Language Packs")
         .click();
     harness.run();
     assert!(
@@ -141,7 +141,7 @@ fn the_locale_of_the_system_language_stays_on() {
             .query_by_label_contains("is the system language. Choose another")
             .is_some()
     );
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(harness));
 }
 
 #[test]

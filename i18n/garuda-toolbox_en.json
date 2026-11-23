@@ -7,7 +7,7 @@
       "string": "Made by the Garuda Linux team"
     },
     "about-copy-details": {
-      "string": "Copy system details"
+      "string": "Copy System Details"
     },
     "about-details-copied": {
       "string": "Copied the system details to the clipboard."
@@ -50,10 +50,10 @@
       "string": "Service status"
     },
     "about-exorcist": {
-      "string": "Call the exorcist"
+      "string": "Call the Exorcist"
     },
     "about-exorcist-title": {
-      "string": "Exorcist called"
+      "string": "Exorcist Called"
     },
     "about-exorcist-called": {
       "string": "You must be pretty desperate to click this. Some special voodoo is on its way. If the app still misbehaves, tell us on the Garuda Linux forum or the issue tracker."
@@ -65,7 +65,7 @@
       "string": "Issue tracker"
     },
     "about-web": {
-      "string": "Garuda Linux on the web"
+      "string": "Garuda Linux on the Web"
     },
     "about-web-start": {
       "string": "Start page"
@@ -204,7 +204,7 @@
       "string": "The settings of systemd-boot and the kernel command line that is built into each kernel image."
     },
     "boot-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "boot-queued": {
       "string": "Changes with Apply"
@@ -239,7 +239,7 @@
       "string": "This parameter opens a root shell at boot or switches a security layer off. Anyone at the computer could then take it over. Add it only if you know why you need it."
     },
     "boot-risky-confirm": {
-      "string": "Add the parameter"
+      "string": "Add the Parameter"
     },
     "boot-risky-cancel": {
       "string": "Cancel"
@@ -284,7 +284,7 @@
       "string": "Dismiss"
     },
     "boot-menu": {
-      "string": "Boot menu"
+      "string": "Boot Menu"
     },
     "boot-default": {
       "string": "Default entry"
@@ -391,16 +391,16 @@
       "string": "Looking for the boot menu entry of the kernel {kernel}…"
     },
     "boot-proposal-queue": {
-      "string": "Queue as default"
+      "string": "Queue as Default"
     },
     "boot-proposal-keep": {
-      "string": "Do not change"
+      "string": "Do Not Change"
     },
     "boot-proposal-close": {
       "string": "Close"
     },
     "boot-kernel": {
-      "string": "Kernel parameters"
+      "string": "Kernel Parameters"
     },
     "boot-parameters": {
       "string": "Parameters passed to the kernel"
@@ -481,7 +481,7 @@
       "string": "Set in /etc/default/grub as GRUB_MENU_PICTURE, which some GRUB themes read. Choose a picture to replace it."
     },
     "boot-background-title": {
-      "string": "Choose a background picture"
+      "string": "Choose a Background Picture"
     },
     "boot-background-filter": {
       "string": "Pictures"
@@ -493,7 +493,7 @@
       "string": "The theme.txt file of a GRUB theme, usually below /usr/share/grub/themes."
     },
     "boot-theme-title": {
-      "string": "Choose a GRUB theme"
+      "string": "Choose a GRUB Theme"
     },
     "boot-theme-filter": {
       "string": "GRUB theme"
@@ -589,7 +589,7 @@
       "string": "Install the boot loader of a system that does not start again, or build its boot files again."
     },
     "repair-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "repair-asks-first": {
       "string": "Each repair asks first and names the partition and the disk it writes to. A GRUB system with /boot on a partition of its own, or with its EFI system partition somewhere else than /boot/efi, is not repaired here."
@@ -710,10 +710,10 @@
       "string": "No free disk was found, so GRUB cannot be installed."
     },
     "repair-reinstall": {
-      "string": "Reinstall the boot loader…"
+      "string": "Reinstall the Boot Loader…"
     },
     "repair-regenerate": {
-      "string": "Build the boot files again…"
+      "string": "Build the Boot Files Again…"
     },
     "repair-running": {
       "string": "The repair is running. The Console shows its output."
@@ -731,17 +731,17 @@
       "string": "Show Console"
     },
     "repair-reinstall-title": {
-      "string": "Reinstall the boot loader?",
+      "string": "Reinstall the Boot Loader?",
       "developer_comment": "The confirm dialog."
     },
     "repair-regenerate-title": {
-      "string": "Build the boot files again?"
+      "string": "Build the Boot Files Again?"
     },
     "repair-reinstall-confirm": {
-      "string": "Reinstall the boot loader"
+      "string": "Reinstall the Boot Loader"
     },
     "repair-regenerate-confirm": {
-      "string": "Build the boot files again"
+      "string": "Build the Boot Files Again"
     },
     "repair-cancel": {
       "string": "Cancel"
@@ -1272,7 +1272,7 @@
       "string": "Runs the daemon that automatically applies your Intel undervolt settings on boot."
     },
     "catalog-settings-rightclick-emulation": {
-      "string": "Right click emulation"
+      "string": "Right Click Emulation"
     },
     "catalog-settings-rightclick-emulation-package": {
       "string": "Touchpad long press"
@@ -1281,7 +1281,7 @@
       "string": "Configures libinput so that holding a single finger on a touchscreen or touchpad registers as a right-click."
     },
     "catalog-settings-desktop-and-apps": {
-      "string": "Desktop and apps"
+      "string": "Desktop and Apps"
     },
     "catalog-settings-audio-no-suspend": {
       "string": "Audio no-suspend"
@@ -1302,7 +1302,7 @@
       "string": "Prevents Discord from prompting to download and installing updates, since this is totally useless on Archlinux - Pacman does it for us."
     },
     "catalog-gaming-launchers": {
-      "string": "Game launchers"
+      "string": "Game Launchers"
     },
     "catalog-gaming-heroic-games-launcher-bin": {
       "string": "Heroic Games Launcher"
@@ -1392,7 +1392,7 @@
       "string": "Script to install various redistributable runtime libraries in Wine"
     },
     "catalog-gaming-tools": {
-      "string": "Gaming tools"
+      "string": "Gaming Tools"
     },
     "catalog-gaming-dxvk-mingw-git": {
       "string": "DXVK"
@@ -1455,7 +1455,7 @@
       "string": "A Vulkan post-processing layer. Some of the effects are CAS, FXAA, SMAA, deband"
     },
     "catalog-gaming-controllers": {
-      "string": "Controller support"
+      "string": "Controller Support"
     },
     "catalog-gaming-bluez": {
       "string": "BlueZ"
@@ -2817,7 +2817,7 @@
       "string": "Font editor for vector graphics"
     },
     "catalog-setup-input-method": {
-      "string": "Input methods"
+      "string": "Input Methods"
     },
     "catalog-setup-asian": {
       "string": "Asian"
@@ -3195,7 +3195,7 @@
       "string": "Free, easy, personal accounting"
     },
     "catalog-setup-pkgmngrs": {
-      "string": "Software centers"
+      "string": "Software Centers"
     },
     "catalog-setup-gnome-firmware": {
       "string": "GNOME Firmware"
@@ -3429,7 +3429,7 @@
       "string": "Kernel parameters that kernel-install builds into each unified kernel image"
     },
     "catalog-config-files-display-and-window-managers": {
-      "string": "Display and window managers"
+      "string": "Display and Window Managers"
     },
     "catalog-config-files-gdm-config": {
       "string": "GDM config"
@@ -3537,7 +3537,7 @@
       "string": "Configuration for the MangoHud performance overlay"
     },
     "catalog-config-files-garuda-tools": {
-      "string": "Garuda tools"
+      "string": "Garuda Tools"
     },
     "catalog-config-files-btrfs-assistant-config": {
       "string": "Btrfs Assistant config"
@@ -3570,7 +3570,7 @@
       "string": "Configuration for zram-generator"
     },
     "catalog-config-files-graphics-and-display": {
-      "string": "Graphics and display"
+      "string": "Graphics and Display"
     },
     "catalog-config-files-20-gpu-conf": {
       "string": "20-gpu.conf"
@@ -3675,7 +3675,7 @@
       "string": "OpenSSH server daemon configuration file"
     },
     "catalog-config-files-package-management": {
-      "string": "Package management"
+      "string": "Package Management"
     },
     "catalog-config-files-chaotic-mirrorlist": {
       "string": "Chaotic mirrorlist"
@@ -3906,7 +3906,7 @@
       "string": "Configuration for the Plymouth bootsplash daemon"
     },
     "catalog-config-files-user-environment": {
-      "string": "User environment"
+      "string": "User Environment"
     },
     "catalog-config-files-alacritty": {
       "string": "Alacritty"
@@ -4005,7 +4005,7 @@
       "string": "Zsh configuration file for the current user"
     },
     "catalog-config-files-users-and-authentication": {
-      "string": "Users and authentication"
+      "string": "Users and Authentication"
     },
     "catalog-config-files-group": {
       "string": "Group"
@@ -4136,11 +4136,11 @@
   },
   "changes": {
     "changes-title": {
-      "string": "Queued changes"
+      "string": "Queued Changes"
     },
     "changes-pill": {
       "string": "{count, plural, one {change queued} other {changes queued}}",
-      "developer_comment": "The floating pill at the bottom right. $count is how many."
+      "developer_comment": "The count in the footer bar under the page. $count is how many."
     },
     "changes-running": {
       "string": "{count, plural, one {Applying change} other {Applying changes}}"
@@ -4165,11 +4165,11 @@
       "developer_comment": "The button that drops one change, named after it for screen readers."
     },
     "changes-remove-all-ask": {
-      "string": "Remove all…",
+      "string": "Remove All…",
       "developer_comment": "Asks first, hence the ellipsis."
     },
     "changes-remove-all": {
-      "string": "Remove all"
+      "string": "{count, plural, one {Remove Change} other {Remove All}}"
     },
     "changes-remove-all-question": {
       "string": "{count, plural, one {Remove the queued change?} other {Remove all {count} queued changes?}}"
@@ -4178,7 +4178,7 @@
       "string": "Apply"
     },
     "changes-keep": {
-      "string": "Keep them"
+      "string": "Keep Them"
     },
     "change-unfinished": {
       "string": "Did not finish",
@@ -4633,7 +4633,7 @@
       "developer_comment": "The language's own name, shown in the language picker."
     },
     "search-clear": {
-      "string": "Clear search",
+      "string": "Clear Search",
       "developer_comment": "The ✕ in a search field and the button that empties a list's search."
     },
     "search-nothing-matches": {
@@ -4645,45 +4645,45 @@
       "developer_comment": "The ✕ in a dialog's title bar."
     },
     "password-show": {
-      "string": "Show password",
+      "string": "Show Password",
       "developer_comment": "The eye in a password field while its text shows as dots."
     },
     "password-hide": {
-      "string": "Hide password",
+      "string": "Hide Password",
       "developer_comment": "The eye in a password field while its text shows."
     },
     "close-running-question": {
-      "string": "Quit while changes are being applied?",
+      "string": "Quit While Changes Are Being Applied?",
       "developer_comment": "Asked when the window is closed while changes are being applied."
     },
     "close-running-detail": {
       "string": "Quitting cancels the run. A step that is halfway done, such as a package update, may leave the system in a broken state."
     },
     "close-running-keep": {
-      "string": "Keep running"
+      "string": "Keep Running"
     },
     "close-running-quit": {
-      "string": "Cancel and quit"
+      "string": "Cancel and Quit"
     },
     "close-edit-question": {
-      "string": "Quit without applying your edit?",
+      "string": "Quit Without Applying Your Edit?",
       "developer_comment": "Asked when the window is closed while Config Files shows an edit that was not applied."
     },
     "close-edit-detail": {
       "string": "The changes you made to a configuration file are not written yet. Quitting discards them."
     },
     "close-edit-keep": {
-      "string": "Keep editing"
+      "string": "Keep Editing"
     },
     "close-edit-quit": {
-      "string": "Discard and quit"
+      "string": "Discard and Quit"
     },
     "common-plan-running": {
       "string": "Changes are being applied. This waits until they are done.",
       "developer_comment": "The banner of a page whose switches and menus wait while a plan runs."
     },
     "common-read-again": {
-      "string": "Read again",
+      "string": "Read Again",
       "developer_comment": "The action of a banner that tells of a failed read."
     },
     "common-reading": {
@@ -4691,14 +4691,14 @@
       "developer_comment": "The name of a Read again button while a read runs."
     },
     "row-open-website": {
-      "string": "Open website",
+      "string": "Open Website",
       "developer_comment": "The actions a row's menu may hold on any page."
     },
     "row-copy-name": {
-      "string": "Copy name"
+      "string": "Copy Name"
     },
     "row-show-logs": {
-      "string": "Show logs"
+      "string": "Show Logs"
     },
     "row-menu": {
       "string": "Actions for {name}",
@@ -4744,7 +4744,7 @@
       "developer_comment": "The button that closes the missing-catalog window."
     },
     "missing-catalog-title": {
-      "string": "Garuda Toolbox is not installed completely",
+      "string": "Garuda Toolbox Is Not Installed Completely",
       "developer_comment": "The missing-catalog window: a title, what to do, then the missing folder and the reinstall command, each with a copy button. $label is the row's name."
     },
     "missing-catalog-body": {
@@ -4763,7 +4763,7 @@
       "string": "Copied to the clipboard."
     },
     "close-stopping-title": {
-      "string": "Stopping the run",
+      "string": "Stopping the Run",
       "developer_comment": "Shown after Quit was confirmed during a run, until the canceled run ends and the window closes."
     }
   },
@@ -4772,7 +4772,7 @@
       "string": "Well-known configuration files of the system and your apps."
     },
     "configs-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "configs-search": {
       "string": "Search config files"
@@ -4799,7 +4799,7 @@
       "string": "{section} files"
     },
     "configs-open-in-app": {
-      "string": "Open in app"
+      "string": "Open in App"
     },
     "configs-edit": {
       "string": "Edit"
@@ -4808,17 +4808,17 @@
       "string": "View"
     },
     "configs-show-files": {
-      "string": "Show the files"
+      "string": "Show the Files"
     },
     "configs-hide-files": {
-      "string": "Hide the files"
+      "string": "Hide the Files"
     },
     "configs-files": {
       "string": "{count, plural, one {1 file} other {{count} files}}",
       "developer_comment": "$count is how many files the folder holds."
     },
     "configs-wiki-open": {
-      "string": "Open wiki page"
+      "string": "Open Wiki Page"
     },
     "configs-admin": {
       "string": "Saving asks for an administrator password"
@@ -4941,13 +4941,13 @@
       "string": "Show Console"
     },
     "configs-cancel-edit": {
-      "string": "Cancel edit"
+      "string": "Cancel Edit"
     },
     "configs-review": {
-      "string": "Review changes"
+      "string": "Review Changes"
     },
     "configs-review-title": {
-      "string": "Save the changes to {path}?"
+      "string": "Save the Changes to {path}?"
     },
     "configs-review-link": {
       "string": "{path} is a link. Saving writes the file it leads to, {target}. The link itself stays as it is.",
@@ -4968,11 +4968,14 @@
     "configs-save": {
       "string": "Save"
     },
+    "configs-review-cancel": {
+      "string": "Cancel"
+    },
     "configs-edit-again": {
-      "string": "Edit again"
+      "string": "Edit Again"
     },
     "configs-compare-again": {
-      "string": "Compare again"
+      "string": "Compare Again"
     },
     "configs-discard": {
       "string": "Discard"
@@ -4981,28 +4984,28 @@
       "string": "Discard…"
     },
     "configs-discard-title": {
-      "string": "Discard your edits?"
+      "string": "Discard Your Edits?"
     },
     "configs-discard-question": {
       "string": "Your edits to {path} are thrown away. The file stays as it was."
     },
     "configs-discard-keep": {
-      "string": "Keep editing"
+      "string": "Keep Editing"
     },
     "configs-review-close": {
-      "string": "Close and keep the edits"
+      "string": "Close and Keep the Edits"
     },
     "configs-review-lines": {
       "string": "{count, plural, one {Line {first}} other {Lines {first} to {last}}}"
     },
     "configs-view-title": {
-      "string": "The text of {path}"
+      "string": "The Text of {path}"
     },
     "configs-view-link": {
       "string": "{path} is a link. This is the text of the file it leads to, {target}."
     },
     "configs-copy-all": {
-      "string": "Copy all"
+      "string": "Copy All"
     },
     "configs-copied": {
       "string": "Copied to the clipboard."
@@ -5048,13 +5051,13 @@
       "string": "Console output actions"
     },
     "console-copy-output": {
-      "string": "Copy output"
+      "string": "Copy Output"
     },
     "console-share-output": {
-      "string": "Share output…"
+      "string": "Share Output…"
     },
     "console-clear-output": {
-      "string": "Clear output"
+      "string": "Clear Output"
     },
     "console-output-copied": {
       "string": "Copied the output to the clipboard."
@@ -5177,7 +5180,7 @@
       "developer_comment": "An install failed as a mirror no longer has a package file."
     },
     "console-update-and-retry": {
-      "string": "Update the system and try again"
+      "string": "Update the System and Try Again"
     }
   },
   "diagnostics": {
@@ -5188,7 +5191,7 @@
       "string": "Reports"
     },
     "diagnostics-another": {
-      "string": "Collect another report",
+      "string": "Collect Another Report",
       "developer_comment": "Unfolds the report rows while a report shows."
     },
     "diagnostics-collect": {
@@ -5299,13 +5302,13 @@
       "string": "Search the report"
     },
     "diagnostics-search-clear": {
-      "string": "Clear the search"
+      "string": "Clear the Search"
     },
     "diagnostics-copy": {
-      "string": "Copy report"
+      "string": "Copy Report"
     },
     "diagnostics-share": {
-      "string": "Share report…"
+      "string": "Share Report…"
     },
     "diagnostics-share-tooltip": {
       "string": "Uploads the report, encrypted, to bin.garudalinux.org and gives you a link to share."
@@ -5353,7 +5356,7 @@
       "string": "Other categories have apps that match."
     },
     "discover-show-all-matches": {
-      "string": "{count, plural, one {Show the match} other {Show all {count} matches}}",
+      "string": "{count, plural, one {Show the Match} other {Show All {count} Matches}}",
       "developer_comment": "$count is how many apps of every category match the search."
     },
     "discover-none": {
@@ -5389,6 +5392,21 @@
     },
     "discover-problem-reason": {
       "string": "Some categories could not be loaded. The others are shown. {reason}"
+    },
+    "discover-back": {
+      "string": "Back"
+    },
+    "discover-back-name": {
+      "string": "Back to App Catalog"
+    },
+    "discover-details-packages": {
+      "string": "Packages"
+    },
+    "discover-details-website": {
+      "string": "Website"
+    },
+    "discover-package-from": {
+      "string": "{package} from {repository}"
     }
   },
   "guide": {
@@ -5402,7 +5420,7 @@
       "string": "Search the guide…"
     },
     "guide-outline": {
-      "string": "On this page"
+      "string": "On This Page"
     },
     "guide-open-page": {
       "string": "Open {page}",
@@ -5421,7 +5439,7 @@
       "string": "Warning"
     },
     "guide-copy-code": {
-      "string": "Copy code"
+      "string": "Copy Code"
     },
     "guide-enlarge": {
       "string": "Show larger: {alt}",
@@ -5457,10 +5475,10 @@
       "string": "Maintain and set up your system."
     },
     "home-status": {
-      "string": "System status"
+      "string": "System Status"
     },
     "home-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "home-checking": {
       "string": "Checking the system…"
@@ -5475,10 +5493,10 @@
       "string": "{count, plural, one {One check could not run, so its result is missing.} other {{count} checks could not run, so their results are missing.}}"
     },
     "home-show-details": {
-      "string": "Show details"
+      "string": "Show Details"
     },
     "home-hide-details": {
-      "string": "Hide details"
+      "string": "Hide Details"
     },
     "home-failed-updates": {
       "string": "Repository updates: {reason}",
@@ -5512,16 +5530,16 @@
       "string": "Update now in the Console, or queue the update with your other changes."
     },
     "home-update-now": {
-      "string": "Update now"
+      "string": "Update Now"
     },
     "home-queue-update": {
-      "string": "Queue update"
+      "string": "Queue Update"
     },
     "home-unqueue-update": {
-      "string": "Don't update"
+      "string": "Don't Update"
     },
     "home-show-packages": {
-      "string": "Show packages"
+      "string": "Show Packages"
     },
     "home-aur-updates": {
       "string": "{count, plural, one {One AUR update available} other {{count} AUR updates available}}"
@@ -5539,7 +5557,7 @@
       "string": "Arch based systems should be updated at least every two weeks."
     },
     "home-merges": {
-      "string": "Configuration files to merge"
+      "string": "Configuration Files to Merge"
     },
     "home-merges-review": {
       "string": "Review…"
@@ -5548,7 +5566,7 @@
       "string": "Open in meld"
     },
     "home-merges-title": {
-      "string": "Configuration files to merge"
+      "string": "Configuration Files to Merge"
     },
     "home-merges-reading": {
       "string": "Reading the files…"
@@ -5569,7 +5587,7 @@
       "string": "queued"
     },
     "home-merges-take-back": {
-      "string": "Take back"
+      "string": "Take Back"
     },
     "home-merges-unreadable": {
       "string": "A file could not be read. Use meld instead."
@@ -5584,16 +5602,16 @@
       "string": "An older saved version. It can only be removed."
     },
     "home-merges-remove": {
-      "string": "Remove the copy"
+      "string": "Remove the Copy"
     },
     "home-merges-keep": {
-      "string": "Keep current"
+      "string": "Keep Current"
     },
     "home-merges-take-new": {
-      "string": "Take new"
+      "string": "Take New"
     },
     "home-merges-take-saved": {
-      "string": "Take saved"
+      "string": "Take Saved"
     },
     "home-merges-change": {
       "string": "Change {number}"
@@ -5602,19 +5620,19 @@
       "string": "{count, plural, one {One unchanged line} other {{count} unchanged lines}}"
     },
     "home-merges-keep-file": {
-      "string": "Keep current file"
+      "string": "Keep Current File"
     },
     "home-merges-use-file": {
-      "string": "Use new file"
+      "string": "Use New File"
     },
     "home-merges-restore-file": {
-      "string": "Restore saved file"
+      "string": "Restore Saved File"
     },
     "home-merges-queue-picks": {
-      "string": "Queue the merge"
+      "string": "Queue the Merge"
     },
     "home-merges-edit": {
-      "string": "Edit result…"
+      "string": "Edit Result…"
     },
     "home-merges-edit-name": {
       "string": "Merged text"
@@ -5626,7 +5644,7 @@
       "string": "Back"
     },
     "home-merges-edit-queue": {
-      "string": "Queue the edited text"
+      "string": "Queue the Edited Text"
     },
     "home-merges-applied": {
       "string": "This runs with your other changes. Where snapper is set up, a snapshot comes first. The old file is kept in /var/lib/garuda-toolbox/backups."
@@ -5653,7 +5671,7 @@
       "string": "Restart…"
     },
     "home-restart-question": {
-      "string": "Restart now?"
+      "string": "Restart Now?"
     },
     "home-restart-question-detail": {
       "string": "Save your work first. Open programs are closed."
@@ -5671,7 +5689,7 @@
       "string": "The computer could not be restarted. Restart it from the desktop's menu."
     },
     "home-pending": {
-      "string": "Pending updates"
+      "string": "Pending Updates"
     },
     "home-pending-none": {
       "string": "No updates are waiting."
@@ -5683,7 +5701,7 @@
       "string": "{from} → {to}"
     },
     "home-live": {
-      "string": "Live system"
+      "string": "Live System"
     },
     "home-install": {
       "string": "Install Garuda Linux"
@@ -5692,7 +5710,7 @@
       "string": "Start the installer. It asks for your password."
     },
     "home-install-button": {
-      "string": "Start installer"
+      "string": "Start Installer"
     },
     "home-install-failed": {
       "string": "The installer could not start: {reason}",
@@ -5702,7 +5720,7 @@
       "string": "The live system's tools could not be looked for."
     },
     "home-chroot": {
-      "string": "Repair an installed system"
+      "string": "Repair an Installed System"
     },
     "home-chroot-detail": {
       "string": "Open a root shell inside the Garuda Linux installed on this computer, in the Console. Type exit to leave it."
@@ -5711,7 +5729,7 @@
       "string": "Open in Console"
     },
     "home-next": {
-      "string": "Next steps"
+      "string": "Next Steps"
     },
     "home-next-setup": {
       "string": "Pick the apps you want and install them in one go"
@@ -5793,7 +5811,7 @@
       "string": "Show in Services"
     },
     "home-cleanup": {
-      "string": "Orphans and package cache"
+      "string": "Orphans and Package Cache"
     },
     "home-cleanup-detail-cache": {
       "string": "No package is orphaned. The package cache holds {cache}.",
@@ -5803,10 +5821,10 @@
       "string": "{orphans, plural, one {One package is no longer needed. The package cache holds {cache}.} other {{orphans} packages are no longer needed. The package cache holds {cache}.}}"
     },
     "home-cleanup-queue": {
-      "string": "Queue clean-up"
+      "string": "Queue Clean-up"
     },
     "home-cleanup-unqueue": {
-      "string": "Don't clean up"
+      "string": "Don't Clean Up"
     },
     "home-check-updates": {
       "string": "Repository updates"
@@ -5833,7 +5851,7 @@
       "string": "Get help with a report for the forum"
     },
     "home-recent": {
-      "string": "Recently used"
+      "string": "Recently Used"
     },
     "home-news": {
       "string": "News"
@@ -5879,7 +5897,7 @@
       "developer_comment": "$release is what `uname -r` prints."
     },
     "kernels-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "kernels-reading": {
       "string": "Reading the kernels…"
@@ -5931,13 +5949,13 @@
       "string": "Headers install with Apply"
     },
     "kernels-queue-headers": {
-      "string": "Queue headers"
+      "string": "Queue Headers"
     },
     "kernels-unqueue-headers": {
-      "string": "Don't install headers"
+      "string": "Don't Install Headers"
     },
     "kernels-modules": {
-      "string": "DKMS modules"
+      "string": "DKMS Modules"
     },
     "kernels-module-installed": {
       "string": "{module} {version}: installed",
@@ -5956,10 +5974,10 @@
       "string": "{module} {version}: build queued"
     },
     "kernels-queue-builds": {
-      "string": "Queue module builds"
+      "string": "Queue Module Builds"
     },
     "kernels-unqueue-builds": {
-      "string": "Don't build modules"
+      "string": "Don't Build Modules"
     },
     "kernels-dkms-loading": {
       "string": "Asking dkms for its modules…"
@@ -5980,10 +5998,10 @@
       "string": "{count, plural, one {One DKMS module is not built. DKMS builds extra drivers, such as those of NVIDIA or VirtualBox, for each kernel.} other {{count} DKMS modules are not built. DKMS builds extra drivers, such as those of NVIDIA or VirtualBox, for each kernel.}}"
     },
     "kernels-queue-all-headers": {
-      "string": "Queue all headers"
+      "string": "Queue All Headers"
     },
     "kernels-queue-all-builds": {
-      "string": "Queue all builds"
+      "string": "Queue All Builds"
     },
     "kernels-refusal-running": {
       "string": "{name} is the kernel that runs right now, so it stays installed.",
@@ -5999,7 +6017,7 @@
       "string": "Dismiss"
     },
     "kernels-set-default": {
-      "string": "Set as default…",
+      "string": "Set as Default…",
       "developer_comment": "The link that opens Boot options with a kernel offered as the default."
     },
     "kernels-set-default-name": {
@@ -6014,7 +6032,7 @@
       "string": "The languages, number and date formats this system can use, and translations for your programs."
     },
     "locales-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "locales-tabs": {
       "string": "Languages tabs"
@@ -6023,7 +6041,7 @@
       "string": "Locales"
     },
     "locales-tab-packs": {
-      "string": "Language packs"
+      "string": "Language Packs"
     },
     "locales-queued": {
       "string": "Changes with Apply"
@@ -6032,13 +6050,13 @@
       "string": "Search locales and packs"
     },
     "locales-search-hint": {
-      "string": "Search locales and packs…"
+      "string": "Search…"
     },
     "locales-filter-utf8": {
-      "string": "UTF-8 only"
+      "string": "UTF-8 Only"
     },
     "locales-filter-enabled": {
-      "string": "Enabled only"
+      "string": "Enabled Only"
     },
     "locales-list": {
       "string": "Locales"
@@ -6114,7 +6132,7 @@
       "string": "Language packs for your enabled locales and installed programs."
     },
     "locales-packs-add-missing": {
-      "string": "Queue all missing"
+      "string": "Queue All Missing"
     },
     "locales-packs-sort": {
       "string": "Sort language packs"
@@ -6132,7 +6150,7 @@
       "string": "Selected first"
     },
     "locales-packs-list": {
-      "string": "Language packs"
+      "string": "Language Packs"
     },
     "locales-packs-reading": {
       "string": "Reading the language packs…"
@@ -6170,7 +6188,7 @@
       "string": "Keep the system in a good state: updates, cleanups, tools and repairs."
     },
     "maintenance-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "maintenance-tabs": {
       "string": "Maintenance tabs"
@@ -6179,22 +6197,22 @@
       "string": "Common"
     },
     "maintenance-tab-reset": {
-      "string": "Reset settings"
+      "string": "Reset Settings"
     },
     "maintenance-tab-repairs": {
       "string": "Repairs"
     },
     "maintenance-operations": {
-      "string": "Package care"
+      "string": "Package Care"
     },
     "maintenance-operations-detail": {
       "string": "Queue these to apply them with your other changes, or run one now in the Console."
     },
     "maintenance-run-now": {
-      "string": "Run now"
+      "string": "Run Now"
     },
     "maintenance-unqueue": {
-      "string": "Remove from queue"
+      "string": "Remove from Queue"
     },
     "maintenance-queued": {
       "string": "Runs with Apply"
@@ -6206,7 +6224,7 @@
       "string": "Update every package, with snapshots and checks when garuda-update is installed."
     },
     "maintenance-op-upgrade-system-queue": {
-      "string": "Queue update"
+      "string": "Queue Update"
     },
     "maintenance-op-remove-orphans": {
       "string": "Remove orphans"
@@ -6215,7 +6233,7 @@
       "string": "Remove packages that were installed as dependencies and are no longer needed."
     },
     "maintenance-op-remove-orphans-queue": {
-      "string": "Queue removal"
+      "string": "Queue Removal"
     },
     "maintenance-op-remove-orphans-question": {
       "string": "Packages that were installed for others and are no longer needed get removed. The Console lists them and asks once more before anything goes."
@@ -6227,7 +6245,7 @@
       "string": "Delete cached packages of software that is no longer installed."
     },
     "maintenance-op-clean-package-cache-queue": {
-      "string": "Queue cleanup"
+      "string": "Queue Cleanup"
     },
     "maintenance-op-clean-package-cache-question": {
       "string": "Every cached package of software that is no longer installed is deleted. You cannot go back to those versions afterwards."
@@ -6239,7 +6257,7 @@
       "string": "Download the newest keys that prove the packages of the repositories are genuine (the keyring)."
     },
     "maintenance-op-refresh-keyring-queue": {
-      "string": "Queue refresh"
+      "string": "Queue Refresh"
     },
     "maintenance-op-remove-database-lock": {
       "string": "Remove the pacman lock"
@@ -6251,7 +6269,7 @@
       "string": "Update the packages built from the AUR with paru, which asks its questions in the terminal."
     },
     "maintenance-op-remove-database-lock-queue": {
-      "string": "Queue unlock"
+      "string": "Queue Unlock"
     },
     "maintenance-tools": {
       "string": "Tools"
@@ -6263,7 +6281,7 @@
       "string": "Open"
     },
     "maintenance-install-open": {
-      "string": "Install and open…"
+      "string": "Install and Open…"
     },
     "maintenance-not-installed": {
       "string": "Not installed",
@@ -6282,7 +6300,7 @@
       "string": "Ranking mirrors, {time}"
     },
     "maintenance-ranking-cancel": {
-      "string": "Stop ranking"
+      "string": "Stop Ranking"
     },
     "maintenance-tool-arch-mirrors": {
       "string": "Refresh Arch mirrors"
@@ -6337,7 +6355,7 @@
       "string": "Dismiss"
     },
     "maintenance-reset": {
-      "string": "Application settings"
+      "string": "Application Settings"
     },
     "maintenance-reset-detail": {
       "string": "Choose the applications whose settings go back to Garuda's defaults. Your current files are kept as backups."
@@ -6349,7 +6367,7 @@
       "string": "This system has no Garuda defaults in /etc/skel."
     },
     "maintenance-reset-button": {
-      "string": "Reset selected…"
+      "string": "Reset Selected…"
     },
     "maintenance-reset-busy": {
       "string": "Resetting the chosen settings…"
@@ -6362,7 +6380,7 @@
       "developer_comment": "$names lists the applications, separated by commas."
     },
     "maintenance-reset-question": {
-      "string": "{count, plural, one {Reset 1 setting?} other {Reset {count} settings?}}"
+      "string": "{count, plural, one {Reset 1 Setting?} other {Reset {count} Settings?}}"
     },
     "maintenance-reset-replaces": {
       "string": "Replaces {files}",
@@ -6406,25 +6424,25 @@
       "string": "Let garuda-health fix the common problems it finds."
     },
     "maintenance-repair-remote-fix": {
-      "string": "Reset package manager settings"
+      "string": "Reset Package Manager Settings"
     },
     "maintenance-repair-remote-fix-detail": {
       "string": "Reset pacman.conf, the mirror lists and the keyring to Garuda's defaults."
     },
     "maintenance-repair-remote-keyring": {
-      "string": "Reset keyring"
+      "string": "Reset Keyring"
     },
     "maintenance-repair-remote-keyring-detail": {
       "string": "Reset the package signing keys to Garuda's defaults."
     },
     "maintenance-repair-remote-full-fix": {
-      "string": "Full reset"
+      "string": "Full Reset"
     },
     "maintenance-repair-remote-full-fix-detail": {
       "string": "Reset pacman fully and reinstall every package."
     },
     "maintenance-repair-remote-reset-audio": {
-      "string": "Reset audio"
+      "string": "Reset Audio"
     },
     "maintenance-repair-remote-reset-audio-detail": {
       "string": "Reinstall and reset the PipeWire audio configuration."
@@ -6436,7 +6454,7 @@
       "string": "Reset Snapper fully and create its configurations again."
     },
     "maintenance-repair-remote-reinstall": {
-      "string": "Reinstall packages"
+      "string": "Reinstall Packages"
     },
     "maintenance-repair-remote-reinstall-detail": {
       "string": "Reinstall every installed package."
@@ -6472,7 +6490,7 @@
       "string": "The connection, the radios, the network drivers and tests."
     },
     "network-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "network-tabs": {
       "string": "Network tabs"
@@ -6547,13 +6565,13 @@
       "string": "Could not be found out"
     },
     "network-address-show": {
-      "string": "Show public address"
+      "string": "Show Public Address"
     },
     "network-address-again": {
-      "string": "Try again"
+      "string": "Try Again"
     },
     "network-address-copy": {
-      "string": "Copy public address"
+      "string": "Copy Public Address"
     },
     "network-address-hide": {
       "string": "Hide"
@@ -6706,7 +6724,7 @@
       "string": "No driver matches"
     },
     "network-drivers-clear": {
-      "string": "Clear filters"
+      "string": "Clear Filters"
     },
     "network-driver-other-files": {
       "string": "Blacklisted by {files}. Garuda Toolbox does not change that file."
@@ -6733,16 +6751,16 @@
       "string": "Every device {module} runs stops at once. When it runs your network card, the connection drops until you load it again."
     },
     "network-driver-unload-keep": {
-      "string": "Keep it loaded"
+      "string": "Keep It Loaded"
     },
     "network-driver-blacklist": {
-      "string": "Queue blacklist"
+      "string": "Queue Blacklist"
     },
     "network-driver-allow": {
-      "string": "Queue removal from blacklist"
+      "string": "Queue Removal from Blacklist"
     },
     "network-driver-unqueue": {
-      "string": "Take back"
+      "string": "Take Back"
     },
     "network-refused-other-file": {
       "string": "{name}: another driver settings file (in modprobe.d) blacklists this driver. Garuda Toolbox only changes its own file.",
@@ -6758,10 +6776,10 @@
       "string": "Network devices as lspci and lsusb list them."
     },
     "network-hardware-copy-all": {
-      "string": "Copy all"
+      "string": "Copy All"
     },
     "network-hardware-copy-line": {
-      "string": "Copy this line"
+      "string": "Copy This Line"
     },
     "network-hardware-reading": {
       "string": "Reading the devices…"
@@ -6788,10 +6806,10 @@
       "string": "Queue pciutils"
     },
     "network-hardware-unqueue-pciutils": {
-      "string": "Take back pciutils"
+      "string": "Take Back pciutils"
     },
     "network-tests": {
-      "string": "Connection tests"
+      "string": "Connection Tests"
     },
     "network-tests-detail": {
       "string": "Both tests run with your own rights and show their output in the Console."
@@ -6812,10 +6830,10 @@
       "string": "Most hops (for traceroute)"
     },
     "network-ping": {
-      "string": "Run ping"
+      "string": "Run Ping"
     },
     "network-traceroute": {
-      "string": "Run traceroute"
+      "string": "Run Traceroute"
     },
     "network-traceroute-missing": {
       "string": "Traceroute needs the package traceroute, which is not installed."
@@ -6837,7 +6855,7 @@
       "string": "Show Console"
     },
     "network-hotspot": {
-      "string": "Wi-Fi hotspot"
+      "string": "Wi-Fi Hotspot"
     },
     "network-hotspot-detail": {
       "string": "Share this computer's connection with other devices. The hotspot tool opens in its own window."
@@ -6846,13 +6864,13 @@
       "string": "Share this computer's connection with other devices. This needs the package linux-wifi-hotspot, which waits in the queue until you apply it."
     },
     "network-hotspot-open": {
-      "string": "Open hotspot"
+      "string": "Open Hotspot"
     },
     "network-hotspot-queue": {
-      "string": "Queue hotspot tool"
+      "string": "Queue Hotspot Tool"
     },
     "network-hotspot-unqueue": {
-      "string": "Take back"
+      "string": "Take Back"
     },
     "network-hotspot-unknown": {
       "string": "The installed packages could not be read, so it is not known whether the hotspot tool is installed. Read again reads them once more."
@@ -6903,7 +6921,7 @@
   },
   "packages": {
     "packages-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "packages-search": {
       "string": "Search packages"
@@ -6999,7 +7017,7 @@
       "string": "Remove"
     },
     "packages-take-back": {
-      "string": "Take back"
+      "string": "Take Back"
     },
     "packages-tag-dependency": {
       "string": "Dependency"
@@ -7052,14 +7070,14 @@
       "string": "Cancel"
     },
     "packages-back": {
-      "string": "← Packages",
+      "string": "Packages",
       "developer_comment": "The -name texts are what screen readers say."
     },
     "packages-back-name": {
       "string": "Back to Packages"
     },
     "packages-back-to": {
-      "string": "← {package}",
+      "string": "{package}",
       "developer_comment": "$package is the package the page was opened from."
     },
     "packages-back-to-name": {
@@ -7152,7 +7170,7 @@
       "developer_comment": "The count of installed files follows it, dimmed."
     },
     "packages-copy-list": {
-      "string": "Copy list"
+      "string": "Copy List"
     },
     "packages-files-copied": {
       "string": "The file list was copied to the clipboard."
@@ -7165,7 +7183,7 @@
       "string": "Filter files"
     },
     "packages-files-filter-clear": {
-      "string": "Clear the filter"
+      "string": "Clear the Filter"
     },
     "packages-files-none": {
       "string": "No file matches “{filter}”."
@@ -7174,7 +7192,7 @@
       "string": "History"
     },
     "packages-history-all": {
-      "string": "Show all"
+      "string": "Show All"
     },
     "packages-history-failed": {
       "string": "pacman's log could not be read."
@@ -7244,7 +7262,7 @@
       "string": "Built from a community script on your computer. paru shows the build script in the Console before it builds."
     },
     "packages-aur-install-confirm": {
-      "string": "Build and install"
+      "string": "Build and Install"
     },
     "packages-aur-maintainer": {
       "string": "Maintainer"
@@ -7330,7 +7348,7 @@
       "string": "Settings"
     },
     "page-guide": {
-      "string": "User guide"
+      "string": "User Guide"
     },
     "page-about": {
       "string": "About"
@@ -7405,7 +7423,7 @@
       "string": "All"
     },
     "services-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "services-sort": {
       "string": "Sort services"
@@ -7444,7 +7462,7 @@
       "string": "Change the search or the filters to see more services."
     },
     "services-show-every": {
-      "string": "{count, plural, one {Show the one match} other {Show all {count} matches}}",
+      "string": "{count, plural, one {Show the One Match} other {Show All {count} Matches}}",
       "developer_comment": "A button under \"No service matches.\" that picks the All chip. $count is how many units the search finds there."
     },
     "services-busy": {
@@ -7816,6 +7834,15 @@
     },
     "settings-log-trace": {
       "string": "Everything"
+    },
+    "settings-blur-desktop": {
+      "string": "Blur the desktop behind the window"
+    },
+    "settings-blur-desktop-description": {
+      "string": "Blurs the desktop behind the window."
+    },
+    "settings-blur-desktop-unavailable": {
+      "string": "This desktop does not offer blur behind windows."
     }
   },
   "setup": {
@@ -7825,17 +7852,8 @@
     "setup-welcome": {
       "string": "Welcome"
     },
-    "setup-welcome-title": {
-      "string": "Welcome to the Setup Assistant"
-    },
     "setup-welcome-text": {
-      "string": "Pick the apps you want, one category at a time. Nothing is installed until you review and apply your choices at the end."
-    },
-    "setup-welcome-steps": {
-      "string": "{count, plural, one {There is 1 category.} other {There are {count} categories.}} Next skips one you do not need, Back returns to it, and the list between them jumps to any category."
-    },
-    "setup-welcome-installed": {
-      "string": "Apps that are already installed show as on. Turning one off removes it."
+      "string": "Nothing is installed until you apply your choices at the end. Apps that are already installed show as on, and turning one off removes it."
     },
     "setup-unavailable": {
       "string": "The Setup Assistant's list of apps could not be read"
@@ -7885,7 +7903,7 @@
       "string": "Review lists every queued change, also those from other pages. Nothing changes before you apply there."
     },
     "setup-review": {
-      "string": "Review and apply"
+      "string": "Review and Apply"
     },
     "setup-nothing": {
       "string": "You picked nothing. Go back to choose apps, or finish without changes."
@@ -7924,7 +7942,7 @@
       "string": "Restart…"
     },
     "setup-finish-setup": {
-      "string": "Finish setup"
+      "string": "Finish Setup"
     },
     "setup-forum": {
       "string": "Garuda forum"
@@ -7948,11 +7966,11 @@
     },
     "share-upload-question": {
       "report": {
-        "string": "Upload this report?",
+        "string": "Upload This Report?",
         "developer_comment": "The question before an upload.\nUsed when `subject` is `report`."
       },
       "output": {
-        "string": "Upload this output?",
+        "string": "Upload This Output?",
         "developer_comment": "The question before an upload.\nUsed when `subject` is `output`."
       }
     },
@@ -7975,10 +7993,10 @@
       "string": "Search the text"
     },
     "share-upload-search-clear": {
-      "string": "Clear the search"
+      "string": "Clear the Search"
     },
     "share-upload-search-next": {
-      "string": "Next match"
+      "string": "Next Match"
     },
     "share-upload-search-count": {
       "string": "{current} of {count}"
@@ -8003,7 +8021,7 @@
       }
     },
     "share-copy-link": {
-      "string": "Copy link"
+      "string": "Copy Link"
     },
     "share-uploaded-short": {
       "string": "Uploaded.",
@@ -8013,24 +8031,24 @@
       "string": "More link actions"
     },
     "share-open-link": {
-      "string": "Open in browser"
+      "string": "Open in Browser"
     },
     "share-copy-delete-link": {
-      "string": "Copy delete link"
+      "string": "Copy Delete Link"
     },
     "share-delete-now": {
-      "string": "Delete now…"
+      "string": "Delete Now…"
     },
     "share-hide": {
       "string": "Hide"
     },
     "share-delete-question": {
       "report": {
-        "string": "Delete the report from the server?",
+        "string": "Delete the Report from the Server?",
         "developer_comment": "Used when `subject` is `report`."
       },
       "output": {
-        "string": "Delete the output from the server?",
+        "string": "Delete the Output from the Server?",
         "developer_comment": "Used when `subject` is `output`."
       }
     },
@@ -8090,6 +8108,9 @@
     "sidebar-search": {
       "string": "Search"
     },
+    "sidebar-search-hint": {
+      "string": "Search everything"
+    },
     "console-title": {
       "string": "Console"
     },
@@ -8117,48 +8138,48 @@
       "string": "AUR"
     },
     "palette-show-all": {
-      "string": "Show all {count} in {page}",
+      "string": "Show All {count} in {page}",
       "developer_comment": "The last row of a group that shows only its best rows. $count is how many rows the group has, $page the name of the page that lists them all."
     },
     "palette-show-all-here": {
-      "string": "Show all {count}",
+      "string": "Show All {count}",
       "developer_comment": "The last row of a group that shows only its best rows, which shows the rest right there. $count is how many rows the group has."
     },
     "command-apply": {
-      "string": "Apply changes"
+      "string": "Apply Changes"
     },
     "command-toggle-sidebar": {
-      "string": "Toggle sidebar"
+      "string": "Toggle Sidebar"
     },
     "command-toggle-console": {
-      "string": "Toggle console"
+      "string": "Toggle Console"
     },
     "command-open-palette": {
-      "string": "Command palette"
+      "string": "Command Palette"
     },
     "command-review-changes": {
-      "string": "Review changes"
+      "string": "Review Changes"
     },
     "command-quit": {
       "string": "Quit"
     },
     "command-focus-search": {
-      "string": "Search this page"
+      "string": "Search This Page"
     },
     "command-help": {
-      "string": "Help for this page"
+      "string": "Help for This Page"
     },
     "command-clear-changes": {
-      "string": "Remove all changes"
+      "string": "Remove All Changes"
     },
     "command-zoom-in": {
-      "string": "Zoom in"
+      "string": "Zoom In"
     },
     "command-zoom-out": {
-      "string": "Zoom out"
+      "string": "Zoom Out"
     },
     "command-zoom-reset": {
-      "string": "Reset zoom"
+      "string": "Reset Zoom"
     },
     "command-apply-tooltip": {
       "string": "Run every queued change now, with one password"
@@ -8210,15 +8231,15 @@
       "string": "Help"
     },
     "appmenu-review-and-apply": {
-      "string": "Review and apply…",
+      "string": "Review and Apply…",
       "developer_comment": "Opens the list of queued changes, where they are applied. A dialog\nfollows, hence the dots."
     },
     "appmenu-clear-changes": {
-      "string": "Remove all changes…",
+      "string": "Remove All Changes…",
       "developer_comment": "Asks before it removes every queued change."
     },
     "appmenu-sidebar-expanded": {
-      "string": "Expanded sidebar",
+      "string": "Expanded Sidebar",
       "developer_comment": "A check item: the sidebar shows the page names."
     },
     "toast-name": {
@@ -8407,7 +8428,7 @@
       "string": "Other sections have entries with “{search}” in their name or description."
     },
     "toggles-show-all-matches": {
-      "string": "{count, plural, one {Show the match} other {Show all {count} matches}}",
+      "string": "{count, plural, one {Show the Match} other {Show All {count} Matches}}",
       "developer_comment": "$count is how many entries of the whole page match the search."
     },
     "toggles-section-count": {
@@ -8469,7 +8490,7 @@
   },
   "tweaks": {
     "tweaks-shell-network": {
-      "string": "Shell and network"
+      "string": "Shell and Network"
     },
     "tweaks-garuda-update": {
       "string": "Garuda Update"
@@ -8561,7 +8582,7 @@
       "string": "Add users, set passwords, lock accounts and change groups."
     },
     "users-refresh": {
-      "string": "Read again"
+      "string": "Read Again"
     },
     "users-tabs": {
       "string": "Users and groups tabs"
@@ -8585,16 +8606,16 @@
       "string": "Search users"
     },
     "users-search-hint": {
-      "string": "Search users…"
+      "string": "Search…"
     },
     "users-search-detail": {
       "string": "The search looks at user names, user IDs, full names, home folders, shells and groups."
     },
     "users-add": {
-      "string": "Add user…"
+      "string": "Add User…"
     },
     "users-regular-only": {
-      "string": "Regular users only"
+      "string": "Regular Users Only"
     },
     "users-regular-only-detail": {
       "string": "Hides the accounts of the system and its services."
@@ -8637,7 +8658,7 @@
       "string": "Clear the filter to see the accounts of the system."
     },
     "users-show-all": {
-      "string": "Show all accounts"
+      "string": "Show All Accounts"
     },
     "users-list": {
       "string": "Users"
@@ -8670,7 +8691,7 @@
       "string": "Edit…"
     },
     "users-password": {
-      "string": "Set password…"
+      "string": "Set Password…"
     },
     "users-edit-named": {
       "string": "Edit {user}…",
@@ -8680,16 +8701,16 @@
       "string": "More actions for {user}"
     },
     "users-lock": {
-      "string": "Queue lock"
+      "string": "Queue Lock"
     },
     "users-unlock": {
-      "string": "Queue unlock"
+      "string": "Queue Unlock"
     },
     "users-unqueue-lock": {
-      "string": "Don't lock"
+      "string": "Don't Lock"
     },
     "users-unqueue-unlock": {
-      "string": "Don't unlock"
+      "string": "Don't Unlock"
     },
     "users-lock-unknown": {
       "string": "Lock: state not known"
@@ -8701,7 +8722,7 @@
       "string": "Remove…"
     },
     "users-keep": {
-      "string": "Unqueue removal"
+      "string": "Unqueue Removal"
     },
     "users-root": {
       "string": "Root accounts are not changed here."
@@ -8866,7 +8887,7 @@
       "string": "The two passwords differ."
     },
     "users-add-title": {
-      "string": "Add a user"
+      "string": "Add a User"
     },
     "users-field-name": {
       "string": "User name"
@@ -8942,10 +8963,10 @@
       "string": "The user is created right away. This asks for your own password."
     },
     "users-add-confirm": {
-      "string": "Add user now"
+      "string": "Add User Now"
     },
     "users-add-more": {
-      "string": "More options"
+      "string": "More Options"
     },
     "users-add-why-no-name": {
       "string": "Enter a user name.",
@@ -8985,16 +9006,16 @@
       "string": "The changes wait in the queue until you apply them."
     },
     "users-queue-changes": {
-      "string": "Queue changes"
+      "string": "Queue Changes"
     },
     "users-password-title": {
-      "string": "Set the password of {user}"
+      "string": "Set the Password of {user}"
     },
     "users-password-note": {
       "string": "The password is set right away and asks for your own password. This page shows when it is done. The password is not kept in the queue or in any file of Garuda Toolbox."
     },
     "users-password-confirm": {
-      "string": "Set password now"
+      "string": "Set Password Now"
     },
     "users-groups-title": {
       "string": "Groups of {user}"
@@ -9012,7 +9033,7 @@
       "string": "{group} (new group)"
     },
     "users-remove-title": {
-      "string": "Remove the user {user}?"
+      "string": "Remove the User {user}?"
     },
     "users-remove-goes": {
       "string": "The removal waits in the queue until you apply it. This goes:"
@@ -9036,19 +9057,19 @@
       "string": "Also delete the home folder"
     },
     "users-remove-confirm": {
-      "string": "Queue removal"
+      "string": "Queue Removal"
     },
     "groups-search": {
       "string": "Search groups"
     },
     "groups-search-hint": {
-      "string": "Search groups…"
+      "string": "Search…"
     },
     "groups-search-detail": {
       "string": "The search looks at group names, group IDs and members."
     },
     "groups-add": {
-      "string": "Add group…"
+      "string": "Add Group…"
     },
     "groups-sort": {
       "string": "Sort groups"
@@ -9097,10 +9118,10 @@
       "developer_comment": "What a screen reader hears for the row button above."
     },
     "groups-unqueue-new": {
-      "string": "Don't add"
+      "string": "Don't Add"
     },
     "groups-unqueue-new-named": {
-      "string": "Don't add {group}"
+      "string": "Don't Add {group}"
     },
     "groups-unqueue-removal": {
       "string": "Keep"
@@ -9109,16 +9130,16 @@
       "string": "Keep {group}"
     },
     "groups-remove-title": {
-      "string": "Remove the group {group}?"
+      "string": "Remove the Group {group}?"
     },
     "groups-remove-detail": {
       "string": "Its members leave it. Files that belong to the group keep its number as their group. The removal waits in the queue until you apply it."
     },
     "groups-remove-confirm": {
-      "string": "Queue removal"
+      "string": "Queue Removal"
     },
     "groups-add-title": {
-      "string": "Add a group"
+      "string": "Add a Group"
     },
     "groups-field-name": {
       "string": "Group name"
@@ -9127,7 +9148,7 @@
       "string": "The group waits in the queue until you apply it. Users can be put into it before that."
     },
     "groups-add-confirm": {
-      "string": "Queue group"
+      "string": "Queue Group"
     }
   }
 }

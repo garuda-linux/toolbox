@@ -15,7 +15,7 @@ pub fn steps() -> Vec<Step> {
         no_match,
         Step::wait("Nothing matches “zz-nothing-matches”"),
         Step::Shot("components-no-match"),
-        Step::click("Clear search"),
+        Step::click("Clear Search"),
         Step::wait("Audio"),
         // A package of Arch's own repositories, so plain Arch offers it too.
         Step::button("Install EasyEffects"),

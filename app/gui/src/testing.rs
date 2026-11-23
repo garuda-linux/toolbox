@@ -6,6 +6,7 @@
 #[cfg(test)]
 pub mod captures;
 mod ink;
+mod painted_icons;
 mod rows;
 #[cfg(test)]
 mod tests;
@@ -17,6 +18,7 @@ use egui::{CentralPanel, Frame, Rect, Ui};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 pub use ink::{drawing_top, letters, letters_top};
+pub use painted_icons::paints_icon;
 pub use rows::{
     assert_rows_hold_their_content, assert_rows_hold_their_parts, assert_text_beside_picture,
     picture_beside, text_left,
@@ -46,9 +48,6 @@ const HEIGHT: f32 = 900.0;
 pub const PLAN_RUNNING: &str = "Changes are being applied. This waits until they are done.";
 /// The collapsed sidebar's width, its margins included.
 pub const COLLAPSED_SIDEBAR: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.sidebar_collapsed;
-/// How far a search field's text starts from the field's left edge.
-const SEARCH_INSET: f32 = 48.0;
-
 /// Everything a page reads, set by the test. Read and nothing pending
 /// unless the test says otherwise.
 #[expect(
@@ -83,6 +82,8 @@ pub struct PageFixture {
     pub plans: Plans,
     pub desktops: Vec<String>,
     pub settings: Settings,
+    /// On by default, so the blur switch works as on a desktop that blurs.
+    pub desktop_blur: bool,
     /// The page sends here, [`PageFixture::sent`] reads it back.
     pub commands: CommandSender,
     pub receiver: CommandReceiver,
@@ -118,6 +119,7 @@ impl Default for PageFixture {
             plans: Plans::default(),
             desktops: Vec::new(),
             settings: Settings::default(),
+            desktop_blur: true,
             commands,
             receiver,
         }
@@ -161,6 +163,7 @@ impl PageFixture {
             preferences: SettingsView {
                 settings: &self.settings,
                 autostart: false,
+                desktop_blur: self.desktop_blur,
                 language: None,
                 theme: ThemeChoice::default(),
                 motion: MotionChoice::default(),
@@ -302,7 +305,7 @@ pub fn rect_of<S>(harness: &Harness<'_, S>, role: Role, label: &str) -> Rect {
 #[expect(clippy::expect_used, reason = "the length was asserted just before")]
 pub fn lowest_read_again<'tree, S>(harness: &'tree Harness<'_, S>) -> egui_kittest::Node<'tree> {
     let mut buttons: Vec<_> = harness
-        .query_all_by_role_and_label(Role::Button, "Read again")
+        .query_all_by_role_and_label(Role::Button, "Read Again")
         .collect();
 
     assert_eq!(
@@ -329,10 +332,9 @@ where
 
 /// Checks the page header of `title` with purpose `subtitle`.
 ///
-/// `control` (when given) sits beside the title, not stacked under the
-/// purpose. `search` (when given) starts the toolbar at the title's left
-/// edge, below the purpose. The search's text starts after the field's
-/// padding and magnifier, at most [`SEARCH_INSET`] in.
+/// `control` and `search` (when given) sit beside the title on the toolbar
+/// row, not stacked under it. The search is at the row's right end, after
+/// the title. The purpose heads the body, under the row.
 ///
 /// # Panics
 ///
@@ -345,24 +347,31 @@ pub fn assert_header<S>(
 ) {
     let title = harness.get_by_role_and_label(Role::Heading, title).rect();
     let subtitle = harness.get_by_role_and_label(Role::Label, subtitle).rect();
+    let row_bottom =
+        title.center().y + toolbox_gui_kit::tokens::Sizes::DEFAULT.toolbar_height / 2.0;
+
     if let Some(control) = control {
         assert!(
-            control.top() < subtitle.bottom(),
-            "the header control at {control:?} is stacked under the purpose {subtitle:?}"
+            control.top() < row_bottom,
+            "the header control at {control:?} is stacked under the title {title:?}"
         );
     }
 
     if let Some(search) = search {
-        let inset = search.left() - title.left();
         assert!(
-            (0.0..=SEARCH_INSET).contains(&inset),
-            "the search at {search:?} is not at the title's left edge {title:?}"
+            search.left() >= title.right(),
+            "the search at {search:?} is over the title {title:?}"
         );
         assert!(
-            search.top() >= subtitle.bottom(),
-            "the search is not under the purpose"
+            (search.center().y - title.center().y).abs() < 1.0,
+            "the search at {search:?} is not on the title's row {title:?}"
         );
     }
+
+    assert!(
+        subtitle.top() >= row_bottom,
+        "the purpose {subtitle:?} is in the toolbar row"
+    );
 }
 
 /// How strongly the button `label` calls for a click, read from the fill
@@ -376,15 +385,14 @@ pub fn button_kind<S>(harness: &Harness<'_, S>, label: &str) -> ButtonKind {
 }
 
 /// How strongly the button drawn at `at` calls for a click, read from the
-/// fill there.
+/// fill there. Danger draws as Soft (KDE has no red button), so it reads
+/// as Soft here.
 pub fn kind_at<S>(harness: &Harness<'_, S>, at: egui::Pos2) -> ButtonKind {
     let fill = toolbox_gui_kit::testing::fill_under(harness, at);
     let tokens = toolbox_gui_kit::tokens::current(&harness.ctx);
-    if fill == Some(tokens.accent) {
+    if fill == Some(ButtonKind::Primary.rest_fill(&tokens)) {
         ButtonKind::Primary
-    } else if fill == Some(tokens.error) {
-        ButtonKind::Danger
-    } else if fill == Some(tokens.field) {
+    } else if fill == Some(ButtonKind::Soft.rest_fill(&tokens)) {
         ButtonKind::Soft
     } else {
         ButtonKind::Ghost

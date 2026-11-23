@@ -1,7 +1,7 @@
 use egui::{FontFamily, TextStyle};
 
 use super::{
-    FontFile, INTER, JETBRAINS_MONO, Weight, add_fallback, apply_sizes, definitions, font,
+    FontFile, INTER, JETBRAINS_MONO, UiFaces, Weight, add_fallback, apply_sizes, definitions, font,
     has_weight_axis,
 };
 
@@ -15,53 +15,76 @@ fn desktop_font(name: &str, weight: u16) -> FontFile {
 }
 
 #[test]
-fn without_desktop_fonts_inter_carries_every_weight() {
-    let fonts = definitions(&[], None);
+fn without_desktop_fonts_regular_is_inter_at_400_and_bold_at_700() {
+    let fonts = definitions(&UiFaces::default(), None);
 
-    assert_eq!(fonts.families[&FontFamily::Proportional], [INTER]);
-    assert_eq!(fonts.families[&Weight::Medium.family()], ["Inter 500"]);
-    assert_eq!(fonts.families[&Weight::SemiBold.family()], ["Inter 600"]);
+    assert_eq!(fonts.families[&FontFamily::Proportional], ["Inter 400"]);
     assert_eq!(fonts.families[&Weight::Bold.family()], ["Inter 700"]);
     assert_eq!(
         fonts.families[&FontFamily::Monospace],
-        [JETBRAINS_MONO, INTER]
+        [JETBRAINS_MONO.to_owned(), format!("{INTER} 400")]
     );
 }
 
 #[test]
-fn desktop_fonts_go_first_in_the_family_of_their_weight() {
-    let fonts = definitions(
-        &[
-            desktop_font("Noto Sans", 400),
-            desktop_font("Noto Sans", 700),
-        ],
-        Some(&desktop_font("Hack", 400)),
-    );
+fn the_desktop_regular_face_draws_regular_text_at_its_own_weight() {
+    // A KDE user with Inter Bold 10 gets the face at 700 for all body text.
+    let ui = UiFaces {
+        regular: Some(desktop_font(INTER, 700)),
+        bold: None,
+    };
+
+    let fonts = definitions(&ui, None);
 
     assert_eq!(
         fonts.families[&FontFamily::Proportional],
-        ["Noto Sans", INTER]
+        ["Inter 700", "Inter 400"]
+    );
+}
+
+#[test]
+fn medium_and_semibold_draw_as_regular_text() {
+    assert_eq!(Weight::Medium.family(), FontFamily::Proportional);
+    assert_eq!(Weight::SemiBold.family(), FontFamily::Proportional);
+}
+
+#[test]
+fn desktop_faces_go_first_in_the_family_of_their_step() {
+    let ui = UiFaces {
+        regular: Some(desktop_font("Noto Sans", 400)),
+        bold: Some(desktop_font("Noto Sans", 700)),
+    };
+
+    let fonts = definitions(&ui, Some(&desktop_font("Hack", 400)));
+
+    assert_eq!(
+        fonts.families[&FontFamily::Proportional],
+        ["Noto Sans 400", "Inter 400"]
     );
     assert_eq!(
         fonts.families[&Weight::Bold.family()],
         ["Noto Sans 700", "Inter 700"]
     );
     assert_eq!(
-        fonts.families[&Weight::Medium.family()],
-        ["Inter 500"],
-        "a weight the desktop font lacks stays Inter"
-    );
-    assert_eq!(
         fonts.families[&FontFamily::Monospace],
-        ["Hack", JETBRAINS_MONO, INTER]
+        [
+            "Hack".to_owned(),
+            JETBRAINS_MONO.to_owned(),
+            format!("{INTER} 400")
+        ]
     );
 }
 
 #[test]
-fn a_desktop_font_named_like_a_bundled_one_does_not_replace_it() {
-    let fonts = definitions(&[desktop_font(INTER, 400)], None);
+fn a_desktop_face_of_a_bundled_name_and_weight_does_not_replace_it() {
+    let ui = UiFaces {
+        regular: None,
+        bold: Some(desktop_font(INTER, 700)),
+    };
 
-    assert_eq!(fonts.families[&FontFamily::Proportional], [INTER]);
+    let fonts = definitions(&ui, None);
+
+    assert_eq!(fonts.families[&Weight::Bold.family()], ["Inter 700"]);
 }
 
 #[test]
@@ -115,16 +138,15 @@ fn at_the_default_size_titles_are_four_points_and_sections_two_over_the_old_scal
     );
 }
 
+/// Kirigami's `Heading.qml` sizes level 1 at 1.35 and level 2 at 1.20 of the
+/// default font, which the body size stands for here.
 #[test]
-fn the_type_scale_falls_from_title_to_caption() {
-    let steps = [
-        super::TITLE,
-        super::SECTION,
-        super::BODY,
-        super::SMALL,
-        super::CAPTION,
-    ];
+fn the_page_title_and_section_headings_are_kirigami_levels_one_and_two() {
+    assert!((super::PAGE_TITLE - 1.35).abs() < 0.001);
+    assert!((super::SECTION_TITLE - 1.2).abs() < 0.001);
+}
 
+fn assert_falls(steps: [f32; 4]) {
     for pair in steps.windows(2) {
         let [larger, smaller] = pair else { continue };
         assert!(larger > smaller, "{steps:?}");
@@ -132,26 +154,45 @@ fn the_type_scale_falls_from_title_to_caption() {
 }
 
 #[test]
+fn the_heading_scale_falls_from_page_title_to_small() {
+    assert_falls([
+        super::PAGE_TITLE,
+        super::SECTION_TITLE,
+        super::BODY,
+        super::SMALL,
+    ]);
+}
+
+#[test]
+fn the_type_scale_falls_from_title_to_small() {
+    assert_falls([super::TITLE, super::SECTION, super::BODY, super::SMALL]);
+}
+
+#[test]
 fn a_fallback_goes_last_in_every_family() {
-    let mut fonts = definitions(&[desktop_font("Noto Sans", 400)], None);
+    let ui = UiFaces {
+        regular: Some(desktop_font("Noto Sans", 400)),
+        bold: None,
+    };
+
+    let mut fonts = definitions(&ui, None);
     add_fallback(&mut fonts, &desktop_font("Noto Color Emoji", 400));
 
-    for family in Weight::ALL
-        .map(Weight::family)
+    for family in [Weight::Regular.family(), Weight::Bold.family()]
         .into_iter()
         .chain([FontFamily::Monospace])
     {
         assert_eq!(
             fonts.families[&family].last().map(String::as_str),
-            Some("Noto Color Emoji")
+            Some("Noto Color Emoji 400")
         );
     }
 }
 
 #[test]
 fn a_fallback_named_like_a_font_in_use_is_left_out() {
-    let mut fonts = definitions(&[], None);
+    let mut fonts = definitions(&UiFaces::default(), None);
     add_fallback(&mut fonts, &desktop_font(INTER, 400));
 
-    assert_eq!(fonts.families[&FontFamily::Proportional], [INTER]);
+    assert_eq!(fonts.families[&FontFamily::Proportional], ["Inter 400"]);
 }

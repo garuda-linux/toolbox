@@ -23,7 +23,7 @@ use toolbox_system::{
     Cards, Checked, NetworkActions, NetworkSource, Probe, ProbeError, ProbeIssue,
 };
 
-use crate::common::{Fixture, SMALLEST, TALL, WIDTH, open_tab, packages, window};
+use crate::common::{Fixture, SMALLEST, TALL, WIDTH, open_tab, packages, queued_shown, window};
 use crate::look::look_for;
 use crate::system::{first_read, settle, step_until};
 
@@ -218,7 +218,7 @@ fn the_public_address_shows_after_a_click() {
 
     assert!(harness.query_by_label("192.168.1.1").is_some());
 
-    harness.get_by_label("Show public address").click();
+    harness.get_by_label("Show Public Address").click();
     step_until(harness, "the address", |harness| {
         harness.query_by_label_contains("203.0.113.7").is_some()
     });
@@ -232,7 +232,7 @@ fn a_blacklisted_driver_waits_in_the_queue() {
 
     harness.get_by_label("More actions for r8169").click();
     harness.run();
-    harness.get_by_label("Queue blacklist").click();
+    harness.get_by_label("Queue Blacklist").click();
     harness.run();
 
     assert!(
@@ -240,7 +240,7 @@ fn a_blacklisted_driver_waits_in_the_queue() {
             .query_by_label("Queued: add to the blacklist")
             .is_some()
     );
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(harness));
 }
 
 #[test]
@@ -276,6 +276,8 @@ fn a_long_device_name_wraps_above_its_kind_at_every_width() {
 
         for (name, kind) in [("RTL8111/8168", "Ethernet"), ("MT7922", "Wireless")] {
             // The row's name, not the row itself, which carries the same label.
+            // The name's box runs past its capitals, as a raised title line does, so
+            // the kind must start below the middle of the name, not its box.
             let name = harness
                 .query_all_by_label_contains(name)
                 .map(|node| node.rect())
@@ -284,7 +286,7 @@ fn a_long_device_name_wraps_above_its_kind_at_every_width() {
 
             let kind = harness.get_by_label(kind).rect();
             assert!(
-                kind.top() >= name.bottom(),
+                kind.top() >= name.center().y,
                 "width {width}: name at {name:?}, kind at {kind:?}"
             );
         }

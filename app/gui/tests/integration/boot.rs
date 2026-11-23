@@ -16,7 +16,7 @@ use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
 use toolbox_system::{BootMenuSource, Host, MenuRead};
 
-use crate::common::{Fixture, TALL, window};
+use crate::common::{Fixture, TALL, queued_shown, window};
 use crate::look::look_for;
 use crate::system::{first_read, settle, shows, step_until};
 
@@ -153,14 +153,14 @@ fn the_kernels_page_proposes_a_kernel_as_the_default() {
     harness
         .get_by_label("Set linux-lts as the default boot entry")
         .click();
-    step_until(harness, "the offer", shows("Queue as default"));
+    step_until(harness, "the offer", shows("Queue as Default"));
     settle(harness);
     harness.snapshot("boot/proposal_dark");
-    harness.get_by_label("Queue as default").click();
+    harness.get_by_label("Queue as Default").click();
     harness.run();
 
-    assert!(harness.query_by_label("change queued").is_some());
-    assert!(harness.query_by_label("Queue as default").is_none());
+    assert!(queued_shown(harness));
+    assert!(harness.query_by_label("Queue as Default").is_none());
 }
 
 #[test]
@@ -172,5 +172,5 @@ fn a_chosen_theme_is_queued() {
     harness.get_by_label("Choose GRUB theme").scroll_to_me();
     harness.run();
     harness.get_by_label("Choose GRUB theme").click();
-    step_until(harness, "the queued theme", shows("change queued"));
+    step_until(harness, "the queued theme", queued_shown);
 }

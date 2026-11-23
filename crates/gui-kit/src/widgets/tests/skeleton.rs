@@ -1,12 +1,13 @@
 use std::time::Duration;
 
 use egui::epaint::Mesh;
-use egui::{Shape, Theme, ViewportId};
+use egui::{Shape, Theme};
 use egui_kittest::Harness;
 
 use super::super::{SkeletonRows, card, skeleton_list};
+use super::motion::repaint_delay;
 use crate::testing::{
-    Cover, cover, filled_rects, freeze_shimmer, harness, lines_in, painted, repaints_once_settled,
+    Cover, cover, freeze_shimmer, harness, lines_in, painted, repaints_once_settled,
 };
 use crate::{motion, theme, tokens};
 
@@ -58,22 +59,19 @@ fn bands<'frame, State>(harness: &'frame Harness<'_, State>) -> Vec<&'frame Mesh
         .collect()
 }
 
-fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
-    harness
-        .output()
-        .viewport_output
-        .get(&ViewportId::ROOT)
-        .map_or(Duration::MAX, |viewport| viewport.repaint_delay)
-}
-
-/// Square placeholders as tall as a row's tile, the bars and controls
-/// are all wider than tall.
+/// Square placeholders the size of an icon. The bars and controls are wider
+/// than tall.
 fn tiles(harness: &Harness<'_>) -> usize {
-    let tokens = tokens::current(&harness.ctx);
-    let (fill, edge) = (tokens.hover, tokens.sizes.icon_tile);
-    filled_rects(harness, fill)
+    painted(harness)
         .into_iter()
-        .filter(|rect| (rect.width() - edge).abs() < 0.5 && (rect.height() - edge).abs() < 0.5)
+        .filter(|shape| {
+            let Shape::Rect(rect) = shape else {
+                return false;
+            };
+
+            let size = rect.rect.size();
+            (size.x - size.y).abs() < 0.5 && (16.0..=24.0).contains(&size.y)
+        })
         .count()
 }
 

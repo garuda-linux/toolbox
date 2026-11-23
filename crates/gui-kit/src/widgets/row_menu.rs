@@ -4,7 +4,7 @@
 
 use egui::{Align, Layout, Popup, PopupAnchor, PopupKind, Pos2, Response, Ui, vec2};
 
-use super::menu::{MENU_WIDTH, menu_for, menu_glass, menu_items};
+use super::menu::{menu_for, menu_glass, menu_items, menu_width};
 use super::{RowState, icon_button};
 use crate::icons;
 
@@ -83,13 +83,13 @@ fn context_menu(
         row.response.layer_id,
     )
     .kind(PopupKind::Menu)
-    .layout(Layout::top_down_justified(Align::Min))
+    .layout(Layout::top_down(Align::Min))
     .open_memory(None)
     .anchor_widget(row.response.id)
     .accessible_name(name)
-    .width(MENU_WIDTH)
+    .width(menu_width(ui, id))
     .frame(glass.frame())
     .show(|popup| {
-        menu_items(glass, popup, items);
+        menu_items(glass, popup, id, items);
     });
 }

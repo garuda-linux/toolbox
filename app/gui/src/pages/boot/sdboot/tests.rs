@@ -318,7 +318,7 @@ fn proposed(conf: &str, kernel: &str) -> Shown {
 fn a_proposed_kernel_is_queued_by_its_flavour() {
     let mut harness = proposed(LOADER_CONF, "linux-garuda");
 
-    harness.get_by_label("Queue as default").click();
+    harness.get_by_label("Queue as Default").click();
     harness.run();
 
     assert_eq!(
@@ -341,7 +341,7 @@ fn a_kernel_without_an_image_is_not_offered() {
             .query_by_label_contains("systemd-boot has no image of the kernel linux-lts yet")
             .is_some()
     );
-    assert!(harness.query_by_label("Queue as default").is_none());
+    assert!(harness.query_by_label("Queue as Default").is_none());
 }
 
 /// The image's `loader.conf` with the kernel already its default.
@@ -350,5 +350,5 @@ fn the_kernel_that_is_the_default_already_says_so() {
     let conf = format!("default garuda-*-garuda.efi\n{LOADER_CONF}");
     let harness = proposed(&conf, "linux-garuda");
 
-    assert!(harness.query_by_label("Queue as default").is_none());
+    assert!(harness.query_by_label("Queue as Default").is_none());
 }

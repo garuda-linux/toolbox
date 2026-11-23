@@ -8,7 +8,7 @@ use egui::{CornerRadius, CursorIcon, Frame, Id, Response, Sense, Shadow, Stroke,
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
-use toolbox_gui_kit::widgets::{DialogWidth, ModalWrapper, focus_ring, rich};
+use toolbox_gui_kit::widgets::{DialogWidth, ModalWrapper, focus_from_keyboard, rich};
 use toolbox_guide::Image;
 
 use super::markdown::Reader;
@@ -148,7 +148,15 @@ fn framed(
         })
         .inner;
 
-    focus_ring(ui, &response, CARD_RADIUS);
+    if focus_from_keyboard(ui, &response) {
+        ui.painter().rect_stroke(
+            response.rect,
+            CornerRadius::same(CARD_RADIUS),
+            Stroke::new(OUTLINE, tokens.decoration_focus),
+            egui::StrokeKind::Outside,
+        );
+    }
+
     response
 }
 

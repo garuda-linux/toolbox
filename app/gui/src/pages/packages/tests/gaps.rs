@@ -35,8 +35,11 @@ fn assert_even<State>(harness: &Harness<'_, State>, package: &str) {
         "{package}: the capitals start {above} under the row's top, the last baseline ends \
          {below} above its bottom"
     );
+
+    // The picture is taller than the two lines, so the text block is centred
+    // and the padding is only the least room below it.
     assert!(
-        (row.bottom() - last - padding).abs() <= SAME,
+        row.bottom() - last >= padding - SAME,
         "{package}: the last line ends {} above the row's bottom",
         row.bottom() - last
     );

@@ -6,7 +6,7 @@ use std::rc::Rc;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_plan::StepId;
 
-use super::{step_state, steps};
+use super::list::{step_state, steps};
 use crate::console::{StepRow, StepState};
 
 #[test]
@@ -198,8 +198,6 @@ fn ringed(harness: &egui_kittest::Harness<'_, crate::console::Console>) -> bool 
 /// hides, so its cursor alone shows the focus.
 #[test]
 fn a_focused_terminal_never_rings_its_box() {
-    use egui_kittest::kittest::Queryable as _;
-
     let mut harness = terminal_box(false);
     harness.get_by_role(egui::accesskit::Role::Terminal).focus();
     harness.run();

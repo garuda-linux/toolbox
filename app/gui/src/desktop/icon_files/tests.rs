@@ -45,7 +45,7 @@ fn svg_files_of_the_theme_are_read_and_others_are_left_to_the_bundled_set() {
     let mut lookup = Fake::default();
     lookup
         .files
-        .insert(("Papirus".into(), "go-home-symbolic".into()), home);
+        .insert(("Papirus".into(), "go-home".into()), home);
     lookup
         .files
         .insert(("Papirus".into(), "globe-symbolic".into()), globe);
@@ -56,10 +56,13 @@ fn svg_files_of_the_theme_are_read_and_others_are_left_to_the_bundled_set() {
         drawn_uri(GO_HOME, &icons),
         "bytes://icons/theme/Papirus/go-home.svg"
     );
-    assert_eq!(drawn_uri(GLOBE, &icons), "bytes://icons/bundled/globe.svg");
+    assert_eq!(
+        drawn_uri(GLOBE, &icons),
+        "bytes://icons/bundled/globe-symbolic.svg"
+    );
     assert_eq!(
         drawn_uri(PLUGINS, &icons),
-        "bytes://icons/bundled/plugins.svg"
+        "bytes://icons/bundled/plugins-symbolic.svg"
     );
 }
 
@@ -67,7 +70,7 @@ fn svg_files_of_the_theme_are_read_and_others_are_left_to_the_bundled_set() {
 fn an_unreadable_file_is_left_to_the_bundled_set() {
     let mut lookup = Fake::default();
     lookup.files.insert(
-        ("Papirus".into(), "go-home-symbolic".into()),
+        ("Papirus".into(), "go-home".into()),
         PathBuf::from("/nonexistent/go-home.svg"),
     );
 
@@ -82,7 +85,7 @@ fn an_unreadable_file_is_left_to_the_bundled_set() {
 #[test]
 fn an_svg_over_the_cap_is_left_to_the_bundled_set() {
     let folder = TempDir::new().unwrap();
-    let home = folder.path().join("go-home-symbolic.svg");
+    let home = folder.path().join("go-home.svg");
     let globe = folder.path().join("globe-symbolic.svg");
     let padding = "x".repeat(super::MAX_SVG_BYTES);
     fs::write(&home, format!("<svg><!-- {padding} --></svg>")).unwrap();
@@ -91,7 +94,7 @@ fn an_svg_over_the_cap_is_left_to_the_bundled_set() {
     let mut lookup = Fake::default();
     lookup
         .files
-        .insert(("Papirus".into(), "go-home-symbolic".into()), home);
+        .insert(("Papirus".into(), "go-home".into()), home);
     lookup
         .files
         .insert(("Papirus".into(), "globe-symbolic".into()), globe);
@@ -104,7 +107,7 @@ fn an_svg_over_the_cap_is_left_to_the_bundled_set() {
     );
     assert_eq!(
         drawn_uri(GLOBE, &icons),
-        "bytes://icons/theme/Papirus/globe.svg",
+        "bytes://icons/theme/Papirus/globe-symbolic.svg",
         "a file of exactly the cap is still read"
     );
 }
@@ -129,25 +132,25 @@ fn app_pictures_are_found_by_name_in_the_theme() {
 }
 
 #[test]
-fn a_glyph_is_read_from_the_symbolic_name_only() {
+fn an_action_icon_is_read_by_its_plain_name_and_a_glyph_by_its_symbolic_one() {
     let folder = TempDir::new().unwrap();
-    let coloured = folder.path().join("go-home.svg");
-    let symbolic = folder.path().join("go-home-symbolic.svg");
-    let plugins = folder.path().join("plugins.svg");
-    fs::write(&coloured, "<svg/>").unwrap();
+    let action = folder.path().join("go-home.svg");
+    let symbolic = folder.path().join("plugins-symbolic.svg");
+    let plain = folder.path().join("plugins.svg");
+    fs::write(&action, r#"<svg fill="currentColor"/>"#).unwrap();
     fs::write(&symbolic, r#"<svg fill="currentColor"/>"#).unwrap();
-    fs::write(&plugins, "<svg/>").unwrap();
+    fs::write(&plain, "<svg/>").unwrap();
 
     let mut lookup = Fake::default();
     lookup
         .files
-        .insert(("Papirus".into(), "go-home".into()), coloured);
+        .insert(("Papirus".into(), "go-home".into()), action);
     lookup
         .files
-        .insert(("Papirus".into(), "go-home-symbolic".into()), symbolic);
+        .insert(("Papirus".into(), "plugins-symbolic".into()), symbolic);
     lookup
         .files
-        .insert(("Papirus".into(), "plugins".into()), plugins);
+        .insert(("Papirus".into(), "plugins".into()), plain);
 
     let icons = theme_icons("Papirus", &lookup);
 
@@ -161,10 +164,11 @@ fn a_glyph_is_read_from_the_symbolic_name_only() {
             .image_options()
             .tint,
         Color32::RED,
-        "the symbolic file, which takes the tint, is drawn"
+        "the action icon takes the tint, as Breeze draws it in the text colour"
     );
     assert_eq!(
         drawn_uri(PLUGINS, &icons),
-        "bytes://icons/bundled/plugins.svg"
+        "bytes://icons/theme/Papirus/plugins-symbolic.svg",
+        "a glyph is read by its symbolic name, not the plain file"
     );
 }

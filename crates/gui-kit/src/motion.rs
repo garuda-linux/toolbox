@@ -52,9 +52,6 @@ pub const PAGE_ENTER: f32 = 0.15;
 /// How far another page or tab rises while it appears, in points.
 pub const PAGE_RISE: f32 = 8.0;
 
-/// The chosen segment's pill moving to another segment.
-pub const SEGMENT_SLIDE: f32 = 0.15;
-
 pub const CORNER_BUTTON: Timing = Timing::both(theme::ANIMATION_TIME);
 
 pub const CHEVRON_TURN: f32 = theme::ANIMATION_TIME;

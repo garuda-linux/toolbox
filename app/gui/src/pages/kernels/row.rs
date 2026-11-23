@@ -5,10 +5,10 @@ use toolbox_core::features::kernels::view::{Module, Row};
 use toolbox_core::features::toggles::shown::Control;
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
 use toolbox_gui_kit::icons::Icon;
-use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{
-    ActionRow, ButtonKind, ListItem, RowState, Tone, counted_disclosure, highlighted,
-    named_pill_button, pill_button, pill_width, queued_tag, rich, row_height, text_block_height,
+    ActionRow, ButtonKind, ListItem, RowState, Tone, actions_stacked, counted_disclosure,
+    highlighted, named_pill_button, pill_button, pill_width, push_height, queued_tag, rich,
+    row_height, text_block_height_with,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 
@@ -37,7 +37,7 @@ impl ListItem for Item<'_> {
 /// A row's height before it was laid out, in the fonts in use. Kernels
 /// with headers or modules grow below it.
 pub fn estimate(ui: &Ui) -> f32 {
-    row_height(ui, text_block_height(ui, LINES))
+    row_height(ui, text_block_height_with(ui, LINES, push_height(ui)))
 }
 
 /// One kernel as an action row on its section's tile. Its words hold the
@@ -51,7 +51,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
         .default
         .then(|| i18n::text(ui.ctx(), "kernels-default").into_owned());
 
-    let words = ActionRow::new(glyph, Tone::Neutral, name).row(state.row);
+    let words = ActionRow::new(glyph, name).row(state.row);
     let words = match (&status, &default) {
         (Some((label, tone)), Some(default)) => words
             .status(label, *tone)
@@ -71,13 +71,10 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
             }
         },
         |ui| {
-            // Every row reserves the default link's room, so the change
-            // buttons line up whether or not a row has the link.
             if details && !row.default {
                 default_link(ui, context, row);
             } else {
-                let text = i18n::text(ui.ctx(), "kernels-set-default");
-                ui.add_space(pill_width(ui, &text) + ui.tokens().sizes.control_gap);
+                default_slot(ui, state.row);
             }
 
             // The running kernel stays, so its button rests unless it
@@ -100,6 +97,15 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
             }
         },
     );
+}
+
+/// The room of the default link, kept beside the words so the change buttons
+/// line up. Under the words there is none to keep.
+fn default_slot(ui: &mut Ui, row: egui::Id) {
+    if !actions_stacked(ui, row) {
+        let text = i18n::text(ui.ctx(), "kernels-set-default");
+        ui.add_space(pill_width(ui, &text) + ui.tokens().sizes.control_gap);
+    }
 }
 
 /// The state beside the name: a queued change, else that the kernel runs.
@@ -304,13 +310,13 @@ const fn module_text(module: &Module) -> (&'static str, Tone) {
     }
 }
 
-/// A wrapped line of tags, as tall as a pill button when `with_button`,
+/// A wrapped line of tags, as tall as a push button when `with_button`,
 /// so the tags centre on it. A line starts at the style's own height and
 /// grows only once the taller pill comes, which leaves the tags higher up.
 fn tags_line(ui: &mut Ui, with_button: bool, add: impl FnOnce(&mut Ui)) {
     ui.scope(|ui| {
         if with_button {
-            ui.spacing_mut().interact_size.y = PILL_HEIGHT;
+            ui.spacing_mut().interact_size.y = push_height(ui);
         }
 
         ui.horizontal_wrapped(add);

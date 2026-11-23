@@ -67,7 +67,13 @@ fn a_click_shows_the_picture_large_and_escape_leads_back() {
         })
         .expect("the dialog shows the picture");
 
-    assert!(large.width() > small.width(), "{large:?} {small:?}");
+    // A wide column can make the picture taller than the window. The larger
+    // view then takes the window's height less the dialog's frame.
+    let window = harness.ctx.content_rect().height();
+    assert!(
+        large.height() >= window * 0.8,
+        "the larger view {large:?} does not use the window {window} tall, the page shows {small:?}"
+    );
 
     harness.key_press(egui::Key::Escape);
     harness.run();

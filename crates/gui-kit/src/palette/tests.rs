@@ -29,3 +29,22 @@ fn the_palette_in_use_is_the_fallback_before_any_was_stored() {
     ctx.set_theme(Theme::Dark);
     assert_eq!(super::current(&ctx), Palette::fallback(Theme::Dark));
 }
+
+#[test]
+fn the_fallbacks_name_none_for_darklys_roles_so_the_tokens_derive_them() {
+    // Darkly's hover, focus and tooltips take the accent, the raised surface
+    // and the text, which the built-in palettes already hold. No literal
+    // colour is added for them.
+    for palette in [
+        Palette::fallback(Theme::Dark),
+        Palette::fallback(Theme::Light),
+        Palette::adwaita(Theme::Dark),
+        Palette::adwaita(Theme::Light),
+    ] {
+        assert_eq!(palette.decoration_hover, None);
+        assert_eq!(palette.decoration_focus, None);
+        assert_eq!(palette.tooltip, None);
+        assert_eq!(palette.tooltip_text, None);
+        assert_eq!(palette.contrast, None);
+    }
+}

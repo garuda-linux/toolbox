@@ -134,7 +134,7 @@ fn heading(ui: &mut Ui, context: &PageContext<'_>, reading: &Loadable<Status>) {
     let tokens = tokens::current(&ctx);
     split_row(
         ui,
-        icon_button_width(ui),
+        icon_button_width(),
         |ui| {
             ui.horizontal(|ui| {
                 let title = i18n::text(&ctx, "home-status");
@@ -230,16 +230,14 @@ pub fn run_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, run: RunNow,
 pub fn run_row(
     ui: &mut Ui,
     context: &PageContext<'_>,
-    (icon, tone): (Icon, Tone),
+    icon: Icon,
     [title, detail, button]: [&str; 3],
     run: RunNow,
 ) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, title);
     let detail = i18n::text(&ctx, detail);
-    ActionRow::new(icon, tone, &title)
-        .detail(&detail)
-        .show(ui, |ui| {
-            run_button(ui, context, button, run, ButtonKind::Soft);
-        });
+    ActionRow::new(icon, &title).detail(&detail).show(ui, |ui| {
+        run_button(ui, context, button, run, ButtonKind::Soft);
+    });
 }

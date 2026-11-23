@@ -16,7 +16,7 @@ fn removing_orphans_asks_first_and_runs_on_its_danger_button() {
     let mut harness = page(with(programs(), Maintenance::default()));
 
     let orphans = harness
-        .query_all_by_label("Run now")
+        .query_all_by_label("Run Now")
         .nth(1)
         .expect("Remove orphans has a Run now button");
 
@@ -70,7 +70,7 @@ fn queue_sits_beside_run_now_and_rests_while_a_plan_runs() {
         ..with(programs(), Maintenance::default())
     });
 
-    let queue = harness.get_by_role_and_label(Role::Button, "Queue cleanup");
+    let queue = harness.get_by_role_and_label(Role::Button, "Queue Cleanup");
     assert!(queue.accesskit_node().is_disabled());
     assert!(harness.query_by_role(Role::MenuItem).is_none());
 }
@@ -87,7 +87,7 @@ fn a_queued_operation_offers_to_take_it_back() {
     );
 
     let mut harness = page(fixture);
-    harness.get_by_label("Remove from queue").click();
+    harness.get_by_label("Remove from Queue").click();
     harness.run();
 
     assert_eq!(
@@ -122,7 +122,7 @@ fn a_question_closes_when_its_tab_or_page_is_left() {
     for leave in leaves {
         let mut harness = page(with(programs(), Maintenance::default()));
         harness
-            .query_all_by_label("Run now")
+            .query_all_by_label("Run Now")
             .nth(1)
             .unwrap()
             .click();

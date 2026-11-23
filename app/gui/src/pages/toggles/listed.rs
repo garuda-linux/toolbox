@@ -50,7 +50,6 @@ pub struct SectionRows {
     pub title: String,
     /// Such as "2/8".
     pub count: String,
-    pub icon: Icon,
     pub entries: Vec<EntryRow>,
 }
 
@@ -158,7 +157,6 @@ impl SectionRows {
             id: section.section.id().to_owned(),
             title: section_title(ctx, catalog, section),
             count: count_text(ctx, section.tally(matched), section.read(matched)),
-            icon: icons::named(section.section.icon()).unwrap_or(icons::PLUGINS),
             entries,
         })
     }

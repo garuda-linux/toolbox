@@ -6,7 +6,8 @@ use toolbox_core::features::network::{Connectivity, ServiceRow, service_rows};
 use toolbox_core::features::services::{ActiveState, FileState};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, Tone, banner, card, icon_button, icon_button_width, pill_button, rich, status_dot,
+    ButtonKind, SkeletonRows, Tone, banner, card, icon_button, icon_button_width, pill_button,
+    rich, skeleton_list, status_dot,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitScope;
@@ -79,7 +80,7 @@ fn connection(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let network = context.service::<Network>();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
-    heading(ui, icons::NETWORK_CONNECT, "network-connection");
+    heading(ui, "network-connection");
 
     let (internet, tone) = internet_state(network.connectivity());
 
@@ -146,7 +147,7 @@ fn address(ui: &mut Ui, context: &PageContext<'_>) {
     let title = text("network-address");
 
     // Room for an IPv6 address and the two icons behind it.
-    let trailing = 2.0 * (icon_button_width(ui) + ui.spacing().item_spacing.x);
+    let trailing = 2.0 * (icon_button_width() + ui.spacing().item_spacing.x);
     row(ui, false, &words(&title), VALUE_WIDTH + trailing, |ui| {
         ui.horizontal(|ui| match address {
             Address::Known(known) => {
@@ -183,16 +184,28 @@ fn address(ui: &mut Ui, context: &PageContext<'_>) {
 
 fn services(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    heading(ui, icons::SYSTEM_RUN, "network-services");
+    heading(ui, "network-services");
     let listing = context.service::<Units>().get(UnitScope::System);
     let Some(units) = listing.get() else {
-        let id = if listing.error().is_some() {
-            "network-services-unknown"
+        if listing.error().is_some() {
+            banner(
+                ui,
+                Tone::Neutral,
+                &i18n::text(&ctx, "network-services-unknown"),
+                &[],
+            );
         } else {
-            "network-services-reading"
-        };
+            // The rows to come, so the card does not change when they do.
+            let name = i18n::text(&ctx, "network-services-reading");
+            let rows = SkeletonRows {
+                count: 4,
+                row_height: ui.tokens().sizes.toolbar_height,
+                leading: false,
+            };
 
-        banner(ui, Tone::Neutral, &i18n::text(&ctx, id), &[]);
+            card(ui, |ui| skeleton_list(ui, rows, &name));
+        }
+
         return;
     };
 

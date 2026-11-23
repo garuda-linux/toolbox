@@ -14,7 +14,7 @@ use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::BODY;
 use toolbox_gui_kit::toasts::{ToastTexts, Toasts};
 use toolbox_gui_kit::widgets::{
-    PageParts, cover_page_bottom, page_layout_shaped, start_page_entry,
+    PageParts, cover_page_bottom, page_layout_shaped, push_height, start_page_entry,
 };
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::protocol::Mode;
@@ -124,15 +124,21 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         changes::inline(ui, queued, changes_ui, commands);
     });
 
-    if !sheet_shown {
+    if sheet_shown.is_none() {
         let room = band.unwrap_or(page_rect);
-        changes::floating(ui.ctx(), room, queued, changes_ui, commands);
+        changes::footer(ui.ctx(), room, queued, changes_ui, commands);
     }
 
     status
         .inspect(|rect| status_bar::fill(ui, *rect, reading, Mode::of_dry_run(dry_run), commands));
     let ctx = ui.ctx().clone();
-    notices(&ctx, page_rect, stopping, toasts);
+
+    // Notes stand above the Console's sheet, not over its last line.
+    let notes_room = sheet_shown.map_or(page_rect, |shown| {
+        Rect::from_min_max(page_rect.min, egui::pos2(page_rect.right(), shown.top()))
+    });
+
+    notices(&ctx, notes_room, stopping, toasts);
     palette.show(&ctx, context, commands);
 }
 
@@ -169,10 +175,10 @@ fn editing(context: &PageContext<'_>) -> bool {
 fn changes_band(ui: &mut Ui) -> Rect {
     let tokens = tokens::current(ui.ctx());
     Panel::bottom("changes_band")
-        .exact_size(tokens.sizes.changes_band)
+        .exact_size(tokens.sizes.changes_chrome + push_height(ui))
         .resizable(false)
         .show_separator_line(false)
-        .frame(Frame::new().fill(tokens.window))
+        .frame(Frame::new().fill(tokens.band))
         .show(ui, |_ui| {})
         .response
         .rect
@@ -187,9 +193,9 @@ fn page_area(
     context: &PageContext<'_>,
 ) -> Rect {
     open_page(ui.ctx(), page, jump);
-    let window = tokens::current(ui.ctx()).window;
+    let band = tokens::current(ui.ctx()).band;
     CentralPanel::default()
-        .frame(Frame::new().fill(window))
+        .frame(Frame::new().fill(band))
         .show(ui, |ui| {
             // The page paints on under the Console, so the sheet's frost
             // shows it blurred. Its scroll area ends at the sheet's top.
@@ -215,7 +221,6 @@ fn page_area(
 fn notices(ctx: &egui::Context, page: Rect, stopping: bool, toasts: &mut Toasts) {
     let texts = ToastTexts {
         name: &i18n::text(ctx, "toast-name"),
-        close: &i18n::text(ctx, "dialog-close"),
     };
 
     if stopping {

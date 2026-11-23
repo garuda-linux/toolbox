@@ -1,8 +1,10 @@
 use egui::Ui;
+use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 
 use super::page_layout;
 use crate::testing::harness;
+use crate::widgets::ButtonKind;
 
 /// A long page whose layout salt is the state, so a test can switch it
 /// as a new page or tab would.
@@ -127,4 +129,61 @@ fn a_covered_bottom_leaves_room_to_scroll_every_row_above_the_cover() {
         last.bottom(),
         300.0 - COVER
     );
+}
+/// The toolbar's sort ends where a full-width control in the body ends,
+/// whether the body scrolls, and so keeps the strip, or fits.
+#[test]
+fn the_toolbar_ends_where_the_body_does() {
+    for extra in [0_u8, 60] {
+        let mut harness = harness(400.0, 300.0).build_ui_state(
+            |root, count: &mut u8| {
+                let rows = *count;
+                page_layout(
+                    root,
+                    0_u8,
+                    &mut (),
+                    |(), ui: &mut Ui| {
+                        crate::widgets::page_header(
+                            ui,
+                            "Services",
+                            "Units of the system.",
+                            0.0,
+                            |_| {},
+                        );
+                        crate::widgets::page_toolbar(
+                            ui,
+                            &mut (),
+                            |(), ui| {
+                                _ = crate::widgets::pill_button(ui, "Search", ButtonKind::Soft);
+                            },
+                            |(), ui| _ = crate::widgets::pill_button(ui, "Sort", ButtonKind::Soft),
+                        );
+                        true
+                    },
+                    |(), ui: &mut Ui| {
+                        let width = ui.available_width();
+                        _ = ui.add_sized([width, 30.0], egui::Button::new("Body edge"));
+                        for row in 0..rows {
+                            ui.label(format!("Row {row}"));
+                        }
+                    },
+                );
+            },
+            extra,
+        );
+
+        harness.run();
+        harness.run();
+        let sort = harness.get_by_role_and_label(Role::Button, "Sort").rect();
+        let body = harness
+            .get_by_role_and_label(Role::Button, "Body edge")
+            .rect();
+
+        assert!(
+            (sort.right() - body.right()).abs() < 0.5,
+            "{extra} rows: the sort ends at {} and the body at {}",
+            sort.right(),
+            body.right()
+        );
+    }
 }

@@ -143,7 +143,7 @@ fn the_files_that_exist_show_by_section() {
     for label in [
         "Bootloader",
         "System",
-        "User environment",
+        "User Environment",
         "Hostname",
         "Bash",
     ] {
@@ -169,12 +169,12 @@ fn a_guarded_file_is_shown_read_only() {
     harness.run();
     harness.query_all_by_label("View").next().unwrap().click();
     step_until(harness, "the text", |harness| {
-        harness.query_all_by_label("Copy all").next().is_some()
+        harness.query_all_by_label("Copy All").next().is_some()
     });
 
     assert!(
         harness
-            .query_all_by_label_contains("The text of /etc/group")
+            .query_all_by_label_contains("The Text of /etc/group")
             .next()
             .is_some()
     );

@@ -60,7 +60,7 @@ fn the_hero_names_the_app_above_its_version_and_copies_the_system_details() {
     assert!(name.bottom() <= version.top(), "{name:?} {version:?}");
     assert!(version.bottom() <= credits.top(), "{version:?} {credits:?}");
 
-    harness.get_by_label("Copy system details").click();
+    harness.get_by_label("Copy System Details").click();
     harness.run();
 
     assert!(matches!(
@@ -84,7 +84,7 @@ fn a_help_link_opens_its_page() {
 
 fn call_the_exorcist(harness: &mut Harness<'static, PageState<AboutPage>>) {
     harness
-        .get_by_role_and_label(Role::Button, "Call the exorcist")
+        .get_by_role_and_label(Role::Button, "Call the Exorcist")
         .click();
     harness.run();
 }
@@ -97,7 +97,7 @@ fn the_exorcist_answers_in_a_dialog_not_a_note() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Exorcist called")
+            .query_by_role_and_label(Role::Dialog, "Exorcist Called")
             .is_some()
     );
     assert!(
@@ -119,7 +119,7 @@ fn escape_sends_the_exorcist_away() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Exorcist called")
+            .query_by_role_and_label(Role::Dialog, "Exorcist Called")
             .is_none()
     );
 }
@@ -184,21 +184,60 @@ fn every_place_is_listed_once_and_the_start_page_is_on_the_web() {
     );
 }
 
-#[test]
-fn the_two_top_cards_stand_equally_tall() {
-    let (harness, _opened) = page();
-    let fill = toolbox_gui_kit::tokens::current(&harness.ctx).card;
-    let mut cards = toolbox_gui_kit::testing::filled_rects(&harness, fill);
+/// The outlines of the two cards side by side: the facts, then the help.
+fn top_cards(harness: &Harness<'static, PageState<AboutPage>>) -> (egui::Rect, egui::Rect) {
+    let fill = toolbox_gui_kit::tokens::current(&harness.ctx).card_glass;
+    let mut cards = toolbox_gui_kit::testing::filled_rects(harness, fill);
     cards.sort_by(|first, second| first.top().total_cmp(&second.top()));
-    let [facts, help] = [cards[0], cards[1]];
+    let [first, second, ..] = cards[..] else {
+        panic!("two cards, found {cards:?}");
+    };
 
-    assert!((facts.top() - help.top()).abs() < 0.5, "{facts:?} {help:?}");
+    if first.left() < second.left() {
+        (first, second)
+    } else {
+        (second, first)
+    }
+}
+
+fn assert_one_line(harness: &Harness<'static, PageState<AboutPage>>, case: &str) {
+    let (facts, help) = top_cards(harness);
+
+    assert!(facts.right() < help.left(), "{case}: {facts:?} {help:?}");
     assert!(
-        (facts.height() - help.height()).abs() < 0.5,
-        "{} against {}",
-        facts.height(),
-        help.height()
+        (facts.top() - help.top()).abs() < 0.01 && (facts.bottom() - help.bottom()).abs() < 0.01,
+        "{case}: {facts:?} {help:?}, bottoms {} apart",
+        facts.bottom() - help.bottom()
     );
+}
+
+#[test]
+fn the_two_top_cards_end_on_one_line() {
+    for theme in [egui::Theme::Dark, egui::Theme::Light] {
+        for language in ["en-US", "de-DE"] {
+            let (mut harness, _opened) = page();
+            harness.ctx.set_theme(theme);
+            crate::i18n::set_language(&harness.ctx, &language.parse().expect("a language"));
+            harness.run();
+
+            assert_one_line(&harness, &format!("{theme:?} {language}"));
+        }
+    }
+}
+
+/// At two pixels per point one pixel is half a point, so a row that
+/// grows by a pixel, with another font for example, leaves the last
+/// measure a fraction short.
+#[test]
+fn the_two_top_cards_meet_again_after_a_fraction_of_a_point() {
+    let (mut harness, _opened) = page();
+    let id = egui::Id::unique(super::TOP_CARDS);
+    let measured = harness.ctx.data(|data| data.get_temp::<f32>(id));
+    let short = measured.expect("a measure of the taller card") - 0.25;
+    harness.ctx.data_mut(|data| data.insert_temp(id, short));
+    harness.run();
+
+    assert_one_line(&harness, "a measure 0.25 short");
 }
 
 #[test]
@@ -212,7 +251,7 @@ fn only_technical_facts_offer_a_copy_button() {
     };
 
     assert!(
-        harness.query_by_label("Copy system details").is_some(),
+        harness.query_by_label("Copy System Details").is_some(),
         "the version and the system are what a bug report needs"
     );
     assert!(!copy("Made by"), "a name is nothing to paste");
@@ -252,5 +291,31 @@ fn retired_services_are_no_longer_listed() {
 
     for name in ["Whoogle", "IRC"] {
         assert!(harness.query_all_by_label(name).next().is_none(), "{name}");
+    }
+}
+
+/// Each help row is centred on the fact beside it.
+#[test]
+fn each_help_row_lines_up_with_a_fact() {
+    let (mut harness, _opened) = page();
+    harness.run();
+
+    let centre = |label: &str| {
+        let text = toolbox_gui_kit::testing::painted_text(&harness, label).expect(label);
+        text.pos.y + text.galley.rect.center().y
+    };
+
+    for (fact, help) in [
+        ("License", "Garuda Linux wiki"),
+        ("Made by", "Arch Linux wiki"),
+        ("Bug reports", "Service status"),
+        ("Website", "Call the Exorcist"),
+    ] {
+        assert!(
+            (centre(fact) - centre(help)).abs() < 1.0,
+            "{fact} at {}, {help} at {}",
+            centre(fact),
+            centre(help)
+        );
     }
 }

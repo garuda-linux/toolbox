@@ -14,7 +14,7 @@ fn a_reset_row_names_the_files_it_replaces_in_sight() {
         Maintenance::showing(None, false, vec![kitty()], None),
     ));
 
-    open_tab(&mut harness, "Reset settings");
+    open_tab(&mut harness, "Reset Settings");
 
     let row = harness.get_by_role_and_label(Role::CheckBox, "Kitty");
     assert_eq!(
@@ -42,10 +42,10 @@ fn a_long_reset_list_scrolls_and_keeps_its_buttons_in_the_window() {
 
     let mut harness = page(with(programs(), maintenance));
     harness.set_size(vec2(1024.0, 600.0));
-    open_tab(&mut harness, "Reset settings");
-    harness.get_by_label("Reset selected…").scroll_to_me();
+    open_tab(&mut harness, "Reset Settings");
+    harness.get_by_label("Reset Selected…").scroll_to_me();
     harness.run();
-    harness.get_by_label("Reset selected…").click();
+    harness.get_by_label("Reset Selected…").click();
     harness.run();
 
     let window = harness.ctx.content_rect();

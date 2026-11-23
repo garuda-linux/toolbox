@@ -1,9 +1,19 @@
 use egui::Theme;
 use egui::style::ScrollAnimation;
 
-use super::{ANIMATION_TIME, apply, reduced_motion, set_reduced_motion};
+use super::{ANIMATION_TIME, apply, reduced_motion, set_reduced_motion, set_translucent};
 use crate::palette::Palette;
 use crate::tokens::{self, Tokens};
+
+fn applied() -> egui::Context {
+    let ctx = egui::Context::default();
+    apply(
+        &ctx,
+        &Palette::fallback(Theme::Dark),
+        &Palette::fallback(Theme::Light),
+    );
+    ctx
+}
 
 #[test]
 fn both_themes_take_their_tokens() {
@@ -18,7 +28,7 @@ fn both_themes_take_their_tokens() {
     assert_eq!(dark_style.visuals.window_fill, dark_tokens.card);
     assert_eq!(
         dark_style.visuals.widgets.hovered.bg_fill,
-        dark_tokens.hover
+        dark_tokens.button_hover
     );
     assert_eq!(
         dark_style.visuals.override_text_color, None,
@@ -35,12 +45,7 @@ fn both_themes_take_their_tokens() {
 
 #[test]
 fn fields_show_a_boundary_that_stands_out_three_to_one_without_growing() {
-    let ctx = egui::Context::default();
-    apply(
-        &ctx,
-        &Palette::fallback(Theme::Dark),
-        &Palette::fallback(Theme::Light),
-    );
+    let ctx = applied();
 
     for theme in [Theme::Dark, Theme::Light] {
         let tokens = Tokens::derive(&Palette::fallback(theme), theme);
@@ -65,12 +70,7 @@ fn fields_show_a_boundary_that_stands_out_three_to_one_without_growing() {
 
 #[test]
 fn reduced_motion_stops_every_animation_in_both_themes() {
-    let ctx = egui::Context::default();
-    apply(
-        &ctx,
-        &Palette::fallback(Theme::Dark),
-        &Palette::fallback(Theme::Light),
-    );
+    let ctx = applied();
 
     set_reduced_motion(&ctx, true);
 
@@ -101,12 +101,7 @@ fn reduced_motion_outlasts_a_new_palette_and_can_be_taken_back() {
 
 #[test]
 fn tooltips_stay_up_while_the_pointer_moves_along_the_sidebar() {
-    let ctx = egui::Context::default();
-    apply(
-        &ctx,
-        &Palette::fallback(Theme::Dark),
-        &Palette::fallback(Theme::Light),
-    );
+    let ctx = applied();
 
     for theme in [Theme::Dark, Theme::Light] {
         let interaction = &ctx.style_of(theme).interaction;
@@ -115,60 +110,28 @@ fn tooltips_stay_up_while_the_pointer_moves_along_the_sidebar() {
 }
 
 #[test]
-fn a_shown_scroll_bar_stays_drawn_at_rest_and_keeps_its_own_room() {
-    let ctx = egui::Context::default();
-    apply(
-        &ctx,
-        &Palette::fallback(Theme::Dark),
-        &Palette::fallback(Theme::Light),
+fn radii_are_darkly_corner_radius_9_and_its_derived_shapes() {
+    // Each shape takes Darkly's CornerRadius of 9 (darkly.kcfg:57) less its
+    // frame, the line of each derivation sits beside its constant.
+    use super::{
+        CARD_RADIUS, CHECK_RADIUS, CONTROL_RADIUS, FIELD_RADIUS, POPOVER_RADIUS, RADIUS,
+        TAB_RADIUS, TOOL_BUTTON_RADIUS,
+    };
+
+    assert_eq!(RADIUS, 9, "item highlights and rows (darklystyle.cpp:4753)");
+    assert_eq!(
+        POPOVER_RADIUS, 9,
+        "menus and popovers (darklystyle.cpp:4753)"
     );
-    let mut style = (*ctx.style_of(Theme::Dark)).clone();
-    super::show_scroll_bars(&mut style);
-
-    let scroll = style.spacing.scroll;
-    assert!(scroll.dormant_handle_opacity > 0.0, "it hides at rest");
-    assert!(
-        scroll.floating_allocated_width >= scroll.floating_width,
-        "the bar would cover the last characters"
+    assert_eq!(CARD_RADIUS, 8, "card and frame (darklyhelper.cpp:466)");
+    assert_eq!(FIELD_RADIUS, 8, "line edits (darklyhelper.cpp:1045)");
+    assert_eq!(TAB_RADIUS, 8, "unchosen tabs, every corner");
+    assert_eq!(CONTROL_RADIUS, 7, "buttons (darklyhelper.cpp:829)");
+    assert_eq!(CHECK_RADIUS, 5, "check boxes (darklyhelper.cpp:1275)");
+    assert_eq!(
+        TOOL_BUTTON_RADIUS, 9,
+        "tool buttons 8.5, rounded up (darklyhelper.cpp:908)"
     );
-}
-
-#[test]
-fn every_scroll_handle_is_one_quiet_look_that_still_reaches_three_to_one() {
-    let ctx = egui::Context::default();
-    let palettes = (
-        Palette::fallback(Theme::Dark),
-        Palette::fallback(Theme::Light),
-    );
-
-    apply(&ctx, &palettes.0, &palettes.1);
-
-    for (theme, palette) in [(Theme::Dark, &palettes.0), (Theme::Light, &palettes.1)] {
-        let tokens = Tokens::derive(palette, theme);
-        let page = (*ctx.style_of(theme)).clone();
-        let mut shown = page.clone();
-        super::show_scroll_bars(&mut shown);
-
-        let near = page.spacing.scroll.active_handle_opacity;
-        assert!(
-            (shown.spacing.scroll.dormant_handle_opacity - near).abs() < f32::EPSILON,
-            "{theme:?}: a shown bar looks other than a page's"
-        );
-        assert!(
-            near < 0.8,
-            "{theme:?}: the handle is as loud as text ({near})"
-        );
-
-        for surface in [tokens.window, tokens.card] {
-            // egui blends the faded text over the surface in gamma space.
-            let handle = tokens::mix(surface, tokens.text, near);
-            let ratio = tokens::contrast(handle, surface);
-            assert!(
-                ratio >= 3.0,
-                "{theme:?}: handle at {ratio:.2}:1 on {surface:?}"
-            );
-        }
-    }
 }
 
 #[test]
@@ -176,4 +139,25 @@ fn a_pill_is_round_at_both_ends() {
     let diameter = f32::from(super::PILL_RADIUS) * 2.0;
 
     assert!((diameter - super::PILL_HEIGHT).abs() < f32::EPSILON);
+}
+
+#[test]
+fn the_translucent_window_takes_its_panel_fill_and_gives_it_back() {
+    let ctx = egui::Context::default();
+    let dark = Palette::fallback(Theme::Dark);
+    let light = Palette::fallback(Theme::Light);
+    apply(&ctx, &dark, &light);
+    let opaque = ctx.style_of(Theme::Dark).visuals.panel_fill;
+    assert_eq!(opaque.a(), 255);
+
+    set_translucent(&ctx, true);
+    let glass = ctx.style_of(Theme::Dark).visuals.panel_fill;
+    assert_eq!(glass.a(), 214);
+    assert_eq!(
+        glass,
+        Tokens::derive(&dark, Theme::Dark).glass().window_glass
+    );
+
+    set_translucent(&ctx, false);
+    assert_eq!(ctx.style_of(Theme::Dark).visuals.panel_fill, opaque);
 }

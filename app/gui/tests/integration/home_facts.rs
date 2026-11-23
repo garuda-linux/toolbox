@@ -67,16 +67,16 @@ fn orphans_queue_their_clean_up_and_take_it_back() {
 
     assert!(
         harness
-            .query_by_label("Orphans and package cache")
+            .query_by_label("Orphans and Package Cache")
             .is_some()
     );
-    harness.get_by_label("Queue clean-up").click();
+    harness.get_by_label("Queue Clean-up").click();
     harness.run();
-    assert!(harness.query_by_label("Don't clean up").is_some());
+    assert!(harness.query_by_label("Don't Clean Up").is_some());
 
-    harness.get_by_label("Don't clean up").click();
+    harness.get_by_label("Don't Clean Up").click();
     harness.run();
-    assert!(harness.query_by_label("Queue clean-up").is_some());
+    assert!(harness.query_by_label("Queue Clean-up").is_some());
 }
 
 #[test]
@@ -85,7 +85,7 @@ fn a_small_cache_without_orphans_is_no_row() {
 
     assert!(
         harness
-            .query_by_label("Orphans and package cache")
+            .query_by_label("Orphans and Package Cache")
             .is_none()
     );
     assert!(harness.query_by_label("Everything is fine").is_some());

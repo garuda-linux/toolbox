@@ -70,9 +70,15 @@ pub const fn queued_text(wish: Toggle, control: Control) -> &'static str {
 
 /// Cuts a description after [`DESCRIPTION_LINES`]. Its tooltip and
 /// screen readers keep it whole.
-pub fn cut(mut description: LayoutJob) -> LayoutJob {
+pub fn cut(description: LayoutJob) -> LayoutJob {
+    cut_to(description, DESCRIPTION_LINES)
+}
+
+/// Cuts a description after `lines` lines, for a row beside a details pane,
+/// which has room for fewer lines than a full-width row.
+pub fn cut_to(mut description: LayoutJob, lines: u8) -> LayoutJob {
     description.wrap = TextWrapping {
-        max_rows: usize::from(DESCRIPTION_LINES),
+        max_rows: usize::from(lines),
         ..TextWrapping::default()
     };
 
@@ -83,13 +89,19 @@ pub fn cut(mut description: LayoutJob) -> LayoutJob {
 /// button of a page is as wide as the widest text, so the descriptions
 /// of all rows end at one x.
 pub fn width(ui: &Ui, control: Control, setting: Setting) -> f32 {
-    let menu = icon_button_width(ui) + ui.tokens().sizes.control_gap;
+    let menu = icon_button_width() + ui.tokens().sizes.control_gap;
     match control {
         Control::Switch if setting == Setting::Switch => menu + SWITCH_WIDTH,
         Control::Switch | Control::Install | Control::Remove | Control::TakeBack => {
             menu + button_width(ui)
         }
     }
+}
+
+/// Whether the button of the details pane was pressed. It is the row's
+/// button, so both take the same press.
+pub fn press(ui: &mut Ui, shown: Shown<'_>) -> bool {
+    button(ui, shown).clicked()
 }
 
 /// Returns whether the row asks for its change: a click on it, or Space on

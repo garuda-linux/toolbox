@@ -4,6 +4,10 @@ use egui_kittest::kittest::Queryable as _;
 
 use super::super::{Tone, banner};
 use crate::testing::{harness, rims_around};
+use crate::theme::PILL_HEIGHT;
+
+/// Darkly's push button at the test font, its text plus 18 px.
+const PUSH_HEIGHT: f32 = 34.0;
 
 #[test]
 fn a_banner_shows_its_actions_in_order_and_tells_which_was_clicked() {
@@ -61,13 +65,13 @@ fn a_banner_action_keeps_an_outline_on_the_neutral_wash() {
 #[test]
 fn a_success_banner_shows_the_positive_glyph() {
     let tokens = crate::tokens::current(&egui::Context::default());
-    let (_, _, icon) = Tone::Success.banner(&tokens);
+    let (_, icon) = Tone::Success.status_mark(&tokens);
 
     assert_eq!(icon, crate::icons::DIALOG_POSITIVE);
 }
 
 #[test]
-fn a_one_line_banner_is_as_tall_with_or_without_an_action() {
+fn a_banner_line_with_an_action_grows_to_the_button() {
     let mut heights = Vec::new();
     for actions in [&[][..], &["Queue all"][..]] {
         let mut harness = harness(800.0, 200.0).build_ui_state(
@@ -82,7 +86,15 @@ fn a_one_line_banner_is_as_tall_with_or_without_an_action() {
         heights.push(*harness.state());
     }
 
-    assert_eq!(heights[0], heights[1]);
+    // A line holding a push button grows to it, the one without keeps the
+    // pill height, so the banner with an action is taller by the difference.
+    let grown = PUSH_HEIGHT - PILL_HEIGHT;
+    assert!(
+        (heights[1] - heights[0] - grown).abs() < 0.5,
+        "without {} and with {}",
+        heights[0],
+        heights[1]
+    );
 }
 
 #[test]
@@ -149,19 +161,56 @@ fn a_one_line_banner_centres_its_icon_on_the_line() {
 }
 
 #[test]
-fn a_banner_action_on_a_status_wash_is_filled_without_a_rim() {
+fn a_banner_action_is_a_breeze_button_with_its_frame_on_the_status_wash() {
+    // The KDE reference (kde-chip.png) draws the action with its frame
+    // on the tinted banner, so the button keeps the rim it has anywhere.
     let mut harness = harness(800.0, 200.0)
         .build_ui(|ui| _ = banner(ui, Tone::Warning, "3 checks failed.", &["Read again"]));
 
     harness.run();
 
     let button = harness.get_by_label("Read again").rect();
-    let field = crate::tokens::current(&harness.ctx).field;
+    let field = crate::tokens::current(&harness.ctx).input;
 
     assert_eq!(
         crate::testing::fill_under(&harness, button.center()),
         Some(field)
     );
     let rims = rims_around(&harness, button.center());
-    assert!(rims.iter().all(|width| *width < 0.5), "{rims:?}");
+    assert!(rims.iter().any(|width| *width >= 1.0), "{rims:?}");
+}
+
+fn tokens_of(theme: egui::Theme) -> crate::tokens::Tokens {
+    crate::tokens::Tokens::derive(&crate::Palette::fallback(theme), theme)
+}
+
+#[test]
+fn a_banner_frames_its_type_colour_and_fills_with_a_fifth_of_it_over_the_card() {
+    let tokens = tokens_of(egui::Theme::Dark);
+    let look = Tone::Warning.banner_look(&tokens);
+
+    assert_eq!(look.frame, tokens.warning);
+    assert_eq!(
+        look.fill,
+        crate::tokens::mix(tokens.card, tokens.warning, 0.2)
+    );
+}
+
+#[test]
+fn an_information_banner_takes_the_active_text_colour_and_a_neutral_one_too() {
+    let tokens = tokens_of(egui::Theme::Dark);
+
+    assert_eq!(Tone::Accent.banner_look(&tokens).frame, tokens.roles.active);
+    assert_eq!(
+        Tone::Neutral.banner_look(&tokens).frame,
+        tokens.roles.active
+    );
+}
+
+#[test]
+fn a_success_banner_is_framed_in_the_positive_colour() {
+    let tokens = tokens_of(egui::Theme::Light);
+
+    assert_eq!(Tone::Success.banner_look(&tokens).frame, tokens.success);
+    assert_eq!(Tone::Error.banner_look(&tokens).frame, tokens.error);
 }

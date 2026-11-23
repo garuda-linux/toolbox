@@ -109,7 +109,7 @@ fn an_empty_list_offers_every_match_and_the_button_picks_all() {
 
     assert!(harness.query_by_label("No service matches.").is_some());
     harness
-        .get_by_role_and_label(Role::Button, "Show the one match")
+        .get_by_role_and_label(Role::Button, "Show the One Match")
         .click();
     harness.run();
 
@@ -134,8 +134,8 @@ fn nothing_found_at_all_offers_no_button() {
             .query_by_label("Change the search or the filters to see more services.")
             .is_some()
     );
-    assert!(harness.query_by_label_contains("Show all").is_none());
-    assert!(harness.query_by_label("Show the one match").is_none());
+    assert!(harness.query_by_label_contains("Show All").is_none());
+    assert!(harness.query_by_label("Show the One Match").is_none());
 }
 
 #[test]

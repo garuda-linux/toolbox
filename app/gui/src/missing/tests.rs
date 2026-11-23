@@ -55,7 +55,7 @@ fn the_state_stands_in_the_middle_of_the_window() {
     harness.run();
 
     let title = harness
-        .get_by_label("Garuda Toolbox is not installed completely")
+        .get_by_label("Garuda Toolbox Is Not Installed Completely")
         .rect();
 
     let quit = harness.get_by_role_and_label(Role::Button, "Quit").rect();
@@ -70,11 +70,11 @@ fn the_state_stands_in_the_middle_of_the_window() {
         "Quit {quit:?} is not centred in {width}"
     );
 
-    // The icon stands above the title, so the title starts further from the
-    // top than Quit ends from the bottom.
+    // The 96 px icon and its gaps stand above the title. The bound is that
+    // stack's height at the KDE spacing.
     let (above, below) = (title.top(), height - quit.bottom());
     assert!(
-        below > 16.0 && above > below && above - below < 120.0,
+        below > 16.0 && above > below && above - below < 160.0,
         "the state runs from {above} to {below} above the bottom"
     );
 }

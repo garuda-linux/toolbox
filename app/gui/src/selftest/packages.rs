@@ -60,8 +60,12 @@ pub fn arch_steps() -> Vec<Step> {
         Step::wait("Back to pacman"),
         Step::Shot("packages-detail-dependency"),
         Step::click("Back to pacman"),
-        Step::wait("Back to Packages"),
-        Step::click("Back to Packages"),
+        Step::press(Key::Escape),
+        Step::Wait {
+            role: Some(Role::ListItem),
+            label: "pacman",
+        },
+        Step::Shot("packages-closed"),
         Step::shortcut(Key::A),
         Step::press(Key::Backspace),
         Step::button("Optional"),
@@ -99,13 +103,20 @@ pub fn aur_steps() -> Vec<Step> {
         },
         Step::wait("https://aur.archlinux.org/packages/paru-bin"),
         Step::Shot("packages-aur-detail"),
-        Step::click("Back to Packages"),
+        Step::Click {
+            role: Some(Role::ListItem),
+            label: "yay-bin",
+        },
         Step::wait("Install yay-bin"),
         Step::click("Install yay-bin"),
         Step::wait("Build yay-bin from the AUR?"),
         Step::Shot("packages-aur-install"),
         Step::button("Cancel"),
         Step::WaitGone("Build yay-bin from the AUR?"),
+        Step::Click {
+            role: Some(Role::ListItem),
+            label: "yay-bin",
+        },
         Step::wait("Install yay-bin"),
     ]
 }

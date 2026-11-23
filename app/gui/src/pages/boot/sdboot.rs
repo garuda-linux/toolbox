@@ -4,8 +4,8 @@ mod tests;
 
 use egui::Ui;
 use toolbox_core::features::boot::kernel_default;
-use toolbox_gui_kit::widgets::{Tone, banner, card};
-use toolbox_gui_kit::{UiExt as _, icons};
+use toolbox_gui_kit::UiExt as _;
+use toolbox_gui_kit::widgets::{Tone, card};
 use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderSetting, MAX_ENTRIES, SdBootMenu};
 use toolbox_services::boot_menu::Menu;
@@ -16,12 +16,13 @@ use crate::command::BootCommand;
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::pages::PageContext;
+use crate::pages::rows::read_again_banner;
 use crate::pages::setting_row::{Words, row};
 
 pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
     let menu = context.service::<Boot>().menu();
 
-    heading(ui, icons::FORMAT_LIST_UNORDERED, "boot-menu");
+    heading(ui, "boot-menu");
 
     let state = format!("boot-default-{}", menu.as_str());
     let Some(sdboot) = menu.sdboot() else {
@@ -36,37 +37,41 @@ pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
-    counts(ui, sdboot);
+    counts(ui, context, sdboot);
     card(ui, |ui| menu::show(ui, context, sdboot));
 }
 
-fn counts(ui: &mut Ui, menu: &SdBootMenu) {
+fn counts(ui: &mut Ui, context: &PageContext<'_>, menu: &SdBootMenu) {
     if menu.skipped == 0 && menu.cut == 0 {
         return;
     }
 
     let ctx = ui.ctx().clone();
-    let limit = MAX_ENTRIES;
     let mut sentences = Vec::new();
 
     if menu.skipped > 0 {
-        let count = menu.skipped;
-
         sentences.push(i18n::text_with(
             &ctx,
             "boot-sdboot-skipped",
-            &[("count", Arg::from(count))],
+            &[("count", Arg::from(menu.skipped))],
         ));
     }
 
     if menu.cut > 0 {
-        let count = menu.cut;
-        let args = [("count", Arg::from(count)), ("limit", Arg::from(limit))];
+        let args = [
+            ("count", Arg::from(menu.cut)),
+            ("limit", Arg::from(MAX_ENTRIES)),
+        ];
 
         sentences.push(i18n::text_with(&ctx, "boot-sdboot-cut", &args));
     }
 
-    banner(ui, Tone::Warning, &sentences.join(" "), &[]);
+    // Only unread entries can read again, a cut menu shows its first 256.
+    let text = sentences.join(" ");
+    if read_again_banner(ui, Tone::Warning, &text, menu.skipped > 0) {
+        context.commands.send(BootCommand::Refresh);
+    }
+
     ui.add_space(ui.tokens().sizes.card_gap);
 }
 
@@ -105,7 +110,7 @@ pub fn proposal(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 pub fn no_cmdline_card(ui: &mut Ui) {
-    heading(ui, icons::UTILITIES_TERMINAL, "boot-kernel");
+    heading(ui, "boot-kernel");
     card(ui, |ui| {
         fact(ui, "boot-parameters", "boot-sdboot-no-cmdline");
     });

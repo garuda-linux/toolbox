@@ -1,6 +1,7 @@
 use egui::epaint::{RectShape, Shadow};
 use egui::{Color32, CornerRadius, Frame, InnerResponse, Margin, Rect, Shape, Stroke, Ui, vec2};
 
+use crate::toasts::paint_popup_shadow;
 use crate::tokens;
 use crate::widgets::paint_top_light;
 
@@ -9,6 +10,8 @@ pub struct Glass {
     frame: Frame,
     tint: Color32,
     lit: bool,
+    /// Darkly's two popup shadow layers, instead of the frame's one.
+    two_layer: bool,
 }
 
 impl Glass {
@@ -18,6 +21,7 @@ impl Glass {
             frame,
             tint,
             lit: false,
+            two_layer: false,
         }
     }
 
@@ -29,7 +33,10 @@ impl Glass {
             .inner_margin(margin)
             .shadow(ui.visuals().popup_shadow);
 
-        Self::new(frame, super::raised(ui.ctx())).lit()
+        Self {
+            two_layer: true,
+            ..Self::new(frame, super::raised(ui.ctx())).lit()
+        }
     }
 
     #[must_use = "a glass does nothing until shown"]
@@ -63,8 +70,14 @@ impl Glass {
         );
 
         let corners = self.frame.corner_radius;
-        ui.painter()
-            .set(shadow, self.frame.shadow.as_shape(rect, corners));
+        if self.two_layer {
+            let tokens = tokens::current(ui.ctx());
+            paint_popup_shadow(ui.painter(), shadow, rect, corners, &tokens);
+        } else {
+            let plain = self.frame.shadow.as_shape(rect, corners);
+            ui.painter().set(shadow, plain);
+        }
+
         if let Some(blur) = blur {
             blur.fill(ui.ctx(), rect, corners);
         }

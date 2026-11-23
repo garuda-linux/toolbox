@@ -25,7 +25,7 @@ fn unread() -> Shown {
 /// The text beside the Shell and network heading, if any.
 fn heading_count(harness: &Shown) -> Option<String> {
     let heading = harness
-        .get_by_role_and_label(Role::Heading, "Shell and network")
+        .get_by_role_and_label(Role::Heading, "Shell and Network")
         .rect();
 
     harness
@@ -45,7 +45,7 @@ fn chip_label(harness: &Shown) -> String {
     harness
         .query_all_by_role(Role::Button)
         .filter_map(|button| button.accesskit_node().label())
-        .find(|label| label.starts_with("Shell and network"))
+        .find(|label| label.starts_with("Shell and Network"))
         .expect("the section has a chip")
 }
 

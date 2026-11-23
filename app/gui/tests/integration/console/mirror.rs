@@ -41,13 +41,13 @@ fn an_install_that_met_a_missing_mirror_file_offers_an_update_first() {
 
     harness.get_by_label("Apply").click();
     harness.step();
-    wait_for(&mut harness, "Update the system and try again");
+    wait_for(&mut harness, "Update the System and Try Again");
     unfocus(&mut harness);
     harness.snapshot("console/mirror_missing_dark");
 
     harness.get_by_label("Console output actions").click();
     harness.run();
-    harness.get_by_label("Copy output").click();
+    harness.get_by_label("Copy Output").click();
     harness.step();
     let quoted = "failed retrieving file 'cowsay-3.8.4-1-any.pkg.tar.zst' from 127.0.0.1:8765";
     let mut commands = harness.output().platform_output.commands.iter();
@@ -58,7 +58,7 @@ fn an_install_that_met_a_missing_mirror_file_offers_an_update_first() {
     assert!(copied, "pacman's quotes did not pass through");
 
     harness
-        .get_by_label("Update the system and try again")
+        .get_by_label("Update the System and Try Again")
         .click();
     harness.step();
 

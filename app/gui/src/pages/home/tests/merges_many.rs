@@ -110,7 +110,7 @@ fn count(harness: &Shown, label: &str) -> usize {
 
 fn second_take(harness: &Shown) -> egui_kittest::Node<'_> {
     harness
-        .query_all_by_role_and_label(Role::RadioButton, "Take new")
+        .query_all_by_role_and_label(Role::RadioButton, "Take New")
         .nth(1)
         .unwrap()
 }
@@ -123,18 +123,18 @@ fn every_copy_is_listed_with_its_own_changes() {
         assert!(harness.query_by_role_and_label(Role::Tab, file).is_some());
     }
 
-    assert_eq!(count(&harness, "Take new"), 3);
+    assert_eq!(count(&harness, "Take New"), 3);
 
     show(&mut harness, "/etc/locale.gen");
-    assert_eq!(count(&harness, "Take saved"), 1);
+    assert_eq!(count(&harness, "Take Saved"), 1);
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Restore saved file")
+            .query_by_role_and_label(Role::Button, "Restore Saved File")
             .is_some()
     );
 
     show(&mut harness, "/etc/default/grub");
-    assert_eq!(count(&harness, "Take new"), 2);
+    assert_eq!(count(&harness, "Take New"), 2);
 }
 
 #[test]
@@ -142,7 +142,7 @@ fn mixed_picks_queue_the_merged_text() {
     let mut harness = three();
 
     take_color(&mut harness);
-    click(&mut harness, Role::Button, "Queue the merge");
+    click(&mut harness, Role::Button, "Queue the Merge");
 
     assert_eq!(harness.state().fixture.sent(), [pacman_merge()]);
 }
@@ -153,11 +153,11 @@ fn picks_stay_while_another_copy_is_shown() {
 
     take_color(&mut harness);
     show(&mut harness, "/etc/locale.gen");
-    click(&mut harness, Role::RadioButton, "Take saved");
+    click(&mut harness, Role::RadioButton, "Take Saved");
     show(&mut harness, "/etc/pacman.conf");
-    click(&mut harness, Role::Button, "Queue the merge");
+    click(&mut harness, Role::Button, "Queue the Merge");
     show(&mut harness, "/etc/locale.gen");
-    click(&mut harness, Role::Button, "Queue the merge");
+    click(&mut harness, Role::Button, "Queue the Merge");
 
     assert_eq!(
         harness.state().fixture.sent(),
@@ -173,11 +173,11 @@ fn each_copy_queues_its_own_choice() {
     let mut harness = three();
 
     take_color(&mut harness);
-    click(&mut harness, Role::Button, "Queue the merge");
+    click(&mut harness, Role::Button, "Queue the Merge");
     show(&mut harness, "/etc/locale.gen");
-    click(&mut harness, Role::Button, "Keep current file");
+    click(&mut harness, Role::Button, "Keep Current File");
     show(&mut harness, "/etc/default/grub");
-    click(&mut harness, Role::Button, "Use new file");
+    click(&mut harness, Role::Button, "Use New File");
 
     let grub = grub_current();
     let saved = locale_saved();

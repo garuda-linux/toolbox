@@ -4,6 +4,7 @@ use egui::{Color32, Theme};
 use toolbox_terminal::Color;
 
 use super::frost::{SCRIM_LEAST, least_band, neutral};
+use super::readability::Ends;
 use super::{SECONDARY_CONTRAST, Surfaces, contrast, mix};
 use crate::oklch::{lightness, with_lightness};
 use crate::palette::Palette;
@@ -15,20 +16,26 @@ const LIGHTNESS_STEP: f32 = 0.005;
 const LIGHTNESS_STEPS: u16 = 200;
 
 impl Surfaces {
-    /// The printed colours are moved in lightness until they read on the solid `terminal` and on the thinnest glass.
+    #[expect(
+        clippy::too_many_arguments,
+        reason = "the glass needs the theme, the palette, the text pair, the sidebar and the ends"
+    )]
+    /// The printed colours move in lightness until they read on the solid
+    /// `terminal` and on the thinnest glass.
     pub(super) fn terminal_look(
         &self,
         theme: Theme,
         palette: &Palette,
         [text, terminal]: [Color32; 2],
         sidebar: Color32,
+        ends: Ends,
     ) -> (Color32, Ansi) {
         let frost = self.frost(text, sidebar, palette.accent);
         let under = self
             .under_blur(sidebar, palette.accent)
             .map(|own| own.blend(frost));
 
-        let neutral = neutral(theme);
+        let neutral = neutral(theme, ends);
         let view = Palette {
             view: terminal,
             ..*palette
@@ -56,7 +63,8 @@ impl Surfaces {
     }
 }
 
-/// Until it reaches 4.5:1 on the terminal and on each of `under`. Hue and chroma stay as far as sRGB holds them.
+/// Until it reaches 4.5:1 on the terminal and on each of `under`. Hue and
+/// chroma stay as far as sRGB holds them.
 fn lit(colour: Color32, theme: Theme, terminal: Color32, under: &[Color32]) -> Color32 {
     let reads = |candidate: Color32| {
         std::iter::once(&terminal)

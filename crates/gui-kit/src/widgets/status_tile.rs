@@ -1,17 +1,21 @@
-//! The mark of a status: its plain glyph in the status colour on a soft
-//! tile of that colour. Banners, notes, error rows, empty states and
-//! status rows draw this one mark, so a status looks the same everywhere.
+//! The mark of a status: Breeze's colour status icon, drawn plain at
+//! the icon size, as KDE's inline messages draw theirs. Banners, notes,
+//! error rows, empty states and status rows draw this one mark, so a
+//! status looks the same everywhere.
 
 use egui::{Color32, Pos2, Rect, Response, Role, Sense, Ui, Vec2, vec2};
 
-use super::icon_tile::{TileSize, paint_icon_tile};
+use super::icon_tile::{TileSize, paint_icon};
 use super::mark_word::mark_and_word;
 use super::{Tone, line, status_dot};
 use crate::fonts::{SMALL, Weight};
-use crate::icons::{self, Icon};
-use crate::tokens::{self, Tile, Tokens};
+use crate::icons::{Icon, colour};
+#[cfg(test)]
+use crate::tokens::Tile;
+use crate::tokens::{self, Tokens};
 
 impl Tone {
+    #[cfg(test)]
     pub fn status_mark(self, tokens: &Tokens) -> (Tile, Icon) {
         (tokens.status_tile(self.status_colour(tokens)), self.glyph())
     }
@@ -27,31 +31,24 @@ impl Tone {
         }
     }
 
+    /// Information and a neutral note both take KDE's information icon,
+    /// as KDE has no neutral one.
     const fn glyph(self) -> Icon {
         match self {
-            Self::Accent | Self::Neutral => icons::HELP_ABOUT,
-            Self::Warning => icons::DIALOG_WARNING,
-            Self::Success => icons::DIALOG_POSITIVE,
-            Self::Error => icons::DIALOG_ERROR,
+            Self::Accent | Self::Neutral => colour::DIALOG_INFORMATION,
+            Self::Warning => colour::DIALOG_WARNING,
+            Self::Success => colour::DIALOG_POSITIVE,
+            Self::Error => colour::DIALOG_ERROR,
         }
-    }
-
-    /// The status a state glyph stands for, for callers that name the
-    /// glyph alone.
-    pub(super) fn of_state_glyph(icon: Icon) -> Option<Self> {
-        [Self::Accent, Self::Warning, Self::Success, Self::Error]
-            .into_iter()
-            .find(|tone| tone.glyph() == icon)
     }
 }
 
 pub fn paint_status_tile(ui: &Ui, centre: Pos2, size: TileSize, tone: Tone) {
-    let (tile, icon) = tone.status_mark(&tokens::current(ui.ctx()));
-    paint_icon_tile(ui, centre, size, icon, tile);
+    paint_icon(ui, centre, size, tone.glyph());
 }
 
 pub fn status_tile(ui: &mut Ui, size: TileSize, tone: Tone) -> Rect {
-    let edge = size.edge(ui);
+    let edge = size.edge();
     let (rect, _) = ui.allocate_exact_size(vec2(edge, edge), Sense::hover());
     paint_status_tile(ui, rect.center(), size, tone);
     rect
@@ -74,7 +71,7 @@ pub fn status_word(ui: &mut Ui, label: &str, tone: Tone) -> Response {
 
 fn marked_word(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let edge = TileSize::Line.edge(ui);
+    let edge = TileSize::Line.edge();
     let gap = tokens.sizes.text_to_icon;
     let text = line(ui, label, Weight::Medium, SMALL, tokens.secondary);
     mark_and_word(

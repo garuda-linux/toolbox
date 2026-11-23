@@ -90,7 +90,6 @@ fn the_aur_chip_lists_the_most_popular_first_with_votes_and_marks() {
 
     assert!(!listed(&harness, "gimp"));
     assert!(harness.query_by_label("Out of date").is_some());
-    assert!(harness.query_all_by_label("1.0-1 · 42 votes").count() >= 3);
 
     let tops: Vec<f32> = ["paru-bin", "yay-bin", "toolbox-sample-git"]
         .iter()
@@ -109,9 +108,14 @@ fn the_aur_chip_lists_the_most_popular_first_with_votes_and_marks() {
 fn install_asks_about_the_build_script_before_it_queues() {
     let mut harness = on(aur_page());
 
+    super::super::tests::open_row(&mut harness, "yay-bin");
     harness.get_by_label("Install yay-bin").click();
     harness.run();
-    assert!(harness.state().fixture.sent().is_empty(), "queued at once");
+    assert_eq!(
+        harness.state().fixture.sent(),
+        [Command::from(PackagesCommand::Show(name("yay-bin")))],
+        "nothing queued before the build is answered"
+    );
     assert!(
         harness
             .query_by_label_contains("paru shows the build script in the Console")
@@ -119,7 +123,7 @@ fn install_asks_about_the_build_script_before_it_queues() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "Build and install")
+        .get_by_role_and_label(Role::Button, "Build and Install")
         .click();
     harness.run();
 

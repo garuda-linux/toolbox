@@ -5,7 +5,7 @@ page-diagnostics-subtitle = Reports about this computer for a forum post or a bu
 
 diagnostics-reports = Reports
 # Unfolds the report rows while a report shows.
-diagnostics-another = Collect another report
+diagnostics-another = Collect Another Report
 diagnostics-collect = Collect
 # What screen readers call a row's Collect. $name is the report's name.
 diagnostics-collect-name = Collect { $name }
@@ -52,9 +52,9 @@ diagnostics-lines =
 diagnostics-collected = · collected { $time } UTC · { $lines }
 diagnostics-collected-unknown = · { $lines }
 diagnostics-search = Search the report
-diagnostics-search-clear = Clear the search
+diagnostics-search-clear = Clear the Search
 
-diagnostics-copy = Copy report
-diagnostics-share = Share report…
+diagnostics-copy = Copy Report
+diagnostics-share = Share Report…
 diagnostics-share-tooltip = Uploads the report, encrypted, to bin.garudalinux.org and gives you a link to share.
 diagnostics-report-copied = Copied the report to the clipboard.

@@ -9,6 +9,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::maintenance::page::{PageTool, Repair};
 use toolbox_core::features::maintenance::{Operation, Tool};
+use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::Toggle;
 use toolbox_system::mirrors::RankProblem;
@@ -19,7 +20,7 @@ use crate::command::{Command, MaintenanceCommand};
 use crate::maintenance::{Maintenance, MaintenanceProblem};
 use crate::page_service::Services;
 use crate::programs::Programs;
-use crate::testing::{PLAN_RUNNING, PageFixture, PageState, button_kind};
+use crate::testing::{PLAN_RUNNING, PageFixture, PageState, button_kind, paints_icon, rect_of};
 
 type Page = Harness<'static, PageState<MaintenancePage>>;
 
@@ -92,9 +93,9 @@ fn an_operation_runs_now_or_waits_in_the_queue() {
             .query_by_label("More actions for Remove orphans")
             .is_none()
     );
-    harness.get_by_label("Queue removal").click();
+    harness.get_by_label("Queue Removal").click();
     harness.run();
-    harness.get_all_by_label("Run now").next().unwrap().click();
+    harness.get_all_by_label("Run Now").next().unwrap().click();
     harness.run();
 
     assert_eq!(
@@ -114,7 +115,7 @@ fn a_missing_tool_offers_its_install_and_the_ranking_says_it_runs() {
     let ranking = Maintenance::showing(None, true, Vec::new(), None);
     let mut harness = page(with(programs(), ranking));
 
-    assert_eq!(disabled(&harness, "Install and open…"), [false]);
+    assert_eq!(disabled(&harness, "Install and Open…"), [false]);
     assert!(
         harness
             .query_by_label_contains("Testing the mirrors")
@@ -126,9 +127,9 @@ fn a_missing_tool_offers_its_install_and_the_ranking_says_it_runs() {
             .is_some()
     );
 
-    harness.get_by_label("Install and open…").scroll_to_me();
+    harness.get_by_label("Install and Open…").scroll_to_me();
     harness.run();
-    harness.get_by_label("Install and open…").click();
+    harness.get_by_label("Install and Open…").click();
     harness.run();
 
     assert_eq!(
@@ -147,7 +148,7 @@ fn a_running_plan_rests_every_button_that_starts_one() {
     });
 
     assert!(harness.query_by_label(PLAN_RUNNING).is_some());
-    assert!(disabled(&harness, "Run now").iter().all(|rests| *rests));
+    assert!(disabled(&harness, "Run Now").iter().all(|rests| *rests));
     assert!(disabled(&harness, "Open").iter().all(|rests| *rests));
 }
 
@@ -170,7 +171,7 @@ fn repairs_lists_the_repairs_it_can_run() {
     let mut harness = page(with(programs(), Maintenance::default()));
     open_tab(&mut harness, "Repairs");
 
-    assert!(harness.query_by_label("Reset audio").is_some());
+    assert!(harness.query_by_label("Reset Audio").is_some());
     assert!(harness.query_by_label("Install garuda-update").is_none());
 
     harness.get_all_by_label("Run").next().unwrap().click();
@@ -235,7 +236,7 @@ fn one_banner_names_and_installs_every_missing_package() {
 #[test]
 fn a_system_without_defaults_says_so() {
     let mut harness = page(with(programs(), Maintenance::default()));
-    open_tab(&mut harness, "Reset settings");
+    open_tab(&mut harness, "Reset Settings");
 
     assert!(
         harness
@@ -252,7 +253,7 @@ fn a_chosen_setting_is_reset_after_the_question_lists_its_files() {
         Maintenance::showing(None, false, vec![kitty()], None),
     ));
 
-    open_tab(&mut harness, "Reset settings");
+    open_tab(&mut harness, "Reset Settings");
 
     harness
         .get_by_role_and_label(Role::CheckBox, "Kitty")
@@ -269,12 +270,12 @@ fn a_chosen_setting_is_reset_after_the_question_lists_its_files() {
     maintenance.choose("kitty", Toggle::On);
     harness.state_mut().fixture.services.maintenance = maintenance;
     harness.run();
-    harness.get_by_label("Reset selected…").click();
+    harness.get_by_label("Reset Selected…").click();
     harness.run();
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Reset 1 setting?")
+            .query_by_role_and_label(Role::Dialog, "Reset 1 Setting?")
             .is_some()
     );
     assert!(
@@ -294,9 +295,9 @@ fn a_chosen_setting_is_reset_after_the_question_lists_its_files() {
 fn nothing_chosen_leaves_the_reset_resting() {
     let maintenance = Maintenance::showing(None, false, vec![kitty()], None);
     let mut harness = page(with(programs(), maintenance));
-    open_tab(&mut harness, "Reset settings");
+    open_tab(&mut harness, "Reset Settings");
 
-    assert_eq!(disabled(&harness, "Reset selected…"), [true]);
+    assert_eq!(disabled(&harness, "Reset Selected…"), [true]);
 }
 
 #[test]
@@ -309,7 +310,7 @@ fn a_reset_that_failed_names_the_applications() {
 
     let maintenance = Maintenance::showing(None, false, vec![kitty()], Some(outcome));
     let mut harness = page(with(programs(), maintenance));
-    open_tab(&mut harness, "Reset settings");
+    open_tab(&mut harness, "Reset Settings");
 
     assert!(
         harness
@@ -328,7 +329,7 @@ fn kinds(harness: &Page, label: &str) -> Vec<ButtonKind> {
 #[test]
 fn only_the_system_update_leads_the_common_tab() {
     let harness = page(with(programs(), Maintenance::default()));
-    let runs = kinds(&harness, "Run now");
+    let runs = kinds(&harness, "Run Now");
 
     assert_eq!(runs.first(), Some(&ButtonKind::Primary));
     assert!(
@@ -338,13 +339,44 @@ fn only_the_system_update_leads_the_common_tab() {
 }
 
 #[test]
-fn the_reset_question_answers_with_danger() {
+fn the_reset_question_answers_without_a_red_fill() {
     let mut maintenance = Maintenance::showing(None, false, vec![kitty()], None);
     maintenance.choose("kitty", Toggle::On);
     let mut harness = page(with(programs(), maintenance));
-    open_tab(&mut harness, "Reset settings");
-    harness.get_by_label("Reset selected…").click();
+    open_tab(&mut harness, "Reset Settings");
+    harness.get_by_label("Reset Selected…").click();
     harness.run();
 
-    assert_eq!(button_kind(&harness, "Reset"), ButtonKind::Danger);
+    // Danger draws as Soft (buttons.rs), so only its delete icon marks it.
+    assert_eq!(button_kind(&harness, "Reset"), ButtonKind::Soft);
+    let answer = rect_of(&harness, Role::Button, "Reset");
+    assert!(paints_icon(&harness, answer, icons::EDIT_DELETE));
+}
+
+#[test]
+fn the_tool_buttons_share_one_width_and_left_edge() {
+    let ranking = Maintenance::showing(None, true, Vec::new(), None);
+    let harness = page(with(programs(), ranking));
+
+    let buttons: Vec<egui::Rect> = ["Install and Open…", "Open"]
+        .into_iter()
+        .flat_map(|label| harness.query_all_by_label(label).map(|node| node.rect()))
+        .collect();
+
+    let first = buttons.first().expect("a tool button").width();
+
+    assert!(buttons.len() > 1, "more than one tool button");
+    for button in &buttons {
+        assert!(
+            (button.width() - first).abs() < 0.5,
+            "a tool button is {} wide, the first {first}",
+            button.width()
+        );
+    }
+
+    let left = buttons.iter().map(egui::Rect::left).collect::<Vec<_>>();
+    assert!(
+        left.iter().all(|edge| (edge - left[0]).abs() < 0.5),
+        "left edges {left:?}"
+    );
 }

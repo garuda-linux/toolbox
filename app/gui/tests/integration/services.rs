@@ -15,7 +15,7 @@ use toolbox_gui::{App, Setup};
 use toolbox_plan::{UnitName, UnitScope};
 use toolbox_system::CallError;
 
-use crate::common::{HEIGHT, no_note, type_into, window};
+use crate::common::{HEIGHT, no_note, queued_shown, type_into, window};
 use crate::look::look_for;
 use crate::system::step_until;
 
@@ -177,7 +177,7 @@ fn the_switch_queues_the_boot_state() {
     harness.run();
 
     assert!(harness.query_by_label("Disables with Apply").is_some());
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(&harness));
 }
 
 #[test]
@@ -229,7 +229,7 @@ fn the_search_keeps_matching_units() {
 
     // The Running chip stays picked, the failed match waits behind it.
     assert!(!listed(&harness, "bluetooth.service"));
-    harness.get_by_label("Show the one match").click();
+    harness.get_by_label("Show the One Match").click();
     harness.run();
 
     assert!(listed(&harness, "bluetooth.service"));

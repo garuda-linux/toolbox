@@ -31,6 +31,8 @@ pub mod settings;
 pub mod setup;
 pub mod toggles;
 pub mod tweaks;
+#[cfg(test)]
+mod under_palette;
 pub mod users;
 
 use std::sync::Arc;
@@ -257,8 +259,8 @@ pub fn plan_running(ui: &mut Ui, context: &PageContext<'_>) {
     ui.add_space(ui.tokens().sizes.card_gap);
 }
 
-pub fn heading(ui: &mut Ui, icon: toolbox_gui_kit::icons::Icon, id: &str) {
+pub fn heading(ui: &mut Ui, id: &str) {
     let title = crate::i18n::text(ui.ctx(), id);
-    toolbox_gui_kit::widgets::SectionHeading::new(icon, &title, "").show(ui);
+    toolbox_gui_kit::widgets::SectionHeading::new(&title, "").show(ui);
     ui.add_space(ui.tokens().sizes.heading_gap);
 }

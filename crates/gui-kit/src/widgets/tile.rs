@@ -1,12 +1,11 @@
 use egui::{CornerRadius, Rect, Response, Role, Sense, StrokeKind, Ui, WidgetInfo, pos2, vec2};
 
 use super::card::light_rim;
-use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
+use super::icon_tile::{TileSize, paint_icon};
 use super::list::text_line_height;
 use super::press::Pointer;
+use super::rich;
 use super::text::{cut, cut_lines};
-use super::top_light::paint_top_light;
-use super::{focus_ring, rich};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::icons::{self, Icon};
 use crate::theme::CARD_RADIUS;
@@ -32,10 +31,10 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
         return response;
     }
 
-    let pointer = Pointer::of_focusable(&response);
+    let pointer = Pointer::of_keyboard(ui, &response);
     let hovered = pointer.is_under();
-    let fill = pointer.fill(&tokens, tokens.card);
-    let rim = light_rim(ui, tokens.outline);
+    let fill = pointer.fill(&tokens, tokens.card_glass);
+    let rim = light_rim(tokens.card_edge);
 
     ui.painter().rect(
         rect,
@@ -44,18 +43,17 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
         rim,
         StrokeKind::Inside,
     );
-    paint_top_light(ui.painter(), rect, CARD_RADIUS);
 
     // The same inset as a card's rows, so a tile's icon lines up with
     // theirs in one column.
     let padding = tokens.sizes.row_padding.x;
-    let edge = TileSize::Row.edge(ui);
+    let edge = TileSize::Row.edge();
     let badge = Rect::from_center_size(
         pos2(rect.left() + padding + edge / 2.0, rect.center().y),
         vec2(edge, edge),
     );
 
-    paint_icon_tile(ui, badge.center(), TileSize::Row, icon, page_tile(ui.ctx()));
+    paint_icon(ui, badge.center(), TileSize::Row, icon.for_row());
     let text = Rect::from_x_y_ranges(
         badge.right() + GAP..=rect.right() - padding - CHEVRON - GAP,
         rect.y_range(),
@@ -75,7 +73,6 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
 
     let ink = if hovered { tokens.text } else { tokens.dim };
     icon_image(ui, icons::GO_NEXT, ink).paint_at(ui, chevron);
-    focus_ring(ui, &response, CARD_RADIUS);
 
     response
 }

@@ -74,7 +74,7 @@ fn the_header_comes_before_the_body_and_the_status_bar_last() {
     assert!(search < filter, "the body before the header: {stops:?}");
 
     let tabs = position(&stops, "System");
-    let refresh = position(&stops, "Read again");
+    let refresh = position(&stops, "Read Again");
     assert!(tabs < refresh, "refresh before the tabs: {stops:?}");
 }
 
@@ -105,7 +105,7 @@ fn the_status_bar_is_the_last_stop_of_the_window() {
     let page = position(&stops, "Home");
     let bar = stops
         .iter()
-        .rposition(|stop| stop == "Read again")
+        .rposition(|stop| stop == "Read Again")
         .unwrap_or_else(|| panic!("the status bar has no Read again: {stops:?}"));
 
     assert!(page < bar, "the status bar before the sidebar: {stops:?}");

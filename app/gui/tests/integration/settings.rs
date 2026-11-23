@@ -44,6 +44,16 @@ pub fn settings() -> (Harness<'static, App>, Arc<Recorder>) {
 
 /// The Settings page drawn on `theme`, with that theme's desktop look.
 pub fn settings_on(theme: Theme) -> (Harness<'static, App>, Arc<Recorder>) {
+    settings_on_with(theme, false)
+}
+
+/// The Settings page where the compositor `desktop_blur`s behind the window.
+/// The window starts translucent as `main` makes it, when both the setting
+/// and the compositor allow it.
+pub fn settings_on_with(
+    theme: Theme,
+    desktop_blur: bool,
+) -> (Harness<'static, App>, Arc<Recorder>) {
     let store = Arc::new(Recorder::default());
     let kept = Arc::clone(&store);
     let look = look_for(shared_runtime(), theme);
@@ -51,11 +61,15 @@ pub fn settings_on(theme: Theme) -> (Harness<'static, App>, Arc<Recorder>) {
         let setup = Setup {
             look,
             preferences: PreferencesSetup {
+                desktop_blur,
                 store: Some(kept),
                 ..PreferencesSetup::default()
             },
             ..Setup::default()
         };
+
+        let blurs = desktop_blur && Settings::default().window.blur_desktop;
+        toolbox_gui_kit::theme::set_translucent(&cc.egui_ctx, blurs);
 
         App::new(cc, setup)
     });
@@ -125,6 +139,40 @@ fn checks_turned_off_are_saved() {
         saved.last().map(|settings| settings.status.refresh),
         Some(RefreshInterval::Off)
     );
+}
+
+fn panel_alpha(harness: &Harness<'static, App>) -> u8 {
+    harness.ctx.style_of(Theme::Dark).visuals.panel_fill.a()
+}
+
+#[test]
+fn the_desktop_blur_is_opt_in_and_the_switch_moves_the_translucent_background() {
+    let (mut harness, store) = settings_on_with(Theme::Dark, true);
+    assert_eq!(panel_alpha(&harness), 255);
+
+    let blur = "Blur the desktop behind the window";
+    harness.get_by_role_and_label(Role::CheckBox, blur).click();
+    harness.run();
+    assert!(store.saved().last().unwrap().window.blur_desktop);
+    assert_eq!(panel_alpha(&harness), 214);
+
+    harness.get_by_role_and_label(Role::CheckBox, blur).click();
+    harness.run();
+    assert!(!store.saved().last().unwrap().window.blur_desktop);
+    assert_eq!(panel_alpha(&harness), 255);
+}
+
+#[test]
+fn without_a_compositor_blur_the_switch_keeps_the_window_opaque() {
+    let (mut harness, _store) = settings_on_with(Theme::Dark, false);
+    assert_eq!(panel_alpha(&harness), 255);
+
+    harness
+        .get_by_role_and_label(Role::CheckBox, "Blur the desktop behind the window")
+        .click();
+    harness.run();
+
+    assert_eq!(panel_alpha(&harness), 255);
 }
 
 #[test]

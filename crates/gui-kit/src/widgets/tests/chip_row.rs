@@ -158,9 +158,10 @@ fn a_chip_group_wider_than_its_room_wraps_onto_a_second_line() {
     let fourth = harness.get_by_role_and_label(Role::Button, "Four").rect();
     let last = harness.get_by_role_and_label(Role::Button, "Six").rect();
 
+    // A Kirigami.Chip is 27 px at 10 pt, not a pill.
     assert!(
-        (first.height() - 32.0).abs() < 0.5,
-        "a chip is one pill high, got {}",
+        (first.height() - 27.0).abs() < 0.5,
+        "a chip is one chip high, got {}",
         first.height()
     );
     assert!(

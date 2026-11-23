@@ -13,7 +13,7 @@ pub(super) mod span;
 
 use egui::{AsIdSalt, Id, IdSalt, Rangef, Role, Ui, UiBuilder};
 pub(super) use metrics::text_line_height;
-pub use metrics::{row_height, text_block_height};
+pub use metrics::{row_height, text_block_height, text_block_height_with};
 use span::Offsets;
 
 use super::card;
@@ -112,6 +112,10 @@ pub enum RowHeights {
 }
 
 #[derive(Clone, Debug)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "a row keeps each key and state as a flag of its own"
+)]
 pub struct RowState {
     pub index: usize,
     /// The row's id, which its [`ActionRow`](super::ActionRow) and
@@ -123,6 +127,10 @@ pub struct RowState {
     pub toggle: bool,
     /// The Menu key or Shift+F10 was pressed on the focused row.
     pub menu: bool,
+    /// The row is the list's selected one, drawn with the selection fill.
+    pub selected: bool,
+    /// The arrow keys moved the Tab stop onto this row in this frame.
+    pub keyed: bool,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -131,6 +139,7 @@ pub struct RowList<'a> {
     name: &'a str,
     heights: RowHeights,
     reveal: Option<&'a str>,
+    selected: Option<&'a str>,
 }
 
 impl<'a> RowList<'a> {
@@ -142,7 +151,15 @@ impl<'a> RowList<'a> {
             name,
             heights,
             reveal: None,
+            selected: None,
         }
+    }
+
+    /// Marks the row of `key` as selected, the one a details pane shows.
+    #[must_use = "the list does nothing until shown"]
+    pub const fn selected(mut self, key: Option<&'a str>) -> Self {
+        self.selected = key;
+        self
     }
 
     /// Focuses the row of `key` and scrolls it into view, such as an app
@@ -176,6 +193,7 @@ impl<'a> RowList<'a> {
                 let (roving, holds) = stop_for_frame(ui, list, items, self.reveal);
                 let keys = keys::take(ui, roving.held());
                 let stop = roving.stop();
+                let selected = self.selected;
                 let offsets = self.offsets(ui, list, items);
                 let fixed = match self.heights {
                     RowHeights::Fixed(height) => Some(height),
@@ -207,6 +225,8 @@ impl<'a> RowList<'a> {
                         focusable: roving.is_stop(index),
                         toggle: asked && keys.toggle,
                         menu: asked && keys.menu,
+                        selected: selected == Some(item.key()),
+                        keyed: roving.moved() && index == stop,
                     };
 
                     let (height, response) = row::show(ui, place, item, &mut body);

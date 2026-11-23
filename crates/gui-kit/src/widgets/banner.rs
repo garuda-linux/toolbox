@@ -1,44 +1,63 @@
 use egui::accesskit::{Live, Role};
 use egui::{
-    CornerRadius, Frame, Label, Margin, Response, Sense, TextStyle, TextWrapMode, Ui, WidgetText,
-    pos2, vec2,
+    Color32, CornerRadius, Frame, Label, Margin, Response, Sense, Stroke, TextStyle, TextWrapMode,
+    Ui, WidgetText, pos2, vec2,
 };
 
-use super::buttons::{pill_button, rimmed_pill_button};
+use super::buttons::pill_button;
 use super::icon_tile::TileSize;
 use super::status_tile::paint_status_tile;
 use super::{ButtonKind, Choice, Tone, rich, split_row};
 use crate::fonts::{BODY, Weight};
-use crate::icons::Icon;
 use crate::theme::{CARD_RADIUS, PILL_HEIGHT};
 use crate::tokens::{self, Tokens};
 
+/// The share of the type colour in a banner's fill, Kirigami's `opacity: 0.20`.
+const WASH: f32 = 0.2;
+/// Kirigami pads a banner by `smallSpacing` from its 1 px frame.
+const PADDING: i8 = 5;
+
+/// Kirigami's `InlineMessage` look: the type colour as a 1 px frame, and
+/// the card with a fifth of that colour over it.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub(super) struct BannerLook {
+    pub frame: Color32,
+    pub fill: Color32,
+}
+
 impl Tone {
-    pub(super) fn banner(self, tokens: &Tokens) -> (egui::Color32, egui::Color32, Icon) {
-        let (tile, icon) = self.status_mark(tokens);
-        (tile.fill, tile.ink, icon)
+    pub(super) fn banner_look(self, tokens: &Tokens) -> BannerLook {
+        let frame = self.banner_colour(tokens);
+        BannerLook {
+            frame,
+            fill: tokens::mix(tokens.card, frame, WASH),
+        }
     }
 
-    fn wash(self, tokens: &Tokens) -> egui::Color32 {
+    /// Information takes the view's active text colour, Kirigami's
+    /// `activeTextColor`. A neutral note takes it too, as KDE has no third
+    /// colour for one.
+    const fn banner_colour(self, tokens: &Tokens) -> Color32 {
         match self {
-            Self::Accent => tokens.accent_soft,
-            Self::Neutral => tokens.field,
-            Self::Warning => tokens.banner_wash(tokens.warning),
-            Self::Success => tokens.banner_wash(tokens.success),
-            Self::Error => tokens.banner_wash(tokens.error),
+            Self::Accent | Self::Neutral => tokens.roles.active,
+            Self::Warning => tokens.warning,
+            Self::Success => tokens.success,
+            Self::Error => tokens.error,
         }
     }
 }
 
-/// right, in their order. Returns the index of the one clicked.
+/// `text` with its status mark at the left and `actions` as Breeze buttons at
+/// the right, in their order. Returns the index of the one clicked.
 pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Choice<usize> {
     let tokens = tokens::current(ui.ctx());
-    let wash = tone.wash(&tokens);
+    let look = tone.banner_look(&tokens);
 
     let framed = Frame::new()
-        .fill(wash)
+        .fill(look.fill)
+        .stroke(Stroke::new(1.0, look.frame))
         .corner_radius(CornerRadius::same(CARD_RADIUS))
-        .inner_margin(Margin::from(tokens.sizes.row_padding))
+        .inner_margin(Margin::same(PADDING))
         .show(ui, |ui| {
             ui.set_width(ui.available_width());
             let gap = ui.spacing().item_spacing.x;
@@ -61,15 +80,9 @@ pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Choice<u
                         ui.allocate_space(vec2(0.0, PILL_HEIGHT));
                     }
 
-                    // Only the neutral wash is a Soft button's own fill.
-                    let rimmed = tone == Tone::Neutral;
                     let mut clicked = None;
                     for (index, action) in actions.iter().enumerate() {
-                        let response = if rimmed {
-                            rimmed_pill_button(ui, action, ButtonKind::Soft)
-                        } else {
-                            pill_button(ui, action, ButtonKind::Soft)
-                        };
+                        let response = pill_button(ui, action, ButtonKind::Soft);
 
                         if response.clicked() {
                             clicked = Some(index);
@@ -94,8 +107,8 @@ pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Choice<u
 /// response.
 fn icon_and_text(ui: &mut Ui, tone: Tone, text: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let edge = TileSize::Line.edge(ui);
-    let gap = tokens.sizes.picture_gap;
+    let edge = TileSize::Line.edge();
+    let gap = tokens.sizes.tight_gap;
     let wrap = (ui.available_width() - edge - gap).max(0.0);
     let words = rich(ui, text, Weight::Medium, BODY, tokens.text);
     let galley =

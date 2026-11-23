@@ -7,7 +7,8 @@ use egui::{Color32, Theme};
 use toolbox_terminal::Color;
 
 use super::super::{Tokens, contrast, mix};
-use super::{accents, laid_on};
+use super::accents;
+use super::frost::laid_on;
 use crate::oklch::{hue_chroma, lightness};
 use crate::palette::Palette;
 use crate::terminal_colors::{Ansi, PRINTED, resolve};
@@ -52,18 +53,17 @@ fn printed(palette: &Palette, tokens: &Tokens) -> Vec<(String, Color32)> {
 }
 
 #[test]
-fn the_terminal_glass_is_neutral_black_in_dark_and_white_in_light() {
+fn the_terminal_glass_is_the_shadow_shade_in_dark_and_the_window_in_light() {
     for (theme, _, tokens) in every_theme() {
         let glass = tokens.terminal_glass;
-        let shade = match theme {
-            Theme::Dark => 0,
-            Theme::Light => glass.a(),
+        let ink = match theme {
+            Theme::Dark => tokens.shadow_shade,
+            Theme::Light => tokens.window,
         };
 
-        assert_eq!(
-            [glass.r(), glass.g(), glass.b()],
-            [shade; 3],
-            "{theme:?}: {glass:?} casts a tint"
+        assert!(
+            super::tinted_as(glass, ink),
+            "{theme:?}: {glass:?} is not {ink:?}"
         );
     }
 }
@@ -88,8 +88,7 @@ fn printed_colours_read_on_the_solid_terminal_and_on_the_glass() {
             tokens.sidebar,
             tokens.card,
             tokens.field,
-            tokens.hover,
-            tokens.pressed,
+            tokens.button_hover,
             mix(tokens.card, tokens.accent, 0.5),
         ];
 

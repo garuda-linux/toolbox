@@ -8,9 +8,9 @@ console-hide = Hide the Console
 console-resize = Resize the Console
 
 console-output-menu = Console output actions
-console-copy-output = Copy output
-console-share-output = Share output…
-console-clear-output = Clear output
+console-copy-output = Copy Output
+console-share-output = Share Output…
+console-clear-output = Clear Output
 console-output-copied = Copied the output to the clipboard.
 
 console-status-running = Applying changes…
@@ -67,4 +67,4 @@ notify-failed-body = A step failed. The Console shows what happened.
 
 # An install failed as a mirror no longer has a package file.
 console-mirror-missing = A mirror no longer has a file this install needs: the package databases are older than the mirror. A system update brings them up to date.
-console-update-and-retry = Update the system and try again
+console-update-and-retry = Update the System and Try Again

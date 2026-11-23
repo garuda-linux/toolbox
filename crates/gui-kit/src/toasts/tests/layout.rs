@@ -1,13 +1,12 @@
-use egui::Rect;
-use egui::accesskit::Role;
+use egui::epaint::RectShape;
+use egui::{Rect, Shape};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::{MAX_WIDTH, ToastKind, Toasts};
 use super::{TEXTS, shown, with};
-use crate::testing::{cap_off_centre, filled_rect, harness, tinted_rects};
+use crate::testing::{filled_rect, harness, painted_text};
 use crate::tokens;
-use crate::widgets::Tone;
 
 const SHORT: &str = "A step failed. Open the Console to see what happened.";
 const LONG: &str = "A step failed while another program held the package database, \
@@ -22,22 +21,12 @@ fn note(harness: &Harness<'static, Toasts>) -> Rect {
         .expect("no note is shown")
 }
 
-fn tile(harness: &Harness<'static, Toasts>, tone: Tone) -> Rect {
-    let tokens = tokens::current(&harness.ctx);
-    let (tile, _) = tone.status_mark(&tokens);
-    filled_rect(harness, tile.fill).expect("the note paints no status tile")
-}
-
-fn close(harness: &Harness<'static, Toasts>) -> Rect {
-    harness.get_by_role_and_label(Role::Button, "Close").rect()
-}
-
 #[test]
 fn a_short_sentence_stays_on_one_line_and_the_note_grows_for_it() {
-    let one_word = shown(with(ToastKind::Error, "Failed"));
+    let one_word = shown(with(ToastKind::Info, "Failed"));
     let line = one_word.get_by_label("Failed").rect().height();
 
-    let harness = shown(with(ToastKind::Error, SHORT));
+    let harness = shown(with(ToastKind::Info, SHORT));
     let text = harness.get_by_label(SHORT).rect();
 
     assert!(
@@ -54,18 +43,17 @@ fn a_short_sentence_stays_on_one_line_and_the_note_grows_for_it() {
 
 #[test]
 fn a_long_text_wraps_at_the_widest_note() {
-    let harness = shown(with(ToastKind::Error, LONG));
+    let harness = shown(with(ToastKind::Info, LONG));
 
     let width = note(&harness).width();
     assert!((width - MAX_WIDTH).abs() < 0.5, "the note is {width} wide");
-    assert!(width <= MAX_WIDTH + 0.5, "the note is {width} wide");
 }
 
 #[test]
 fn a_note_keeps_inside_a_narrow_window() {
     let mut harness = harness(320.0, 300.0).build_ui_state(
         |ui, toasts: &mut Toasts| toasts.show(ui.ctx(), ui.max_rect(), TEXTS),
-        with(ToastKind::Error, SHORT),
+        with(ToastKind::Info, SHORT),
     );
 
     harness.run_steps(2);
@@ -75,77 +63,66 @@ fn a_note_keeps_inside_a_narrow_window() {
 }
 
 #[test]
-fn the_tile_the_text_and_close_share_one_middle() {
-    for text in [SHORT, LONG] {
-        let harness = shown(with(ToastKind::Error, text));
-        let tile = tile(&harness, Tone::Error);
-        let block = harness.get_by_label(text).rect();
-        let close = close(&harness);
-
-        let middle = tile.center().y;
-        assert!(
-            (block.center().y - middle).abs() < 0.5,
-            "{block:?} {tile:?}"
-        );
-        assert!(
-            (close.center().y - middle).abs() < 0.5,
-            "{close:?} {tile:?}"
-        );
-    }
-}
-
-#[test]
-fn one_line_sits_on_the_tile_middle_by_its_capitals() {
-    let harness = shown(with(ToastKind::Error, SHORT));
-    let tile = tile(&harness, Tone::Error);
-
-    let off = cap_off_centre(&harness, SHORT, tile).expect("the text is painted");
-
-    // Half a pixel of rounding either way, as every control allows.
-    assert!(
-        off.abs() < 0.75,
-        "the capitals sit {off} off the tile's middle"
-    );
-}
-
-#[test]
-fn the_padding_is_the_same_all_round() {
-    let harness = shown(with(ToastKind::Error, SHORT));
-    let (note, tile, close) = (note(&harness), tile(&harness, Tone::Error), close(&harness));
-    let content = tile.union(close);
+fn the_padding_is_kirigamis_large_spacing_all_round() {
+    let harness = shown(with(ToastKind::Info, SHORT));
+    let note = note(&harness);
+    let text = harness.get_by_label(SHORT).rect();
 
     let sides = [
-        content.left() - note.left(),
-        note.right() - content.right(),
-        content.top() - note.top(),
-        note.bottom() - content.bottom(),
+        text.left() - note.left(),
+        note.right() - text.right(),
+        text.top() - note.top(),
+        note.bottom() - text.bottom(),
     ];
 
     for side in sides {
-        assert!((side - sides[0]).abs() < 0.5, "{sides:?}");
+        assert!((side - 8.0).abs() < 1.0, "{sides:?}");
     }
 }
 
 #[test]
-fn each_kind_marks_itself_with_its_status_tile_and_colour() {
-    for (kind, tone) in [
-        (ToastKind::Error, Tone::Error),
-        (ToastKind::Info, Tone::Accent),
-    ] {
-        let harness = shown(with(kind, "Copied"));
-        let tokens = tokens::current(&harness.ctx);
-        let (mark, _) = tone.status_mark(&tokens);
-        let square = tile(&harness, tone);
+fn a_note_is_the_complementary_set_at_ninety_percent_with_its_own_text() {
+    let harness = shown(with(ToastKind::Info, SHORT));
+    let tokens = tokens::current(&harness.ctx);
 
-        let glyph = tinted_rects(&harness, mark.ink)
-            .into_iter()
-            .find(|glyph| square.contains_rect(*glyph));
+    let fill = filled_rect(&harness, tokens.roles.complementary.gamma_multiply(0.9));
+    assert!(fill.is_some(), "no note painted in the complementary set");
 
-        assert!(
-            glyph.is_some(),
-            "{kind:?}: no glyph in {:?} on the tile",
-            mark.ink
-        );
-        assert!((square.width() - square.height()).abs() < 0.5, "{square:?}");
+    let text = painted_text(&harness, SHORT).expect("the text is painted");
+    assert_eq!(text.fallback_color, tokens.roles.complementary_text);
+}
+
+/// The rectangles of `shape`, looking inside the groups a shadow is painted in.
+fn rects_within(shape: &Shape) -> Vec<RectShape> {
+    if let Shape::Rect(rect) = shape {
+        return vec![rect.clone()];
+    }
+
+    if let Shape::Vec(shapes) = shape {
+        return shapes.iter().flat_map(rects_within).collect();
+    }
+
+    Vec::new()
+}
+
+/// Darkly's popup shadow, two layers: 5 px down and 20 px soft at 44 % of
+/// the shadow shade, and 3 px up and 10 px soft at 24 %.
+#[test]
+fn a_note_casts_darklys_two_layer_popup_shadow() {
+    let harness = shown(with(ToastKind::Info, SHORT));
+    let tokens = tokens::current(&harness.ctx);
+    let note = note(&harness);
+
+    for (blur, drop, share) in [(20.0, 5.0, 0.44), (10.0, -3.0, 0.24)] {
+        let colour = tokens.shadow_shade.gamma_multiply(share);
+        let found = harness.output().shapes.iter().any(|clipped| {
+            rects_within(&clipped.shape).into_iter().any(|rect| {
+                rect.fill == colour
+                    && (rect.blur_width - blur).abs() < f32::EPSILON
+                    && (rect.rect.center().y - note.center().y - drop).abs() < 0.01
+            })
+        });
+
+        assert!(found, "no popup shadow {blur} px soft, {drop} px down");
     }
 }

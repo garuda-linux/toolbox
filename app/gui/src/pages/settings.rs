@@ -9,7 +9,6 @@ use egui::{Context, Ui};
 use toolbox_catalog::SchemeMode;
 use toolbox_config::{LogLevel, RefreshInterval};
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::widgets::{Select, card, section_intro, segmented, segmented_width};
 
 use self::minutes::MinutesField;
@@ -47,11 +46,7 @@ impl PageView for SettingsPage {
         let view = context.preferences;
         let send = |command: SettingsCommand| context.commands.send(command);
 
-        section(
-            ui,
-            "settings-appearance",
-            icons::PREFERENCES_DESKTOP_THEME_GLOBAL,
-        );
+        section(ui, "settings-appearance");
         card(ui, |ui| {
             language(ui, &view, &send);
             theme(ui, &view, &send);
@@ -64,10 +59,11 @@ impl PageView for SettingsPage {
             schemes::scheme(ui, SchemeMode::Dark, schemes, &send);
             schemes::scheme(ui, SchemeMode::Light, schemes, &send);
             motion(ui, &view, &send);
+            blur_desktop(ui, &view, &send);
         });
         ui.add_space(ui.tokens().sizes.section_gap);
 
-        section(ui, "settings-behaviour", icons::CHRONOMETER);
+        section(ui, "settings-behaviour");
         card(ui, |ui| {
             autostart(ui, &view, &send);
             if automatic(ui, &view, &send) {
@@ -80,7 +76,7 @@ impl PageView for SettingsPage {
         });
         ui.add_space(ui.tokens().sizes.section_gap);
 
-        section(ui, "settings-diagnostics", icons::OFFICE_REPORT);
+        section(ui, "settings-diagnostics");
         card(ui, |ui| {
             copy_reports(ui, &view, &send);
             log_level(ui, &view, &send);
@@ -135,10 +131,10 @@ impl Texts {
 
 /// A section's heading with what the section holds under it, in sight
 /// rather than behind a button.
-fn section(ui: &mut Ui, id: &str, icon: Icon) {
+fn section(ui: &mut Ui, id: &str) {
     let ctx = ui.ctx().clone();
     let help = i18n::text(&ctx, &format!("{id}-help"));
-    section_intro(ui, icon, &i18n::text(&ctx, id), &help);
+    section_intro(ui, &i18n::text(&ctx, id), &help);
 }
 
 fn language(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
@@ -208,6 +204,25 @@ fn motion(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
     });
 }
 
+/// Without the compositor's blur the setting changes nothing, so its switch
+/// shows off and says why instead of a state that has no effect.
+fn blur_desktop(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
+    let id = "settings-blur-desktop";
+    let shown = view.settings.window.blur_desktop;
+    if view.desktop_blur {
+        switch_setting(ui, id, shown, send, SettingsCommand::BlurDesktop);
+        return;
+    }
+
+    let ctx = ui.ctx().clone();
+    let words = Texts {
+        title: i18n::text(&ctx, id),
+        description: i18n::text(&ctx, "settings-blur-desktop-unavailable"),
+    };
+
+    switch_row(ui, false, &words.borrowed(), false, false);
+}
+
 fn autostart(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
     let ctx = ui.ctx().clone();
     let words = texts(&ctx, "settings-autostart");
@@ -249,11 +264,22 @@ fn user_units(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
 /// Off by default: the list is a download from the AUR, and its
 /// packages are community scripts.
 fn aur(ui: &mut Ui, view: &SettingsView<'_>, send: Send<'_>) {
-    let ctx = ui.ctx().clone();
-    let words = texts(&ctx, "settings-aur");
     let shown = view.settings.packages.show_aur;
-    if switch_row(ui, false, &words.borrowed(), shown, true) {
-        send(SettingsCommand::Aur(!shown));
+    switch_setting(ui, "settings-aur", shown, send, SettingsCommand::Aur);
+}
+
+/// A switch whose row is named by `id`, sending `command` with the flipped value.
+fn switch_setting(
+    ui: &mut Ui,
+    id: &str,
+    on: bool,
+    send: Send<'_>,
+    command: fn(bool) -> SettingsCommand,
+) {
+    let ctx = ui.ctx().clone();
+    let words = texts(&ctx, id);
+    if switch_row(ui, false, &words.borrowed(), on, true) {
+        send(command(!on));
     }
 }
 

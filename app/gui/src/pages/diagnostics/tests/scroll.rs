@@ -4,7 +4,7 @@ use toolbox_services::diagnostics::page::Page;
 use super::{page, plain_report};
 
 /// The folded rows' line above the report.
-const COLLECT: &str = "Collect another report";
+const COLLECT: &str = "Collect Another Report";
 
 fn long_report() -> Page {
     let text = (0_u16..400).fold(String::new(), |mut text, line| {
@@ -59,19 +59,23 @@ fn only_the_report_scrolls_and_the_page_stays() {
 #[test]
 fn a_long_report_runs_down_to_a_card_gap_above_the_bottom() {
     let harness = page(long_report());
-    let report = harness.get_by_role(egui::accesskit::Role::Document).rect();
+    let tokens = toolbox_gui_kit::tokens::current(&harness.ctx);
+
+    // The report's card is the largest card the page paints.
+    let card = toolbox_gui_kit::testing::filled_rects(&harness, tokens.card)
+        .into_iter()
+        .max_by(|one, other| one.area().total_cmp(&other.area()))
+        .expect("the report's card is painted");
 
     // kittest shows the page in a default central panel, whose margin the
     // app's window does not have.
     let panel = egui::Frame::central_panel(&harness.ctx.global_style()).inner_margin;
     let bottom = harness.ctx.content_rect().bottom() - f32::from(panel.bottom);
-    let gap = toolbox_gui_kit::tokens::current(&harness.ctx)
-        .sizes
-        .card_gap;
+    let gap = tokens.sizes.card_gap;
 
     assert!(
-        (bottom - report.bottom() - gap).abs() < 0.5,
-        "the report ends {} above the bottom",
-        bottom - report.bottom()
+        (bottom - card.bottom() - gap).abs() < 0.5,
+        "the report's card ends {} above the bottom",
+        bottom - card.bottom()
     );
 }

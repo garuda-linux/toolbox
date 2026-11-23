@@ -31,7 +31,7 @@ struct FileField<'a> {
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let ctx = ui.ctx().clone();
-    heading(ui, icons::PREFERENCES_DESKTOP_THEME_GLOBAL, "boot-look");
+    heading(ui, "boot-look");
     let splash = page.flag(Flag::Splash);
     let background = page.background();
     let theme = page.theme();
@@ -81,7 +81,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
 
 /// systemd-boot has no menu picture or theme.
 pub fn plymouth_card(ui: &mut Ui, context: &PageContext<'_>) {
-    heading(ui, icons::PREFERENCES_DESKTOP_THEME_GLOBAL, "boot-look");
+    heading(ui, "boot-look");
     card(ui, |ui| plymouth(ui, context));
 }
 
@@ -156,7 +156,7 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
 
     let choose = i18n::text(&ctx, "boot-file-choose");
     let gap = ui.spacing().item_spacing.x;
-    let width = pill_width(ui, &choose) + gap + icon_button_width(ui);
+    let width = pill_width(ui, &choose) + gap + icon_button_width();
     row(ui, first, &words, width, |ui| {
         let choose_name = i18n::text_with(
             &ctx,

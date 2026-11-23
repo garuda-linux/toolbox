@@ -21,7 +21,7 @@ fn the_edit_dialog_queues_only_what_changed() {
     let mut harness = edit_dialog("ada, Ada Lovelace", "ada");
 
     type_into(&mut harness, Role::TextInput, "Full name", " King");
-    harness.get_by_label("Queue changes").click();
+    harness.get_by_label("Queue Changes").click();
     harness.run();
 
     assert_eq!(
@@ -102,7 +102,7 @@ fn the_move_choice_shows_once_the_home_folder_changed() {
         .get_by_role_and_label(Role::CheckBox, "Move the files to the new folder")
         .click();
     harness.run();
-    harness.get_by_label("Queue changes").click();
+    harness.get_by_label("Queue Changes").click();
     harness.run();
 
     assert_eq!(

@@ -2,7 +2,7 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::removable_tag;
-use crate::testing::{circle_fills, fill_under, harness};
+use crate::testing::{fill_under, harness};
 
 fn shown() -> egui_kittest::Harness<'static, bool> {
     let mut harness = harness(400.0, 100.0).build_ui_state(
@@ -38,15 +38,18 @@ fn the_remove_cross_sits_inside_its_tag_with_a_finger_sized_target() {
 fn a_hovered_cross_shows_a_disc_off_the_tag_fill() {
     let mut harness = shown();
     let tag = harness.get_by_role_and_label(Role::Label, "quiet").rect();
+    let cross = harness
+        .get_by_role_and_label(Role::Button, "Remove quiet")
+        .rect();
+
     harness
         .get_by_role_and_label(Role::Button, "Remove quiet")
         .hover();
     harness.run();
 
     let fill = fill_under(&harness, tag.center());
-    let discs = circle_fills(&harness);
-    assert_eq!(discs.len(), 1, "{discs:?}");
-    assert_ne!(discs.first().copied(), fill);
+    let under_cross = fill_under(&harness, cross.center());
+    assert_ne!(under_cross, fill, "the hovered cross has its own fill");
 }
 
 #[test]

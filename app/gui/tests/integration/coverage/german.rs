@@ -41,6 +41,12 @@ fn the_longest_pages_in_german() {
             .get_by_role_and_label(Role::RadioButton, tab)
             .click();
         maintenance.run();
+        if name == "repairs" {
+            crate::system::step_until(&mut maintenance, "the repairs", |harness| {
+                harness.query_by_label("Vollständig zurücksetzen").is_some()
+            });
+        }
+
         results.add(maintenance.try_snapshot(format!("coverage/maintenance_{name}_german")));
     }
 

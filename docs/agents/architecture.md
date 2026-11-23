@@ -21,7 +21,10 @@
   data comes from its service (`context.service::<T>()`): the dkms
   reading from `Kernels`, the unit lists from `Units`, the app pictures
   from `Artwork`. The design system is
-  `crates/gui-kit`. The window is opaque, blur stays inside it ([Frost](#frost)).
+  `crates/gui-kit`. The window's background is translucent over the blur
+  the compositor draws behind it, where one is offered
+  ([toolbox-backdrop](#crates)). Cards and controls stay opaque, and blur
+  inside the window is [Frost](#frost).
 - Console: a full terminal, so full-screen programs such as paru's
   editor work. A plain-text transcript beside it serves screen readers,
   copy and share. Output is never clickable. A queue is applied as a whole.
@@ -82,42 +85,46 @@ Link rules (check with `cargo tree -p <crate> --edges normal`):
   `toolbox-log`. The upload, the public address and the pages' states are
   `toolbox-services`'s.
 
-| Crate                | Holds                                                                                                     | Must not                                                   |
-| -------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `toolbox-plan`       | value objects, `RootAction`, `UserAction`, `Plan`, helper protocol, validation                            | do I/O                                                     |
-| `toolbox-text`       | `OutsideText`, made only by `plain`, `plain_up_to` and `keep_lines`, `is_hidden`                          | link anything but serde, do I/O                            |
-| `toolbox-state`      | snapshot parts, lsblk and dkms parsing, reports                                                           | do I/O, be linked by the helper                            |
-| `toolbox-pty`        | programs in a PTY, process group cancel, `strip_ansi`, `styled_lines`                                     | know actions or egui                                       |
-| `toolbox-terminal`   | the Console's emulator: bytes in, styled rows and cursor out, keys to bytes                               | know egui or the helper                                    |
-| `toolbox-guide`      | `docs/src` built in by `build.rs`, search, link and picture tests                                         | link egui, read files at run time                          |
-| `toolbox-exec`       | plan steps in PTYs, `capture`, `secure` (`openat2`), `preflight`, builtins                                | link a derive crate other than `thiserror`                 |
-| `toolbox-fs`         | atomic replace (`replace_at`, `replace`)                                                                  | link anything but rustix                                   |
-| `toolbox-helper`     | `apply`, `read <kind>`, `logs <kind>`, `fetch <path>`                                                     | run free-form commands                                     |
-| `toolbox-system`     | ports to the running system as traits plus adapters, status probes                                        | decide, hold UI state, send a request outside the machine  |
-| `toolbox-catalog`    | TOML schemas, loader and validation for `data/catalog/`                                                   | probe the system                                           |
-| `toolbox-core`       | `ChangeSet`, `Snapshot`, the planner, `features/<name>`                                                   | do I/O                                                     |
-| `toolbox-config`     | settings file, XDG paths, autostart link                                                                  |                                                            |
-| `toolbox-log`        | rotating log file, see [logging.md](logging.md)                                                           | look up XDG folders                                        |
-| `toolbox-calendar`   | UTC calendar arithmetic (`Utc`) for timestamps and backup names                                           | read a clock or a time zone database                       |
-| `toolbox-https`      | the one HTTPS agent (`Https`, `Rules` per caller, `Clock`)                                                | follow a redirect, read a body past its cap, know a server |
-| `toolbox-privatebin` | PrivateBin v2 paste format and upload                                                                     | take a server from input, log a link                       |
-| `toolbox-aur`        | the AUR from its daily dump only (`Cache`, `parse`)                                                       | call the RPC, build a URL from input, ask twice a day      |
-| `toolbox-news`       | Garuda's and Arch's RSS feeds (`Cache`, `Feeds`)                                                          | build a URL from input, ask more than every six hours      |
-| `toolbox-instance`   | single instance: `activation`, `bus`                                                                      | ask more than window, page and queue, decode a queue edit  |
-| `toolbox-appmenu`    | the global menu: `com.canonical.dbusmenu`, the X11 Registrar, KWin's Wayland appmenu, window only, no CLI | link egui, hold an item that applies the queue             |
-| `toolbox-cli`        | clap arguments, exit codes, `output::Paint`, `Prompt`                                                     | run a command or touch the system                          |
-| `toolbox-gui-kit`    | tokens, theme, icons, fonts, widgets, toasts, `terminal_view`, `frost`                                    | pick a colour outside the tokens                           |
-| `toolbox-services`   | what the window and the CLI share (`apply`, `queue`, `diagnostics`, `share`, `address`, `locks`, ...)     | link egui, `toolbox-gui-kit` or a root helper crate        |
-| `toolbox-gui`        | `app/*`, `shell/*`, `pages/*`, GUI services, `ports.rs`, `selftest/*`                                     | hold feature logic                                         |
-| `toolbox-commands`   | every subcommand, its output, Ctrl+C handling                                                             | link egui or `toolbox-gui-kit`                             |
-| `toolbox-lint`       | comment and shape rules for Rust                                                                          | ship                                                       |
-| `toolbox-xtask`      | the `cargo xtask` commands                                                                                | ship                                                       |
+| Crate                | Holds                                                                                                                                           | Must not                                                   |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `toolbox-plan`       | value objects, `RootAction`, `UserAction`, `Plan`, helper protocol, validation                                                                  | do I/O                                                     |
+| `toolbox-text`       | `OutsideText`, made only by `plain`, `plain_up_to` and `keep_lines`, `is_hidden`                                                                | link anything but serde, do I/O                            |
+| `toolbox-state`      | snapshot parts, lsblk and dkms parsing, reports                                                                                                 | do I/O, be linked by the helper                            |
+| `toolbox-pty`        | programs in a PTY, process group cancel, `strip_ansi`, `styled_lines`                                                                           | know actions or egui                                       |
+| `toolbox-terminal`   | the Console's emulator: bytes in, styled rows and cursor out, keys to bytes                                                                     | know egui or the helper                                    |
+| `toolbox-guide`      | `docs/src` built in by `build.rs`, search, link and picture tests                                                                               | link egui, read files at run time                          |
+| `toolbox-exec`       | plan steps in PTYs, `capture`, `secure` (`openat2`), `preflight`, builtins                                                                      | link a derive crate other than `thiserror`                 |
+| `toolbox-fs`         | atomic replace (`replace_at`, `replace`)                                                                                                        | link anything but rustix                                   |
+| `toolbox-helper`     | `apply`, `read <kind>`, `logs <kind>`, `fetch <path>`                                                                                           | run free-form commands                                     |
+| `toolbox-system`     | ports to the running system as traits plus adapters, status probes                                                                              | decide, hold UI state, send a request outside the machine  |
+| `toolbox-catalog`    | TOML schemas, loader and validation for `data/catalog/`                                                                                         | probe the system                                           |
+| `toolbox-core`       | `ChangeSet`, `Snapshot`, the planner, `features/<name>`                                                                                         | do I/O                                                     |
+| `toolbox-config`     | settings file, XDG paths, autostart link                                                                                                        |                                                            |
+| `toolbox-log`        | rotating log file, see [logging.md](logging.md)                                                                                                 | look up XDG folders                                        |
+| `toolbox-calendar`   | UTC calendar arithmetic (`Utc`) for timestamps and backup names                                                                                 | read a clock or a time zone database                       |
+| `toolbox-https`      | the one HTTPS agent (`Https`, `Rules` per caller, `Clock`)                                                                                      | follow a redirect, read a body past its cap, know a server |
+| `toolbox-privatebin` | PrivateBin v2 paste format and upload                                                                                                           | take a server from input, log a link                       |
+| `toolbox-aur`        | the AUR from its daily dump only (`Cache`, `parse`)                                                                                             | call the RPC, build a URL from input, ask twice a day      |
+| `toolbox-news`       | Garuda's and Arch's RSS feeds (`Cache`, `Feeds`)                                                                                                | build a URL from input, ask more than every six hours      |
+| `toolbox-instance`   | single instance: `activation`, `bus`                                                                                                            | ask more than window, page and queue, decode a queue edit  |
+| `toolbox-backdrop`   | the blur the compositor draws behind the window: `ext-background-effect-v1`, KWin's `org_kde_kwin_blur`, KWin's X11 property (`choice` is pure) | link egui, decide the look, read settings                  |
+| `toolbox-appmenu`    | the global menu: `com.canonical.dbusmenu`, the X11 Registrar, KWin's Wayland appmenu, window only, no CLI                                       | link egui, hold an item that applies the queue             |
+| `toolbox-cli`        | clap arguments, exit codes, `output::Paint`, `Prompt`                                                                                           | run a command or touch the system                          |
+| `toolbox-gui-kit`    | tokens, theme, icons, fonts, widgets, toasts, `terminal_view`, `frost`                                                                          | pick a colour outside the tokens                           |
+| `toolbox-services`   | what the window and the CLI share (`apply`, `queue`, `diagnostics`, `share`, `address`, `locks`, ...)                                           | link egui, `toolbox-gui-kit` or a root helper crate        |
+| `toolbox-gui`        | `app/*`, `shell/*`, `pages/*`, GUI services, `ports.rs`, `selftest/*`                                                                           | hold feature logic                                         |
+| `toolbox-commands`   | every subcommand, its output, Ctrl+C handling                                                                                                   | link egui or `toolbox-gui-kit`                             |
+| `toolbox-lint`       | comment and shape rules for Rust                                                                                                                | ship                                                       |
+| `toolbox-xtask`      | the `cargo xtask` commands                                                                                                                      | ship                                                       |
 
 ### Frost
 
-Menus, lists, toasts, the Changes pill and popover, the status note,
-dialogs and the Console show a live blur of what lies under them plus a
-tint. The header band shows the blur under a neutral scrim.
+Menus, lists, toasts, the Changes popover, the status note, dialogs and
+the Console show a live blur of what lies under them plus a tint. The
+Changes footer bar under the page is window coloured, not frosted
+(`the_footer_is_window_coloured_and_the_popover_frosted` in
+`app/gui/tests/integration/changes.rs`). The header band shows the blur
+under a neutral scrim.
 
 - `frost::install` turns it on. Without it, or when the GPU refuses a
   pipeline, a surface shows its tint.

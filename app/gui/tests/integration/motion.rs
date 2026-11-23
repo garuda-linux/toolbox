@@ -139,7 +139,7 @@ fn open_from_the_palette(harness: &mut Harness<'static, App>) {
 
     // The row's name ends in its shortcut, and it is drawn over the page.
     harness
-        .query_all_by_label_contains("Toggle console")
+        .query_all_by_label_contains("Toggle Console")
         .last()
         .expect("the palette's row")
         .click();

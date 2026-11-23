@@ -1,5 +1,6 @@
-//! A whole number with its unit between a step down and a step up, all
-//! inside one filled pill, so the three read as one control.
+//! A whole number with its unit in one input, stepped by the up and down
+//! arrows at its right end, as Breeze's spin box draws them: a column of
+//! two arrows inside the frame.
 
 #[cfg(test)]
 mod tests;
@@ -7,20 +8,27 @@ mod tests;
 use std::ops::RangeInclusive;
 
 use egui::accesskit::Role;
-use egui::{Align2, Id, Rect, Response, Sense, Shape, Ui, WidgetInfo, pos2, vec2};
+use egui::{Id, Pos2, Rect, Response, Sense, Shape, Stroke, Ui, WidgetInfo, pos2, vec2};
 
-use super::field::paint_field;
-use super::focus::focus_ring;
+use super::field::{INSET, field_height, paint_field};
+use super::focus::focus_from_keyboard;
 use super::number::inset_number_with_unit;
-use super::press::Pointer;
-use super::text::line;
-use crate::fonts::{BODY, Weight};
-use crate::theme::{CONTROL_RADIUS, PILL_HEIGHT, PILL_RADIUS};
-use crate::tokens;
+use crate::theme::FIELD_RADIUS;
+use crate::tokens::{self, mix};
+
+/// Darkly's `SpinBox_ArrowButtonWidth`, the column of arrows.
+const ARROW_COLUMN: f32 = 20.0;
+/// Darkly's `ArrowSize`, the side of an arrow's square.
+const ARROW_SIZE: f32 = 10.0;
+/// Darkly's `arrowShade`, how far an arrow moves from the text toward the
+/// base (darklyhelper.cpp:56).
+const ARROW_SHADE: f32 = 0.15;
+/// Breeze's `PenWidth::Symbol`, half of it as the arrow's inset.
+const SYMBOL_HALF_PEN: f32 = 0.5005;
 
 /// The words of a [`spin_field`]. `name` names the number for screen
 /// readers and should say the unit, which they do not hear. `less` and
-/// `more` name the steppers.
+/// `more` name the down and up arrows.
 #[derive(Clone, Copy, Debug)]
 pub struct SpinTexts<'a> {
     /// Tells the field apart from the other fields of its ui.
@@ -47,80 +55,115 @@ pub fn spin_field(
     texts: SpinTexts<'_>,
 ) -> bool {
     let before = *value;
-    let (pill, _) = ui.allocate_exact_size(vec2(width, PILL_HEIGHT), Sense::hover());
+    let (frame, _) = ui.allocate_exact_size(vec2(width, field_height(ui)), Sense::hover());
 
-    // The fill goes under every part but follows the number's focus,
+    // The frame goes under every part but follows the number's focus,
     // known only once it is drawn.
     let slot = ui.painter().add(Shape::Noop);
     let id = ui.scope_id().with(("spin_field", texts.salt));
-    let less = Rect::from_min_size(pill.min, vec2(PILL_HEIGHT, PILL_HEIGHT));
-    let more = Rect::from_min_size(
-        pos2(pill.right() - PILL_HEIGHT, pill.top()),
-        vec2(PILL_HEIGHT, PILL_HEIGHT),
+
+    let inner = frame.shrink(INSET);
+    let column = Rect::from_min_max(
+        pos2(inner.right() - ARROW_COLUMN, inner.top()),
+        inner.right_bottom(),
     );
 
-    let middle = Rect::from_min_max(
-        pos2(less.right(), pill.top()),
-        pos2(more.left(), pill.bottom()),
+    let half = ARROW_COLUMN / 2.0;
+    let up = Rect::from_min_size(
+        pos2(column.left(), column.center().y - half),
+        vec2(ARROW_COLUMN, half),
     );
 
-    if stepper(ui, id.with("less"), less, Step::Less, texts.less) {
+    let down = up.translate(vec2(0.0, half));
+    let text = Rect::from_min_max(inner.min, pos2(column.left(), inner.bottom()));
+
+    let (least, most) = (*range.start(), *range.end());
+    if stepper(
+        ui,
+        id.with("less"),
+        down,
+        Step::Less,
+        (texts.less, *value <= least),
+    ) {
         *value = value.saturating_sub(1);
     }
 
-    let number = ui.put(middle, |ui: &mut Ui| {
+    let number = ui.put(text, |ui: &mut Ui| {
         inset_number_with_unit(
             ui,
             value,
             range.clone(),
-            middle.width(),
+            text.width(),
             (texts.salt, texts.name, texts.unit),
         )
     });
 
-    if stepper(ui, id.with("more"), more, Step::More, texts.more) {
+    if stepper(
+        ui,
+        id.with("more"),
+        up,
+        Step::More,
+        (texts.more, *value >= most),
+    ) {
         *value = value.saturating_add(1);
     }
 
     *value = (*value).clamp(*range.start(), *range.end());
-    paint_field(ui, slot, pill, CONTROL_RADIUS, number.has_focus());
+    paint_field(ui, slot, frame, FIELD_RADIUS, number.has_focus());
 
     *value != before
 }
 
-/// A round button inside the pill. A circle of the hover fill marks the
-/// pointer and the focus.
-fn stepper(ui: &Ui, id: Id, rect: Rect, step: Step, name: &str) -> bool {
+/// One arrow of the column, named and at its limit or not. It is a click
+/// target with no fill of its own.
+fn stepper(ui: &Ui, id: Id, rect: Rect, step: Step, (name, at_limit): (&str, bool)) -> bool {
     let response = ui.interact(rect, id, Sense::click());
-    response.widget_info(|| WidgetInfo::labeled(Role::Button, ui.is_enabled(), name));
+    let enabled = ui.is_enabled() && !at_limit;
+    response.widget_info(|| WidgetInfo::labeled(Role::Button, enabled, name));
 
     if ui.is_rect_visible(rect) {
-        paint_stepper(ui, rect, &response, step);
+        paint_arrow(ui, rect, &response, step, at_limit);
     }
 
     response.clicked()
 }
 
-fn paint_stepper(ui: &Ui, rect: Rect, response: &Response, step: Step) {
+/// Darkly's `renderSpinBoxArrow`: a polyline in the arrow's square, centred
+/// in its rect. The text shaded toward the view colour, the decoration
+/// focus under the pointer or with the focus from a key, and the dim text
+/// at the limit, where an arrow does not react to either.
+fn paint_arrow(ui: &Ui, rect: Rect, response: &Response, step: Step, at_limit: bool) {
     let tokens = tokens::current(ui.ctx());
-    let pointer = Pointer::of_focusable(response);
-    if pointer.is_under() {
-        let fill = pointer.fill(&tokens, tokens.field);
-        ui.painter()
-            .circle_filled(rect.center(), f32::from(PILL_RADIUS), fill);
-    }
-
-    let symbol = match step {
-        Step::Less => "−",
-        Step::More => "+",
+    let ink = if at_limit {
+        tokens.dim
+    } else if response.hovered() || focus_from_keyboard(ui, response) {
+        tokens.decoration_focus
+    } else {
+        mix(tokens.text, tokens.view, ARROW_SHADE)
     };
 
-    let ink = tokens.text;
-    let glyph = line(ui, symbol, Weight::SemiBold, BODY, ink);
-    let at = Align2::CENTER_CENTER
-        .anchor_size(rect.center(), glyph.size())
-        .min;
+    // Breeze's points in the square for a size of 10 px, where its
+    // `sizeOffset` is half a pixel.
+    let inset = SYMBOL_HALF_PEN;
+    let offset = 0.5;
+    let points: [Pos2; 3] = match step {
+        Step::More => [
+            pos2(inset, 7.5 - inset - offset),
+            pos2(ARROW_SIZE / 2.0, 2.5 - offset),
+            pos2(ARROW_SIZE - inset, 7.5 - inset - offset),
+        ],
+        Step::Less => [
+            pos2(inset, 2.5 + inset + offset),
+            pos2(ARROW_SIZE / 2.0, 7.5 + offset),
+            pos2(ARROW_SIZE - inset, 2.5 + inset + offset),
+        ],
+    };
 
-    ui.painter().galley(at, glyph, ink);
-    focus_ring(ui, response, PILL_RADIUS);
+    let origin = rect.center() - vec2(ARROW_SIZE, ARROW_SIZE) / 2.0;
+    let line: Vec<Pos2> = points
+        .into_iter()
+        .map(|point| origin + point.to_vec2())
+        .collect();
+
+    ui.painter().line(line, Stroke::new(1.0, ink));
 }

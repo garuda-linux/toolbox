@@ -199,15 +199,7 @@ fn run(
         instance,
     };
 
-    let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default()
-            .with_app_id(APP_ID)
-            .with_inner_size([1400.0, 960.0])
-            .with_min_inner_size(toolbox_gui::zoom::SMALLEST_WINDOW),
-        renderer: eframe::Renderer::Wgpu,
-        persist_window: true,
-        ..Default::default()
-    };
+    let options = start::native_options(APP_ID);
 
     // A panic of the UI thread is caught only to bound the shutdown: a
     // dropped runtime waits for its blocking tasks without a limit.
@@ -265,12 +257,19 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         instance,
     } = start;
 
+    let mut preferences = preferences(&paths, settings, &cc.egui_ctx);
+    start::desktop_blur(cc, &mut preferences);
+
     let system_language = i18n::language_from_env(|key| std::env::var_os(key));
-    let shown = i18n::shown(settings.general.language.as_ref(), &system_language);
+    let shown = i18n::shown(
+        preferences.settings.general.language.as_ref(),
+        &system_language,
+    );
+
     let helper = helper_services(&handle, &cc.egui_ctx, shown);
     let mode = Mode::of_dry_run(helper.dry_run);
 
-    let readers = readers(&handle, &cc.egui_ctx, &settings);
+    let readers = readers(&handle, &cc.egui_ctx, &preferences.settings);
     let commands = instance.commands.sender.clone();
     let (power, starter) = machine(&handle, mode, commands, &cc.egui_ctx);
     let (desktop_look, app_pictures) = look(&handle, &cc.egui_ctx, family, &catalogs);
@@ -308,7 +307,7 @@ fn create(cc: &CreationContext<'_>, start: Start) -> Created {
         desktops,
         version: env!("CARGO_PKG_VERSION"),
         dry_run: helper.dry_run,
-        preferences: preferences(&paths, settings, &cc.egui_ctx),
+        preferences,
     };
 
     #[cfg(feature = "selftest")]

@@ -236,7 +236,7 @@ fn note(ui: &mut Ui, callout: &Callout, reader: &mut Reader<'_>) {
 /// top of the label's capitals, as a row's picture starts at its
 /// title's, rather than at the line box above them.
 fn mark_tile(ui: &mut Ui, tone: Tone) {
-    let edge = TileSize::Row.edge(ui);
+    let edge = TileSize::Row.edge();
     let capital = ui.painter().layout_no_wrap(
         "H".to_owned(),
         fonts::font(ui.style(), Weight::SemiBold, BODY),

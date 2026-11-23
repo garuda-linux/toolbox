@@ -43,10 +43,11 @@ impl DiagnosticsPage {
         let row_height = ui.fonts_mut(|fonts| fonts.row_height(&font));
 
         // The box takes exactly the room left in view, so the page around
-        // it never scrolls and the report's own bar is the only one.
+        // it never scrolls and the report's own bar is the only one. The
+        // card's 1 px outline sits outside its padding on both sides.
         let sizes = ui.tokens().sizes;
         let around = 2.0_f32.mul_add(
-            f32::from(sizes.card_padding.top.max(sizes.card_padding.bottom)),
+            f32::from(sizes.card_padding.top.max(sizes.card_padding.bottom)) + 1.0,
             sizes.card_gap,
         );
 
@@ -65,8 +66,6 @@ impl DiagnosticsPage {
             let glyph = ui.fonts_mut(|fonts| fonts.glyph_width(&font, 'M'));
             let columns = character_count(ui.available_width() / glyph.max(1.0));
             let rows = self.rows(lines, Some(columns));
-
-            toolbox_gui_kit::theme::show_scroll_bars(ui.style_mut());
 
             // show_rows counts the spacing of this ui between rows.
             ui.spacing_mut().item_spacing.y = 0.0;
@@ -142,8 +141,12 @@ impl DiagnosticsPage {
 
 /// "· 14:05 UTC · 312 lines", the time left out while unknown.
 fn meta(ctx: &egui::Context, collected: Option<u64>, line_count: usize) -> String {
-    let count = line_count;
-    let lines = i18n::text_with(ctx, "diagnostics-lines", &[("count", Arg::from(count))]);
+    let lines = i18n::text_with(
+        ctx,
+        "diagnostics-lines",
+        &[("count", Arg::from(line_count))],
+    );
+
     let Some(seconds) = collected else {
         return i18n::text_with(
             ctx,

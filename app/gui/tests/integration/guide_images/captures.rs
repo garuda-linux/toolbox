@@ -269,9 +269,9 @@ fn diagnostics_upload(theme: Theme) -> RgbaImage {
     let mut fixture = crate::diagnostics::diagnostics_page_on(false, theme);
     let harness = fixture.harness();
     crate::diagnostics::collect(harness);
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
-    dialog(harness, "Upload this report?")
+    dialog(harness, "Upload This Report?")
 }
 
 fn discover(theme: Theme) -> RgbaImage {
@@ -331,16 +331,16 @@ fn maintenance_common(theme: Theme) -> RgbaImage {
 fn maintenance_reset(theme: Theme) -> RgbaImage {
     let mut fixture = crate::maintenance::maintenance_on(theme);
     let harness = fixture.harness();
-    open_tab(harness, "Reset settings");
+    open_tab(harness, "Reset Settings");
     harness
         .get_by_role_and_label(Role::CheckBox, "Fish")
         .click();
     harness
         .get_by_role_and_label(Role::CheckBox, "Kitty")
         .click();
-    harness.get_by_label("Reset selected…").click();
+    harness.get_by_label("Reset Selected…").click();
     harness.run();
-    dialog(harness, "Reset 2 settings?")
+    dialog(harness, "Reset 2 Settings?")
 }
 
 fn network(theme: Theme) -> RgbaImage {
@@ -352,7 +352,7 @@ fn palette_open(theme: Theme) -> RgbaImage {
     let mut harness = launch_in(window(TALL).with_theme(theme), launch_setup(theme));
     harness.key_press_modifiers(Modifiers::COMMAND, Key::K);
     harness.run();
-    dialog(&mut harness, "Command palette")
+    dialog(&mut harness, "Command Palette")
 }
 
 fn services(theme: Theme) -> RgbaImage {

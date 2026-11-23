@@ -19,7 +19,7 @@ fn unloading_a_driver_asks_first_and_keeps_it_on_no() {
     );
     assert_eq!(sent(&harness), []);
 
-    harness.get_by_label("Keep it loaded").click();
+    harness.get_by_label("Keep It Loaded").click();
     harness.run();
     assert_eq!(sent(&harness), []);
 

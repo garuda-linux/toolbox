@@ -18,12 +18,18 @@ const GAP: egui::Vec2 = vec2(20.0, 10.0);
 /// have between them.
 const ROW_PAD: i8 = 5;
 
-/// The stripes are painted under the grid once its rows are measured,
-/// as egui's own stop at the grid and leave the frame's margin bare.
+/// The stripes are painted after the rows are measured, so they run into the
+/// frame's margin.
 pub(super) fn show(ui: &mut Ui, table: &Table, reader: &mut Reader<'_>) {
     let tokens = ui.tokens();
     let backdrop = ui.painter().add(Shape::Noop);
     let columns = table.head.len();
+
+    // The cells share the pane's width, so the table wraps instead of
+    // running sideways, up to a cell's `CELL_WIDTH`.
+    let counted = f32::from(u16::try_from(columns.max(1)).unwrap_or(u16::MAX));
+    let beside = 2.0_f32.mul_add(SIDE, GAP.x * (counted - 1.0));
+    let room = ((ui.available_width() - beside) / counted).clamp(0.0, CELL_WIDTH);
     let mut bottoms = Vec::new();
     reader.in_table = true;
 
@@ -48,7 +54,7 @@ pub(super) fn show(ui: &mut Ui, table: &Table, reader: &mut Reader<'_>) {
                             .enumerate()
                             .map(|(column, cell)| {
                                 let sides = (column == 0, column + 1 == columns);
-                                cell_text(ui, cell, weight, sides, reader)
+                                cell_text(ui, cell, weight, (sides, room), reader)
                             })
                             .fold(f32::MIN, f32::max);
 
@@ -121,7 +127,7 @@ fn cell_text(
     ui: &mut Ui,
     cell: &[Span],
     weight: Weight,
-    (first, last): (bool, bool),
+    ((first, last), room): ((bool, bool), f32),
     reader: &mut Reader<'_>,
 ) -> f32 {
     ui.horizontal_top(|ui| {
@@ -131,7 +137,7 @@ fn cell_text(
         }
 
         ui.vertical(|ui| {
-            ui.set_max_width(CELL_WIDTH);
+            ui.set_max_width(room);
             spans::show(ui, cell, weight, reader);
         });
 

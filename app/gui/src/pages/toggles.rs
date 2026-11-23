@@ -20,10 +20,10 @@ use toolbox_core::features::toggles::shown::{self as view, Section, Tally};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    RowHeights, RowList, Tone, banner, counted_chips, dimmed, page_toolbar, section_heading,
+    RowHeights, RowList, Tone, banner, counted_chips, dimmed, page_header, section_heading,
 };
 
-use super::header::{search, title_header};
+use super::header::search;
 use super::rows::{Look, refusal_banner};
 use super::{PageContext, plan_running};
 use crate::artwork::Artwork;
@@ -77,18 +77,22 @@ impl TogglePage {
         self
     }
 
-    /// The search waits for the catalog's list, as the chips do.
+    /// The search sits in the toolbar at the right, where KDE apps put it,
+    /// and waits for the catalog's list, as the chips do.
     pub fn header(&mut self, ui: &mut Ui, listed: bool) {
-        title_header(ui, self.title, self.subtitle);
-        page_toolbar(
+        let ctx = ui.ctx().clone();
+        let width = ui.tokens().sizes.search_width;
+        let text = &mut self.search;
+        page_header(
             ui,
-            &mut self.search,
-            |text, ui| {
+            &i18n::text(&ctx, self.title),
+            &i18n::text(&ctx, self.subtitle),
+            width,
+            |ui| {
                 ui.enabled_ui(listed, |ui| {
                     _ = search(ui, text, "toggles-search", "toggles-search-hint");
                 });
             },
-            |_, _| {},
         );
     }
 
@@ -273,7 +277,7 @@ impl TogglePage {
         }
 
         if headed {
-            section_heading(ui, section.icon, &section.title, &section.count);
+            section_heading(ui, &section.title, &section.count);
             ui.add_space(ui.tokens().sizes.heading_gap);
         }
 

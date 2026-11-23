@@ -11,6 +11,7 @@ use std::sync::Arc;
 
 use egui::{Color32, Context, Id, Image};
 use toolbox_gui_kit::oklch::{hue_chroma, shift_hue};
+use toolbox_gui_kit::tokens;
 
 const SOURCE: &str = include_str!("../../../assets/garuda-logo.svg");
 /// The violet the logo is drawn in, before any accent turns it.
@@ -37,11 +38,14 @@ pub fn image(ctx: &Context, accent: Color32, dark: bool) -> Image<'static> {
 /// changes, so the colours are turned once and not on every frame.
 fn bytes(ctx: &Context, accent: Color32, dark: bool) -> Arc<[u8]> {
     let uri = uri(accent, dark);
+
+    // Read before the context's data is locked, which the lookup would wait on.
+    let toward = tokens::current(ctx).text;
     ctx.data_mut(|data| {
         let slot = data.get_temp_mut_or_default::<Slot>(slot_id());
         if slot.uri != uri {
             slot.uri = uri;
-            slot.bytes = Arc::from(svg(accent, dark).into_bytes());
+            slot.bytes = Arc::from(svg(accent, dark, toward).into_bytes());
         }
 
         Arc::clone(&slot.bytes)
@@ -63,8 +67,9 @@ fn uri(accent: Color32, dark: bool) -> String {
 }
 
 /// The logo's SVG with its colours turned to `accent`. Black and white
-/// details stay as they are.
-fn svg(accent: Color32, dark: bool) -> String {
+/// details stay as they are. The dark copy lightens toward `toward`, the
+/// theme's text, which is the light end of a dark theme.
+fn svg(accent: Color32, dark: bool, toward: Color32) -> String {
     let (hue, chroma) = hue_chroma(accent);
     let turn = if chroma < MIN_CHROMA {
         0.0
@@ -75,7 +80,7 @@ fn svg(accent: Color32, dark: bool) -> String {
     recolour(SOURCE, |colour| {
         let turned = shift_hue(colour, turn);
         if dark {
-            turned.lerp_to_gamma(Color32::WHITE, LIGHTEN)
+            turned.lerp_to_gamma(toward, LIGHTEN)
         } else {
             turned
         }

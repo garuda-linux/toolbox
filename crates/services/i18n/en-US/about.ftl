@@ -2,7 +2,7 @@
 
 page-about-subtitle = Maintain and set up your Garuda Linux system.
 about-hero-credits = Made by the Garuda Linux team
-about-copy-details = Copy system details
+about-copy-details = Copy System Details
 about-details-copied = Copied the system details to the clipboard.
 about-licence = License
 about-licence-value = GPL 3.0 or later
@@ -18,13 +18,13 @@ about-copied = Copied to the clipboard.
 about-help-wiki = Garuda Linux wiki
 about-help-arch-wiki = Arch Linux wiki
 about-help-status = Service status
-about-exorcist = Call the exorcist
-about-exorcist-title = Exorcist called
+about-exorcist = Call the Exorcist
+about-exorcist-title = Exorcist Called
 about-exorcist-called = You must be pretty desperate to click this. Some special voodoo is on its way. If the app still misbehaves, tell us on the Garuda Linux forum or the issue tracker.
 about-exorcist-forum = Forum
 about-exorcist-tracker = Issue tracker
 
-about-web = Garuda Linux on the web
+about-web = Garuda Linux on the Web
 about-web-start = Start page
 about-web-start-description = The start page for your browser
 about-web-gitlab = GitLab

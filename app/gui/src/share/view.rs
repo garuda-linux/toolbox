@@ -5,11 +5,10 @@ use egui::{Id, Label, Ui};
 use toolbox_core::features::diagnostics::{Redacted, UploadFailure};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
-use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, banner, confirm_buttons,
-    loading_label, menu_button, menu_item, pill_button, rich,
+    loading_label, menu_button, menu_item, pill_button, push_height, rich,
 };
 use toolbox_privatebin::{Paste, SERVER};
 use toolbox_services::share::{Upload, UploadProblem};
@@ -71,7 +70,7 @@ pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> 
     ui.horizontal(|ui| {
         // As tall as the buttons before the text comes, so it centres on
         // their middle and not on egui's shorter row.
-        ui.set_min_height(PILL_HEIGHT);
+        ui.set_min_height(push_height(ui));
         ui.label(rich(
             ui,
             &text("share-uploaded-short"),

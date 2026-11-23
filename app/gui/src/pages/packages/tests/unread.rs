@@ -71,7 +71,7 @@ fn a_failed_check_shows_a_banner_that_reads_again_and_no_count() {
     );
 
     // The header's Read again comes first.
-    let banner = harness.query_all_by_label("Read again").last().unwrap();
+    let banner = harness.query_all_by_label("Read Again").last().unwrap();
     banner.click();
     harness.run();
 

@@ -9,7 +9,7 @@ use egui::accesskit::Role;
 use egui::{Align2, AsIdSalt, EventFilter, Key, Modifiers, Response, TextEdit, Ui};
 
 pub use self::digits::Digits;
-use super::field::{inset_field_with_unit, text_field, text_field_with_unit};
+use super::field::{Parts, field, inset_field_with_unit, text_field_with_unit};
 
 #[derive(Clone, Copy)]
 enum Look<'a> {
@@ -86,7 +86,7 @@ fn number(
         .align(Align2::RIGHT_CENTER);
 
     let response = match look {
-        Look::Plain => text_field(ui, edit),
+        Look::Plain => field(ui, edit, Parts::default()).0,
         Look::Unit(unit) => text_field_with_unit(ui, edit, unit),
         Look::Inset(unit) => inset_field_with_unit(ui, edit, unit),
     };

@@ -2,32 +2,55 @@ use egui::emath::GuiRounding as _;
 use egui::layers::ShapeIdx;
 use egui::{
     Color32, CornerRadius, Frame, InnerResponse, Margin, Rect, Response, Sense, Shape, Stroke, Ui,
-    UiBuilder,
+    UiBuilder, pos2, vec2,
 };
 
 use super::list::memory;
 use super::press::{Pointer, hover_amount};
-use super::top_light::paint_top_light;
 use crate::theme::{CARD_RADIUS, RADIUS};
 use crate::tokens;
 
 pub(super) const HOVER_INSET: f32 = 4.0;
 pub(super) const DIVIDER: f32 = 1.0;
 
+/// A card as Darkly draws its group box: the card fill, a 1 px outline and
+/// its soft shadow, with round corners. It is as wide as its column. The
+/// page's margins keep it off the window's edges.
 pub fn card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
     let tokens = tokens::current(ui.ctx());
-    let shown = Frame::new()
-        .fill(tokens.card)
-        .stroke(light_rim(ui, tokens.outline))
-        .corner_radius(CornerRadius::same(CARD_RADIUS))
-        .show(ui, |ui| {
-            ui.set_width(ui.available_width());
-            ui.spacing_mut().item_spacing.y = 0.0;
-            body(ui)
-        });
+    let outer = ui.available_rect_before_wrap();
+    let rect = Rect::from_min_size(outer.min, vec2(outer.width(), f32::INFINITY));
+    let inner = ui
+        .scope_builder(UiBuilder::new().max_rect(rect), |ui| {
+            Frame::new()
+                .fill(tokens.card_glass)
+                .stroke(light_rim(tokens.card_edge))
+                .corner_radius(CornerRadius::same(CARD_RADIUS))
+                .shadow(group_box_shadow(ui))
+                .show(ui, |ui| {
+                    ui.set_width(ui.available_width());
+                    ui.spacing_mut().item_spacing.y = 0.0;
+                    body(ui)
+                })
+        })
+        .inner;
 
-    paint_top_light(ui.painter(), shown.response.rect, CARD_RADIUS);
-    shown
+    ui.advance_cursor_after_rect(Rect::from_min_max(
+        outer.min,
+        pos2(outer.right(), inner.response.rect.bottom()),
+    ));
+    inner
+}
+
+/// Darkly's group box shadow, blur 4 and 1 px down, in the shadow shade at
+/// 40 of 255 (darklyhelper.cpp:1229 and :592). egui's blur is twice Qt's.
+fn group_box_shadow(ui: &Ui) -> egui::Shadow {
+    egui::Shadow {
+        offset: [0, 1],
+        blur: 8,
+        spread: 0,
+        color: tokens::current(ui.ctx()).card_shadow,
+    }
 }
 
 /// A [`card`] with the card padding round its body.
@@ -44,15 +67,10 @@ pub fn padded_card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResp
     })
 }
 
-/// A 1 px rim of `colour` in light themes only, where white on near
-/// white needs one. Dark themes set a surface off by its fill and the
-/// light along its top ([`paint_top_light`]) instead.
-pub fn light_rim(ui: &Ui, colour: Color32) -> Stroke {
-    if ui.visuals().dark_mode {
-        Stroke::NONE
-    } else {
-        Stroke::new(1.0, colour)
-    }
+/// The 1 px outline of a card or tile, Darkly's frame outline, in both
+/// themes. Darkly draws no light along a frame's top.
+pub fn light_rim(colour: Color32) -> Stroke {
+    Stroke::new(1.0, colour)
 }
 
 pub fn card_row<R>(ui: &mut Ui, first: bool, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
@@ -99,7 +117,7 @@ pub(super) fn divider(ui: &mut Ui, first: bool) {
     let right = ui.max_rect().right() - padding.x;
     let y = ui.painter().round_to_pixel_center(ui.cursor().top());
     ui.painter()
-        .hline(left..=right, y, Stroke::new(DIVIDER, tokens.outline));
+        .hline(left..=right, y, Stroke::new(DIVIDER, tokens.row_divider));
     ui.add_space(y + DIVIDER / 2.0 - ui.cursor().top());
 }
 
@@ -131,7 +149,7 @@ pub(super) fn paint_hover(ui: &Ui, backdrop: ShapeIdx, response: &Response) {
     let fill = Shape::rect_filled(
         rect,
         CornerRadius::same(RADIUS),
-        tokens.field.gamma_multiply(amount),
+        tokens.item_hover.gamma_multiply(amount),
     );
 
     ui.painter().set(backdrop, fill);
@@ -159,14 +177,6 @@ pub(super) fn fill_rect(row: Rect, pixels_per_point: f32) -> Rect {
 
 pub(super) fn mark_raised(ui: &Ui, raised: bool) {
     memory::write(ui.ctx(), ui.scope_id(), |row| row.raised = Some(raised));
-}
-
-/// Whether `ui` or a Ui around it sits on a row's hover fill, where a
-/// Soft button at rest has the fill's own colour.
-pub(super) fn on_raised(ui: &Ui) -> bool {
-    ui.stack()
-        .iter()
-        .any(|frame| memory::get(ui, frame.scope_id).raised == Some(true))
 }
 
 /// Whether `ui` sits in a card's row, which paints the one fill under

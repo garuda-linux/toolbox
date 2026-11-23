@@ -31,10 +31,10 @@ fn plain_field() -> Harness<'static, String> {
     harness
 }
 
-/// A click focuses a field as the keyboard does, and the ring shows
-/// where the typing goes either way.
+/// A click focuses a field as the keyboard does, and the Highlight halo
+/// shows where the typing goes either way, with no frame.
 #[test]
-fn a_field_focused_by_a_click_shows_its_ring() {
+fn a_field_focused_by_a_click_shows_the_highlight_halo() {
     let mut harness = plain_field();
     let field = harness
         .get_by_role_and_label(Role::TextInput, "Name")
@@ -42,12 +42,18 @@ fn a_field_focused_by_a_click_shows_its_ring() {
 
     click_at(&mut harness, field.center());
 
-    let ring = tokens::current(&harness.ctx).accent_ring;
-    assert!(rim_colours_around(&harness, field.center()).contains(&ring));
+    let tokens = tokens::current(&harness.ctx);
+    assert!(
+        filled_rect(&harness, tokens.accent_tint.gamma_multiply(0.6)).is_some(),
+        "no halo"
+    );
+    assert_eq!(rim_colours_around(&harness, field.center()).len(), 0);
 }
 
+/// Darkly's line edit has no hover state, so the pointer changes neither
+/// the fill nor the card outline at rest.
 #[test]
-fn a_field_under_the_pointer_steps_its_fill_towards_the_focused_one() {
+fn a_field_under_the_pointer_keeps_its_fill_and_its_outline() {
     let mut harness = plain_field();
     let field = harness
         .get_by_role_and_label(Role::TextInput, "Name")
@@ -57,9 +63,14 @@ fn a_field_under_the_pointer_steps_its_fill_towards_the_focused_one() {
     harness.run();
 
     let tokens = tokens::current(&harness.ctx);
-    let step = tokens.field.lerp_to_gamma(tokens.hover, 0.5);
-    assert!(filled_rect(&harness, step).is_some(), "no hover fill");
-    assert!(filled_rect(&harness, tokens.field).is_none());
+    assert!(
+        filled_rect(&harness, tokens.input).is_some(),
+        "no input fill"
+    );
+    assert_eq!(
+        rim_colours_around(&harness, field.center()),
+        vec![tokens.card_outline]
+    );
 }
 
 fn secret() -> Harness<'static, (SecretText, Option<egui::Id>)> {

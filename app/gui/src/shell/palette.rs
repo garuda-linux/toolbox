@@ -11,6 +11,7 @@ mod tests;
 
 use std::rc::Rc;
 
+use egui::scroll_area::ScrollBarVisibility;
 use egui::{Context, Id, Key, Modifiers, ScrollArea};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{
@@ -48,6 +49,11 @@ impl Palette {
     pub fn show(&mut self, ctx: &Context, context: &PageContext<'_>, commands: &CommandSender) {
         if !self.open {
             return;
+        }
+
+        // Text typed into the sidebar's search goes on as this palette's query.
+        if let Some(text) = ctx.data_mut(|data| data.remove_temp::<String>(seed_id())) {
+            self.query = text;
         }
 
         let rows = found::cached(&mut self.found, ctx, context, &self.query, &self.expanded);
@@ -88,9 +94,13 @@ impl Palette {
                     .flatten()
                     .map(|row| (row.pick.clone(), true));
 
+                // The bar keeps its room beside the rows, shown or not, so the
+                // dialog is as wide with a short list as with a long one.
+                let rows_width = width - ui.spacing().scroll.allocated_width();
                 let (clicked, pointed) = ScrollArea::vertical()
+                    .scroll_bar_visibility(ScrollBarVisibility::AlwaysVisible)
                     .max_height(ui.tokens().sizes.palette_list_height)
-                    .show(ui, |ui| self.list(ui, &rows, moved, width))
+                    .show(ui, |ui| self.list(ui, &rows, moved, rows_width))
                     .inner;
 
                 if let Some(index) = pointed {
@@ -198,4 +208,14 @@ fn send(commands: &CommandSender, command: Command, by_key: bool) {
             other
         }
     });
+}
+
+/// Passes `text` on as the query of the palette that opens next, so the
+/// sidebar's typing is not lost. It waits until the palette is open.
+pub fn pass_query(ctx: &Context, text: String) {
+    ctx.data_mut(|data| data.insert_temp(seed_id(), text));
+}
+
+fn seed_id() -> Id {
+    Id::unique("toolbox_gui::palette::query")
 }

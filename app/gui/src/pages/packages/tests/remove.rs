@@ -12,6 +12,7 @@ fn removing_a_package_others_need_names_them() {
     harness.run();
     let gimps = harness.query_all_by_label("gimp").count();
 
+    super::open_row(&mut harness, "gegl");
     harness.get_by_label("Remove gegl").click();
     harness.run();
 
@@ -28,6 +29,7 @@ fn removing_a_package_nothing_needs_names_no_user() {
     let mut harness = fixture(None).harness(PackagesPage::default());
     harness.run();
 
+    super::open_row(&mut harness, "gimp");
     harness.get_by_label("Remove gimp").click();
     harness.run();
 

@@ -2,9 +2,10 @@
 //! in a list of dependencies, and the heading of a part that folds away,
 //! such as a package's file list.
 
-use egui::{Rect, Response, Role, Sense, Stroke, Ui, WidgetInfo, pos2, vec2};
+use egui::{CornerRadius, Rect, Response, Role, Sense, Stroke, Ui, WidgetInfo, pos2, vec2};
 
-use super::{focus_ring, line};
+use super::focus::focus_from_keyboard;
+use super::line;
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::theme::RADIUS;
 use crate::ui_ext::icon_image;
@@ -35,14 +36,15 @@ fn inline(ui: &mut Ui, text: &str, name: &str, role: Role) -> Response {
         return response;
     }
 
+    // The underline is the link's own sign of a pointer or a key on it, so
+    // a click alone leaves it off.
     let painter = ui.painter();
     painter.galley(rect.min, galley, tokens.accent_text);
-    if response.hovered() || response.has_focus() {
+    if response.hovered() || focus_from_keyboard(ui, &response) {
         let base = rect.bottom() - 1.0;
         painter.hline(rect.x_range(), base, Stroke::new(1.0, tokens.accent_text));
     }
 
-    focus_ring(ui, &response, RADIUS);
     response.on_hover_cursor(egui::CursorIcon::PointingHand)
 }
 
@@ -81,6 +83,11 @@ fn folding(ui: &mut Ui, title: &str, count: Option<&str>, open: bool) -> Respons
     }
 
     let mid = rect.center().y;
+    if focus_from_keyboard(ui, &response) {
+        ui.painter()
+            .rect_filled(rect, CornerRadius::same(RADIUS), tokens.decoration_focus);
+    }
+
     let chevron = Rect::from_center_size(
         pos2(rect.left() + CHEVRON / 2.0, mid),
         vec2(CHEVRON, CHEVRON),
@@ -104,6 +111,5 @@ fn folding(ui: &mut Ui, title: &str, count: Option<&str>, open: bool) -> Respons
         ui.painter().galley(count_at, number, tokens.secondary);
     }
 
-    focus_ring(ui, &response, RADIUS);
     response
 }

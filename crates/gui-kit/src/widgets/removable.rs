@@ -3,8 +3,10 @@
 
 use egui::{Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
-use super::chip::{TAG_HEIGHT, TAG_SCALE, tag};
-use super::{Tone, focus_ring, line};
+use super::chip::{CHIP_RADIUS, TAG_HEIGHT, TAG_SCALE, paint_chip, tag};
+use super::focus::focus_from_keyboard;
+use super::press::{Pointer, item_look};
+use super::{Tone, line};
 use crate::fonts::Weight;
 use crate::ui_ext::icon_image;
 use crate::{icons, tokens};
@@ -13,7 +15,7 @@ use crate::{icons, tokens};
 const TARGET: f32 = 24.0;
 /// Room around the target inside the tag.
 const INSET: f32 = 2.0;
-const PADDING_X: f32 = 10.0;
+const PADDING_X: f32 = 8.0;
 pub const GLYPH: f32 = 12.0;
 
 /// A [`tag`] for a parameter that stays, with a small lock before it, the
@@ -42,8 +44,9 @@ pub fn lock_mark(ui: &mut Ui, name: &str) -> Response {
 /// response.
 pub fn removable_tag(ui: &mut Ui, text: &str, name: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let (fill, ink) = Tone::Neutral.colors(&tokens);
-    let galley = line(ui, text, Weight::SemiBold, TAG_SCALE, ink);
+    let look = Tone::Neutral.look(&tokens, Pointer::Rest);
+    let ink = tokens.text;
+    let galley = line(ui, text, Weight::Regular, TAG_SCALE, ink);
     let height = TAG_HEIGHT;
     let width = PADDING_X + galley.size().x + INSET + TARGET + INSET;
     let (rect, _) = ui.allocate_exact_size(vec2(width, height), Sense::hover());
@@ -68,9 +71,16 @@ pub fn removable_tag(ui: &mut Ui, text: &str, name: &str) -> Response {
 
     if ui.is_rect_visible(rect) {
         let painter = ui.painter();
-        painter.rect_filled(rect, height / 2.0, fill);
-        if cross.hovered() {
-            painter.circle_filled(cross_rect.center(), TARGET / 2.0, tokens.pressed);
+        paint_chip(ui, rect, look, &|colour| colour);
+        let focused = focus_from_keyboard(ui, &cross) && ui.is_enabled();
+        if focused || cross.hovered() {
+            let fill = if focused {
+                tokens.decoration_focus
+            } else {
+                item_look(&tokens, false, Pointer::Hovered).fill
+            };
+
+            painter.rect_filled(cross_rect.shrink(INSET), CHIP_RADIUS, fill);
         }
 
         let at = pos2(
@@ -87,6 +97,5 @@ pub fn removable_tag(ui: &mut Ui, text: &str, name: &str) -> Response {
             );
     }
 
-    focus_ring(ui, &cross, u8::MAX);
     cross
 }

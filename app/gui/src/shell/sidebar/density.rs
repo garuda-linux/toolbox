@@ -5,6 +5,10 @@ use toolbox_gui_kit::widgets::{NavLook, group_label_height, nav_divider_height};
 use crate::page::{Group, PageId};
 use crate::page_ui;
 
+/// The gap between entries at normal size. Each highlight sits 6 points
+/// into its 36 point row, so the rows already stand 36 apart.
+const PITCH_GAP: f32 = 0.0;
+
 #[derive(Clone, Copy, Debug)]
 pub(super) struct Density {
     pub(super) row: f32,
@@ -29,9 +33,9 @@ impl Density {
     const fn normal(sizes: &Sizes, expanded: bool) -> Self {
         Self {
             row: sizes.nav_row_height,
-            gap: sizes.nav_gap,
+            gap: PITCH_GAP,
             group_gap: sizes.nav_group_gap,
-            divider: divider_room(sizes, sizes.nav_group_gap, sizes.nav_gap),
+            divider: divider_room(sizes, sizes.nav_group_gap, PITCH_GAP),
             top_gap: sizes.control_gap,
             compact: false,
             label_room: 0.0,
@@ -71,7 +75,10 @@ impl Density {
             // between entries that egui puts there too.
             packed.label_below = (sizes.tight_gap - packed.gap).max(0.0);
             let spare = available - packed.needed(ui);
-            let least = (sizes.heading_gap - packed.gap).max(0.0);
+
+            // The least is a group's gap, not a heading's, so a packed
+            // heading still reads as the start of the group below it.
+            let least = (sizes.section_gap - packed.gap).max(0.0);
             packed.label_room = (spare / headings).max(least);
         }
 

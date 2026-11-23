@@ -3,14 +3,10 @@ use egui::{Key, Ui};
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
-use super::super::{
-    Tone, counted_disclosure, disclosure, link_tag, minor_heading, tag, text_button, text_link,
-};
+use super::super::{counted_disclosure, disclosure, minor_heading, text_button, text_link};
 use crate::palette::Palette;
-use crate::testing::{filled_rect, harness, text_colour};
+use crate::testing::{harness, text_colour};
 use crate::tokens;
-
-const NAME: &str = "1,204 packages";
 
 fn link_shown() -> Harness<'static, bool> {
     let mut harness = harness(300.0, 120.0).build_ui_state(
@@ -116,67 +112,8 @@ fn a_counted_disclosure_shows_its_count_as_a_minor_heading_does() {
     assert_eq!(text_colour(&harness, "4"), Some(tokens.secondary));
 }
 
-fn shown() -> Harness<'static, u32> {
-    let mut harness = harness(400.0, 100.0).build_ui_state(
-        |ui, clicks: &mut u32| {
-            ui.horizontal(|ui| {
-                if link_tag(ui, NAME, Tone::Neutral).clicked() {
-                    *clicks += 1;
-                }
-
-                tag(ui, "linux 6.12", Tone::Neutral);
-            });
-        },
-        0,
-    );
-
-    harness.run();
-    harness
-}
-
 #[test]
-fn a_link_tag_is_as_tall_as_a_tag() {
-    let harness = shown();
-    let link = harness.get_by_role_and_label(Role::Link, NAME).rect();
-    let plain = harness.get_by_label("linux 6.12").rect();
-
-    assert!((link.height() - plain.height()).abs() < 0.5);
-    assert!((link.center().y - plain.center().y).abs() < 0.5);
-}
-
-#[test]
-fn a_link_tag_answers_a_click() {
-    let mut harness = shown();
-    harness.get_by_role_and_label(Role::Link, NAME).click();
-    harness.run();
-
-    assert_eq!(*harness.state(), 1);
-}
-
-#[test]
-fn a_link_tag_answers_the_keyboard() {
-    let mut harness = shown();
-    harness.get_by_role_and_label(Role::Link, NAME).focus();
-    harness.run();
-    harness.key_press(Key::Enter);
-    harness.run();
-
-    assert_eq!(*harness.state(), 1);
-}
-
-#[test]
-fn a_link_tag_under_the_pointer_takes_the_selection_tint() {
-    let mut harness = shown();
-    harness.get_by_role_and_label(Role::Link, NAME).hover();
-    harness.run();
-
-    let tokens = tokens::current(&harness.ctx);
-    assert!(filled_rect(&harness, tokens.accent_tint).is_some());
-    assert_eq!(text_colour(&harness, NAME), Some(tokens.on_tint));
-}
-
-#[test]
-fn a_link_tags_tinted_text_reads_in_both_themes() {
+fn the_tinted_text_reads_on_its_tints_in_both_themes() {
     for theme in [egui::Theme::Dark, egui::Theme::Light] {
         let tokens = tokens::Tokens::derive(&Palette::fallback(theme), theme);
 

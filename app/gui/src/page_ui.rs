@@ -5,14 +5,14 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_gui_kit::icons::{self, Icon};
+use toolbox_gui_kit::icons::{self, Icon, colour};
 use toolbox_gui_kit::tokens::Hue;
 
 use crate::page::{Group, PageId};
 
 /// The sidebar's Search entry. It sits among the pages, so its glyph
 /// belongs to no page.
-pub const SEARCH_ICON: Icon = icons::SYSTEM_SEARCH;
+pub const SEARCH_ICON: Icon = icons::EDIT_FIND;
 
 pub trait PageLook {
     fn icon(self) -> Icon;
@@ -26,25 +26,25 @@ impl PageLook for PageId {
     fn icon(self) -> Icon {
         match self {
             Self::Home => icons::GO_HOME,
-            Self::Setup => icons::TOOLS_WIZARD,
-            Self::Components => icons::PLUGINS,
-            Self::Gaming => icons::INPUT_GAMEPAD,
-            Self::Discover => icons::VIEW_LIST_ICONS,
-            Self::Packages => icons::REPOSITORY,
-            Self::Services => icons::SYSTEM_RUN,
-            Self::SystemSettings => icons::VIEW_MEDIA_EQUALIZER,
-            Self::Kernels => icons::RUN_BUILD,
-            Self::Locales => icons::LANGUAGES,
-            Self::Users => icons::USER_OTHERS,
-            Self::Configs => icons::DOCUMENT_PROPERTIES,
-            Self::Network => icons::NETWORK_CONNECT,
-            Self::Boot => icons::DRIVE_HARDDISK_ROOT,
-            Self::Maintenance => icons::TOOLS,
-            Self::BootRepair => icons::RUN_BUILD_CONFIGURE,
-            Self::Diagnostics => icons::OFFICE_REPORT,
+            Self::Setup => colour::SYSTEM_SOFTWARE_INSTALL,
+            Self::Components => colour::PREFERENCES_DESKTOP_PERIPHERALS,
+            Self::Gaming => colour::PREFERENCES_DESKTOP_GAMING,
+            Self::Discover => colour::PLASMADISCOVER,
+            Self::Packages => colour::PACKAGE_X_GENERIC,
+            Self::Services => colour::PREFERENCES_SYSTEM_SERVICES,
+            Self::SystemSettings => colour::PREFERENCES_SYSTEM,
+            Self::Kernels => colour::PREFERENCES_SYSTEM_LINUX,
+            Self::Locales => colour::PREFERENCES_DESKTOP_LOCALE,
+            Self::Users => colour::PREFERENCES_SYSTEM_USERS,
+            Self::Configs => colour::PREFERENCES_OTHER,
+            Self::Network => colour::PREFERENCES_SYSTEM_NETWORK,
+            Self::Boot => colour::PREFERENCES_SYSTEM_STARTUP,
+            Self::Maintenance => colour::APPLICATIONS_UTILITIES,
+            Self::BootRepair => colour::DRIVE_HARDDISK_ROOT,
+            Self::Diagnostics => colour::HWINFO,
             Self::Settings => icons::CONFIGURE,
             Self::Guide => icons::HELP_CONTENTS,
-            Self::About => icons::VIEW_CERTIFICATE,
+            Self::About => icons::HELP_ABOUT,
         }
     }
 }

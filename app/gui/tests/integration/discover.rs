@@ -15,7 +15,7 @@ use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, snapshot};
 use toolbox_plan::PackageName;
 
-use crate::common::{HEIGHT, packages, palette, type_into, wheel, window};
+use crate::common::{HEIGHT, packages, palette, queued_shown, type_into, wheel, window};
 use crate::look::look_for;
 use crate::system::first_read;
 
@@ -165,14 +165,14 @@ fn install_queues_an_app_and_take_back_drops_it() {
         .get_by_role_and_label(Role::Button, "Install Firefox")
         .click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_some());
+    assert!(queued_shown(&harness));
     assert!(harness.query_by_label("Installs with Apply").is_some());
 
     harness
-        .get_by_role_and_label(Role::Button, "Take back Firefox")
+        .get_by_role_and_label(Role::Button, "Take Back Firefox")
         .click();
     harness.run();
-    assert!(harness.query_by_label("change queued").is_none());
+    assert!(!queued_shown(&harness));
 }
 
 #[test]
@@ -215,7 +215,7 @@ fn a_search_without_hits_says_so_and_clears() {
     );
 
     harness
-        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear Search")
         .last()
         .expect("the empty state's Clear search")
         .click();
@@ -256,7 +256,7 @@ fn the_row_menu_holds_the_website() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Open website")
+            .query_by_role_and_label(Role::MenuItem, "Open Website")
             .is_some()
     );
 }
@@ -350,7 +350,7 @@ fn without_the_installed_packages_one_banner_offers_to_read_again() {
     );
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Read again")
+            .query_by_role_and_label(Role::Button, "Read Again")
             .is_some()
     );
 }

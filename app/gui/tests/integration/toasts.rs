@@ -63,7 +63,7 @@ fn a_failed_read_shows_on_its_page_with_read_again_and_raises_no_note() {
     assert!(no_note(&harness));
 
     harness
-        .query_all_by_label("Read again")
+        .query_all_by_label("Read Again")
         .max_by(|one, other| one.rect().top().total_cmp(&other.rect().top()))
         .unwrap()
         .click();

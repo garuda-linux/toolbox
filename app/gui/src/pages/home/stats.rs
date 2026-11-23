@@ -7,7 +7,7 @@ use toolbox_cli::output::size;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
 use toolbox_gui_kit::widgets::{
-    TileSize, Tone, focus_ring, light_rim, meter, paint_top_light, rich, status_tile,
+    TileSize, Tone, focus_from_keyboard, light_rim, meter, rich, status_tile,
 };
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_services::home::Overview;
@@ -72,7 +72,7 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
         Standing::Unknown => Tone::Neutral,
     };
 
-    let rim = light_rim(ui, tokens.outline);
+    let rim = light_rim(tokens.card_edge);
     let response = ui
         .scope_builder(
             UiBuilder::new()
@@ -81,15 +81,15 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
             |ui| {
                 let last = ui.response();
                 let fill = if last.is_pointer_button_down_on() {
-                    tokens.pressed
-                } else if last.hovered() {
-                    tokens.hover
+                    tokens.button_pressed
+                } else if last.hovered() || focus_from_keyboard(ui, &last) {
+                    tokens.button_hover
                 } else {
-                    tokens.card
+                    tokens.card_glass
                 };
 
                 ui.set_width(width);
-                let shown = Frame::new()
+                Frame::new()
                     .fill(fill)
                     .stroke(rim)
                     .corner_radius(CARD_RADIUS)
@@ -115,14 +115,11 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
                             if warn { Tone::Warning } else { Tone::Accent },
                         );
                     });
-
-                paint_top_light(ui.painter(), shown.response.rect, CARD_RADIUS);
             },
         )
         .response;
 
     response.widget_info(|| WidgetInfo::labeled(Role::Link, true, format!("{name}: {value}")));
-    focus_ring(ui, &response, CARD_RADIUS);
     if response.hovered() {
         ctx.set_cursor_icon(CursorIcon::PointingHand);
     }

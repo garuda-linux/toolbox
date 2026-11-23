@@ -208,13 +208,20 @@ fn the_first_banner_follows_the_header_without_an_extra_gap() {
     let running = harness.get_by_label_contains("Running kernel:").rect();
     let first = harness.get_by_label_contains("lacks its headers").rect();
 
-    // The band reaches a card gap under the header and the body starts a
-    // header gap under the band, about 53 px with the banner's padding. A
-    // second gap would make it more than 70.
+    let purpose = harness
+        .get_by_label(
+            "A kernel you install is used after the next restart, chosen in the boot menu.",
+        )
+        .rect();
+
+    assert!(
+        running.top() >= purpose.bottom(),
+        "the release is not in the body under the purpose"
+    );
     let gap = first.top() - running.bottom();
     assert!(
         gap < 60.0,
-        "{gap} px from the header to the first banner's words"
+        "{gap} px from the release line to the first banner's words"
     );
 }
 
@@ -258,7 +265,7 @@ fn built_modules_fold_away_and_a_click_opens_them() {
     );
 
     harness
-        .get_by_role_and_label(Role::Button, "DKMS modules 1")
+        .get_by_role_and_label(Role::Button, "DKMS Modules 1")
         .click();
     harness.run();
 
@@ -291,7 +298,7 @@ fn the_headers_tag_and_its_button_share_one_centre_line() {
 
     let tag = harness.get_by_label("Headers missing").rect();
     let button = harness
-        .get_by_role_and_label(Role::Button, "Queue headers")
+        .get_by_role_and_label(Role::Button, "Queue Headers")
         .rect();
 
     assert!(
@@ -305,7 +312,12 @@ fn a_tall_kernel_row_keeps_set_as_default_and_remove_on_its_title_line() {
     let mut harness = with_dkms(dkms()).harness(KernelsPage::default());
     harness.run();
 
-    let title = harness.get_by_role_and_label(Role::Label, "linux").rect();
+    // The actions centre on the middle of the title's capitals.
+    let capitals = toolbox_gui_kit::testing::capitals_top(&harness, "linux")
+        .zip(toolbox_gui_kit::testing::baseline(&harness, "linux"))
+        .map(|(top, baseline)| f32::midpoint(top, baseline))
+        .expect("the title is painted");
+
     let default = harness
         .get_by_role_and_label(Role::Button, "Set linux as the default boot entry")
         .rect();
@@ -315,11 +327,10 @@ fn a_tall_kernel_row_keeps_set_as_default_and_remove_on_its_title_line() {
         .rect();
 
     assert!(
-        (default.top() - title.top()).abs() < 8.0 && (remove.top() - title.top()).abs() < 8.0,
-        "the title starts at {} and its actions at {} and {}",
-        title.top(),
-        default.top(),
-        remove.top(),
+        (default.center().y - capitals).abs() < 1.0 && (remove.center().y - capitals).abs() < 1.0,
+        "the title's capitals centre at {capitals} and its actions at {} and {}",
+        default.center().y,
+        remove.center().y,
     );
 }
 

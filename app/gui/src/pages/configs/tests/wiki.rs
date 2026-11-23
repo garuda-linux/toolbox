@@ -9,7 +9,7 @@ fn the_wiki_page_waits_in_the_menu_named_after_its_file() {
     harness.run();
     harness.run();
 
-    assert!(harness.query_by_label("Open wiki page").is_none());
+    assert!(harness.query_by_label("Open Wiki Page").is_none());
     harness
         .get_by_role_and_label(Role::Button, "More actions for GRUB default")
         .click();
@@ -17,7 +17,7 @@ fn the_wiki_page_waits_in_the_menu_named_after_its_file() {
 
     assert!(
         harness
-            .query_by_role_and_label(Role::MenuItem, "Open wiki page")
+            .query_by_role_and_label(Role::MenuItem, "Open Wiki Page")
             .is_some()
     );
 }

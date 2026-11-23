@@ -23,15 +23,15 @@ fn disabled(harness: &super::Shown, label: &str) -> bool {
 #[test]
 fn queue_changes_waits_until_the_groups_differ_from_the_start() {
     let mut harness = membership_dialog();
-    assert!(disabled(&harness, "Queue changes"));
+    assert!(disabled(&harness, "Queue Changes"));
 
     harness.get_by_role_and_label(Role::CheckBox, WHEEL).click();
     harness.run();
-    assert!(!disabled(&harness, "Queue changes"));
+    assert!(!disabled(&harness, "Queue Changes"));
 
     harness.get_by_role_and_label(Role::CheckBox, WHEEL).click();
     harness.run();
-    assert!(disabled(&harness, "Queue changes"));
+    assert!(disabled(&harness, "Queue Changes"));
 }
 
 #[test]
@@ -47,7 +47,7 @@ fn the_group_search_narrows_the_boxes_and_keeps_the_ticks() {
 
     harness.get_by_role_and_label(Role::CheckBox, WHEEL).click();
     harness.run();
-    harness.get_by_label("Queue changes").click();
+    harness.get_by_label("Queue Changes").click();
     harness.run();
 
     let groups = ["ada", "video", "wheel"].map(group_name);

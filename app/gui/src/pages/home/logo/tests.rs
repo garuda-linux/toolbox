@@ -25,7 +25,7 @@ fn first_stop(svg: &str) -> Color32 {
 
 #[test]
 fn a_red_accent_leaves_no_violet_behind() {
-    let logo = svg(RED, false);
+    let logo = svg(RED, false, Color32::WHITE);
     for facet in SOURCE_FACETS {
         assert!(!logo.contains(facet), "{facet} is still in the logo");
     }
@@ -33,7 +33,7 @@ fn a_red_accent_leaves_no_violet_behind() {
 
 #[test]
 fn the_black_and_white_details_stay() {
-    let logo = svg(RED, false);
+    let logo = svg(RED, false, Color32::WHITE);
     assert!(logo.contains("#000000") && logo.contains("#ffffff"));
 }
 
@@ -42,13 +42,16 @@ fn the_dark_copy_is_lighter_than_the_light_one() {
     let light =
         |colour: Color32| u32::from(colour.r()) + u32::from(colour.g()) + u32::from(colour.b());
 
-    assert!(light(first_stop(&svg(RED, true))) > light(first_stop(&svg(RED, false))));
+    assert!(
+        light(first_stop(&svg(RED, true, Color32::WHITE)))
+            > light(first_stop(&svg(RED, false, Color32::WHITE)))
+    );
 }
 
 #[test]
 fn the_facets_take_the_hue_of_the_accent() {
     let (hue, _) = hue_chroma(RED);
-    let (stop_hue, _) = hue_chroma(first_stop(&svg(RED, false)));
+    let (stop_hue, _) = hue_chroma(first_stop(&svg(RED, false, Color32::WHITE)));
     let off = (stop_hue - hue).rem_euclid(360.0);
     assert!(
         off.min(360.0 - off) < 10.0,

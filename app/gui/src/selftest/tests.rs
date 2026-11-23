@@ -178,7 +178,6 @@ fn a_shot_waits_out_every_slide_and_fade() {
 
     assert!(!super::runner::settled(Duration::ZERO));
     for seconds in [
-        motion::SEGMENT_SLIDE,
         motion::SHEET_ENTER,
         motion::SHEET_EXIT,
         motion::TOAST_ENTER,

@@ -51,7 +51,7 @@ fn the_list_scrolled_to_the_open_page_starts_on_a_whole_entry() {
     }
 }
 
-/// A heading too long for "On this page" wraps to a second line rather
+/// A heading too long for "On This Page" wraps to a second line rather
 /// than end in "…".
 #[test]
 fn a_long_outline_entry_wraps_to_two_lines() {

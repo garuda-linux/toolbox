@@ -29,8 +29,8 @@ fn live(programs: Programs) -> PageFixture {
 fn without_installer_and_repair_shell_there_is_no_live_heading() {
     let harness = page(live(Programs::default()));
 
-    assert!(harness.query_by_label("Live system").is_none());
-    assert!(harness.query_by_label("Start installer").is_none());
+    assert!(harness.query_by_label("Live System").is_none());
+    assert!(harness.query_by_label("Start Installer").is_none());
 }
 
 #[test]
@@ -40,10 +40,10 @@ fn the_installer_comes_under_the_live_heading() {
         ..Programs::default()
     }));
 
-    assert!(harness.query_by_label("Live system").is_some());
+    assert!(harness.query_by_label("Live System").is_some());
     assert!(
         harness
-            .query_by_role_and_label(Role::Button, "Start installer")
+            .query_by_role_and_label(Role::Button, "Start Installer")
             .is_some()
     );
 }

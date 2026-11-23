@@ -34,6 +34,7 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
         cancel: &cancel,
         confirm: &confirm,
         kind: ButtonKind::Primary,
+        icon: None,
         width: DialogWidth::Small,
     };
 

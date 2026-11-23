@@ -66,8 +66,8 @@ fn the_header_controls_stay_inside_the_card_at_any_width() {
 
         for (role, name) in [
             (Role::TextInput, "Search the report"),
-            (Role::Button, "Copy report"),
-            (Role::Button, "Share report…"),
+            (Role::Button, "Copy Report"),
+            (Role::Button, "Share Report…"),
         ] {
             let control = harness.get_by_role_and_label(role, name).rect();
             assert!(

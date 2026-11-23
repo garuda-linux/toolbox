@@ -7,7 +7,7 @@ use toolbox_gui::{App, Setup};
 
 use crate::common::{HEIGHT, launch_in, window};
 
-/// Wide enough for the page list, the text and "On this page".
+/// Wide enough for the page list, the text and "On This Page".
 const WIDE: egui::Vec2 = egui::vec2(1440.0, 900.0);
 
 fn app_on(page: PageId) -> Harness<'static, App> {

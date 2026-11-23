@@ -24,6 +24,7 @@ fn files_in(home: &Path) -> DesktopFiles {
     DesktopFiles::from_env(move |key| match key {
         "HOME" => Some(OsString::from(&home)),
         "XDG_DATA_DIRS" => Some(home.join("system").into_os_string()),
+        "XDG_CONFIG_DIRS" => Some(home.join("etc-xdg").into_os_string()),
         _ => None,
     })
 }
@@ -31,6 +32,13 @@ fn files_in(home: &Path) -> DesktopFiles {
 fn write(path: &Path, text: &str) {
     fs::create_dir_all(path.parent().unwrap()).unwrap();
     fs::write(path, text).unwrap();
+}
+
+fn write_kdedefaults(home: &Path) {
+    write(
+        &home.join(".config/kdedefaults/kdeglobals"),
+        toolbox_gui_kit::testing::desktop::kde::KDEDEFAULTS_KDEGLOBALS,
+    );
 }
 
 #[test]
@@ -150,4 +158,32 @@ fn the_icon_folders_follow_the_data_folders() {
         ]
         .map(std::path::PathBuf::from)
     );
+}
+
+#[test]
+fn kde_reads_the_icon_theme_from_the_kdedefaults_layer_under_the_users_file() {
+    let home = TempDir::new().unwrap();
+    write(&home.path().join(".config/kdeglobals"), MOKKA_KDEGLOBALS);
+    write_kdedefaults(home.path());
+
+    let desktop = files_in(home.path()).read(Family::Kde).desktop.unwrap();
+
+    assert_eq!(desktop.icon_theme.as_deref(), Some("Tela-circle-dark"));
+    assert_eq!(
+        desktop.font.map(|font| font.family).as_deref(),
+        Some("Inter"),
+        "the user's own file still counts"
+    );
+}
+
+#[test]
+fn the_users_kdeglobals_wins_over_the_kdedefaults_layer() {
+    let home = TempDir::new().unwrap();
+    let own = format!("{MOKKA_KDEGLOBALS}\n[Icons]\nTheme=breeze-dark\n");
+    write(&home.path().join(".config/kdeglobals"), &own);
+    write_kdedefaults(home.path());
+
+    let desktop = files_in(home.path()).read(Family::Kde).desktop.unwrap();
+
+    assert_eq!(desktop.icon_theme.as_deref(), Some("breeze-dark"));
 }

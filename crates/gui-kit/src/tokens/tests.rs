@@ -3,14 +3,24 @@
     reason = "tests build desktop palettes from literal colours"
 )]
 
+mod cards;
 mod code;
+mod darkly;
+mod focus;
+mod frames;
+mod frost;
+mod glass;
+mod kirigami;
 mod letter_softness;
 mod letters;
 mod lights;
+mod readability;
 mod scrim;
+mod shade;
 mod sidebar;
 mod terminal_glass;
 mod tiles;
+mod toolbar;
 
 use egui::{Color32, Theme};
 
@@ -28,33 +38,30 @@ fn with_accent(theme: Theme, accent: Color32) -> Tokens {
 }
 
 #[test]
-fn dark_surfaces_rise_from_sidebar_to_pressed() {
-    let tokens = Tokens::derive(&Palette::fallback(Theme::Dark), Theme::Dark);
+fn the_button_steps_are_darklys_lighter_hover_and_darker_press() {
+    // Darkly's button hover and press (darklyhelper.cpp:848). The fallback
+    // names no focus, so the accent stands in. The hover is not checked
+    // against the window, as a dark Button can round to its grey.
+    let palette = Palette::fallback(Theme::Dark);
+    let tokens = Tokens::derive(&palette, Theme::Dark);
 
-    // The sidebar is the window under the header's black scrim.
-    let steps = [
-        tokens.sidebar,
-        tokens.window,
-        tokens.card,
-        tokens.field,
-        tokens.hover,
-        tokens.pressed,
-    ];
-
-    for pair in steps.windows(2) {
-        let [lower, upper] = pair else { continue };
-        assert!(lightness(*lower) < lightness(*upper), "{steps:?}");
-    }
+    assert_eq!(
+        tokens.button_hover,
+        super::darkly::lighter(tokens.input, 1.05)
+    );
+    assert_eq!(
+        tokens.button_pressed,
+        super::darkly::darker(palette.accent, 1.1)
+    );
 }
 
 #[test]
-fn light_cards_sit_above_the_sidebar_and_the_window() {
+fn light_sidebar_is_the_window_under_the_text_coloured_scrim() {
+    // The header's white scrim is the text colour,
+    // so the light sidebar sits below the window, not above it.
     let tokens = Tokens::derive(&Palette::fallback(Theme::Light), Theme::Light);
 
-    // The sidebar is the window under the header's white scrim.
-    assert!(lightness(tokens.card) > lightness(tokens.sidebar));
-    assert!(lightness(tokens.sidebar) > lightness(tokens.window));
-    assert!(lightness(tokens.window) > lightness(tokens.hover));
+    assert!(lightness(tokens.sidebar) < lightness(tokens.window));
 }
 
 #[test]
@@ -97,35 +104,34 @@ fn text_on_the_selection_tint_stays_readable() {
 }
 
 #[test]
-fn text_on_the_selection_tint_stays_readable_with_a_pale_desktop_accent() {
+fn a_pale_desktop_accent_takes_the_text_for_its_selection() {
+    // The desktop's light selection text misses 3:1 on a pale accent, so the
+    // theme's text, which reads better on it, takes its place.
     let tokens = with_accent(Theme::Light, Color32::from_rgb(0xb8, 0xd8, 0xf8));
 
-    assert!(contrast(tokens.on_tint, tokens.accent_tint) >= 4.5);
+    assert_eq!(tokens.on_tint, tokens.text);
 }
 
 #[test]
-fn the_light_selection_tint_stands_out_as_much_as_the_dark_one() {
-    let [dark, light] = [Theme::Dark, Theme::Light].map(|theme| {
+fn the_selection_tint_stands_out_from_the_sidebar_in_both_themes() {
+    for theme in [Theme::Dark, Theme::Light] {
         let tokens = Tokens::derive(&Palette::fallback(theme), theme);
-        contrast(tokens.accent_tint, tokens.sidebar)
-    });
+        let ratio = contrast(tokens.accent_tint, tokens.sidebar);
 
-    assert!(light >= dark, "light {light}, dark {dark}");
+        assert!(ratio >= 3.0, "{theme:?}: {ratio}");
+    }
 }
 
 #[test]
-fn a_soft_button_on_a_dark_dialog_stands_further_off_than_the_field_fill() {
+fn a_soft_button_on_a_dark_dialog_keeps_the_field_fill() {
     let tokens = Tokens::derive(&Palette::fallback(Theme::Dark), Theme::Dark);
 
-    let (raised, plain) = (
-        contrast(tokens.field_on_raised, tokens.raised),
-        contrast(tokens.field, tokens.raised),
-    );
-
-    assert!(raised > plain, "{raised:.3} against {plain:.3}");
+    // Breeze paints a button's Button fill on any window-coloured surface, so
+    // a dialog's Soft button keeps it.
+    assert_eq!(tokens.field_on_raised, tokens.field);
 
     assert!(
-        lightness(tokens.field_on_raised) < lightness(tokens.hover),
+        lightness(tokens.field_on_raised) < lightness(tokens.button_hover),
         "a hover still shows a step"
     );
 }
@@ -138,133 +144,12 @@ fn a_soft_button_on_a_white_dialog_keeps_the_field_fill() {
 }
 
 #[test]
-fn light_cards_stand_out_from_the_window() {
-    let tokens = Tokens::derive(&Palette::fallback(Theme::Light), Theme::Light);
-
-    let ratio = contrast(tokens.card, tokens.window);
-    assert!(ratio >= 1.07, "{ratio:.3}");
-}
-
-#[test]
 fn a_rim_reads_on_the_field_fill() {
     for theme in [Theme::Dark, Theme::Light] {
         let tokens = Tokens::derive(&Palette::fallback(theme), theme);
 
         let ratio = contrast(tokens.rim, tokens.field);
         assert!(ratio >= 3.0, "{theme:?}: {ratio}");
-    }
-}
-
-pub(super) fn laid_on(over: Color32, under: Color32) -> Color32 {
-    let alpha = f32::from(over.a()) / 255.0;
-    let opaque = Color32::from_rgb(over.r(), over.g(), over.b())
-        .gamma_multiply(1.0 / alpha.max(f32::EPSILON));
-
-    super::mix(
-        under,
-        Color32::from_rgb(opaque.r(), opaque.g(), opaque.b()),
-        alpha,
-    )
-}
-
-#[test]
-fn the_console_frost_is_as_thin_as_its_text_over_the_apps_own_surfaces_allows() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let plain = Tokens::derive(&Palette::fallback(theme), theme);
-
-        // Only the app's own page lies under the Console now, no desktop.
-        let own = [
-            plain.window,
-            plain.sidebar,
-            plain.card,
-            plain.field,
-            plain.hover,
-            plain.pressed,
-        ];
-
-        for backdrop in own {
-            let glass = laid_on(plain.frost, backdrop);
-            let ratio = contrast(plain.text, glass);
-            assert!(ratio >= 4.5, "{theme:?} over {backdrop:?}: {ratio}");
-        }
-
-        assert!(
-            plain.frost.a() <= plain.frost_raised_blurred.a(),
-            "{theme:?}: the Console's frost {} is thicker than a menu's {}",
-            plain.frost.a(),
-            plain.frost_raised_blurred.a()
-        );
-    }
-}
-
-#[test]
-fn every_text_reads_on_the_frosted_menus_over_any_backdrop() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let plain = Tokens::derive(&Palette::fallback(theme), theme);
-        let glass = plain.frost_raised;
-        assert!(glass.a() < 255, "{theme:?}: the page shows through");
-        for backdrop in [Color32::WHITE, Color32::BLACK] {
-            let laid = laid_on(glass, backdrop);
-            let ratio = contrast(plain.secondary, laid);
-            assert!(ratio >= 4.5, "{theme:?} over {backdrop:?}: {ratio}");
-        }
-    }
-}
-
-#[test]
-fn over_the_live_blur_menus_thin_out_and_still_read_on_the_apps_own_surfaces() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let tokens = Tokens::derive(&Palette::fallback(theme), theme);
-        let own = [
-            tokens.window,
-            tokens.sidebar,
-            tokens.card,
-            tokens.raised,
-            tokens.field,
-            tokens.hover,
-            tokens.pressed,
-            super::mix(tokens.card, tokens.accent, 0.5),
-        ];
-
-        let (blurred, veil) = (tokens.frost_raised_blurred, tokens.frost_raised);
-
-        // Light secondary text reaches 4.5:1 on the window with no room to
-        // spare, so a light menu can thin only a little.
-        let thinner = if theme == Theme::Dark { 40 } else { 0 };
-        assert!(
-            u16::from(blurred.a()) + thinner <= u16::from(veil.a()),
-            "{theme:?}: {} is barely thinner than {}",
-            blurred.a(),
-            veil.a()
-        );
-        for backdrop in own {
-            let ratio = contrast(tokens.secondary, laid_on(blurred, backdrop));
-            assert!(ratio >= 4.5, "{theme:?} over {backdrop:?}: {ratio}");
-        }
-    }
-}
-
-#[test]
-fn sharp_content_under_a_frosted_menu_stays_a_faint_ghost() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let glass = Tokens::derive(&Palette::fallback(theme), theme).frost_raised;
-        assert!(
-            glass.a() >= 217,
-            "{theme:?}: {} lets too much through",
-            glass.a()
-        );
-    }
-}
-
-#[test]
-fn the_light_blur_shows_through_as_much_as_the_dark_one() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let tint = Tokens::derive(&Palette::fallback(theme), theme).frost_raised_blurred;
-        assert!(
-            tint.a() <= 191,
-            "{theme:?} tint {} hides the blur",
-            tint.a()
-        );
     }
 }
 
@@ -286,24 +171,16 @@ pub(super) fn every_tokens() -> Vec<(Theme, Tokens)> {
     fallback.into_iter().chain(picked).collect()
 }
 
+/// The accent line is the accent itself, with no 3:1 move. A pale accent
+/// therefore reads faintly on a light fill.
 #[test]
-fn the_focus_ring_reaches_three_to_one_on_every_fill_with_any_accent() {
+fn the_accent_ring_is_the_accent_unmoved() {
     for (theme, accent) in accents() {
         let tokens = with_accent(theme, accent);
-
-        for fill in [
-            tokens.window,
-            tokens.sidebar,
-            tokens.card,
-            tokens.field,
-            tokens.accent_tint,
-        ] {
-            let ratio = contrast(tokens.accent_ring, fill);
-            assert!(
-                ratio >= 3.0,
-                "{theme:?} {accent:?}: ring at {ratio:.2} on {fill:?}"
-            );
-        }
+        assert_eq!(
+            tokens.accent_ring, accent,
+            "{theme:?}: the accent ring is the accent"
+        );
     }
 }
 
@@ -347,7 +224,7 @@ fn status_and_secondary_text_stay_readable_on_every_fill_they_sit_on() {
             tokens.card,
             tokens.window,
             tokens.field,
-            tokens.hover,
+            tokens.button_hover,
             tokens.sidebar,
         ];
 
@@ -368,4 +245,44 @@ fn status_and_secondary_text_stay_readable_on_every_fill_they_sit_on() {
             }
         }
     }
+}
+
+#[test]
+fn the_active_text_is_the_desktops_active_colour_and_the_accent_without_one() {
+    let mut palette = Palette::fallback(Theme::Dark);
+    assert_eq!(
+        Tokens::derive(&palette, Theme::Dark).roles.active,
+        Tokens::derive(&palette, Theme::Dark).accent
+    );
+
+    let peach = Color32::from_rgb(250, 179, 135);
+    palette.active = Some(peach);
+    assert_eq!(Tokens::derive(&palette, Theme::Dark).roles.active, peach);
+}
+
+#[test]
+fn the_notes_take_the_complementary_set_and_the_window_without_one() {
+    let mut palette = Palette::fallback(Theme::Dark);
+    let tokens = Tokens::derive(&palette, Theme::Dark);
+    assert_eq!(tokens.roles.complementary, tokens.window);
+
+    let note = Color32::from_rgb(0x31, 0x36, 0x3b);
+    palette.complementary = Some(note);
+    assert_eq!(
+        Tokens::derive(&palette, Theme::Dark).roles.complementary,
+        note
+    );
+}
+
+/// Whether `scrim` is `colour` at the scrim's own alpha. egui stores the
+/// colour premultiplied, so the check compares it premultiplied, to one level.
+pub(super) fn tinted_as(scrim: Color32, colour: Color32) -> bool {
+    let expected = colour.gamma_multiply(f32::from(scrim.a()) / 255.0);
+    [
+        (scrim.r(), expected.r()),
+        (scrim.g(), expected.g()),
+        (scrim.b(), expected.b()),
+    ]
+    .iter()
+    .all(|(got, want)| got.abs_diff(*want) <= 1)
 }

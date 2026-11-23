@@ -87,7 +87,8 @@ fn await_sample_read(harness: &mut Harness<'static, App>) {
 
 /// A reader the test does not give finishes at once, as on a system with
 /// nothing to read. Without one a page would wait for its read forever,
-/// and its Read again would spin.
+/// and its Read again would spin. Nothing found still lists every repair,
+/// greyed out, as the real check does.
 fn finish_reads(mut setup: Setup, ctx: &egui::Context) -> Setup {
     if setup.snapshot.is_none() {
         setup.snapshot = Some(sample_reader(ctx, &setup.catalogs, None));
@@ -98,7 +99,7 @@ fn finish_reads(mut setup: Setup, ctx: &egui::Context) -> Setup {
             shared_runtime().handle(),
             toolbox_gui::waking::repaint(ctx.clone()),
             "programs",
-            Programs::default,
+            || Programs::found(|_| false),
         ));
     }
 
@@ -142,7 +143,7 @@ pub fn palette(harness: &mut Harness<'static, App>, text: &str) {
     harness.key_press_modifiers(Modifiers::COMMAND, Key::K);
     harness.run();
     harness
-        .get_by_role_and_label(Role::TextInput, "Command palette")
+        .get_by_role_and_label(Role::TextInput, "Command Palette")
         .type_text(text);
     harness.run();
 }
@@ -192,6 +193,18 @@ pub fn no_note(harness: &Harness<'static, App>) -> bool {
     harness
         .query_by_role_and_label(Role::Alert, "Notification")
         .is_none()
+}
+
+/// The footer's count, "1 change queued" or "2 changes queued".
+pub fn queued_shown(harness: &Harness<'static, App>) -> bool {
+    harness
+        .query_all_by_label_contains("change queued")
+        .next()
+        .is_some()
+        || harness
+            .query_all_by_label_contains("changes queued")
+            .next()
+            .is_some()
 }
 
 pub fn wheel<State>(harness: &Harness<'static, State>, at: Pos2, delta: Vec2) {

@@ -1,19 +1,23 @@
 //! One row of a list: its divider, its own id and focus, the name screen
-//! readers hear, the hover fill and the focus ring.
+//! readers hear, the hover fill and the keyboard focus line.
 
+use egui::layers::ShapeIdx;
 use egui::style::ScrollAnimation;
 use egui::{Frame, Id, Margin, Rect, Response, Role, Shape, Ui, UiBuilder, WidgetInfo, vec2};
 
-use super::super::card::{divider, fill_rect, mark_raised, paint_hover, row_frame, shows_hover};
-use super::super::focus::ring_around;
+use super::super::card::{divider, mark_raised, paint_hover, row_frame, shows_hover};
+use super::super::focus::item_focus_line;
 use super::super::layout::{SETTLED, moved, remeasured};
 use super::super::roving;
 use super::{ListItem, RowState, memory};
-use crate::theme::RADIUS;
 use crate::{motion, tokens};
 
 /// Where a row goes and what the keys asked of it.
 #[derive(Clone, Copy, Debug)]
+#[expect(
+    clippy::struct_excessive_bools,
+    reason = "a row keeps each key and state as a flag of its own"
+)]
 pub struct Place {
     /// The list's own id, whose kept offsets a new height makes stale.
     pub list: Id,
@@ -24,6 +28,8 @@ pub struct Place {
     pub fixed: Option<f32>,
     pub toggle: bool,
     pub menu: bool,
+    pub selected: bool,
+    pub keyed: bool,
 }
 
 /// Lays out one row and returns its height with its response.
@@ -70,6 +76,8 @@ where
             toggle: place.toggle || whole.clicked(),
             response: whole,
             menu: place.menu,
+            selected: place.selected,
+            keyed: place.keyed,
         };
 
         let dragging = ui.ctx().dragged_id().is_some();
@@ -86,8 +94,8 @@ where
     let response = inner.response;
     response.widget_info(|| WidgetInfo::labeled(Role::ListItem, ui.is_enabled(), &name));
 
-    focus(ui, &response);
-    paint_hover(ui, backdrop, &response);
+    focus(ui, &response, place.selected);
+    paint_fill(ui, backdrop, &response, place.selected);
 
     // The divider above counts, so the rows below are placed past it.
     let height = response.rect.bottom() - start;
@@ -128,9 +136,31 @@ fn centred_frame(ui: &mut Ui, height: f32, place: Place, body: impl FnOnce(&mut 
         });
 }
 
+/// A selected row fills its whole cell with the selection colour, lighter
+/// under the pointer, as Darkly's item view draws a selected item. Other
+/// rows keep the hover fill.
+fn paint_fill(ui: &Ui, backdrop: ShapeIdx, response: &Response, selected: bool) {
+    if !selected {
+        paint_hover(ui, backdrop, response);
+        return;
+    }
+
+    let dragging = ui.ctx().dragged_id().is_some();
+    let lit = shows_hover(response.hovered(), response.contains_pointer(), dragging);
+    let tokens = tokens::current(ui.ctx());
+    let fill = if lit {
+        tokens.tint_hover
+    } else {
+        tokens.selection
+    };
+
+    ui.painter()
+        .set(backdrop, Shape::rect_filled(response.rect, 0.0, fill));
+}
+
 /// A click on the row's empty part focuses it (Rerun's list items), and
 /// a focused row scrolls into view.
-fn focus(ui: &Ui, response: &Response) {
+fn focus(ui: &Ui, response: &Response, selected: bool) {
     if response.clicked() {
         response.request_focus();
     }
@@ -148,10 +178,7 @@ fn focus(ui: &Ui, response: &Response) {
         }
     }
 
-    if response.has_focus() {
-        let ring = fill_rect(response.rect, ui.pixels_per_point());
-        ring_around(ui, ring, RADIUS);
-    }
+    item_focus_line(ui, response, response.rect, selected);
 }
 
 /// The height row `id` took when last laid out.

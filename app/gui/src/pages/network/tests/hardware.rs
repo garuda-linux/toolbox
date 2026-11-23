@@ -79,9 +79,9 @@ fn copy_all_ends_at_the_right_edge_as_the_line_buttons_do() {
     let mut harness = page();
     tab(&mut harness, "Hardware");
 
-    let all = rect_of(&harness, Role::Button, "Copy all");
+    let all = rect_of(&harness, Role::Button, "Copy All");
     let line = harness
-        .query_all_by_label("Copy this line")
+        .query_all_by_label("Copy This Line")
         .next()
         .expect("a device row")
         .rect();
@@ -89,5 +89,28 @@ fn copy_all_ends_at_the_right_edge_as_the_line_buttons_do() {
     assert!(
         (all.right() - line.right()).abs() < 1.0,
         "Copy all at {all:?} does not end where Copy this line at {line:?} does"
+    );
+}
+
+#[test]
+fn the_intro_is_inset_from_the_card_edge_as_the_lines_are() {
+    let mut harness = page();
+    tab(&mut harness, "Hardware");
+
+    let intro = harness
+        .get_by_label("Network devices as lspci and lsusb list them.")
+        .rect();
+
+    let line = harness
+        .query_all_by_label("Wireless")
+        .next()
+        .expect("a device row")
+        .rect();
+
+    assert!(
+        (intro.left() - line.left()).abs() < 1.0,
+        "the intro starts at {} and the line at {}",
+        intro.left(),
+        line.left()
     );
 }

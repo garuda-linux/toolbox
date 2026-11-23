@@ -50,8 +50,8 @@ fn a_row_below_a_divider_has_its_last_baselines_room_clear_above_its_capitals() 
     let shape = painted_text(&harness, BELOW).expect("the title is painted");
     let title = shape.galley.rect.translate(shape.pos.to_vec2());
     let capitals = letters_top(&mut harness, title).expect("the title shows light letters");
-    let outline = tokens::current(&harness.ctx).outline;
-    let divider = lines_in(&harness, outline)
+    let tokens = tokens::current(&harness.ctx);
+    let divider = lines_in(&harness, tokens.row_divider)
         .into_iter()
         .map(|[start, _]| start.y)
         .filter(|y| *y < capitals)

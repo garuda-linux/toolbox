@@ -44,7 +44,7 @@ pub fn install(ctx: &Context) {
     }
 
     widgets::install_focus(ctx);
-    ctx.set_fonts(fonts::definitions(&[], None));
+    ctx.set_fonts(fonts::definitions(&fonts::UiFaces::default(), None));
     fonts::apply_sizes(ctx, None, None);
     theme::apply(
         ctx,

@@ -1,47 +1,56 @@
 //! What a page shows instead of its list: nothing to show, or a list
-//! that could not be read with a way to read it again.
+//! that could not be read with a way to read it again. Kirigami's
+//! `PlaceholderMessage`: one monochrome icon, a heading, an explanation and
+//! a button, all centred.
 
-use egui::{Label, Response, Ui};
+use egui::{Label, Response, Sense, Ui, vec2};
 
-use super::icon_tile::{TileSize, icon_tile};
-use super::status_tile::status_tile;
-use super::{ButtonKind, Tone, pill_button, rich};
-use crate::fonts::{BODY, Weight};
-use crate::icons::Icon;
+use super::buttons::pill_button;
+use super::{ButtonKind, rich};
+use crate::fonts::{BODY, SECTION_TITLE, Weight};
+use crate::icons::{self, Icon};
 use crate::tokens;
 
-/// A title a little larger than body text, as a heading of the state.
-const TITLE_SCALE: f32 = 1.15;
+/// Kirigami's default placeholder icon, `iconSizes.huge` times 1.5.
+const ICON: f32 = 96.0;
+/// `largeSpacing` between the items of the column.
+const LARGE_SPACING: f32 = 8.0;
+/// The button's `topMargin` on top of the column's spacing, a `gridUnit`.
+const ACTION_GAP: f32 = 26.0;
 
-/// `icon` above `title` and `body`, centred in the page, on a large tile:
-/// a state glyph as its status mark, any other icon in the page's hue.
-/// The icon only adorns the title, so screen readers skip it.
+/// `icon` above `title` and `body`, centred in the page, as Kirigami's
+/// `PlaceholderMessage` lays them out. The icon only adorns the title, so
+/// screen readers skip it.
 pub fn empty_state(ui: &mut Ui, icon: Icon, title: &str, body: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
     ui.add_space(tokens.sizes.block_gap);
     ui.vertical_centered(|ui| {
-        if let Some(tone) = Tone::of_state_glyph(icon) {
-            _ = status_tile(ui, TileSize::Large, tone);
-        } else {
-            _ = icon_tile(ui, TileSize::Large, icon);
+        let (rect, _) = ui.allocate_exact_size(vec2(ICON, ICON), Sense::hover());
+        let theme = icons::theme_in_use(ui.ctx());
+        icon.image(theme.as_deref(), tokens.dim)
+            .fit_to_exact_size(vec2(ICON, ICON))
+            .paint_at(ui, rect);
+
+        let heading = (!title.is_empty()).then(|| {
+            ui.add_space(LARGE_SPACING);
+            ui.add(
+                Label::new(rich(
+                    ui,
+                    title,
+                    Weight::Bold,
+                    SECTION_TITLE,
+                    tokens.secondary,
+                ))
+                .wrap(),
+            )
+        });
+
+        if !body.is_empty() {
+            ui.add_space(LARGE_SPACING);
+            ui.add(Label::new(rich(ui, body, Weight::Regular, BODY, tokens.secondary)).wrap());
         }
 
-        ui.add_space(tokens.sizes.control_gap);
-        let title = ui.add(
-            Label::new(rich(
-                ui,
-                title,
-                Weight::SemiBold,
-                BODY * TITLE_SCALE,
-                tokens.text,
-            ))
-            .wrap(),
-        );
-
-        ui.add_space(tokens.sizes.tight_gap);
-
-        ui.add(Label::new(rich(ui, body, Weight::Regular, BODY, tokens.secondary)).wrap());
-        title
+        heading.unwrap_or_else(|| ui.allocate_response(vec2(0.0, 0.0), Sense::hover()))
     })
     .inner
 }
@@ -74,7 +83,7 @@ pub fn empty_state_with(
 }
 
 fn action_button(ui: &mut Ui, action: &str) -> Response {
-    ui.add_space(tokens::current(ui.ctx()).sizes.card_gap);
+    ui.add_space(ACTION_GAP);
     ui.vertical_centered(|ui| pill_button(ui, action, ButtonKind::Soft))
         .inner
 }

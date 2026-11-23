@@ -38,7 +38,17 @@ fn shell() {
     results.add(dark.try_snapshot("shell/collapsed_dark"));
 
     let mut tools = app(Theme::Dark, Setup::default());
+
+    // The Console slides in before the palette opens over it, so each key
+    // settles first.
     tools.key_press_modifiers(Modifiers::COMMAND, Key::J);
+    tools.run();
+    assert!(
+        tools
+            .query_by_label("No changes are being applied")
+            .is_some(),
+        "the Console is not open before the palette"
+    );
     tools.key_press_modifiers(Modifiers::COMMAND, Key::K);
     tools.run();
     results.add(tools.try_snapshot("shell/console_and_palette_dark"));
@@ -80,7 +90,7 @@ fn changes_panel() {
     harness.run();
     results.add(harness.try_snapshot("changes/popover_dark"));
 
-    harness.get_by_label("Remove all…").click();
+    harness.get_by_label("Remove All…").click();
     harness.run();
     results.add(harness.try_snapshot("changes/question_dark"));
 }
@@ -253,23 +263,12 @@ fn services_page() {
 fn discover_page() {
     use crate::discover::{Table, chip, pictured, source_catalogs, source_tree, system};
 
-    // A 4×4 JPEG XL picture of one colour, as Arch's AppStream cache has.
-    const PINK: [u8; 35] = [
-        0xff, 0x0a, 0x18, 0x10, 0x10, 0x09, 0x08, 0x00, 0x01, 0x00, 0x5c, 0x00, 0x4b, 0x18, 0x8b,
-        0x15, 0xc2, 0x09, 0x32, 0x6f, 0x54, 0xfc, 0x07, 0x50, 0x0f, 0x00, 0x00, 0xd8, 0x47, 0x2a,
-        0x00, 0x3c, 0x10, 0x00, 0x00,
-    ];
-
-    let dir = tempfile::TempDir::new().unwrap();
-    let jxl = dir.path().join("aerc.jxl");
-    std::fs::write(&jxl, PINK).unwrap();
-
-    // Each picture is its own app's, so the shot shows no wrong one. aerc's
-    // is the one colour above, a pink square that takes the letter's place.
-    let table = Table(vec![
-        ("mumble", source_tree().join("icons/gaming/mumble.svg")),
-        ("aerc", jxl),
-    ]);
+    // Only Mumble has a picture. aerc has none in Arch's AppStream cache,
+    // so its row shows the letter tile, as a real system does.
+    let table = Table(vec![(
+        "mumble",
+        source_tree().join("icons/gaming/mumble.svg"),
+    )]);
 
     let mut offered = system();
     let mut sync = offered
@@ -321,7 +320,7 @@ fn frost_in_light() {
     let mut dialog = app(Theme::Light, setup());
     dialog.get_by_label("Review").click();
     dialog.run();
-    dialog.get_by_label("Remove all…").click();
+    dialog.get_by_label("Remove All…").click();
     dialog.run();
     results.add(dialog.try_snapshot("frost/question_light"));
 

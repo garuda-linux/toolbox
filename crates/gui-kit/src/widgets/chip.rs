@@ -1,23 +1,35 @@
 mod line;
 
 use egui::text::{LayoutJob, TextFormat};
-use egui::{Align, Color32, Id, Rect, Response, Role, Sense, Ui, Vec2, WidgetInfo, pos2, vec2};
+use egui::{
+    Align, Color32, Id, Rect, Response, Role, Sense, Stroke, StrokeKind, Ui, Vec2, WidgetInfo,
+    pos2, vec2,
+};
 pub use line::{chips, counted_chips, named_chips, toggle_chips};
 
+use super::focus::focus_from_keyboard;
 use super::mark_word::mark_and_word;
-use super::press::{Pointer, hover_amount};
-use super::{focus_ring, line, roving};
-use crate::fonts::{self, CAPTION, SMALL, Weight};
-use crate::tokens::{self, Tokens};
+use super::press::{ItemLook, Pointer};
+use super::{line, rich, roving};
+use crate::fonts::{self, BODY, SMALL, Weight};
+use crate::tokens::{self, Tokens, mix};
 
-const CHIP_HEIGHT: f32 = 32.0;
-const CHIP_RADIUS: u8 = 16;
-const CHIP_PADDING_X: f32 = 14.0;
-const CHIP_GAP: f32 = 7.0;
-pub(super) const TAG_HEIGHT: f32 = 24.0;
-const TAG_RADIUS: u8 = 12;
-const TAG_PADDING_X: f32 = 10.0;
-pub(super) const TAG_SCALE: f32 = CAPTION;
+/// Kirigami.Chip as the desktop style lays it out at a 10 pt font
+/// (measured from a render).
+const CHIP_HEIGHT: f32 = 27.0;
+pub(super) const CHIP_RADIUS: u8 = 5;
+const CHIP_PADDING_X: f32 = 8.0;
+/// Kirigami's `smallSpacing` between the chip's parts.
+const CHIP_GAP: f32 = 4.0;
+const FRAME_CONTRAST: f32 = 0.2;
+const CHECKED_FILL: f32 = 0.2;
+const CHECKED_FRAME: f32 = 0.9;
+const PRESSED_FILL: f32 = 0.3;
+const PRESSED_FRAME: f32 = 0.7;
+/// A tag is a Kirigami.Chip that takes no click.
+pub(super) const TAG_HEIGHT: f32 = CHIP_HEIGHT;
+const TAG_PADDING_X: f32 = CHIP_PADDING_X;
+pub(super) const TAG_SCALE: f32 = BODY;
 const DOT: f32 = 7.0;
 const DOT_GAP: f32 = 7.0;
 
@@ -44,23 +56,27 @@ impl Tone {
         }
     }
 
-    pub(super) fn colors(self, tokens: &Tokens) -> (Color32, Color32) {
-        match self {
-            Self::Accent => (tokens.accent_soft, tokens.accent),
-            Self::Neutral => (tokens.hover, tokens.secondary),
-            Self::Warning => (tokens.tag_wash(tokens.warning), tokens.warning),
-            Self::Success => (tokens.tag_wash(tokens.success), tokens.success),
-            Self::Error => (tokens.tag_wash(tokens.error), tokens.error),
-        }
+    /// A neutral tag is a plain chip, a toned one a checked chip in its
+    /// tone's colour.
+    pub(super) fn look(self, tokens: &Tokens, pointer: Pointer) -> ItemLook {
+        let tint = match self {
+            Self::Neutral => return chip_look(tokens, tokens.accent, false, pointer),
+            Self::Accent => tokens.accent,
+            Self::Warning => tokens.warning,
+            Self::Success => tokens.success,
+            Self::Error => tokens.error,
+        };
+
+        chip_look(tokens, tint, true, pointer)
     }
 }
 
-/// A selected chip takes the accent tint, as the sidebar's entry does.
+/// A checked chip takes the highlight, as Kirigami's `DefaultChipBackground`.
 pub fn chip(ui: &mut Ui, label: &str, count: Option<&str>, selected: bool) -> Response {
     chip_in(ui, label, count, selected, None)
 }
 
-/// A chip of a [`chip_row`]: `member` is its id and whether it is the
+/// A chip of a `chip_row`: `member` is its id and whether it is the
 /// group's Tab stop. A chip alone takes no part in a stop.
 fn chip_in(
     ui: &mut Ui,
@@ -70,26 +86,21 @@ fn chip_in(
     member: Option<(Id, bool)>,
 ) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let (fill, ink, muted) = if selected {
-        (tokens.accent_tint, tokens.on_tint, tokens.on_tint)
-    } else {
-        (tokens.field, tokens.text, tokens.secondary)
-    };
 
     // The painter of a chip does not take the fade of a disabled Ui, so the
     // chip fades its own colours.
-    let fade = |colour: Color32| {
-        if ui.is_enabled() {
+    let (enabled, visuals) = (ui.is_enabled(), ui.visuals().clone());
+    let fade = move |colour: Color32| {
+        if enabled {
             colour
         } else {
-            ui.visuals().disable(colour)
+            visuals.disable(colour)
         }
     };
 
-    let (fill, ink, muted) = (fade(fill), fade(ink), fade(muted));
-
-    let name = line(ui, label, Weight::Medium, SMALL, ink);
-    let number = count.map(|count| line(ui, count, Weight::Medium, SMALL, muted));
+    let ink = fade(tokens.text);
+    let name = line(ui, label, Weight::Regular, BODY, ink);
+    let number = count.map(|count| line(ui, count, Weight::Regular, BODY, ink));
     let number_width = number
         .as_ref()
         .map_or(0.0, |number| number.size().x + CHIP_GAP);
@@ -111,16 +122,22 @@ fn chip_in(
     response.widget_info(|| WidgetInfo::selected(Role::Button, ui.is_enabled(), selected, &spoken));
 
     if ui.is_rect_visible(rect) {
-        let pointer = Pointer::of(&response);
-        let fill = chip_fill(
-            &tokens,
-            fill,
-            selected,
-            pointer,
-            hover_amount(ui, &response, pointer),
-        );
+        let focused = focus_from_keyboard(ui, &response) && ui.is_enabled();
+        let look = chip_look(&tokens, tokens.accent, selected, Pointer::of(&response));
+        paint_chip(ui, rect, focused_look(look, &tokens, focused), &fade);
 
-        ui.painter().rect_filled(rect, CHIP_RADIUS, fill);
+        // The text on a focus fill is laid out again in the colour that
+        // reads on it, as a galley keeps the colour it was laid out in.
+        let (name, number, ink) = if focused {
+            let on_focus = fade(tokens.on_focus);
+            (
+                line(ui, label, Weight::Regular, BODY, on_focus),
+                count.map(|count| line(ui, count, Weight::Regular, BODY, on_focus)),
+                on_focus,
+            )
+        } else {
+            (name, number, ink)
+        };
 
         let top = rect.center().y - name.size().y / 2.0;
         let left = rect.left() + CHIP_PADDING_X;
@@ -128,10 +145,8 @@ fn chip_in(
         ui.painter().galley(pos2(left, top), name, ink);
         if let Some(number) = number {
             let at = pos2(left + name_width + CHIP_GAP, top);
-            ui.painter().galley(at, number, muted);
+            ui.painter().galley(at, number, ink);
         }
-
-        focus_ring(ui, &response, CHIP_RADIUS);
     }
 
     response
@@ -149,9 +164,18 @@ pub fn queued_tag(ui: &mut Ui, label: &str, tone: Tone) -> Response {
 /// Used for a state every row of a list shows, where a coloured pill would repeat down the page.
 pub fn status_dot(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let text = line(ui, label, Weight::Medium, SMALL, tokens.secondary);
+    let room = (ui.available_width() - DOT - DOT_GAP).max(0.0);
+    let full = line(ui, label, Weight::Medium, SMALL, tokens.secondary);
+    let cut = room < full.size().x;
+    let text = if cut {
+        let styled = rich(ui, label, Weight::Medium, SMALL, tokens.secondary);
+        super::text::cut(ui, styled, room)
+    } else {
+        full
+    };
+
     let dot = tone.dot(&tokens);
-    mark_and_word(
+    let response = mark_and_word(
         ui,
         (Vec2::splat(DOT), DOT_GAP),
         text,
@@ -159,7 +183,13 @@ pub fn status_dot(ui: &mut Ui, label: &str, tone: Tone) -> Response {
         |ui, mark| {
             ui.painter().circle_filled(mark.center(), DOT / 2.0, dot);
         },
-    )
+    );
+
+    if cut {
+        response.on_hover_text(label)
+    } else {
+        response
+    }
 }
 
 /// [`status_dot`] whose word goes on with `rest` in the regular weight,
@@ -189,47 +219,81 @@ pub fn status_dot_then(ui: &mut Ui, label: &str, rest: &str, tone: Tone) -> Resp
     )
 }
 
-/// A chip's fill: a hover shows on an unselected chip only, a press on
-/// either, so a selected chip still answers the finger.
-pub(super) fn chip_fill(
+/// Kirigami's `DefaultChipBackground`, with `tint` where it takes the
+/// highlight: the window's own fill and a frame step at rest, the hover
+/// colour along the frame under the pointer, a fifth of the tint checked
+/// and nearly all of it along the frame.
+pub(super) fn chip_look(
     tokens: &Tokens,
-    rest: Color32,
-    selected: bool,
+    tint: Color32,
+    checked: bool,
     pointer: Pointer,
-    hover: f32,
-) -> Color32 {
-    match (pointer, selected) {
-        (Pointer::Pressed, false) => tokens.pressed,
-        (Pointer::Pressed, true) => tokens.tint_pressed,
-        (_, true) => rest,
-        (_, false) => rest.lerp_to_gamma(tokens.hover, hover),
+) -> ItemLook {
+    let (fill, frame) = match (checked, pointer) {
+        (_, Pointer::Pressed) => (PRESSED_FILL, PRESSED_FRAME),
+        (true, _) => (CHECKED_FILL, CHECKED_FRAME),
+        (false, Pointer::Hovered) => {
+            return ItemLook {
+                fill: Color32::TRANSPARENT,
+                frame: tokens.accent,
+            };
+        }
+        (false, Pointer::Rest) => {
+            return ItemLook {
+                fill: Color32::TRANSPARENT,
+                frame: mix(tokens.window, tokens.text, FRAME_CONTRAST),
+            };
+        }
+    };
+
+    ItemLook {
+        fill: tint.gamma_multiply(fill),
+        frame: tint.gamma_multiply(frame),
     }
 }
 
-pub fn tag(ui: &mut Ui, text: &str, tone: Tone) -> Response {
-    let tokens = tokens::current(ui.ctx());
-    painted_tag(ui, text, Sense::hover(), Role::Label, |_| {
-        tone.colors(&tokens)
-    })
+/// A chip with keyboard focus fills with the focus colour, as a focused
+/// button does, and keeps its frame.
+const fn focused_look(look: ItemLook, tokens: &Tokens, focused: bool) -> ItemLook {
+    if focused {
+        ItemLook {
+            fill: tokens.focus_fill,
+            frame: look.frame,
+        }
+    } else {
+        look
+    }
 }
 
-/// The ink reads 4.5:1 under the pointer and when pressed, on a selected chip's accent tint.
-pub fn link_tag(ui: &mut Ui, text: &str, tone: Tone) -> Response {
-    let tokens = tokens::current(ui.ctx());
-    let response = painted_tag(
-        ui,
-        text,
-        Sense::click(),
-        Role::Link,
-        |response| match Pointer::of(response) {
-            Pointer::Rest => tone.colors(&tokens),
-            Pointer::Hovered => (tokens.accent_tint, tokens.on_tint),
-            Pointer::Pressed => (tokens.tint_pressed, tokens.on_tint),
-        },
+pub(super) fn paint_chip(ui: &Ui, rect: Rect, look: ItemLook, fade: &impl Fn(Color32) -> Color32) {
+    ui.painter().rect(
+        rect,
+        CHIP_RADIUS,
+        fade(look.fill),
+        Stroke::new(1.0, fade(look.frame)),
+        StrokeKind::Inside,
     );
+}
 
-    focus_ring(ui, &response, TAG_RADIUS);
-    response.on_hover_cursor(egui::CursorIcon::PointingHand)
+/// A Kirigami.Chip that takes no click. A tone other than Neutral marks
+/// the chip as a checked one marks it, in the tone's colour.
+pub fn tag(ui: &mut Ui, text: &str, tone: Tone) -> Response {
+    let tokens = tokens::current(ui.ctx());
+    painted_tag(ui, text, tokens.text, |_| tone.look(&tokens, Pointer::Rest))
+}
+
+/// A [`tag`] of a neutral tone, or on a selected row, where the selection
+/// fill is behind it and the words and the frame take the selection text.
+pub fn tag_on_row(ui: &mut Ui, text: &str, selected: bool) -> Response {
+    if !selected {
+        return tag(ui, text, Tone::Neutral);
+    }
+
+    let tokens = tokens::current(ui.ctx());
+    painted_tag(ui, text, tokens.on_tint, |_| ItemLook {
+        fill: Color32::TRANSPARENT,
+        frame: tokens.on_tint,
+    })
 }
 
 /// Where a tag's words start so they share the baseline of the small
@@ -242,20 +306,20 @@ fn words_top(ui: &Ui, middle: f32) -> f32 {
     };
 
     let (beside_height, beside_baseline) = capital(Weight::Medium, SMALL);
-    let (_, own_baseline) = capital(Weight::SemiBold, TAG_SCALE);
+    let (_, own_baseline) = capital(Weight::Regular, TAG_SCALE);
     middle - beside_height / 2.0 + beside_baseline - own_baseline
 }
 
+/// A tag drawn in `rest_ink` at rest. It only hovers.
 fn painted_tag(
     ui: &mut Ui,
     text: &str,
-    sense: Sense,
-    role: Role,
-    colours: impl FnOnce(&Response) -> (Color32, Color32),
+    rest_ink: Color32,
+    look: impl FnOnce(Pointer) -> ItemLook,
 ) -> Response {
     // The ink waits for the pointer, so the line is measured before it
     // is laid out in its colour. egui keeps both layouts cached.
-    let measured = line(ui, text, Weight::SemiBold, TAG_SCALE, Color32::PLACEHOLDER);
+    let measured = line(ui, text, Weight::Regular, TAG_SCALE, Color32::PLACEHOLDER);
     let width = TAG_PADDING_X.mul_add(2.0, measured.size().x);
 
     // The pill sits on the line's middle, as a status dot's words do. On
@@ -265,16 +329,20 @@ fn painted_tag(
     let (id, taken) = ui.allocate_space(vec2(width, slot));
     let rect = Rect::from_center_size(taken.center(), vec2(width, TAG_HEIGHT));
 
-    let response = ui.interact(rect, id, sense);
-    response.widget_info(|| WidgetInfo::labeled(role, ui.is_enabled(), text));
+    let response = ui.interact(rect, id, Sense::hover());
+    response.widget_info(|| WidgetInfo::labeled(Role::Label, ui.is_enabled(), text));
 
     if ui.is_rect_visible(rect) {
-        let (fill, ink) = colours(&response);
-        let galley = line(ui, text, Weight::SemiBold, TAG_SCALE, ink);
-        ui.painter().rect_filled(rect, TAG_RADIUS, fill);
+        let tokens = tokens::current(ui.ctx());
+        let focused = focus_from_keyboard(ui, &response) && ui.is_enabled();
+        let words_ink = if focused { tokens.on_focus } else { rest_ink };
+
+        let galley = line(ui, text, Weight::Regular, TAG_SCALE, words_ink);
+        let look = focused_look(look(Pointer::of(&response)), &tokens, focused);
+        paint_chip(ui, rect, look, &|colour| colour);
         let left = rect.center().x - galley.size().x / 2.0;
         let position = pos2(left, words_top(ui, rect.center().y));
-        ui.painter().galley(position, galley, ink);
+        ui.painter().galley(position, galley, words_ink);
     }
 
     response

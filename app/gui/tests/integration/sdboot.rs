@@ -11,7 +11,7 @@ use toolbox_gui::App;
 use toolbox_plan::sdboot::{LoaderEntry, LoaderSetting, LoaderSettings, SdBootMenu, sections};
 use toolbox_system::{BootMenuSource, Host, MenuRead};
 
-use crate::common::Fixture;
+use crate::common::{Fixture, queued_shown};
 use crate::system::step_until;
 
 const LOADER_CONF: &str = toolbox_plan::testing::sdboot::LOADER_CONF;
@@ -114,7 +114,7 @@ fn a_restored_loader_change_the_file_meets_leaves_without_the_page() {
     let harness = fixture.harness();
 
     step_until(harness, "the met change to leave", |harness| {
-        harness.query_by_label("change queued").is_none()
+        !queued_shown(harness)
     });
 
     assert_eq!(source.0.load(Ordering::SeqCst), 1);

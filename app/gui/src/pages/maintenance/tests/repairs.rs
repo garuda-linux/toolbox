@@ -29,14 +29,14 @@ fn a_repair_that_wipes_asks_first_and_runs_on_its_danger_button() {
     assert_eq!(sent(&harness), [], "nothing runs before the answer");
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Run Full reset?")
+            .query_by_role_and_label(Role::Dialog, "Run Full Reset?")
             .is_some()
     );
 
     harness.snapshot("maintenance/repair_question_dark");
 
     harness
-        .get_by_role_and_label(Role::Button, "Full reset")
+        .get_by_role_and_label(Role::Button, "Full Reset")
         .click();
     harness.run();
 
@@ -81,7 +81,7 @@ fn without_garuda_update_its_repairs_show_but_rest() {
     let mut harness = page(with(programs, Maintenance::default()));
     open_tab(&mut harness, "Repairs");
 
-    assert!(harness.query_by_label("Reset audio").is_some());
+    assert!(harness.query_by_label("Reset Audio").is_some());
     assert_eq!(
         disabled(&harness, "Run"),
         [false, false, true, true, true, true, true, true]
@@ -107,7 +107,7 @@ fn a_greyed_repair_greys_its_whole_row() {
     open_tab(&mut harness, "Repairs");
 
     assert_eq!(disabled(&harness, "System health check"), [false]);
-    assert_eq!(disabled(&harness, "Reset audio"), [true]);
+    assert_eq!(disabled(&harness, "Reset Audio"), [true]);
     assert!(
         disabled(&harness, "Needs garuda-update")
             .iter()

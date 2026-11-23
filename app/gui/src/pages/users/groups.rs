@@ -7,8 +7,8 @@ use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, ListItem, RowHeights, RowList, Tone, named_pill_button, pill_button, rich,
-    row_height, split_row, status_dot, text_block_height,
+    ButtonKind, ListItem, RowHeights, RowList, Tone, named_pill_button, pill_button, push_height,
+    rich, row_height, split_row, status_dot, text_block_height_with,
 };
 
 use super::dialogs::{AddGroup, Dialog, RemoveGroup};
@@ -107,7 +107,7 @@ fn toolbar(ui: &mut Ui, dialog: &mut Option<Dialog>, known: bool) {
 }
 
 fn group_height(ui: &Ui) -> f32 {
-    row_height(ui, text_block_height(ui, 1))
+    row_height(ui, text_block_height_with(ui, 1, push_height(ui)))
 }
 
 fn row(ui: &mut Ui, context: &PageContext<'_>, group: &GroupRow, dialog: &mut Option<Dialog>) {

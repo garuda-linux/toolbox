@@ -99,7 +99,7 @@ url = "https://wiki.archlinux.org/title/Unified_kernel_image"
 
 [[section]]
 id = "display-and-window-managers"
-title = "Display and window managers"
+title = "Display and Window Managers"
 icon = "window"
 
 [[section.entry]]
@@ -229,7 +229,7 @@ url = "https://wiki.archlinux.org/title/MangoHud"
 
 [[section]]
 id = "garuda-tools"
-title = "Garuda tools"
+title = "Garuda Tools"
 icon = "tools"
 
 [[section.entry]]
@@ -269,7 +269,7 @@ url = "https://wiki.archlinux.org/title/Zram"
 
 [[section]]
 id = "graphics-and-display"
-title = "Graphics and display"
+title = "Graphics and Display"
 icon = "monitor"
 
 [[section.entry]]
@@ -398,7 +398,7 @@ url = "https://wiki.archlinux.org/title/OpenSSH"
 
 [[section]]
 id = "package-management"
-title = "Package management"
+title = "Package Management"
 icon = "package"
 
 [[section.entry]]
@@ -680,7 +680,7 @@ url = "https://wiki.archlinux.org/title/Plymouth"
 
 [[section]]
 id = "user-environment"
-title = "User environment"
+title = "User Environment"
 icon = "utilities-terminal"
 
 [[section.entry]]
@@ -798,7 +798,7 @@ url = "https://wiki.archlinux.org/title/Zsh"
 
 [[section]]
 id = "users-and-authentication"
-title = "Users and authentication"
+title = "Users and Authentication"
 icon = "user-others"
 
 [[section.entry]]

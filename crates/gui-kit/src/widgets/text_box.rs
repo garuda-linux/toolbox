@@ -5,12 +5,12 @@
 use egui::text::CCursor;
 use egui::{Align, AsIdSalt, Frame, Margin, Response, ScrollArea, Shape, TextEdit, Ui};
 
-use super::field::{PADDING_X, paint_field};
-use crate::theme::CONTROL_RADIUS;
+use super::field::{FRAME_WIDTH, paint_field};
+use crate::theme::FIELD_RADIUS;
 
-/// Room above and below the text, so its first line does not touch the
-/// box's top.
-const PADDING_Y: i8 = 10;
+/// Room above and below the text, the line edit's 7 px frame, so its first
+/// line does not touch the box's top.
+const PADDING_Y: i8 = FRAME_WIDTH;
 
 /// `edit` in a filled box as wide as the room, named `name`, that
 /// scrolls both ways once its text is taller than `max_height`. The
@@ -65,7 +65,7 @@ fn boxed(
     // The fill depends on the focus the text only reports once drawn.
     let fill_slot = ui.painter().add(Shape::Noop);
     let framed = Frame::NONE
-        .inner_margin(Margin::symmetric(PADDING_X, PADDING_Y))
+        .inner_margin(Margin::symmetric(FRAME_WIDTH, PADDING_Y))
         .show(ui, |ui| {
             ScrollArea::both()
                 .id_salt(("text_box", salt))
@@ -93,13 +93,13 @@ fn boxed(
 
     let response = framed.inner;
 
-    // The ring goes round the whole box, not the text that holds the
+    // The focus halo goes round the whole box, not the text that holds the
     // focus inside it.
     paint_field(
         ui,
         fill_slot,
         framed.response.rect,
-        CONTROL_RADIUS,
+        FIELD_RADIUS,
         response.has_focus(),
     );
 

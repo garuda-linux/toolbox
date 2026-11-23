@@ -33,7 +33,7 @@ pub(super) fn app_on(height: f32, page: PageId) -> Harness<'static, App> {
     harness
 }
 
-fn cut_edges(harness: &Harness<'_, App>) -> Vec<f32> {
+pub(super) fn cut_edges(harness: &Harness<'_, App>) -> Vec<f32> {
     let edge = tokens::current(&harness.ctx).sidebar_edge;
     lines_in(harness, edge)
         .iter()
@@ -48,7 +48,7 @@ fn cut_edges(harness: &Harness<'_, App>) -> Vec<f32> {
 
 /// The gradients the last frame laid over the sidebar from its own fill
 /// to nothing.
-fn fades(harness: &Harness<'_, App>) -> Vec<Rect> {
+pub(super) fn fades(harness: &Harness<'_, App>) -> Vec<Rect> {
     let sidebar = tokens::current(&harness.ctx).sidebar;
     harness
         .output()
@@ -62,7 +62,9 @@ fn fades(harness: &Harness<'_, App>) -> Vec<Rect> {
             let colours: Vec<_> = mesh.vertices.iter().map(|vertex| vertex.color).collect();
             let rect = mesh.calc_bounds();
             (rect.right() <= SIDEBAR_WIDTH + 1.0
-                && colours.contains(&sidebar)
+                && colours
+                    .iter()
+                    .any(|colour| is_fill_at_some_alpha(*colour, sidebar))
                 && colours.contains(&egui::Color32::TRANSPARENT))
             .then_some(rect)
         })
@@ -135,7 +137,10 @@ pub(super) fn cover_at(harness: &Harness<'_, App>, y: f32) -> f32 {
             };
 
             (mesh.calc_bounds().right() <= SIDEBAR_WIDTH + 1.0
-                && mesh.vertices.iter().any(|vertex| vertex.color == sidebar))
+                && mesh
+                    .vertices
+                    .iter()
+                    .any(|vertex| is_fill_at_some_alpha(vertex.color, sidebar)))
             .then_some(mesh)
         })
         .filter_map(|mesh| {
@@ -206,7 +211,7 @@ fn the_last_entry_above_a_bottom_cut_fades_alike_in_both_themes() {
     }
 
     assert!(
-        (dark - light).abs() <= 0.4,
+        (dark - light).abs() <= 0.05,
         "dark {dark}:1 against light {light}:1"
     );
 }
@@ -323,4 +328,20 @@ fn a_collapsed_divider_shows_while_half_its_next_icon_shows() {
             }
         }
     }
+}
+
+/// Whether `colour` is the sidebar's fill at some alpha, as the cut lays it
+/// over the last entries: each channel is the fill's, scaled by the alpha.
+/// The cut's fill is weaker in a light theme, so the exact colour is not
+/// matched.
+fn is_fill_at_some_alpha(colour: egui::Color32, fill: egui::Color32) -> bool {
+    let alpha = f32::from(colour.a()) / 255.0;
+    colour.a() > 0
+        && [
+            (colour.r(), fill.r()),
+            (colour.g(), fill.g()),
+            (colour.b(), fill.b()),
+        ]
+        .iter()
+        .all(|(got, want)| f32::from(*want).mul_add(-alpha, f32::from(*got)).abs() <= 1.5)
 }

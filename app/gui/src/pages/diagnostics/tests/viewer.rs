@@ -46,7 +46,7 @@ fn the_rows_fold_while_a_report_shows_and_unfold_on_request() {
     let mut harness = page(report());
     assert!(harness.query_by_label("Collect Full report").is_none());
 
-    harness.get_by_label("Collect another report").click();
+    harness.get_by_label("Collect Another Report").click();
     harness.run();
 
     assert!(harness.query_by_label("Collect Full report").is_some());

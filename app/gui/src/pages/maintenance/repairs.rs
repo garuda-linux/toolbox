@@ -60,7 +60,7 @@ impl Asked {
 }
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
-    heading(ui, icons::GAMES_SOLVE, "maintenance-repairs");
+    heading(ui, "maintenance-repairs");
     let Some(programs) = context.home.programs else {
         super::waiting(ui, "maintenance-repairs", Repair::ALL.len());
         return;
@@ -176,6 +176,7 @@ pub(super) fn ask(
         cancel: &cancel,
         confirm: &name,
         kind: ButtonKind::Danger,
+        icon: None,
         width: DialogWidth::Small,
     };
 

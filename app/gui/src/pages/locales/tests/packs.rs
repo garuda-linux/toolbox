@@ -6,7 +6,7 @@ use super::{Shown, page, system};
 fn packs_tab() -> Shown {
     let mut harness = page(system());
     harness
-        .get_by_role_and_label(Role::RadioButton, "Language packs")
+        .get_by_role_and_label(Role::RadioButton, "Language Packs")
         .click();
     harness.run();
     harness
@@ -40,7 +40,7 @@ fn a_packs_search_without_a_match_offers_to_clear_it() {
 
     assert!(harness.query_by_label("No language pack matches").is_some());
     harness
-        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear Search")
         .last()
         .expect("the empty state's Clear search")
         .click();
@@ -82,7 +82,7 @@ fn a_locale_names_its_character_set_once() {
             .is_some()
     );
 
-    harness.get_by_label("UTF-8 only").click();
+    harness.get_by_label("UTF-8 Only").click();
     harness.run();
     assert!(harness.query_by_label("de_DE, ISO-8859-1").is_some());
 }
@@ -98,7 +98,7 @@ fn a_locale_search_without_a_match_offers_to_clear_it() {
     harness.run();
 
     harness
-        .query_all_by_role_and_label(Role::Button, "Clear search")
+        .query_all_by_role_and_label(Role::Button, "Clear Search")
         .last()
         .expect("the empty state's Clear search")
         .click();

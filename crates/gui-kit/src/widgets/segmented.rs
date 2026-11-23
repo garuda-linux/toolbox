@@ -1,37 +1,66 @@
-//! Options side by side in one pill, the chosen one raised, as views of
-//! one page (System and User units). A radio group to a screen reader:
-//! one Tab stop, the arrow keys move the choice.
+//! Options side by side as rounded tabs, the chosen one a pill raised above
+//! the others, as views of one page (System and User units). The tabs join
+//! each other.
+//! A radio group to a screen reader: one Tab stop, the arrow keys move the
+//! choice.
 
 use std::sync::Arc;
 
 use egui::{
     AsIdSalt, Color32, CornerRadius, EventFilter, Galley, Id, Key, Modifiers, Rect, Response, Role,
-    Sense, StrokeKind, Ui, UiBuilder, WidgetInfo, pos2, vec2,
+    Sense, Shadow, Shape, Stroke, StrokeKind, Ui, UiBuilder, WidgetInfo, pos2, vec2,
 };
 
-use super::card::light_rim;
-use super::press::{Pointer, hover_amount};
-use super::{Choice, focus_ring, line};
+use super::buttons::look::BLUR_PER_RADIUS;
+use super::focus::focus_from_keyboard;
+use super::press::Pointer;
+use super::{Choice, line, push_height};
 use crate::fonts::{BODY, Weight};
-use crate::motion;
-use crate::theme::{PILL_HEIGHT, PILL_RADIUS};
+use crate::theme::{RADIUS, TAB_RADIUS};
 use crate::tokens::{self, Tokens};
 
-/// Between the pill's edge and a segment.
-const INSET: f32 = 3.0;
-const PADDING_X: f32 = 16.0;
-/// Round ends of a segment, half its height inside the inset.
-const SEGMENT_RADIUS: u8 = 13;
+/// Breeze's `TabBar_TabMinWidth` (breezemetrics.h:131).
+const TAB_MIN_WIDTH: f32 = 80.0;
+/// Breeze's `TabBar_TabMarginWidth`, which Qt's `PM_TabBarTabHSpace` takes
+/// on each side of the text (breezemetrics.h:130, breezestyle.cpp:821). The
+/// chosen pill sits inside the tab by `PILL_INSET`, so the tab adds that
+/// inset to keep the text margin inside the pill.
+const TAB_MARGIN_X: f32 = 8.0 + PILL_INSET;
+/// Breeze's `TabBar_TabMarginHeight`, which `PM_TabBarTabVSpace` takes
+/// above and below the text (breezemetrics.h:129, breezestyle.cpp:823).
+const TAB_MARGIN_Y: f32 = 4.0;
+/// Breeze's `TabBar_TabOverlap`: each tab runs this far under the next
+/// (breezemetrics.h:135, breezestyle.cpp:817).
+const TAB_OVERLAP: f32 = 1.0;
+/// Darkly's pill of the chosen tab sits this far inside the tab rect
+/// (darklystyle.cpp:7354-7355).
+pub(super) const PILL_INSET: f32 = 4.0;
+/// Above and below, the pill keeps the inset of a field's or button's face,
+/// so a tab is as tall as the controls beside it in a toolbar.
+const PILL_INSET_Y: f32 = 2.0;
+
+/// How far every tab's pill sits inside its rect, for a row that places
+/// the tabs by what they paint.
+pub const fn tab_pill_inset() -> f32 {
+    PILL_INSET
+}
 
 /// How wide [`segmented`] draws `labels`, for a row that places it before
 /// drawing.
 pub fn segmented_width(ui: &Ui, labels: &[&str]) -> f32 {
-    let segments: f32 = labels
+    let widths: Vec<f32> = labels
         .iter()
         .map(|label| segment_width(&label_galley(ui, label)))
-        .sum();
+        .collect();
 
-    INSET.mul_add(2.0, segments)
+    total_width(&widths)
+}
+
+/// The width of tabs side by side, each one over the next by the overlap.
+fn total_width(widths: &[f32]) -> f32 {
+    let between = widths.len().saturating_sub(1);
+    let overlap = f32::from(u16::try_from(between).unwrap_or(u16::MAX)) * TAB_OVERLAP;
+    widths.iter().sum::<f32>() - overlap
 }
 
 fn label_galley(ui: &Ui, label: &str) -> Arc<Galley> {
@@ -39,10 +68,21 @@ fn label_galley(ui: &Ui, label: &str) -> Arc<Galley> {
 }
 
 fn segment_width(galley: &Galley) -> f32 {
-    PADDING_X.mul_add(2.0, galley.size().x)
+    TAB_MARGIN_X
+        .mul_add(2.0, galley.size().x)
+        .max(TAB_MIN_WIDTH)
 }
 
-/// One segment per option, the one equal to `current` raised, in a group
+/// Tabs are a push button high, not Breeze's `TabBar_TabMinHeight` of 30
+/// (breezemetrics.h:132).
+fn tab_height(ui: &Ui, galleys: &[Arc<Galley>]) -> f32 {
+    galleys
+        .iter()
+        .map(|galley| TAB_MARGIN_Y.mul_add(2.0, galley.size().y))
+        .fold(push_height(ui), f32::max)
+}
+
+/// One tab per option, the one equal to `current` chosen, in a group
 /// called `name`. Returns the option clicked or moved to this frame.
 pub fn segmented<T>(
     ui: &mut Ui,
@@ -61,10 +101,11 @@ where
 
     let widths: Vec<f32> = galleys.iter().map(|galley| segment_width(galley)).collect();
 
-    // Taken here, so a wrapping row moves the whole pill to the next line.
-    let total = INSET.mul_add(2.0, widths.iter().sum::<f32>());
-    let height = PILL_HEIGHT;
-    let (outer, response) = ui.allocate_exact_size(vec2(total, height), Sense::hover());
+    // Taken here, so a wrapping row moves the whole group to the next line.
+    let total = total_width(&widths);
+    let (outer, response) =
+        ui.allocate_exact_size(vec2(total, tab_height(ui, &galleys)), Sense::hover());
+
     let builder = UiBuilder::new()
         .max_rect(outer)
         .id_salt(("segmented", salt))
@@ -74,6 +115,19 @@ where
     let group = ui.new_child(builder);
     let value = segments(&group, outer, (galleys, widths), options, current);
     Choice { response, value }
+}
+
+/// The tabs end to end across `outer`, each joined to the next by the overlap.
+fn tab_rects(outer: Rect, widths: &[f32]) -> Vec<Rect> {
+    let mut left = outer.left();
+    widths
+        .iter()
+        .map(|width| {
+            let rect = Rect::from_min_size(pos2(left, outer.top()), vec2(*width, outer.height()));
+            left += width - TAB_OVERLAP;
+            rect
+        })
+        .collect()
 }
 
 fn segments<T>(
@@ -87,45 +141,63 @@ where
     T: PartialEq + Copy,
 {
     let tokens = tokens::current(ui.ctx());
-    ui.painter().rect_filled(outer, PILL_RADIUS, tokens.field);
+    let rects = tab_rects(outer, &widths);
 
-    let mut left = outer.left() + INSET;
-    let rects: Vec<Rect> = widths
+    let (shown, mut picked) = keyed(ui, options, current);
+    let responses: Vec<Response> = options
         .iter()
-        .map(|width| {
-            let rect = Rect::from_min_size(
-                pos2(left, outer.top() + INSET),
-                vec2(*width, INSET.mul_add(-2.0, outer.height())),
-            );
-
-            left += width;
-            rect
+        .zip(&rects)
+        .enumerate()
+        .map(|(index, ((_, label), rect))| {
+            segment(
+                ui,
+                segment_id(ui, label),
+                *rect,
+                label,
+                Some(index) == shown,
+            )
         })
         .collect();
 
-    let (shown, mut picked) = keyed(ui, options, current);
-    if let Some(rect) = shown.and_then(|index| rects.get(index)) {
-        pill(ui, outer.left(), *rect, picked.is_some());
-    }
+    // Breeze paints the chosen tab last, over the tabs it overlaps.
+    let order = (0..options.len())
+        .filter(|index| Some(*index) != shown)
+        .chain(shown);
 
-    for (index, ((value, label), (galley, rect))) in options
-        .iter()
-        .zip(galleys.into_iter().zip(rects))
-        .enumerate()
-    {
+    for index in order {
+        let (Some(rect), Some(galley), Some(response), Some((value, _))) = (
+            rects.get(index),
+            galleys.get(index),
+            responses.get(index),
+            options.get(index),
+        ) else {
+            continue;
+        };
+
         let chosen = Some(index) == shown;
-        let response = segment(ui, segment_id(ui, label), rect, label, chosen);
-        let ink = if chosen || response.hovered() {
-            tokens.text
+        let corners = corners(chosen);
+        let focused = focus_from_keyboard(ui, response) && ui.is_enabled();
+        paint_tab(
+            ui,
+            &tokens,
+            (*rect, corners),
+            (chosen, Pointer::of(response)),
+            focused,
+        );
+
+        // The label is laid out once in the text colour, so a focused tab
+        // paints its own colour over it.
+        let ink = if focused {
+            tokens.on_focus
         } else {
-            tokens.secondary
+            tokens.text
         };
 
         ui.painter()
-            .galley(rect.center() - galley.size() / 2.0, galley, ink);
+            .galley(rect.center() - galley.size() / 2.0, Arc::clone(galley), ink);
 
         if response.has_focus() {
-            lock_arrows(ui, &response);
+            lock_arrows(ui, response);
         }
 
         if response.clicked() {
@@ -162,41 +234,6 @@ where
     }
 }
 
-/// The raised pill under the chosen segment, at `rect`. A click slides
-/// it there, a key moves it at once, as keys never wait for motion.
-///
-/// The slide runs on the offset from `track_left`, so a track that moves
-/// as a whole carries the pill along at once.
-fn pill(ui: &Ui, track_left: f32, rect: Rect, by_key: bool) {
-    let ctx = ui.ctx();
-    let time = if by_key {
-        0.0
-    } else {
-        motion::duration(ctx, motion::SEGMENT_SLIDE)
-    };
-
-    let id = ui.scope_id().with("pill");
-    let offset = ctx.animate_value_with_time(id.with("offset"), rect.left() - track_left, time);
-    let width = ctx.animate_value_with_time(id.with("width"), rect.width(), time);
-    let at = Rect::from_min_size(
-        pos2(track_left + offset, rect.top()),
-        vec2(width, rect.height()),
-    );
-
-    let tokens = tokens::current(ctx);
-
-    // White on pale grey needs a rim to show which one is chosen.
-    let rim = light_rim(ui, tokens.rim);
-
-    ui.painter().rect(
-        at,
-        CornerRadius::same(SEGMENT_RADIUS),
-        tokens.raised,
-        rim,
-        StrokeKind::Inside,
-    );
-}
-
 fn segment_id(ui: &Ui, label: &str) -> Id {
     ui.scope_id().with(("segment", label))
 }
@@ -204,35 +241,89 @@ fn segment_id(ui: &Ui, label: &str) -> Id {
 /// Only the chosen segment takes focus, so Tab passes the group in one
 /// step. A click still picks the others.
 fn segment(ui: &Ui, id: Id, rect: Rect, label: &str, chosen: bool) -> Response {
-    let tokens = tokens::current(ui.ctx());
     let sense = if chosen { Sense::click() } else { Sense::CLICK };
     let response = ui.interact(rect, id, sense);
     response
         .widget_info(|| WidgetInfo::selected(Role::RadioButton, ui.is_enabled(), chosen, label));
 
-    let pointer = Pointer::of(&response);
-    let fill = segment_fill(
-        &tokens,
-        chosen,
-        pointer,
-        hover_amount(ui, &response, pointer),
-    );
-
-    ui.painter()
-        .rect_filled(rect, CornerRadius::same(SEGMENT_RADIUS), fill);
-
-    focus_ring(ui, &response, SEGMENT_RADIUS);
     response
 }
 
-/// A segment's own fill: only another one than the chosen, while pressed.
-/// The chosen one sits on the sliding [`pill`], and a hover shows in the
-/// text alone.
-pub(super) fn segment_fill(tokens: &Tokens, chosen: bool, pointer: Pointer, hover: f32) -> Color32 {
-    match (chosen, pointer) {
-        (false, Pointer::Pressed) => tokens.pressed,
-        (true, _) => Color32::TRANSPARENT,
-        (false, _) => Color32::TRANSPARENT.lerp_to_gamma(tokens.hover, hover),
+/// The chosen tab is a pill inset from its rect, with Darkly's shadow and
+/// a 1 px outline. An unchosen one has no fill of its own unless the pointer or
+/// the keyboard is on it, and then fills the same inset pill, so it is
+/// never larger than the choice beside it.
+fn paint_tab(
+    ui: &Ui,
+    tokens: &Tokens,
+    (rect, corners): (Rect, CornerRadius),
+    (is_chosen, pointer): (bool, Pointer),
+    focused: bool,
+) {
+    let body = rect.shrink2(vec2(PILL_INSET, PILL_INSET_Y));
+
+    let shapes = ui.painter();
+    if is_chosen {
+        shapes.add(pill_shadow(tokens, body, corners));
+    }
+
+    shapes.rect_filled(body, corners, tab_fill(tokens, is_chosen, pointer, focused));
+    if is_chosen {
+        // The fill alone sits near the window colour on flat palettes.
+        shapes.rect_stroke(
+            body,
+            corners,
+            Stroke::new(1.0, tokens.card_outline),
+            StrokeKind::Inside,
+        );
+    }
+}
+
+/// Darkly's shadow under the chosen pill, one pixel down. Qt blurs it 6
+/// and egui draws twice Qt's blur (darklystyle.cpp:7355-7360,
+/// darklyhelper.cpp:1791-1808).
+fn pill_shadow(tokens: &Tokens, reach: Rect, corners: CornerRadius) -> Shape {
+    let shadow = Shadow {
+        offset: [0, 1],
+        blur: 6 * BLUR_PER_RADIUS,
+        spread: 0,
+        color: tokens.control_shadow,
+    };
+
+    Shape::from(shadow.as_shape(reach, corners))
+}
+
+/// Every corner of a tab is rounded: the chosen one as the pill of
+/// `RADIUS`, the others at `TAB_RADIUS`.
+pub(super) const fn corners(chosen: bool) -> CornerRadius {
+    CornerRadius::same(if chosen { RADIUS } else { TAB_RADIUS })
+}
+
+/// The fill of a tab. The chosen one is the push-button colour, the fill
+/// that stands apart from the window on a flat theme. An unchosen one has
+/// no fill at rest and the item hover under the pointer.
+pub(super) const fn segment_fill(tokens: &Tokens, chosen: bool, pointer: Pointer) -> Color32 {
+    if chosen {
+        tokens.chosen_tab
+    } else if pointer.is_under() {
+        tokens.item_hover
+    } else {
+        Color32::TRANSPARENT
+    }
+}
+
+/// A tab with keyboard focus fills with the focus colour, as a focused
+/// button does. Otherwise it is [`segment_fill`].
+pub(super) const fn tab_fill(
+    tokens: &Tokens,
+    chosen: bool,
+    pointer: Pointer,
+    focused: bool,
+) -> Color32 {
+    if focused {
+        tokens.focus_fill
+    } else {
+        segment_fill(tokens, chosen, pointer)
     }
 }
 

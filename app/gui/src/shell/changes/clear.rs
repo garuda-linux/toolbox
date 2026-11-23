@@ -21,7 +21,7 @@ pub fn ask_to_clear(
 
     let cancel = i18n::text(ctx, "changes-keep");
 
-    let confirm = i18n::text(ctx, "changes-remove-all");
+    let confirm = i18n::text_with(ctx, "changes-remove-all", &[("count", Arg::from(count))]);
     let texts = Question {
         title: &title,
         close: &close,
@@ -29,6 +29,7 @@ pub fn ask_to_clear(
         cancel: &cancel,
         confirm: &confirm,
         kind: ButtonKind::Danger,
+        icon: None,
         width: DialogWidth::Small,
     };
 

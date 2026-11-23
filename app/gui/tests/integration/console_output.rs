@@ -84,7 +84,7 @@ fn choose(harness: &mut Harness<'static, App>, item: &str) {
 fn copy_puts_the_output_on_the_clipboard_and_says_so() {
     let (mut harness, _runtime) = applied();
 
-    choose(&mut harness, "Copy output");
+    choose(&mut harness, "Copy Output");
 
     let copied = harness.output().platform_output.commands.iter().any(|command| {
         matches!(command, egui::OutputCommand::CopyText(text) if text.contains("Proceed with installation?"))
@@ -103,12 +103,12 @@ fn copy_puts_the_output_on_the_clipboard_and_says_so() {
 fn share_asks_with_the_output_then_shows_the_link() {
     let (mut harness, _runtime) = applied();
 
-    choose(&mut harness, "Share output…");
+    choose(&mut harness, "Share Output…");
     harness.run();
 
     assert!(
         harness
-            .query_by_role_and_label(Role::Dialog, "Upload this output?")
+            .query_by_role_and_label(Role::Dialog, "Upload This Output?")
             .is_some()
     );
     assert!(
@@ -121,14 +121,14 @@ fn share_asks_with_the_output_then_shows_the_link() {
 
     harness.get_by_label("Upload").click();
     harness.step();
-    wait_for(&mut harness, "Copy link");
+    wait_for(&mut harness, "Copy Link");
 }
 
 #[test]
 fn clear_empties_the_output_and_its_menu_goes() {
     let (mut harness, _runtime) = applied();
 
-    choose(&mut harness, "Clear output");
+    choose(&mut harness, "Clear Output");
     harness.run();
 
     assert!(harness.query_by_label(MENU).is_none());
@@ -146,22 +146,22 @@ fn snapshots_of_the_menu_the_question_and_the_link_row() {
     harness.run();
     harness.snapshot("console/menu_dark");
 
-    harness.get_by_label("Share output…").click();
+    harness.get_by_label("Share Output…").click();
     harness.run();
     harness.snapshot("console/share_question_dark");
 
     harness.get_by_label("Upload").click();
     harness.step();
-    wait_for(&mut harness, "Copy link");
+    wait_for(&mut harness, "Copy Link");
     harness.snapshot("console/shared_dark");
 }
 
 fn shared(harness: &mut Harness<'static, App>) {
-    choose(harness, "Share output…");
+    choose(harness, "Share Output…");
     harness.run();
     harness.get_by_label("Upload").click();
     harness.step();
-    wait_for(harness, "Copy link");
+    wait_for(harness, "Copy Link");
 }
 
 #[test]
@@ -172,7 +172,7 @@ fn the_link_takes_one_row_and_the_terminal_keeps_its_room() {
     shared(&mut harness);
 
     let after = harness.get_by_label("Console output").rect().height();
-    let row = harness.get_by_label("Copy link").rect().height();
+    let row = harness.get_by_label("Copy Link").rect().height();
     let spacing = harness.ctx.global_style().spacing.item_spacing.y;
     let gap = toolbox_gui_kit::tokens::current(&harness.ctx)
         .sizes
@@ -185,7 +185,7 @@ fn the_link_takes_one_row_and_the_terminal_keeps_its_room() {
         "the terminal went from {before} to {after}, a row is {row}"
     );
     assert!(
-        harness.query_by_label("Delete now…").is_none(),
+        harness.query_by_label("Delete Now…").is_none(),
         "the delete link sits in the row"
     );
 }
@@ -208,7 +208,7 @@ fn with_the_setting_on_the_link_goes_to_the_clipboard() {
 fn clear_empties_the_steps_too_and_the_console_is_idle() {
     let (mut harness, _runtime) = applied();
 
-    choose(&mut harness, "Clear output");
+    choose(&mut harness, "Clear Output");
     harness.run();
 
     assert!(harness.query_by_label("Done").is_none(), "the step stayed");
@@ -243,13 +243,13 @@ fn a_plan_that_printed_nothing_can_be_cleared_but_not_copied() {
     harness.get_by_label(MENU).click();
     harness.run();
 
-    let copy = harness.get_by_label("Copy output");
+    let copy = harness.get_by_label("Copy Output");
     assert!(
         copy.accesskit_node().is_disabled(),
         "copy offered without output"
     );
 
-    harness.get_by_label("Clear output").click();
+    harness.get_by_label("Clear Output").click();
     harness.run();
     assert!(
         harness
@@ -289,7 +289,7 @@ fn the_console_with_output_in_light_and_the_copy_note() {
     let (mut harness, _runtime) = applied_with(succeeding_script(), false, Theme::Light);
     harness.snapshot("console/applied_light");
 
-    choose(&mut harness, "Copy output");
+    choose(&mut harness, "Copy Output");
     harness.run();
     harness.snapshot("console/copied_toast_light");
 }

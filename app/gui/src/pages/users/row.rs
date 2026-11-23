@@ -4,8 +4,9 @@ use toolbox_core::features::users::view::LockAction;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
-    ButtonKind, RowState, Tone, menu_item, named_pill_button, pill_button, rich, row_height,
-    row_menu, split_row_in, status_dot, text_block_height,
+    ButtonKind, RowState, Tone, icon_button_width, menu_item, named_pill_button, pill_button,
+    pill_width, push_height, rich, row_height, row_menu, split_row_in, status_dot,
+    text_block_height_with,
 };
 
 use super::dialogs::{Dialog, Edit, Membership, PasswordForm, RemoveUser};
@@ -20,7 +21,7 @@ use crate::users::Users;
 const CONTROLS_WIDTH: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.row_actions_narrow;
 
 pub fn height(ui: &Ui) -> f32 {
-    row_height(ui, text_block_height(ui, 2))
+    row_height(ui, text_block_height_with(ui, 2, push_height(ui)))
 }
 
 pub fn show(
@@ -38,10 +39,20 @@ pub fn show(
     split_row_in(
         ui,
         state.row,
-        CONTROLS_WIDTH,
+        controls_width(ui, removing),
         |ui| words(ui, context, row),
         |ui| controls(ui, context, (row, state), dialog),
     );
+}
+
+/// The width the controls take: the button of the row's state (Edit, or
+/// Unqueue Removal for a row queued for removal), the gap and the ⋯ button.
+/// A reservation for the widest text would push the text under the controls
+/// on a narrow window.
+pub(super) fn controls_width(ui: &Ui, removing: bool) -> f32 {
+    let id = if removing { "users-keep" } else { "users-edit" };
+    let button = pill_width(ui, &i18n::text(ui.ctx(), id));
+    button + ui.tokens().sizes.control_gap + icon_button_width()
 }
 
 fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow) {
@@ -151,7 +162,6 @@ fn controls(
         }
     }
 
-    ui.add_space(ui.tokens().sizes.control_gap);
     row_menu(ui, state, &more, |ui| menu(ui, context, row, dialog));
 }
 

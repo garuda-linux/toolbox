@@ -119,12 +119,12 @@ fn a_reset_copies_the_chosen_settings_into_the_home() {
     let mut fixture = maintenance();
     let harness = fixture.harness();
 
-    open_tab(harness, "Reset settings");
+    open_tab(harness, "Reset Settings");
     harness
         .get_by_role_and_label(Role::CheckBox, "Kitty")
         .click();
     harness.run();
-    harness.get_by_label("Reset selected…").click();
+    harness.get_by_label("Reset Selected…").click();
     harness.run();
     harness.get_by_label("Reset").click();
     step_until(
@@ -145,7 +145,7 @@ fn repairs_shows_the_repairs_of_the_installed_programs() {
 
     open_tab(harness, "Repairs");
 
-    assert!(harness.query_by_label("Reset audio").is_some());
+    assert!(harness.query_by_label("Reset Audio").is_some());
     assert!(harness.query_by_label("Install garuda-update").is_none());
 }
 
@@ -164,7 +164,7 @@ fn the_palette_opens_the_tab_that_holds_a_repair() {
 
     pick(harness, "reset audio");
 
-    assert!(harness.query_by_label("Reset audio").is_some());
+    assert!(harness.query_by_label("Reset Audio").is_some());
     assert!(harness.query_by_label("Update system").is_none());
 }
 
@@ -178,5 +178,5 @@ fn the_palette_finds_an_operation_and_the_reset() {
     assert!(harness.query_by_label("Remove orphans").is_some());
 
     pick(harness, "reset settings");
-    assert!(harness.query_by_label("Application settings").is_some());
+    assert!(harness.query_by_label("Application Settings").is_some());
 }

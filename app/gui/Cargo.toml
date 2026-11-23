@@ -34,6 +34,7 @@ winit-csd.workspace = true
 toolbox-news.workspace = true
 toolbox-catalog.workspace = true
 toolbox-appmenu.workspace = true
+toolbox-backdrop.workspace = true
 toolbox-cli.workspace = true
 toolbox-commands.workspace = true
 toolbox-config.workspace = true

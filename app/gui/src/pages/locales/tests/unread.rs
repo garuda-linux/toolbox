@@ -91,7 +91,7 @@ fn a_system_without_locale_gen_says_so_without_read_again() {
     );
     assert_eq!(
         harness
-            .query_all_by_role_and_label(Role::Button, "Read again")
+            .query_all_by_role_and_label(Role::Button, "Read Again")
             .count(),
         1,
         "only the header's"

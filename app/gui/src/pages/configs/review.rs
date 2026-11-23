@@ -8,13 +8,13 @@ use egui::{
     WidgetInfo, pos2, vec2,
 };
 use toolbox_core::features::configs::session::{Changes, EditedFile, Session};
-use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
 use toolbox_gui_kit::tokens::Tokens;
 use toolbox_gui_kit::widgets::{
     ButtonKind, DialogWidth, ModalWrapper, Pending, Question, Tone, banner, mono_small,
-    pill_button, question, right_buttons,
+    pill_button, pill_button_with_icon, pill_width, pill_width_with_icon, question, right_buttons,
 };
+use toolbox_gui_kit::{UiExt as _, icons};
 
 use self::lines::{Covered, Kind, Row};
 use super::texts;
@@ -73,7 +73,12 @@ pub fn show(ctx: &Context, context: &PageContext<'_>, session: &Session) -> bool
         ask_discard(ctx, context, &path);
     }
 
-    outcome.closed
+    let cancelled = cancel_review().get(ctx).is_some();
+    if cancelled {
+        cancel_review().release(ctx);
+    }
+
+    outcome.closed || cancelled
 }
 
 fn discard_question() -> Pending<()> {
@@ -105,6 +110,7 @@ fn ask_discard(ctx: &Context, context: &PageContext<'_>, path: &str) {
         cancel: &cancel,
         confirm: &confirm,
         kind: ButtonKind::Danger,
+        icon: None,
         width: DialogWidth::Small,
     };
 
@@ -318,15 +324,22 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<
         text("configs-save"),
     );
 
-    let labels: Vec<&str> = [discard.as_str(), edit_again.as_str()]
-        .into_iter()
-        .chain(failed.then_some(compare_again.as_str()))
-        .chain([save.as_str()])
-        .collect();
+    let cancel = text("configs-review-cancel");
+    let widths: Vec<f32> = [
+        pill_width_with_icon(ui, &discard),
+        pill_width(ui, &edit_again),
+    ]
+    .into_iter()
+    .chain(failed.then(|| pill_width(ui, &compare_again)))
+    .chain([
+        pill_width_with_icon(ui, &save),
+        pill_width_with_icon(ui, &cancel),
+    ])
+    .collect();
 
-    right_buttons(ui, &labels, |ui| {
+    right_buttons(ui, &widths, |ui| {
         let mut chosen = None;
-        if pill_button(ui, &discard, ButtonKind::Soft).clicked() {
+        if pill_button_with_icon(ui, &discard, ButtonKind::Soft, icons::EDIT_DELETE).clicked() {
             discard_question().hold(ui.ctx(), ());
         }
 
@@ -344,13 +357,24 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<
         }
 
         let saved = ui
-            .enabled_ui(idle, |ui| pill_button(ui, &save, ButtonKind::Primary))
+            .enabled_ui(idle, |ui| {
+                pill_button_with_icon(ui, &save, ButtonKind::Primary, icons::DIALOG_OK_APPLY)
+            })
             .inner;
 
         if saved.clicked() {
             chosen = Some(ConfigsCommand::Apply);
         }
 
+        if pill_button_with_icon(ui, &cancel, ButtonKind::Soft, icons::DIALOG_CANCEL).clicked() {
+            cancel_review().hold(ui.ctx(), ());
+        }
+
         chosen
     })
+}
+
+/// Cancel closes the review and keeps the changes, as the title's close does.
+fn cancel_review() -> Pending<()> {
+    Pending::new(Id::unique("toolbox_gui::configs::review::cancel"))
 }

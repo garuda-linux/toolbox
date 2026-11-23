@@ -1,18 +1,20 @@
+mod chips;
 mod unread;
 
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use egui::{Ui, vec2};
-use toolbox_core::features::packages::list::{Catalog, Counts, Filter};
+use chips::{AurChip, ChipCounts, filters, idle_filters};
+use egui::Ui;
+use toolbox_core::features::packages::list::{Catalog, Filter, View};
 use toolbox_gui_kit::row_cache::Same;
 use toolbox_gui_kit::widgets::{
-    ListItem, RowHeights, RowList, Rows, Tone, chip, dimmed, empty_state, page_toolbar,
+    ListItem, RowHeights, RowList, Rows, Tone, dimmed, empty_state, page_toolbar,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
 pub use unread::unreadable;
-use unread::{placeholder, unreadable_index, unreadable_page, waiting};
+use unread::{placeholder, unreadable_index, unreadable_page};
 
 use super::row::{self, PackageRow, Row};
 use super::{PackagesPage, Updates, aur, shows_aur};
@@ -20,25 +22,11 @@ use crate::command::{AppCommand, PackagesCommand};
 use crate::i18n;
 use crate::packages::{Packages, Read};
 use crate::page::PageId;
+use crate::pages::PageContext;
 use crate::pages::header::{refresh_header_reading, search};
 use crate::pages::rows::refusal_banner;
 use crate::pages::search_empty::search_empty_state;
-use crate::pages::{PageContext, plan_running};
 use crate::refused::Shown as _;
-
-struct AurChip {
-    /// `None` until the AUR's copy is read.
-    count: Option<usize>,
-}
-
-/// What the chips count. A count that is not known shows none.
-struct ChipCounts {
-    /// `None` without pacman's databases.
-    repository: Option<Counts>,
-    updates_known: bool,
-    /// `None` while the AUR is off.
-    aur: Option<AurChip>,
-}
 
 /// The rows of `places` in `entries`, each built only when the list draws
 /// it: the AUR alone has about a hundred thousand.
@@ -101,47 +89,71 @@ pub fn header(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
     );
 }
 
-pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
-    let _ui = tracing::trace_span!("packages ui").entered();
-    plan_running(ui, context);
-    refusal(ui, context);
-
+/// The list's top, which spans the page above both columns: the chips, the
+/// AUR's lines and the notice of a repository index that cannot be read.
+pub fn top(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
     let aur_on = shows_aur(context);
     if !aur_on && page.filter == Filter::Aur {
         page.filter = Filter::Installed;
     }
 
-    let Some((catalog, unread)) = read_catalog(page, ui, context, aur_on) else {
-        return;
-    };
-
-    // Only the AUR's chip has rows without pacman's databases.
-    if unread {
-        page.filter = Filter::Aur;
+    match context.service::<Packages>().index() {
+        Read::Known(catalog) => {
+            let catalog = Arc::clone(catalog);
+            known_top(page, ui, context, &catalog, false);
+        }
+        Read::Loading => {
+            ui.enabled_ui(false, |ui| idle_filters(page, ui, aur_on));
+        }
+        Read::Unavailable | Read::Failed if !aur_on => idle_filters(page, ui, aur_on),
+        Read::Unavailable | Read::Failed => {
+            // Only the AUR's chip has rows without pacman's databases.
+            page.filter = Filter::Aur;
+            unreadable_index(ui, context);
+            ui.add_space(ui.tokens().sizes.header_gap);
+            let catalog = Arc::new(Catalog::default());
+            known_top(page, ui, context, &catalog, true);
+        }
     }
+}
 
+/// The list's column under the top: the rows, or the state that stands in
+/// for them while the index is read or cannot be.
+pub fn column(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
+    let aur_on = shows_aur(context);
+    match context.service::<Packages>().index() {
+        Read::Known(catalog) => {
+            let catalog = Arc::clone(catalog);
+            known_column(page, ui, context, &catalog, aur_on);
+        }
+        Read::Loading => placeholder(ui, "packages-loading", page.open.is_some()),
+        Read::Unavailable | Read::Failed if !aur_on => unreadable_page(ui, context),
+        Read::Unavailable | Read::Failed => {
+            let catalog = Arc::new(Catalog::default());
+            known_column(page, ui, context, &catalog, aur_on);
+        }
+    }
+}
+
+/// The chips and the AUR's lines of a read index. `unread` leaves the
+/// repository chips off, as the AUR alone lists then.
+fn known_top(
+    page: &mut PackagesPage,
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    catalog: &Arc<Catalog>,
+    unread: bool,
+) {
+    let aur_on = shows_aur(context);
     let updates = Updates::of(context);
-    let status = context.home.status_revision;
-    let key = (page.filter, Same::of(&catalog), status);
-    let view = page.view.get(&[&page.search], key, || {
-        let _build = tracing::trace_span!("filter packages").entered();
-        let pending = match &updates {
-            Updates::Known(pending) => pending.clone(),
-            Updates::Unread | Updates::Failed => BTreeSet::new(),
-        };
-
-        catalog.view(page.filter, &page.search, &pending)
-    });
-
+    let view = view_of(page, catalog, &updates, context);
     let aur_rows = aur_on.then(|| aur::rows_of(page, context)).flatten();
-    let aur_chip = aur_on.then(|| AurChip {
-        count: aur_rows.as_ref().map(|rows| rows.len()),
-    });
-
     let counts = ChipCounts {
         repository: (!unread).then_some(view.counts),
         updates_known: updates.is_known(),
-        aur: aur_chip,
+        aur: aur_on.then(|| AurChip {
+            count: aur_rows.as_ref().map(|rows| rows.len()),
+        }),
     };
 
     filters(page, ui, counts);
@@ -150,74 +162,55 @@ pub fn body(page: &mut PackagesPage, ui: &mut Ui, context: &PageContext<'_>) {
         (true, Filter::Aur) => aur::note(ui, context),
         (true, _) => {}
     }
+}
 
-    ui.add_space(ui.tokens().sizes.header_gap);
-
+/// The rows of a read index, or the AUR's list or the updates' state the
+/// chip picked.
+fn known_column(
+    page: &mut PackagesPage,
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    catalog: &Arc<Catalog>,
+    aur_on: bool,
+) {
     if page.filter == Filter::Aur {
-        aur::body(
-            page,
-            ui,
-            context,
-            &catalog,
-            aur_rows.as_ref().map(|rows| rows.as_slice()),
-        );
+        let aur_rows = aur_on.then(|| aur::rows_of(page, context)).flatten();
+        let places = aur_rows.as_ref().map(|rows| rows.as_slice());
+        aur::body(page, ui, context, catalog, places);
         return;
     }
 
-    if page.filter == Filter::Updates && !updates_read(ui, context, &updates) {
+    let updates = Updates::of(context);
+    if page.filter == Filter::Updates && !updates_read(ui, context, &updates, page.open.is_some()) {
         return;
     }
 
+    let view = view_of(page, catalog, &updates, context);
     if view.rows.is_empty() {
         nothing(page, ui);
         return;
     }
 
-    rows(page, ui, context, &catalog, &view.rows);
+    rows(page, ui, context, catalog, &view.rows);
 }
 
-/// The repositories' catalog and whether it could not be read, `None` when
-/// the page shows nothing else.
-fn read_catalog(
+/// The view of the repositories' catalog under the chip and the search.
+fn view_of(
     page: &mut PackagesPage,
-    ui: &mut Ui,
+    catalog: &Arc<Catalog>,
+    updates: &Updates,
     context: &PageContext<'_>,
-    aur_on: bool,
-) -> Option<(Arc<Catalog>, bool)> {
-    // The AUR needs none of pacman's databases, so its chip stays under
-    // the notice when they cannot be read.
-    match context.service::<Packages>().index() {
-        Read::Known(catalog) => Some((Arc::clone(catalog), false)),
-        Read::Loading => {
-            waiting(page, ui, aur_on);
-            None
-        }
-        Read::Unavailable | Read::Failed if !aur_on => {
-            idle_filters(page, ui, aur_on);
-            unreadable_page(ui, context);
-            None
-        }
-        Read::Unavailable | Read::Failed => {
-            unreadable_index(ui, context);
-            ui.add_space(ui.tokens().sizes.header_gap);
-            Some((Arc::new(Catalog::default()), true))
-        }
-    }
-}
+) -> Arc<View> {
+    let key = (page.filter, Same::of(catalog), context.home.status_revision);
+    page.view.get(&[&page.search], key, || {
+        let _build = tracing::trace_span!("filter packages").entered();
+        let pending = match updates {
+            Updates::Known(pending) => pending.clone(),
+            Updates::Unread | Updates::Failed => BTreeSet::new(),
+        };
 
-/// The chips while the index cannot be read: the repository's are off and
-/// count nothing, the AUR's stays as far as it is on.
-fn idle_filters(page: &mut PackagesPage, ui: &mut Ui, aur_on: bool) {
-    let aur = aur_on.then_some(AurChip { count: None });
-    filters(
-        page,
-        ui,
-        ChipCounts {
-            repository: None,
-            updates_known: false,
-            aur,
-        },
-    );
+        catalog.view(page.filter, &page.search, &pending)
+    })
 }
 
 fn rows(
@@ -234,31 +227,34 @@ fn rows(
     };
 
     let list = i18n::text(ui.ctx(), "page-packages");
-    if let Some(package) = shown_rows(page, ui, context, &shown, ("packages", &list)) {
+    if let Some(package) = shown_rows(page, ui, context, &shown, ("packages", &list, false)) {
         page.open(&package, false, context);
     }
 }
 
 /// One list under its id salt and name. Returns the package whose row
-/// asked for its detail view, which the caller opens on its own side.
+/// asked for its detail view, which the caller opens on its own side. The
+/// row of the open package is selected when `aur` is the side it opened on.
 #[must_use = "a dropped package loses the click that asked to open it"]
 pub fn shown_rows<'rows, S>(
     page: &mut PackagesPage,
     ui: &mut Ui,
     context: &PageContext<'_>,
     shown: &'rows S,
-    (salt, list): (&'static str, &str),
+    (salt, list, aur): (&'static str, &str, bool),
 ) -> Option<PackageName>
 where
     S: Rows,
     S::Item<'rows>: PackageRow,
 {
-    let heights = RowHeights::Fixed(row::height(ui));
+    let heights = RowHeights::Fixed(row::height(ui, page.open.is_some()));
     let revealed = page.back_to.as_ref().map(|name| name.as_str().to_owned());
+    let selected = page.selection(aur);
     let mut opened = None;
 
     let holds = RowList::new(salt, list, heights)
         .reveal(revealed.as_deref())
+        .selected(selected.as_deref())
         .show(ui, shown, |ui, item, state| {
             dimmed(ui, context.busy, |ui| {
                 if row::show(ui, context, page, &item, state) {
@@ -283,75 +279,17 @@ where
 
 /// Draws the placeholder rows or the failure banner of the Updates chip.
 /// Returns whether the updates are known, so the rows may show.
-fn updates_read(ui: &mut Ui, context: &PageContext<'_>, updates: &Updates) -> bool {
+fn updates_read(ui: &mut Ui, context: &PageContext<'_>, updates: &Updates, compact: bool) -> bool {
     match updates {
         Updates::Known(_) => true,
         Updates::Unread => {
-            placeholder(ui, "packages-updates-loading");
+            placeholder(ui, "packages-updates-loading", compact);
             false
         }
         Updates::Failed => {
             unreadable(ui, context, "packages-updates-failed");
             false
         }
-    }
-}
-
-/// The repository chips go off without pacman's databases, as their
-/// counts would only be zeros. The AUR's chip needs none of them.
-fn filters(page: &mut PackagesPage, ui: &mut Ui, counts: ChipCounts) {
-    let ctx = ui.ctx().clone();
-    let repository = counts.repository;
-    let count = |pick: fn(Counts) -> usize| repository.map(pick);
-    let mut chips = vec![
-        (
-            Filter::Installed,
-            "packages-filter-installed",
-            count(|known| known.installed),
-        ),
-        (
-            Filter::Updates,
-            "packages-filter-updates",
-            count(|known| known.updates).filter(|_| counts.updates_known),
-        ),
-        (
-            Filter::Orphans,
-            "packages-filter-orphans",
-            count(|known| known.orphans),
-        ),
-        (
-            Filter::Optional,
-            "packages-filter-optional",
-            count(|known| known.optional),
-        ),
-        (Filter::All, "packages-filter-all", count(|known| known.all)),
-    ];
-
-    if let Some(aur_chip) = counts.aur {
-        chips.push((Filter::Aur, "packages-filter-aur", aur_chip.count));
-    }
-
-    let gap = ui.tokens().sizes.control_gap;
-    let mut picked = None;
-    ui.horizontal_wrapped(|ui| {
-        ui.spacing_mut().item_spacing = vec2(gap, gap);
-        for (filter, id, shown) in chips {
-            let title = i18n::text(&ctx, id);
-            let number = shown.map(|number| number.to_string());
-            let enabled = repository.is_some() || filter == Filter::Aur;
-            let selected = filter == page.filter;
-            let response = ui.add_enabled(enabled, |ui: &mut Ui| {
-                chip(ui, &title, number.as_deref(), selected)
-            });
-
-            if response.clicked() {
-                picked = Some(filter);
-            }
-        }
-    });
-
-    if let Some(filter) = picked {
-        page.filter = filter;
     }
 }
 

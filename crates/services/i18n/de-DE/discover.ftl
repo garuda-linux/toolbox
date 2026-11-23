@@ -33,3 +33,9 @@ discover-category-science = Wissenschaft
 discover-category-security = Sicherheit
 discover-category-utilities = Werkzeuge
 discover-problem-reason = Einige Kategorien konnten nicht geladen werden. Die übrigen werden angezeigt. { $reason }
+
+discover-back = Zurück
+discover-back-name = Zurück zum App-Katalog
+discover-details-packages = Pakete
+discover-details-website = Webseite
+discover-package-from = { $package } aus { $repository }

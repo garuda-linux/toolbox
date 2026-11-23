@@ -2,7 +2,8 @@ use egui::{Label, Rect, Ui, vec2};
 
 use super::super::list::text_line_height;
 use super::super::{
-    ButtonKind, card, card_row, pill_button, rich, split_row, text_block_height, title_line,
+    ButtonKind, card, card_row, pill_button, push_height, rich, split_row, text_block_height,
+    text_block_height_with, title_line,
 };
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::testing::harness;
@@ -43,7 +44,11 @@ fn row(with_button: bool) -> Placed {
         move |ui, placed: &mut Placed| {
             card(ui, |ui| {
                 let drawn = card_row(ui, true, |ui| {
-                    placed.estimate = text_block_height(ui, 1);
+                    placed.estimate = if with_button {
+                        text_block_height_with(ui, 1, push_height(ui))
+                    } else {
+                        text_block_height(ui, 1)
+                    };
                     let width = if with_button { 120.0 } else { 0.0 };
                     split_row(ui, width, words, |ui| {
                         with_button.then(|| pill_button(ui, "Change", ButtonKind::Soft).rect)

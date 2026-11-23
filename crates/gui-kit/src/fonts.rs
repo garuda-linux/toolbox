@@ -19,16 +19,21 @@ use skrifa::{FontRef, MetadataProvider as _, Tag};
 pub const INTER: &str = "Inter";
 pub const JETBRAINS_MONO: &str = "JetBrains Mono";
 
-/// Page titles. Larger than an even step, as the brand look has them.
+/// Figures of a metric tile. Larger than an even step, as the brand look has them.
 pub const TITLE: f32 = 2.3;
-/// Section headings and dialog titles.
+/// Kirigami's level 1 heading (`Heading.qml`), the page title in the toolbar.
+pub const PAGE_TITLE: f32 = 1.35;
+/// Kirigami's level 2 heading (`Heading.qml`), the section headings.
+pub const SECTION_TITLE: f32 = 1.2;
+/// egui's Heading style, the Home page's card titles and figures, the
+/// guide's level 2 headings, the Console's title, the setup stages and a
+/// secondary metric's figure.
 pub const SECTION: f32 = 1.4;
 /// Labels of rows and buttons, pane titles, the body size.
 pub const BODY: f32 = 1.0;
-/// Descriptions, counts and the Console's state.
+/// Descriptions, counts and the Console's state. No text takes a size off
+/// these steps.
 pub const SMALL: f32 = 0.92;
-/// Tags and the sidebar's group labels. No text takes a size off these steps.
-pub const CAPTION: f32 = 0.82;
 
 /// KDE's and GNOME's default size, used when the desktop names none.
 const DEFAULT_POINTS: f32 = 10.0;
@@ -56,8 +61,6 @@ pub enum Weight {
 }
 
 impl Weight {
-    pub const ALL: [Self; 4] = [Self::Regular, Self::Medium, Self::SemiBold, Self::Bold];
-
     pub const fn css(self) -> u16 {
         match self {
             Self::Regular => 400,
@@ -76,47 +79,58 @@ impl Weight {
         }
     }
 
-    /// Regular is egui's own proportional family, so plain text needs no
-    /// family named.
+    /// KDE and GNOME draw labels, buttons and body text in the desktop's
+    /// own weight, so Regular, Medium and `SemiBold` share its family and
+    /// only Bold steps up from it (Kirigami's headings and emphasis).
     pub fn family(self) -> FontFamily {
         match self {
-            Self::Regular => FontFamily::Proportional,
-            Self::Medium => FontFamily::Name("medium".into()),
-            Self::SemiBold => FontFamily::Name("semibold".into()),
+            Self::Regular | Self::Medium | Self::SemiBold => FontFamily::Proportional,
             Self::Bold => FontFamily::Name("bold".into()),
-        }
-    }
-
-    fn data_name(self, font: &str) -> String {
-        match self {
-            Self::Regular => font.to_owned(),
-            Self::Medium | Self::SemiBold | Self::Bold => format!("{font} {}", self.css()),
         }
     }
 }
 
-/// Every font egui may draw with. `ui` holds the desktop's font at the
-/// weights it has, each going first in the family of its weight.
+/// The desktop's UI font at the two steps the app draws: its own weight for
+/// the regular text, and its bold face for the bold step.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct UiFaces {
+    pub regular: Option<FontFile>,
+    pub bold: Option<FontFile>,
+}
+
+/// The name egui knows a face by: the family and the weight it draws at.
+fn face_name(font: &str, css: u16) -> String {
+    format!("{font} {css}")
+}
+
+/// Every font egui may draw with. The desktop's faces go first in the
+/// family of their step, the bundled Inter behind them.
 #[must_use = "the definitions do nothing until set on the context"]
-pub fn definitions(ui: &[FontFile], fixed: Option<&FontFile>) -> FontDefinitions {
+pub fn definitions(ui: &UiFaces, fixed: Option<&FontFile>) -> FontDefinitions {
     let mut fonts = FontDefinitions::empty();
     let inter = include_bytes!("../assets/fonts/InterVariable.ttf");
+    let steps = [
+        (Weight::Regular, ui.regular.as_ref()),
+        (Weight::Bold, ui.bold.as_ref()),
+    ];
 
-    for weight in Weight::ALL {
-        let name = weight.data_name(INTER);
+    for (weight, _) in steps {
         let data = weighted(FontData::from_static(inter), weight.css());
-        fonts.font_data.insert(name.clone(), Arc::new(data));
+        fonts
+            .font_data
+            .insert(face_name(INTER, weight.css()), Arc::new(data));
+    }
 
-        let mut family = vec![name];
-        if let Some(file) = ui
-            .iter()
-            .find(|file| Weight::nearest(file.weight) == weight)
-        {
-            let key = weight.data_name(&file.name);
-            if !fonts.font_data.contains_key(&key) {
+    for (weight, desktop) in steps {
+        let bundled = face_name(INTER, weight.css());
+        let mut family = vec![bundled.clone()];
+        if let Some(file) = desktop {
+            let key = face_name(&file.name, file.weight);
+            if key != bundled {
                 fonts
                     .font_data
-                    .insert(key.clone(), Arc::new(desktop_data(file)));
+                    .entry(key.clone())
+                    .or_insert_with(|| Arc::new(desktop_data(file)));
                 family.insert(0, key);
             }
         }
@@ -132,7 +146,11 @@ pub fn definitions(ui: &[FontFile], fixed: Option<&FontFile>) -> FontDefinitions
         )),
     );
 
-    let mut monospace = vec![JETBRAINS_MONO.to_owned(), INTER.to_owned()];
+    let mut monospace = vec![
+        JETBRAINS_MONO.to_owned(),
+        face_name(INTER, Weight::Regular.css()),
+    ];
+
     if let Some(file) = fixed.filter(|file| !fonts.font_data.contains_key(&file.name)) {
         fonts
             .font_data
@@ -147,15 +165,16 @@ pub fn definitions(ui: &[FontFile], fixed: Option<&FontFile>) -> FontDefinitions
 /// Puts `file` behind every family, for the glyphs no other font has,
 /// such as emoji. A colour font draws in colour.
 pub fn add_fallback(fonts: &mut FontDefinitions, file: &FontFile) {
-    if fonts.font_data.contains_key(&file.name) {
+    let key = face_name(&file.name, file.weight);
+    if fonts.font_data.contains_key(&key) {
         return;
     }
 
     fonts
         .font_data
-        .insert(file.name.clone(), Arc::new(desktop_data(file)));
+        .insert(key.clone(), Arc::new(desktop_data(file)));
     for family in fonts.families.values_mut() {
-        family.push(file.name.clone());
+        family.push(key.clone());
     }
 }
 

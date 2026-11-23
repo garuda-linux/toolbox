@@ -85,10 +85,10 @@ fn a_report_is_collected_and_uploaded_to_the_dry_run_server() {
     let harness = fixture.harness();
 
     collect(harness);
-    harness.get_by_label("Share report…").click();
+    harness.get_by_label("Share Report…").click();
     harness.run();
     harness.get_by_label("Upload").click();
-    step_until(harness, "the link", shows("Copy link"));
+    step_until(harness, "the link", shows("Copy Link"));
 
     assert!(harness.query_by_label("Uploaded.").is_some());
 }
@@ -123,8 +123,8 @@ fn the_report_header_stays_inside_its_card_beside_the_sidebar() {
 
     for (role, name) in [
         (Role::TextInput, "Search the report"),
-        (Role::Button, "Copy report"),
-        (Role::Button, "Share report…"),
+        (Role::Button, "Copy Report"),
+        (Role::Button, "Share Report…"),
     ] {
         let control = harness.get_by_role_and_label(role, name).rect();
         assert!(

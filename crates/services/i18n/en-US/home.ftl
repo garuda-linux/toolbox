@@ -2,8 +2,8 @@ home-hello = Hello, { $user }!
 home-welcome = Welcome to Garuda Linux
 home-subtitle = Maintain and set up your system.
 
-home-status = System status
-home-refresh = Read again
+home-status = System Status
+home-refresh = Read Again
 home-checking = Checking the system…
 home-all-clear =
     { $count ->
@@ -16,8 +16,8 @@ home-failed =
         [one] One check could not run, so its result is missing.
        *[other] { $count } checks could not run, so their results are missing.
     }
-home-show-details = Show details
-home-hide-details = Hide details
+home-show-details = Show Details
+home-hide-details = Hide Details
 # $reason is the program's own words, in English.
 home-failed-updates = Repository updates: { $reason }
 home-failed-aur = AUR updates: { $reason }
@@ -34,10 +34,10 @@ home-updates =
        *[other] { $count } updates available
     }
 home-updates-detail = Update now in the Console, or queue the update with your other changes.
-home-update-now = Update now
-home-queue-update = Queue update
-home-unqueue-update = Don't update
-home-show-packages = Show packages
+home-update-now = Update Now
+home-queue-update = Queue Update
+home-unqueue-update = Don't Update
+home-show-packages = Show Packages
 home-aur-updates =
     { $count ->
         [one] One AUR update available
@@ -47,39 +47,39 @@ home-aur-detail = Packages of the AUR (Arch User Repository) are built by paru i
 home-aur-update = Update in Console
 home-stale = The last update is overdue
 home-stale-detail = Arch based systems should be updated at least every two weeks.
-home-merges = Configuration files to merge
+home-merges = Configuration Files to Merge
 home-merges-review = Review…
 home-merges-meld = Open in meld
-home-merges-title = Configuration files to merge
+home-merges-title = Configuration Files to Merge
 home-merges-reading = Reading the files…
 home-merges-failed = The files could not be read.
 home-merges-none = Nothing left to merge.
 home-merges-files = Files
 home-merges-pair = { $copy } beside { $file }
 home-merges-queued = queued
-home-merges-take-back = Take back
+home-merges-take-back = Take Back
 home-merges-unreadable = A file could not be read. Use meld instead.
 home-merges-gone = The file in use is gone. The copy can take its place.
 home-merges-same = The copy is the same as the file in use.
 home-merges-older = An older saved version. It can only be removed.
-home-merges-remove = Remove the copy
-home-merges-keep = Keep current
-home-merges-take-new = Take new
-home-merges-take-saved = Take saved
+home-merges-remove = Remove the Copy
+home-merges-keep = Keep Current
+home-merges-take-new = Take New
+home-merges-take-saved = Take Saved
 home-merges-change = Change { $number }
 home-merges-unchanged = { $count ->
         [one] One unchanged line
        *[other] { $count } unchanged lines
     }
-home-merges-keep-file = Keep current file
-home-merges-use-file = Use new file
-home-merges-restore-file = Restore saved file
-home-merges-queue-picks = Queue the merge
-home-merges-edit = Edit result…
+home-merges-keep-file = Keep Current File
+home-merges-use-file = Use New File
+home-merges-restore-file = Restore Saved File
+home-merges-queue-picks = Queue the Merge
+home-merges-edit = Edit Result…
 home-merges-edit-name = Merged text
 home-merges-edit-invalid = The text is too large or holds a NUL character.
 home-merges-edit-back = Back
-home-merges-edit-queue = Queue the edited text
+home-merges-edit-queue = Queue the Edited Text
 home-merges-applied = This runs with your other changes. Where snapper is set up, a snapshot comes first. The old file is kept in /var/lib/garuda-toolbox/backups.
 home-health-errors = garuda-health found problems
 home-health-warnings = garuda-health found warnings
@@ -89,30 +89,30 @@ home-restart = Restart to finish the update
 home-restart-detail = The running kernel or system libraries were replaced.
 home-restart-button = Restart…
 
-home-restart-question = Restart now?
+home-restart-question = Restart Now?
 home-restart-question-detail = Save your work first. Open programs are closed.
 home-restart-confirm = Restart
 home-cancel = Cancel
 home-restart-denied = The restart was not authorized.
 home-restart-failed = The computer could not be restarted. Restart it from the desktop's menu.
 
-home-pending = Pending updates
+home-pending = Pending Updates
 home-pending-none = No updates are waiting.
 home-pending-aur = AUR
 home-pending-versions = { $from } → { $to }
 
-home-live = Live system
+home-live = Live System
 home-install = Install Garuda Linux
 home-install-detail = Start the installer. It asks for your password.
-home-install-button = Start installer
+home-install-button = Start Installer
 # $reason is the system's own words, in English.
 home-install-failed = The installer could not start: { $reason }
 home-programs-failed = The live system's tools could not be looked for.
-home-chroot = Repair an installed system
+home-chroot = Repair an Installed System
 home-chroot-detail = Open a root shell inside the Garuda Linux installed on this computer, in the Console. Type exit to leave it.
 home-chroot-button = Open in Console
 
-home-next = Next steps
+home-next = Next Steps
 home-next-setup = Pick the apps you want and install them in one go
 home-next-maintenance = Keep your system in a good state
 home-next-review =
@@ -170,7 +170,7 @@ home-services =
        *[other] { $count } services failed
     }
 home-services-button = Show in Services
-home-cleanup = Orphans and package cache
+home-cleanup = Orphans and Package Cache
 # $cache is a size such as "6.4 GiB".
 home-cleanup-detail-cache = No package is orphaned. The package cache holds { $cache }.
 home-cleanup-detail =
@@ -178,8 +178,8 @@ home-cleanup-detail =
         [one] One package is no longer needed. The package cache holds { $cache }.
        *[other] { $orphans } packages are no longer needed. The package cache holds { $cache }.
     }
-home-cleanup-queue = Queue clean-up
-home-cleanup-unqueue = Don't clean up
+home-cleanup-queue = Queue Clean-up
+home-cleanup-unqueue = Don't Clean Up
 
 home-check-updates = Repository updates
 home-check-aur = AUR updates
@@ -190,7 +190,7 @@ home-check-cleanup = Orphans and cache
 home-check-health = garuda-health
 
 home-next-diagnostics = Get help with a report for the forum
-home-recent = Recently used
+home-recent = Recently Used
 
 home-news = News
 home-news-garuda-page = Garuda forum

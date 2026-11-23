@@ -21,7 +21,7 @@ const BUTTONS_HEIGHT: f32 = 80.0;
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, confirming: &mut bool) {
     let ctx = ui.ctx().clone();
     let shelf = context.service::<Maintenance>().shelf();
-    heading(ui, icons::DOCUMENT_REVERT, "maintenance-reset");
+    heading(ui, "maintenance-reset");
     if shelf.rows().is_empty() {
         empty_state(
             ui,

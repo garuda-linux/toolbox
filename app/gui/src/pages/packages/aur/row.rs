@@ -5,7 +5,7 @@
 use egui::{Context, Ui};
 use toolbox_core::features::packages::aur::{AurPackage, row_state};
 use toolbox_core::features::packages::list::{Catalog, RowState};
-use toolbox_gui_kit::widgets::{ListItem, Tone, status_dot, tag};
+use toolbox_gui_kit::widgets::{ListItem, Tone, status_dot, tag_on_row};
 use toolbox_plan::PackageName;
 
 use super::super::row::{Act, PackageRow, undone};
@@ -58,9 +58,9 @@ impl PackageRow for AurRow<'_> {
         }
     }
 
-    fn marks(&self, ui: &mut Ui) {
+    fn marks(&self, ui: &mut Ui, selected: bool) {
         let ctx = ui.ctx().clone();
-        tag(ui, &i18n::text(&ctx, "packages-tag-aur"), Tone::Neutral);
+        tag_on_row(ui, &i18n::text(&ctx, "packages-tag-aur"), selected);
         if self.entry.out_of_date.is_some() {
             status_dot(
                 ui,

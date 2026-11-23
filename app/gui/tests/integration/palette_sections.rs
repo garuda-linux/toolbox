@@ -8,7 +8,7 @@ use toolbox_gui::{App, Setup};
 
 use crate::common::{launch, palette};
 
-const PALETTE: &str = "Command palette";
+const PALETTE: &str = "Command Palette";
 
 fn buttons(harness: &Harness<'static, App>) -> Vec<String> {
     harness
@@ -25,7 +25,7 @@ fn show_all_expands_the_section_and_keeps_the_palette_open() {
     let before = buttons(&harness);
     let show_all = before
         .iter()
-        .find(|label| label.starts_with("Show all") && !label.contains(" in "))
+        .find(|label| label.starts_with("Show All") && !label.contains(" in "))
         .expect("a section without a page")
         .clone();
 

@@ -78,7 +78,7 @@ impl PageView for BootPage {
             Readiness::Failed => {
                 let (title, detail) = (text("boot-failed"), text("boot-failed-detail"));
                 let again = text("common-read-again");
-                if empty_state_action(ui, icons::DIALOG_ERROR, &title, &detail, &again).clicked() {
+                if empty_state_action(ui, icons::ERROR, &title, &detail, &again).clicked() {
                     context.commands.send(BootCommand::Refresh);
                 }
             }
@@ -217,6 +217,7 @@ fn risky(ctx: &egui::Context, context: &PageContext<'_>, value: &str) -> bool {
         cancel: &cancel,
         confirm: &confirm,
         kind: ButtonKind::Danger,
+        icon: None,
         width: DialogWidth::Small,
     };
 

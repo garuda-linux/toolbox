@@ -3,7 +3,7 @@ use egui_kittest::kittest::Queryable as _;
 
 use super::super::{SectionHeading, group_label, menu_heading};
 use crate::testing::{fill_under, harness, painted_text, text_colour};
-use crate::{UiExt as _, icons, tokens};
+use crate::{UiExt as _, tokens};
 
 fn painted(text: &str, draw: impl FnMut(&mut egui::Ui)) -> (Color32, tokens::Tokens) {
     let mut harness = harness(400.0, 200.0).build_ui(draw);
@@ -16,7 +16,7 @@ fn painted(text: &str, draw: impl FnMut(&mut egui::Ui)) -> (Color32, tokens::Tok
 #[test]
 fn a_section_detail_is_secondary_text() {
     let (colour, tokens) = painted("2/8", |ui| {
-        SectionHeading::new(icons::AUDIO_VOLUME_HIGH, "Audio", "2/8").show(ui);
+        SectionHeading::new("Audio", "2/8").show(ui);
     });
 
     assert_eq!(colour, tokens.secondary);
@@ -30,10 +30,11 @@ fn a_menu_heading_is_secondary_text() {
 }
 
 #[test]
-fn a_sidebar_group_label_is_secondary_text() {
-    let (colour, tokens) = painted("SYSTEM", |ui| group_label(ui, "System", false));
+fn a_sidebar_group_label_takes_the_full_sidebar_text() {
+    // The sidebar's text is the full text colour, as Darkly's sidebar entries take it.
+    let (colour, tokens) = painted("System", |ui| group_label(ui, "System", false));
 
-    assert_eq!(colour, tokens.secondary);
+    assert_eq!(colour, tokens.sidebar_text);
 }
 
 #[test]
@@ -60,11 +61,10 @@ fn a_disabled_button_keeps_its_colours_under_egui_s_fade_alone() {
 
         harness.run();
         let tokens = tokens::current(&harness.ctx);
-        let (ink, fill) = match kind {
-            ButtonKind::Primary => (tokens.on_accent, tokens.accent),
-            ButtonKind::Danger => (tokens.on_error, tokens.error),
-            ButtonKind::Soft | ButtonKind::Ghost => (tokens.text, tokens.field),
-        };
+
+        // Breeze draws every push button's text in the normal text colour, and
+        // a Primary button fills with the accent blended into the field.
+        let (ink, fill) = (tokens.text, kind.rest_fill(&tokens));
 
         let alpha = harness.ctx.global_style().visuals.disabled_alpha;
         let text = painted_text(&harness, "Add user…").expect("the text is painted");
@@ -99,26 +99,28 @@ fn a_disabled_ghost_button_stays_without_a_fill() {
     let centre = harness.get_by_label("Details").rect().center();
     let under = fill_under(&harness, centre);
 
-    for quiet in [tokens.field, tokens.hover] {
+    for quiet in [tokens.field, tokens.button_hover] {
         assert_ne!(under, Some(quiet.gamma_multiply(alpha)));
         assert_ne!(under, Some(quiet));
     }
 }
 
 #[test]
-fn a_warning_tag_takes_a_wash_of_its_colour_as_success_and_error_do() {
+fn a_toned_tag_is_a_checked_chip_in_its_tone() {
     use super::super::Tone;
+    use super::super::press::Pointer;
     use crate::palette::Palette;
 
     for theme in [egui::Theme::Dark, egui::Theme::Light] {
         let tokens = tokens::Tokens::derive(&Palette::fallback(theme), theme);
-        let (fill, ink) = Tone::Warning.colors(&tokens);
+        let look = Tone::Warning.look(&tokens, Pointer::Rest);
 
-        assert_eq!(fill, tokens.tag_wash(tokens.warning), "{theme:?}");
-        assert!(
-            tokens::contrast(ink, fill) >= 4.5,
-            "{theme:?}: {} on the wash",
-            tokens::contrast(ink, fill)
+        assert_eq!(look.fill, tokens.warning.gamma_multiply(0.2), "{theme:?}");
+        assert_eq!(look.frame, tokens.warning.gamma_multiply(0.9), "{theme:?}");
+        assert_eq!(
+            Tone::Neutral.look(&tokens, Pointer::Rest).fill,
+            Color32::TRANSPARENT,
+            "{theme:?}"
         );
     }
 }

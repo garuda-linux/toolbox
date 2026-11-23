@@ -1,9 +1,11 @@
-//! Short notes about background results nobody waited on, at the top
-//! right of the page area below the page's header, after Rerun's
-//! notification toasts.
+//! Short notes about background results nobody waited on.
 //!
-//! A note fades after a while, an error after a longer one or when
-//! closed, and hovering it pauses that. Notes come in through
+//! They follow Kirigami's passive notifications: at the bottom centre of
+//! the page area, the newest on top, in the Complementary colour set and
+//! without an icon.
+//!
+//! A note stays for seven seconds, waits while the pointer is on it or the
+//! window is away, and a click closes it. Notes come in through
 //! [`Toasts::add`] or, from a widget without a way to the app, through
 //! [`raise`].
 
@@ -12,34 +14,44 @@ mod tests;
 
 use std::time::Duration;
 
+use egui::layers::ShapeIdx;
 use egui::{
-    Align2, Context, CornerRadius, Id, Label, LayerId, Order, Rect, Role, Sense, TextStyle,
-    TextWrapMode, Ui, WidgetText, pos2, vec2,
+    Align2, Context, CornerRadius, Frame, Id, Label, LayerId, Margin, Order, Painter, Rect, Role,
+    Sense, Shadow, Shape, TextStyle, TextWrapMode, Ui, WidgetText, pos2, vec2,
 };
 
 use crate::fonts::{BODY, Weight};
 use crate::frost::Glass;
 use crate::motion::{self, Timing};
 use crate::theme::CARD_RADIUS;
-use crate::widgets::{TileSize, Tone, icon_button, icon_button_width, paint_status_tile, rich};
-use crate::{icons, tokens};
+use crate::tokens::{self, Tokens};
+use crate::widgets::rich;
 
-const INFO_TIME: Duration = Duration::from_secs(4);
-/// How long an error shows, long enough to read it twice.
-const ERROR_TIME: Duration = Duration::from_secs(10);
+/// Darkly's popup shadow strengths, the shadow shade at these shares.
+const POPUP_NEAR: f32 = 0.44;
+const POPUP_FAR: f32 = 0.24;
+
+/// Kirigami's default `closeInterval`, for an error as for any note: it
+/// has no timeout of its own.
+const TIME: Duration = Duration::from_secs(7);
 /// A note appears with a drop into place and leaves by fading alone.
 const TIMING: Timing = Timing::new(motion::TOAST_ENTER, motion::TOAST_EXIT);
-/// The widest a note grows before its text wraps, short of a narrow page:
-/// room for a sentence of about sixty characters on one line.
-const MAX_WIDTH: f32 = 460.0;
-/// From the page area's top right corner, or below its header.
-const OFFSET: egui::Vec2 = vec2(-16.0, 16.0);
+/// Kirigami's `gridUnit * 25`, the widest a note grows before its text wraps.
+const MAX_WIDTH: f32 = 450.0;
+/// Kirigami's `largeSpacing`, inside a note and from the bottom edge.
+const PADDING: i8 = 8;
+const BOTTOM: f32 = 8.0;
+/// Kirigami's `maximumNotificationCount`: a fifth note takes the oldest's
+/// place, which then leaves.
+const MAX_SHOWN: usize = 4;
+/// Kirigami's note background, at 90 % opacity.
+const OPACITY: f32 = 0.9;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ToastKind {
-    /// It fades by itself.
+    /// Read as a status message.
     Info,
-    /// It fades later, or when closed.
+    /// Read at once as an alert, for a failure.
     Error,
 }
 
@@ -72,26 +84,26 @@ pub struct Toasts {
     next: u64,
 }
 
-/// What the notes are called: the Alert role's name, and the error's
-/// Close button.
+/// What the notes are called for screen readers: the Alert role's name.
 #[derive(Clone, Copy, Debug)]
 pub struct ToastTexts<'a> {
     pub name: &'a str,
-    pub close: &'a str,
 }
 
 impl Toasts {
     pub fn add(&mut self, kind: ToastKind, text: impl Into<String>) {
-        let time = match kind {
-            ToastKind::Info => INFO_TIME,
-            ToastKind::Error => ERROR_TIME,
-        };
+        let open = self.shown.iter().filter(|toast| !toast.leaving()).count();
+        if open >= MAX_SHOWN
+            && let Some(oldest) = self.shown.iter_mut().find(|toast| !toast.leaving())
+        {
+            oldest.closed = true;
+        }
 
         self.shown.push(Toast {
             id: self.next,
             kind,
             text: text.into(),
-            time,
+            time: TIME,
             deadline: None,
             paused: None,
             run_out: false,
@@ -104,13 +116,13 @@ impl Toasts {
         self.shown.is_empty()
     }
 
-    /// The texts on screen, newest last.
+    /// The texts on screen, oldest first.
     pub fn texts(&self) -> Vec<&str> {
         self.shown.iter().map(|toast| toast.text.as_str()).collect()
     }
 
-    /// Draws the notes stacked down from the top right of `page`, beside
-    /// the page title, and counts down the notes not under the pointer.
+    /// Draws the notes stacked up from the bottom centre of `page`, the
+    /// oldest at the bottom, and counts down the notes not under the pointer.
     /// Asks for a frame only while one counts down.
     pub fn show(&mut self, ctx: &Context, page: Rect, texts: ToastTexts<'_>) {
         let raised: Vec<(ToastKind, String)> =
@@ -121,9 +133,10 @@ impl Toasts {
         }
 
         let now = ctx.input(|input| input.time);
-        let gap = tokens::current(ctx).sizes.card_gap;
-        let mut top = page.right_top() + OFFSET;
-        let widest = MAX_WIDTH.min(2.0_f32.mul_add(OFFSET.x, page.width()));
+        let gap = tokens::current(ctx).sizes.tight_gap;
+        let widest = MAX_WIDTH.min(page.width() / 1.5);
+        let centre = page.center().x;
+        let mut bottom = page.bottom() - BOTTOM;
 
         let mut gone = Vec::new();
         let mut next_frame: Option<Duration> = None;
@@ -141,9 +154,9 @@ impl Toasts {
                 continue;
             }
 
-            // The notes below one that left move up rather than jump.
+            // The notes above one that left move down rather than jump.
             let restack = motion::duration(ctx, motion::RESTACK);
-            let y = ctx.animate_value_with_time(id.with("y"), top.y, restack);
+            let y = ctx.animate_value_with_time(id.with("y"), bottom, restack);
             let drop = if leaving {
                 0.0
             } else {
@@ -152,16 +165,19 @@ impl Toasts {
 
             let area = egui::Area::new(id)
                 .order(Order::Foreground)
-                .pivot(Align2::RIGHT_TOP)
-                .fixed_pos(pos2(top.x, y - drop))
+                .pivot(Align2::CENTER_BOTTOM)
+                .fixed_pos(pos2(centre, y - drop))
                 .fade_in(false)
                 .interactable(!leaving)
                 .movable(false)
-                .role(Role::Alert)
+                .role(match toast.kind {
+                    ToastKind::Info => Role::Status,
+                    ToastKind::Error => Role::Alert,
+                })
                 .accessible_name(format!("{}: {}", texts.name, toast.text))
                 .show(ctx, |ui| {
                     ui.multiply_opacity(shown);
-                    note(ui, toast, texts.close, widest)
+                    note(ui, toast, widest)
                 });
 
             if area.inner {
@@ -174,7 +190,7 @@ impl Toasts {
                 }
             }
 
-            top.y += area.response.rect.height() + gap;
+            bottom -= area.response.rect.height() + gap;
         }
 
         self.shown.retain(|toast| !gone.contains(&toast.id));
@@ -225,6 +241,41 @@ fn count_down(ctx: &Context, toast: &mut Toast, id: Id, now: f64) -> Option<Dura
     wait
 }
 
+/// Darkly's popup shadow, two layers: one 5 px down and 20 px soft, one 3 px
+/// up and 10 px soft. Dialogs and notes both cast it.
+pub(crate) fn popup_shadows(tokens: &Tokens) -> [Shadow; 2] {
+    [
+        Shadow {
+            offset: [0, 5],
+            blur: 20,
+            spread: 0,
+            color: tokens.shadow_shade.gamma_multiply(POPUP_NEAR),
+        },
+        Shadow {
+            offset: [0, -3],
+            blur: 10,
+            spread: 0,
+            color: tokens.shadow_shade.gamma_multiply(POPUP_FAR),
+        },
+    ]
+}
+
+/// Paints the [`popup_shadows`] of `rect` into `slot`, a placeholder added
+/// before the frame so the shadow stays under it.
+pub(crate) fn paint_popup_shadow(
+    painter: &Painter,
+    slot: ShapeIdx,
+    rect: Rect,
+    corners: CornerRadius,
+    tokens: &Tokens,
+) {
+    let shapes = popup_shadows(tokens)
+        .map(|shadow| Shape::from(shadow.as_shape(rect, corners)))
+        .to_vec();
+
+    painter.set(slot, Shape::Vec(shapes));
+}
+
 /// Raises a note from a widget, which [`Toasts::show`] takes in on its
 /// next call.
 pub fn raise(ctx: &Context, kind: ToastKind, text: impl Into<String>) {
@@ -235,65 +286,48 @@ pub fn raise(ctx: &Context, kind: ToastKind, text: impl Into<String>) {
     });
 }
 
-/// One note at most `widest` wide, its status mark, text and Close button
-/// centred on the whole text. Returns whether Close was clicked.
-fn note(ui: &mut Ui, toast: &Toast, close: &str, widest: f32) -> bool {
+/// One note of at most `widest` wide: its text in the Complementary set,
+/// on a rounded, shadowed frame. Returns whether a click closed it.
+fn note(ui: &mut Ui, toast: &Toast, widest: f32) -> bool {
     let tokens = tokens::current(ui.ctx());
-    let (tone, closable) = match toast.kind {
-        ToastKind::Info => (Tone::Accent, false),
-        ToastKind::Error => (Tone::Error, true),
-    };
+    let pad = f32::from(PADDING);
+    let wrap = (-pad).mul_add(2.0, widest).max(0.0);
+    let words = rich(
+        ui,
+        &toast.text,
+        Weight::Regular,
+        BODY,
+        tokens.roles.complementary_text,
+    );
 
-    let padding = tokens.sizes.toast_padding;
-    Glass::raised(ui, CornerRadius::same(CARD_RADIUS), padding)
+    let galley =
+        WidgetText::from(words).into_galley(ui, Some(TextWrapMode::Wrap), wrap, TextStyle::Body);
+
+    let text = galley.size();
+
+    // A wrapped text keeps the widest note, so its right edge does not
+    // follow the words that happened to wrap.
+    let width = if galley.rows.len() > 1 { wrap } else { text.x };
+    let corners = CornerRadius::same(CARD_RADIUS);
+    let glass = Glass::new(
+        Frame::new()
+            .corner_radius(corners)
+            .inner_margin(Margin::same(PADDING)),
+        tokens.roles.complementary.gamma_multiply(OPACITY),
+    );
+
+    let slot = ui.painter().add(Shape::Noop);
+    let response = glass
         .show(ui, |ui| {
-            let edge = TileSize::Line.edge(ui);
-            let gap = tokens.sizes.picture_gap;
-            let button = if closable { icon_button_width(ui) } else { 0.0 };
-            let beside = edge + gap + if closable { gap + button } else { 0.0 };
-
-            // The glass's 1 px rim lies outside the padding.
-            let frame = padding.sum().x + 2.0;
-            let wrap = (widest - frame - beside).max(0.0);
-            let words = rich(ui, &toast.text, Weight::Medium, BODY, tokens.text);
-            let galley = WidgetText::from(words).into_galley(
-                ui,
-                Some(TextWrapMode::Wrap),
-                wrap,
-                TextStyle::Body,
-            );
-
-            let text = galley.size();
-
-            // A wrapped text keeps the widest note, so its right edge does
-            // not follow the words that happened to wrap.
-            let width = if galley.rows.len() > 1 { wrap } else { text.x };
-            let size = vec2(beside + width, text.y.max(edge).max(button));
-            let (row, _) = ui.allocate_exact_size(size, Sense::hover());
-            let centre = row.center().y;
-            paint_status_tile(
-                ui,
-                pos2(row.left() + edge / 2.0, centre),
-                TileSize::Line,
-                tone,
-            );
-
-            let at = pos2(row.left() + edge + gap, centre - text.y / 2.0);
-            ui.put(Rect::from_min_size(at, text), Label::new(galley));
-
-            closable && {
-                let place = Rect::from_center_size(
-                    pos2(row.right() - button / 2.0, centre),
-                    vec2(button, button),
-                );
-
-                ui.put(place, |ui: &mut Ui| {
-                    icon_button(ui, icons::WINDOW_CLOSE, close)
-                })
-                .clicked()
-            }
+            let (row, _) = ui.allocate_exact_size(vec2(width, text.y), Sense::hover());
+            ui.put(Rect::from_min_size(row.min, text), Label::new(galley));
         })
-        .inner
+        .response;
+
+    paint_popup_shadow(ui.painter(), slot, response.rect, corners, &tokens);
+
+    ui.interact(response.rect, response.id.with("tap"), Sense::click())
+        .clicked()
 }
 
 fn inbox_id() -> Id {

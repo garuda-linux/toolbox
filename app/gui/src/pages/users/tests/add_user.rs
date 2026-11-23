@@ -15,7 +15,7 @@ fn login(harness: &super::Shown) -> String {
 #[test]
 fn the_full_name_proposes_the_login_until_it_is_typed() {
     let mut harness = page(unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
 
     type_into(&mut harness, Role::TextInput, "Full name", "Grace Hopper");
@@ -31,7 +31,7 @@ fn the_full_name_proposes_the_login_until_it_is_typed() {
 #[test]
 fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
     let mut harness = page(unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
     type_into(&mut harness, Role::TextInput, "Full name", "Grace Hopper");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
@@ -41,10 +41,10 @@ fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
         "Repeat the password",
         "s3cret",
     );
-    harness.get_by_label("Add user now").click();
+    harness.get_by_label("Add User Now").click();
     harness.run();
 
-    assert!(harness.query_by_label("Add user now").is_none());
+    assert!(harness.query_by_label("Add User Now").is_none());
 
     let users = &mut harness.state_mut().fixture.services.users;
     users.started(RunKind::NewAccount, name("grace"));
@@ -59,7 +59,7 @@ fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
         .plan_finished(false);
     harness.run();
 
-    assert!(harness.query_by_label("Add user now").is_some());
+    assert!(harness.query_by_label("Add User Now").is_some());
     assert_eq!(login(&harness), "grace");
     assert!(harness.query_by_label("Enter a password.").is_some());
 }
@@ -67,7 +67,7 @@ fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
 #[test]
 fn a_new_account_that_was_added_leaves_the_dialog_closed() {
     let mut harness = page(unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
     type_into(&mut harness, Role::TextInput, "User name", "grace");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
@@ -77,7 +77,7 @@ fn a_new_account_that_was_added_leaves_the_dialog_closed() {
         "Repeat the password",
         "s3cret",
     );
-    harness.get_by_label("Add user now").click();
+    harness.get_by_label("Add User Now").click();
     harness.run();
 
     let users = &mut harness.state_mut().fixture.services.users;
@@ -92,7 +92,7 @@ fn a_new_account_that_was_added_leaves_the_dialog_closed() {
         .plan_finished(true);
     harness.run();
 
-    assert!(harness.query_by_label("Add user now").is_none());
+    assert!(harness.query_by_label("Add User Now").is_none());
 }
 
 /// The note is about the whole dialog, so it leads instead of reading as
@@ -100,7 +100,7 @@ fn a_new_account_that_was_added_leaves_the_dialog_closed() {
 #[test]
 fn the_note_that_the_user_is_added_at_once_leads_the_dialog() {
     let mut harness = page(unlocked());
-    harness.get_by_label("Add user…").click();
+    harness.get_by_label("Add User…").click();
     harness.run();
 
     let note = harness

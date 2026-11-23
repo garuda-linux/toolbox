@@ -22,7 +22,7 @@ pub fn meter(ui: &mut Ui, share: Option<f32>, tone: Tone) -> Rect {
 
     let radius = height / 2.0;
     let painter = ui.painter();
-    painter.rect_filled(rect, radius, tokens.field);
+    painter.rect_filled(rect, radius, track_colour(&tokens));
 
     // A sliver keeps the round ends, so a nearly empty disk still shows.
     let share = share.clamp(0.0, 1.0);
@@ -35,11 +35,16 @@ pub fn meter(ui: &mut Ui, share: Option<f32>, tone: Tone) -> Rect {
     rect
 }
 
-/// The accent fitted to 3:1 on the track while fine, as the focus ring
-/// is: the bar is the only mark of the share.
+/// The track is the text at 30 %, as Darkly's progress bar draws it.
+fn track_colour(tokens: &Tokens) -> Color32 {
+    tokens.text.gamma_multiply(0.3)
+}
+
+/// The accent fills a neutral share, as Darkly's progress bar takes the
+/// highlight. The bar is the only mark of the share.
 const fn fill(tone: Tone, tokens: &Tokens) -> Color32 {
     match tone {
-        Tone::Accent => tokens.accent_ring,
+        Tone::Accent => tokens.accent,
         Tone::Neutral | Tone::Warning | Tone::Success | Tone::Error => tone.status_colour(tokens),
     }
 }

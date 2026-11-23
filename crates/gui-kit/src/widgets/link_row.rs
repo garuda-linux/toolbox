@@ -4,7 +4,8 @@
 
 use egui::{Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
-use super::icon_tile::{TileSize, page_tile, paint_icon_tile};
+use super::icon_tile::{TileSize, paint_icon};
+use super::list::text_line_height;
 use super::painted_row::painted_row;
 use super::rich;
 use super::text::cut;
@@ -13,7 +14,8 @@ use crate::icons::{self, Icon};
 use crate::tokens;
 use crate::ui_ext::icon_image;
 
-const HEIGHT: f32 = 40.0;
+/// Darkly's item rows: the text line with 3 points above and below.
+const ITEM_PADDING_Y: f32 = 3.0;
 const PADDING_X: f32 = 12.0;
 const GAP: f32 = 12.0;
 const CHEVRON: f32 = 14.0;
@@ -22,8 +24,18 @@ const CHEVRON: f32 = 14.0;
 /// opens a page, with a chevron, and [`Role::Button`] for one that acts here,
 /// without it.
 pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
+    link_row_at_least(ui, icon, title, role, 0.0)
+}
+
+/// A [`link_row`] at least `least` tall, for rows that share a card's height
+/// with the rows of a card beside it.
+pub fn link_row_at_least(ui: &mut Ui, icon: Icon, title: &str, role: Role, least: f32) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let row = painted_row(ui, HEIGHT, Sense::click(), 0.0);
+    let height = ITEM_PADDING_Y
+        .mul_add(2.0, text_line_height(ui, Weight::Medium, BODY))
+        .max(least);
+
+    let row = painted_row(ui, height, Sense::click(), 0.0);
     let (rect, response) = (row.content, row.response.clone());
     response.widget_info(|| WidgetInfo::labeled(role, ui.is_enabled(), title));
 
@@ -33,19 +45,13 @@ pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
 
     row.paint_fill(ui);
     let mid = rect.center().y;
-    let edge = TileSize::Line.edge(ui);
+    let edge = TileSize::Line.edge();
     let square = Rect::from_center_size(
         pos2(rect.left() + PADDING_X + edge / 2.0, mid),
         vec2(edge, edge),
     );
 
-    paint_icon_tile(
-        ui,
-        square.center(),
-        TileSize::Line,
-        icon,
-        page_tile(ui.ctx()),
-    );
+    paint_icon(ui, square.center(), TileSize::Line, icon.for_row());
 
     let leads = role == Role::Link;
     let chevron = Rect::from_center_size(

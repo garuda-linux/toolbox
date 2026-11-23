@@ -12,8 +12,8 @@ toggles-nothing-in-section-detail = Other sections have entries with “{ $searc
 # $count is how many entries of the whole page match the search.
 toggles-show-all-matches =
     { $count ->
-        [one] Show the match
-       *[other] Show all { $count } matches
+        [one] Show the Match
+       *[other] Show All { $count } Matches
     }
 # $on and $total are counts of the entries of a section, a chip or the page, shown as "2/8".
 toggles-section-count = { $on }/{ $total }

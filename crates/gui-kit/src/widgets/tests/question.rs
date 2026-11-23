@@ -32,6 +32,7 @@ fn asking() -> Harness<'static, Asking> {
                 cancel: "Keep",
                 confirm: "Remove all",
                 kind: ButtonKind::Danger,
+                icon: None,
                 width: DialogWidth::Small,
             };
 
