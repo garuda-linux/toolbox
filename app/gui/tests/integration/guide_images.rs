@@ -8,13 +8,15 @@ mod files;
 
 use egui::Theme;
 
+use crate::look;
+
 #[test]
 fn every_guide_picture_matches_its_render() {
     let update = files::updating();
     let mut stale = Vec::new();
     for capture in &captures::ALL {
         for theme in [Theme::Dark, Theme::Light] {
-            let picture = (capture.render)(theme);
+            let picture = look::pictured(|| (capture.render)(theme));
             if let Err(problem) = files::settle(capture.name, theme, &picture, update) {
                 stale.push(problem);
             }
