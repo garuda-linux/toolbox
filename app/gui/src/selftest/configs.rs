@@ -22,7 +22,7 @@ pub fn steps() -> Vec<Step> {
         Step::WaitContaining("GRUB default"),
         Step::Shot("configs"),
         Step::button("Edit"),
-        Step::WaitContaining("Save the changes to /etc/default/grub"),
+        Step::WaitContaining("Save the Changes to /etc/default/grub"),
         Step::WaitContaining("Edited by the dry run"),
         Step::Shot("configs-review"),
         Step::button("Save"),
@@ -34,7 +34,7 @@ pub fn steps() -> Vec<Step> {
     steps.extend([
         Step::wait("Bash"),
         Step::button("Edit"),
-        Step::WaitContaining("Save the changes to ~/.bashrc"),
+        Step::WaitContaining("Save the Changes to ~/.bashrc"),
         Step::WaitContaining("Edited by the dry run"),
         Step::Shot("configs-home-review"),
         Step::button("Save"),

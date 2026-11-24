@@ -207,6 +207,16 @@ fn the_arch_suite_runs_alone_and_all_leaves_it_out() {
     );
 }
 
+/// Its Review and Apply… refuses only while nothing is queued, and later
+/// suites leave changes behind.
+#[test]
+fn the_menu_suite_runs_first_in_all() {
+    let all = steps("all").unwrap();
+    let menu = steps("appmenu").unwrap();
+
+    assert_eq!(all[..menu.len()], menu[..]);
+}
+
 /// The AUR runs offline on the dry run's sample list, so `all` holds it.
 /// Its install question ends in Cancel: nothing is queued.
 #[test]

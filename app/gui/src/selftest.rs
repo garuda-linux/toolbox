@@ -49,6 +49,8 @@ const SUITE_VARIABLE: &str = "GARUDA_TOOLBOX_SELFTEST_SUITE";
 const PATIENCE: Duration = Duration::from_secs(60);
 
 const SUITES: [(&str, Suite); 22] = [
+    // First, as its Review and Apply… refuses only while nothing is queued.
+    ("appmenu", appmenu::steps),
     ("home", home::steps),
     ("setup", setup::steps),
     ("components", components::steps),
@@ -70,7 +72,6 @@ const SUITES: [(&str, Suite); 22] = [
     ("settings", settings::steps),
     ("guide", guide::steps),
     ("about", about::steps),
-    ("appmenu", appmenu::steps),
 ];
 
 /// Suites that need what only the Arch runner has, such as pacman's
