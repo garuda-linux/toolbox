@@ -62,14 +62,22 @@ fn an_aur_package_is_found_only_while_the_aur_is_on() {
 fn more_than_five_packages_end_with_a_row_that_lists_them_all() {
     let (mut harness, _runtime) = launch(Theme::Dark, None, false, Arc::new(SampleAur));
 
-    found(&mut harness, "a", "Show All");
+    let packages_row = |node: &egui_kittest::Node<'_>| {
+        node.accesskit_node()
+            .label()
+            .is_some_and(|label| label.starts_with("Show All") && label.ends_with("in Packages"))
+    };
+
+    // Other sections show their own Show All row before the package search lands.
+    palette(&mut harness, "a");
+    step_until(&mut harness, "the Packages row", |harness| {
+        harness
+            .query_all_by_role(Role::Button)
+            .any(|node| packages_row(&node))
+    });
     harness
         .query_all_by_role(Role::Button)
-        .find(|node| {
-            node.accesskit_node().label().is_some_and(|label| {
-                label.starts_with("Show All") && label.ends_with("in Packages")
-            })
-        })
+        .find(packages_row)
         .expect("the row")
         .click_accesskit();
 
