@@ -138,3 +138,17 @@ fn a_menu_separator_is_a_rule_inset_ten_points_in_the_separator_colour() {
         "{right:?} in {copy:?}"
     );
 }
+
+/// Darkly's strong focus draws a selected item's text in the highlighted
+/// text colour over the fill (darklystyle.cpp `drawMenuItemControl`).
+#[test]
+fn a_hovered_menu_item_draws_its_text_in_the_highlighted_text_colour() {
+    let mut harness = copy_menu(300.0);
+    harness.get_by_label("Copy").hover();
+    harness.run();
+
+    let text = crate::testing::painted_text(&harness, "Copy").expect("the item is painted");
+    let wanted = tokens::current(&harness.ctx).highlighted_text;
+
+    assert_eq!(text.fallback_color, wanted);
+}

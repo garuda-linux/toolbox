@@ -186,12 +186,18 @@ fn item(ui: &mut Ui, icon: Option<Icon>, text: &str, room: bool) -> Response {
     // Darkly's menus show the keyboard's entry as the pointer does, so a
     // key-focused item takes the hover fill and no ring.
     let pointer = Pointer::of_keyboard(ui, &response);
-    if ui.is_enabled() {
+    let filled = ui.is_enabled() && pointer != Pointer::Rest;
+    if filled {
         paint_item_fill(ui, rect, pointer, &tokens);
     }
 
-    // A disabled ui fades it once, see `press.rs`.
-    let ink = tokens.text;
+    // A disabled ui fades it once, see `press.rs`. On the fill Darkly's
+    // strong focus takes the highlighted text colour.
+    let ink = if filled {
+        tokens.highlighted_text
+    } else {
+        tokens.text
+    };
 
     let mut left = rect.left() + ITEM_INSET;
     if room {
