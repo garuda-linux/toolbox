@@ -237,3 +237,55 @@ fn the_icon_and_the_text_block_centre_on_the_row() {
         }
     }
 }
+
+/// A kernel's row: the title, then a description and a version, each a
+/// label of its own in the body.
+fn body_row(lines: u8) -> (Rect, Rect) {
+    let mut harness = harness(800.0, 400.0).build_ui_state(
+        move |ui, (content, button): &mut (Rect, Rect)| {
+            card(ui, |ui| {
+                let drawn = card_row(ui, true, |ui| {
+                    ActionRow::new(icons::CHECKMARK, TITLE).show_with_body(
+                        ui,
+                        |ui| {
+                            let ink = tokens::current(ui.ctx()).secondary;
+                            for line in 0..lines {
+                                let line = format!("Line {line}");
+                                let text = rich(ui, &line, Weight::Regular, SMALL, ink);
+                                ui.add(Label::new(text).wrap());
+                            }
+                        },
+                        |ui| *button = pill_button(ui, "Install", ButtonKind::Soft).rect,
+                    );
+                });
+
+                *content = content_of(ui, drawn.response.rect);
+            });
+        },
+        (Rect::NOTHING, Rect::NOTHING),
+    );
+
+    harness.run();
+    harness.run();
+    *harness.state()
+}
+
+#[test]
+fn a_body_of_two_lines_keeps_the_button_on_the_rows_middle() {
+    let (content, button) = body_row(2);
+
+    assert!(
+        (button.center().y - content.center().y).abs() < SAME,
+        "button at {button:?}, row content {content:?}"
+    );
+}
+
+#[test]
+fn a_body_of_three_lines_keeps_the_button_on_the_title_line() {
+    let (content, button) = body_row(3);
+
+    assert!(
+        button.center().y < content.center().y - SAME,
+        "button at {button:?}, row content {content:?}"
+    );
+}

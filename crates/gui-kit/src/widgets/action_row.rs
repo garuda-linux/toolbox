@@ -10,9 +10,9 @@ use crate::tokens;
 
 const WIDTH_REASON: &str = "action_row width";
 const HEIGHT_REASON: &str = "action_row height";
-/// A row whose words are taller than three title lines and the gap under the
-/// title keeps its actions on the title line.
-const TALL_ROWS: f32 = 3.0;
+/// A row whose words are taller than its title and this many detail lines,
+/// with the gap under each, keeps its actions on the title line.
+const TALL_DETAIL: f32 = 2.5;
 
 /// The tile, the words and the actions are centred on the row. A row too
 /// narrow for both puts the actions on a line under the words.
@@ -347,7 +347,10 @@ pub fn actions_stacked(ui: &Ui, row: Id) -> bool {
 
 fn is_anchored(ui: &Ui, words_was: Option<f32>) -> bool {
     let gap = tokens::current(ui.ctx()).sizes.tight_gap;
-    words_was.is_some_and(|words| words > TALL_ROWS.mul_add(title_line(ui), gap))
+    let font = fonts::font(ui.style(), Weight::Regular, SMALL);
+    let detail = ui.ctx().fonts_mut(|fonts| fonts.row_height(&font));
+    let limit = TALL_DETAIL.mul_add(detail, 2.0_f32.mul_add(gap, title_line(ui)));
+    words_was.is_some_and(|words| words > limit)
 }
 
 /// Read by the actions themselves, which may leave out a slot that only
