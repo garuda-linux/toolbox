@@ -18,7 +18,7 @@ use toolbox_gui_kit::{UiExt as _, motion};
 
 use self::density::Density;
 use self::edges::{
-    cut_edges, entries_end, list_area, newly_current, reveal, scroll_by, section_hides, side_edge,
+    cut_edges, entries_end, list_area, reveal, reveal_due, scroll_by, section_hides, side_edge,
     strength,
 };
 use self::head::{keep_entries_right, rail_toggle, search};
@@ -140,7 +140,7 @@ fn pages_and_foot(
 
     // Read every frame, also while an app page is open and no entry of the
     // list is, so a return to the same page reveals it again.
-    if newly_current(ui, current) {
+    if reveal_due(ui, current, reading) {
         ui.data_mut(|data| data.insert_temp(revealing_id(), REVEAL_FRAMES));
     }
 

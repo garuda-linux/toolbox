@@ -327,11 +327,13 @@ pub(super) fn side_edge(ui: &Ui) {
     ui.painter().vline(x, page.y_range(), hairline);
 }
 
-/// Whether `current` became the open page since the sidebar last drew,
-/// so its entry scrolls into sight once and the user may scroll away.
-pub(super) fn newly_current(ui: &Ui, current: PageId) -> bool {
+/// Whether `current` became the open page, or the reading note below the
+/// list came or went, since the sidebar last drew. Then the open entry
+/// scrolls into sight once and the user may scroll away. A read that ends
+/// after the reveal settled would leave the list scrolled for a shorter one.
+pub(super) fn reveal_due(ui: &Ui, current: PageId, reading: bool) -> bool {
     let id = ui.scope_id().with("current page");
-    let before = ui.data(|data| data.get_temp::<PageId>(id));
-    ui.data_mut(|data| data.insert_temp(id, current));
-    before != Some(current)
+    let before = ui.data(|data| data.get_temp::<(PageId, bool)>(id));
+    ui.data_mut(|data| data.insert_temp(id, (current, reading)));
+    before != Some((current, reading))
 }

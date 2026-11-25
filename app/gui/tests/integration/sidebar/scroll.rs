@@ -4,14 +4,17 @@ use egui::accesskit::Role;
 use egui::{Key, Rect};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
+use toolbox_core::Snapshot;
 use toolbox_gui::page::{Group, PageId};
-use toolbox_gui::{App, Setup};
+use toolbox_gui::testing::PATIENCE;
+use toolbox_gui::{App, Setup, snapshot};
 use toolbox_gui_kit::testing::lines_in;
 use toolbox_gui_kit::tokens;
 
 use super::cut::app_on;
 use super::{entry_name, foot_top};
-use crate::common::{HEIGHT, SMALLEST, launch_in, palette, wheel, window};
+use crate::common::{HEIGHT, SMALLEST, launch_in, palette, shared_runtime, wheel, window};
+use crate::system::{Answer, step_until};
 
 const HEADINGS: [&str; 3] = ["Install", "System", "Care"];
 
@@ -228,4 +231,49 @@ fn a_return_from_an_app_page_scrolls_the_open_page_back_into_the_sidebar() {
         back.bottom() <= foot + 0.5,
         "the open page's entry {back:?} stays under the foot at {foot}"
     );
+}
+
+/// At the smallest window Packages fits the list unscrolled, but not above
+/// the reading note. The read lands only after the reveal settled with it.
+#[test]
+fn a_read_that_ends_late_scrolls_the_list_back_to_rest() {
+    let (answer, answers) = crossbeam_channel::unbounded::<Answer>();
+    let mut harness =
+        toolbox_gui_kit::testing::harness(SMALLEST.0, SMALLEST.1).build_eframe(move |cc| {
+            let probe = move || answers.recv_timeout(PATIENCE).unwrap();
+            let setup = Setup {
+                open: Some(PageId::Packages),
+                snapshot: Some(snapshot::spawn(
+                    shared_runtime().handle(),
+                    toolbox_gui::waking::repaint(cc.egui_ctx.clone()),
+                    probe,
+                )),
+                ..Setup::default()
+            };
+
+            App::new(cc, setup)
+        });
+
+    step_until(&mut harness, "the reading note", |harness| {
+        harness.query_by_label("Reading the system…").is_some()
+    });
+    harness.run_steps(30);
+    answer.send((Snapshot::default(), Vec::new())).unwrap();
+    step_until(&mut harness, "the first read", |harness| {
+        !harness.state().awaits_first_read()
+    });
+    harness.run();
+
+    let at_rest = launch_in(
+        toolbox_gui_kit::testing::harness(SMALLEST.0, SMALLEST.1),
+        Setup::default(),
+    );
+
+    let home = |shown: &Harness<'_, App>| {
+        shown
+            .get_by_role_and_label(Role::Tab, &entry_name(shown, PageId::Home))
+            .rect()
+    };
+
+    assert_eq!(home(&harness), home(&at_rest));
 }
