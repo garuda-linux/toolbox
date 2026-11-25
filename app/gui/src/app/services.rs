@@ -10,6 +10,8 @@ use toolbox_core::features::packages::aur::AurNames;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::Mode;
+#[cfg(feature = "testing")]
+use toolbox_services::boot_menu::Menu;
 use toolbox_services::locks::Locks;
 use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::Notification;
@@ -167,6 +169,19 @@ impl App {
     #[cfg(feature = "testing")]
     pub fn awaits_first_read(&self) -> bool {
         self.first_read()
+    }
+
+    /// Whether the first read or a read a page asked for has not ended
+    /// yet, so a picture taken now would show it loading.
+    #[cfg(feature = "testing")]
+    pub fn awaits_reads(&self) -> bool {
+        let services = &self.services;
+        self.first_read()
+            || services.home.awaits()
+            || services.kernels.awaits()
+            || services.units.awaits()
+            || *services.boot.menu() == Menu::Loading
+            || *services.users.locks() == Locks::Loading
     }
 
     /// Why Apply waits, as the id of its text. A guard that has not

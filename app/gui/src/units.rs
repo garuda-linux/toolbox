@@ -134,6 +134,24 @@ impl Units {
         }
     }
 
+    /// Whether a page opened and a list it asked for has not been taken.
+    #[cfg(any(test, feature = "testing"))]
+    pub fn awaits(&self) -> bool {
+        let opened = self
+            .handle
+            .as_ref()
+            .is_some_and(|handle| *handle.opened.borrow());
+
+        let pending = |list: &UnitListing| {
+            matches!(
+                list,
+                Loadable::NotLoaded | Loadable::Loading { previous: _ }
+            )
+        };
+
+        opened && (pending(&self.lists.system) || pending(&self.lists.user))
+    }
+
     /// The lists that came in since the last frame.
     pub fn take(&mut self) {
         if let Some(lists) = self.handle.as_mut().and_then(UnitsHandle::changed) {

@@ -55,6 +55,11 @@ impl Kernels {
         self.dkms.reading().is_loading()
     }
 
+    #[cfg(feature = "testing")]
+    pub const fn awaits(&self) -> bool {
+        self.dkms.awaits()
+    }
+
     /// The modules of the last answer, which stay while dkms is asked
     /// again. Empty until dkms answered.
     pub fn dkms_entries(&self) -> &[DkmsEntry] {

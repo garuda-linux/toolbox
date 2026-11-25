@@ -131,3 +131,34 @@ fn a_failed_list_keeps_the_last_units_beside_its_failure() {
     assert_eq!(units.system.get().map(Vec::len), Some(1));
     assert_eq!(units.user, toolbox_gui_kit::Loadable::NotLoaded);
 }
+
+#[tokio::test]
+async fn the_units_await_only_lists_an_open_page_asked_for() {
+    let (asked, _answered) = crossbeam_channel::unbounded();
+    let handle = spawn(
+        &tokio::runtime::Handle::current(),
+        crate::waking::Wake::none(),
+        Arc::new(Recorded { asked }),
+        Duration::ZERO,
+    );
+
+    let mut units = super::Units::new(Some(handle));
+    assert!(!units.awaits(), "no page opened");
+
+    units.open();
+    assert!(units.awaits());
+
+    tokio::time::timeout(PATIENCE, async {
+        while units.awaits() {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+            units.take();
+        }
+    })
+    .await
+    .unwrap();
+
+    assert!(
+        units.get(UnitScope::User).error().is_some(),
+        "a failure ends the wait"
+    );
+}

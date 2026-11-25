@@ -36,6 +36,7 @@ use toolbox_system::{
 };
 
 use crate::common::{launch_with, packages, shared_runtime};
+use crate::system::step_until;
 
 const PASSWD: &str = toolbox_plan::testing::accounts::PASSWD;
 const GROUP: &str = toolbox_exec::testing::accounts::GROUP;
@@ -104,8 +105,16 @@ fn file_rows() -> Vec<UnitFileRow> {
     serde_json::from_value(reply(LIST_UNIT_FILES_JSON)).expect("the captured unit files")
 }
 
+/// Returns once every read has landed, as the readers answer on threads
+/// of their own and a loaded machine answers after `run` gave up.
 pub fn launch_covered(builder: HarnessBuilder<App>, setup: Setup) -> Harness<'static, App> {
-    launch_with(builder, setup, covered)
+    let mut harness = launch_with(builder, setup, covered);
+    step_until(&mut harness, "every read", |harness| {
+        !harness.state().awaits_reads()
+    });
+    harness.run();
+
+    harness
 }
 
 /// The readers of the pages the other tests give none: status, facts,

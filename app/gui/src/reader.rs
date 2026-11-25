@@ -133,6 +133,16 @@ impl<T> Watched<T> {
     pub fn latest(&self) -> Option<&T> {
         self.reading.get()
     }
+
+    /// Whether a reader feeds it and its answer has not been taken yet.
+    #[cfg(any(test, feature = "testing"))]
+    pub const fn awaits(&self) -> bool {
+        self.handle.is_some()
+            && matches!(
+                self.reading,
+                Loadable::NotLoaded | Loadable::Loading { previous: _ }
+            )
+    }
 }
 
 /// The value `receiver` holds, once per change. An error means the task

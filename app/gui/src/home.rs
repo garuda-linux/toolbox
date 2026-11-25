@@ -88,6 +88,11 @@ impl Home {
         }
     }
 
+    #[cfg(feature = "testing")]
+    pub const fn awaits(&self) -> bool {
+        self.status.awaits() || self.facts.awaits() || self.news.awaits() || self.programs.awaits()
+    }
+
     pub fn set_merge_reads(&mut self, reads: MergeReads) {
         self.merges.set_reads(reads);
     }

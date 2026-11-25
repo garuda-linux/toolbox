@@ -11,7 +11,6 @@ use toolbox_gui::{App, Setup};
 
 use crate::captured::launch_covered;
 use crate::common::{HEIGHT, SMALLEST, WIDTH};
-use crate::system::step_until;
 
 const WIDE: (f32, f32) = (WIDTH, HEIGHT);
 
@@ -25,20 +24,10 @@ fn page(page: PageId, theme: Theme, size: (f32, f32), setup: Setup) -> Harness<'
         ..setup
     };
 
-    let mut harness = launch_covered(
+    launch_covered(
         toolbox_gui_kit::testing::harness(size.0, size.1).with_theme(theme),
         setup,
-    );
-
-    // The lock state arrives from a thread of its own, after `run` may have
-    // given up on a slow machine.
-    step_until(&mut harness, "the lock state", |harness| {
-        harness
-            .query_by_label_contains("Asking which accounts are locked")
-            .is_none()
-    });
-
-    harness
+    )
 }
 
 fn pages() -> impl Iterator<Item = PageId> {

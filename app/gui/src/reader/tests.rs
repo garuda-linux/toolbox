@@ -203,3 +203,24 @@ async fn a_failed_read_keeps_the_last_value_beside_its_error() {
     assert_eq!(reading.error().map(String::as_str), Some("gone"));
     assert_eq!(reading.get(), Some(&7));
 }
+
+#[tokio::test]
+async fn a_watch_awaits_its_reader_until_the_first_answer_is_taken() {
+    let (read, release, _runs) = held_read();
+    let mut watched = Watched::new(Some(start(read)));
+    watched.take();
+    assert!(watched.awaits());
+
+    release.send(()).unwrap();
+    tokio::time::timeout(PATIENCE, async {
+        while watched.latest().is_none() {
+            tokio::time::sleep(Duration::from_millis(5)).await;
+            watched.take();
+        }
+    })
+    .await
+    .unwrap();
+
+    assert!(!watched.awaits());
+    assert!(!Watched::<usize>::new(None).awaits());
+}
