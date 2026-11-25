@@ -8,6 +8,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use toolbox_core::features::merges::choice;
 use toolbox_gui_kit::Loadable;
 use toolbox_plan::{ConfigText, MergeCopy, Resolution};
+use toolbox_services::programs::Programs;
 use toolbox_system::MergePair;
 use toolbox_system::testing::packages::PACMAN_CONF;
 
@@ -185,7 +186,13 @@ fn the_dialog_in_dark_and_light() {
 
 #[test]
 fn the_card_offers_review_and_meld() {
-    let mut harness = page(waiting(vec![pair(Some(current()))]));
+    let mut fixture = waiting(vec![pair(Some(current()))]);
+    fixture
+        .services
+        .home
+        .set_programs(Programs::found(|_| true));
+
+    let mut harness = page(fixture);
     harness
         .get_by_role_and_label(Role::Button, "Review…")
         .scroll_to_me();
@@ -235,5 +242,24 @@ fn cancel_centres_on_the_first_line_of_the_actions() {
         "Cancel centre {} and Keep Current File centre {}",
         cancel.center().y,
         keep.center().y
+    );
+}
+
+/// pacdiff-merge stops at once without meld, so the menu that offers it
+/// is gone while meld is missing.
+#[test]
+fn the_card_offers_no_meld_while_meld_is_missing() {
+    let mut fixture = waiting(vec![pair(Some(current()))]);
+    fixture.services.home.set_programs(Programs::found(|path| {
+        path != std::path::Path::new("/usr/bin/meld")
+    }));
+
+    let harness = page(fixture);
+
+    assert!(harness.query_by_label("Review…").is_some());
+    assert!(
+        harness
+            .query_by_label("More actions for Configuration Files to Merge")
+            .is_none()
     );
 }

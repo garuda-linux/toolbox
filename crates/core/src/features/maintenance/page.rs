@@ -229,7 +229,7 @@ where
         .flat_map(|tool| {
             let row = ToolRow {
                 tool: PageTool::Program(*tool),
-                installed: exists(Path::new(tool.program())),
+                installed: exists(Path::new(tool.found_by())),
             };
 
             let ranking = matches!(tool, Tool::ArchMirrors).then(|| ToolRow {

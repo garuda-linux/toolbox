@@ -344,3 +344,14 @@ fn an_operation_and_a_tool_have_the_texts_of_the_common_tab() {
         "maintenance-tool-btrfs-assistant"
     );
 }
+
+/// pacdiff-merge needs meld, and launch-terminal is on every Garuda
+/// system, so the launcher alone must not count as the tool.
+#[test]
+fn the_merge_tool_counts_as_installed_only_with_meld() {
+    let without = tools(|path| path != Path::new("/usr/bin/meld"));
+    let with = tools(|_| true);
+
+    assert!(!installed(&without, PageTool::Program(Tool::MergePacdiff)));
+    assert!(installed(&with, PageTool::Program(Tool::MergePacdiff)));
+}

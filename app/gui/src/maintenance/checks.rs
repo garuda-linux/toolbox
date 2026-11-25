@@ -54,7 +54,7 @@ impl Maintenance {
     pub(super) fn decide(&mut self, next: Next, found: bool, launcher: Option<&dyn Launcher>) {
         match next {
             Next::Tool(tool) if found => self.launch(tool, launcher),
-            Next::Tool(tool) => self.absent(PageTool::Program(tool), tool.program()),
+            Next::Tool(tool) => self.absent(PageTool::Program(tool), tool.found_by()),
             Next::RankMirrors if found => self.rank(),
             Next::RankMirrors => self.absent(PageTool::ChaoticMirrors, RATE_MIRRORS_PROGRAM),
         }
@@ -64,7 +64,7 @@ impl Maintenance {
 /// The program a finished install's check looks for.
 const fn program_of(next: Next) -> &'static str {
     match next {
-        Next::Tool(tool) => tool.program(),
+        Next::Tool(tool) => tool.found_by(),
         Next::RankMirrors => RATE_MIRRORS_PROGRAM,
     }
 }

@@ -280,6 +280,15 @@ impl Tool {
         }
     }
 
+    /// The file whose presence means the tool can run. Garuda's terminal
+    /// launcher is always there, but pacdiff-merge stops without meld.
+    pub const fn found_by(self) -> &'static str {
+        match self {
+            Self::MergePacdiff => "/usr/bin/meld",
+            Self::ArchMirrors | Self::BtrfsAssistant | Self::EditRepositories => self.program(),
+        }
+    }
+
     /// The package that provides the tool, to offer its installation when
     /// it is missing.
     pub fn package(self) -> PackageName {

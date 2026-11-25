@@ -1,6 +1,6 @@
 use egui::Ui;
 use toolbox_cli::output::size;
-use toolbox_core::features::maintenance::page::{PageTool, operations};
+use toolbox_core::features::maintenance::page::{PageTool, installed, operations};
 use toolbox_core::features::maintenance::{Operation, RunNow, Tool, upgrade_queued};
 use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, pill_button, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, icons};
@@ -11,6 +11,7 @@ use toolbox_system::HealthLevel;
 use super::super::HomePage;
 use super::{run_button, run_row};
 use crate::command::{HomeCommand, MaintenanceCommand, UiCommand};
+use crate::home::Home;
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::page::PageId;
@@ -106,7 +107,7 @@ pub(super) fn stale(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 /// Review opens the dialog that compares and queues them. meld, through
-/// the script Maintenance runs, stays in the menu.
+/// the script Maintenance runs, stays in the menu while it is installed.
 pub(super) fn merges(
     page: &mut HomePage,
     ui: &mut Ui,
@@ -115,6 +116,11 @@ pub(super) fn merges(
 ) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "home-merges");
+    let meld = installed(
+        context.service::<Home>().tools(),
+        PageTool::Program(Tool::MergePacdiff),
+    );
+
     let files: Vec<String> = overview
         .merges
         .iter()
@@ -128,6 +134,10 @@ pub(super) fn merges(
                 let review = i18n::text(&ctx, "home-merges-review");
                 if pill_button(ui, &review, ButtonKind::Soft).clicked() {
                     super::super::merges::open(&mut page.merges, context);
+                }
+
+                if !meld {
+                    return;
                 }
 
                 more(ui, &title, |ui| {

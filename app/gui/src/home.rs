@@ -106,6 +106,12 @@ impl Home {
         &mut self.merges
     }
 
+    /// The programs a test hands Home, without a reader.
+    #[cfg(any(test, feature = "testing"))]
+    pub fn set_programs(&mut self, programs: Programs) {
+        self.programs = Watched::loaded(Loadable::Loaded(Arc::new(programs)));
+    }
+
     pub fn set_problem(&mut self, problem: Option<HomeProblem>) {
         self.problem = problem;
     }
