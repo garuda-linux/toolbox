@@ -152,3 +152,29 @@ fn a_hovered_menu_item_draws_its_text_in_the_highlighted_text_colour() {
 
     assert_eq!(text.fallback_color, wanted);
 }
+
+/// The first frame of an open menu already has its width, so it does not
+/// jump to another place and size in the next.
+#[test]
+fn a_menu_opens_at_its_final_place() {
+    let mut harness = harness(600.0, 300.0).build_ui(|ui| {
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Min), |ui| {
+            menu_button(ui, "More actions", |ui| {
+                drop(menu_item(ui, "Open in meld"));
+            });
+        });
+    });
+
+    harness.run();
+    harness.get_by_label("More actions").click_accesskit();
+    let mut places = Vec::new();
+    for _ in 0_u8..6 {
+        harness.step();
+        if let Some(item) = harness.query_by_label("Open in meld") {
+            places.push(item.rect());
+        }
+    }
+
+    places.dedup();
+    assert_eq!(places.len(), 1, "the item moved: {places:?}");
+}

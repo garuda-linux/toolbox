@@ -37,6 +37,7 @@ pub(super) const LIST_GAP: f32 = 2.0;
 struct Widest {
     shown: Option<f32>,
     this_frame: f32,
+    laid_out: Option<f32>,
 }
 
 pub fn menu_button(ui: &mut Ui, name: &str, items: impl FnOnce(&mut Ui)) -> Response {
@@ -120,9 +121,19 @@ pub(super) fn menu_width(ui: &Ui, key: Id) -> f32 {
         widest.shown = Some(widest.this_frame);
     }
 
+    // egui places a popup by the size it had in the last frame, so a frame
+    // at a new width would place the menu once more and move it in the next.
+    let width = widest.shown.unwrap_or(MENU_WIDTH);
+    if widest
+        .laid_out
+        .is_some_and(|before| (before - width).abs() > 0.5)
+    {
+        ctx.request_discard("a menu's width changed");
+    }
+
+    widest.laid_out = Some(width);
     widest.this_frame = 0.0;
     ctx.data_mut(|data| data.insert_temp(widest_id(key), widest));
-    let width = widest.shown.unwrap_or(MENU_WIDTH);
     width + tokens::current(ctx).sizes.list_padding.sum().x
 }
 
