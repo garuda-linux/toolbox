@@ -154,3 +154,49 @@ fn handles_of(ctx: &Context, show: impl FnMut(&mut Ui)) -> Vec<Rect> {
 fn is_rest_handle(rect: Rect) -> bool {
     (rect.width() - REST_WIDTH).abs() < 0.01
 }
+
+/// egui shrinks the area to its one short row, and keeps the bar's strip
+/// right under it, so the handle sits there and not under the room the
+/// area could have taken.
+#[test]
+fn a_shrunk_area_paints_its_sideways_handle_under_its_content() {
+    let ctx = styled();
+    let frame = || {
+        ctx.run_ui(
+            RawInput {
+                screen_rect: Some(Rect::from_min_size(pos2(0.0, 0.0), vec2(400.0, 300.0))),
+                ..RawInput::default()
+            },
+            |ui| {
+                show_scroll(ui, ScrollArea::horizontal(), |ui| {
+                    ui.allocate_space(vec2(1000.0, 14.0));
+                });
+            },
+        )
+    };
+
+    // The first frame learns that the row overflows, the second keeps the strip.
+    frame().textures_delta.clear();
+    let mut output = frame();
+
+    output.textures_delta.clear();
+    let handles: Vec<Rect> = output
+        .shapes
+        .iter()
+        .filter_map(|clipped| {
+            let Shape::Rect(rect) = &clipped.shape else {
+                return None;
+            };
+
+            ((rect.rect.height() - REST_WIDTH).abs() < 0.01).then_some(rect.rect)
+        })
+        .collect();
+
+    // Under the row and its strip, not near the bottom of the 300 point screen.
+    assert!(
+        handles
+            .iter()
+            .any(|handle| handle.top() > 14.0 && handle.bottom() < 2.0_f32.mul_add(STRIP, 14.0)),
+        "no handle in the strip under the row: {handles:?}"
+    );
+}

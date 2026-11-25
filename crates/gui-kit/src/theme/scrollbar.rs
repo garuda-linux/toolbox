@@ -53,9 +53,9 @@ pub fn show_scroll<R>(
     area: ScrollArea,
     add_contents: impl FnOnce(&mut Ui) -> R,
 ) -> ScrollAreaOutput<R> {
-    let output = area.show(ui, add_contents);
-    paint_bars(ui, &output);
-    output
+    let shown = ui.scope(|ui| area.show(ui, add_contents));
+    paint_bars(ui, &shown.inner, shown.response.rect);
+    shown.inner
 }
 
 /// [`show_scroll`] for a list that shows no bar, as the collapsed sidebar
@@ -78,14 +78,16 @@ pub fn show_scroll_rows<R>(
     total_rows: usize,
     add_contents: impl FnOnce(&mut Ui, Range<usize>) -> R,
 ) -> ScrollAreaOutput<R> {
-    let output = area.show_rows(ui, row_height, total_rows, add_contents);
-    paint_bars(ui, &output);
-    output
+    let shown = ui.scope(|ui| area.show_rows(ui, row_height, total_rows, add_contents));
+    paint_bars(ui, &shown.inner, shown.response.rect);
+    shown.inner
 }
 
 /// Paints the handle and, on hover, the groove of each bar the content
 /// overflows. Called by [`show_scroll`] and [`show_scroll_rows`] only.
-pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>) {
+/// `taken` is the rect the area took with its strips. egui 0.37 reports
+/// `inner_rect` before an auto shrink, so the strips are measured from it.
+pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>, taken: Rect) {
     let ctx = ui.ctx();
     let tokens = tokens::current(ctx);
     let focused = is_focused(ctx, output);
@@ -95,6 +97,7 @@ pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>) {
         TIME
     };
 
+    let overflows = |along: usize| output.content_size[along] > output.inner_rect.size()[along];
     for along in [0, 1] {
         let viewport = output.inner_rect.size()[along];
         let content = output.content_size[along];
@@ -102,7 +105,7 @@ pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>) {
             continue;
         }
 
-        let strip = strip(output.inner_rect, along);
+        let strip = strip(taken, along, overflows(1 - along));
         let hovered = ui.rect_contains_pointer(strip);
         let hover_id = output.id.with(("darkly_bar", along));
         let groove_t = ctx.animate_bool_with_time(hover_id, hovered, time);
@@ -150,17 +153,19 @@ fn handle_colour(tokens: &Tokens, hovered: bool, focused: bool, groove_t: f32) -
 }
 
 /// The strip beside the content for an axis, at the bottom for a horizontal
-/// bar and at the right for a vertical one, as egui places its own.
-fn strip(inner: Rect, along: usize) -> Rect {
+/// bar and at the right for a vertical one, as egui places its own, inside
+/// the rect `taken`. Beside the other bar it ends where that one starts.
+fn strip(taken: Rect, along: usize, other: bool) -> Rect {
+    let corner = if other { STRIP } else { 0.0 };
     if along == 1 {
         Rect::from_min_max(
-            pos2(inner.max.x, inner.min.y),
-            pos2(inner.max.x + STRIP, inner.max.y),
+            pos2(taken.max.x - STRIP, taken.min.y),
+            pos2(taken.max.x, taken.max.y - corner),
         )
     } else {
         Rect::from_min_max(
-            pos2(inner.min.x, inner.max.y),
-            pos2(inner.max.x, inner.max.y + STRIP),
+            pos2(taken.min.x, taken.max.y - STRIP),
+            pos2(taken.max.x - corner, taken.max.y),
         )
     }
 }
