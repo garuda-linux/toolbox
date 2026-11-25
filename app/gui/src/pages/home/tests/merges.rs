@@ -263,3 +263,21 @@ fn the_card_offers_no_meld_while_meld_is_missing() {
             .is_none()
     );
 }
+
+/// A long line of a file scrolls sideways in the diff instead of widening
+/// the dialog past its title bar. The capture's `#Color` line is made 300
+/// characters long.
+#[test]
+fn a_long_line_keeps_the_dialog_at_its_width() {
+    let dialog = |current: String| {
+        let harness = opened(vec![pair(Some(current))]);
+        harness
+            .get_by_role_and_label(Role::Button, "Cancel")
+            .rect()
+            .x_range()
+    };
+
+    let long = current().replacen("\n#Color\n", &format!("\n#Color {}\n", "x".repeat(300)), 1);
+
+    assert_eq!(dialog(long), dialog(current()));
+}

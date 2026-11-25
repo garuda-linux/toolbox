@@ -195,10 +195,13 @@ fn changes(
     let height = (ui.available_height() - FOOTER).max(FOOTER);
     let mut change = 0;
     let mut chosen = None;
+    let width = ui.available_width();
 
+    // A long line scrolls sideways, as in meld, so it cannot widen the
+    // dialog past its title bar.
     show_scroll(
         ui,
-        ScrollArea::vertical()
+        ScrollArea::both()
             .id_salt(("toolbox_gui::home::merges::changes", copy.as_str()))
             .max_height(height)
             .auto_shrink([false, true]),
@@ -207,13 +210,13 @@ fn changes(
                 match part {
                     Part::Same(text) => {
                         let lines_of: Vec<&str> = text.split_inclusive('\n').collect();
-                        same(ui, &lines_of, index == 0, index + 1 == count);
+                        same(ui, &lines_of, (index == 0, index + 1 == count), width);
                     }
                     Part::Change { current, copy: new } => {
                         let removed: Vec<&str> = current.split_inclusive('\n').collect();
                         let added: Vec<&str> = new.split_inclusive('\n').collect();
-                        lines(ui, &removed, '-', Tone::Error);
-                        lines(ui, &added, '+', Tone::Success);
+                        lines(ui, &removed, ('-', Tone::Error), width);
+                        lines(ui, &added, ('+', Tone::Success), width);
 
                         let name = i18n::text_with(
                             &ctx,
@@ -240,7 +243,7 @@ fn changes(
     chosen
 }
 
-fn same(ui: &mut Ui, lines_of: &[&str], first: bool, last: bool) {
+fn same(ui: &mut Ui, lines_of: &[&str], (first, last): (bool, bool), width: f32) {
     let head = if first {
         0
     } else {
@@ -258,8 +261,8 @@ fn same(ui: &mut Ui, lines_of: &[&str], first: bool, last: bool) {
     lines(
         ui,
         lines_of.get(..head).unwrap_or_default(),
-        ' ',
-        Tone::Neutral,
+        (' ', Tone::Neutral),
+        width,
     );
 
     if hidden > 0 {
@@ -279,10 +282,11 @@ fn same(ui: &mut Ui, lines_of: &[&str], first: bool, last: bool) {
     }
 
     let rest = lines_of.get(lines_of.len() - tail..).unwrap_or_default();
-    lines(ui, rest, ' ', Tone::Neutral);
+    lines(ui, rest, (' ', Tone::Neutral), width);
 }
 
-fn lines(ui: &mut Ui, lines_of: &[&str], mark: char, tone: Tone) {
+/// `width` is the view's, so a change's band spans it also beside short lines.
+fn lines(ui: &mut Ui, lines_of: &[&str], (mark, tone): (char, Tone), width: f32) {
     if lines_of.is_empty() {
         return;
     }
@@ -295,7 +299,7 @@ fn lines(ui: &mut Ui, lines_of: &[&str], mark: char, tone: Tone) {
     };
 
     Frame::new().fill(fill).show(ui, |ui| {
-        ui.set_width(ui.available_width());
+        ui.set_min_width(width);
         for line in lines_of {
             let shown = format!("{mark} {}", line.strip_suffix('\n').unwrap_or(line));
             ui.add(Label::new(mono_small(ui, &shown, tokens.text)).extend());
