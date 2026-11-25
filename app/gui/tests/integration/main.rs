@@ -42,6 +42,7 @@ mod page_scroll;
 mod palette_packages;
 mod palette_sections;
 mod schemes;
+mod scroll_bars;
 mod sdboot;
 mod services;
 mod settings;

@@ -1,7 +1,9 @@
-use egui::{Context, Rangef, RawInput, Rect, Shape, Theme, pos2, vec2};
+use egui::scroll_area::ScrollArea;
+use egui::{Context, Rangef, RawInput, Rect, Shape, Theme, Ui, pos2, vec2};
 
 use super::{
-    GROOVE_WIDTH, HOVER_WIDTH, MIN_LENGTH, REST_WIDTH, STRIP, cross_span, paint_bars, thumb_span,
+    GROOVE_WIDTH, HOVER_WIDTH, MIN_LENGTH, REST_WIDTH, STRIP, cross_span, show_scroll,
+    show_scroll_hidden, show_scroll_rows, thumb_span,
 };
 use crate::palette::Palette;
 use crate::theme::apply;
@@ -80,6 +82,30 @@ fn bars_paint_a_rest_handle_only_where_content_overflows() {
     assert!((handles[0].width() - REST_WIDTH).abs() < 0.01);
 }
 
+#[test]
+fn a_hidden_area_paints_no_handle_however_far_it_overflows() {
+    let ctx = styled();
+    let handles = handles_of(&ctx, |ui| {
+        show_scroll_hidden(ui, ScrollArea::vertical(), |ui| allocate_rows(ui, 80));
+    });
+
+    assert!(handles.is_empty(), "{handles:?}");
+}
+
+#[test]
+fn rows_shown_through_show_scroll_rows_paint_their_handle() {
+    let ctx = styled();
+    let handles = handles_of(&ctx, |ui| {
+        show_scroll_rows(ui, ScrollArea::vertical(), 14.0, 80, |ui, rows| {
+            for _ in rows {
+                ui.allocate_space(vec2(100.0, 14.0));
+            }
+        });
+    });
+
+    assert_eq!(handles.len(), 1, "{handles:?}");
+}
+
 fn thumb(strip: Rangef, viewport: f32, content: f32, offset: f32) -> (f32, f32) {
     let span = thumb_span(strip, viewport, content, offset);
     (span.min, span.max)
@@ -91,20 +117,24 @@ fn cross(strip: Rangef, width: f32) -> (f32, f32) {
 }
 
 fn visible_handles(ctx: &Context, rows: usize) -> Vec<Rect> {
+    handles_of(ctx, |ui| {
+        show_scroll(ui, ScrollArea::vertical(), |ui| allocate_rows(ui, rows));
+    })
+}
+
+fn allocate_rows(ui: &mut Ui, rows: usize) {
+    for _ in 0..rows {
+        ui.allocate_space(vec2(100.0, 14.0));
+    }
+}
+
+fn handles_of(ctx: &Context, show: impl FnMut(&mut Ui)) -> Vec<Rect> {
     let input = RawInput {
         screen_rect: Some(Rect::from_min_size(pos2(0.0, 0.0), vec2(400.0, 300.0))),
         ..RawInput::default()
     };
 
-    let mut output = ctx.run_ui(input, |ui| {
-        let scrolled = egui::ScrollArea::vertical().show(ui, |ui| {
-            for _ in 0..rows {
-                ui.allocate_space(vec2(100.0, 14.0));
-            }
-        });
-
-        paint_bars(ui, &scrolled);
-    });
+    let mut output = ctx.run_ui(input, show);
 
     output.textures_delta.clear();
 

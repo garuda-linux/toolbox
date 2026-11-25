@@ -14,6 +14,7 @@ use std::rc::Rc;
 use egui::scroll_area::ScrollBarVisibility;
 use egui::{Context, Id, Key, Modifiers, ScrollArea};
 use toolbox_gui_kit::UiExt as _;
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::widgets::{
     DialogWidth, ModalWrapper, SearchTexts, menu_heading, search_field,
 };
@@ -97,11 +98,12 @@ impl Palette {
                 // The bar keeps its room beside the rows, shown or not, so the
                 // dialog is as wide with a short list as with a long one.
                 let rows_width = width - ui.spacing().scroll.allocated_width();
-                let (clicked, pointed) = ScrollArea::vertical()
+                let area = ScrollArea::vertical()
                     .scroll_bar_visibility(ScrollBarVisibility::AlwaysVisible)
-                    .max_height(ui.tokens().sizes.palette_list_height)
-                    .show(ui, |ui| self.list(ui, &rows, moved, rows_width))
-                    .inner;
+                    .max_height(ui.tokens().sizes.palette_list_height);
+
+                let (clicked, pointed) =
+                    show_scroll(ui, area, |ui| self.list(ui, &rows, moved, rows_width)).inner;
 
                 if let Some(index) = pointed {
                     self.marked = index;

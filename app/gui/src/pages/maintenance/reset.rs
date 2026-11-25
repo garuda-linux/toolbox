@@ -1,6 +1,7 @@
 //! Overwritten files are kept as backups beside the originals.
 
 use egui::{Align, Id, Label, Layout, ScrollArea, Ui};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::widgets::{
     ButtonKind, CheckRowTexts, Confirmation, ModalWrapper, Tone, banner, card, card_row,
     check_row_with_line, confirm_buttons, empty_state, loading_label, pill_button, pill_width,
@@ -141,14 +142,17 @@ fn ask(ctx: &egui::Context, context: &PageContext<'_>, confirming: &mut bool) {
 
             // The dialog is no taller than the window, so a long list
             // scrolls and leaves Cancel and Reset in sight.
-            ScrollArea::vertical()
-                .max_height((ui.available_height() - BUTTONS_HEIGHT).max(0.0))
-                .auto_shrink([false, true])
-                .show(ui, |ui| {
+            show_scroll(
+                ui,
+                ScrollArea::vertical()
+                    .max_height((ui.available_height() - BUTTONS_HEIGHT).max(0.0))
+                    .auto_shrink([false, true]),
+                |ui| {
                     for target in shelf.chosen_targets() {
                         ui.add(Label::new(egui::RichText::new(target).monospace()).wrap());
                     }
-                });
+                },
+            );
 
             confirm_buttons(
                 ui,

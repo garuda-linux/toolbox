@@ -9,6 +9,7 @@ use egui::{
 };
 use toolbox_core::features::configs::session::{Changes, EditedFile, Session};
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
+use toolbox_gui_kit::theme::show_scroll_rows;
 use toolbox_gui_kit::tokens::Tokens;
 use toolbox_gui_kit::widgets::{
     ButtonKind, DialogWidth, ModalWrapper, Pending, Question, Tone, banner, mono_small,
@@ -198,16 +199,21 @@ fn diff(ui: &mut Ui, changes: &Changes) {
         .scope(|ui| {
             // show_rows counts the spacing of this ui between rows.
             ui.spacing_mut().item_spacing.y = 0.0;
-            ScrollArea::both()
-                .max_height(height)
-                .auto_shrink([false, true])
-                .show_rows(ui, look.height, rows.lines.len(), |ui, range| {
+            show_scroll_rows(
+                ui,
+                ScrollArea::both()
+                    .max_height(height)
+                    .auto_shrink([false, true]),
+                look.height,
+                rows.lines.len(),
+                |ui, range| {
                     ui.set_min_width(look.extent);
                     let width = look.extent.max(ui.available_width());
                     for row in rows.lines.get(range).unwrap_or_default() {
                         paint_row(ui, row, &look, width);
                     }
-                })
+                },
+            )
         })
         .inner;
 

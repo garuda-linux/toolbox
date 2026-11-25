@@ -8,6 +8,7 @@ use egui::{Label, ScrollArea, TextStyle, Ui};
 use toolbox_calendar::Utc;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::terminal_colors::Ansi;
+use toolbox_gui_kit::theme::show_scroll_rows;
 use toolbox_gui_kit::widgets::{SearchTexts, padded_card, pill_width, rich, search_field};
 use toolbox_gui_kit::{UiExt as _, palette};
 use toolbox_pty::Run;
@@ -69,17 +70,22 @@ impl DiagnosticsPage {
 
             // show_rows counts the spacing of this ui between rows.
             ui.spacing_mut().item_spacing.y = 0.0;
-            ScrollArea::vertical()
-                .id_salt("diagnostics-report")
-                .auto_shrink([false, true])
-                .max_height(height)
-                .show_rows(ui, row_height, rows.len(), |ui, shown| {
+            show_scroll_rows(
+                ui,
+                ScrollArea::vertical()
+                    .id_salt("diagnostics-report")
+                    .auto_shrink([false, true])
+                    .max_height(height),
+                row_height,
+                rows.len(),
+                |ui, shown| {
                     for row in rows.get(shown).unwrap_or_default() {
                         let runs = lines.get(row.line).map_or(&[][..], Vec::as_slice);
                         let job = layout(runs, *row, &font, (&ansi, &palette));
                         ui.add(Label::new(job).extend());
                     }
-                });
+                },
+            );
         })
         .response
         .widget_info(|| egui::WidgetInfo::labeled(egui::accesskit::Role::Document, true, &*label));

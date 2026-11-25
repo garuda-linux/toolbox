@@ -11,7 +11,7 @@ use egui::{
 };
 use toolbox_gui_kit::code::{CodeJob, Ink};
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, Weight};
-use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS};
+use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS, show_scroll};
 use toolbox_gui_kit::widgets::{TileSize, Tone, corner_button, paint_status_tile, rich};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_guide::{
@@ -147,7 +147,7 @@ fn code_block(ui: &mut Ui, code: &Code, reader: &mut Reader<'_>) {
         .inner_margin(Margin::same(CODE_PADDING))
         .show(ui, |ui| {
             ui.set_width(ui.available_width());
-            ScrollArea::horizontal().show(ui, |ui| {
+            show_scroll(ui, ScrollArea::horizontal(), |ui| {
                 ui.add(Label::new(code_job(ui, code)).extend());
             });
         })

@@ -12,7 +12,7 @@ use egui::accesskit::Role;
 use egui::{Frame, Id, Label, Margin, ScrollArea, Sense, TextStyle, Ui};
 use toolbox_core::features::diagnostics::Redacted;
 use toolbox_gui_kit::UiExt as _;
-use toolbox_gui_kit::theme::CONTROL_RADIUS;
+use toolbox_gui_kit::theme::{CONTROL_RADIUS, show_scroll_rows};
 use toolbox_gui_kit::widgets::{ButtonKind, SearchTexts, highlighted, pill_button, search_field};
 
 use self::found::Found;
@@ -129,7 +129,7 @@ fn text_rows(
                 area = area.vertical_scroll_offset(top.min(last).max(0.0));
             }
 
-            area.show_rows(ui, row_height, found.rows().len(), |ui, rows| {
+            show_scroll_rows(ui, area, row_height, found.rows().len(), |ui, rows| {
                 for row in found.rows().get(rows).unwrap_or_default() {
                     let piece = piece_text(found.line(row.line), *row);
                     let job = highlighted(ui, &piece, &search.query, font.clone(), tokens.text);

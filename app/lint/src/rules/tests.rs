@@ -9,6 +9,7 @@ mod filler;
 mod no_shell_command;
 mod program_path;
 mod restating;
+mod scroll_bars;
 mod semicolon;
 mod separate;
 mod sudo_once;

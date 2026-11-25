@@ -15,6 +15,7 @@ mod picture;
 mod results;
 
 use egui::{Rect, ScrollArea, Ui, UiBuilder, pos2};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{BodyShape, page_toolbar};
 use toolbox_guide::Hit;
@@ -218,14 +219,15 @@ fn pane<R>(
     body: impl FnOnce(&mut Ui) -> R,
 ) -> R {
     let mut inner = ui.new_child(UiBuilder::new().max_rect(rect));
-    ScrollArea::vertical()
-        .id_salt(salt)
-        .auto_shrink(false)
-        .show(&mut inner, |scrolled| {
+    show_scroll(
+        &mut inner,
+        ScrollArea::vertical().id_salt(salt).auto_shrink(false),
+        |scrolled| {
             scrolled.set_width(scrolled.available_width() - SCROLL_ROOM);
             body(scrolled)
-        })
-        .inner
+        },
+    )
+    .inner
 }
 
 /// The body below the purpose, which the body draws first, so the panes

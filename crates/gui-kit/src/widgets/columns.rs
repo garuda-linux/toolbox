@@ -8,7 +8,7 @@
 
 use egui::{Id, Rect, ScrollArea, Stroke, Ui, UiBuilder, pos2, vec2};
 
-use crate::theme::{self, LARGE_SPACING};
+use crate::theme::{self, LARGE_SPACING, show_scroll};
 use crate::tokens;
 
 /// Kirigami's `PageRow.defaultColumnWidth`, which is 20 grid units.
@@ -100,10 +100,13 @@ impl<'a> Columns<'a> {
 fn column(ui: &mut Ui, salt: Id, rect: Rect, body: impl FnOnce(&mut Ui)) {
     let mut child = ui.new_child(UiBuilder::new().max_rect(rect));
     child.set_clip_rect(rect.intersect(child.clip_rect()));
-    ScrollArea::vertical()
-        .auto_shrink([false, false])
-        .id_salt(salt)
-        .show(&mut child, body);
+    show_scroll(
+        &mut child,
+        ScrollArea::vertical()
+            .auto_shrink([false, false])
+            .id_salt(salt),
+        body,
+    );
 }
 
 /// Whether `width` points of content leave no room for two columns.

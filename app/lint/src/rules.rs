@@ -11,6 +11,7 @@ mod filler;
 mod no_shell_command;
 mod program_path;
 mod restating;
+mod scroll_bars;
 mod semicolon;
 mod separate;
 mod sudo_once;
@@ -30,7 +31,7 @@ use crate::source::{Place, Source, parse};
 
 /// Every name an allow directive may give: each rule's own and the two
 /// the directives themselves report under.
-pub const NAMES: [&str; 19] = [
+pub const NAMES: [&str; 20] = [
     artifacts::RULE,
     blank_before::RULE,
     comment_lines::RULE,
@@ -42,6 +43,7 @@ pub const NAMES: [&str; 19] = [
     no_shell_command::RULE,
     program_path::RULE,
     restating::RULE,
+    scroll_bars::RULE,
     semicolon::RULE,
     separate::RULE,
     sudo_once::RULE,
@@ -97,6 +99,7 @@ fn lint_tree(
     no_shell_command::check(&source, place, &mut findings);
     program_path::check(&source, place, &mut findings);
     restating::check(&source, &mut findings);
+    scroll_bars::check(&source, place, &mut findings);
     semicolon::check(&source, &mut findings);
     separate::check(&source, &mut findings);
     sudo_once::check(&source, place, &mut findings);

@@ -17,7 +17,7 @@ use toolbox_core::ChangeView;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::frost::{self, Glass};
 use toolbox_gui_kit::motion::{self, Timing};
-use toolbox_gui_kit::theme::POPOVER_RADIUS;
+use toolbox_gui_kit::theme::{POPOVER_RADIUS, show_scroll};
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, icon_button, pill_button, rich, split_row, tag};
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
@@ -224,13 +224,11 @@ fn popover(
     });
     ui.add_space(tokens.sizes.control_gap);
 
-    let scrolled = egui::ScrollArea::vertical()
-        .max_height(list)
-        .show(ui, |ui| {
-            for change in changes {
-                row(ui, change, commands);
-            }
-        });
+    let scrolled = show_scroll(ui, egui::ScrollArea::vertical().max_height(list), |ui| {
+        for change in changes {
+            row(ui, change, commands);
+        }
+    });
 
     match held {
         Some(reason) => unread(ui, reason, commands),

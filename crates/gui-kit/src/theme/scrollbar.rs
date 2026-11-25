@@ -3,29 +3,32 @@
 //! egui still owns the wheel, the keyboard, the drag and the reserved strip,
 //! as its bars take the strip width as their hit area. Its own bars are
 //! drawn invisible (see [`super::write`]), so this pass adds the handle and
-//! the groove in Darkly's sizes and colours. A call site paints it once
-//! after each `ScrollArea::show`.
+//! the groove in Darkly's sizes and colours. [`show_scroll`] and its
+//! variants are the only way to show a `ScrollArea`, as the lint
+//! `scroll-bars` holds the rest of the app to them.
 
 #[cfg(test)]
 mod tests;
 
-use egui::scroll_area::ScrollAreaOutput;
+use std::ops::Range;
+
+use egui::scroll_area::{ScrollArea, ScrollAreaOutput, ScrollBarVisibility};
 use egui::{Color32, Context, CornerRadius, Rangef, Rect, Ui, lerp, pos2};
 
 use crate::tokens::{self, Tokens};
 
 /// The strip a bar takes beside the content: Darkly's `ScrollBar_Extend`
 /// (darkly.h:97).
-pub(super) const STRIP: f32 = 21.0;
+pub const STRIP: f32 = 21.0;
 /// The handle at rest and under the pointer: Darkly's
 /// `ScrollBar_SliderWidth` (darkly.h:98) halved and then whole
 /// (darklystyle.cpp:6387-6399).
-const REST_WIDTH: f32 = 4.0;
+pub const REST_WIDTH: f32 = 4.0;
 const HOVER_WIDTH: f32 = 8.0;
 /// The groove, the full `ScrollBar_SliderWidth` (darklystyle.cpp:8150).
 const GROOVE_WIDTH: f32 = 8.0;
 /// Darkly's `ScrollBar_MinSliderHeight` (darkly.h:99).
-pub(super) const MIN_LENGTH: f32 = 20.0;
+pub const MIN_LENGTH: f32 = 20.0;
 /// Darkly's `ScrollBar_NoButtonHeight`, (21 - 8) / 2 rounded down, keeps the
 /// handle off the strip's ends.
 const END_INSET: f32 = 6.0;
@@ -43,9 +46,46 @@ const GROOVE_ALPHA: f32 = 0.3;
 /// The fade into the hover look, in seconds.
 const TIME: f32 = 0.25;
 
+/// Shows `area` and paints its bars. Every `ScrollArea` in the app goes
+/// through here, as a bar is only painted after its `show`.
+pub fn show_scroll<R>(
+    ui: &mut Ui,
+    area: ScrollArea,
+    add_contents: impl FnOnce(&mut Ui) -> R,
+) -> ScrollAreaOutput<R> {
+    let output = area.show(ui, add_contents);
+    paint_bars(ui, &output);
+    output
+}
+
+/// [`show_scroll`] for a list that shows no bar, as the collapsed sidebar
+/// rail: the wheel and the keys still scroll it. `paint_bars` cannot tell
+/// a hidden bar from the output, so the visibility is set here.
+pub fn show_scroll_hidden<R>(
+    ui: &mut Ui,
+    area: ScrollArea,
+    add_contents: impl FnOnce(&mut Ui) -> R,
+) -> ScrollAreaOutput<R> {
+    area.scroll_bar_visibility(ScrollBarVisibility::AlwaysHidden)
+        .show(ui, add_contents)
+}
+
+/// [`show_scroll`] for rows of one height, as `ScrollArea::show_rows`.
+pub fn show_scroll_rows<R>(
+    ui: &mut Ui,
+    area: ScrollArea,
+    row_height: f32,
+    total_rows: usize,
+    add_contents: impl FnOnce(&mut Ui, Range<usize>) -> R,
+) -> ScrollAreaOutput<R> {
+    let output = area.show_rows(ui, row_height, total_rows, add_contents);
+    paint_bars(ui, &output);
+    output
+}
+
 /// Paints the handle and, on hover, the groove of each bar the content
-/// overflows. Call it after the `ScrollArea` that produced `output`.
-pub fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>) {
+/// overflows. Called by [`show_scroll`] and [`show_scroll_rows`] only.
+pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>) {
     let ctx = ui.ctx();
     let tokens = tokens::current(ctx);
     let focused = is_focused(ctx, output);

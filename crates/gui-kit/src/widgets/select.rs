@@ -11,6 +11,7 @@ use pill::{CHEVRON, CHEVRON_INSET, TEXT_INSET, paint_chevron, paint_pill};
 use super::menu::{ITEM_INSET, MENU_WIDTH, item_height, menu_glass};
 use super::{Choice, line, push_height};
 use crate::fonts::{BODY, Weight};
+use crate::theme::show_scroll;
 use crate::tokens;
 
 /// The widest an open list grows for a long option, such as a shell's
@@ -254,13 +255,14 @@ fn list(
             }
 
             glass.inside(popup, |inside| {
-                ScrollArea::vertical()
-                    .max_height(height)
-                    .auto_shrink([false, true])
-                    .show(inside, |list| {
-                        options_in(list, options, swatches, selected, reveal)
-                    })
-                    .inner
+                show_scroll(
+                    inside,
+                    ScrollArea::vertical()
+                        .max_height(height)
+                        .auto_shrink([false, true]),
+                    |list| options_in(list, options, swatches, selected, reveal),
+                )
+                .inner
             })
         });
 

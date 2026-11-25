@@ -13,6 +13,7 @@ mod shell;
 use egui::{Context, Id, Label, Response, TextEdit, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, SecretText, SecretTexts, check_row,
     confirm_buttons_when, confirm_buttons_why, rich, secret_field, text_field,
@@ -109,10 +110,13 @@ pub fn dialog_why(
     let outcome = modal.show(ctx, |ui| {
         // A floating bar would cover the right end of the fields.
         ui.spacing_mut().scroll = egui::style::ScrollStyle::solid();
-        egui::ScrollArea::vertical()
-            .max_height(ui.available_height() - BUTTONS_HEIGHT)
-            .auto_shrink([false, true])
-            .show(ui, body);
+        show_scroll(
+            ui,
+            egui::ScrollArea::vertical()
+                .max_height(ui.available_height() - BUTTONS_HEIGHT)
+                .auto_shrink([false, true]),
+            body,
+        );
 
         match why.filter(|_| !ready) {
             Some(why) => confirm_buttons_why(ui, &cancel, confirm, kind, Some(why)),

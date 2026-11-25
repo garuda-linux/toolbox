@@ -8,6 +8,7 @@ use std::collections::BTreeMap;
 use egui::{Context, Id, Label, Layout, ScrollArea, Ui, vec2};
 use toolbox_core::features::merges::{CachedComparison, Pick};
 use toolbox_gui_kit::fonts::{BODY, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::widgets::{
     DialogWidth, ModalWrapper, NavLook, Pending, Tone, banner, nav_row, rich,
 };
@@ -155,9 +156,10 @@ fn list(ui: &mut Ui, dialog: &mut MergeDialog, context: &PageContext<'_>, pairs:
         height: ui.tokens().sizes.nav_row_height,
     };
 
-    ScrollArea::vertical()
-        .id_salt("toolbox_gui::home::merges::list")
-        .show(ui, |ui| {
+    show_scroll(
+        ui,
+        ScrollArea::vertical().id_salt("toolbox_gui::home::merges::list"),
+        |ui| {
             for (index, pair) in pairs.iter().enumerate() {
                 let queued = toolbox_core::features::merges::queued(context.changes, &pair.copy);
                 let label = entry_label(&ctx, &pair.copy, queued.is_some());
@@ -166,7 +168,8 @@ fn list(ui: &mut Ui, dialog: &mut MergeDialog, context: &PageContext<'_>, pairs:
                     dialog.editing = None;
                 }
             }
-        });
+        },
+    );
 }
 
 /// The file in use names the entry, the heading at the right names the copy.

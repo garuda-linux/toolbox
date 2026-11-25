@@ -5,6 +5,7 @@
 mod caps;
 pub mod desktop;
 mod gpu;
+mod handles;
 mod pointer;
 mod repaints;
 mod shimmer;
@@ -14,6 +15,7 @@ pub use caps::{
 };
 use egui_kittest::HarnessBuilder;
 use egui_kittest::kittest::Queryable as _;
+pub use handles::scroll_handles;
 pub use pointer::{click_at, scroll, wheel_at};
 pub use repaints::{Cover, Repaints, cover, repaints_once_settled};
 pub use shimmer::{freeze_shimmer, shimmer_frozen};

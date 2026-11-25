@@ -3,6 +3,7 @@
 
 use egui::{Color32, Context, Frame, Label, ScrollArea, Ui, vec2};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{card, line, rich};
 use toolbox_plan::protocol::Failure;
@@ -43,10 +44,12 @@ pub(super) fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
             .inner_margin(tokens.sizes.steps_padding)
             .show(ui, |ui| {
                 ui.scope(|ui| {
-                    ScrollArea::vertical()
-                        .max_height(STEPS_HEIGHT)
-                        .auto_shrink([false, true])
-                        .show(ui, |ui| {
+                    show_scroll(
+                        ui,
+                        ScrollArea::vertical()
+                            .max_height(STEPS_HEIGHT)
+                            .auto_shrink([false, true]),
+                        |ui| {
                             ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
                             for step in steps {
                                 let row = ui.horizontal(|ui| {
@@ -68,7 +71,8 @@ pub(super) fn steps(ui: &mut Ui, steps: &[StepRow], dry_run: bool) {
 
                                 follow_running(ui, step, &row.response);
                             }
-                        });
+                        },
+                    );
                 });
             });
     });

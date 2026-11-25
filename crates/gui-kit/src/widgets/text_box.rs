@@ -6,7 +6,7 @@ use egui::text::CCursor;
 use egui::{Align, AsIdSalt, Frame, Margin, Response, ScrollArea, Shape, TextEdit, Ui};
 
 use super::field::{FRAME_WIDTH, paint_field};
-use crate::theme::FIELD_RADIUS;
+use crate::theme::{FIELD_RADIUS, show_scroll};
 
 /// Room above and below the text, the line edit's 7 px frame, so its first
 /// line does not touch the box's top.
@@ -67,11 +67,13 @@ fn boxed(
     let framed = Frame::NONE
         .inner_margin(Margin::symmetric(FRAME_WIDTH, PADDING_Y))
         .show(ui, |ui| {
-            ScrollArea::both()
-                .id_salt(("text_box", salt))
-                .max_height(max_height)
-                .auto_shrink([false, shrink])
-                .show(ui, |ui| {
+            show_scroll(
+                ui,
+                ScrollArea::both()
+                    .id_salt(("text_box", salt))
+                    .max_height(max_height)
+                    .auto_shrink([false, shrink]),
+                |ui| {
                     let output = edit
                         .frame(Frame::NONE)
                         .desired_width(f32::INFINITY)
@@ -87,8 +89,9 @@ fn boxed(
                     }
 
                     output.response.response
-                })
-                .inner
+                },
+            )
+            .inner
         });
 
     let response = framed.inner;

@@ -5,6 +5,7 @@ use toolbox_core::features::merges::{
     CachedComparison, Comparison, Part, Pick, Standing, choice, edit_start, queued, settled,
 };
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Tone, banner, mono_small, pill_button, pill_button_with_icon, pill_width_with_icon,
     queued_tag, rich, segmented,
@@ -195,11 +196,13 @@ fn changes(
     let mut change = 0;
     let mut chosen = None;
 
-    ScrollArea::vertical()
-        .id_salt(("toolbox_gui::home::merges::changes", copy.as_str()))
-        .max_height(height)
-        .auto_shrink([false, true])
-        .show(ui, |ui| {
+    show_scroll(
+        ui,
+        ScrollArea::vertical()
+            .id_salt(("toolbox_gui::home::merges::changes", copy.as_str()))
+            .max_height(height)
+            .auto_shrink([false, true]),
+        |ui| {
             for (index, part) in parts.enumerate() {
                 match part {
                     Part::Same(text) => {
@@ -231,7 +234,8 @@ fn changes(
                     }
                 }
             }
-        });
+        },
+    );
 
     chosen
 }

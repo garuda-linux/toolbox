@@ -6,6 +6,7 @@ use egui::{Rect, ScrollArea, Ui, UiBuilder, pos2};
 
 use super::{column, column_rect};
 use crate::motion;
+use crate::theme::show_scroll;
 use crate::tokens::Sizes;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -83,7 +84,7 @@ pub(super) fn scrolled(
     body: impl FnOnce(&mut Ui),
 ) -> f32 {
     let mut body_ui = ui.new_child(UiBuilder::new().max_rect(room.view));
-    let scroll = area.show(&mut body_ui, |scrolling| {
+    let scroll = show_scroll(&mut body_ui, area, |scrolling| {
         // The page runs on under the header. Only the painting reaches up
         // there: the area itself starts below the band, so a control
         // scrolled into sight lands fully below it.

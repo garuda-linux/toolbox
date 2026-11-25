@@ -1,6 +1,7 @@
 use egui::{Align, Layout, Rect, ScrollArea, Ui, UiBuilder};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{SMALL, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{ButtonKind, named_pill_button, rich, text_link};
 use toolbox_guide::{Guide, Page};
@@ -51,7 +52,7 @@ pub(super) fn show(
     let mut reader = Reader::new(state.target.as_deref());
     let mut inner = ui.new_child(UiBuilder::new().max_rect(rect));
     let view_top = rect.top();
-    let scrolled = area.show(&mut inner, |column| {
+    let scrolled = show_scroll(&mut inner, area, |column| {
         column.set_width(column.available_width());
         column.set_max_width(TEXT_WIDTH.min(column.available_width()));
         top_line(column, page, context);

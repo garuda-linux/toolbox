@@ -39,15 +39,11 @@ pub(super) fn reveal(ui: &Ui, stops: &[f32], entry: Rect) -> Option<f32> {
 }
 
 /// The sidebar's list, at the offset [`scroll_by`] left for it. The
-/// collapsed rail has no bar, as its width is the icons' alone: the wheel
-/// and the keys scroll it, and the fade and hairline mark the cut.
-pub(super) fn list_area(ui: &Ui, expanded: bool) -> ScrollArea {
+/// collapsed rail shows no bar (see `show_scroll_hidden`), as its width is
+/// the icons' alone: the wheel and the keys scroll it, and the fade and
+/// hairline mark the cut.
+pub(super) fn list_area(ui: &Ui) -> ScrollArea {
     let area = ScrollArea::vertical();
-    let area = if expanded {
-        area
-    } else {
-        area.scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysHidden)
-    };
 
     match ui.data_mut(|data| data.remove_temp::<f32>(offset_id(ui))) {
         Some(offset) => area.vertical_scroll_offset(offset),

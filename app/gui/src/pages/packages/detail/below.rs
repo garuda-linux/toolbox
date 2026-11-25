@@ -12,6 +12,7 @@ use toolbox_core::features::packages::detail::{HISTORY_SHOWN, file_list, matchin
 use toolbox_core::features::packages::history::HistoryEntry;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
+use toolbox_gui_kit::theme::show_scroll_rows;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_gui_kit::widgets::{
     ButtonKind, PropertyTexts, SearchTexts, counted_disclosure, disclosure, loading_indicator,
@@ -138,11 +139,15 @@ fn file_lines(ui: &mut Ui, files: &[OutsideText], places: &[usize]) {
     padded_card(ui, |ui| {
         // show_rows counts the spacing of this ui between rows.
         ui.spacing_mut().item_spacing.y = 0.0;
-        ScrollArea::vertical()
-            .id_salt("packages-files")
-            .auto_shrink([false, true])
-            .max_height(FILES_HEIGHT)
-            .show_rows(ui, height, places.len(), |ui, shown| {
+        show_scroll_rows(
+            ui,
+            ScrollArea::vertical()
+                .id_salt("packages-files")
+                .auto_shrink([false, true])
+                .max_height(FILES_HEIGHT),
+            height,
+            places.len(),
+            |ui, shown| {
                 let lines = places
                     .get(shown)
                     .unwrap_or_default()
@@ -156,7 +161,8 @@ fn file_lines(ui: &mut Ui, files: &[OutsideText], places: &[usize]) {
 
                     ui.add(Label::new(text).truncate());
                 }
-            });
+            },
+        );
     })
     .response
     .widget_info(|| WidgetInfo::labeled(Role::Document, true, &*label));

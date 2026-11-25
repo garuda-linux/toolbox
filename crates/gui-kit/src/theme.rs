@@ -8,8 +8,10 @@ mod tests;
 
 use egui::style::{ScrollAnimation, ScrollStyle};
 use egui::{Color32, Context, CornerRadius, Shadow, Stroke, Style, Theme, vec2};
-pub use scrollbar::paint_bars;
-use scrollbar::{MIN_LENGTH, STRIP};
+#[cfg(any(test, feature = "testing"))]
+pub(crate) use scrollbar::REST_WIDTH;
+pub(crate) use scrollbar::{MIN_LENGTH, STRIP};
+pub use scrollbar::{show_scroll, show_scroll_hidden, show_scroll_rows};
 
 use crate::palette::{self, Palette};
 use crate::tokens::{self, Tokens};
@@ -145,8 +147,8 @@ fn write(style: &mut Style, tokens: &Tokens) {
     spacing.window_margin = sizes.popover_padding;
 
     // egui keeps the strip and the drag, its bar width is the strip so the
-    // drag covers all of it. Its own bar stays invisible, `paint_bars`
-    // draws Darkly's handle and groove over it.
+    // drag covers all of it. Its own bar stays invisible, `show_scroll`
+    // paints Darkly's handle and groove over it.
     spacing.scroll = ScrollStyle {
         floating: true,
         bar_width: STRIP,

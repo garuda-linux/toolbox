@@ -3,6 +3,7 @@
 
 use egui::{Context, Id, Label, ScrollArea, Ui};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, Tone, confirm_buttons, rich, split_row,
@@ -55,13 +56,11 @@ fn updates(page: &mut HomePage, ctx: &Context, overview: Option<&Overview<'_>>) 
                 let none = i18n::text(ctx, "home-pending-none");
                 ui.label(rich(ui, &none, Weight::Regular, BODY, tokens.secondary));
             } else {
-                ScrollArea::vertical()
-                    .max_height(LIST_HEIGHT)
-                    .show(ui, |ui| {
-                        for update in pending {
-                            row(ui, update);
-                        }
-                    });
+                show_scroll(ui, ScrollArea::vertical().max_height(LIST_HEIGHT), |ui| {
+                    for update in pending {
+                        row(ui, update);
+                    }
+                });
             }
         });
 

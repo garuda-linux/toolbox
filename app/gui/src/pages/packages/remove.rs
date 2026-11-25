@@ -8,6 +8,7 @@ use toolbox_core::Toggle;
 use toolbox_core::features::packages::graph::{required_by, takes_along};
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_gui_kit::fonts::{BODY, Weight};
+use toolbox_gui_kit::theme::show_scroll;
 use toolbox_gui_kit::widgets::{
     ButtonKind, Confirmation, DialogWidth, ModalWrapper, confirm_buttons, rich,
 };
@@ -113,10 +114,10 @@ fn names(ui: &mut Ui, intro: &str, packages: &[PackageName], salt: &str) {
     let tokens = tokens::current(ui.ctx());
     ui.add(Label::new(rich(ui, intro, Weight::Regular, BODY, tokens.text)).wrap());
     ui.add_space(ui.tokens().sizes.control_gap);
-    ScrollArea::vertical()
-        .id_salt(salt)
-        .max_height(LIST_HEIGHT)
-        .show(ui, |ui| {
+    show_scroll(
+        ui,
+        ScrollArea::vertical().id_salt(salt).max_height(LIST_HEIGHT),
+        |ui| {
             for package in packages {
                 ui.label(rich(
                     ui,
@@ -126,5 +127,6 @@ fn names(ui: &mut Ui, intro: &str, packages: &[PackageName], salt: &str) {
                     tokens.text,
                 ));
             }
-        });
+        },
+    );
 }

@@ -9,7 +9,7 @@ mod head;
 mod reading;
 
 use egui::{Frame, Margin, Panel, Rect, Ui, UiBuilder, pos2};
-use toolbox_gui_kit::theme::SIDEBAR_WIDTH;
+use toolbox_gui_kit::theme::{SIDEBAR_WIDTH, show_scroll, show_scroll_hidden};
 use toolbox_gui_kit::widgets::{
     EdgeFade, HIGHLIGHT_TOP, NAV_ICON, group_label, group_label_height, nav_divider,
     nav_divider_height, nav_row,
@@ -144,11 +144,18 @@ fn pages_and_foot(
         ui.data_mut(|data| data.insert_temp(revealing_id(), REVEAL_FRAMES));
     }
 
-    let list = list_area(ui, density.expanded).show(ui, |ui| {
-        keep_entries_right(ui, ui.max_rect().right());
-        let fade = EdgeFade::of(ui, height, density.row);
-        pages(ui, current, density, commands, Some(fade))
-    });
+    let area = list_area(ui);
+    let content = |inside: &mut Ui| {
+        keep_entries_right(inside, inside.max_rect().right());
+        let fade = EdgeFade::of(inside, height, density.row);
+        pages(inside, current, density, commands, Some(fade))
+    };
+
+    let list = if density.expanded {
+        show_scroll(ui, area, content)
+    } else {
+        show_scroll_hidden(ui, area, content)
+    };
 
     if let Some(by) = list.inner.scroll {
         scroll_by(ui, &list, by);

@@ -7,7 +7,7 @@ use egui::{
 };
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::Weight;
-use toolbox_gui_kit::theme::RADIUS;
+use toolbox_gui_kit::theme::{RADIUS, show_scroll};
 use toolbox_guide::{Span, Table};
 
 use super::{Reader, spans};
@@ -52,7 +52,7 @@ pub(super) fn show(ui: &mut Ui, table: &Table, reader: &mut Reader<'_>) {
         .show(ui, |ui| {
             // Laid out by hand: egui's Grid centres a cell in a row height
             // from the last frame, so wrapped cells start at different tops.
-            ScrollArea::horizontal().show(ui, |ui| {
+            show_scroll(ui, ScrollArea::horizontal(), |ui| {
                 ui.spacing_mut().item_spacing.y = 0.0;
                 let start = ui.cursor().min;
                 let mut top = start.y;
