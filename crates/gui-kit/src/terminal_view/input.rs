@@ -11,7 +11,7 @@ const CUT: u8 = 0x18;
 const LITERAL_NEXT: u8 = 0x16;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Input {
+pub(super) enum Input {
     Bytes(Vec<u8>),
     /// Ctrl+Shift+C: copy the selection.
     Copy,

@@ -1,11 +1,12 @@
 use toolbox_cli::output::{Paint, Style};
+use toolbox_plan::UnitName;
 
 use super::text;
 use crate::lists::ServiceRow;
 
 fn bluetooth() -> ServiceRow {
     ServiceRow {
-        name: "bluetooth.service".to_owned(),
+        name: UnitName::new("bluetooth.service").unwrap(),
         active: "active",
         state: "running".to_owned(),
         at_boot: true,

@@ -8,7 +8,7 @@ use crate::settings::SettingRow;
 
 impl Named for ServiceRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.name]
+        vec![self.name.as_str()]
     }
 }
 
@@ -20,7 +20,7 @@ impl Named for ToggleRow {
 
 impl Named for KernelRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.name]
+        vec![self.name.as_str()]
     }
 }
 
@@ -34,19 +34,19 @@ impl Named for LocaleRow {
 
 impl Named for UserRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.name, &self.full_name]
+        vec![self.name.as_str(), self.full_name.as_str()]
     }
 }
 
 impl Named for GroupRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.name]
+        vec![self.name.as_str()]
     }
 }
 
 impl Named for ModuleRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.module]
+        vec![self.module.as_str()]
     }
 }
 
@@ -58,13 +58,13 @@ impl Named for FileRow {
 
 impl Named for PackRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.package, &self.program]
+        vec![self.package.as_str(), self.program.as_str()]
     }
 }
 
 impl Named for DriverLine {
     fn names(&self) -> Vec<&str> {
-        vec![&self.module]
+        vec![self.module.as_str()]
     }
 }
 

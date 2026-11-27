@@ -1,6 +1,6 @@
 use std::error::Error;
-use std::io::{BufRead as _, BufReader, Read as _, Write as _};
-use std::process::{Command, ExitStatus, Stdio};
+use std::io::{self, BufRead as _, BufReader, Read as _, Write};
+use std::process::{Child, Command, ExitStatus, Stdio};
 
 use toolbox_plan::protocol::{Answer, Event, Mode, Outcome, Request, decode, encode};
 use toolbox_plan::{RootAction, Step, StepId};
@@ -43,9 +43,20 @@ pub fn helper_answering(
 
 /// Runs `command` with `stdin` kept open until the helper says `done`.
 pub fn run_helper(
+    command: Command,
+    stdin: &str,
+    reply: Option<Reply<'_>>,
+) -> Result<Run, Box<dyn Error>> {
+    run_helper_at(command, stdin, reply, |step| Some(Answer::Proceed { step }))
+}
+
+/// [`run_helper`] that answers each gate with what `at_gate` gives. `None`
+/// closes stdin instead, as an app that went away does.
+pub fn run_helper_at(
     mut command: Command,
     stdin: &str,
-    mut reply: Option<Reply<'_>>,
+    reply: Option<Reply<'_>>,
+    at_gate: impl FnMut(StepId) -> Option<Answer>,
 ) -> Result<Run, Box<dyn Error>> {
     let mut child = command
         .stdin(Stdio::piped())
@@ -53,10 +64,25 @@ pub fn run_helper(
         .stderr(Stdio::piped())
         .spawn()?;
 
-    let mut input = child.stdin.take().ok_or("no stdin pipe")?;
+    let input = child.stdin.take().ok_or("no stdin pipe")?;
+
+    drive(child, input, stdin, reply, at_gate)
+}
+
+/// Sends `stdin` to the helper on `input`, answers its gates and questions
+/// and returns what it printed. `input` stays open until the helper says
+/// `done`, unless `at_gate` closes it.
+pub fn drive(
+    mut child: Child,
+    input: impl Write,
+    stdin: &str,
+    mut reply: Option<Reply<'_>>,
+    mut at_gate: impl FnMut(StepId) -> Option<Answer>,
+) -> Result<Run, Box<dyn Error>> {
+    let mut input = Some(input);
     let output = child.stdout.take().ok_or("no stdout pipe")?;
     let mut errors = child.stderr.take().ok_or("no stderr pipe")?;
-    input.write_all(stdin.as_bytes())?;
+    send(&mut input, stdin)?;
 
     let mut stdout = String::new();
 
@@ -65,22 +91,22 @@ pub fn run_helper(
         let event = decode::<Event>(&line).ok();
         let done = event == Some(Event::Done);
 
-        // The app goes on at every gate. A test that stops at one closes stdin instead.
         if let Some(Event::Waiting { step }) = &event {
-            input.write_all(encode(&Answer::Proceed { step: *step })?.as_bytes())?;
-            input.flush()?;
+            match at_gate(*step) {
+                Some(answer) => send(&mut input, &encode(&answer)?)?,
+                None => input = None,
+            }
         }
 
         if let Some(Event::Output { step: _, data }) = &event
             && let Some(answer) = reply.take_if(|answer| data.contains(answer.asked))
         {
-            input.write_all(
-                encode(&Answer::Input {
+            send(
+                &mut input,
+                &encode(&Answer::Input {
                     data: answer.typed.to_owned(),
-                })?
-                .as_bytes(),
+                })?,
             )?;
-            input.flush()?;
         }
 
         stdout.push_str(&line);
@@ -105,6 +131,15 @@ pub fn run_helper(
         stdout,
         stderr,
     })
+}
+
+fn send(input: &mut Option<impl Write>, text: &str) -> io::Result<()> {
+    if let Some(input) = input {
+        input.write_all(text.as_bytes())?;
+        input.flush()?;
+    }
+
+    Ok(())
 }
 
 pub fn events(run: &Run) -> Result<Vec<Event>, Box<dyn Error>> {

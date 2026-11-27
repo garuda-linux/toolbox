@@ -60,7 +60,9 @@ fn the_default_dns_removes_the_drop_in() {
 #[test]
 fn hblock_on_enables_the_timer_and_fills_the_hosts_file() {
     assert_eq!(
-        shown(&RootAction::SetHblock { enabled: true }),
+        shown(&RootAction::SetHblock {
+            enabled: crate::Toggle::On
+        }),
         ["systemctl enable --now -- hblock.timer", "hblock"]
     );
 }
@@ -68,7 +70,9 @@ fn hblock_on_enables_the_timer_and_fills_the_hosts_file() {
 #[test]
 fn hblock_off_disables_the_timer_and_empties_the_block_list() {
     assert_eq!(
-        shown(&RootAction::SetHblock { enabled: false }),
+        shown(&RootAction::SetHblock {
+            enabled: crate::Toggle::Off
+        }),
         [
             "systemctl disable --now -- hblock.timer",
             "hblock -S none -D none"
@@ -133,14 +137,14 @@ fn a_garuda_update_switch_is_one_builtin_edit() {
     assert_eq!(
         shown(&RootAction::SetGarudaUpdateFlag {
             flag: GarudaUpdateFlag::UpdateAur,
-            enabled: true,
+            enabled: crate::Toggle::On,
         }),
         ["set UPDATE_AUR=1 in /etc/garuda/garuda-update/config"]
     );
     assert_eq!(
         shown(&RootAction::SetGarudaUpdateFlag {
             flag: GarudaUpdateFlag::SkipMirrorlist,
-            enabled: false,
+            enabled: crate::Toggle::Off,
         }),
         ["comment out SKIP_MIRRORLIST in /etc/garuda/garuda-update/config"]
     );
@@ -156,13 +160,15 @@ fn settings_actions_round_trip_through_json() {
         RootAction::SetDns {
             provider: DnsProvider::Quad9,
         },
-        RootAction::SetHblock { enabled: true },
+        RootAction::SetHblock {
+            enabled: crate::Toggle::On,
+        },
         RootAction::SetWifiBackend {
             backend: WifiBackend::WpaSupplicant,
         },
         RootAction::SetGarudaUpdateFlag {
             flag: GarudaUpdateFlag::NoCheckSpace,
-            enabled: false,
+            enabled: crate::Toggle::Off,
         },
     ];
 

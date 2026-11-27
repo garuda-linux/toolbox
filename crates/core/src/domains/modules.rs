@@ -32,7 +32,7 @@ impl Domain for ModuleBlacklist {
         each(Self::STAGE, changes, |module, wish| {
             RootAction::SetModuleBlacklisted {
                 module: module.clone(),
-                blacklisted: wish.is_on(),
+                blacklisted: *wish,
             }
         })
     }

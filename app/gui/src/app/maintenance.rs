@@ -69,12 +69,12 @@ impl App {
         }
     }
 
-    fn queue_operation(&mut self, operation: Operation, on: bool) {
+    fn queue_operation(&mut self, operation: Operation, on: Toggle) {
         let snapshot = self.current_snapshot();
         let task = operation.task(upgrader(&snapshot, self.services.home.garuda_update()));
 
         self.queue.edit(&snapshot, |changes, snapshot| {
-            maintenance::queue(task, Toggle::from_on(on), changes, snapshot);
+            maintenance::queue(task, on, changes, snapshot);
         });
     }
 }

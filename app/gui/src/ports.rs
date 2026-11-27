@@ -38,14 +38,14 @@ use toolbox_https::SystemClock;
 use toolbox_news::{Feeds, News, NewsSource};
 use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
-use toolbox_privatebin::{Https, Transport};
+use toolbox_privatebin::{PrivateBinTransport, Transport};
 use toolbox_services::address::{AddressSource, KdeGeoIp};
 use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
 use toolbox_system::{
-    ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing, HelperLocks,
-    Libalpm, MergeSource, NetworkActions, NetworkSource, PacmanLog, Sources, StatusSources,
-    SystemActions, SystemBootMenu, SystemConfigFiles, SystemDiagnostics, SystemEditor,
-    SystemNetwork, SystemRepair,
+    AurOrderSource, ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing,
+    HelperLocks, Libalpm, MergeSource, NetworkActions, NetworkSource, PacmanLog, Paru, RouteSource,
+    Sources, StatusSources, SystemActions, SystemBootMenu, SystemConfigFiles, SystemDiagnostics,
+    SystemEditor, SystemNetwork, SystemRepair, SystemRoute,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";
@@ -114,7 +114,7 @@ pub fn helper_services(
     let transport: Arc<dyn Transport> = if dry_run {
         Arc::new(DryRunTransport)
     } else {
-        Arc::new(Https::new())
+        Arc::new(PrivateBinTransport::new())
     };
 
     let source = Arc::new(SystemDiagnostics::system(Arc::<HelperLauncher>::clone(
@@ -264,6 +264,12 @@ pub fn snapshot_sources() -> Sources {
 fn snapshot_sources_with(lookup: impl Fn(&str) -> Option<OsString>, development: bool) -> Sources {
     let sources = Sources::system();
 
+    // The route the AUR orders are read with, so the snapshot and the reads agree.
+    let sources = match samples::route() {
+        Some(route) => Sources { route, ..sources },
+        None => sources,
+    };
+
     match self_test_merges(lookup, development) {
         Some(merges) => Sources { merges, ..sources },
         None => sources,
@@ -299,11 +305,25 @@ pub fn packages(handle: &Handle, mode: Mode) -> PackagesSetup {
         .flatten()
         .unwrap_or_else(|| Arc::new(Cache::system(Paths::from_process().aur_dir())));
 
+    // paru only reads an order, so a dry run asks it too. A self-test build
+    // answers with the captured orders.
+    let orders: Arc<dyn AurOrderSource> = dry_run
+        .then(samples::aur_orders)
+        .flatten()
+        .unwrap_or_else(|| Arc::new(Paru::new()));
+
+    let route: Arc<dyn RouteSource> = dry_run
+        .then(samples::route)
+        .flatten()
+        .unwrap_or_else(|| Arc::new(SystemRoute::system()));
+
     PackagesSetup {
         runtime: handle.clone(),
         source: Arc::new(Libalpm::system()),
         log: Arc::new(PacmanLog::system()),
         aur,
+        orders,
+        route,
     }
 }
 

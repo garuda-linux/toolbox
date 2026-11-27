@@ -168,6 +168,12 @@ impl TryFrom<String> for MergeCopy {
     }
 }
 
+impl AsRef<str> for MergeCopy {
+    fn as_ref(&self) -> &str {
+        self.path.as_str()
+    }
+}
+
 impl From<MergeCopy> for String {
     fn from(copy: MergeCopy) -> Self {
         copy.path.as_str().to_owned()

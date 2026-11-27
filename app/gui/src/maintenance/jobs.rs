@@ -82,7 +82,7 @@ impl Jobs {
 
     /// Stops the ranking under way. Its result comes back as
     /// [`RankProblem::Cancelled`].
-    pub fn cancel_rank(&self) {
+    pub(super) fn cancel_rank(&self) {
         self.cancel.store(true, Ordering::Relaxed);
     }
 
@@ -134,7 +134,7 @@ impl Jobs {
         self.ranked.landed().pop()
     }
 
-    pub fn reset_outcome(&self) -> Option<Outcome> {
+    pub(super) fn reset_outcome(&self) -> Option<Outcome> {
         self.reset.landed().pop()
     }
 }

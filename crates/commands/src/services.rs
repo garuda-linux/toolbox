@@ -33,7 +33,7 @@ pub fn show(show: &UnitShow, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     };
 
     let unit = show.unit.as_str();
-    let Some(row) = rows.iter().find(|row| row.name == unit) else {
+    let Some(row) = rows.iter().find(|row| row.name.as_str() == unit) else {
         let refused = Refused::Unknown(format!("there is no unit {unit}, see `services list`"))
             .hinted(unit, rows.iter().map(|row| row.name.as_str()));
 
@@ -71,7 +71,7 @@ fn text(paint: Paint, row: &ServiceRow, user: bool) -> String {
     let whose = if user { "yours" } else { "the system's" };
 
     paint.facts(
-        &row.name,
+        row.name.as_str(),
         &[
             ("description", &row.description),
             ("state", &state),

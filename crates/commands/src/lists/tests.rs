@@ -1,3 +1,5 @@
+mod json;
+
 use std::collections::BTreeSet;
 
 use toolbox_catalog::ToggleCatalog;
@@ -7,7 +9,7 @@ use toolbox_core::domains::{Accounts, Group, InstalledPackages, User};
 use toolbox_core::features::kernels::view::BootMenus;
 use toolbox_core::features::locales::{SupportedLocales, parse_supported};
 use toolbox_core::features::services::{ActiveState, FileState, UnitInfo};
-use toolbox_plan::{GroupName, PackageName, UnitName, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, PackageName, ShellPath, UnitName, UserName};
 
 use super::{UserRow, groups, kernels, locales, people, services, toggles, users};
 
@@ -48,8 +50,8 @@ fn accounts() -> Snapshot {
             uid: 1001,
             gid: 1001,
             gecos: toolbox_text::plain("Ada Lovelace,Room 1"),
-            home: "/home/ada".to_owned(),
-            shell: "/usr/bin/fish".to_owned(),
+            home: Ok(HomeDirectory::new("/home/ada").unwrap()),
+            shell: Ok(ShellPath::new("/usr/bin/fish").unwrap()),
         }],
         groups: vec![Group {
             name: GroupName::new("wheel").unwrap(),
@@ -71,7 +73,7 @@ fn services_say_their_state_and_whether_they_start_at_boot() {
         ),
     ]);
 
-    assert_eq!(rows[0].name, "bluetooth.service");
+    assert_eq!(rows[0].name.as_str(), "bluetooth.service");
     assert_eq!(rows[0].active, "failed");
     assert!(!rows[0].at_boot);
     assert!(rows[1].at_boot);
@@ -110,7 +112,10 @@ fn users_name_their_full_name_and_shell_and_groups_their_members() {
 
     let people = users(&snapshot).unwrap();
     assert_eq!(people[0].full_name, "Ada Lovelace");
-    assert_eq!(people[0].shell, "/usr/bin/fish");
+    assert_eq!(
+        people[0].shell.as_ref().ok().map(ShellPath::as_str),
+        Some("/usr/bin/fish")
+    );
 
     let teams = groups(&snapshot).unwrap();
     assert_eq!(teams[0].members, ["ada"]);
@@ -132,11 +137,11 @@ fn a_toggle_row_names_its_page_as_the_window_does() {
 
 fn account(name: &str, uid: u32) -> UserRow {
     UserRow {
-        name: name.to_owned(),
+        name: UserName::new(name).unwrap(),
         uid,
-        full_name: String::new(),
-        home: format!("/home/{name}"),
-        shell: "/bin/bash".to_owned(),
+        full_name: toolbox_text::plain(""),
+        home: Ok(HomeDirectory::new(format!("/home/{name}")).unwrap()),
+        shell: Ok(ShellPath::new("/bin/bash").unwrap()),
     }
 }
 
@@ -257,8 +262,8 @@ fn users_and_groups_are_listed_by_id() {
         uid,
         gid: uid,
         gecos: toolbox_text::plain(""),
-        home: format!("/home/{name}"),
-        shell: "/bin/bash".to_owned(),
+        home: Ok(HomeDirectory::new(format!("/home/{name}")).unwrap()),
+        shell: Ok(ShellPath::new("/bin/bash").unwrap()),
     };
 
     let group = |name: &str, gid: u32| Group {

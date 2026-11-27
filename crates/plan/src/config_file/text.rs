@@ -29,7 +29,7 @@ pub enum InvalidConfigText {
 ///
 /// Never the content in debug text: a file may hold keys or tokens, and
 /// debug text ends up in logs.
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ConfigText(String);
 
 validated_string!(ConfigText, InvalidConfigText, redacted);

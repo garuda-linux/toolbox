@@ -26,7 +26,7 @@ const NARROW_CONTROL: f32 = toolbox_gui_kit::tokens::Sizes::DEFAULT.setting_cont
 const BAR_HEIGHT: f32 = 4.0;
 const BAR_RADIUS: u8 = 2;
 
-pub fn stages(ctx: &egui::Context, steps: &Steps) -> Vec<(Stage, String)> {
+pub(super) fn stages(ctx: &egui::Context, steps: &Steps) -> Vec<(Stage, String)> {
     let numbered = steps.pairs().enumerate().map(|(index, (id, title))| {
         let number = index + 1;
         let name = i18n::text_with(

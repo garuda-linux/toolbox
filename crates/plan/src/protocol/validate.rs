@@ -59,7 +59,9 @@ impl Request {
 }
 
 fn refuse_protected(step: &Step<RootAction>) -> Result<(), RequestError> {
-    let RootAction::RemovePackages { packages } = &step.action else {
+    let (RootAction::RemovePackages { packages } | RootAction::RemoveMakeDependencies { packages }) =
+        &step.action
+    else {
         return Ok(());
     };
 

@@ -20,7 +20,7 @@ use crate::pages::PageContext;
 use crate::pages::packages::repository;
 
 /// Kept so the palette finds its rows again once a read lands.
-pub type Lists = (Option<Arc<Catalog>>, Option<Arc<AurCatalog>>);
+pub(super) type Lists = (Option<Arc<Catalog>>, Option<Arc<AurCatalog>>);
 
 pub fn lists(context: &PageContext<'_>) -> Lists {
     fn known<T>(read: &Read<Arc<T>>) -> Option<Arc<T>> {

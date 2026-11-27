@@ -11,7 +11,7 @@ use crate::shown::Shown;
 pub const MAX_PATH_BYTES: usize = 1024;
 
 /// Longer than any group, key or value a toggle needs.
-pub const MAX_WORD_BYTES: usize = 255;
+const MAX_WORD_BYTES: usize = 255;
 
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
 pub enum InvalidHomePath {
@@ -99,7 +99,8 @@ impl ConfigWord {
     /// # Errors
     ///
     /// [`InvalidConfigWord`] for an empty or overlong word, one with a
-    /// control character, `[`, `]`, `=` or `#`, or blanks around it.
+    /// [hidden](toolbox_text::is_hidden) character, `[`, `]`, `=` or `#`, or
+    /// blanks around it.
     pub fn new(value: impl Into<String>) -> Result<Self, InvalidConfigWord> {
         let value = value.into();
 
@@ -113,9 +114,11 @@ impl ConfigWord {
             });
         }
 
+        // A bidi override or a zero-width character would show a word other
+        // than the one written to the file.
         if let Some(character) = value
             .chars()
-            .find(|character| character.is_control() || "[]=#".contains(*character))
+            .find(|character| toolbox_text::is_hidden(*character) || "[]=#".contains(*character))
         {
             return Err(InvalidConfigWord::InvalidCharacter(character));
         }

@@ -13,7 +13,7 @@ use crate::domain::{Domain, Stage, Staged, Summary, Toggle};
 
 /// The user's teardown runs before the system's, so the root steps of an
 /// apply stay one batch behind one password.
-pub const USER_TEARDOWN: Stage = Stage::new(Stage::TEARDOWN.rank() - 10);
+pub(super) const USER_TEARDOWN: Stage = Stage::new(Stage::TEARDOWN.rank() - 10);
 
 /// Disabling runs at [`Stage::TEARDOWN`]: `systemctl disable` fails for a
 /// unit whose package the same apply removed before it.

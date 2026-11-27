@@ -17,7 +17,7 @@ use crate::apply::PlanId;
 const KEPT_OUTPUT: usize = 64 * 1024;
 
 #[derive(Debug, Default)]
-pub struct MirrorWatch {
+pub(super) struct MirrorWatch {
     /// The install steps of each plan sent that has not started, as two
     /// may be on their way at once.
     sent: BTreeMap<PlanId, BTreeMap<StepId, TargetList<PackageName>>>,

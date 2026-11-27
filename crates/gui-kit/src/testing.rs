@@ -21,6 +21,7 @@ pub use repaints::{Cover, Repaints, cover, repaints_once_settled};
 pub use shimmer::{freeze_shimmer, shimmer_frozen};
 
 use crate::fonts::{FontFile, UiFaces, Weight};
+pub use crate::widgets::forget_rows;
 
 /// How many keys a test presses to reach a widget before it gives up.
 const REACH_LIMIT: usize = 60;

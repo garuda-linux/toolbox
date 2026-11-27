@@ -33,6 +33,9 @@ pub enum Refusal {
     /// The removal would take a protected dependency along, the
     /// [`Refused::subject`].
     TakesAlong(Protection),
+    /// The AUR package conflicts with the installed package that is the
+    /// [`Refused::subject`], which pacman would not replace.
+    Conflicts,
 }
 
 impl From<kernels::Refusal> for Refusal {

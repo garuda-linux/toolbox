@@ -41,7 +41,7 @@ pub enum Act {
 
 /// What the shared row, list and detail header need of a repository or
 /// an AUR row.
-pub trait PackageRow: ListItem + Copy {
+pub(super) trait PackageRow: ListItem + Copy {
     /// The state word of a queued install, which for the AUR is a build.
     const INSTALLS: &'static str;
 
@@ -145,7 +145,11 @@ const fn says_installed(filter: Filter) -> bool {
     )
 }
 
-pub fn button_text<R>(ui: &Ui, context: &PageContext<'_>, row: &R) -> (Cow<'static, str>, Act)
+pub(super) fn button_text<R>(
+    ui: &Ui,
+    context: &PageContext<'_>,
+    row: &R,
+) -> (Cow<'static, str>, Act)
 where
     R: PackageRow,
 {
@@ -273,7 +277,7 @@ where
 }
 
 /// What waits for Apply, else whether it is installed.
-pub fn state_word<R>(context: &PageContext<'_>, row: &R) -> Option<(&'static str, Tone)>
+pub(super) fn state_word<R>(context: &PageContext<'_>, row: &R) -> Option<(&'static str, Tone)>
 where
     R: PackageRow,
 {
@@ -292,7 +296,7 @@ where
     }
 }
 
-pub const fn undone(wish: Toggle) -> Toggle {
+pub(super) const fn undone(wish: Toggle) -> Toggle {
     if wish.is_on() {
         Toggle::Off
     } else {

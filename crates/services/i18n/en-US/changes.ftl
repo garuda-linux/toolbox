@@ -43,9 +43,28 @@ change-unfinished = Did not finish
 changes-wait-read = Apply waits until the system has been read.
 changes-wait-locks = Apply waits for the lock state of the accounts. The Users and groups page says when it cannot be read.
 changes-wait-aur = Apply waits for the package list of the AUR. The Packages page says when it cannot be read.
-# Why Apply is disabled while a queued AUR build has no build order yet.
-changes-wait-orders = Apply waits for the build orders of the queued AUR packages. Take those packages out of the queue to apply the rest.
+# Why Apply is disabled while a queued AUR build has no build order yet. $reason
+# names the package and why its order is missing.
+changes-wait-orders = Apply waits for a build order. { $reason }
+# A queued AUR build that no read has answered yet. $name is the package.
+changes-wait-order-unknown = { $name } waits for its build order.
+# Why Apply is disabled while the build orders of the queued AUR packages are
+# read. $names lists the packages.
+changes-wait-reading = Apply waits until the build orders of { $names } are read.
+# Drops an Apply that waits for the build orders.
+changes-cancel-apply = Cancel
 changes-wait-running = Apply waits until the changes being applied are done.
+
+# The lines under a queued AUR package. $bases are the packages paru builds,
+# $count the repository packages it installs as dependencies.
+changes-build-reading = Reading the build order
+changes-build-waiting = Waits for its build order
+changes-build-ready = Builds { $bases }. { $count ->
+    [one] Installs one repository package as a dependency.
+   *[other] Installs { $count } repository packages as dependencies.
+}
+changes-build-packages = Packages
+changes-old-path-password = paru asks for the password for each step, so it may ask several times.
 # Why Apply is disabled after a read failed, for example when the password
 # prompt was closed. The popover shows it with a Read again button.
 changes-unread-locks = Apply waits: the lock state of the accounts could not be read.

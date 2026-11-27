@@ -19,7 +19,7 @@ const READING: &str = "Reading the system…";
 
 const CLEAR: &str = "\r\u{1b}[2K";
 
-pub struct Spinner {
+struct Spinner {
     stop: Option<Sender<()>>,
     drawing: Option<JoinHandle<()>>,
 }

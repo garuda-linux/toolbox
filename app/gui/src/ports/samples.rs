@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use toolbox_aur::AurSource;
 use toolbox_news::NewsSource;
-use toolbox_system::{MergeSource, RepairSource};
+use toolbox_system::{AurOrderSource, MergeSource, RepairSource, RouteSource};
 
 #[cfg(feature = "selftest")]
 #[expect(
@@ -25,6 +25,34 @@ pub fn repair() -> Option<Arc<dyn RepairSource>> {
 )]
 pub fn aur() -> Option<Arc<dyn AurSource>> {
     Some(Arc::new(toolbox_gui::packages::SampleAur))
+}
+
+#[cfg(feature = "selftest")]
+#[expect(
+    clippy::unnecessary_wraps,
+    reason = "a release build answers None through the same signature"
+)]
+pub fn aur_orders() -> Option<Arc<dyn AurOrderSource>> {
+    Some(Arc::new(toolbox_system::SampleAurOrders))
+}
+
+#[cfg(feature = "selftest")]
+#[expect(
+    clippy::unnecessary_wraps,
+    reason = "a release build answers None through the same signature"
+)]
+pub fn route() -> Option<Arc<dyn RouteSource>> {
+    Some(Arc::new(toolbox_system::SampleRoute))
+}
+
+#[cfg(not(feature = "selftest"))]
+pub const fn aur_orders() -> Option<Arc<dyn AurOrderSource>> {
+    None
+}
+
+#[cfg(not(feature = "selftest"))]
+pub const fn route() -> Option<Arc<dyn RouteSource>> {
+    None
 }
 
 #[cfg(feature = "selftest")]

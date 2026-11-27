@@ -7,13 +7,16 @@ mod tests;
 use std::io;
 use std::os::fd::OwnedFd;
 use std::path::Path;
+use std::sync::Arc;
+use std::sync::atomic::AtomicBool;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use rustix::fs::{AtFlags, FileType, Mode};
 use rustix::io::Errno;
-use toolbox_plan::{AUR_BUILT, BuildRun, MAKEPKG_ARGS, PARU_CLONE, PackageName};
+use toolbox_plan::{AUR_BUILT, AUR_CLONE, BuildRun, MAKEPKG_ARGS, PackageName};
 use toolbox_pty::PtyCommand;
 
+use super::review::{Unreviewed, unchanged_since_review};
 use super::route::{RouteProblem, route_from_home};
 use super::{entries, remove_run_folder};
 use crate::secure::{self, DIR_FLAGS};
@@ -33,28 +36,32 @@ pub enum BuildError {
     NotAFolder(String),
     #[error(transparent)]
     Route(#[from] RouteProblem),
+    #[error("{base}: {reason}")]
+    Unreviewed { base: String, reason: Unreviewed },
     #[error("cannot prepare the build run: {0}")]
     Io(#[from] io::Error),
 }
 
 /// The command that builds `base` in its clone, with the packages going to
-/// the run folder. Old run folders go first, and the run folder is made
-/// with mode 0700 whatever the umask.
+/// the run folder. The clone must hold the commit the user reviewed, with
+/// no change to a tracked file. Old run folders go first, and the run folder
+/// is made with mode 0700 whatever the umask.
 ///
 /// # Errors
 ///
 /// [`BuildError::NoClone`] or [`BuildError::NotAFolder`] when the clone is
-/// not a folder of `home` reached without a link, or [`BuildError::Io`]
-/// when a run folder cannot be made.
+/// not a folder of `home` reached without a link, [`BuildError::Unreviewed`]
+/// when the clone differs from its review, or [`BuildError::Io`] when a run
+/// folder cannot be made.
 pub fn prepare(
     home: &Path,
-    makepkg: &Path,
-    base: &PackageName,
-    run: &BuildRun,
+    (makepkg, git): (&Path, &Path),
+    (base, run): (&PackageName, &BuildRun),
     now: SystemTime,
+    cancel: &Arc<AtomicBool>,
 ) -> Result<PtyCommand, BuildError> {
-    let clone = Path::new(PARU_CLONE).join(base.as_str());
-    let shown = format!("~/{PARU_CLONE}/{base}");
+    let clone = Path::new(AUR_CLONE).join(base.as_str());
+    let shown = format!("~/{AUR_CLONE}/{base}");
 
     match secure::open_dir(home, &clone) {
         Ok(_) => {}
@@ -65,6 +72,13 @@ pub fn prepare(
     }
 
     route_from_home(home, rustix::process::geteuid().as_raw())?;
+
+    unchanged_since_review(git, &home.join(&clone), cancel).map_err(|reason| {
+        BuildError::Unreviewed {
+            base: shown.clone(),
+            reason,
+        }
+    })?;
 
     let built = secure::create_dirs(home, Path::new(AUR_BUILT))?;
     remove_old_runs(&built, now)?;

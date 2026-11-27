@@ -203,7 +203,7 @@ fn locked_after(user: &UserName, changes: &ChangeSet, snapshot: &Snapshot) -> bo
             snapshot
                 .part::<AccountLockFlags>()
                 .and_then(|flags| flags.is_locked(user))
-                == Some(true)
+                == Some(Toggle::On)
         },
         |wish| wish.is_on(),
     )

@@ -113,6 +113,32 @@ fn install_built(names: &[&str], reason: InstallReason) -> PlannedAction {
     })
 }
 
+fn review(bases: &[&str]) -> PlannedAction {
+    user(UserAction::ReviewAur {
+        bases: targets(bases),
+    })
+}
+
+fn remove_make_dependencies(names: Vec<PackageName>) -> PlannedAction {
+    root(RootAction::RemoveMakeDependencies {
+        packages: TargetList::new(names).unwrap(),
+    })
+}
+
+fn is_review(action: &PlannedAction) -> bool {
+    matches!(
+        action,
+        PlannedAction::User(UserAction::ReviewAur { bases: _ })
+    )
+}
+
+fn is_removal(action: &PlannedAction) -> bool {
+    matches!(
+        action,
+        PlannedAction::Root(RootAction::RemoveMakeDependencies { packages: _ })
+    )
+}
+
 fn install_dependencies(packages: TargetList<PackageName>) -> PlannedAction {
     root(RootAction::InstallDependencies { packages })
 }
@@ -124,6 +150,7 @@ fn names_of(action: &PlannedAction) -> Vec<PackageName> {
     if let PlannedAction::Root(
         RootAction::InstallPackages { packages }
         | RootAction::InstallDependencies { packages }
+        | RootAction::RemoveMakeDependencies { packages }
         | RootAction::InstallBuilt {
             run: _,
             packages,
@@ -136,6 +163,10 @@ fn names_of(action: &PlannedAction) -> Vec<PackageName> {
 
     if let PlannedAction::User(UserAction::BuildAur { base, run: _ }) = action {
         names.push(base.clone());
+    }
+
+    if let PlannedAction::User(UserAction::ReviewAur { bases }) = action {
+        names.extend(bases.iter().cloned());
     }
 
     names

@@ -6,12 +6,14 @@ use std::time::{Duration, Instant};
 use rustix::fs::Mode;
 use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::{Answer, Event, Outcome};
-use toolbox_plan::{AUR_BUILT, BuildRun, PARU_CLONE, PackageName, StepId};
+use toolbox_plan::{AUR_BUILT, AUR_CLONE, BuildRun, PackageName, StepId};
 
 use super::super::{Environment, PtyRunner};
 use crate::apply::Runner as _;
 use crate::aur;
-use crate::test_support::{ada_home, answer_after, assert_failed, mode, printed, stand_in};
+use crate::test_support::{
+    ada_home, answer_after, assert_failed, git_program, mode, printed, reviewed_clone, stand_in,
+};
 
 const PACKAGE: &str = "octopi-git-0.16.2-1-x86_64.pkg.tar.zst";
 
@@ -19,7 +21,7 @@ const PACKAGE: &str = "octopi-git-0.16.2-1-x86_64.pkg.tar.zst";
 /// The helper's own check (`aur::stage`) must accept the file.
 fn built_package_passes_the_helper(umask: u32) {
     let (root, home) = ada_home();
-    fs::create_dir_all(home.join(PARU_CLONE).join("octopi-git")).unwrap();
+    reviewed_clone(&home, "octopi-git");
     let makepkg = stand_in(root.path(), &format!("printf x > \"$PKGDEST/{PACKAGE}\""));
     let (_app, answers) = channel();
     let mut runner = PtyRunner::new(answers, Environment::Inherited).with_home(home.clone());
@@ -60,13 +62,20 @@ fn run() -> BuildRun {
 }
 
 fn build(runner: &mut PtyRunner, makepkg: &Path, events: &mut Vec<Event>) -> Outcome {
-    runner.build_aur(StepId::new(1), makepkg, (&octopi(), &run()), events)
+    let git = git_program();
+
+    runner.build_aur(
+        StepId::new(1),
+        (makepkg, git.as_path()),
+        (&octopi(), &run()),
+        events,
+    )
 }
 
 #[test]
 fn makepkg_runs_in_the_clone_with_pkgdest_and_the_flags() {
     let (root, home) = ada_home();
-    fs::create_dir_all(home.join(PARU_CLONE).join("octopi-git")).unwrap();
+    reviewed_clone(&home, "octopi-git");
     let record = root.path().join("record");
     let script = format!(
         "{{ pwd -P; printf '%s\\n' \"$PKGDEST\"; printf '%s\\n' \"$@\"; }} > '{}'",
@@ -83,7 +92,7 @@ fn makepkg_runs_in_the_clone_with_pkgdest_and_the_flags() {
     );
 
     let clone = home
-        .join(PARU_CLONE)
+        .join(AUR_CLONE)
         .join("octopi-git")
         .display()
         .to_string();
@@ -99,7 +108,7 @@ fn makepkg_runs_in_the_clone_with_pkgdest_and_the_flags() {
 #[test]
 fn without_a_home_makepkg_does_not_start() {
     let (root, home) = ada_home();
-    fs::create_dir_all(home.join(PARU_CLONE).join("octopi-git")).unwrap();
+    reviewed_clone(&home, "octopi-git");
     let record = root.path().join("record");
     let makepkg = stand_in(root.path(), &format!("touch '{}'", record.display()));
     let (_app, answers) = channel();
@@ -136,7 +145,7 @@ fn a_missing_clone_names_its_folder_and_makepkg_does_not_start() {
 
     assert_failed(build(&mut runner, &makepkg, &mut events));
     assert!(
-        printed(&events).contains("~/.cache/paru/clone/octopi-git"),
+        printed(&events).contains("~/.cache/garuda-toolbox/aur-clone/octopi-git"),
         "{}",
         printed(&events)
     );
@@ -146,7 +155,7 @@ fn a_missing_clone_names_its_folder_and_makepkg_does_not_start() {
 #[test]
 fn a_cancel_stops_the_running_makepkg() {
     let (root, home) = ada_home();
-    fs::create_dir_all(home.join(PARU_CLONE).join("octopi-git")).unwrap();
+    reviewed_clone(&home, "octopi-git");
     let makepkg = stand_in(root.path(), "sleep 30");
     let (app, answers) = channel();
     let mut runner = PtyRunner::new(answers, Environment::Inherited).with_home(home);

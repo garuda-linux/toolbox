@@ -25,7 +25,7 @@ const MAX_INCLUDE_DEPTH: usize = 10;
 type Includes<'a> = dyn FnMut(&str) -> Vec<String> + 'a;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct PacmanConf {
+pub(super) struct PacmanConf {
     pub root: PathBuf,
     pub db_path: PathBuf,
     /// The repository sections in file order, each once.

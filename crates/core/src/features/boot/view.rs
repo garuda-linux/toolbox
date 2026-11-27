@@ -3,7 +3,8 @@ mod tests;
 
 use serde::Serialize;
 use toolbox_plan::{
-    DefaultEntry, GrubKey, GrubMenu, GrubTimeout, KernelParameters, MenuEntry, PlymouthTheme,
+    DefaultEntry, GrubKey, GrubMenu, GrubPicture, GrubThemeFile, GrubTimeout, KernelParameters,
+    MenuEntry, PlymouthTheme,
 };
 use toolbox_text::OutsideText;
 
@@ -43,7 +44,8 @@ pub struct Probed {
     reason = "each is its own switch or state of the GRUB file the page shows"
 )]
 pub struct Page {
-    default: String,
+    /// `None` without the file, where GRUB is not the boot loader.
+    default: Option<Result<DefaultEntry, OutsideText>>,
     remember: bool,
     timeout: GrubTimeout,
     timeout_known: bool,
@@ -53,9 +55,9 @@ pub struct Page {
     parameter_items: Vec<String>,
     flags: Vec<Flag>,
     flags_queued: Vec<&'static str>,
-    background: String,
+    background: Option<Result<GrubPicture, OutsideText>>,
     background_from_theme: bool,
-    theme: String,
+    theme: Option<Result<GrubThemeFile, OutsideText>>,
     sdboot: bool,
 }
 
@@ -96,7 +98,7 @@ impl Page {
             background_from_theme: queued.background_source == PictureSource::Theme,
             background: queued.background,
             theme: queued.theme,
-            default: queued.default,
+            default: Some(queued.default),
             sdboot: false,
         }
     }
@@ -163,30 +165,32 @@ impl Page {
         &self.flags_queued
     }
 
-    pub fn background(&self) -> &str {
-        &self.background
+    /// The picture the page shows, `None` for none.
+    pub fn background(&self) -> Option<&str> {
+        self.background.as_ref().map(toolbox_text::checked_text)
     }
 
     pub const fn background_from_theme(&self) -> bool {
         self.background_from_theme
     }
 
-    pub fn theme(&self) -> &str {
-        &self.theme
+    /// The theme the page shows, `None` for none.
+    pub fn theme(&self) -> Option<&str> {
+        self.theme.as_ref().map(toolbox_text::checked_text)
     }
 
-    /// The entry the menu's default select shows, empty when GRUB boots
+    /// The entry the menu's default select shows, `None` when GRUB boots
     /// the last one or nothing is known.
-    pub fn entry_value(&self, menu: Option<&GrubMenu>) -> String {
+    pub fn entry_value<'page>(&'page self, menu: Option<&'page GrubMenu>) -> Option<&'page str> {
         self.listed_entry(menu).map_or_else(
             || {
                 if self.boots_last_entry() {
-                    String::new()
+                    None
                 } else {
-                    self.default.clone()
+                    self.default_text()
                 }
             },
-            |entry| entry.id.as_str().to_owned(),
+            |entry| Some(entry.id.as_str()),
         )
     }
 
@@ -194,12 +198,16 @@ impl Page {
         self.listed_entry(menu).is_some()
     }
 
-    fn boots_last_entry(&self) -> bool {
-        self.default == DefaultEntry::Saved.as_str()
+    fn default_text(&self) -> Option<&str> {
+        self.default.as_ref().map(toolbox_text::checked_text)
+    }
+
+    const fn boots_last_entry(&self) -> bool {
+        matches!(self.default, Some(Ok(DefaultEntry::Saved)))
     }
 
     fn listed_entry<'menu>(&self, menu: Option<&'menu GrubMenu>) -> Option<&'menu MenuEntry> {
-        menu.and_then(|menu| menu.find(&self.default))
+        menu.and_then(|menu| menu.find(self.default_text().unwrap_or_default()))
             .filter(|entry| !entry.submenu && !self.boots_last_entry())
     }
 }
@@ -293,28 +301,19 @@ pub fn plymouth_themes(snapshot: &Snapshot) -> Vec<String> {
         .unwrap_or_default()
 }
 
-fn plymouth_current(snapshot: &Snapshot) -> String {
-    snapshot
-        .part::<PlymouthState>()
-        .and_then(|state| state.current.as_ref())
-        .map_or("", PlymouthTheme::as_str)
-        .to_owned()
+fn plymouth_current(snapshot: &Snapshot) -> Option<PlymouthTheme> {
+    snapshot.part::<PlymouthState>()?.current.clone()
 }
 
-pub fn plymouth_theme_queued(changes: &ChangeSet) -> String {
+pub fn plymouth_theme_queued(changes: &ChangeSet) -> Option<PlymouthTheme> {
     changes
         .wish::<PlymouthThemes>(&Single)
         .cloned()
         .or_else(|| SdBootKernelDomain::queued_theme(changes))
-        .as_ref()
-        .map_or("", PlymouthTheme::as_str)
-        .to_owned()
 }
 
-pub fn plymouth_shown(snapshot: &Snapshot, changes: &ChangeSet) -> String {
-    Some(plymouth_theme_queued(changes))
-        .filter(|queued| !queued.is_empty())
-        .unwrap_or_else(|| plymouth_current(snapshot))
+pub fn plymouth_shown(snapshot: &Snapshot, changes: &ChangeSet) -> Option<PlymouthTheme> {
+    plymouth_theme_queued(changes).or_else(|| plymouth_current(snapshot))
 }
 
 pub fn is_queued(changes: &ChangeSet, key: GrubKey) -> bool {

@@ -87,11 +87,7 @@ pub(super) fn unless_protected(
         Err(failed) => return failed,
     };
 
-    let protected: Vec<&str> = targets
-        .iter()
-        .filter(|target| protection(target).is_some())
-        .map(PackageName::as_str)
-        .collect();
+    let protected = protected_names(&targets);
 
     if protected.is_empty() {
         return runner.run(step, run, sink);
@@ -107,6 +103,14 @@ pub(super) fn unless_protected(
     )
 }
 
+fn protected_names(names: &[PackageName]) -> Vec<&str> {
+    names
+        .iter()
+        .filter(|name| protection(name).is_some())
+        .map(PackageName::as_str)
+        .collect()
+}
+
 /// Each line must be a name `test` asked about, as they become root `pacman -S` arguments.
 pub(super) fn unmet(
     step: StepId,
@@ -115,21 +119,10 @@ pub(super) fn unmet(
     runner: &mut dyn Runner,
     sink: &mut dyn EventSink,
 ) -> Outcome {
-    let unmet = match targets(step, test, QueryKind::Deptest, runner, sink) {
+    let unmet = match asked_names(step, test, QueryKind::Deptest, runner, sink) {
         Ok(unmet) => unmet,
         Err(failed) => return failed,
     };
-
-    if let Some(stranger) = unmet
-        .iter()
-        .find(|name| !test.arguments().iter().any(|asked| asked == name.as_str()))
-    {
-        return failure(
-            step,
-            sink,
-            &format!("{test} named {stranger}, which it was not asked about"),
-        );
-    }
 
     if unmet.is_empty() {
         return Outcome::Skipped;
@@ -140,6 +133,75 @@ pub(super) fn unmet(
         &run.clone().args(unmet.iter().map(PackageName::as_str)),
         sink,
     )
+}
+
+/// Removes the orphans among the names `query` was asked about, in one
+/// `run`. A protected name ends the step before anything is removed.
+pub(super) fn orphans(
+    step: StepId,
+    query: &Command,
+    run: &Command,
+    runner: &mut dyn Runner,
+    sink: &mut dyn EventSink,
+) -> Outcome {
+    let names = match asked_names(step, query, QueryKind::Orphans, runner, sink) {
+        Ok(names) => names,
+        Err(failed) => return failed,
+    };
+
+    if names.is_empty() {
+        return Outcome::Skipped;
+    }
+
+    let protected = protected_names(&names);
+    if !protected.is_empty() {
+        return failure(
+            step,
+            sink,
+            &format!(
+                "nothing was removed, as the protected {} may not go",
+                protected.join(" ")
+            ),
+        );
+    }
+
+    runner.run(
+        step,
+        &run.clone().args(names.iter().map(PackageName::as_str)),
+        sink,
+    )
+}
+
+/// The names `query` printed, each one of the names it was asked about.
+fn asked_names(
+    step: StepId,
+    query: &Command,
+    kind: QueryKind,
+    runner: &mut dyn Runner,
+    sink: &mut dyn EventSink,
+) -> Result<Vec<PackageName>, Outcome> {
+    let names = targets(step, query, kind, runner, sink)?;
+
+    stranger(step, query, &names, sink).map_or(Ok(names), Err)
+}
+
+/// A line of a query becomes an argument of the next command, so it must be
+/// one of the names the query was asked about.
+fn stranger(
+    step: StepId,
+    query: &Command,
+    names: &[PackageName],
+    sink: &mut dyn EventSink,
+) -> Option<Outcome> {
+    let stranger = names
+        .iter()
+        .find(|name| !query.arguments().iter().any(|asked| asked == name.as_str()))?;
+
+    Some(failure(
+        step,
+        sink,
+        &format!("{query} named {stranger}, which it was not asked about"),
+    ))
 }
 
 fn targets(

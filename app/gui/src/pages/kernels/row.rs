@@ -98,7 +98,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
             if control::show(ui, shown, state) {
                 context.commands.send(KernelEdit::Toggle {
                     kernel: row.kernel.name.clone(),
-                    on: !row.wanted,
+                    on: Toggle::from_on(!row.wanted),
                 });
             }
         },
@@ -231,7 +231,7 @@ fn headers(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
         if waiting_button(ui, context, &i18n::text(&ctx, action)).clicked() {
             context.commands.send(KernelEdit::Headers {
                 kernel: row.kernel.name.clone(),
-                on: !queued,
+                on: Toggle::from_on(!queued),
             });
         }
     });
@@ -298,7 +298,7 @@ fn builds_button(ui: &mut Ui, context: &PageContext<'_>, row: &Row) {
     if waiting_button(ui, context, &i18n::text(&ctx, action)).clicked() {
         context.commands.send(KernelEdit::Builds {
             kernel: row.kernel.name.clone(),
-            on: !queued,
+            on: Toggle::from_on(!queued),
         });
     }
 }

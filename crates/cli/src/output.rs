@@ -4,7 +4,6 @@
 
 mod json;
 mod row;
-mod size;
 #[cfg(test)]
 mod tests;
 
@@ -18,7 +17,6 @@ use unicode_width::{UnicodeWidthChar as _, UnicodeWidthStr as _};
 
 pub use self::json::{SCHEMA, json, json_line, with_schema};
 pub use self::row::{Mark, Row};
-pub use self::size::size;
 
 const GAP: usize = 2;
 

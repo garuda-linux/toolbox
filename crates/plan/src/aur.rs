@@ -4,8 +4,11 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Below the user's home: paru's clone of each pkgbase.
-pub const PARU_CLONE: &str = ".cache/paru/clone";
+/// Below the user's home: the app's own clone of each pkgbase.
+///
+/// paru fetches into it and makepkg builds in it, so it holds what the user
+/// reviewed. Only the user may write it, which the review and the build check.
+pub const AUR_CLONE: &str = ".cache/garuda-toolbox/aur-clone";
 
 /// Below the user's home: one folder per build run, makepkg's `PKGDEST`.
 /// The helper cannot read the user's `XDG_CACHE_HOME`.
@@ -17,6 +20,11 @@ pub const AUR_BUILT: &str = ".cache/garuda-toolbox/aur-built";
 /// first. Dependencies, installing and cleaning up are the helper's, so
 /// `-s`, `-i`, `-c` and `-r` stay out.
 pub const MAKEPKG_ARGS: [&str; 2] = ["-f", "-C"];
+
+/// What the review step's command says after the folder it works in. The
+/// Console finds the review by this end of the text, so the shown text and
+/// that check both take it from here.
+pub const REVIEW_TAIL: &str = ", then show the build files and ask before any build";
 
 /// Relative to `/`: where the helper copies built packages before
 /// `pacman -U`, so no other user can swap a file after the check.

@@ -15,7 +15,7 @@ use crate::bus::{CALL_TIMEOUT, CallError, bounded, classify, forget_shared, shar
 const PROPERTIES: &str = "org.freedesktop.DBus.Properties";
 
 /// The system connection the units share, see [`shared`].
-pub struct SystemProperties(pub Connection);
+struct SystemProperties(pub Connection);
 
 impl PropertyReads for SystemProperties {
     async fn all(&self, path: &str, interface: &str) -> Result<Value, CallError> {

@@ -9,7 +9,7 @@ mod tests;
 pub const NARROW: f32 = 720.0;
 
 #[derive(Debug, Default)]
-pub struct Fold {
+pub(super) struct Fold {
     narrow: bool,
     folded: bool,
 }

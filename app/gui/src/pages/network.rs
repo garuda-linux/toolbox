@@ -14,10 +14,10 @@ mod tools;
 
 use egui::Ui;
 use toolbox_core::features::network::DriverFilter;
-use toolbox_gui_kit::widgets::{Tone, page_toolbar};
+use toolbox_gui_kit::widgets::page_toolbar;
 
 use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
-use super::rows::refused_banner;
+use super::rows::refused_page_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, NetworkCommand};
 use crate::network::Network;
@@ -118,9 +118,5 @@ impl PageView for NetworkPage {
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Network>().refusal();
-    if refused_banner(ui, refused, Tone::Error, "network-dismiss") {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Network));
-    }
+    refused_page_banner(ui, context, refused, PageId::Network, "network-dismiss");
 }

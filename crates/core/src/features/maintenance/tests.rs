@@ -157,7 +157,9 @@ fn cleaning_up_runs_after_every_package_change() {
             RootAction::InstallPackages {
                 packages: one("hblock")
             },
-            RootAction::SetHblock { enabled: true },
+            RootAction::SetHblock {
+                enabled: toolbox_plan::Toggle::On,
+            },
             RootAction::RemoveOrphans,
             RootAction::CleanPackageCache,
         ]

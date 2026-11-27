@@ -11,7 +11,7 @@ mod rows;
 mod tests;
 
 use egui::{Label, Ui};
-use toolbox_core::features::diagnostics::Collector;
+use toolbox_core::features::diagnostics::{Collector, Refusal, Selection};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::widgets::{
@@ -139,29 +139,33 @@ fn running(ui: &mut Ui, text: &str, detail: &str) {
 fn status(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let page = context.service::<Diagnostics>().page();
-    let selection = name(&ctx, &page.selection);
+    let selection = page
+        .selection
+        .map_or_else(String::new, |selection| selection_name(&ctx, selection));
+
     let named =
         |id: &str| i18n::text_with(&ctx, id, &[("name", Arg::from(&selection))]).into_owned();
 
     match page.state {
         State::Idle => {}
         State::Running => {
-            let text = if page.part.is_empty() {
-                named("diagnostics-collecting")
-            } else {
-                let part = name(&ctx, &page.part);
-                let (step, count) = (page.step, Collector::ALL.len());
-                i18n::text_with(
-                    &ctx,
-                    "diagnostics-collecting-step",
-                    &[
-                        ("name", Arg::from(&part)),
-                        ("step", Arg::from(step)),
-                        ("count", Arg::from(count)),
-                    ],
-                )
-                .into_owned()
-            };
+            let text = page.part.map_or_else(
+                || named("diagnostics-collecting"),
+                |collector| {
+                    let part = collector_name(&ctx, collector);
+                    let (step, count) = (page.step, Collector::ALL.len());
+                    i18n::text_with(
+                        &ctx,
+                        "diagnostics-collecting-step",
+                        &[
+                            ("name", Arg::from(&part)),
+                            ("step", Arg::from(step)),
+                            ("count", Arg::from(count)),
+                        ],
+                    )
+                    .into_owned()
+                },
+            );
 
             running(
                 ui,
@@ -182,7 +186,7 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
             banner(ui, Tone::Warning, &text, &[]);
         }
         State::Refused(refusal) => {
-            let text = named(&format!("diagnostics-{}", refusal.code()));
+            let text = named(refusal_id(refusal));
             banner(ui, Tone::Warning, &text, &[]);
         }
         State::Failed => {
@@ -200,11 +204,50 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
     }
 }
 
-/// Empty before the first collection, which has no report to name.
-fn name(ctx: &egui::Context, id: &str) -> String {
-    if id.is_empty() {
-        return String::new();
-    }
+pub(super) fn selection_name(ctx: &egui::Context, selection: Selection) -> String {
+    i18n::text(ctx, selection_id(selection)).into_owned()
+}
 
-    i18n::text(ctx, &format!("diagnostics-{id}")).into_owned()
+fn collector_name(ctx: &egui::Context, collector: Collector) -> String {
+    i18n::text(ctx, collector_id(collector)).into_owned()
+}
+
+// The ids are literals, so grep and the catalog checks see every one.
+const fn selection_id(selection: Selection) -> &'static str {
+    match selection {
+        Selection::All => "diagnostics-all",
+        Selection::One(collector) => collector_id(collector),
+    }
+}
+
+const fn collector_id(collector: Collector) -> &'static str {
+    match collector {
+        Collector::Inxi => "diagnostics-inxi",
+        Collector::Health => "diagnostics-garuda-health",
+        Collector::SystemdAnalyze => "diagnostics-systemd-analyze",
+        Collector::Journal => "diagnostics-journalctl",
+        Collector::PacmanLog => "diagnostics-pacman",
+        Collector::Dmesg => "diagnostics-dmesg",
+    }
+}
+
+pub(super) const fn description_id(selection: Selection) -> &'static str {
+    match selection {
+        Selection::All => "diagnostics-all-description",
+        Selection::One(Collector::Inxi) => "diagnostics-inxi-description",
+        Selection::One(Collector::Health) => "diagnostics-garuda-health-description",
+        Selection::One(Collector::SystemdAnalyze) => "diagnostics-systemd-analyze-description",
+        Selection::One(Collector::Journal) => "diagnostics-journalctl-description",
+        Selection::One(Collector::PacmanLog) => "diagnostics-pacman-description",
+        Selection::One(Collector::Dmesg) => "diagnostics-dmesg-description",
+    }
+}
+
+const fn refusal_id(refusal: Refusal) -> &'static str {
+    match refusal {
+        Refusal::Dismissed => "diagnostics-dismissed",
+        Refusal::Denied => "diagnostics-denied",
+        Refusal::NoAgent => "diagnostics-no-agent",
+        Refusal::HelperMissing => "diagnostics-helper-missing",
+    }
 }

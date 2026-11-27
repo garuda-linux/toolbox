@@ -81,6 +81,9 @@ fn a_kernel_refusal_names_the_kernel_with_the_kernels_page_code() {
     let refused = Refusal::Kernel(kernels::Refusal::LastKernel).of_package(&package("linux-lts"));
 
     assert_eq!(refused.refusal.code(), "last-kernel");
-    assert_eq!(refused.refusal.text_id(), "kernels-refusal-last-kernel");
+    assert_eq!(
+        refused.refusal.text_id(),
+        Some("kernels-refusal-last-kernel")
+    );
     assert_eq!(refused.subject, "linux-lts");
 }

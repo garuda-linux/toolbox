@@ -70,7 +70,13 @@ fn a_queued_theme_shows_instead_of_the_current_one() {
     let snapshot = image(CMDLINE, &["plymouth"]);
     let mut changes = ChangeSet::default();
 
-    assert_eq!(plymouth_shown(&snapshot, &changes), "bgrt");
+    assert_eq!(
+        plymouth_shown(&snapshot, &changes),
+        Some(plymouth_theme("bgrt"))
+    );
     set_plymouth_theme(plymouth_theme("spinner"), &mut changes, &snapshot).unwrap();
-    assert_eq!(plymouth_shown(&snapshot, &changes), "spinner");
+    assert_eq!(
+        plymouth_shown(&snapshot, &changes),
+        Some(plymouth_theme("spinner"))
+    );
 }

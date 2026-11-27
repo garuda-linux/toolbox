@@ -8,6 +8,7 @@ use toolbox_gui_kit::widgets::{
     pill_width, push_height, rich, row_height, row_menu, split_row_in, status_dot,
     text_block_height_with,
 };
+use toolbox_plan::Toggle;
 
 use super::dialogs::{Dialog, Edit, Membership, PasswordForm, RemoveUser};
 use super::texts;
@@ -81,7 +82,7 @@ fn words(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow) {
             status_dot(ui, &text("users-tag-you"), Tone::Neutral);
         }
 
-        if context.service::<Users>().locks().of(&row.user.name) == Some(true) {
+        if context.service::<Users>().locks().of(&row.user.name) == Some(Toggle::On) {
             status_dot(ui, &text("users-tag-locked"), Tone::Warning);
         }
 
@@ -208,7 +209,7 @@ fn menu(ui: &mut Ui, context: &PageContext<'_>, row: &UserRow, dialog: &mut Opti
     if !row.current && row.user.is_regular() && menu_item(ui, &text("users-remove")).clicked() {
         *dialog = Some(Dialog::Remove(RemoveUser {
             user: name.clone(),
-            home: row.user.home.clone(),
+            home: row.user.home_text().to_owned(),
             groups: row.groups.iter().map(ToString::to_string).collect(),
             delete_home: false,
         }));

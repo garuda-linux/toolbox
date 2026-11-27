@@ -17,7 +17,7 @@ impl App {
         match command {
             NetworkCommand::StartService(unit) => {
                 if let Some(plan) = plan_start(unit) {
-                    self.run_for_network(plan, unit.to_owned());
+                    self.run_for_network(plan, unit.unit().to_owned());
                 }
             }
             NetworkCommand::LoadDriver { module, load } => {

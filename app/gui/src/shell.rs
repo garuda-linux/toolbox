@@ -1,4 +1,6 @@
 mod changes;
+
+pub use self::changes::{BuildNote, Hold};
 mod console_panel;
 mod palette;
 mod sidebar;
@@ -49,9 +51,11 @@ pub struct View<'app> {
     pub reading: &'app Reading,
     /// Quit was confirmed during a run, the window closes once it stopped.
     pub stopping: bool,
-    /// Why Apply waits, as the id of its text: a restored queue the
-    /// pages' guards have not checked yet.
-    pub held: Option<&'static str>,
+    /// Why Apply waits: a restored queue the pages' guards have not checked
+    /// yet, or the build orders of queued AUR packages.
+    pub held: Option<&'app Hold>,
+    /// The notes of the queued AUR builds, by package name.
+    pub build_notes: &'app [(String, BuildNote)],
     pub toasts: &'app mut Toasts,
 }
 
@@ -65,6 +69,10 @@ pub struct Snap {
     pub page: bool,
 }
 
+#[expect(
+    clippy::too_many_lines,
+    reason = "the shell draws its parts in one order, and each part is a line or two of the view"
+)]
 pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
     let View {
         page,
@@ -81,6 +89,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
         reading,
         stopping,
         held,
+        build_notes,
         toasts,
     } = view;
 
@@ -98,6 +107,7 @@ pub fn show(ui: &mut Ui, view: View<'_>, commands: &CommandSender) {
     let queued = changes::Queued {
         changes,
         held,
+        notes: build_notes,
         running: console.running(),
         console_open,
     };

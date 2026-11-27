@@ -51,3 +51,32 @@ impl AurOrderSource for FakeAurOrders {
         }
     }
 }
+
+/// [`FakeAurOrders`] behind a gate: each `order` call waits for a token on
+/// `gate`, so a test decides when paru answers.
+#[derive(Debug)]
+pub struct GatedAurOrders {
+    inner: FakeAurOrders,
+    gate: parking_lot::Mutex<std::sync::mpsc::Receiver<()>>,
+}
+
+impl GatedAurOrders {
+    pub const fn new(inner: FakeAurOrders, gate: std::sync::mpsc::Receiver<()>) -> Self {
+        Self {
+            inner,
+            gate: parking_lot::Mutex::new(gate),
+        }
+    }
+
+    /// How many times `order` was asked, past the gate.
+    pub fn asked(&self) -> usize {
+        self.inner.asked()
+    }
+}
+
+impl AurOrderSource for GatedAurOrders {
+    fn order(&self, package: &PackageName) -> Result<AurOrder, ProbeError> {
+        self.gate.lock().recv().ok();
+        self.inner.order(package)
+    }
+}

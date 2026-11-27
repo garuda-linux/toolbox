@@ -2,13 +2,17 @@ mod boot;
 mod fakes;
 mod graph;
 mod modules;
+mod route;
 
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use fakes::{FakeHost, FakeKernels, FakeLocales, FakePackages, FakeSettings, FakeUnits, sources};
+use fakes::{
+    FakeHost, FakeKernels, FakeLocales, FakePackages, FakeSettings, FakeUnits, sources, units,
+};
 use toolbox_plan::{
-    ConfigWord, GroupName, HomePath, PackageName, UnitName, UserConfigEdit, UserName, WifiBackend,
+    ConfigWord, GroupName, HomeDirectory, HomePath, PackageName, ShellPath, UnitName,
+    UserConfigEdit, UserName, WifiBackend,
 };
 use toolbox_state::accounts::{Accounts, CurrentUser, Group, User};
 use toolbox_state::kernels::{KernelReleases, LinuxPackages, RunningKernel};
@@ -22,7 +26,6 @@ use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig
 
 use super::{Host, Probe, ProbeIssue, Sources, probe_snapshot};
 use crate::ProbeError;
-use crate::units::{SystemUnitFiles, UserUnitFiles};
 
 fn ada() -> UserName {
     UserName::new("ada").unwrap()
@@ -52,19 +55,6 @@ fn masked_user() -> MaskedUserUnits {
     MaskedUserUnits(BTreeSet::from([UnitName::new("tracker.service").unwrap()]))
 }
 
-fn units() -> FakeUnits {
-    FakeUnits {
-        system: Ok(SystemUnitFiles {
-            enabled: enabled(),
-            masked: masked(),
-        }),
-        user: Ok(UserUnitFiles {
-            enabled: enabled_user(),
-            masked: masked_user(),
-        }),
-    }
-}
-
 fn accounts() -> Accounts {
     Accounts {
         users: vec![User {
@@ -72,8 +62,8 @@ fn accounts() -> Accounts {
             uid: 1000,
             gid: 1000,
             gecos: toolbox_text::plain("Ada Lovelace"),
-            home: "/home/ada".to_owned(),
-            shell: "/usr/bin/fish".to_owned(),
+            home: Ok(HomeDirectory::new("/home/ada").unwrap()),
+            shell: Ok(ShellPath::new("/usr/bin/fish").unwrap()),
         }],
         groups: vec![Group {
             name: GroupName::new("wheel").unwrap(),

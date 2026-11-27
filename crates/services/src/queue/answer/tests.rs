@@ -88,9 +88,10 @@ fn an_aur_build_the_copy_lacks_goes_once_the_copy_is_known() {
         .unwrap();
     assert_eq!(queue.changes().len(), 2, "the builds wait for the copy");
 
-    system.insert(AurNames(
-        std::iter::once("yay-bin".parse().unwrap()).collect(),
-    ));
+    system.insert(AurNames {
+        names: std::iter::once("yay-bin".parse().unwrap()).collect(),
+        ..AurNames::default()
+    });
     queue.meet(&system);
 
     assert_eq!(

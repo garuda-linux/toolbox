@@ -1,5 +1,6 @@
 use toolbox_cli::args::{ReadList, Search, ServicesList, ToggleList};
 use toolbox_cli::output::{Mark, Row};
+use toolbox_plan::{LocaleName, UnitName};
 
 use super::{Filter, Named, kept, narrow, print, services, summary, toggles};
 use crate::lists::{LocaleRow, ServiceRow, ToggleRow};
@@ -153,7 +154,7 @@ fn text_says_how_many_are_shown() {
 
 fn service(name: &str, active: &'static str, file_state: &'static str) -> ServiceRow {
     ServiceRow {
-        name: name.to_owned(),
+        name: UnitName::new(name).unwrap(),
         active,
         state: String::new(),
         at_boot: file_state == "enabled",
@@ -188,7 +189,11 @@ fn services_filter_by_state_and_boot() {
 
     let names = |list: ServicesList| -> Vec<String> {
         kept(&rows, None, &services(&list))
-            .map(|rows| rows.into_iter().map(|row| row.name.clone()).collect())
+            .map(|rows| {
+                rows.into_iter()
+                    .map(|row| row.name.as_str().to_owned())
+                    .collect()
+            })
             .unwrap_or_default()
     };
 
@@ -268,7 +273,7 @@ fn switches_filter_by_on_and_off_and_unknown_is_neither() {
 #[test]
 fn a_locale_matches_its_language_name() {
     let row = LocaleRow {
-        locale: "de_DE.UTF-8".to_owned(),
+        locale: LocaleName::new("de_DE.UTF-8").unwrap(),
         charset: "UTF-8".to_owned(),
         name: Some("German (Germany)".to_owned()),
         enabled: false,

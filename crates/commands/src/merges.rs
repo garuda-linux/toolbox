@@ -18,7 +18,7 @@ use toolbox_core::domains::MergeCopies;
 use toolbox_core::features::configs::Diff;
 use toolbox_core::features::merges::{self, Standing, choice, standing};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{ConfigText, MergeCopy, Resolution};
+use toolbox_plan::{ConfigFilePath, ConfigText, MergeCopy, Resolution};
 use toolbox_system::{MergePair, MergeSource as _, Pacdiff, SystemConfigFiles, read_pair};
 use toolbox_text::OutsideText;
 
@@ -35,9 +35,11 @@ const TERMINAL_ONLY: &str = "merge it in a terminal";
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct MergeRow {
-    pub copy: String,
-    /// Empty for a copy the toolbox never opens.
-    pub file: String,
+    #[serde(serialize_with = "toolbox_text::serialize_text")]
+    pub copy: Result<MergeCopy, OutsideText>,
+    /// `None` for a copy the toolbox never opens.
+    #[serde(serialize_with = "serialize_file")]
+    pub file: Option<ConfigFilePath>,
     pub kind: String,
     pub state: String,
     #[serde(skip)]
@@ -46,8 +48,23 @@ pub struct MergeRow {
 
 impl filter::Named for MergeRow {
     fn names(&self) -> Vec<&str> {
-        vec![&self.copy, &self.file]
+        vec![
+            toolbox_text::checked_text(&self.copy),
+            self.file.as_ref().map_or("", ConfigFilePath::as_str),
+        ]
     }
+}
+
+/// The file of a copy, `""` for a copy the toolbox never opens.
+#[expect(
+    clippy::ref_option,
+    reason = "serde hands a field over by reference, so the option cannot be taken by value"
+)]
+fn serialize_file<S>(file: &Option<ConfigFilePath>, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: serde::Serializer,
+{
+    serializer.serialize_str(file.as_ref().map_or("", ConfigFilePath::as_str))
 }
 
 pub fn command(command: &MergesCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
@@ -122,16 +139,16 @@ pub fn rows(paths: &[PathBuf], read: &dyn Fn(&MergeCopy) -> MergePair) -> Vec<Me
                 Ok(copy) => {
                     let pair = read(&copy);
                     MergeRow {
-                        copy: shown,
-                        file: copy.original().to_string(),
+                        file: Some(copy.original().clone()),
                         kind: copy.kind().as_str().to_owned(),
                         state: state(&pair),
                         unread: texts(&pair).is_err(),
+                        copy: Ok(copy),
                     }
                 }
                 Err(_withheld) => MergeRow {
-                    copy: shown,
-                    file: String::new(),
+                    copy: Err(toolbox_text::plain(&shown)),
+                    file: None,
                     kind: String::new(),
                     state: TERMINAL_ONLY.to_owned(),
                     unread: false,
@@ -203,7 +220,13 @@ fn listing(rows: &[MergeRow]) -> Listing<'_> {
 
                 Row::new(
                     mark,
-                    vec![row.copy.clone(), row.file.clone(), row.state.clone()],
+                    vec![
+                        toolbox_text::checked_text(&row.copy).to_owned(),
+                        row.file
+                            .as_ref()
+                            .map_or_else(String::new, ToString::to_string),
+                        row.state.clone(),
+                    ],
                 )
             })
             .collect(),

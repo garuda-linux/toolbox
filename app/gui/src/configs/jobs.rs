@@ -112,7 +112,7 @@ impl Jobs {
         self.lane.landed()
     }
 
-    pub fn open_home(&self, target: &Target) -> bool {
+    pub(super) fn open_home(&self, target: &Target) -> bool {
         let Target::Home(path) = target else {
             return false;
         };
@@ -139,7 +139,7 @@ impl Jobs {
         );
     }
 
-    pub fn fetch(&self, file: EditedFile) {
+    pub(super) fn fetch(&self, file: EditedFile) {
         let name = match &file {
             EditedFile::Root(path) => Target::Root(path.clone()),
             EditedFile::Home(path) => Target::Home(path.clone()),
@@ -199,7 +199,7 @@ impl Jobs {
 
     /// Empties the folder of copies on this thread, for the end of the
     /// app, when no blocking thread may get its turn anymore.
-    pub fn clear_copies(&self) {
+    pub(super) fn clear_copies(&self) {
         self.tools.clear();
     }
 

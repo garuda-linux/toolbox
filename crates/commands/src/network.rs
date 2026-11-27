@@ -21,7 +21,7 @@ use toolbox_core::features::network::{
     flight_mode, plan_ping, plan_switch, plan_traceroute, radio_summary, set_blacklisted,
 };
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{Bounded, HostName, Plan, Toggle};
+use toolbox_plan::{Bounded, HostName, KernelModule, Plan, Toggle};
 use toolbox_services::address::{AddressProblem, KdeGeoIp, lookup_address};
 use toolbox_system::{
     NetworkActions as _, NetworkSource, SystemActions, SystemNetwork, system_cards,
@@ -40,8 +40,10 @@ pub struct StatusView {
     /// One per activated Ethernet or Wi-Fi device. Empty while NetworkManager
     /// does not run.
     pub interfaces: Vec<InterfaceView>,
-    pub wifi: Option<bool>,
-    pub bluetooth: Option<bool>,
+    #[serde(with = "toolbox_plan::option_as_bool")]
+    pub wifi: Option<Toggle>,
+    #[serde(with = "toolbox_plan::option_as_bool")]
+    pub bluetooth: Option<Toggle>,
     pub flight_mode: bool,
     /// The reads that failed, so a script tells "no router" from a broken
     /// read.
@@ -53,7 +55,7 @@ pub struct StatusView {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct DriverLine {
     #[serde(rename = "id")]
-    pub module: String,
+    pub module: KernelModule,
     pub category: &'static str,
     pub loaded: bool,
     pub blacklisted: bool,
@@ -196,7 +198,7 @@ pub fn view(source: &dyn NetworkSource) -> StatusView {
 
     let on = |kind: RadioKind| {
         let summary = radio_summary(&radios, kind);
-        summary.present.then_some(!summary.blocked)
+        summary.present.then_some(Toggle::from_on(!summary.blocked))
     };
 
     StatusView {
@@ -241,7 +243,7 @@ fn drivers(read: &ReadList, out: &mut Out<'_>) -> Exit {
     let rows: Vec<DriverLine> = driver_rows(facts, &ChangeSet::default())
         .into_iter()
         .map(|row| DriverLine {
-            module: row.name.as_str().to_owned(),
+            module: row.name.clone(),
             category: row.category.as_str(),
             loaded: row.loaded,
             blacklisted: row.own || !row.other_files.is_empty(),
@@ -282,11 +284,11 @@ pub fn driver_listing(rows: &[DriverLine]) -> Listing<'_> {
 
 pub fn radio_listing(view: &StatusView) -> Listing<'static> {
     let read = !view.unread.contains(&"radios");
-    let row = |name: &str, on: Option<bool>| {
+    let row = |name: &str, on: Option<Toggle>| {
         let (mark, state) = match (read, on) {
             (false, _) => (Mark::Unknown, "unknown"),
-            (true, Some(true)) => (Mark::On, "on"),
-            (true, Some(false)) => (Mark::Off, "off"),
+            (true, Some(Toggle::On)) => (Mark::On, "on"),
+            (true, Some(Toggle::Off)) => (Mark::Off, "off"),
             (true, None) => (Mark::Blank, "none"),
         };
 
@@ -296,7 +298,7 @@ pub fn radio_listing(view: &StatusView) -> Listing<'static> {
     let rows = vec![
         row("wifi", view.wifi),
         row("bluetooth", view.bluetooth),
-        row("flight", Some(view.flight_mode)),
+        row("flight", Some(Toggle::from_on(view.flight_mode))),
     ];
 
     let on = rows.iter().filter(|radio| radio.mark == Mark::On).count();

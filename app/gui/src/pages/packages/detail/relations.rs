@@ -23,7 +23,7 @@ use crate::i18n::Arg;
 use crate::packages::Details;
 
 /// The package each name in the details leads to, as the catalog answers.
-pub type Targets = BTreeMap<String, PackageName>;
+type Targets = BTreeMap<String, PackageName>;
 
 /// The targets of the shown details, keyed by them and the catalog they
 /// were resolved against.

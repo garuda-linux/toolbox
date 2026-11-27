@@ -8,7 +8,7 @@ use std::net::IpAddr;
 use toolbox_plan::{HopLimit, HostName, PingCount, PingTimeout, PlannedAction, UnitName};
 
 use super::{
-    Connectivity, GEOCLUE, HOTSPOT_PACKAGE, PackageState, Radio, RadioKind, RadioSummary,
+    Connectivity, HOTSPOT_PACKAGE, NetworkUnit, PackageState, Radio, RadioKind, RadioSummary,
     RadioTarget, flight_mode, package_state, plan_ping, plan_start, plan_traceroute,
     public_address, radio_summary, rfkill_arguments, service_rows, toggle_install,
 };
@@ -133,13 +133,23 @@ fn installed_services_show_as_systemd_lists_them() {
         ),
         // Listed only because something asked for it: no unit file.
         unit("connman.service", ActiveState::Inactive, FileState::Unknown),
-        unit(GEOCLUE, ActiveState::Inactive, FileState::Static),
+        unit(
+            NetworkUnit::Geoclue.unit(),
+            ActiveState::Inactive,
+            FileState::Static,
+        ),
         unit("sshd.service", ActiveState::Active, FileState::Enabled),
     ];
 
     let rows: Vec<(&str, &str, &str)> = service_rows(&units)
         .into_iter()
-        .map(|row| (row.unit, row.active.as_str(), row.file_state.as_str()))
+        .map(|row| {
+            (
+                row.unit.unit(),
+                row.active.as_str(),
+                row.file_state.as_str(),
+            )
+        })
         .collect();
 
     assert_eq!(
@@ -155,12 +165,10 @@ fn installed_services_show_as_systemd_lists_them() {
 #[test]
 fn only_the_listed_services_start_from_this_page() {
     assert_eq!(
-        commands(&plan_start("bluetooth.service").unwrap()),
+        commands(&plan_start(NetworkUnit::Bluetooth).unwrap()),
         ["systemctl start -- bluetooth.service"]
     );
-    assert!(plan_start("sshd.service").is_none());
-    assert!(plan_start(GEOCLUE).is_none());
-    assert!(plan_start("bluetooth.service --now").is_none());
+    assert!(plan_start(NetworkUnit::Geoclue).is_none());
 }
 
 #[test]

@@ -1,5 +1,5 @@
-use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout};
+use toolbox_plan::{LoaderDefault, Toggle};
 
 use super::{CurrentLoader, LoaderSettingsDomain};
 use crate::test_support::commands;
@@ -60,7 +60,11 @@ fn many_settings_are_one_edit_and_nothing_else() {
         LoaderSetting::Default(Some(LoaderDefault::new("garuda-*-garuda.efi").unwrap())),
         &state,
     );
-    LoaderSettingsDomain::want(&mut changes, LoaderSetting::Editor(Some(false)), &state);
+    LoaderSettingsDomain::want(
+        &mut changes,
+        LoaderSetting::Editor(Some(Toggle::Off)),
+        &state,
+    );
 
     assert_eq!(
         commands(&plan(&changes)),

@@ -10,6 +10,7 @@ here=$(cd "$(dirname "$0")" && pwd)
 }
 
 id tester >/dev/null 2>&1 || useradd --create-home tester
+id ada >/dev/null 2>&1 || useradd --create-home ada
 getent group toolbox-test-group >/dev/null || groupadd toolbox-test-group
 
 install -d -o tester /srv/toolbox-test /srv/toolbox-test-older

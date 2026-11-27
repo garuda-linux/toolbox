@@ -23,6 +23,8 @@ pub enum Program {
     GarudaHealth,
     GarudaInxi,
     GarudaUpdate,
+    /// Reviews AUR build files, as the user only.
+    Git,
     Gpasswd,
     Groupadd,
     Groupdel,
@@ -94,6 +96,7 @@ impl Program {
             Self::GarudaHealth => "/usr/bin/garuda-health",
             Self::GarudaInxi => "/usr/bin/garuda-inxi",
             Self::GarudaUpdate => "/usr/bin/garuda-update",
+            Self::Git => "/usr/bin/git",
             Self::Gpasswd => "/usr/bin/gpasswd",
             Self::Groupadd => "/usr/bin/groupadd",
             Self::Groupdel => "/usr/bin/groupdel",

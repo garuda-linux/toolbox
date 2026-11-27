@@ -3,11 +3,12 @@
 //! seconds, the text shows them as people read them.
 
 use serde::Serialize;
-use toolbox_cli::output::{Mark, Paint, Row, size};
+use toolbox_cli::output::{Mark, Paint, Row};
 use toolbox_core::features::packages::{
     IndexEntry, InstallReason, OptionalDependency, Origin, PackageDetails,
 };
-use toolbox_text::OutsideText;
+use toolbox_plan::PackageName;
+use toolbox_text::{OutsideText, size};
 
 use super::super::out::Listing;
 use super::{facts_text, listed};
@@ -15,7 +16,7 @@ use super::{facts_text, listed};
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct PackageRow {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: PackageName,
     pub description: OutsideText,
     /// The repository's version, the installed one for a foreign package.
     pub version: String,
@@ -36,7 +37,7 @@ pub struct InstalledRow {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct PackageInfo {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: PackageName,
     pub description: OutsideText,
     pub version: String,
     pub repository: Option<String>,
@@ -56,7 +57,7 @@ pub struct PackageInfo {
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct OptionalRow {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: PackageName,
     pub reason: OutsideText,
 }
 
@@ -72,7 +73,7 @@ pub struct InstalledInfo {
 impl PackageRow {
     pub fn of(entry: &IndexEntry) -> Self {
         Self {
-            name: entry.name.as_str().to_owned(),
+            name: entry.name.clone(),
             description: entry.description.clone(),
             version: entry.version.clone(),
             repository: repository(&entry.origin),
@@ -88,7 +89,7 @@ impl PackageRow {
 impl PackageInfo {
     pub fn of(details: PackageDetails) -> Self {
         Self {
-            name: details.name.as_str().to_owned(),
+            name: details.name.clone(),
             description: details.description,
             version: details.version,
             repository: repository(&details.origin),
@@ -100,10 +101,7 @@ impl PackageInfo {
             optional: details
                 .optional
                 .into_iter()
-                .map(|OptionalDependency { name, reason }| OptionalRow {
-                    name: name.as_str().to_owned(),
-                    reason,
-                })
+                .map(|OptionalDependency { name, reason }| OptionalRow { name, reason })
                 .collect(),
             required_by: details.required_by,
             provides: details.provides,
@@ -202,7 +200,7 @@ pub fn info_text(paint: Paint, info: &PackageInfo) -> String {
         ),
     ];
 
-    facts_text(paint, &info.name, &facts)
+    facts_text(paint, info.name.as_str(), &facts)
 }
 
 fn repository(origin: &Origin) -> Option<String> {

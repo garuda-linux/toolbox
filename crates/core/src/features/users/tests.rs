@@ -18,7 +18,7 @@ use super::{
     Refusal, add_group, keep_user, remove_user, set_full_name, set_groups, set_locked, set_shell,
 };
 use crate::domains::{
-    AccountLocks, Accounts, AvailableShells, CurrentUser, FullNames, LoginShells, RemovedUsers,
+    Accounts, AvailableShells, CurrentUser, FullNames, LoginShells, RemovedUsers,
 };
 use crate::test_support::{NOBODY_ID, group, group_name, membership, user, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -182,7 +182,13 @@ fn root_accounts_are_not_changed_at_all() {
             Err(Refusal::Root)
         );
         assert_eq!(
-            set_locked(&name, Toggle::On, Some(false), &mut changes, &snapshot),
+            set_locked(
+                &name,
+                Toggle::On,
+                Some(Toggle::Off),
+                &mut changes,
+                &snapshot
+            ),
             Err(Refusal::Root)
         );
         assert_eq!(
@@ -205,59 +211,6 @@ fn root_accounts_are_not_changed_at_all() {
     }
 
     assert!(changes.is_empty());
-}
-
-#[test]
-fn the_current_user_cannot_lock_or_remove_itself() {
-    let snapshot = snapshot();
-    let mut changes = ChangeSet::default();
-
-    assert_eq!(
-        set_locked(
-            &user_name("ada"),
-            Toggle::On,
-            Some(false),
-            &mut changes,
-            &snapshot
-        ),
-        Err(Refusal::CurrentUser)
-    );
-    assert_eq!(
-        remove_user(&user_name("ada"), HomeFolder::Keep, &mut changes, &snapshot),
-        Err(Refusal::CurrentUser)
-    );
-
-    set_locked(
-        &user_name("ada"),
-        Toggle::Off,
-        None,
-        &mut changes,
-        &snapshot,
-    )
-    .unwrap();
-    assert_eq!(queued(&changes), ["account-locks ada"]);
-}
-
-#[test]
-fn a_lock_queues_once_and_a_second_click_takes_it_back() {
-    let snapshot = snapshot();
-    let mut changes = ChangeSet::default();
-    let grace = user_name("grace");
-
-    set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::On));
-
-    set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot).unwrap();
-    assert!(changes.is_empty());
-
-    set_locked(&grace, Toggle::On, Some(true), &mut changes, &snapshot).unwrap();
-    set_locked(&grace, Toggle::Off, Some(false), &mut changes, &snapshot).unwrap();
-    assert!(changes.is_empty());
-
-    set_locked(&grace, Toggle::Off, None, &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::Off));
-    set_locked(&grace, Toggle::On, None, &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::On));
 }
 
 #[test]

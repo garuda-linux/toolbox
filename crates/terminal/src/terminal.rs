@@ -23,7 +23,7 @@ use crate::screen::{self, Cursor, Row};
 use crate::{KeyMode, MouseEncoding, MouseMode, MouseReporting};
 
 /// Lines kept above the screen.
-pub const SCROLLBACK_LINES: usize = 5000;
+const SCROLLBACK_LINES: usize = 5000;
 
 /// A cell position counted over scrollback and screen together: line 0 is
 /// the oldest scrollback line, line [`Terminal::history_len`] the top

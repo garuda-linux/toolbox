@@ -30,7 +30,12 @@ fn held_mark() -> Id {
 /// control that is always there, takes it back rather than the sidebar on
 /// the next Tab. Only at that moment: a focus the user moves or clears
 /// later stays as they left it. `cancel` is the Cancel drawn this frame.
-pub fn keep_in_header(ctx: &Context, running: bool, cancel: Option<&Response>, close: &Response) {
+pub(super) fn keep_in_header(
+    ctx: &Context,
+    running: bool,
+    cancel: Option<&Response>,
+    close: &Response,
+) {
     let drawn: Vec<&Response> = cancel.into_iter().chain([close]).collect();
     let held = drawn
         .iter()

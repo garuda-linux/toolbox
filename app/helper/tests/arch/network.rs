@@ -19,7 +19,7 @@ const PACKAGE_FILE: &str = "/usr/lib/modprobe.d/toolbox-test-package.conf";
 fn blacklist(module: &str, blacklisted: bool) -> Result<RootAction, Box<dyn std::error::Error>> {
     Ok(RootAction::SetModuleBlacklisted {
         module: KernelModule::new(module)?,
-        blacklisted,
+        blacklisted: toolbox_plan::Toggle::from_on(blacklisted),
     })
 }
 

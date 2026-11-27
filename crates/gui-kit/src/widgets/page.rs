@@ -300,7 +300,7 @@ pub(super) fn column<R>(
 }
 
 /// The widest the page body's column gets, unlimited outside a page.
-pub fn column_width(ctx: &egui::Context) -> f32 {
+fn column_width(ctx: &egui::Context) -> f32 {
     ctx.data(|data| data.get_temp(column_width_id()))
         .unwrap_or(f32::INFINITY)
 }

@@ -55,7 +55,7 @@ fn heading(ui: &mut Ui) {
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
                 // Right to left, so Garuda's link stands first when read.
                 for source in Source::ALL.into_iter().rev() {
-                    let text = i18n::text(&ctx, &format!("home-news-{}-page", source.key()));
+                    let text = i18n::text(&ctx, source_page_id(source));
                     if text_link(ui, &text, &text).clicked() {
                         links::open(&ctx, source.page());
                     }
@@ -63,6 +63,21 @@ fn heading(ui: &mut Ui) {
             });
         },
     );
+}
+
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn source_id(source: Source) -> &'static str {
+    match source {
+        Source::Garuda => "home-news-garuda",
+        Source::Arch => "home-news-arch",
+    }
+}
+
+const fn source_page_id(source: Source) -> &'static str {
+    match source {
+        Source::Garuda => "home-news-garuda-page",
+        Source::Arch => "home-news-arch-page",
+    }
 }
 
 fn posts(ui: &mut Ui, news: &News) {
@@ -90,7 +105,7 @@ fn row(ui: &mut Ui, post: &Post) {
         });
 
         // A cell of its own, so the titles line up whatever the source.
-        let source = i18n::text(&ctx, &format!("home-news-{}", post.source.key()));
+        let source = i18n::text(&ctx, source_id(post.source));
         ui.allocate_ui_with_layout(vec2(SOURCE_WIDTH, height), layout, |ui| {
             ui.set_min_width(SOURCE_WIDTH);
             tag(ui, &source, Tone::Neutral);

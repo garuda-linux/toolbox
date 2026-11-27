@@ -5,7 +5,7 @@ use toolbox_cli::args::{
 use toolbox_cli::confirm::{Interrupted, Prompt};
 use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User};
 use toolbox_core::{Snapshot, Toggle};
-use toolbox_plan::{GroupName, PlannedAction, RootAction, ShellPath, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, PlannedAction, RootAction, ShellPath, UserName};
 
 use super::{add, edit, group, lock, remove};
 use crate::change::Refused;
@@ -59,8 +59,8 @@ fn user(name: &str, uid: u32) -> User {
         uid,
         gid: uid,
         gecos: toolbox_text::plain(""),
-        home: format!("/home/{name}"),
-        shell: "/usr/bin/bash".parse().unwrap(),
+        home: Ok(HomeDirectory::new(format!("/home/{name}")).unwrap()),
+        shell: Ok("/usr/bin/bash".parse().unwrap()),
     }
 }
 

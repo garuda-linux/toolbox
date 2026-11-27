@@ -25,10 +25,10 @@ use toolbox_services::boot_menu::Menu;
 use toolbox_services::dkms::Dkms;
 
 use super::header::refresh_header_reading;
-use super::rows::refused_banner;
+use super::rows::refused_page_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::boot::Boot;
-use crate::command::{AppCommand, KernelCommand, KernelEdit};
+use crate::command::{KernelCommand, KernelEdit};
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::kernels::Kernels;
@@ -165,16 +165,15 @@ fn header(ui: &mut Ui, context: &PageContext<'_>) {
 /// The running release sits in the body, as Kirigami's pages put their status text.
 fn release_line(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
-    let release = view::release(context.snapshot);
-    if release.is_empty() {
+    let Some(release) = view::release(context.snapshot) else {
         return;
-    }
+    };
 
     let tokens = tokens::current(&ctx);
     let text = i18n::text_with(
         &ctx,
         "kernels-running-release",
-        &[("release", Arg::from(release))],
+        &[("release", Arg::from(release.as_str()))],
     );
 
     ui.label(rich(ui, &text, Weight::Medium, SMALL, tokens.secondary));
@@ -183,11 +182,7 @@ fn release_line(ui: &mut Ui, context: &PageContext<'_>) {
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Kernels>().refusal();
-    if refused_banner(ui, refused, Tone::Error, "kernels-dismiss") {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Kernels));
-    }
+    refused_page_banner(ui, context, refused, PageId::Kernels, "kernels-dismiss");
 }
 
 /// What dkms said, and the banners that queue what is missing.

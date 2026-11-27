@@ -88,6 +88,8 @@ pub use layout::{
 };
 pub use letter_tile::{hue_of, initial, paint_letter_tile};
 pub use link_row::link_row_at_least;
+#[cfg(any(test, feature = "testing"))]
+pub use list::forget_rows;
 pub use list::{
     ListItem, RowHeights, RowList, RowState, Rows, row_height, text_block_height,
     text_block_height_with,

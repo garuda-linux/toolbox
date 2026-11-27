@@ -74,6 +74,20 @@ including `Tab`. To leave the terminal with the keyboard, press `Ctrl+Tab` to
 move forward, or `Ctrl+Shift+Tab` to move back. A hint under the terminal
 says so while it has the focus.
 
+## Answer a review of an AUR build
+
+Before an AUR package is built, the Console shows its build files and waits.
+A line above the header says so, with **Continue** at its end. Read the files,
+then do one of these:
+
+- Click **Continue**, or type `y` and press Enter in the terminal. The build
+  goes on.
+- Click **Cancel**, or press any other key and Enter. The run stops, and
+  nothing is built.
+
+Enter alone never continues. **Continue** is not the default button, so
+pressing Enter while the terminal has the focus does not click it.
+
 ## Stop a running program
 
 Click **Cancel** beside the status line of the Console. It shows only

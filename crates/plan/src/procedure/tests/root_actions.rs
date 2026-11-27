@@ -14,7 +14,7 @@ use crate::{
 
 /// Every kind [`kind`] names. Written by hand, so a variant missing here
 /// fails [`every_root_action_variant_has_a_sample`].
-const KINDS: [&str; 51] = [
+const KINDS: [&str; 52] = [
     "install-packages",
     "remove-packages",
     "install-dependencies",
@@ -22,6 +22,7 @@ const KINDS: [&str; 51] = [
     "upgrade-system",
     "clean-package-cache",
     "remove-orphans",
+    "remove-make-dependencies",
     "refresh-keyring",
     "remove-database-lock",
     "garuda-update-remote",
@@ -88,6 +89,7 @@ fn kind(action: &RootAction) -> &'static str {
         RootAction::UpgradeSystem { upgrader: _ } => "upgrade-system",
         RootAction::CleanPackageCache => "clean-package-cache",
         RootAction::RemoveOrphans => "remove-orphans",
+        RootAction::RemoveMakeDependencies { packages: _ } => "remove-make-dependencies",
         RootAction::RefreshKeyring => "refresh-keyring",
         RootAction::RemoveDatabaseLock => "remove-database-lock",
         RootAction::GarudaUpdateRemote { action: _ } => "garuda-update-remote",
@@ -222,6 +224,9 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         },
         RootAction::CleanPackageCache,
         RootAction::RemoveOrphans,
+        RootAction::RemoveMakeDependencies {
+            packages: packages(),
+        },
         RootAction::RefreshKeyring,
         RootAction::RemoveDatabaseLock,
         RootAction::GarudaUpdateRemote {
@@ -256,17 +261,19 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         RootAction::SetDns {
             provider: DnsProvider::Quad9,
         },
-        RootAction::SetHblock { enabled: true },
+        RootAction::SetHblock {
+            enabled: crate::Toggle::On,
+        },
         RootAction::SetWifiBackend {
             backend: WifiBackend::Iwd,
         },
         RootAction::SetGarudaUpdateFlag {
             flag: GarudaUpdateFlag::UpdateAur,
-            enabled: false,
+            enabled: crate::Toggle::Off,
         },
         RootAction::SetLocaleEnabled {
             locale: LocaleEntry::parse("de_DE.UTF-8 UTF-8").unwrap(),
-            enabled: true,
+            enabled: crate::Toggle::On,
         },
         RootAction::GenerateLocales,
         RootAction::SetSystemLocale {
@@ -290,7 +297,7 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         },
         RootAction::SetUserLocked {
             user: user(),
-            locked: true,
+            locked: crate::Toggle::On,
         },
         RootAction::SetFullName {
             user: user(),
@@ -327,7 +334,7 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         RootAction::UnloadModule { module: module() },
         RootAction::SetModuleBlacklisted {
             module: module(),
-            blacklisted: true,
+            blacklisted: crate::Toggle::On,
         },
         RootAction::SetGrubSettings {
             settings: GrubSettings::new(vec![GrubSetting::Submenus(true)]).unwrap(),

@@ -81,6 +81,8 @@ systemd, polkit or pkexec.
 - Tests that change the system return at once unless `TOOLBOX_IT_ARCH=1`,
   root and `/etc/arch-release` are all given. They run with
   `--test-threads=1`.
+- `ada` (made by `ci/arch/setup.sh`) is the user of the AUR cases in
+  `app/helper/tests/arch/aur*.rs`, which build with real makepkg.
 - Every new root action adds a test in `app/helper/tests/arch.rs` or
   `app/helper/tests/arch/`. Account tests use `toolbox-test-user-*` and
   `toolbox-test-grp-*`.
@@ -127,12 +129,13 @@ defines `suite_<name>`. After the setup a `limactl snapshot` (tag `base`)
 is taken, and every suite after the first, and every part of a suite that
 breaks the system, starts from it again.
 
-| Suite      | What it checks                                                                                            |
-| ---------- | --------------------------------------------------------------------------------------------------------- |
-| `upgrade`  | `update`, a package in and out, maintenance tasks, `linux-lts` installed and removed, on the real mirrors |
-| `faults`   | Cuts the power while pacman runs, then blocks the network for an install                                  |
-| `accounts` | Adds, changes, locks and removes an account, each proven by `su` on a terminal                            |
-| `sdboot`   | `loader.conf` settings, `kernels default` and a new kernel parameter, then a restart into the rebuilt UKI |
+| Suite      | What it checks                                                                                                                                                                                                                                                                                                          |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `upgrade`  | `update`, a package in and out, maintenance tasks, `linux-lts` installed and removed, on the real mirrors                                                                                                                                                                                                               |
+| `faults`   | Cuts the power while pacman runs, then blocks the network for an install                                                                                                                                                                                                                                                |
+| `accounts` | Adds, changes, locks and removes an account, each proven by `su` on a terminal                                                                                                                                                                                                                                          |
+| `sdboot`   | `loader.conf` settings, `kernels default` and a new kernel parameter, then a restart into the rebuilt UKI                                                                                                                                                                                                               |
+| `aur`      | `packages install --aur` on a terminal: the review (Enter declines, `y` installs), a second install, an AUR dependency with its make dependencies, a symlinked `~/.cache`, a conflict, and the sudo socket probe (K8). Needs the network and the AUR, and runs long: `octopi-git` builds for most of it (not timed yet) |
 
 - A snapshot of the running VM takes a second, after a `sync` so the
   setup is on the disk. `restore_base` stops the VM, applies the snapshot

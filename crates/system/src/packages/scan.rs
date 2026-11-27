@@ -18,7 +18,7 @@ use crate::error::ProbeError;
 use crate::names;
 
 /// The scan of [`super::Libalpm`], for one snapshot.
-pub struct LibalpmScan<'adapter> {
+pub(super) struct LibalpmScan<'adapter> {
     sync: &'adapter SyncCache,
     conf: Result<PacmanConf, ProbeError>,
     /// Looked at before the handle opens, since libalpm creates the

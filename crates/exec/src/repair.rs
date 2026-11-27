@@ -42,7 +42,7 @@ enum MountError {
 
 /// What the mounted file system lacks to be repaired.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Lacking {
+enum Lacking {
     /// No `/usr/bin` with the program: not an installed system with
     /// GRUB, or a btrfs whose system lies in another subvolume.
     Program(Program),
@@ -87,7 +87,7 @@ pub fn preflight<'actions>(
 ///
 /// When a folder on the way is a symlink or cannot be made, the mount
 /// table cannot be read, or something is mounted at the mount point.
-pub fn prepare_mount(root: &Path) -> io::Result<()> {
+fn prepare_mount(root: &Path) -> io::Result<()> {
     let target = Path::new(REPAIR_ROOT);
     let folder = target
         .parent()
@@ -115,7 +115,7 @@ pub fn prepare_mount(root: &Path) -> io::Result<()> {
 /// # Errors
 ///
 /// When a folder cannot be read for another reason than being absent.
-pub fn installed_system(root: &Path, need: RepairNeed) -> io::Result<Option<Lacking>> {
+fn installed_system(root: &Path, need: RepairNeed) -> io::Result<Option<Lacking>> {
     let system = Path::new(REPAIR_ROOT);
     let lacking = match loader::installed_loader(root)? {
         InstalledLoader::Grub => grub_lacks(root, need)?,

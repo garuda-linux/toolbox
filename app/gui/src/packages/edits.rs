@@ -52,6 +52,14 @@ impl Packages {
                 self.open_aur();
                 Handled::taken()
             }
+            PackagesCommand::ReadOrders => {
+                self.ask_orders(changes, snapshot, true);
+                Handled::taken()
+            }
+            PackagesCommand::CancelApply => {
+                self.end_apply();
+                Handled::taken()
+            }
             // Home's status and facts count packages too, which App reads.
             PackagesCommand::Refresh => Handled::default(),
         }

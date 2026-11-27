@@ -10,19 +10,22 @@ use std::sync::Arc;
 
 use toolbox_aur::AurSource;
 use toolbox_cli::Exit;
-use toolbox_core::domains::{AccountLockFlags, CurrentLoader};
+use toolbox_core::domains::{AccountLockFlags, CurrentLoader, waiting_orders};
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
-use toolbox_core::features::{Guard, Refusal, Unchecked, may_plan};
+use toolbox_core::features::{Guard, Refusal, Unchecked};
 use toolbox_core::{ChangeSet, SavedChanges, Snapshot};
 use toolbox_plan::PackageName;
+use toolbox_services::aur_orders::{self, RouteProblem};
 use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
-use toolbox_system::{HelperLocks, LockSource as _};
+use toolbox_system::{AurOrderSource, HelperLocks, LockSource as _};
 
 use super::said::say;
+use crate::change::Refused;
 use crate::out::{Out, Settings};
+use crate::packages::aur;
 
 /// The helper's answers and the AUR's copy.
-pub struct HelperReads<'a> {
+pub(super) struct HelperReads<'a> {
     /// For the note when the helper goes through sudo.
     pub settings: Settings,
     pub aur: &'a dyn AurSource,
@@ -54,13 +57,12 @@ impl UnprobedReads for HelperReads<'_> {
 
 /// The queue `saved` as it may run against `system`: restored and met by
 /// every guard, with the parts of `reads` read only for a change that
-/// waits for them.
+/// waits for them. The build orders are not read here, see [`filled`].
 ///
 /// # Errors
 ///
 /// [`Refusal::GuardsWaiting`] when a guard still waits for its part. Its
-/// changes are unchecked then, so none of the queue runs. A queued AUR build
-/// without its build order is [`Refusal::OrderWaits`].
+/// changes are unchecked then, so none of the queue runs.
 pub fn checked(
     saved: &SavedChanges,
     system: &Snapshot,
@@ -80,8 +82,76 @@ pub fn checked(
         unchecked.recheck(&mut changes, &snapshot);
     }
 
-    may_plan(&unchecked, &changes)?;
+    unchecked.ready(&changes)?;
     Ok(changes)
+}
+
+/// Refuses an AUR build that waits for the window, when the command line
+/// starts the helper through sudo. Sudo does not say who asked, so the
+/// build's helper step could not find the build folder.
+///
+/// # Errors
+///
+/// [`Refused::Unavailable`] naming the waiting builds.
+fn sudo_waits(changes: &ChangeSet, through_sudo: bool) -> Result<(), Refused> {
+    let waiting = aur_orders::needing(changes);
+    if !through_sudo || waiting.is_empty() {
+        return Ok(());
+    }
+
+    Err(Refused::Unavailable(format!(
+        "{} need the window or a polkit agent, sudo cannot start their build\napply the queue in the window, or run this where pkexec can ask",
+        names(&waiting)
+    )))
+}
+
+/// The checks an apply makes before its plan: a sudo run takes no waiting
+/// build, and every build's order is read and filled.
+///
+/// # Errors
+///
+/// As [`sudo_waits`] and [`filled`].
+pub(super) fn prepared(
+    changes: &mut ChangeSet,
+    system: &Snapshot,
+    through_sudo: bool,
+    route: Result<(), RouteProblem>,
+    orders: &dyn AurOrderSource,
+) -> Result<(), Refused> {
+    sudo_waits(changes, through_sudo)?;
+    filled(changes, system, route, orders)
+}
+
+/// Reads and fills the build orders of the queued AUR builds before the
+/// plan, as the window does before every Apply. Nothing builds on a
+/// queue that is not all built.
+///
+/// # Errors
+///
+/// [`Refused::Unavailable`] naming the first build without its order, or
+/// [`Refusal::OrderWaits`] for a build left waiting.
+pub fn filled(
+    changes: &mut ChangeSet,
+    system: &Snapshot,
+    route: Result<(), RouteProblem>,
+    orders: &dyn AurOrderSource,
+) -> Result<(), Refused> {
+    aur::filled(changes, system, orders, route, crate::root::run_counter())?;
+
+    let left: Vec<PackageName> = waiting_orders(changes);
+    if left.is_empty() {
+        Ok(())
+    } else {
+        Err(Refused::Unavailable(order_words(&left)))
+    }
+}
+
+fn names(packages: &[PackageName]) -> String {
+    packages
+        .iter()
+        .map(PackageName::as_str)
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
 /// `probed` after the run of `changes`, with the parts their domains

@@ -8,7 +8,7 @@ use egui::accesskit::Role;
 use egui::{Label, RichText, ScrollArea, TextStyle, Ui, WidgetInfo};
 use toolbox_core::features::packages::PackageDetails;
 use toolbox_core::features::packages::detail::{HISTORY_SHOWN, file_list, matching_files, shown};
-use toolbox_core::features::packages::history::HistoryEntry;
+use toolbox_core::features::packages::history::{HistoryAction, HistoryEntry};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::theme::show_scroll_rows;
@@ -244,9 +244,20 @@ fn line(ctx: &egui::Context, entry: &HistoryEntry) -> (String, String) {
     (when, change(ctx, entry))
 }
 
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn action_id(action: HistoryAction) -> &'static str {
+    match action {
+        HistoryAction::Installed => "packages-history-installed",
+        HistoryAction::Upgraded => "packages-history-upgraded",
+        HistoryAction::Downgraded => "packages-history-downgraded",
+        HistoryAction::Reinstalled => "packages-history-reinstalled",
+        HistoryAction::Removed => "packages-history-removed",
+    }
+}
+
 /// "Upgraded 3.0.2-1 → 3.0.4-1".
 fn change(ctx: &egui::Context, entry: &HistoryEntry) -> String {
-    let action = i18n::text(ctx, &format!("packages-history-{}", entry.action.as_str()));
+    let action = i18n::text(ctx, action_id(entry.action));
     let versions: Cow<'_, str> = if entry.versions.contains(" -> ") {
         Cow::Owned(entry.versions.replace(" -> ", " → "))
     } else {

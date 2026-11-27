@@ -40,16 +40,16 @@ fn the_lima_file_reads_with_its_theme_and_os_prober() {
     assert_eq!(
         GrubState::read(LIMA),
         GrubState {
-            default: "0".to_owned(),
+            default: Ok(DefaultEntry::Entry(MenuEntryId::new("0").unwrap())),
             timeout: Some(5),
             command_line: "loglevel=3 quiet".to_owned(),
             parameters: Some(parameters("loglevel=3 quiet")),
             submenus: true,
             save_default: false,
             os_prober: true,
-            background: String::new(),
-            menu_picture: String::new(),
-            theme: LIMA_THEME.to_owned(),
+            background: None,
+            menu_picture: None,
+            theme: Some(Ok(GrubThemeFile::new(LIMA_THEME).unwrap())),
         }
     );
 }
@@ -58,8 +58,14 @@ fn the_lima_file_reads_with_its_theme_and_os_prober() {
 fn the_installed_file_reads_with_its_single_quoted_command_line() {
     let state = GrubState::read(INSTALLED);
 
-    assert_eq!(state.default, "0");
-    assert_eq!(state.theme, INSTALLED_THEME);
+    assert_eq!(
+        state.default,
+        Ok(DefaultEntry::Entry(MenuEntryId::new("0").unwrap()))
+    );
+    assert_eq!(
+        state.theme,
+        Some(Ok(GrubThemeFile::new(INSTALLED_THEME).unwrap()))
+    );
     assert_eq!(state.command_line, "quiet loglevel=3");
     assert!(state.os_prober);
     assert!(state.submenus);
@@ -71,7 +77,10 @@ fn the_installed_file_reads_with_its_single_quoted_command_line() {
 fn an_empty_file_reads_as_grubs_defaults() {
     let state = GrubState::read("");
 
-    assert_eq!(state.default, "0");
+    assert_eq!(
+        state.default,
+        Ok(DefaultEntry::Entry(MenuEntryId::new("0").unwrap()))
+    );
     assert_eq!(state.timeout, Some(5));
     assert_eq!(state.parameters, Some(KernelParameters::default()));
     assert!(state.submenus && !state.save_default && !state.os_prober);
@@ -211,7 +220,7 @@ fn clearing_the_theme_comments_it_out() {
         changed_lines(INSTALLED, &after),
         [format!("#GRUB_THEME=\"{INSTALLED_THEME}\"")]
     );
-    assert_eq!(GrubState::read(&after).theme, "");
+    assert_eq!(GrubState::read(&after).theme, None);
 }
 
 #[test]

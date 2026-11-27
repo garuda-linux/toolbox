@@ -7,7 +7,7 @@ mod tests;
 
 use std::collections::BTreeMap;
 
-use toolbox_plan::UserName;
+use toolbox_plan::{Toggle, UserName};
 use toolbox_state::accounts::AccountLockFlags;
 use toolbox_system::LockProblem;
 use toolbox_system::pkexec::Refusal;
@@ -32,9 +32,9 @@ impl Locks {
         }
     }
 
-    pub fn of(&self, user: &UserName) -> Option<bool> {
+    pub fn of(&self, user: &UserName) -> Option<Toggle> {
         match self {
-            Self::Known(flags) => flags.get(user).copied(),
+            Self::Known(flags) => flags.get(user).copied().map(Toggle::from_on),
             Self::NotAsked | Self::Loading | Self::Refused(_) | Self::Unknown => None,
         }
     }
@@ -45,15 +45,6 @@ impl Locks {
         match self {
             Self::Known(flags) => Some(AccountLockFlags(flags.clone())),
             Self::NotAsked | Self::Loading | Self::Refused(_) | Self::Unknown => None,
-        }
-    }
-
-    pub const fn code(&self) -> &'static str {
-        match self {
-            Self::NotAsked | Self::Loading => "loading",
-            Self::Known(_) => "known",
-            Self::Refused(refusal) => refusal.code(),
-            Self::Unknown => "unknown",
         }
     }
 }

@@ -139,7 +139,10 @@ fn garuda_update_switches_create_and_edit_the_config() -> TestResult {
         fs::remove_dir_all(GARUDA_UPDATE_FOLDER)?;
     }
 
-    let switch = |flag, enabled| RootAction::SetGarudaUpdateFlag { flag, enabled };
+    let switch = |flag, on: bool| RootAction::SetGarudaUpdateFlag {
+        flag,
+        enabled: toolbox_plan::Toggle::from_on(on),
+    };
 
     assert_eq!(
         apply(vec![switch(GarudaUpdateFlag::UpdateAur, true)])?,

@@ -9,7 +9,7 @@ use std::time::{Duration, Instant};
 
 /// How long a program gets after each signal before the next, harder one.
 /// pacman needs a moment after SIGINT to release its database lock.
-pub const CANCEL_GRACE: Duration = Duration::from_secs(5);
+const CANCEL_GRACE: Duration = Duration::from_secs(5);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Signal {

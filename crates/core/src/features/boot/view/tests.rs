@@ -77,7 +77,7 @@ fn a_grub_system_shows_its_file_and_menu() {
     assert!(!virtual_machine(&snapshot));
 
     let page = Page::read(&snapshot, &changes);
-    assert_eq!(page.entry_value(Some(&menu)), simple());
+    assert_eq!(page.entry_value(Some(&menu)), Some(simple().as_str()));
     assert!(page.entry_listed(Some(&menu)));
     assert!(!is_queued(&changes, GrubKey::Default));
     assert_eq!(page.timeout(), seconds(5));
@@ -100,10 +100,10 @@ fn a_grub_system_shows_its_file_and_menu() {
     assert!(!is_queued(&changes, GrubKey::KernelParameters));
     assert_eq!(
         page.theme(),
-        "/usr/share/grub/themes/catppuccin-mocha/theme.txt"
+        Some("/usr/share/grub/themes/catppuccin-mocha/theme.txt")
     );
     assert!(!is_queued(&changes, GrubKey::Theme));
-    assert_eq!(page.background(), "");
+    assert_eq!(page.background(), None);
     assert!(!is_queued(&changes, GrubKey::Background));
     assert!(!page.background_from_theme());
 }
@@ -160,8 +160,8 @@ fn a_grub_system_without_plymouth_has_no_themes() {
     assert!(!plymouth_installed(&snapshot));
     assert!(!plymouth_queued(&changes));
     assert_eq!(plymouth_themes(&snapshot), Vec::<String>::new());
-    assert_eq!(plymouth_current(&snapshot), "");
-    assert_eq!(plymouth_theme_queued(&changes), "");
+    assert_eq!(plymouth_current(&snapshot), None);
+    assert_eq!(plymouth_theme_queued(&changes), None);
 }
 
 #[test]
@@ -194,7 +194,7 @@ fn queued_changes_show_on_top() {
     assert!(is_queued(&changes, GrubKey::Timeout));
     assert_eq!(
         Page::read(&state, &changes).entry_value(Some(&menu)),
-        fallback()
+        Some(fallback().as_str())
     );
     assert!(is_queued(&changes, GrubKey::Default));
     assert_eq!(
@@ -211,8 +211,11 @@ fn queued_changes_show_on_top() {
     assert!(plymouth_installed(&state));
     assert!(!plymouth_queued(&changes));
     assert_eq!(plymouth_themes(&state), ["bgrt", "spinner"]);
-    assert_eq!(plymouth_current(&state), "bgrt");
-    assert_eq!(plymouth_theme_queued(&changes), "spinner");
+    assert_eq!(plymouth_current(&state), Some(plymouth_theme("bgrt")));
+    assert_eq!(
+        plymouth_theme_queued(&changes),
+        Some(plymouth_theme("spinner"))
+    );
 }
 
 #[test]
@@ -255,7 +258,7 @@ fn remembering_empties_the_default_and_the_splash_queues_plymouth() {
 
     assert!(Page::read(&state, &changes).remember());
     assert!(is_queued(&changes, GrubKey::SaveDefault));
-    assert_eq!(Page::read(&state, &changes).entry_value(Some(&menu)), "");
+    assert_eq!(Page::read(&state, &changes).entry_value(Some(&menu)), None);
     assert!(!Page::read(&state, &changes).entry_listed(Some(&menu)));
     assert!(plymouth_queued(&changes));
 }
@@ -272,16 +275,16 @@ fn the_default_is_matched_by_number_or_title_and_else_shown_as_written() {
     };
 
     let menu = menu();
-    let value = |default: Option<&str>| page(default).entry_value(Some(&menu));
+    let value = |default: Option<&str>| page(default).entry_value(Some(&menu)).map(str::to_owned);
 
-    assert_eq!(value(None), simple());
+    assert_eq!(value(None), Some(simple()));
     assert!(page(None).entry_listed(Some(&menu)));
-    assert_eq!(value(Some("'1>1'")), fallback());
-    assert_eq!(value(Some("'Garuda Linux'")), simple());
-    assert_eq!(value(Some("1")), "1");
+    assert_eq!(value(Some("'1>1'")), Some(fallback()));
+    assert_eq!(value(Some("'Garuda Linux'")), Some(simple()));
+    assert_eq!(value(Some("1")), Some("1".to_owned()));
     assert!(!page(Some("1")).entry_listed(Some(&menu)));
-    assert_eq!(value(Some("gone")), "gone");
-    assert_eq!(page(None).entry_value(None), "0");
+    assert_eq!(value(Some("gone")), Some("gone".to_owned()));
+    assert_eq!(page(None).entry_value(None), Some("0"));
 }
 
 #[test]
@@ -323,11 +326,11 @@ fn a_menu_picture_line_shows_the_picture_of_its_theme() {
 
     assert_eq!(
         Page::read(&snapshot, &changes).theme(),
-        "/usr/share/grub/themes/garuda/theme.txt"
+        Some("/usr/share/grub/themes/garuda/theme.txt")
     );
     assert_eq!(
         Page::read(&snapshot, &changes).background(),
-        "/usr/share/grub/themes/garuda/background.png"
+        Some("/usr/share/grub/themes/garuda/background.png")
     );
     assert!(Page::read(&snapshot, &changes).background_from_theme());
 }
@@ -338,16 +341,22 @@ fn the_queued_plymouth_theme_shows_instead_of_the_current_one() {
 
     assert_eq!(
         plymouth_shown(&system(DEFAULTS, &[]), &ChangeSet::default()),
-        ""
+        None
     );
 
     let mut changes = ChangeSet::default();
 
-    assert_eq!(plymouth_shown(&state, &changes), "bgrt");
+    assert_eq!(
+        plymouth_shown(&state, &changes),
+        Some(plymouth_theme("bgrt"))
+    );
 
     set_plymouth_theme(plymouth_theme("spinner"), &mut changes, &state).unwrap();
 
-    assert_eq!(plymouth_shown(&state, &changes), "spinner");
+    assert_eq!(
+        plymouth_shown(&state, &changes),
+        Some(plymouth_theme("spinner"))
+    );
 }
 
 fn seconds(count: i64) -> GrubTimeout {

@@ -150,7 +150,7 @@ fn bar_shows(reading: &Reading, dry_run: bool) -> bool {
 
 /// A read in progress the bar does not show, as it is away. The sidebar
 /// shows it then.
-pub fn reads_apart(reading: &Reading, mode: Mode) -> bool {
+pub(super) fn reads_apart(reading: &Reading, mode: Mode) -> bool {
     reading.is_loading() && !bar_shows(reading, mode.is_dry_run())
 }
 
@@ -185,7 +185,46 @@ fn failed(reading: &Reading) -> &[FailedRead] {
 }
 
 fn part_name(ctx: &Context, probe: Probe) -> String {
-    i18n::text(ctx, &format!("probe-{}", probe.as_str())).into_owned()
+    i18n::text(ctx, probe_id(probe)).into_owned()
+}
+
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn probe_id(probe: Probe) -> &'static str {
+    match probe {
+        Probe::Packages => "probe-packages",
+        Probe::SyncPackages => "probe-sync-packages",
+        Probe::PackageGraph => "probe-package-graph",
+        Probe::Units => "probe-units",
+        Probe::UserUnits => "probe-user-units",
+        Probe::MaskedUnits => "probe-masked-units",
+        Probe::MaskedUserUnits => "probe-masked-user-units",
+        Probe::Accounts => "probe-accounts",
+        Probe::LoginShells => "probe-login-shells",
+        Probe::AvailableShells => "probe-available-shells",
+        Probe::Dns => "probe-dns",
+        Probe::Hblock => "probe-hblock",
+        Probe::WifiBackend => "probe-wifi-backend",
+        Probe::GarudaUpdate => "probe-garuda-update",
+        Probe::ModuleBlacklist => "probe-module-blacklist",
+        Probe::Merges => "probe-merges",
+        Probe::BootLoader => "probe-boot-loader",
+        Probe::Grub => "probe-grub",
+        Probe::KernelCmdline => "probe-kernel-cmdline",
+        Probe::Plymouth => "probe-plymouth",
+        Probe::VirtualMachine => "probe-virtual-machine",
+        Probe::UserConfigs => "probe-user-configs",
+        Probe::LinuxPackages => "probe-linux-packages",
+        Probe::RunningKernel => "probe-running-kernel",
+        Probe::KernelReleases => "probe-kernel-releases",
+        Probe::SupportedLocales => "probe-supported-locales",
+        Probe::EnabledLocales => "probe-enabled-locales",
+        Probe::SystemLocale => "probe-system-locale",
+        Probe::User => "probe-user",
+        Probe::LiveIso => "probe-live-iso",
+        Probe::Desktops => "probe-desktops",
+        Probe::Edition => "probe-edition",
+        Probe::RebootPending => "probe-reboot-pending",
+    }
 }
 
 fn failed_text(ctx: &Context, failed: &[FailedRead]) -> String {

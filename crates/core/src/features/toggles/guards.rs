@@ -36,7 +36,9 @@ pub(super) fn removal_allowed(
             PackageRefusal::RunningKernel => Refusal::Kernel(kernels::Refusal::Running),
             PackageRefusal::RunningUnknown => Refusal::Kernel(kernels::Refusal::RunningUnknown),
             PackageRefusal::LastKernel => Refusal::Kernel(kernels::Refusal::LastKernel),
-            PackageRefusal::Unread | PackageRefusal::NotOffered => Refusal::Unknown,
+            PackageRefusal::Unread | PackageRefusal::NotOffered | PackageRefusal::Conflicts => {
+                Refusal::Unknown
+            }
         };
 
         refusal.of_package(&refused.subject)

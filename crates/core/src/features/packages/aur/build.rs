@@ -8,6 +8,7 @@ use std::collections::BTreeSet;
 
 use toolbox_plan::{
     BuildRun, InstallReason, PackageName, PlannedAction, RootAction, TargetList, UserAction,
+    protection,
 };
 use toolbox_state::aur::order::{AurOrder, Role};
 use toolbox_text::OutsideText;
@@ -16,7 +17,6 @@ use toolbox_text::OutsideText;
 pub struct BuildPlan {
     pub actions: Vec<PlannedAction>,
     pub bases: Vec<PackageName>,
-    pub make_only: Vec<PackageName>,
 }
 
 /// What stops a plan. Paru's `MISSING` names are outside text. A queued name
@@ -83,6 +83,10 @@ impl Merged {
     ) -> Vec<PlannedAction> {
         let mut actions = Vec::new();
 
+        if let Ok(bases) = TargetList::new(bases.iter().cloned()) {
+            actions.push(PlannedAction::User(UserAction::ReviewAur { bases }));
+        }
+
         let targets = names_with(&self.repo, |role| role == Role::Target);
         let dependencies = names_with(&self.repo, |role| role != Role::Target);
         if let Ok(packages) = TargetList::new(targets) {
@@ -127,7 +131,44 @@ impl Merged {
             }
         }
 
+        if let Ok(packages) = TargetList::new(self.make_only(installed)) {
+            actions.push(PlannedAction::Root(RootAction::RemoveMakeDependencies {
+                packages,
+            }));
+        }
+
         actions
+    }
+
+    /// The MAKE names that no installed package keeps. A protected name stays.
+    fn make_only(&self, installed: &BTreeSet<PackageName>) -> Vec<PackageName> {
+        self.repo
+            .iter()
+            .chain(self.aur.iter())
+            .filter(|(name, role)| {
+                *role == Role::Make && !installed.contains(name) && protection(name).is_none()
+            })
+            .map(|(name, _)| name.clone())
+            .collect::<BTreeSet<PackageName>>()
+            .into_iter()
+            .collect()
+    }
+}
+
+/// What the build of one order does, for its review row: the pkgbases in
+/// build order and the repository packages it installs as dependencies.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Outline {
+    pub bases: Vec<PackageName>,
+    pub dependencies: Vec<PackageName>,
+}
+
+pub fn outline(order: &AurOrder) -> Outline {
+    let merged = Merged::of(std::slice::from_ref(order));
+
+    Outline {
+        bases: merged.bases(),
+        dependencies: names_with(&merged.repo, |role| role != Role::Target),
     }
 }
 
@@ -150,19 +191,7 @@ pub fn plan(
     let bases = merged.bases();
     let actions = merged.actions(&bases, run, installed);
 
-    let make_only: BTreeSet<PackageName> = merged
-        .repo
-        .iter()
-        .chain(merged.aur.iter())
-        .filter(|(name, role)| *role == Role::Make && !installed.contains(name))
-        .map(|(name, _)| name.clone())
-        .collect();
-
-    Ok(BuildPlan {
-        actions,
-        bases,
-        make_only: make_only.into_iter().collect(),
-    })
+    Ok(BuildPlan { actions, bases })
 }
 
 /// # Errors

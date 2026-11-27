@@ -45,6 +45,34 @@ impl AurOrderSource for Paru {
     }
 }
 
+/// The build orders of a self-test build's dry run: the captured `paru -Po`
+/// answers of two AUR builds and of a name the AUR does not have. Any other
+/// name has no answer.
+#[cfg(any(feature = "selftest", feature = "testing"))]
+#[derive(Debug, Default)]
+pub struct SampleAurOrders;
+
+#[cfg(any(feature = "selftest", feature = "testing"))]
+impl AurOrderSource for SampleAurOrders {
+    fn order(&self, package: &PackageName) -> Result<AurOrder, ProbeError> {
+        use toolbox_state::testing::aur::order::{
+            AUR_SYNC_VOTE_STDOUT, MISSING_STDOUT, OCTOPI_GIT_STDOUT,
+        };
+
+        let text = match package.as_str() {
+            "octopi-git" => OCTOPI_GIT_STDOUT,
+            "aur-sync-vote" => AUR_SYNC_VOTE_STDOUT,
+            "no-such-package-toolbox" | "toolbox-sample-git" => MISSING_STDOUT,
+            _ => return Err(ProbeError::Unavailable),
+        };
+
+        parse_order(text).map_err(|error| ProbeError::Invalid {
+            what: format!("the sample build order of {package}"),
+            error: error.into(),
+        })
+    }
+}
+
 /// paru exits with 1 for other errors too. Only an order that names the
 /// asked package, as a build or as missing, is its answer.
 fn answers(order: &AurOrder, package: &PackageName) -> bool {

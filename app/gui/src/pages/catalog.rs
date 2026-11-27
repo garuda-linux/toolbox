@@ -24,7 +24,7 @@ pub trait CatalogKind {
 }
 
 /// The lead sections' data, keyed by the system and the queue.
-pub type LeadData<K> =
+type LeadData<K> =
     RowCache<(Same<Snapshot>, u64), <<K as CatalogKind>::Lead as LeadSections>::Data>;
 
 #[derive(Debug)]

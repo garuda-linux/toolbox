@@ -276,3 +276,29 @@ fn a_dry_run_prints_the_plan_and_never_asks_or_runs() {
     );
     assert!(!out.contains("Running"), "{out}");
 }
+
+#[test]
+fn a_split_plan_is_never_retried_through_sudo() {
+    let build = toolbox_plan::BuildRun::new("1").unwrap();
+    let packages =
+        toolbox_plan::TargetList::new([toolbox_plan::PackageName::new("octopi-git").unwrap()])
+            .unwrap();
+
+    let split = Plan::new([toolbox_plan::PlannedAction::Root(
+        RootAction::InstallBuilt {
+            run: build,
+            packages,
+            reason: toolbox_plan::InstallReason::Explicit,
+        },
+    )]);
+
+    let launcher = Arc::new(Refusing {
+        words: "pkexec must be setuid root",
+        then: helper(Outcome::Succeeded),
+    });
+
+    let (exit, out) = run_with(launcher, split, true, &mut terminal(&[]));
+
+    assert_ne!(exit, Exit::Success, "{out}");
+    assert!(!out.contains(crate::root::SUDO_NOTE), "{out}");
+}

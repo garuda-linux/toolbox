@@ -54,7 +54,7 @@ impl Found {
     }
 
     /// The row that holds match `hit`, counted from 0.
-    pub fn row_of(&self, hit: usize) -> Option<usize> {
+    pub(super) fn row_of(&self, hit: usize) -> Option<usize> {
         let (line, start) = *self.hits.get(hit)?;
         self.rows
             .partition_point(|row| (row.line, row.start) <= (line, start))

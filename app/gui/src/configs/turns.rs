@@ -11,7 +11,7 @@ use tokio::sync::oneshot;
 
 /// Hands out turns in the order the frame asks for them.
 #[derive(Debug, Default)]
-pub struct Turns {
+pub(super) struct Turns {
     /// Closes when the newest turn ended.
     last: Mutex<Option<oneshot::Receiver<()>>>,
 }

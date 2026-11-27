@@ -17,7 +17,7 @@ impl Choice {
     }
 }
 
-pub const fn flag_glyph(flag: GarudaUpdateFlag) -> Icon {
+pub(super) const fn flag_glyph(flag: GarudaUpdateFlag) -> Icon {
     match flag {
         GarudaUpdateFlag::SkipMirrorlist => icons::VIEW_LIST_DETAILS,
         GarudaUpdateFlag::UpdateAur => icons::APPLICATIONS_DEVELOPMENT,

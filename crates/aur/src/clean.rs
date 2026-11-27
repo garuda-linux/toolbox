@@ -14,8 +14,8 @@ pub const DESCRIPTION_CHARS: usize = 512;
 pub const MAINTAINER_CHARS: usize = 64;
 pub const URL_CHARS: usize = 2048;
 /// One entry of a list (a dependency, a licence, a keyword).
-pub const ENTRY_CHARS: usize = 256;
-pub const LIST_ENTRIES: usize = 256;
+const ENTRY_CHARS: usize = 256;
+const LIST_ENTRIES: usize = 256;
 
 pub fn plain(text: &str, max: usize) -> OutsideText {
     toolbox_text::plain_up_to(text, max)

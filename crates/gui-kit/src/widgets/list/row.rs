@@ -182,7 +182,7 @@ fn focus(ui: &Ui, response: &Response, selected: bool) {
 }
 
 /// The height row `id` took when last laid out.
-pub fn remembered(ui: &Ui, id: Id) -> Option<f32> {
+pub(super) fn remembered(ui: &Ui, id: Id) -> Option<f32> {
     memory::get(ui, id).height
 }
 
@@ -201,13 +201,13 @@ fn remember(ui: &Ui, place: Place, height: f32) {
 
 /// Counts the measured heights of `list` that changed, so the list
 /// builds its offsets again only then.
-pub fn heights_seen(ui: &Ui, list: Id) -> u64 {
+pub(super) fn heights_seen(ui: &Ui, list: Id) -> u64 {
     ui.data(|data| data.get_temp::<u64>(heights_id(list)))
         .unwrap_or_default()
 }
 
 /// The kept offsets of `list` no longer fit its rows.
-pub fn heights_changed(ui: &Ui, list: Id) {
+pub(super) fn heights_changed(ui: &Ui, list: Id) {
     ui.data_mut(|data| {
         let seen = data.get_temp_mut_or_default::<u64>(heights_id(list));
         *seen = seen.wrapping_add(1);

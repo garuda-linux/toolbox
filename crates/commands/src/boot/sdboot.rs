@@ -15,7 +15,7 @@ use toolbox_core::features::boot::view::EntryRow;
 use toolbox_core::features::boot::{self as boot, kernel, set_loader};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderTimeout, SdBootMenu};
-use toolbox_plan::{LoaderDefault, PackageName, Plan};
+use toolbox_plan::{LoaderDefault, PackageName, Plan, Toggle};
 use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 
 use super::{entry_listing, unknown_kernel};
@@ -31,9 +31,12 @@ pub struct SdBootView {
     pub loader: &'static str,
     pub timeout: Option<String>,
     pub default: Option<String>,
-    pub editor: Option<bool>,
-    pub auto_entries: Option<bool>,
-    pub auto_firmware: Option<bool>,
+    #[serde(with = "toolbox_plan::option_as_bool")]
+    pub editor: Option<Toggle>,
+    #[serde(with = "toolbox_plan::option_as_bool")]
+    pub auto_entries: Option<Toggle>,
+    #[serde(with = "toolbox_plan::option_as_bool")]
+    pub auto_firmware: Option<Toggle>,
     pub parameters: Option<Vec<String>>,
     pub plymouth: Option<String>,
 }
@@ -86,7 +89,7 @@ pub fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
     let text = if read.json {
         json(&view)
     } else {
-        let unset = |value: Option<bool>| value.map_or("", on_off_text);
+        let unset = |value: Option<Toggle>| value.map_or("", |on| on_off_text(on.is_on()));
         let parameters = view
             .parameters
             .as_ref()
@@ -247,7 +250,7 @@ pub fn loader_setting(
     let switch = |word: &str| match word {
         "none" => Ok(None),
         other => crate::settings::on_off(other)
-            .map(Some)
+            .map(|on| Some(Toggle::from_on(on)))
             .map_err(Refused::Rule),
     };
 

@@ -3,7 +3,7 @@ mod default;
 mod tests;
 
 use toolbox_plan::sdboot::SdBootMenu;
-use toolbox_plan::{DkmsBuild, GrubMenu, PackageName};
+use toolbox_plan::{DkmsBuild, GrubMenu, KernelRelease, PackageName};
 
 use super::{
     DkmsEntry, Kernel, KernelReleases, Listed, ModuleState, ModuleStatus, RunningKernel,
@@ -206,9 +206,9 @@ fn default_kernel(
     default::grub(state, menus.grub?, kernels)
 }
 
-/// What `uname -r` printed, empty when unknown.
-pub fn release(snapshot: &Snapshot) -> &str {
+/// What `uname -r` printed, `None` when unknown.
+pub fn release(snapshot: &Snapshot) -> Option<&KernelRelease> {
     snapshot
         .part::<RunningKernel>()
-        .map_or("", |booted| booted.release.as_str())
+        .map(|booted| &booted.release)
 }

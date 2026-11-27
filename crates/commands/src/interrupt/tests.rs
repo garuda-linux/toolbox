@@ -55,6 +55,17 @@ fn a_signal_counts_as_a_press_and_names_the_exit_code() {
     assert_eq!(stopper.exit(), Exit::HungUp);
 }
 
+/// A step can end as cancelled with no key pressed: a "no" to the review
+/// of an AUR build.
+#[test]
+fn a_cancel_without_a_press_is_a_decline() {
+    let presses = Arc::new(Presses::default());
+    presses.press();
+    let stopper = Stopper::new(Arc::clone(&presses));
+
+    assert_eq!(stopper.exit(), Exit::Declined);
+}
+
 #[test]
 fn each_signal_has_its_shell_code() {
     assert_eq!(Signal::Interrupt.exit(), Exit::Interrupted);

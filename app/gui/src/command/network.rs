@@ -1,6 +1,6 @@
 //! A click on the Network page.
 
-use toolbox_core::features::network::RadioTarget;
+use toolbox_core::features::network::{NetworkUnit, RadioTarget};
 use toolbox_plan::{HopLimit, HostName, KernelModule, PingCount, PingTimeout, Toggle};
 
 use super::{AppCommand, Command};
@@ -19,7 +19,7 @@ pub enum NetworkCommand {
     LookupAddress,
     ForgetAddress,
     /// Starts one of the page's services in the Console.
-    StartService(&'static str),
+    StartService(NetworkUnit),
     /// Loads (`load`) or unloads a driver in the Console.
     LoadDriver {
         module: KernelModule,
@@ -28,7 +28,7 @@ pub enum NetworkCommand {
     /// Queues the driver for the app's blacklist file (`on`), or off it.
     Blacklist {
         module: KernelModule,
-        on: bool,
+        on: Toggle,
     },
     Ping {
         host: HostName,

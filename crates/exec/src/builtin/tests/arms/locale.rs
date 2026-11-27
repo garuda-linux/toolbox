@@ -22,7 +22,7 @@ fn switching_a_locale_line_is_one_step() {
     let root = locale_root();
     let builtin = Builtin::EditLocaleGen {
         entry: LocaleEntry::parse("en_US.UTF-8 UTF-8").unwrap(),
-        on: false,
+        on: toolbox_plan::Toggle::Off,
     };
 
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Succeeded);

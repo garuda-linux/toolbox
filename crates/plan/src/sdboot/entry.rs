@@ -119,7 +119,7 @@ impl LoaderEntry {
 
 /// Without the boot counter (`+3`, `+2-1`), as `bootctl` names it: the
 /// counter changes with every boot attempt.
-pub fn entry_id(file: &str) -> Option<LoaderEntryId> {
+fn entry_id(file: &str) -> Option<LoaderEntryId> {
     let (stem, kind) = file
         .strip_suffix(".efi")
         .map(|stem| (stem, ".efi"))

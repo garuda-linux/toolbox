@@ -228,7 +228,7 @@ impl Rule for HostRule {
 
 /// Letters, digits and `._+-`: one path component that is neither `.` nor
 /// `..`, since the first character is a letter or digit.
-pub fn check_word(value: &str) -> Result<(), Reason> {
+pub(super) fn check_word(value: &str) -> Result<(), Reason> {
     check_characters(value, |character| {
         character.is_ascii_alphanumeric() || "._+-".contains(character)
     })
@@ -245,7 +245,11 @@ fn check_account(value: &str) -> Result<(), Reason> {
 
 /// Not empty, at most `max` characters, and a first character that passes
 /// `first_ok`.
-pub fn check_shape(value: &str, max: usize, first_ok: impl Fn(char) -> bool) -> Result<(), Reason> {
+pub(super) fn check_shape(
+    value: &str,
+    max: usize,
+    first_ok: impl Fn(char) -> bool,
+) -> Result<(), Reason> {
     let Some(first) = value.chars().next() else {
         return Err(Reason::Empty);
     };
@@ -261,7 +265,7 @@ pub fn check_shape(value: &str, max: usize, first_ok: impl Fn(char) -> bool) -> 
     }
 }
 
-pub fn check_characters(value: &str, allowed: impl Fn(char) -> bool) -> Result<(), Reason> {
+pub(super) fn check_characters(value: &str, allowed: impl Fn(char) -> bool) -> Result<(), Reason> {
     value
         .chars()
         .find(|character| !allowed(*character))

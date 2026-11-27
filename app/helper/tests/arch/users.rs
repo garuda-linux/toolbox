@@ -200,7 +200,7 @@ fn the_root_account_is_neither_locked_nor_removed() -> TestResult {
     for action in [
         RootAction::SetUserLocked {
             user: user("root")?,
-            locked: true,
+            locked: toolbox_plan::Toggle::On,
         },
         RootAction::DeleteUser {
             user: user("root")?,

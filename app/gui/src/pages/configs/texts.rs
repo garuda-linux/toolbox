@@ -10,12 +10,14 @@ use crate::i18n;
 use crate::i18n::Arg;
 
 pub fn problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
-    i18n::text_with(ctx, &code.text_id(), &[("path", Arg::from(path))]).into_owned()
+    code.text_id().map_or_else(String::new, |id| {
+        i18n::text_with(ctx, id, &[("path", Arg::from(path))]).into_owned()
+    })
 }
 
 /// The viewer shows a file instead of editing it, so a few problems read
 /// differently there.
-pub fn view_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
+pub(super) fn view_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
     let id = match code {
         ProblemCode::TooLarge => "configs-view-too-large",
         ProblemCode::NotText => "configs-view-not-text",
@@ -44,7 +46,7 @@ pub fn view_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
 }
 
 /// The review keeps the edit after a failed write, which its text says.
-pub fn review_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
+pub(super) fn review_problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
     match code {
         ProblemCode::WriteFailed => i18n::text_with(
             ctx,
@@ -147,7 +149,7 @@ pub fn status(ctx: &Context, session: &Session) -> Option<String> {
 
 /// The one status line of a row: why it is not edited, that it is only
 /// shown, that saving needs a password, or where its link leads.
-pub fn row_status(ctx: &Context, row: &Row) -> String {
+pub(super) fn row_status(ctx: &Context, row: &Row) -> String {
     let id = match row.refusal {
         "" if row.read_only => "configs-read-only",
         "" => "",
@@ -168,7 +170,9 @@ pub fn row_status(ctx: &Context, row: &Row) -> String {
 }
 
 pub fn link(ctx: &Context, row: &Row) -> String {
-    i18n::text_with(ctx, "configs-link", &[("target", Arg::from(&row.target))]).into_owned()
+    let target = row.target.as_ref().map_or("", |target| target.as_str());
+
+    i18n::text_with(ctx, "configs-link", &[("target", Arg::from(target))]).into_owned()
 }
 
 pub fn unreadable(ctx: &Context, problem: &LoadProblem) -> (String, String) {

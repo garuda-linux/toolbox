@@ -78,6 +78,32 @@ fn catalog_texts_come_translated_or_as_the_catalog_says() {
     assert_eq!(text_or(&ctx, "catalog-components-new", "New"), "New");
 }
 
+/// The Users page words a lock that could not be read by its id, in each
+/// language, so a refusal without a text would show the bare id.
+#[test]
+fn every_lock_refusal_has_its_text_in_each_language() {
+    use toolbox_system::pkexec::Refusal;
+
+    use crate::pages::users::texts::refused_lock_id;
+
+    let root = Path::new(toolbox_services::i18n::DIR);
+    let refusals = [
+        Refusal::Dismissed,
+        Refusal::Denied,
+        Refusal::NoAgent,
+        Refusal::HelperMissing,
+        Refusal::Broken,
+    ];
+
+    for locale in ["en-US", "de-DE"] {
+        let ids = ids_of(&root.join(locale));
+        for refusal in refusals {
+            let id = refused_lock_id(refusal);
+            assert!(ids.contains(id), "{id} is missing in {locale}");
+        }
+    }
+}
+
 #[test]
 fn every_account_refusal_has_a_text() {
     let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
@@ -94,14 +120,14 @@ fn every_account_refusal_has_a_text() {
 fn every_page_refusal_has_its_text() {
     use toolbox_core::features::{bootrepair, configs, kernels, locales, network, users};
 
-    fn ids<R>() -> Vec<String>
+    fn ids<R>() -> Vec<&'static str>
     where
         R: RefusalText + IntoEnumIterator,
     {
-        R::iter().map(RefusalText::text_id).collect()
+        R::iter().filter_map(RefusalText::text_id).collect()
     }
 
-    let english = ids_of(&Path::new(toolbox_services::i18n::DIR).join("en-US"));
+    let root = Path::new(toolbox_services::i18n::DIR);
     let all = [
         ids::<users::Refusal>(),
         ids::<kernels::Refusal>(),
@@ -112,13 +138,17 @@ fn every_page_refusal_has_its_text() {
         ids::<configs::session::ProblemCode>(),
     ];
 
-    let missing: Vec<&String> = all
-        .iter()
-        .flatten()
-        .filter(|id| !english.contains(*id))
-        .collect();
+    for locale in ["en-US", "de-DE"] {
+        let shown = ids_of(&root.join(locale));
+        let missing: Vec<&str> = all
+            .iter()
+            .flatten()
+            .copied()
+            .filter(|id| !shown.contains(*id))
+            .collect();
 
-    assert!(missing.is_empty(), "no text for {missing:?}");
+        assert!(missing.is_empty(), "no {locale} text for {missing:?}");
+    }
 }
 
 /// The Maintenance page names each task and its detail by `text_id`.
@@ -135,7 +165,7 @@ fn every_maintenance_task_has_its_name_and_detail() {
         .chain(Repair::ALL.map(Repair::text_id));
 
     let missing: Vec<String> = names
-        .flat_map(|id| [format!("{id}-detail"), id])
+        .flat_map(|id| [format!("{id}-detail"), id.to_owned()])
         .filter(|id| !english.contains(id))
         .collect();
 

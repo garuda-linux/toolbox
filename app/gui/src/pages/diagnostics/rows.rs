@@ -63,13 +63,10 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, open: &mut bool) {
 fn row(ui: &mut Ui, context: &PageContext<'_>, choice: Selection) {
     let ctx = ui.ctx().clone();
     let page = context.service::<Diagnostics>().page();
-    let name = super::name(&ctx, choice.as_str());
-    let detail = i18n::text(
-        &ctx,
-        &format!("diagnostics-{}-description", choice.as_str()),
-    );
+    let name = super::selection_name(&ctx, choice);
+    let detail = i18n::text(&ctx, super::description_id(choice));
 
-    let running = page.state == State::Running && page.selection == choice.as_str();
+    let running = page.state == State::Running && page.selection == Some(choice);
 
     ActionRow::new(icon(choice), &name)
         .detail(&detail)

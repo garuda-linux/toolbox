@@ -271,12 +271,7 @@ impl ServicesPage {
     /// The chips before the first list, all off and counting nothing.
     fn idle_filters(&self, ui: &mut Ui) {
         let ctx = ui.ctx().clone();
-        let labels = Shown::EVERY.map(|shown| {
-            (
-                shown,
-                i18n::text(&ctx, &format!("services-show-{}", shown.as_str())),
-            )
-        });
+        let labels = Shown::EVERY.map(|shown| (shown, i18n::text(&ctx, texts::show_id(shown))));
 
         let options: Vec<(Shown, &str, Option<&str>)> = labels
             .iter()
@@ -301,7 +296,7 @@ impl ServicesPage {
     fn filters(&mut self, ui: &mut Ui, counts: Counts) {
         let ctx = ui.ctx().clone();
         let labels = Shown::EVERY.map(|shown| {
-            let label = i18n::text(&ctx, &format!("services-show-{}", shown.as_str()));
+            let label = i18n::text(&ctx, texts::show_id(shown));
             let count = Some(counts.of(shown).to_string());
             (shown, label, count)
         });

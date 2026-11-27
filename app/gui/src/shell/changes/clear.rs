@@ -5,7 +5,7 @@ use crate::command::{Command, CommandSender, UiCommand};
 use crate::i18n;
 use crate::i18n::Arg;
 
-pub fn ask_to_clear(
+pub(super) fn ask_to_clear(
     ctx: &Context,
     count: usize,
     confirming: &mut Option<UiCommand>,

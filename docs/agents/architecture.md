@@ -48,15 +48,84 @@
   `paru` and `waiting` are saved or sent. A `built` form from a file or
   the bus comes back as `Waiting`, so the app's own order read is the only
   way an order becomes a `Built` wish.
-- Until the review step exists, a `Waiting` wish holds Apply. `may_plan`
-  (`crates/core/src/features.rs`) refuses with `Refusal::OrderWaits` while
-  `waiting_orders` names one, and `Queue::ready` and `queue apply`
-  (`crates/commands/src/queue/ready.rs`) both call it. One such wish holds
-  the whole queue, Paru wishes included. Nothing turns a `Waiting` wish into
-  a `Built` one in the app or the CLI. `toolbox_services::aur_orders`
-  (`read_orders`) reads the orders of one run from an `AurOrderSource` and
-  the route check's answer. It blocks on paru, so a caller runs it in
-  `spawn_blocking`, and nothing calls it yet.
+- The review builtin `ReviewAur` (`crates/exec/src/aur/review.rs`) fetches
+  into the app's own clone `~/.cache/garuda-toolbox/aur-clone` and asks
+  once before any build ([The review](security.md#the-review)).
+- The split plan (`crates/core/src/features/packages/aur/build.rs`) in order:
+  1. `ReviewAur` with every base in build order, when there is a base.
+  2. `InstallPackages` for repository targets, when there are any.
+  3. `InstallDependencies` for the repository lines that are not targets.
+  4. Per base: `BuildAur`, then `InstallBuilt` for each reason that has names
+     (Dependency, Keep, Explicit).
+  5. `RemoveMakeDependencies` for the MAKE names no installed package keeps,
+     without protected names, when there are any.
+
+  The domain puts the `InstallAur` of `Paru` wishes after the review and
+  before the rest, so the review asks before any root step of the AUR plan. `BuildPlan`
+  holds `actions` and `bases`.
+
+- Which path a click takes (`features::packages::aur::toggle`). The snapshot
+  part `AurRoute` (`crates/state/src/aur.rs`) is probed in `probe_snapshot`
+  by `toolbox_system::probe_route`, from the helper's own check of the
+  calling user's build folder (`toolbox_exec::route`). `Accepted` queues
+  `Waiting` (the split path). `Refused { kind, detail }` queues `Paru` (the
+  old path). A missing part refuses as `Refusal::Unread`. `RouteKind` names
+  the refusals a text tells apart (`aur-route-*`, see
+  `toolbox_services::aur_orders::route_text_id`).
+- Conflicts are checked on the split path only. `AurNames` (the window's
+  copy part) lists each package's `conflicts` by name, without version
+  constraints. A conflict with an installed package refuses with
+  `Refusal::Conflicts`, its subject the installed package. The check fails
+  closed: no `AurNames` on the split path is `Unread`.
+- The command line overrides the route part with `RouteKind::ThroughSudo`
+  when it starts the helper through sudo (`root::sudo_route`, see
+  [security.md](security.md#aur-installs)).
+- Orders are filled in memory, in one place for both front ends.
+  `toolbox_services::aur_orders::read_into` (a `ChangeSet`) and `fill` (a
+  `Queue`) read the orders of every queued `Waiting` or `Built` build with
+  `read_orders`, then `give_order` sets `Built` for each order that came back
+  and keeps or sets `Waiting` for each that did not. A `Paru` wish is never
+  touched. `read_orders` blocks on paru, so a caller runs it in
+  `spawn_blocking`. Filling writes nothing when only orders changed: a
+  `Built` wish saves as `waiting`, and `Queue::edit` writes only a changed
+  saved form (pinned by `an_order_alone_changes_nothing_on_disk`).
+- A `Waiting` wish holds Apply. `may_plan` refuses with `Refusal::OrderWaits`
+  while `waiting_orders` names one, and `Queue::ready` holds on it. One such
+  wish holds the whole queue, Paru wishes included.
+- Review rows: `BuildOrder::outline` gives the pkgbases one queued build
+  builds and the repository packages it installs as dependencies
+  (`build::Outline`).
+- The command line's split flow. `queue apply` (`crates/commands/src/queue.rs`,
+  `queue/run.rs`) restores and checks the queue (`ready::checked`), refuses
+  waiting builds under sudo (`ready::sudo_waits`), then reads and fills the
+  orders (`ready::filled`) and only then plans. `packages install --aur`
+  (`packages/aur/install.rs`, `plan_install`) queues, fills and plans in the
+  same order. An order that cannot be read stops the command with exit 5,
+  an installed conflict with exit 8 (`Refused::Rule`), and a setup on the old
+  path is told why in a warning line first (`warn_old_path`).
+- The window's background read of the orders (`Packages`, its `OrderReads`
+  in `toolbox_services::aur_orders::reads`). `Packages::ask_orders` starts
+  one blocking read at a time for a `Waiting` build no read named yet, and
+  every queued build when forced. `App::take_orders` lands it with
+  `land_orders`, which fills the queue, so a build left out of the queue is
+  not put back. A missing order keeps its reason in `order_missing` and is
+  not asked again on its own. The route check runs again on that thread
+  (`RouteSource`), and the samples of a self-test build are
+  `SampleAurOrders` and `SampleRoute` in `toolbox_system`.
+- The window's Apply (`app/gui/src/app/services/orders.rs`): with AUR builds
+  queued it sets the pending Apply to the queue's revision and forces a
+  read of every order. A landed read fills the queue, then the plan is sent
+  in that same pass, unless the revision changed (a queue edit drops the
+  Apply). A second click while it waits does nothing. A queue without
+  builds plans at once, in the click's pass.
+- The Console's review: `features::console::asks_review` matches the text
+  of `ReviewAur` (pinned by a test against the plan). While that step runs,
+  a line above the header shows the hint and **Continue** (sends `y` and
+  Enter as input), since the header has no room for them. Continue never
+  takes the focus, so Enter does not click it.
+- The Changes rows of AUR builds (`shell/changes/build.rs`) show the notes
+  of `App::holds`. The hold of Apply names the build (`Hold`, text built with
+  its arguments), and Read again sends `PackagesCommand::ReadOrders`.
 
 ## Names
 
@@ -91,7 +160,10 @@ Link rules (check with `cargo tree -p <crate> --edges normal`):
 
 - Only `toolbox-gui` and `toolbox-gui-kit` link egui, so
   `cargo nextest run -p toolbox-commands` builds without it.
-- `toolbox-helper` links `toolbox-plan` and `toolbox-exec` only.
+- `toolbox-helper` links `toolbox-plan` and `toolbox-exec` only among the
+  workspace crates. Its dev-dependencies turn on the `testing` features of
+  `toolbox-fs`, `toolbox-plan`, `toolbox-state` and `toolbox-system`, which
+  no release build links.
 - `toolbox-pty`, `toolbox-fs`, `toolbox-https`, `toolbox-calendar`,
   `toolbox-appmenu` and `toolbox-text` link nothing of the workspace. Every outside request goes
   through `toolbox-https`, so the HTTPS rules live in one place.

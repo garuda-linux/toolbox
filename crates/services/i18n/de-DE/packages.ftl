@@ -33,6 +33,7 @@ packages-refused-unread = { $name } lässt sich noch nicht vormerken: Die instal
 packages-refused-running-kernel = { $name } ist der laufende Kernel und bleibt deshalb installiert.
 packages-refused-running-unknown = { $name } bleibt installiert. Der laufende Kernel lässt sich nicht ermitteln, deshalb kann kein Kernel entfernt werden. Den Computer neu starten und erneut versuchen.
 packages-refused-last-kernel = { $name } ist der letzte installierte Kernel. Vor dem Entfernen einen anderen Kernel installieren.
+packages-refused-conflicts = { $name } ist installiert und steht im Konflikt mit dem gewählten AUR-Paket. { $name } zuerst entfernen.
 packages-dismiss = Ausblenden
 # A row button's name for screen readers: $action is the button, such as Install, $name the package.
 packages-action-name = { $action } { $name }
@@ -154,6 +155,7 @@ packages-aur-votes = { $count ->
 
 packages-aur-install-title = { $package } aus dem AUR bauen?
 packages-aur-install-body = Das Paket wird aus einem Skript der Community lokal gebaut. paru zeigt das Build-Skript vorher in der Konsole.
+packages-aur-install-body-split = Das Paket wird aus einem Skript der Community lokal gebaut. Die Konsole zeigt die Build-Dateien vor dem Bauen und Installieren zur Prüfung.
 packages-aur-install-confirm = Bauen und installieren
 
 packages-aur-maintainer = Betreuer

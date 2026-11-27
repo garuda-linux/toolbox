@@ -62,6 +62,7 @@ users-locks-denied = Which accounts are locked is not known: the password dialog
 users-locks-no-agent = Which accounts are locked is not known: no password dialog could appear, because this desktop session runs no polkit authentication agent (the program that asks for your password when an app needs more rights).
 users-locks-helper-missing = Which accounts are locked is not known: the helper of Garuda Toolbox is not installed. Reinstall Garuda Toolbox.
 users-locks-unknown = Which accounts are locked is not known: the helper of Garuda Toolbox could not read it.
+users-locks-broken = Which accounts are locked is not known: pkexec cannot run on this system.
 
 users-run-password-running = Setting the password of { $user }…
 users-run-password-done = The password of { $user } is set.

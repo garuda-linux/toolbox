@@ -2,6 +2,7 @@ use std::future::Future;
 use std::net::IpAddr;
 
 use serde_json::Value;
+use toolbox_plan::MacAddress;
 use toolbox_state::network::{InterfaceCard, Link, Signal, SignalQuality, Subnet};
 
 use super::{
@@ -71,6 +72,16 @@ impl PropertyReads for Replies {
 
 /// busctl's JSON without its types: the one dict of the reply, with each
 /// typed value replaced by its data.
+#[test]
+fn a_hardware_address_that_is_no_mac_is_left_out() {
+    assert_eq!(super::hardware("not a mac"), None);
+    assert_eq!(super::hardware(""), None);
+    assert_eq!(
+        super::hardware("52:54:00:00:00:0E").map(|mac| mac.as_str().to_owned()),
+        Some("52:54:00:00:00:0E".to_owned())
+    );
+}
+
 fn reply(json: &str) -> Value {
     let reply: Value = serde_json::from_str(json).unwrap();
     plain(&reply["data"][0])
@@ -132,7 +143,7 @@ fn wlan0_card() -> InterfaceCard {
     InterfaceCard {
         connection: toolbox_text::plain("network-3"),
         interface: toolbox_text::plain("wlan0"),
-        mac: Some("52:54:00:00:00:07".to_owned()),
+        mac: Some(MacAddress::new("52:54:00:00:00:07").unwrap()),
         ipv4: vec![subnet("192.168.178.30", 24)],
         ipv6: vec![
             subnet("2001:db8::2", 64),
@@ -243,7 +254,10 @@ async fn an_activated_ethernet_device_gets_its_speed() {
     assert_eq!(cards[0], wlan0_card());
     assert_eq!(cards[1].connection, "wired-1");
     assert_eq!(cards[1].interface, "enp3s0");
-    assert_eq!(cards[1].mac.as_deref(), Some("52:54:00:00:00:0E"));
+    assert_eq!(
+        cards[1].mac.as_ref().map(MacAddress::as_str),
+        Some("52:54:00:00:00:0E")
+    );
     assert_eq!(cards[1].link, Link::Wired { speed: Some(1000) });
 }
 

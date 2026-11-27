@@ -15,7 +15,7 @@ use tracing_subscriber::layer::Context;
 use tracing_subscriber::registry::{LookupSpan, SpanRef};
 
 /// Hands each finished line (level, target, message) to `write`.
-pub struct LineLayer<F> {
+pub(super) struct LineLayer<F> {
     write: F,
 }
 

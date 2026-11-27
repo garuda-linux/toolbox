@@ -1,7 +1,7 @@
 use super::{InvalidLoaderChange, LoaderChange, LoaderSetting};
-use crate::LoaderDefault;
 use crate::sdboot::{LoaderEntry, LoaderSettings, LoaderTimeout};
 use crate::testing::sdboot::{section, uki};
+use crate::{LoaderDefault, Toggle};
 
 /// `/efi/loader/loader.conf` of the Garuda Lima image, and the lines
 /// garuda-common-settings' config agent rule appends to it.
@@ -26,7 +26,7 @@ fn the_images_commented_timeout_is_switched_on_in_its_place() {
 
 #[test]
 fn a_setting_the_file_never_names_is_added_at_the_end() {
-    let wanted = change(vec![LoaderSetting::Editor(Some(false))]);
+    let wanted = change(vec![LoaderSetting::Editor(Some(Toggle::Off))]);
 
     assert_eq!(wanted.apply(IMAGE), format!("{IMAGE}editor no\n"));
 }
@@ -36,7 +36,7 @@ fn a_setting_the_file_never_names_is_added_at_the_end() {
 #[test]
 fn every_other_line_stays_byte_for_byte() {
     let file = format!("{IMAGE}{COMMON_SETTINGS}");
-    let wanted = change(vec![LoaderSetting::AutoFirmware(Some(false))]);
+    let wanted = change(vec![LoaderSetting::AutoFirmware(Some(Toggle::Off))]);
 
     assert_eq!(
         wanted.apply(&file),
@@ -62,7 +62,7 @@ fn the_written_file_reads_back_as_the_wanted_settings() {
     let wanted = change(vec![
         LoaderSetting::Timeout(Some(LoaderTimeout::MenuForce)),
         LoaderSetting::Default(Some(LoaderDefault::new("@saved").unwrap())),
-        LoaderSetting::AutoEntries(Some(true)),
+        LoaderSetting::AutoEntries(Some(Toggle::On)),
     ]);
 
     let written = LoaderSettings::parse(&wanted.apply(IMAGE));
@@ -79,7 +79,7 @@ fn a_change_names_each_setting_once() {
     );
     assert_eq!(
         LoaderChange::new(vec![
-            LoaderSetting::Editor(Some(true)),
+            LoaderSetting::Editor(Some(Toggle::On)),
             LoaderSetting::Editor(None),
         ])
         .unwrap_err(),
@@ -109,4 +109,37 @@ fn an_entry_without_a_kernel_release_is_named_exactly() {
         LoaderEntry::uki("garuda-7.3.1-1-garuda.efi", &section(UKI, ".osrel"), None).unwrap();
 
     assert_eq!(bare.default_pattern().as_str(), "garuda-7.3.1-1-garuda.efi");
+}
+
+/// The switches crossed the wire as `true`, `false` or `null` before they
+/// were a `Toggle`, and the helper and the saved queue still read that form.
+#[test]
+fn a_switch_keeps_its_boolean_or_null_wire_form() {
+    assert_eq!(
+        serde_json::to_string(&LoaderSetting::Editor(Some(Toggle::On))).unwrap(),
+        r#"{"key":"editor","value":true}"#
+    );
+    assert_eq!(
+        serde_json::to_string(&LoaderSetting::AutoFirmware(None)).unwrap(),
+        r#"{"key":"auto-firmware","value":null}"#
+    );
+    assert_eq!(
+        serde_json::from_str::<LoaderSetting>(r#"{"key":"auto-entries","value":false}"#).unwrap(),
+        LoaderSetting::AutoEntries(Some(Toggle::Off))
+    );
+
+    let settings = LoaderSettings {
+        editor: Some(Toggle::On),
+        auto_firmware: Some(Toggle::Off),
+        ..LoaderSettings::default()
+    };
+
+    assert_eq!(
+        serde_json::to_string(&settings).unwrap(),
+        r#"{"timeout":null,"default":null,"editor":true,"auto_entries":null,"auto_firmware":false}"#
+    );
+    assert_eq!(
+        serde_json::from_str::<LoaderSettings>(r#"{"editor":true,"auto_firmware":false}"#).unwrap(),
+        settings
+    );
 }

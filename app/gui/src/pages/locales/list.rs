@@ -162,13 +162,13 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &LocaleItem, state: &RowSta
     }) {
         context.commands.send(LocaleCommand::Toggle {
             entry: item.entry.clone(),
-            on: !item.on,
+            on: toolbox_core::Toggle::from_on(!item.on),
         });
     }
 }
 
 /// A line with its words and the control `right` draws at the end.
-pub fn line_row(
+pub(super) fn line_row(
     ui: &mut Ui,
     row: Id,
     line: &Line<'_>,

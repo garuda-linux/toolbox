@@ -110,7 +110,7 @@ impl Jobs {
     }
 
     /// Starts the live cards, once the page opened.
-    pub fn watch_interfaces(&self) {
+    pub(super) fn watch_interfaces(&self) {
         live::spawn(
             &self.setup.runtime,
             Arc::clone(&self.setup.actions),
@@ -119,7 +119,7 @@ impl Jobs {
     }
 
     /// NetworkManager answers over D-Bus, so this waits on the runtime.
-    pub fn read_interfaces(&self) {
+    pub(super) fn read_interfaces(&self) {
         let cards = self.setup.actions.interface_cards();
         self.lane.future("interfaces", cards, |joined| {
             let read = joined.unwrap_or_else(|error| Err(CallError::Failed(error.to_string())));
@@ -128,7 +128,7 @@ impl Jobs {
     }
 
     /// A read that panicked leaves its parts failed.
-    pub fn read_status(&self) {
+    pub(super) fn read_status(&self) {
         let source = Arc::clone(&self.setup.source);
         self.lane.blocking(
             "status",
@@ -147,7 +147,7 @@ impl Jobs {
         );
     }
 
-    pub fn read_hardware(&self) {
+    pub(super) fn read_hardware(&self) {
         let source = Arc::clone(&self.setup.source);
         self.lane.blocking(
             "hardware",
@@ -164,7 +164,7 @@ impl Jobs {
         );
     }
 
-    pub fn lookup_address(&self) {
+    pub(super) fn lookup_address(&self) {
         let address = Arc::clone(&self.setup.address);
         tracing::info!("asking for the public address");
         self.lane.blocking(
@@ -180,7 +180,7 @@ impl Jobs {
         );
     }
 
-    pub fn set_radio(&self, target: RadioTarget, blocked: bool) {
+    pub(super) fn set_radio(&self, target: RadioTarget, blocked: bool) {
         let actions = Arc::clone(&self.setup.actions);
         self.lane.blocking(
             "radio",
@@ -191,7 +191,7 @@ impl Jobs {
 
     /// NetworkManager answers over D-Bus, so this waits on the runtime
     /// rather than a blocking thread.
-    pub fn check_connectivity(&self, recheck: bool) {
+    pub(super) fn check_connectivity(&self, recheck: bool) {
         let checked = self.setup.actions.connectivity(recheck);
         self.lane.future("connectivity", checked, |result| {
             // A check that died did not check.
@@ -202,7 +202,9 @@ impl Jobs {
 
 /// The cards of a read, or none when NetworkManager does not run: the page
 /// then hides the section. Other failures are logged.
-pub fn cards_or_none(read: Result<Vec<InterfaceCard>, CallError>) -> Option<Vec<InterfaceCard>> {
+pub(super) fn cards_or_none(
+    read: Result<Vec<InterfaceCard>, CallError>,
+) -> Option<Vec<InterfaceCard>> {
     match read {
         Ok(cards) => Some(cards),
         Err(error @ (CallError::Unavailable | CallError::Denied)) => {

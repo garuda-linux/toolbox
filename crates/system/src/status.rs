@@ -24,6 +24,8 @@ pub use health::{GarudaHealth, HealthIssue, HealthLevel, HealthSource};
 pub use pacdiff::FoundCopies;
 pub use pacdiff::{MergeSource, Pacdiff, merge_copies};
 pub use pacman_log::{PacmanLog, RecentLogSource, UpdateLogSource};
+#[cfg(any(feature = "selftest", feature = "testing"))]
+pub use updates::SampleAurOrders;
 pub use updates::{
     AurOrderSource, AurUpdateSource, Checkupdates, Paru, PendingUpdate, UpdateSource,
 };

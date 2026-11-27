@@ -18,11 +18,11 @@ use crate::capture::{CaptureError, Policy, capture};
 
 /// Package names, one per line. Far more than every package of a
 /// repository, far less than a root process should hold for nothing.
-pub const MAX_QUERY_BYTES: usize = 8 << 20;
+const MAX_QUERY_BYTES: usize = 8 << 20;
 
 /// A query lists what the database holds, which takes seconds. One that
 /// waits for a lock or a device would hold the helper without an end.
-pub const QUERY_DEADLINE: Duration = Duration::from_mins(2);
+const QUERY_DEADLINE: Duration = Duration::from_mins(2);
 
 /// Which ends of a query are an answer.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -31,13 +31,18 @@ pub enum QueryKind {
     /// `pacman -T`: exit code 0 when every name is met, 127 with the
     /// unmet names.
     Deptest,
+    /// `pacman -Qdtq -- <names>`: the names that are orphans. Exit code 1
+    /// also says that a name is not installed, on stderr.
+    Orphans,
 }
 
 impl QueryKind {
-    fn answered(self, code: Option<i32>, lines: &[String], quiet: bool) -> bool {
+    fn answered(self, code: Option<i32>, lines: &[String], errors: &str, asked: &[String]) -> bool {
+        let quiet = lines.is_empty() && errors.is_empty();
         match self {
             Self::Listing => code == Some(0_i32) || empty_miss(code, quiet),
             Self::Deptest => code == Some(0_i32) || (code == Some(127_i32) && !lines.is_empty()),
+            Self::Orphans => orphans_answered(code, lines, errors, asked),
         }
     }
 }
@@ -54,6 +59,26 @@ enum QueryError {
         ended: String,
         errors: String,
     },
+}
+
+/// Exit 0 with the orphans, or exit 1 when none is one, where every error
+/// line says a name was not found and that name was asked. Exit 1 with
+/// orphans and no such error line is no answer.
+fn orphans_answered(code: Option<i32>, lines: &[String], errors: &str, asked: &[String]) -> bool {
+    let not_found_of_asked = errors.lines().all(|line| {
+        not_found(line).is_some_and(|name| asked.iter().any(|candidate| candidate == name))
+    });
+
+    match code {
+        Some(0_i32) => errors.is_empty(),
+        Some(1_i32) => not_found_of_asked && (lines.is_empty() || !errors.is_empty()),
+        _ => false,
+    }
+}
+
+fn not_found(line: &str) -> Option<&str> {
+    line.strip_prefix("error: package '")?
+        .strip_suffix("' was not found")
 }
 
 /// Runs `command` with `program` in place of its own (a parameter so
@@ -112,8 +137,12 @@ pub fn run(
         .map(str::to_owned)
         .collect();
 
-    let quiet = lines.is_empty() && captured.errors.trim().is_empty();
-    if kind.answered(captured.code, &lines, quiet) {
+    if kind.answered(
+        captured.code,
+        &lines,
+        captured.errors.trim(),
+        command.arguments(),
+    ) {
         return Ok(lines);
     }
 
@@ -131,6 +160,6 @@ pub fn run(
 /// Only exit code 1 with no output and no error text is a miss: pacman
 /// `-Qtdq` exits with 1 when there are no orphans. Every other failure
 /// keeps its error, so a real problem never reads as an empty answer.
-pub fn empty_miss(code: Option<i32>, quiet: bool) -> bool {
+fn empty_miss(code: Option<i32>, quiet: bool) -> bool {
     code == Some(1_i32) && quiet
 }

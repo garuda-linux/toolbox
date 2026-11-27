@@ -1,13 +1,37 @@
 use std::collections::BTreeSet;
 
 use super::{
-    HopLimit, PingCount, PingTimeout, blacklist_entry, blacklisted_modules, set_blacklisted,
+    HopLimit, MacAddress, PingCount, PingTimeout, blacklist_entry, blacklisted_modules,
+    set_blacklisted,
 };
 use crate::{HostName, KernelModule, OutOfRange, Reason, Toggle};
 
 /// `/usr/lib/modprobe.d/systemd.conf` of the Lima image: comments and
 /// `options` lines, no blacklist.
 const SYSTEMD_CONF: &str = crate::testing::network::modules::ROOT_USR_LIB_MODPROBE_D_SYSTEMD_CONF;
+
+#[test]
+fn a_hardware_address_is_six_colon_separated_hex_pairs() {
+    for good in ["52:54:00:00:00:0E", "52:54:00:00:00:0e"] {
+        assert_eq!(MacAddress::new(good).unwrap().as_str(), good);
+    }
+
+    for bad in [
+        "",
+        "52:54:00:00:00",
+        "52:54:00:00:00:0E:00",
+        "52-54-00-00-00-0E",
+        "52:54:00:00:00:0G",
+        " 52:54:00:00:00:0E",
+        "52:54:00:00:00:0E\n",
+        "5254:00:00:00:0E:01",
+    ] {
+        assert!(
+            MacAddress::new(bad).is_err(),
+            "{bad:?} is no hardware address"
+        );
+    }
+}
 
 fn module(name: &str) -> KernelModule {
     KernelModule::new(name).unwrap()

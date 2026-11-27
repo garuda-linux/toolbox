@@ -39,7 +39,7 @@ use crate::page_service::Handled;
 pub enum MaintenanceProblem {
     /// The tool `tool` could not start. `reason` is the system's own text.
     Launch {
-        tool: &'static str,
+        tool: PageTool,
         cause: LaunchCause,
         reason: String,
     },
@@ -184,7 +184,7 @@ impl Maintenance {
         match command {
             MaintenanceCommand::DismissProblem => self.dismiss_problem(),
             MaintenanceCommand::CancelRanking => self.cancel_ranking(),
-            MaintenanceCommand::Choose { entry, on } => self.choose(entry, Toggle::from_on(*on)),
+            MaintenanceCommand::Choose { entry, on } => self.choose(entry, *on),
             MaintenanceCommand::Reset => {
                 let catalogs = Arc::clone(&self.catalogs);
                 self.reset(catalogs.skel.as_ref());
@@ -299,7 +299,7 @@ impl Maintenance {
     fn absent(&mut self, tool: PageTool, program: &str) {
         tracing::error!("{program} is missing after its install ended well");
         self.problem = Some(MaintenanceProblem::Launch {
-            tool: tool.key(),
+            tool,
             cause: LaunchCause::AbsentAfterInstall,
             reason: program.to_owned(),
         });

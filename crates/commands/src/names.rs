@@ -35,8 +35,8 @@ use toolbox_services::page::PageId;
 use toolbox_services::units::{Systemd, UnitLister as _};
 use toolbox_system::{
     AccountSource as _, BootSource as _, ConfigFileSource as _, EtcAccounts, EtcLocales,
-    HelperFetch, Libalpm, LinuxPackageSource as _, LocaleSource as _, ModuleSource as _,
-    PackageSource as _, ProbeError, SyncSource as _, SystemBoot, SystemConfigFiles, SystemModules,
+    HelperFetch, Libalpm, LocaleSource as _, ModuleSource as _, PackageSource as _, ProbeError,
+    SyncSource as _, SystemBoot, SystemConfigFiles, SystemModules,
 };
 
 use super::act::toggle_pages;
@@ -140,7 +140,7 @@ pub fn package_names(packages: &BTreeSet<PackageName>) -> Vec<String> {
 pub fn pack_names(rows: &[PackRow], installed: bool) -> Vec<String> {
     rows.iter()
         .filter(|row| row.installed == installed)
-        .map(|row| row.package.clone())
+        .map(|row| row.package.as_str().to_owned())
         .collect()
 }
 
@@ -229,7 +229,7 @@ pub fn kernel_names(snapshot: &Snapshot) -> Vec<String> {
     lists::kernels(snapshot, BootMenus::default())
         .unwrap_or_default()
         .into_iter()
-        .map(|row| row.name)
+        .map(|row| row.name.as_str().to_owned())
         .collect()
 }
 
@@ -247,7 +247,7 @@ pub fn user_names(snapshot: &Snapshot) -> Vec<String> {
     lists::people(rows, false)
         .0
         .into_iter()
-        .map(|row| row.name)
+        .map(|row| row.name.as_str().to_owned())
         .collect()
 }
 
@@ -255,7 +255,7 @@ pub fn group_names(snapshot: &Snapshot) -> Vec<String> {
     lists::groups(snapshot)
         .unwrap_or_default()
         .into_iter()
-        .map(|row| row.name)
+        .map(|row| row.name.as_str().to_owned())
         .collect()
 }
 
@@ -324,7 +324,7 @@ fn services(scope: UnitScope) -> Vec<String> {
     match listed {
         Ok(Ok(units)) => lists::services(&units)
             .into_iter()
-            .map(|row| row.name)
+            .map(|row| row.name.as_str().to_owned())
             .collect(),
         Ok(Err(_)) | Err(_) => Vec::new(),
     }

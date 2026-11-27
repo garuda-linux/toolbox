@@ -119,7 +119,11 @@ impl Stopper {
     }
 
     pub fn exit(&self) -> Exit {
-        self.presses.first().exit()
+        if self.presses.count() == self.start {
+            Exit::Declined
+        } else {
+            self.presses.first().exit()
+        }
     }
 }
 

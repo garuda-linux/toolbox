@@ -1,7 +1,8 @@
 use std::collections::BTreeSet;
 
 use toolbox_plan::{
-    BuildRun, InstallReason, PackageName, PlannedAction, RootAction, TargetList, UserAction,
+    BuildRun, InstallReason, PackageName, Plan, PlannedAction, RootAction, Segment, TargetList,
+    UserAction,
 };
 use toolbox_state::aur::order::{AurOrder, parse_order};
 use toolbox_state::testing::aur::order::OCTOPI_GIT_STDOUT;
@@ -51,6 +52,22 @@ fn split_of(queued: &[&str], orders: &[AurOrder], run_name: &str) -> Vec<Staged>
         .actions
         .into_iter()
         .map(|action| Staged::at(AurPackages::STAGE, action))
+        .collect()
+}
+
+/// The actions the queue plans for the octopi build, in queue order.
+fn queued_octopi() -> Vec<PlannedAction> {
+    let mut changes = ChangeSet::default();
+    changes.want::<AurPackages>(
+        package("octopi-git"),
+        built(&octopi(), "1a2b"),
+        &Snapshot::default(),
+    );
+
+    changes
+        .actions()
+        .into_iter()
+        .map(|(_domain, action)| action)
         .collect()
 }
 
@@ -152,8 +169,13 @@ fn paru_and_built_wishes_plan_both_parts() {
         ("octopi-git", built(&order, "1a2b")),
     ]);
 
-    let mut expected = vec![paru_install(&["yay-bin"])];
-    expected.extend(split_of(&["octopi-git"], &[order], "1a2b"));
+    let split = split_of(&["octopi-git"], &[order], "1a2b");
+    let [review, rest @ ..] = split.as_slice() else {
+        panic!("the split part has no review");
+    };
+
+    let mut expected = vec![review.clone(), paru_install(&["yay-bin"])];
+    expected.extend(rest.iter().cloned());
     assert_eq!(planned, expected);
 }
 
@@ -205,18 +227,7 @@ fn a_built_wish_fits_only_an_item_its_order_names() {
 #[test]
 fn the_split_actions_keep_the_order_the_builder_gave_through_the_queue() {
     let order = octopi();
-    let mut changes = ChangeSet::default();
-    changes.want::<AurPackages>(
-        package("octopi-git"),
-        built(&order, "1a2b"),
-        &Snapshot::default(),
-    );
-
-    let actual: Vec<PlannedAction> = changes
-        .actions()
-        .into_iter()
-        .map(|(_domain, action)| action)
-        .collect();
+    let actual = queued_octopi();
 
     let expected: Vec<PlannedAction> = split_of(&["octopi-git"], &[order], "1a2b")
         .into_iter()
@@ -224,6 +235,65 @@ fn the_split_actions_keep_the_order_the_builder_gave_through_the_queue() {
         .collect();
 
     assert_eq!(actual, expected);
+}
+
+#[test]
+fn the_split_part_starts_with_the_review_and_ends_with_the_removal() {
+    let actions = queued_octopi();
+
+    assert_eq!(
+        actions.first(),
+        Some(&PlannedAction::User(UserAction::ReviewAur {
+            bases: TargetList::new([package("alpm_octopi_utils-git"), package("octopi-git")])
+                .unwrap(),
+        }))
+    );
+    assert!(matches!(
+        actions.last(),
+        Some(PlannedAction::Root(RootAction::RemoveMakeDependencies {
+            packages: _
+        }))
+    ));
+}
+
+#[test]
+fn the_octopi_split_plan_is_one_segment_per_place_change_in_order() {
+    let segments = Plan::new(queued_octopi()).into_segments();
+
+    let shape: Vec<(bool, usize)> = segments
+        .iter()
+        .map(|segment| match segment {
+            Segment::Root(steps) => (true, steps.len()),
+            Segment::User(steps) => (false, steps.len()),
+        })
+        .collect();
+
+    assert_eq!(
+        shape,
+        [
+            (false, 1),
+            (true, 1),
+            (false, 1),
+            (true, 1),
+            (false, 1),
+            (true, 2),
+        ]
+    );
+
+    assert!(matches!(
+        segments.first(),
+        Some(Segment::User(steps)) if matches!(
+            steps.as_slice(),
+            [step] if matches!(step.action, UserAction::ReviewAur { bases: _ })
+        )
+    ));
+    assert!(matches!(
+        segments.last(),
+        Some(Segment::Root(steps)) if matches!(
+            steps.last(),
+            Some(step) if matches!(step.action, RootAction::RemoveMakeDependencies { packages: _ })
+        )
+    ));
 }
 
 #[test]

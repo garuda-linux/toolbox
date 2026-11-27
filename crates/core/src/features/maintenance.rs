@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests;
 
+pub mod ids;
 pub mod opening;
 pub mod page;
 
@@ -92,11 +93,6 @@ impl Operation {
             Self::RemoveOrphans => "remove-orphans",
             Self::CleanPackageCache => "clean-package-cache",
         }
-    }
-
-    /// The id of its name on the Common tab.
-    pub fn text_id(self) -> String {
-        format!("maintenance-op-{}", self.key())
     }
 
     /// Removing orphans and cleaning the cache take what no later click

@@ -8,11 +8,12 @@ use std::collections::BTreeSet;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
+use toolbox_text::OutsideText;
 
 use super::defaults::{grub_value, set_grub_value, unset_grub_value};
 use super::parameters::KernelParameters;
 use super::timeout::GrubTimeout;
-use crate::{GrubPicture, GrubThemeFile, MenuEntryId};
+use crate::{GrubPicture, GrubThemeFile, InvalidName, MenuEntryId};
 
 /// What `GRUB_DEFAULT` holds when GRUB boots the entry it booted last.
 const SAVED: &str = "saved";
@@ -84,13 +85,14 @@ pub enum InvalidGrubSettings {
 #[serde(try_from = "Vec<GrubSetting>", into = "Vec<GrubSetting>")]
 pub struct GrubSettings(Vec<GrubSetting>);
 
-/// `default`, `background`, `menu_picture` and `theme` hold the file's
-/// text as written, not a validated value, so they are shown and never
-/// passed to a command.
+/// `default`, `background`, `menu_picture` and `theme` keep the file's
+/// text. A value that its rule does not take stays outside text, so it is
+/// shown and never passed to a command.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GrubState {
-    /// `GRUB_DEFAULT` as written, `0` when the file sets none.
-    pub default: String,
+    /// `GRUB_DEFAULT`, `0` when the file sets none. Outside text when it is
+    /// neither `saved` nor a menu entry name, such as a position.
+    pub default: Result<DefaultEntry, OutsideText>,
     /// `None` for a value that is no number.
     pub timeout: Option<i64>,
     /// `GRUB_CMDLINE_LINUX_DEFAULT` as written.
@@ -101,12 +103,13 @@ pub struct GrubState {
     pub submenus: bool,
     pub save_default: bool,
     pub os_prober: bool,
-    /// `GRUB_BACKGROUND` as written, empty for none.
-    pub background: String,
-    /// `GRUB_MENU_PICTURE`, which garuda-boot-options writes. Empty when
+    /// `GRUB_BACKGROUND` as written, `None` for none.
+    pub background: Option<Result<GrubPicture, OutsideText>>,
+    /// `GRUB_MENU_PICTURE`, which garuda-boot-options writes. `None` when
     /// the file has none, as Garuda ships it.
-    pub menu_picture: String,
-    pub theme: String,
+    pub menu_picture: Option<Result<GrubPicture, OutsideText>>,
+    /// `GRUB_THEME` as written, `None` for none.
+    pub theme: Option<Result<GrubThemeFile, OutsideText>>,
 }
 
 impl GrubKey {
@@ -143,6 +146,12 @@ impl DefaultEntry {
             Self::Saved => SAVED,
             Self::Entry(entry) => entry.as_str(),
         }
+    }
+}
+
+impl AsRef<str> for DefaultEntry {
+    fn as_ref(&self) -> &str {
+        self.as_str()
     }
 }
 
@@ -189,16 +198,14 @@ impl GrubSetting {
     /// An unset variable counts as GRUB's default for it.
     pub fn is_met_by(&self, state: &GrubState) -> bool {
         match self {
-            Self::Default(entry) => state.default == entry.as_str(),
+            Self::Default(entry) => state.default == Ok(entry.clone()),
             Self::Timeout(timeout) => timeout.is_met_by(state.timeout),
             Self::KernelParameters(parameters) => state.parameters.as_ref() == Some(parameters),
             Self::Submenus(shown) => state.submenus == *shown,
             Self::SaveDefault(on) => state.save_default == *on,
             Self::OsProber(on) => state.os_prober == *on,
-            Self::Background(picture) => {
-                state.background == picture.as_ref().map_or("", GrubPicture::as_str)
-            }
-            Self::Theme(theme) => state.theme == theme.as_ref().map_or("", GrubThemeFile::as_str),
+            Self::Background(picture) => state.background == picture.clone().map(Ok),
+            Self::Theme(theme) => state.theme == theme.clone().map(Ok),
         }
     }
 }
@@ -269,9 +276,11 @@ impl GrubState {
         let command_line = value(GrubKey::KernelParameters).unwrap_or_default();
 
         Self {
-            default: value(GrubKey::Default)
-                .filter(|text| !text.is_empty())
-                .unwrap_or_else(|| FIRST_ENTRY.to_owned()),
+            default: default_entry(
+                &value(GrubKey::Default)
+                    .filter(|text| !text.is_empty())
+                    .unwrap_or_else(|| FIRST_ENTRY.to_owned()),
+            ),
             timeout: value(GrubKey::Timeout)
                 .map_or(Some(DEFAULT_TIMEOUT), |text| text.trim().parse().ok()),
             parameters: KernelParameters::parse(&command_line),
@@ -280,25 +289,42 @@ impl GrubState {
                 .is_some_and(|text| SUBMENUS_OFF.contains(&text.as_str())),
             save_default: value(GrubKey::SaveDefault).as_deref() == Some("true"),
             os_prober: value(GrubKey::OsProber).as_deref() == Some("false"),
-            background: value(GrubKey::Background).unwrap_or_default(),
-            menu_picture: grub_value(config, MENU_PICTURE).unwrap_or_default(),
-            theme: value(GrubKey::Theme).unwrap_or_default(),
+            background: written(value(GrubKey::Background), GrubPicture::new),
+            menu_picture: written(grub_value(config, MENU_PICTURE), GrubPicture::new),
+            theme: written(value(GrubKey::Theme), GrubThemeFile::new),
         }
     }
 
     /// The picture behind the boot menu: the one `GRUB_BACKGROUND` names,
     /// else the one of the theme.
-    pub fn shown_background(&self) -> &str {
-        if self.background.is_empty() {
-            &self.menu_picture
-        } else {
-            &self.background
-        }
+    pub fn shown_background(&self) -> Option<&Result<GrubPicture, OutsideText>> {
+        self.background.as_ref().or(self.menu_picture.as_ref())
     }
 
     /// Whether [`Self::shown_background`] is the theme's picture, which no
     /// change of `GRUB_BACKGROUND` takes away.
     pub const fn background_is_from_theme(&self) -> bool {
-        self.background.is_empty() && !self.menu_picture.is_empty()
+        self.background.is_none() && self.menu_picture.is_some()
     }
+}
+
+/// `GRUB_DEFAULT` names `saved` or a menu entry. A position or anything
+/// else the menu may match by title stays outside text, as written.
+fn default_entry(text: &str) -> Result<DefaultEntry, OutsideText> {
+    if text == SAVED {
+        return Ok(DefaultEntry::Saved);
+    }
+
+    MenuEntryId::new(text)
+        .map(DefaultEntry::Entry)
+        .map_err(|_invalid| toolbox_text::plain(text))
+}
+
+/// The value of a variable as written, `None` when it is unset or empty.
+fn written<T>(
+    text: Option<String>,
+    check: impl FnOnce(String) -> Result<T, InvalidName>,
+) -> Option<Result<T, OutsideText>> {
+    text.filter(|text| !text.is_empty())
+        .map(|text| check(text.clone()).map_err(|_invalid| toolbox_text::plain(&text)))
 }

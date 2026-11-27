@@ -30,7 +30,10 @@ use crate::{dates, i18n};
 /// The places of the AUR rows under the search, once the copy is read.
 /// The chip asks for the copy the first time it shows, never before:
 /// reading it may download the dump.
-pub fn rows_of(page: &mut PackagesPage, context: &PageContext<'_>) -> Option<Arc<Vec<usize>>> {
+pub(super) fn rows_of(
+    page: &mut PackagesPage,
+    context: &PageContext<'_>,
+) -> Option<Arc<Vec<usize>>> {
     if page.filter == Filter::Aur && !page.aur_asked {
         page.aur_asked = true;
         context.commands.send(PackagesCommand::OpenAur);
@@ -45,7 +48,7 @@ pub fn rows_of(page: &mut PackagesPage, context: &PageContext<'_>) -> Option<Arc
 }
 
 /// The AUR is off: one line under the chips with the way to turn it on.
-pub fn off_hint(ui: &mut Ui, context: &PageContext<'_>) {
+pub(super) fn off_hint(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     under_chips(ui, |ui| {

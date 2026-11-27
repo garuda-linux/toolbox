@@ -45,6 +45,13 @@ pub struct BuildOrder {
     pub installed: BTreeSet<PackageName>,
 }
 
+impl BuildOrder {
+    /// What the build does, for the review row of the package.
+    pub fn outline(&self) -> build::Outline {
+        build::outline(&self.order)
+    }
+}
+
 /// The forms a wish is written in.
 #[derive(Serialize)]
 #[serde(rename_all = "kebab-case")]
@@ -116,11 +123,19 @@ impl Domain for AurPackages {
             .map(|(item, _)| (*item).clone())
             .collect();
 
-        let mut planned = staged([batch(Self::STAGE, names, |packages| {
-            PlannedAction::User(UserAction::InstallAur { packages })
-        })]);
+        let mut split = split(changes);
+        let mut planned = Vec::new();
 
-        planned.extend(split(changes));
+        // Paru's install asks for the password through pkexec, so the review
+        // of the split part must come before it.
+        if split.first().is_some_and(is_review) {
+            planned.push(split.remove(0));
+        }
+
+        planned.extend(staged([batch(Self::STAGE, names, |packages| {
+            PlannedAction::User(UserAction::InstallAur { packages })
+        })]));
+        planned.extend(split);
         planned
     }
 
@@ -129,6 +144,13 @@ impl Domain for AurPackages {
     fn summary(item: &PackageName, _wish: &AurWish) -> Summary {
         Summary::of(SummaryCode::AurInstall, item.as_str())
     }
+}
+
+const fn is_review(step: &Staged) -> bool {
+    matches!(
+        step.action,
+        PlannedAction::User(UserAction::ReviewAur { bases: _ })
+    )
 }
 
 /// The queued packages whose build order is not read yet. A plan holds

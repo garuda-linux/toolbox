@@ -24,7 +24,7 @@ pub enum Problem {
     File(String),
 }
 
-pub trait Store {
+pub(super) trait Store {
     fn in_window(&self) -> bool;
 
     /// # Errors
@@ -45,7 +45,7 @@ pub struct File {
     pub settings: Settings,
 }
 
-pub struct InWindow {
+struct InWindow {
     pub window: Window,
     pub runtime: Handle,
 }

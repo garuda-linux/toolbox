@@ -40,11 +40,11 @@ fn each_switch_is_its_own_step() {
         [
             PlannedAction::Root(RootAction::SetGarudaUpdateFlag {
                 flag: GarudaUpdateFlag::SkipMirrorlist,
-                enabled: true,
+                enabled: Toggle::On,
             }),
             PlannedAction::Root(RootAction::SetGarudaUpdateFlag {
                 flag: GarudaUpdateFlag::UpdateAur,
-                enabled: false,
+                enabled: Toggle::Off,
             }),
         ]
     );

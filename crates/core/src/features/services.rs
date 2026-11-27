@@ -12,7 +12,7 @@ pub mod view;
 
 use std::cmp::Ordering;
 
-pub use states::sub_code;
+pub use states::{SubCode, sub_code};
 use toolbox_plan::{
     Plan, PlannedAction, RootAction, TargetList, UnitName, UnitOperation, UnitScope, UserAction,
 };

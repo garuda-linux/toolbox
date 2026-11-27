@@ -1,7 +1,7 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::features::maintenance::page::LaunchCause;
-use toolbox_core::features::maintenance::{self, Operation, Task};
+use toolbox_core::features::maintenance::page::{LaunchCause, PageTool};
+use toolbox_core::features::maintenance::{self, Operation, Task, Tool};
 use toolbox_plan::Toggle;
 
 use super::{open_tab, page, pending, programs, sent, with};
@@ -94,7 +94,7 @@ fn a_queued_operation_offers_to_take_it_back() {
         sent(&harness),
         [Command::from(MaintenanceCommand::Queue {
             operation: Operation::CleanPackageCache,
-            on: false,
+            on: Toggle::Off,
         })]
     );
 }
@@ -141,7 +141,7 @@ fn a_question_closes_when_its_tab_or_page_is_left() {
 #[test]
 fn a_tool_missing_after_its_install_names_the_program() {
     let problem = MaintenanceProblem::Launch {
-        tool: "btrfs-assistant",
+        tool: PageTool::Program(Tool::BtrfsAssistant),
         cause: LaunchCause::AbsentAfterInstall,
         reason: "/usr/bin/btrfs-assistant".to_owned(),
     };

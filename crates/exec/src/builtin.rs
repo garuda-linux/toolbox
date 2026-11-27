@@ -40,13 +40,13 @@ use crate::apply::EventSink;
 use crate::report::{failure, note};
 use crate::{config_file, repair, secure};
 
-pub const PROC: &str = "proc";
+const PROC: &str = "proc";
 pub const SYSTEM_ROOT: &str = "/";
 
 const NEEDS_RUNNER: &str = "this step runs programs, which needs a runner";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LockRemoval {
+enum LockRemoval {
     Removed,
     NoLock,
     /// A live transaction owns the lock. Removing it would let a second
@@ -90,14 +90,14 @@ pub fn execute(
             step,
             sink,
             &format!("/{GARUDA_UPDATE_CONFIG}"),
-            set_garuda_update_flag(root, *flag, Toggle::from_on(*on)),
+            set_garuda_update_flag(root, *flag, *on),
         ),
         Builtin::EditUserConfig { edit, on } => user_config(home, step, edit, *on, sink),
         Builtin::EditLocaleGen { entry, on } => changed(
             step,
             sink,
             &format!("/{LOCALE_GEN}"),
-            edit_locale_gen(root, entry, Toggle::from_on(*on)),
+            edit_locale_gen(root, entry, *on),
         ),
         Builtin::SetSystemLocale(locale) => system_locale(root, step, locale, sink),
         Builtin::RequireOrdinaryUser(who) => accounts::require_ordinary_user(root, step, who, sink),
@@ -110,7 +110,7 @@ pub fn execute(
             step,
             sink,
             &format!("/{MODPROBE_BLACKLIST}"),
-            edit_modprobe_blacklist(root, module, Toggle::from_on(*on)),
+            edit_modprobe_blacklist(root, module, *on),
         ),
         Builtin::EditGrubDefaults(settings) => changed(
             step,
@@ -136,6 +136,7 @@ pub fn execute(
             reason: _,
         }
         | Builtin::BuildAur { base: _, run: _ }
+        | Builtin::ReviewAur { bases: _ }
         | Builtin::RepairBootLoader { system: _, work: _ } => failure(step, sink, NEEDS_RUNNER),
     }
 }
@@ -171,7 +172,7 @@ fn loader_conf(
 /// # Errors
 ///
 /// When `/proc` cannot be listed or the lock cannot be removed.
-pub fn remove_database_lock(proc_root: &Path, lock: &Path) -> io::Result<LockRemoval> {
+fn remove_database_lock(proc_root: &Path, lock: &Path) -> io::Result<LockRemoval> {
     let held = match std::fs::metadata(lock) {
         Ok(held) => held,
         Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(LockRemoval::NoLock),
@@ -266,7 +267,7 @@ fn user_config(
     home: Option<&Path>,
     step: StepId,
     edit: &UserConfigEdit,
-    on: bool,
+    on: Toggle,
     sink: &mut dyn EventSink,
 ) -> Outcome {
     match home {
@@ -274,12 +275,7 @@ fn user_config(
             // The display form, with the leading `~/` the user knows.
             let file = edit.path().to_string();
 
-            changed(
-                step,
-                sink,
-                &file,
-                edit_user_config(home, edit, Toggle::from_on(on)),
-            )
+            changed(step, sink, &file, edit_user_config(home, edit, on))
         }
         None => failure(
             step,

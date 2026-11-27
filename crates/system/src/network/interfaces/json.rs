@@ -11,7 +11,7 @@ use serde_json::{Map, Value};
 use zbus::{OwnedVariant, Variant};
 
 /// The reply of `GetAll`: each property by its name.
-pub fn properties_json(properties: &HashMap<String, OwnedVariant>) -> Value {
+pub(super) fn properties_json(properties: &HashMap<String, OwnedVariant>) -> Value {
     Value::Object(
         properties
             .iter()

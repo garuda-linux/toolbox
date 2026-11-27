@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use toolbox_plan::UserName;
+use toolbox_plan::{Toggle, UserName};
 use toolbox_system::LockProblem;
 use toolbox_system::pkexec::{HelperError, Refusal};
 
@@ -21,10 +21,9 @@ fn known() -> Locks {
 fn an_answer_names_each_accounts_flag() {
     let locks = known();
 
-    assert_eq!(locks.of(&user("guest")), Some(true));
-    assert_eq!(locks.of(&user("ada")), Some(false));
+    assert_eq!(locks.of(&user("guest")), Some(Toggle::On));
+    assert_eq!(locks.of(&user("ada")), Some(Toggle::Off));
     assert_eq!(locks.of(&user("grace")), None, "not in the answer");
-    assert_eq!(locks.code(), "known");
     assert!(locks.flags().is_some());
 }
 
@@ -38,8 +37,4 @@ fn a_refused_or_failed_read_leaves_the_flags_unknown() {
         assert_eq!(locks.of(&user("ada")), None, "{locks:?}");
         assert_eq!(locks.flags(), None, "{locks:?}");
     }
-
-    assert_eq!(refused.code(), "denied");
-    assert_eq!(failed.code(), "unknown");
-    assert_eq!(Locks::NotAsked.code(), "loading");
 }

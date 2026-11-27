@@ -13,6 +13,7 @@ use toolbox_plan::sdboot::SdBootMenu;
 use toolbox_plan::{FetchRefusal, MergeCopy, PackageName, UnitScope};
 use toolbox_services::catalogs::Catalogs;
 use toolbox_services::units::UnitList;
+use toolbox_state::aur::{AurRoute, RouteKind};
 use toolbox_state::kernels::DkmsEntry;
 use toolbox_state::services::UnitInfo;
 use toolbox_system::{MergePair, ProbeError, ReadProblem};
@@ -136,6 +137,10 @@ fn args(names: &[&str]) -> PackageInstall {
 fn system() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(BTreeSet::new()));
+    snapshot.insert(AurRoute::Refused {
+        kind: RouteKind::Linked,
+        detail: "a folder on the way is missing".to_owned(),
+    });
     snapshot
 }
 

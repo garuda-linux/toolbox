@@ -5,8 +5,8 @@ use std::collections::BTreeSet;
 use serde_json::Value;
 use toolbox_plan::procedure::Invocation;
 use toolbox_plan::{
-    GroupName, LocaleEntry, LocaleName, PackageName, Plan, PlannedAction, PlymouthTheme, StepId,
-    UnitName, UserName,
+    GroupName, HomeDirectory, LocaleEntry, LocaleName, PackageName, Plan, PlannedAction,
+    PlymouthTheme, ShellPath, StepId, UnitName, UserName,
 };
 
 use crate::domains::{AccountLockFlags, Accounts, Group, Membership, User};
@@ -70,8 +70,8 @@ pub fn user(name: &str, uid: u32, gid: u32) -> User {
         uid,
         gid,
         gecos: toolbox_text::plain(""),
-        home: format!("/home/{name}"),
-        shell: "/usr/bin/bash".to_owned(),
+        home: Ok(HomeDirectory::new(format!("/home/{name}")).unwrap()),
+        shell: Ok(ShellPath::new("/usr/bin/bash").unwrap()),
     }
 }
 

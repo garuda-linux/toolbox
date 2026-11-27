@@ -5,11 +5,11 @@ apply everywhere.
 
 ## Who runs what
 
-| Runs as             | What                                                                                                                                                                                                                                                                         |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| User                | the app, probes, user units and journals, user configuration files, `paru` (asks for root itself with `--sudo pkexec`), `paru -Po` and `makepkg` of an AUR build, the editor, `rfkill`, `ping`, `traceroute`, `lsblk`, `bootctl list --json=short` where the ESP is readable |
-| Root, through D-Bus | login1 `Reboot`, systemd1. Both check polkit themselves                                                                                                                                                                                                                      |
-| Root, helper        | everything else, as typed `RootAction`s, one `pkexec` per apply, `pacman -U` of what the user built ([AUR installs](#aur-installs))                                                                                                                                          |
+| Runs as             | What                                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User                | the app, probes, user units and journals, user configuration files, `paru` (asks for root itself with `--sudo pkexec`), `paru -Po` and `makepkg` of an AUR build, `paru -G` and `git` of an AUR review (the review's `git` is hardened, see [The review](#the-review)), the editor, `rfkill`, `ping`, `traceroute`, `lsblk`, `bootctl list --json=short` where the ESP is readable |
+| Root, through D-Bus | login1 `Reboot`, systemd1. Both check polkit themselves                                                                                                                                                                                                                                                                                                                            |
+| Root, helper        | everything else, as typed `RootAction`s, one `pkexec` per apply, `pacman -U` of what the user built ([AUR installs](#aur-installs))                                                                                                                                                                                                                                                |
 
 The app refuses to start as root.
 
@@ -91,8 +91,9 @@ The app refuses to start as root.
   splits pastes and strips control characters but tab and line breaks (`toolbox_terminal::encode_paste`). Input and
   output queues are bounded,
   so a stuck or flooding program never stalls the helper.
-- The helper links no runtime, GUI, D-Bus, HTTP or `parking_lot`
-  (`app/helper/tests/dependencies.rs`, `cargo tree --target all`).
+- The helper's normal dependencies hold no runtime, GUI, D-Bus, HTTP or
+  `parking_lot`, dev-dependencies aside (`app/helper/tests/dependencies.rs`,
+  `cargo tree --target all`).
 
 ### Rules `scripts/lint.sh` enforces
 
@@ -154,8 +155,8 @@ compiled in, so no missing file can empty it.
   passes.
 - A wish from the session bus or a saved queue meets the same checks in
   the `Guard::PackageRemovals` recheck (`features/packages/recheck.rs`), which drops it with a log line.
-- The helper refuses a `RemovePackages` step that names a protected
-  package (`Request::validate`). Before `-Rns` it asks
+- The helper refuses a `RemovePackages` or `RemoveMakeDependencies` step
+  that names a protected package (`Request::validate`). Before `-Rns` it asks
   `pacman -Rs --print` what goes along and fails the step when that
   holds a protected package (`apply/targets.rs`). pacman refuses
   `--print` with `--nosave`.
@@ -174,14 +175,136 @@ paru resolves and fetches, `makepkg` builds as the user, the helper
 installs what was built (`crates/exec/src/aur.rs`). The request carries a
 `BuildRun` and package names, never a path.
 
+An AUR plan of the split path starts with the `ReviewAur` user step, so a
+declined review stops the plan before any root step of the AUR plan, so the
+password is never asked for it. It ends with `RemoveMakeDependencies`, which names only
+dependencies nothing requires and never a protected package: the builder
+drops those names (`toolbox_plan::protection`) before the request is made,
+and the helper refuses a request that names one anyway.
+
 The build is the `BuildAur` builtin, run by the app only
 (`crates/exec/src/aur/build.rs`). The helper fails it, as it has no home.
 
-- `makepkg` runs as the user in `~/.cache/paru/clone/<base>`, with
+- `makepkg` runs as the user in `~/.cache/garuda-toolbox/aur-clone/<base>`
+  (`AUR_CLONE`, the app's own clone, not paru's), with
   `PKGDEST=~/.cache/garuda-toolbox/aur-built/<run>` and the arguments
   `-f -C` (`MAKEPKG_ARGS`). It never gets `-s`, `-i`, `-c` or `-r`, so
   no step of it calls sudo or pacman. These flags are unconfirmed against a
   real `makepkg` run.
+- The build refuses a clone that is not the reviewed one: its `HEAD` must
+  equal `refs/garuda-toolbox/reviewed` and no tracked file may differ from
+  `HEAD` (`unchanged_since_review`, `crates/exec/src/aur/review.rs`). Untracked
+  files, such as downloaded sources, do not count. Nothing starts otherwise,
+  and the step names the base.
+
+### Which path, and the sudo rule
+
+- The split path (`Waiting`, then `Built`) needs `AurRoute::Accepted`, the
+  helper's answer for the calling user's build folder. `Refused { kind }`
+  queues paru's own path (`InstallAur`, `paru --sudo pkexec`). A missing
+  part refuses the click as unread, so nothing is queued on a guess.
+- A conflict with an installed package refuses the split path before the
+  queue changes, and names the installed package. It reads the copy's
+  `conflicts` by name, so `yay<2` is judged as `yay`, which can refuse a
+  case pacman would allow. The old path is not checked: paru asks the user
+  itself.
+- The command line starts the helper through sudo only where pkexec cannot
+  ask on a terminal (`root::through_sudo`). The helper finds the caller from
+  the peer of its stdin, and whether sudo keeps that socket is not verified
+  yet. Until it is, under sudo:
+  - a new AUR install queues the old path (the route part is marked
+    `RouteKind::ThroughSudo`, `root::sudo_route`);
+  - a queue with a `Waiting` build stops before any order is read
+    (`ready::sudo_waits`), since its build needs the window or a polkit
+    agent;
+  - a split plan never falls back to sudo at run time
+    (`apply::split_build`): when pkexec refuses it, the plan ends.
+- The review always asks. `--yes` does not skip it, and `--json` refuses a
+  plan with a review before any step runs.
+
+### The review
+
+`ReviewAur` is a user builtin that runs before any root step of an AUR
+plan (`crates/exec/src/aur/review.rs`, runner in
+`crates/exec/src/pty_runner/console.rs`). One step reviews every base of the
+plan: fetch all, show all, ask once.
+
+- The route check of the build runs first (`route_from_home`), then
+  `~/.cache/garuda-toolbox/aur-clone` is made with mode 0700. It holds what
+  the user reviewed and what makepkg runs, so nobody else may write it.
+- `paru -G -- <bases>` runs in that folder as the user. It is captured, not
+  attached to a terminal, since it asks nothing. Its stdout and stderr name
+  AUR packages and versions, which is outside text, so they go through
+  `OutsideText::keep_lines` before the Console shows them. A fetch that prints
+  more than 64 KiB is stopped and fails the step. A cancel, a finish or the
+  stop flag stops it while it runs.
+- paru keeps the user's environment (`Environment::Inherited`), unlike git.
+  It finds its config and cache through `HOME` and `XDG_*`, which a clean
+  environment would hide. Nothing it does is a diff, so its output is not
+  hardened the way git's is.
+- Each base then needs a plain folder with a `PKGBUILD` and a `.git`
+  folder, reached without a link. Otherwise the step fails and names the base,
+  and nothing is asked.
+- The shown state is `HEAD`, resolved once to a commit id. Against the app's
+  own ref `refs/garuda-toolbox/reviewed` it shows the diff (`from` the ref,
+  `to` `HEAD`). With no ref it shows every tracked file (the diff from git's
+  empty tree). With `HEAD` equal to the ref it says "no change since the last
+  review". paru keeps no marker of its own, so the ref is the app's.
+- The git argv (`crates/exec/src/aur/review/git.rs`), each part for a reason:
+  - `--no-pager`: a pager named by `core.pager` never runs.
+  - `-c core.hooksPath=/dev/null`: `update-ref` runs the
+    reference-transaction hook of the clone otherwise.
+  - `-c core.fsmonitor=false`: a program named by the config runs on any
+    command that reads the worktree (the build's guard does).
+  - `diff --no-ext-diff`: `diff.external` and a driver's `command` run a
+    program. The user's own `diff.external` (difftastic) ran here before this
+    flag.
+  - `--no-textconv`: a `textconv` filter that `.gitattributes` names runs a
+    program to make the text shown.
+  - `--text`: `-diff` or `binary` in `.gitattributes` made `PKGBUILD` show as
+    "Binary files differ". Verified with git 2.56. So every file's text is
+    shown, through the sanitiser below.
+  - `--no-color`: no colour codes in the text.
+  - `--` before the revisions: no path or revision confusion.
+  - Environment: the clean one (`Environment::Clean`, no `HOME`), with
+    `GIT_CONFIG_GLOBAL=/dev/null` (the user's `~/.gitconfig` and XDG config
+    are not read), `GIT_CONFIG_NOSYSTEM=1` and `GIT_ATTR_NOSYSTEM=1`.
+- The text is kept with `OutsideText::keep_lines`, so escape sequences,
+  carriage returns and bidi overrides never reach the Console. Only line
+  breaks and tabs stay.
+- Cap: one base's diff may hold at most 256 KiB (`DIFF_CAP`). A real
+  PKGBUILD with a few patches is some kilobytes, so 256 KiB leaves room. A
+  larger diff fails the step with the base's name and asks nothing, since a
+  cut diff is no review.
+- The question is printed after a drain of the answers, so keys typed while
+  the text was shown cannot answer it. Only `y` or `Y` followed by Enter
+  continues. Enter alone, anything else, `Answer::Cancel`, `Answer::Finish`,
+  a closed channel or the stop flag declines: the step ends `Cancelled`, the
+  ref does not move and the plan stops. The `Console` buttons of a later
+  step send the same keys: Continue sends `y` and Enter, and it is never the
+  default button, so Enter in the terminal does not approve a build. It
+  shows only while the review step runs (`features::console::asks_review`).
+- Yes sets the ref of every base to the commit id that was shown, not to
+  the `HEAD` at the time of the yes. A commit that lands in the clone after
+  the show is therefore not reviewed, and the build refuses it.
+- The helper has no console, so it fails the review (`NEEDS_RUNNER`).
+- The argv and environment of every git run come from one pure function,
+  `invocation` (`git.rs`). Tests pin the exact list and check that `HOME`,
+  `XDG_CONFIG_HOME` and `GIT_CONFIG_COUNT`/`GIT_CONFIG_KEY_*` are absent. A
+  test runs a plain `git diff` with the variables replaced by a user config
+  that names a diff program, and that program runs. So the variable is what
+  keeps the user's config out.
+
+Limits, stated plainly:
+
+- Downloaded sources are not reviewed. The review covers the build files in
+  git, not what makepkg downloads later. A `SKIP` checksum, or a download
+  that changes after the review, is not covered.
+- A tracked symlink shows as its link text. The review does not follow it,
+  so the file it points to is not shown.
+- Files left in the clone by an earlier build are used by makepkg. The build
+  guard ignores untracked files by design, so a leftover source or package is
+  not reviewed.
 - The clone folder must be a folder reached without a link below the
   home. Otherwise the step fails and names the folder, and nothing starts.
 - Folders of `~/.cache/garuda-toolbox` and `aur-built` that are missing
@@ -224,10 +347,11 @@ The build is the `BuildAur` builtin, run by the app only
 - The helper does not look inside a package. Whoever passed the password
   installs what that user built.
 - A `Waiting` wish holds Apply in the window and in `queue apply`
-  (`Refusal::OrderWaits`), so no plan of it runs. Nothing promotes a wish
-  to `Built` yet, and `aur_orders::read_orders` has no caller. Promotion
-  waits for the review step: the user reads the PKGBUILD and confirms before
-  any build, the only defence against a hostile package.
+  (`Refusal::OrderWaits`), so no plan of it runs. Every apply reads the
+  orders of all queued builds again before its plan, so an order from an
+  earlier read never builds. A build whose order does not come back stays
+  `Waiting` and stops the apply. The review (below) is the only defence
+  against a hostile package, and it runs before the first root step.
 - An order is read by the app itself (`paru -Po`), never taken from a saved
   file or a queue edit. `AurWish` writes a `Built` wish as `waiting` and
   reads a `built` form as `Waiting`, so an order from outside plans no root
@@ -249,14 +373,40 @@ The build is the `BuildAur` builtin, run by the app only
   it prints to `-S --asdeps`, so an installed package keeps its reason.
   Each line must be a `PackageName` it was asked about. Only this query
   takes exit 127 with names as an answer (`QueryKind::Deptest`).
+- `RemoveMakeDependencies` removes the make dependencies of a build after
+  it. It runs `pacman -Qdtq -- <names>`, then `pacman -Rn --noconfirm --`
+  with the names it printed, and nothing else. Each printed name must be
+  asked about, a `PackageName` and unprotected, or the step fails and
+  removes nothing (`QueryKind::Orphans`, `apply/targets.rs`).
+  - Exit 0 with names: those are removed. Exit 1 with no output and no
+    error, or with only `was not found` errors for asked names: nothing is
+    removed and the step succeeds. Exit 1 with names needs such an error
+    line, since pacman prints the orphans beside a missing name. Any other
+    exit or error fails the step.
+  - It removes only installed dependencies that nothing requires. An
+    explicitly installed package is never listed, and a package that
+    another one lists as optional stays, because `-Qdtq` leaves out what
+    `-Qdttq` would list. A name that another package still requires makes
+    pacman refuse, and the step fails with pacman's words.
+  - Never `-s` or `-Rns`: `-s` also removes the dependencies that the
+    removed package alone needed, and those would need the check that
+    `RemovePackages` makes first (`pacman -Rs --print`). `-Rn` takes
+    nothing along, so the protected list is the only check.
+  - Protected names are refused when the request is validated, before any
+    step runs, and again when the query answers.
 
 Limits:
 
 - A symlinked `~/.cache` or `/home` is refused.
 - An account without an `/etc/passwd` entry (systemd-homed, LDAP) is
-  refused. The app is to plan the old `paru --sudo pkexec` path for
-  both, which is not built yet.
+  refused. The app then plans the old `paru --sudo pkexec` path for it, as
+  it does for every refused route (`AurRoute::Refused`).
 - A copy has no size limit, as pacman's own cache has none.
+
+The refusals above are proven by `app/helper/tests/arch/aur_refusals.rs` (a
+pipe, a group-writable run folder, a linked `~/.cache` or package file, a foreign
+owner, an uid without an account, a busy store, a corrupt package) and, for a
+symlinked `~/.cache` on a terminal, by the Lima `aur` suite.
 
 ## Files the helper writes
 
@@ -509,6 +659,8 @@ The command line may start the same helper with `sudo -- <helper> apply`
 - Never after a closed dialog or a wrong password.
 - The helper validates as always. sudo only replaces the password
   question.
+- Under sudo the AUR split path is not used at all: see
+  [Which path, and the sudo rule](#which-path-and-the-sudo-rule).
 
 Code: `crates/commands/src/root.rs`, `crates/services/src/apply/launcher.rs`.
 

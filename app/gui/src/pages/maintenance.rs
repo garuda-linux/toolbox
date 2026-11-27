@@ -138,7 +138,7 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
                 LaunchCause::AbsentAfterInstall => "maintenance-problem-launch-absent",
             };
 
-            let name = i18n::text(&ctx, &format!("maintenance-tool-{tool}"));
+            let name = i18n::text(&ctx, tool.text_id());
             i18n::text_with(
                 &ctx,
                 id,

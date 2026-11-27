@@ -57,7 +57,7 @@ use toolbox_core::features::maintenance::{Program, RunNow};
 use toolbox_core::{Snapshot, Toggle};
 use toolbox_plan::Plan;
 use toolbox_plan::protocol::Mode;
-use toolbox_privatebin::{Https, Transport};
+use toolbox_privatebin::{PrivateBinTransport, Transport};
 use toolbox_services::apply::Launcher as _;
 use toolbox_services::catalogs::Catalogs;
 use toolbox_services::diagnostics::DryRunTransport;
@@ -300,7 +300,7 @@ fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let transport: Arc<dyn Transport> = if launcher.mode() == Mode::DryRun {
         Arc::new(DryRunTransport)
     } else {
-        Arc::new(Https::new())
+        Arc::new(PrivateBinTransport::new())
     };
 
     diagnostics::collect(

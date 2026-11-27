@@ -65,6 +65,7 @@ fn why(refused: &Refused<Refusal, PackageName>) -> String {
         other @ (Refusal::NotOffered
         | Refusal::RunningKernel
         | Refusal::RunningUnknown
-        | Refusal::LastKernel) => format!("{other:?}"),
+        | Refusal::LastKernel
+        | Refusal::Conflicts) => format!("{other:?}"),
     }
 }

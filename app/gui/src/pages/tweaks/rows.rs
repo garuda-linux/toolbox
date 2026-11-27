@@ -17,8 +17,8 @@ use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::{GarudaUpdateFlag, ShellPath};
 
 use self::glyphs::flag_glyph;
-use self::text::lead;
 pub(super) use self::text::matches;
+use self::text::{dns_id, flag_id, lead, wifi_id};
 use crate::command::TweakCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -92,7 +92,11 @@ fn heights(ui: &Ui) -> RowHeights {
 /// What is on of the "Shell and network" switches `query` matches, and
 /// whether their state was read. Only ad blocking is one, a picker is
 /// never on and so counts for nothing.
-pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &Needle) -> (Tally, bool) {
+pub(super) fn shell_network_tally(
+    ctx: &Context,
+    choices: &Choices,
+    query: &Needle,
+) -> (Tally, bool) {
     let shown = matches(ctx, Choice::Hblock.text_id(), query);
     let tally = Tally {
         on: usize::from(shown && choices.hblock.on),
@@ -104,14 +108,14 @@ pub fn shell_network_tally(ctx: &Context, choices: &Choices, query: &Needle) -> 
 
 /// What is on of the Garuda Update flags `query` matches, and whether
 /// their state was read.
-pub fn garuda_update_tally(
+pub(super) fn garuda_update_tally(
     ctx: &Context,
     flags: &[(GarudaUpdateFlag, Flip)],
     query: &Needle,
 ) -> (Tally, bool) {
     let matching = flags
         .iter()
-        .filter(|(flag, _)| matches(ctx, &format!("tweaks-flag-{}", flag.as_str()), query));
+        .filter(|(flag, _)| matches(ctx, flag_id(*flag), query));
 
     let tally = matching
         .clone()
@@ -137,7 +141,7 @@ pub fn unread(choices: &Choices) -> usize {
     .count()
 }
 
-pub fn shell_network(
+pub(super) fn shell_network(
     ui: &mut Ui,
     context: &PageContext<'_>,
     choices: &Choices,
@@ -176,7 +180,7 @@ pub fn shell_network(
                 }
                 Choice::Dns => {
                     let entries = named(&choices.dns, |dns| {
-                        let name = i18n::text(&ctx, &format!("tweaks-dns-{}", dns.as_str()));
+                        let name = i18n::text(&ctx, dns_id(*dns));
                         (name.into_owned(), TweakCommand::Dns(*dns))
                     });
 
@@ -184,7 +188,7 @@ pub fn shell_network(
                 }
                 Choice::Wifi => {
                     let entries = named(&choices.wifi, |wifi| {
-                        let name = i18n::text(&ctx, &format!("tweaks-wifi-{}", wifi.as_str()));
+                        let name = i18n::text(&ctx, wifi_id(*wifi));
                         (name.into_owned(), TweakCommand::Wifi(*wifi))
                     });
 
@@ -220,9 +224,9 @@ pub fn garuda_update(
         return false;
     };
 
-    let matching: Vec<(GarudaUpdateFlag, Flip, String)> = flags
+    let matching: Vec<(GarudaUpdateFlag, Flip, &'static str)> = flags
         .iter()
-        .map(|(flag, flip)| (*flag, *flip, format!("tweaks-flag-{}", flag.as_str())))
+        .map(|(flag, flip)| (*flag, *flip, flag_id(*flag)))
         .filter(|(_, _, id)| matches(&ctx, id, query))
         .collect();
 

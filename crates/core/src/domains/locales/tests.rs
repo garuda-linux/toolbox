@@ -42,11 +42,11 @@ fn all_edits_come_first_then_one_locale_gen_then_the_system_locale() {
         [
             PlannedAction::Root(RootAction::SetLocaleEnabled {
                 locale: locale_entry("de_DE.UTF-8 UTF-8"),
-                enabled: true,
+                enabled: Toggle::On,
             }),
             PlannedAction::Root(RootAction::SetLocaleEnabled {
                 locale: locale_entry("en_US.UTF-8 UTF-8"),
-                enabled: false,
+                enabled: Toggle::Off,
             }),
             PlannedAction::Root(RootAction::GenerateLocales),
             PlannedAction::Root(RootAction::SetSystemLocale {

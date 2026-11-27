@@ -25,7 +25,7 @@ pub struct Place {
     pub slot: usize,
 }
 
-pub struct Scene<'frame> {
+pub(super) struct Scene<'frame> {
     pub order: &'frame [LayerId],
     pub transforms: &'frame HashMap<LayerId, TSTransform>,
     pub blurred: &'frame [TextureId],
@@ -36,7 +36,7 @@ pub struct Scene<'frame> {
 /// of other surfaces are left out: a callback cannot run twice in a frame,
 /// and what a backdrop shows is gathered anyway while its texture may
 /// change after this blur was kept.
-pub fn gather(
+pub(super) fn gather(
     layers: &GraphicLayers,
     scene: &Scene<'_>,
     place: Place,
@@ -48,7 +48,7 @@ pub fn gather(
 /// [`gather`], but only what lies within `bounds`, and no shadow. The
 /// header band shows what scrolls under it alone: neither the sidebar
 /// beside it nor a control below it, nor a shadow smeared up from there.
-pub fn gather_within(
+pub(super) fn gather_within(
     layers: &GraphicLayers,
     scene: &Scene<'_>,
     place: Place,

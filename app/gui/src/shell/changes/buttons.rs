@@ -4,7 +4,7 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use super::ChangesState;
+use super::{ChangesState, Hold};
 use crate::command::{CommandSender, UiCommand};
 use crate::i18n;
 
@@ -64,11 +64,13 @@ pub(super) fn review_button(ui: &mut Ui, state: &mut ChangesState) -> egui::Resp
 
     if review.clicked() {
         state.open = !state.open;
+        state.dismissed |= !state.open;
         state.keyed = !review.clicked_by(egui::PointerButton::Primary);
     }
 
     if state.open && ui.input(|input| input.key_pressed(egui::Key::Escape)) {
         state.open = false;
+        state.dismissed = true;
         review.request_focus();
     }
 
@@ -82,7 +84,7 @@ pub(super) fn review_button(ui: &mut Ui, state: &mut ChangesState) -> egui::Resp
 /// something, so a removal queued days ago is never applied unseen.
 pub(super) fn apply_button(
     ui: &mut Ui,
-    held: Option<&'static str>,
+    held: Option<&Hold>,
     commands: &CommandSender,
     removes: bool,
 ) -> (egui::Response, bool) {
@@ -98,18 +100,18 @@ pub(super) fn apply_button(
 
 /// A disabled button tells no screen reader why, so the reason goes into
 /// its description as well as its tooltip.
-pub(super) fn apply_pill(ui: &mut Ui, text: &str, held: Option<&'static str>) -> egui::Response {
+pub(super) fn apply_pill(ui: &mut Ui, text: &str, held: Option<&Hold>) -> egui::Response {
     let apply = ui
         .enabled_ui(held.is_none(), |ui| {
             pill_button_with_icon(ui, text, ButtonKind::Primary, icons::DIALOG_OK_APPLY)
         })
         .inner;
 
-    let Some(id) = held else {
+    let Some(pending) = held else {
         return apply;
     };
 
-    let why = i18n::text(ui.ctx(), id).into_owned();
+    let why = pending.text.clone();
     ui.ctx()
         .accesskit_node_builder(apply.id, |node| node.set_description(why.as_str()));
     apply.on_disabled_hover_text(why)

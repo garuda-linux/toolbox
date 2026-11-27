@@ -7,6 +7,7 @@
 //! again only on Read again: a plan changes nothing in it.
 
 mod edits;
+mod orders;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 mod sample;
 #[cfg(test)]
@@ -22,8 +23,10 @@ use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
 use toolbox_core::features::packages::history::{HistoryEntry, history};
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_plan::PackageName;
-use toolbox_system::{PackageIndexSource, RecentLogSource};
+use toolbox_services::aur_orders::OrderReads;
+use toolbox_system::{AurOrderSource, PackageIndexSource, RecentLogSource, RouteSource};
 
+pub use self::orders::Landing;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub use self::sample::SampleAur;
 use crate::lane::Lane;
@@ -35,6 +38,11 @@ pub struct PackagesSetup {
     pub source: Arc<dyn PackageIndexSource>,
     pub log: Arc<dyn RecentLogSource>,
     pub aur: Arc<dyn AurSource>,
+    /// The build orders of queued AUR builds, read by paru as the user.
+    pub orders: Arc<dyn AurOrderSource>,
+    /// The route check the helper makes for this user, read again for
+    /// every order read.
+    pub route: Arc<dyn RouteSource>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -70,6 +78,13 @@ pub struct Packages {
     jobs: Option<Jobs>,
     /// Which reads run. The old answers stay on screen meanwhile.
     reads: Reads,
+    /// The build orders of the queue, see [`Packages::ask_orders`].
+    orders: OrderReads,
+    /// The read that landed, until App applies it to the queue.
+    landing: Option<Landing>,
+    /// The queue's revision when an Apply waits for a fresh read of the
+    /// orders, see [`Packages::start_apply`].
+    apply: Option<u64>,
 }
 
 pub type PackagesRefusal = Refused<toolbox_core::features::packages::queue::Refusal, PackageName>;
@@ -79,6 +94,7 @@ enum Landed {
     Aur(Read<Arc<AurCatalog>>, Option<AurNames>),
     Info(PackageName, Box<Read<Option<PackageDetails>>>),
     History(PackageName, Read<Vec<HistoryEntry>>),
+    Orders(Landing),
 }
 
 struct Jobs {
@@ -208,6 +224,7 @@ impl Packages {
                     self.reads.history = false;
                     self.change_shown(&package, |shown| shown.history = lines);
                 }
+                Landed::Orders(landing) => self.landing = Some(landing),
             }
         }
     }
@@ -323,6 +340,9 @@ impl Packages {
             refusal: None,
             jobs: None,
             reads: Reads::default(),
+            orders: OrderReads::default(),
+            landing: None,
+            apply: None,
         }
     }
 

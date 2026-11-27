@@ -12,13 +12,13 @@ use toolbox_cli::output::{Paint, json_line};
 use super::{StatusView, brief, text};
 use crate::out::Out;
 
-pub enum Shape {
+pub(super) enum Shape {
     Text { paint: Paint, verbose: bool },
     Brief,
     Json,
 }
 
-pub struct Watch {
+pub(super) struct Watch {
     shape: Shape,
     last: Option<StatusView>,
 }

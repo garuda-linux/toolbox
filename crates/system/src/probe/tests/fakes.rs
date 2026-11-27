@@ -17,12 +17,13 @@ use toolbox_state::parts::{
 };
 use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig, HblockState};
 
-use super::{accounts, kernels, offered, units};
+use super::{accounts, enabled, enabled_user, kernels, masked, masked_user, offered};
 use crate::probe::Sources;
 use crate::units::{SystemUnitFiles, UserUnitFiles};
 use crate::{
     AccountSource, BootSource, HostSource, KernelSource, LocaleSource, MergeSource, ModuleSource,
-    PackageScan, PackageSource, ProbeError, SettingsSource, UnitSource, UserConfigSource,
+    PackageScan, PackageSource, ProbeError, RouteSource, SettingsSource, UnitSource,
+    UserConfigSource,
 };
 
 /// The package reads of one snapshot, each with the answer the test gave.
@@ -246,6 +247,22 @@ impl MergeSource for FakeMerges {
     }
 }
 
+/// The route the helper gives the test user: accepted, unless a test
+/// changes it.
+pub struct FakeRoute(Result<(), fn() -> toolbox_exec::RouteProblem>);
+
+impl FakeRoute {
+    pub const fn accepted() -> Self {
+        Self(Ok(()))
+    }
+}
+
+impl RouteSource for FakeRoute {
+    fn route(&self) -> Result<(), toolbox_exec::RouteProblem> {
+        self.0.map_err(|problem| problem())
+    }
+}
+
 pub fn sources(packages: FakePackages, host: FakeHost) -> Sources {
     Sources {
         packages: Arc::new(packages),
@@ -262,6 +279,20 @@ pub fn sources(packages: FakePackages, host: FakeHost) -> Sources {
         user_configs: Arc::new(FakeConfigs),
         modules: Arc::new(FakeModules),
         merges: Arc::new(FakeMerges),
+        route: Arc::new(FakeRoute::accepted()),
         config_edits: Arc::from([]),
+    }
+}
+
+pub fn units() -> FakeUnits {
+    FakeUnits {
+        system: Ok(SystemUnitFiles {
+            enabled: enabled(),
+            masked: masked(),
+        }),
+        user: Ok(UserUnitFiles {
+            enabled: enabled_user(),
+            masked: masked_user(),
+        }),
     }
 }

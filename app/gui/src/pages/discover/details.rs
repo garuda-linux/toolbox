@@ -29,7 +29,7 @@ use crate::pages::toggles::control;
 /// The app the details show, as its row shows it, the whole description
 /// (the row cuts it) and the packages the app installs.
 #[derive(Debug)]
-pub struct Detail {
+pub(super) struct Detail {
     pub row: AppRow,
     pub text: String,
     pub packages: Vec<PackageName>,

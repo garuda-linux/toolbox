@@ -7,7 +7,7 @@ use toolbox_core::features::maintenance::page::{operations, repairs, tools};
 use super::Tab;
 
 /// The text id of each entry's name and its tab, in the page's order.
-pub fn entries() -> Vec<(String, Tab)> {
+pub fn entries() -> Vec<(&'static str, Tab)> {
     let operations = operations(&ChangeSet::default())
         .into_iter()
         .map(|row| (row.operation.text_id(), Tab::Common));
@@ -20,7 +20,7 @@ pub fn entries() -> Vec<(String, Tab)> {
         .into_iter()
         .map(|row| (row.repair.text_id(), Tab::Repairs));
 
-    let reset = ("maintenance-tab-reset".to_owned(), Tab::Reset);
+    let reset = ("maintenance-tab-reset", Tab::Reset);
 
     operations
         .chain(tools)

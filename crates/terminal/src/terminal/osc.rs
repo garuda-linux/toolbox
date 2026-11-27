@@ -10,10 +10,10 @@ const SUB: u8 = 0x1a;
 
 /// The byte that aborts a string in the parser. The parser drops the
 /// string and goes on with the text after it.
-pub const CAN: u8 = 0x18;
+pub(super) const CAN: u8 = 0x18;
 
 /// Longest string the parser may keep. Longer ones are cut off.
-pub const MAX_OSC_BYTES: usize = 64 << 10;
+pub(super) const MAX_OSC_BYTES: usize = 64 << 10;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 enum State {
@@ -25,7 +25,7 @@ enum State {
 
 /// What a byte does to the string the parser holds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Step {
+pub(super) enum Step {
     Kept,
     /// The string is past [`MAX_OSC_BYTES`]: the byte belongs to it, and
     /// [`CAN`] has to follow it in the parser.
@@ -33,13 +33,13 @@ pub enum Step {
 }
 
 #[derive(Debug, Default)]
-pub struct Tracker {
+pub(super) struct Tracker {
     state: State,
     bytes: usize,
 }
 
 impl Tracker {
-    pub fn step(&mut self, byte: u8) -> Step {
+    pub(super) fn step(&mut self, byte: u8) -> Step {
         let (state, step) = match (self.state, byte) {
             (State::Str, BEL | CAN | SUB) => (State::Ground, Step::Kept),
             (State::Str, ESC) => (State::Escape, Step::Kept),

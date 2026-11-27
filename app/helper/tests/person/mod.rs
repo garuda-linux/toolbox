@@ -37,11 +37,14 @@ pub fn command(args: &[&str], unprivileged: bool) -> Command {
     command
 }
 
-fn run(mut command: Command) -> io::Result<Output> {
+/// A socket pair for the helper's stdin: the app's end, and the helper's,
+/// whose peer is `uid`. As root, this thread alone takes `uid` while it
+/// makes the pair.
+pub fn socket_of(uid: u32) -> io::Result<(UnixStream, OwnedFd)> {
     let root = geteuid().is_root();
 
     if root {
-        set_thread_res_uid(None, Some(Uid::from_raw(PERSON)), None)?;
+        set_thread_res_uid(None, Some(Uid::from_raw(uid)), None)?;
     }
 
     let pair = UnixStream::pair();
@@ -51,7 +54,12 @@ fn run(mut command: Command) -> io::Result<Output> {
     }
 
     let (app, helper) = pair?;
-    let output = command.stdin(Stdio::from(OwnedFd::from(helper))).output();
+    Ok((app, OwnedFd::from(helper)))
+}
+
+fn run(mut command: Command) -> io::Result<Output> {
+    let (app, helper) = socket_of(PERSON)?;
+    let output = command.stdin(Stdio::from(helper)).output();
 
     drop(app);
     output

@@ -351,8 +351,8 @@ pub fn read_in_full(mut system: Snapshot) -> Snapshot {
             uid: 1000,
             gid: 1000,
             gecos: toolbox_text::plain(""),
-            home: "/home/tester".to_owned(),
-            shell: "/usr/bin/bash".to_owned(),
+            home: Ok("/home/tester".parse().unwrap()),
+            shell: Ok("/usr/bin/bash".parse().unwrap()),
         }],
         groups: Vec::new(),
     });

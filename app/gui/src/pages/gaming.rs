@@ -5,7 +5,7 @@ use super::catalog::{CatalogKind, CatalogPage};
 use super::toggles::NoLead;
 use crate::catalogs::CatalogId;
 
-pub type GamingPage = CatalogPage<Gaming>;
+pub(super) type GamingPage = CatalogPage<Gaming>;
 
 #[derive(Debug)]
 pub struct Gaming;

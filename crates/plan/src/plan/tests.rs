@@ -71,7 +71,9 @@ fn a_step_shows_the_commands_its_runner_executes() {
 
 #[test]
 fn a_step_of_several_programs_shows_one_line_each() {
-    let action = PlannedAction::Root(RootAction::SetHblock { enabled: false });
+    let action = PlannedAction::Root(RootAction::SetHblock {
+        enabled: crate::Toggle::Off,
+    });
 
     assert_eq!(
         action.command_lines(),

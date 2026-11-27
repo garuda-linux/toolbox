@@ -4,7 +4,7 @@ use std::fs;
 use std::path::Path;
 
 use tempfile::TempDir;
-use toolbox_plan::PlymouthTheme;
+use toolbox_plan::{DefaultEntry, MenuEntryId, PlymouthTheme};
 use toolbox_state::boot::{PlymouthState, VirtualMachine};
 
 use super::{BootSource as _, SystemBoot};
@@ -68,7 +68,10 @@ fn the_grub_file_is_read_into_its_state() {
         .unwrap()
         .0;
 
-    assert_eq!(state.default, "0");
+    assert_eq!(
+        state.default,
+        Ok(DefaultEntry::Entry(MenuEntryId::new("0").unwrap()))
+    );
     assert_eq!(state.timeout, Some(5));
     assert_eq!(
         state.parameters.map(|parameters| parameters.to_string()),

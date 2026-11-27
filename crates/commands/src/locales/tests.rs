@@ -32,16 +32,37 @@ fn a_package_that_is_no_pack_is_not_installed() {
     );
 }
 
+/// The package, program and locale are plain names in JSON, as before.
+#[test]
+fn a_pack_row_as_json_keeps_its_names_as_strings() {
+    use toolbox_plan::{LocaleName, PackageName};
+
+    use super::PackRow;
+
+    let row = PackRow {
+        package: PackageName::new("firefox-i18n-de").unwrap(),
+        program: PackageName::new("firefox").unwrap(),
+        locale: LocaleName::new("de_DE.UTF-8").unwrap(),
+        installed: true,
+    };
+
+    assert_eq!(
+        serde_json::to_string(&row).unwrap(),
+        r#"{"id":"firefox-i18n-de","program":"firefox","locale":"de_DE.UTF-8","installed":true}"#
+    );
+}
+
 #[test]
 fn installed_packs_are_on() {
     use toolbox_cli::output::Mark;
+    use toolbox_plan::{LocaleName, PackageName};
 
     use super::{PackRow, pack_listing};
 
     let row = |package: &str, installed| PackRow {
-        package: package.to_owned(),
-        program: "firefox".to_owned(),
-        locale: "de_DE.UTF-8".to_owned(),
+        package: PackageName::new(package).unwrap(),
+        program: PackageName::new("firefox").unwrap(),
+        locale: LocaleName::new("de_DE.UTF-8").unwrap(),
         installed,
     };
 

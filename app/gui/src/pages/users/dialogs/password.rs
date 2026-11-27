@@ -72,29 +72,32 @@ impl PasswordForm {
 /// A password and its repetition. A `Password` is built only when a field
 /// changes and when the dialog confirms, as each one is another copy of
 /// the text.
-pub struct PasswordPair {
+pub(super) struct PasswordPair {
     first: SecretText,
     second: SecretText,
     check: Check,
     fields: Vec<Id>,
 }
 
-/// The error code of each field, `None` where nothing is wrong or nothing
+/// What is wrong with each field, `None` where nothing is wrong or nothing
 /// was typed yet.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 struct Check {
     agreed: bool,
-    first: Option<&'static str>,
-    second: Option<&'static str>,
+    first: Option<InvalidPassword>,
+    second: bool,
 }
 
 impl PasswordPair {
     pub fn show(&mut self, ui: &mut Ui, ctx: &Context) {
-        let problem = |code: Option<&str>| code.map(|code| texts::password_problem(ctx, code));
         let first_label = i18n::text(ctx, "users-field-password");
         let second_label = i18n::text(ctx, "users-field-repeat");
-        let first_problem = problem(self.check.first);
-        let second_problem = problem(self.check.second);
+        let first_problem = self
+            .check
+            .first
+            .map(|problem| texts::password_problem(ctx, problem));
+
+        let second_problem = self.check.second.then(|| texts::mismatch(ctx));
         let first = password_field(ui, &first_label, &mut self.first, first_problem.as_deref());
         let second = password_field(
             ui,
@@ -114,7 +117,7 @@ impl PasswordPair {
         }
     }
 
-    pub const fn agreed(&self) -> bool {
+    pub(super) const fn agreed(&self) -> bool {
         self.check.agreed
     }
 
@@ -153,11 +156,11 @@ impl Default for PasswordPair {
 }
 
 fn check(first: &str, second: &str) -> Check {
-    let valid = Password::new(first.to_owned()).map_err(InvalidPassword::as_str);
+    let valid = Password::new(first.to_owned());
     let differ = first != second;
     Check {
         agreed: valid.is_ok() && !differ,
         first: valid.err().filter(|_| !first.is_empty()),
-        second: (differ && !second.is_empty()).then_some("mismatch"),
+        second: differ && !second.is_empty(),
     }
 }

@@ -22,6 +22,13 @@ pub enum Invocation {
         test: Command,
         run: Command,
     },
+    /// Runs `query` with the names of the packages, then `run` with each
+    /// name it printed as an argument. Skipped when it prints nothing. The
+    /// executor refuses a protected name and any name that was not asked.
+    RunWithOrphansFrom {
+        query: Command,
+        run: Command,
+    },
     /// Runs `preview`, whose lines name every package `run` removes, and
     /// fails the step without running `run` when one is protected.
     RunUnlessItRemovesProtected {
@@ -69,6 +76,9 @@ impl Invocation {
             Self::RunWithUnmetFrom { test: _, run: _ } => Some(
                 "only the packages pacman -T names as missing, so an installed one keeps its install reason",
             ),
+            Self::RunWithOrphansFrom { query: _, run: _ } => Some(
+                "only the names pacman -Qdtq lists, installed as dependencies and required by nothing, never with -s",
+            ),
             Self::Always(_)
             | Self::Cleanup {
                 command: _,
@@ -100,7 +110,8 @@ impl Invocation {
             }
             | Self::Feed { command, input: _ } => fmt::Display::fmt(command, out),
             Self::RunWithTargetsFrom { query: test, run }
-            | Self::RunWithUnmetFrom { test, run } => {
+            | Self::RunWithUnmetFrom { test, run }
+            | Self::RunWithOrphansFrom { query: test, run } => {
                 write!(out, "{run} $({test})")
             }
             Self::Builtin(builtin) if shown == Shown::WithNotes => fmt::Display::fmt(builtin, out),

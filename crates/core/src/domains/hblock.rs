@@ -43,9 +43,9 @@ impl Domain for Hblock {
         changes
             .iter()
             .flat_map(|(_, wish)| {
-                let enabled = wish.is_on();
-                let install = enabled.then(|| install(&HBLOCK));
-                let stage = if enabled {
+                let enabled = **wish;
+                let install = enabled.is_on().then(|| install(&HBLOCK));
+                let stage = if enabled.is_on() {
                     Self::STAGE
                 } else {
                     Stage::TEARDOWN

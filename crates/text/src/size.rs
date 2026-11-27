@@ -1,9 +1,3 @@
-//! A size in bytes as people read it, the same in the window and the
-//! terminal.
-
-#[cfg(test)]
-mod tests;
-
 const UNITS: [&str; 6] = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
 
 /// `bytes` with one decimal in the largest unit below it: `200.0 GiB`.

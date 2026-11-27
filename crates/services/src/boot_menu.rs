@@ -17,19 +17,6 @@ pub enum Menu {
 }
 
 impl Menu {
-    pub const fn as_str(&self) -> &'static str {
-        match self {
-            Self::NotAsked => "not-asked",
-            Self::Loading => "loading",
-            Self::Read(MenuRead::Known(_) | MenuRead::SdBoot(_)) => "known",
-            Self::Read(MenuRead::Missing) => "missing",
-            Self::Read(MenuRead::Refused(refusal)) => refusal.code(),
-            Self::Read(MenuRead::Unknown(_) | MenuRead::Unreadable(_) | MenuRead::Cancelled) => {
-                "unknown"
-            }
-        }
-    }
-
     pub const fn known(&self) -> Option<&GrubMenu> {
         match self {
             Self::Read(MenuRead::Known(menu)) => Some(menu),
@@ -62,10 +49,10 @@ impl Menu {
         }
     }
 
-    /// The id of `kernel`'s menu entry, `""` while unknown.
-    pub fn kernel_entry(&self, kernel: &PackageName) -> &str {
+    /// The id of `kernel`'s menu entry, `None` while unknown.
+    pub fn kernel_entry(&self, kernel: &PackageName) -> Option<&str> {
         self.known()
             .and_then(|menu| menu.kernel_entry(kernel))
-            .map_or("", |entry| entry.id.as_str())
+            .map(|entry| entry.id.as_str())
     }
 }

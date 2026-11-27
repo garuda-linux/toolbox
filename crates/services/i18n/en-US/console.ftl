@@ -4,6 +4,9 @@ console-leave-hint = Ctrl+Tab leaves the terminal.
 console-idle-hint = The output of the next apply shows here.
 console-printed-nothing = The changes printed nothing.
 console-cancel = Cancel
+console-continue = Continue
+# Above the review buttons, while a build waits for its answer.
+console-review-hint = The build files are shown above. Continue sends y and Enter, so the build goes on. Cancel stops the plan.
 console-hide = Hide the Console
 console-resize = Resize the Console
 

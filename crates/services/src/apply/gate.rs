@@ -12,10 +12,10 @@ use tokio::runtime::Handle;
 use tokio::sync::Semaphore;
 
 /// Several frames' worth of what the window feeds its terminal.
-pub const MAX_UNREAD: usize = 1024 * 1024;
+const MAX_UNREAD: usize = 1024 * 1024;
 
 #[derive(Clone, Debug)]
-pub struct OutputGate(Arc<Semaphore>);
+pub(super) struct OutputGate(Arc<Semaphore>);
 
 impl Default for OutputGate {
     fn default() -> Self {
@@ -26,7 +26,7 @@ impl Default for OutputGate {
 impl OutputGate {
     /// Waits until `bytes` more fit. A chunk above the limit waits for an
     /// empty queue.
-    pub async fn enter(&self, bytes: usize) {
+    pub(super) async fn enter(&self, bytes: usize) {
         let permits = u32::try_from(bytes.min(MAX_UNREAD)).unwrap_or(u32::MAX);
         if let Ok(permit) = self.0.acquire_many(permits).await {
             permit.forget();
@@ -34,13 +34,13 @@ impl OutputGate {
     }
 
     /// [`Self::enter`] for the blocking thread of the user steps.
-    pub fn enter_blocking(&self, bytes: usize, runtime: &Handle) {
+    pub(super) fn enter_blocking(&self, bytes: usize, runtime: &Handle) {
         runtime.block_on(self.enter(bytes));
     }
 
     /// `bytes` were read. Never frees more than was taken, so reports fed
     /// without the gate leave it as it was.
-    pub fn leave(&self, bytes: usize) {
+    pub(super) fn leave(&self, bytes: usize) {
         let taken = MAX_UNREAD.saturating_sub(self.0.available_permits());
         self.0.add_permits(bytes.min(taken));
     }

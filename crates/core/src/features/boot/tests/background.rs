@@ -34,7 +34,7 @@ fn the_real_garuda_file_shows_no_picture() {
     for defaults in [LIMA, MOKKA] {
         let page = shown(&system(defaults, &[]), &ChangeSet::default()).unwrap();
 
-        assert_eq!(page.background, "");
+        assert_eq!(page.background, None);
         assert_eq!(page.background_source, PictureSource::Own);
     }
 }
@@ -44,7 +44,7 @@ fn a_menu_picture_line_shows_the_picture_of_its_theme_and_not_none() {
     let state = system(&with_menu_picture(), &[]);
     let page = shown(&state, &ChangeSet::default()).unwrap();
 
-    assert_eq!(page.background, THEME_PICTURE);
+    assert_eq!(page.background, Some(Ok(picture(THEME_PICTURE))));
     assert_eq!(page.background_source, PictureSource::Theme);
 }
 
@@ -63,7 +63,7 @@ fn an_own_picture_queues_and_replaces_the_one_of_the_theme_on_the_page() {
     let page = shown(&state, &changes).unwrap();
 
     assert_eq!(changes.len(), 1);
-    assert_eq!(page.background, "/boot/own.png");
+    assert_eq!(page.background, Some(Ok(picture("/boot/own.png"))));
     assert_eq!(page.background_source, PictureSource::Own);
 }
 
@@ -75,7 +75,10 @@ fn clearing_queues_nothing_while_only_the_theme_sets_a_picture() {
     set(GrubSetting::Background(None), &mut changes, &state).unwrap();
 
     assert!(changes.is_empty());
-    assert_eq!(shown(&state, &changes).unwrap().background, THEME_PICTURE);
+    assert_eq!(
+        shown(&state, &changes).unwrap().background,
+        Some(Ok(picture(THEME_PICTURE)))
+    );
 }
 
 #[test]
@@ -85,7 +88,7 @@ fn clearing_an_own_picture_shows_the_one_of_the_theme_again() {
     let mut changes = ChangeSet::default();
     let before = shown(&state, &changes).unwrap();
 
-    assert_eq!(before.background, "/boot/own.png");
+    assert_eq!(before.background, Some(Ok(picture("/boot/own.png"))));
     assert_eq!(before.background_source, PictureSource::Own);
 
     set(GrubSetting::Background(None), &mut changes, &state).unwrap();
@@ -93,7 +96,7 @@ fn clearing_an_own_picture_shows_the_one_of_the_theme_again() {
     let after = shown(&state, &changes).unwrap();
 
     assert_eq!(changes.len(), 1);
-    assert_eq!(after.background, THEME_PICTURE);
+    assert_eq!(after.background, Some(Ok(picture(THEME_PICTURE))));
     assert_eq!(after.background_source, PictureSource::Theme);
 }
 
@@ -106,6 +109,6 @@ fn without_a_theme_picture_clearing_shows_none() {
 
     let after = shown(&state, &changes).unwrap();
 
-    assert_eq!(after.background, "");
+    assert_eq!(after.background, None);
     assert_eq!(after.background_source, PictureSource::Own);
 }

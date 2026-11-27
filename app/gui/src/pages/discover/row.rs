@@ -30,7 +30,7 @@ pub fn height(ui: &Ui) -> f32 {
 }
 
 /// A row beside the details: its name and one line of its description.
-pub fn compact_height(ui: &Ui) -> f32 {
+pub(super) fn compact_height(ui: &Ui) -> f32 {
     row_height(ui, text_block_height(ui, 1).max(picture_height(ui, false)))
 }
 
@@ -92,7 +92,7 @@ pub fn button<'row>(context: &PageContext<'_>, row: &'row AppRow) -> control::Sh
     }
 }
 
-pub fn send_toggle(context: &PageContext<'_>, row: &AppRow) {
+pub(super) fn send_toggle(context: &PageContext<'_>, row: &AppRow) {
     context.commands.send(DiscoverCommand::Toggle {
         app: row.id.clone(),
         wish: if row.on { Toggle::Off } else { Toggle::On },

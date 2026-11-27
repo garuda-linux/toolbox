@@ -1,9 +1,10 @@
 //! The question before an AUR build: the package is built from a
-//! community script on this computer, and paru shows that script in the
-//! Console before it builds.
+//! community script on this computer, and the Console shows that script
+//! before it builds, paru's on the old path and the app's review otherwise.
 
 use egui::{Context, Id};
 use toolbox_core::Toggle;
+use toolbox_core::features::packages::aur::takes_split_path;
 use toolbox_gui_kit::widgets::{ButtonKind, DialogWidth, Question, question};
 
 use super::super::PackagesPage;
@@ -24,7 +25,14 @@ pub fn dialog(page: &mut PackagesPage, ctx: &Context, context: &PageContext<'_>)
     );
 
     let close = i18n::text(ctx, "dialog-close");
-    let body = i18n::text(ctx, "packages-aur-install-body");
+    let split = takes_split_path(context.snapshot);
+
+    let body = if split {
+        i18n::text(ctx, "packages-aur-install-body-split")
+    } else {
+        i18n::text(ctx, "packages-aur-install-body")
+    };
+
     let cancel = i18n::text(ctx, "packages-cancel");
     let confirm = i18n::text(ctx, "packages-aur-install-confirm");
     let texts = Question {

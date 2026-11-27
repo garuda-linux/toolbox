@@ -7,6 +7,7 @@
 
 mod accounts;
 mod app_icons;
+mod aur_route;
 mod boot;
 mod bus;
 mod command;
@@ -45,6 +46,9 @@ pub use accounts::{
     available_shells as parse_available_shells, login_shells as parse_login_shells,
 };
 pub use app_icons::{AppIconSource, AppStreamIcons, file_path, file_url};
+#[cfg(any(feature = "selftest", feature = "testing"))]
+pub use aur_route::SampleRoute;
+pub use aur_route::{RouteSource, SystemRoute, probe_route};
 pub use boot::{BootMenuSource, BootSource, MenuRead, SystemBoot, SystemBootMenu, grub_platform};
 pub use bus::{
     CALL_TIMEOUT, CallError, INTERACTIVE_TIMEOUT, Method, call, call_with_timeout, classify,
@@ -60,7 +64,7 @@ pub use facts::{
     DiskSpace, FactSources, Facts, MachineSource, PackageCount, SystemMachine, probe_facts,
 };
 pub use host::{Host, HostRoots, HostSource, ProcessEnv, SystemHost};
-pub use kernels::{Dkms, DkmsSource, KernelSource, SystemKernels};
+pub use kernels::{Dkms, KernelSource, SystemKernels};
 pub use locales::{EtcLocales, LocaleSource};
 pub use locks::{HelperLocks, LockProblem, LockSource};
 pub use merges::{MergePair, read_pair};
@@ -70,8 +74,7 @@ pub use network::{
 };
 pub use notify::{NOTIFY, Notification, NotifyBody, notify_body};
 pub use packages::{
-    Libalpm, LinuxPackageSource, OrphanSource, PackageIndexSource, PackageScan, PackageSource,
-    SyncSource,
+    Libalpm, OrphanSource, PackageIndexSource, PackageScan, PackageSource, SyncSource,
 };
 pub use power::{
     INHIBIT, InhibitBody, REBOOT, RebootBody, ShutdownLock, inhibit_body, inhibit_shutdown,
@@ -84,6 +87,8 @@ pub use repair::{RepairSource, SystemRepair};
 pub use settings::{EtcSettings, SettingsSource};
 #[cfg(any(test, feature = "selftest"))]
 pub use status::FoundCopies;
+#[cfg(any(feature = "selftest", feature = "testing"))]
+pub use status::SampleAurOrders;
 pub use status::{
     AurOrderSource, AurUpdateSource, Checkupdates, GarudaHealth, HealthIssue, HealthLevel,
     HealthSource, MergeSource, Pacdiff, PacmanLog, Paru, PendingUpdate, RecentLogSource, Status,

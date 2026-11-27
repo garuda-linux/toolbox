@@ -74,7 +74,7 @@ fn without_grub_every_edit_is_refused() {
     assert_eq!(problem, Err(EditProblem::Refused(Refusal::Unavailable)));
     assert_eq!(
         problem.unwrap_err().code().text_id(),
-        "boot-refused-unavailable"
+        Some("boot-refused-unavailable")
     );
 }
 

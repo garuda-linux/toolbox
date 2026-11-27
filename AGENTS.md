@@ -107,7 +107,8 @@ every release. `scripts/release.sh` asks for it.
   `paru` runs as the user.
 - Every visible string is a Fluent text in `crates/services/i18n/en-US` with its
   German counterpart, looked up by id. The command line's output is
-  English ([ui-rules.md](docs/agents/ui-rules.md#command-line)).
+  English ([ui-rules.md](docs/agents/ui-rules.md#command-line)). Console step
+  messages authored by `crates/exec` and the root helper stay English.
 - No `std::sync` lock across `.await`, blocking work in `spawn_blocking`,
   the egui frame never blocks.
 - New files must be `git add`ed before `nix build` sees them.

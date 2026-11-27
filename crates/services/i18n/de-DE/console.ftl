@@ -4,6 +4,9 @@ console-leave-hint = Strg+Tab verlässt das Terminal.
 console-idle-hint = Die Ausgabe der nächsten Übernahme erscheint hier.
 console-printed-nothing = Die Änderungen haben keine Ausgabe erzeugt.
 console-cancel = Abbrechen
+console-continue = Weiter
+# Über den Prüf-Knöpfen, während ein Bau auf seine Antwort wartet.
+console-review-hint = Die Build-Dateien stehen oben. Weiter sendet y und Enter, dann geht der Bau weiter. Abbrechen stoppt den Plan.
 console-hide = Konsole ausblenden
 console-resize = Höhe der Konsole ändern
 

@@ -8,6 +8,8 @@ mod tests;
 use std::ffi::OsString;
 
 pub use order::AurOrderSource;
+#[cfg(any(feature = "selftest", feature = "testing"))]
+pub use order::SampleAurOrders;
 use toolbox_exec::{Environment, locate_program};
 use toolbox_plan::PackageName;
 use toolbox_plan::procedure::Program;

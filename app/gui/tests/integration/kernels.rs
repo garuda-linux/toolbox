@@ -296,7 +296,7 @@ fn a_click_on_an_offered_kernel_asks_to_install_it() {
         harness.state().fixture.sent(),
         [Command::from(KernelCommand::Edit(KernelEdit::Toggle {
             kernel: package("linux-zen"),
-            on: true,
+            on: toolbox_core::Toggle::On,
         }))]
     );
 }

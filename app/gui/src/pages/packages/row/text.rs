@@ -2,12 +2,12 @@
 //! lines under it, and the tags that say what kind of package it is.
 
 use egui::{Context, Label, Ui};
-use toolbox_cli::output::size;
 use toolbox_core::features::packages::{IndexEntry, InstallReason, Origin};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::tokens;
 use toolbox_gui_kit::widgets::{Tone, rich, status_dot, tag_on_row, title_line};
 use toolbox_plan::PackageName;
+use toolbox_text::size;
 
 use super::PackageRow;
 use crate::i18n;
@@ -62,7 +62,7 @@ pub(super) fn text<R>(
 
 /// "extra · 3.0-1 · 12.3 MiB", the installed version for an installed
 /// package.
-pub fn origin_line(ctx: &Context, entry: &IndexEntry) -> String {
+pub(super) fn origin_line(ctx: &Context, entry: &IndexEntry) -> String {
     let version = entry
         .installed
         .as_ref()

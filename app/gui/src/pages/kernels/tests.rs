@@ -120,7 +120,7 @@ fn space_on_a_focused_kernel_asks_for_its_change() {
         harness.state().fixture.sent(),
         [Command::from(KernelEdit::Toggle {
             kernel: "linux-lts".parse().unwrap(),
-            on: false,
+            on: toolbox_core::Toggle::Off,
         })]
     );
 }

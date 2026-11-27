@@ -88,7 +88,7 @@ impl Network {
     fn blacklist(
         &mut self,
         module: &KernelModule,
-        on: bool,
+        on: Toggle,
         changes: &ChangeSet,
         snapshot: &Snapshot,
     ) -> Handled {
@@ -99,7 +99,7 @@ impl Network {
         };
 
         queue_or_refuse(&mut self.refusal, subject, changes, |changes| {
-            set_blacklisted(module, Toggle::from_on(on), facts, changes, snapshot)
+            set_blacklisted(module, on, facts, changes, snapshot)
         })
     }
 }

@@ -103,7 +103,7 @@ fn the_page_shows_the_file_with_the_queue_on_top() {
     let mut changes = ChangeSet::default();
     let before = shown(&state, &changes).unwrap();
 
-    assert_eq!(before.default, "0");
+    assert_eq!(before.default, Ok(DefaultEntry::Entry(entry("0"))));
     assert_eq!(before.timeout, Some(5));
     assert!(!before.remember && before.submenus && before.os_prober);
 
@@ -136,10 +136,18 @@ fn the_page_shows_the_file_with_the_queue_on_top() {
 
     let after = shown(&state, &changes).unwrap();
 
-    assert_eq!(after.default, "a>b");
+    assert_eq!(after.default, Ok(DefaultEntry::Entry(entry("a>b"))));
     assert_eq!(after.timeout, Some(9));
-    assert_eq!(after.background, "/usr/share/a.png");
-    assert_eq!(after.theme, "/usr/share/grub/themes/x/theme.txt");
+    assert_eq!(
+        after.background,
+        Some(Ok(GrubPicture::new("/usr/share/a.png").unwrap()))
+    );
+    assert_eq!(
+        after.theme,
+        Some(Ok(
+            GrubThemeFile::new("/usr/share/grub/themes/x/theme.txt").unwrap()
+        ))
+    );
     assert_eq!(changes.len(), 4);
 }
 
@@ -361,7 +369,7 @@ fn clearing_picture_and_theme_queues_only_when_one_is_set() {
     assert!(changes.is_empty());
 
     set(GrubSetting::Theme(None), &mut changes, &state).unwrap();
-    assert_eq!(shown(&state, &changes).unwrap().theme, "");
+    assert_eq!(shown(&state, &changes).unwrap().theme, None);
     assert_eq!(changes.len(), 1);
 }
 

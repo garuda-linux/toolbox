@@ -214,7 +214,7 @@ fn send(commands: &CommandSender, command: Command, by_key: bool) {
 
 /// Passes `text` on as the query of the palette that opens next, so the
 /// sidebar's typing is not lost. It waits until the palette is open.
-pub fn pass_query(ctx: &Context, text: String) {
+pub(super) fn pass_query(ctx: &Context, text: String) {
     ctx.data_mut(|data| data.insert_temp(seed_id(), text));
 }
 

@@ -7,7 +7,7 @@ use std::time::Duration;
 
 /// `took` as `4.2 s`, `1 min 3 s` or `1 h 5 min`. Each form rounds to its
 /// own unit, so a step of 59.96 seconds reads `1 min`, not `60.0 s`.
-pub fn elapsed(took: Duration) -> String {
+pub(super) fn elapsed(took: Duration) -> String {
     let tenths = rounded(took, 100);
     if tenths < 600 {
         return format!("{}.{} s", tenths / 10, tenths % 10);

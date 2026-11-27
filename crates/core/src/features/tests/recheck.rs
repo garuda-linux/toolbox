@@ -155,7 +155,10 @@ fn queued_aur_builds_wait_for_the_aur_copy_and_unknown_names_go() {
     assert_eq!(changes.len(), 2, "the builds wait for the copy");
 
     let mut with_copy = without_aur();
-    with_copy.insert(AurNames(std::iter::once(package("yay-bin")).collect()));
+    with_copy.insert(AurNames {
+        names: std::iter::once(package("yay-bin")).collect(),
+        ..AurNames::default()
+    });
     assert_eq!(unchecked.recheck(&mut changes, &with_copy), 1);
     assert_eq!(
         changes.queued::<AurPackages>(),

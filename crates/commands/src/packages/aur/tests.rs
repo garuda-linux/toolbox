@@ -1,12 +1,19 @@
 use std::collections::BTreeSet;
 
 use toolbox_aur::{AurError, AurSource, DownloadError, RequestError};
+use toolbox_cli::Exit;
 use toolbox_core::domains::InstalledPackages;
 use toolbox_core::features::packages::aur::{AurIndex, AurPackage};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{PackageName, Plan, PlannedAction, UserAction};
+use toolbox_services::aur_orders::RouteProblem;
+use toolbox_state::aur::{AurRoute, RouteKind};
+use toolbox_state::testing::aur::order::OCTOPI_GIT_STDOUT;
+use toolbox_system::testing::aur_orders::FakeAurOrders;
 
-use super::{aur_info, aur_info_text, aur_listing, found, install_onto, waiting_text};
+use super::{
+    aur_info, aur_info_text, aur_listing, found, install_onto, plan_install, waiting_text,
+};
 use crate::change::{Refused, fresh};
 
 /// paru-bin, paru and yay-bin, paru the least popular.
@@ -30,6 +37,28 @@ impl AurSource for Aur {
     }
 }
 
+/// The AUR's copy with one package, octopi-git, that lists `conflicts`.
+struct Copy(Vec<AurPackage>);
+
+impl AurSource for Copy {
+    fn index(&self) -> Result<AurIndex, AurError> {
+        Ok(AurIndex {
+            packages: self.0.clone(),
+            downloaded: 1_736_467_200,
+            stale: false,
+        })
+    }
+}
+
+fn octopi_copy(conflicts: &[&str]) -> Copy {
+    let mut octopi = package("octopi-git", 3.0);
+    octopi.conflicts = conflicts
+        .iter()
+        .map(|name| toolbox_text::plain(name))
+        .collect();
+
+    Copy(vec![octopi])
+}
 fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap()
 }
@@ -67,7 +96,21 @@ fn installed() -> BTreeSet<PackageName> {
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(installed()));
+    snapshot.insert(refused_route());
     snapshot
+}
+
+/// The helper refuses this user's build folder, so builds take paru's way.
+fn refused_route() -> AurRoute {
+    AurRoute::Refused {
+        kind: RouteKind::Linked,
+        detail: "a folder on the way is missing".to_owned(),
+    }
+}
+
+/// The helper accepts this user's build folder.
+fn accepted_route() -> AurRoute {
+    AurRoute::Accepted
 }
 
 #[test]
@@ -154,4 +197,129 @@ fn an_aur_install_refuses_an_unknown_and_an_installed_package() {
 #[test]
 fn a_waiting_copy_names_the_day_of_the_next_download() {
     assert!(waiting_text(1_736_467_200).contains("2025-01-10"));
+}
+
+/// paru's order of octopi-git, as its captured `paru -Po` answered.
+fn octopi_orders() -> FakeAurOrders {
+    FakeAurOrders::new(vec![("octopi-git", Ok(OCTOPI_GIT_STDOUT))])
+}
+
+fn snapshot_with(route: AurRoute) -> Snapshot {
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(InstalledPackages(installed()));
+    snapshot.insert(route);
+    snapshot
+}
+
+fn split_plan(route: AurRoute, copy: &Copy, orders: &FakeAurOrders) -> Result<Plan, Refused> {
+    plan_install(
+        &[name("octopi-git")],
+        copy,
+        &snapshot_with(route),
+        orders,
+        Ok(()),
+    )
+}
+
+#[test]
+fn an_accepted_route_plans_the_review_first_and_then_the_octopi_builds() {
+    let plan = split_plan(accepted_route(), &octopi_copy(&[]), &octopi_orders()).unwrap();
+    let actions: Vec<&PlannedAction> = plan.steps().iter().map(|step| &step.action).collect();
+
+    assert!(matches!(
+        actions.first(),
+        Some(PlannedAction::User(UserAction::ReviewAur { bases }))
+            if bases.iter().map(PackageName::as_str).eq(["alpm_octopi_utils-git", "octopi-git"])
+    ));
+
+    let built: Vec<&str> = actions
+        .iter()
+        .filter_map(|action| match action {
+            PlannedAction::User(UserAction::BuildAur { base, run: _ }) => Some(base.as_str()),
+            PlannedAction::Root(_) | PlannedAction::User(_) => None,
+        })
+        .collect();
+
+    assert_eq!(built, ["alpm_octopi_utils-git", "octopi-git"]);
+}
+
+#[test]
+fn a_refused_route_plans_the_old_paru_path_and_reads_no_order() {
+    let orders = octopi_orders();
+
+    let plan = split_plan(refused_route(), &octopi_copy(&[]), &orders).unwrap();
+
+    assert!(matches!(
+        &plan.steps()[0].action,
+        PlannedAction::User(UserAction::InstallAur { packages })
+            if packages.iter().map(PackageName::as_str).eq(["octopi-git"])
+    ));
+    assert_eq!(orders.asked(), 0);
+}
+
+#[test]
+fn a_build_without_its_order_stops_before_any_plan_with_its_reason() {
+    let orders = FakeAurOrders::new(vec![("octopi-git", Err("paru is not installed"))]);
+    let refused = split_plan(accepted_route(), &octopi_copy(&[]), &orders).unwrap_err();
+
+    assert_eq!(refused.exit(), Exit::Unavailable);
+    assert!(
+        refused
+            .message()
+            .starts_with("`octopi-git` has no build order: paru could not be asked"),
+        "{}",
+        refused.message()
+    );
+}
+
+#[test]
+fn a_route_the_helper_refuses_names_the_build_folder_for_the_missing_order() {
+    let plan = plan_install(
+        &[name("octopi-git")],
+        &octopi_copy(&[]),
+        &snapshot_with(accepted_route()),
+        &octopi_orders(),
+        Err(RouteProblem::NoAccount(1000)),
+    );
+
+    assert_eq!(
+        plan.unwrap_err().message(),
+        "`octopi-git` has no build order: its build folder cannot be used\nuser id 1000 has no account in /etc/passwd"
+    );
+}
+
+#[test]
+fn a_conflict_with_an_installed_package_refuses_the_split_path_and_names_it() {
+    let refused = split_plan(
+        accepted_route(),
+        &octopi_copy(&["paru-bin"]),
+        &octopi_orders(),
+    );
+
+    assert_eq!(
+        refused.unwrap_err(),
+        Refused::Rule(
+            "octopi-git conflicts with the installed paru-bin. Remove paru-bin first.".to_owned()
+        )
+    );
+}
+
+#[test]
+fn under_sudo_an_aur_install_takes_the_old_path_even_on_an_accepted_route() {
+    let mut snapshot = snapshot_with(accepted_route());
+    crate::root::mark_sudo_route(&mut snapshot);
+
+    let plan = plan_install(
+        &[name("octopi-git")],
+        &octopi_copy(&[]),
+        &snapshot,
+        &octopi_orders(),
+        Ok(()),
+    )
+    .unwrap();
+
+    assert!(matches!(
+        &plan.steps()[0].action,
+        PlannedAction::User(UserAction::InstallAur { packages: _ })
+    ));
 }

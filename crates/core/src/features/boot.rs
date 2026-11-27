@@ -17,10 +17,11 @@ pub use picture::PictureSource;
 pub use recheck::{recheck, recheck_grub};
 pub use sdboot::{is_protected, kernel, kernel_default, set_loader};
 use toolbox_plan::{
-    DefaultEntry, GrubKey, GrubSetting, GrubState, KernelParameter, KernelParameters, KnownPackage,
-    MenuEntryId, PackageName, PlymouthTheme,
+    DefaultEntry, GrubKey, GrubPicture, GrubSetting, GrubState, GrubThemeFile, KernelParameter,
+    KernelParameters, KnownPackage, MenuEntryId, PackageName, PlymouthTheme,
 };
 pub use toolbox_state::boot::{VirtualMachine, booted_from_snapshot};
+use toolbox_text::OutsideText;
 
 use crate::domains::{
     CurrentGrub, GrubDefaults, InstalledPackages, KernelSetting, Packages, PlymouthState,
@@ -50,7 +51,7 @@ pub enum Refusal {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Shown {
-    pub default: String,
+    pub default: Result<DefaultEntry, OutsideText>,
     /// GRUB boots the entry it booted last.
     pub remember: bool,
     pub timeout: Option<i64>,
@@ -58,10 +59,11 @@ pub struct Shown {
     pub parameters: Option<KernelParameters>,
     pub submenus: bool,
     pub os_prober: bool,
-    pub background: String,
+    /// `None` for no picture at all.
+    pub background: Option<Result<GrubPicture, OutsideText>>,
     /// The page cannot take the theme's picture away.
     pub background_source: PictureSource,
-    pub theme: String,
+    pub theme: Option<Result<GrubThemeFile, OutsideText>>,
 }
 
 /// # Errors
@@ -79,19 +81,19 @@ pub fn shown(snapshot: &Snapshot, changes: &ChangeSet) -> Option<Shown> {
     let state = grub(snapshot).ok()?;
     let mut shown = Shown {
         default: state.default.clone(),
-        remember: state.save_default || state.default == DefaultEntry::Saved.as_str(),
+        remember: state.save_default || state.default == Ok(DefaultEntry::Saved),
         timeout: state.timeout,
         parameters: state.parameters.clone(),
         submenus: state.submenus,
         os_prober: state.os_prober,
-        background: state.shown_background().to_owned(),
+        background: state.shown_background().cloned(),
         background_source: PictureSource::of(state.background_is_from_theme()),
         theme: state.theme.clone(),
     };
 
     for (_, setting) in changes.queued::<GrubDefaults>() {
         match setting {
-            GrubSetting::Default(entry) => entry.as_str().clone_into(&mut shown.default),
+            GrubSetting::Default(entry) => shown.default = Ok(entry),
             GrubSetting::Timeout(seconds) => shown.timeout = Some(i64::from(seconds)),
             GrubSetting::KernelParameters(list) => shown.parameters = Some(list),
             GrubSetting::Submenus(on) => shown.submenus = on,
@@ -99,14 +101,10 @@ pub fn shown(snapshot: &Snapshot, changes: &ChangeSet) -> Option<Shown> {
             GrubSetting::OsProber(on) => shown.os_prober = on,
             GrubSetting::Background(picture) => {
                 shown.background_source =
-                    PictureSource::of(picture.is_none() && !state.menu_picture.is_empty());
-                shown.background = picture
-                    .as_ref()
-                    .map_or_else(|| state.menu_picture.clone(), ToString::to_string);
+                    PictureSource::of(picture.is_none() && state.menu_picture.is_some());
+                shown.background = picture.map(Ok).or_else(|| state.menu_picture.clone());
             }
-            GrubSetting::Theme(theme) => {
-                shown.theme = theme.as_ref().map(ToString::to_string).unwrap_or_default();
-            }
+            GrubSetting::Theme(theme) => shown.theme = theme.map(Ok),
         }
     }
 
@@ -144,10 +142,10 @@ pub fn set_remember(
     let default = if on {
         DefaultEntry::Saved
     } else {
-        MenuEntryId::new(state.default.as_str())
-            .ok()
-            .filter(|entry| entry.as_str() != DefaultEntry::Saved.as_str())
-            .map_or(DefaultEntry::Entry(fallback), DefaultEntry::Entry)
+        match &state.default {
+            Ok(DefaultEntry::Entry(entry)) => DefaultEntry::Entry(entry.clone()),
+            Ok(DefaultEntry::Saved) | Err(_) => DefaultEntry::Entry(fallback),
+        }
     };
 
     set(GrubSetting::SaveDefault(on), changes, snapshot)?;

@@ -19,11 +19,10 @@ use std::time::{Duration, SystemTime};
 
 use toolbox_plan::PackageName;
 use toolbox_system::{
-    AppIconSource as _, AppStreamIcons, AurUpdateSource as _, Checkupdates, Dkms, DkmsSource as _,
-    EtcLocales, KernelSource as _, Libalpm, LinuxPackageSource as _, LocaleSource as _,
-    MergeSource as _, Pacdiff, PackageSource as _, PacmanLog, Paru, PendingUpdate, ProbeError,
-    StatusSources, SyncSource as _, SystemKernels, UpdateLogSource as _, UpdateSource as _,
-    probe_status,
+    AppIconSource as _, AppStreamIcons, AurUpdateSource as _, Checkupdates, Dkms, EtcLocales,
+    KernelSource as _, Libalpm, LocaleSource as _, MergeSource as _, Pacdiff, PackageSource as _,
+    PacmanLog, Paru, PendingUpdate, ProbeError, StatusSources, SyncSource as _, SystemKernels,
+    UpdateLogSource as _, UpdateSource as _, probe_status,
 };
 
 const PACMAN_LOG: &str = "/var/log/pacman.log";

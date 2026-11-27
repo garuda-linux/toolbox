@@ -4,11 +4,11 @@
 //! or `https` address.
 
 use egui::{Context, Ui};
-use toolbox_aur::package_page;
-use toolbox_cli::output::size;
 use toolbox_core::features::packages::aur::AurPackage;
 use toolbox_core::features::packages::{OptionalDependency, PackageDetails};
 use toolbox_plan::PackageName;
+use toolbox_services::aur_page::package_page;
+use toolbox_text::size;
 
 use super::super::super::Unfolded;
 use super::super::facts::{Fact, Value, grid, installed, joined, web};

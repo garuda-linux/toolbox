@@ -18,17 +18,17 @@ const TIMEOUT: Duration = Duration::from_mins(5);
 /// The dump is about 14 MB gzipped. Far more is no dump of the AUR.
 const MAX_GZIPPED_BYTES: u64 = 64 << 20;
 
-pub const HOST: &str = "aur.archlinux.org";
+const HOST: &str = "aur.archlinux.org";
 
 /// A validator longer than this is no `ETag` or date and is not kept.
 const MAX_VALIDATOR_BYTES: usize = 256;
 
 /// Blocks while a request runs, so call it off the GUI thread.
-pub struct Https {
+pub struct AurTransport {
     https: toolbox_https::Https,
 }
 
-impl Https {
+impl AurTransport {
     #[must_use = "the transport does nothing until a request is sent"]
     pub fn new() -> Self {
         Self::with_timeout(TIMEOUT)
@@ -49,13 +49,13 @@ impl Https {
     }
 }
 
-impl Default for Https {
+impl Default for AurTransport {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Transport for Https {
+impl Transport for AurTransport {
     fn get(&self, url: &str, validators: &Validators) -> Result<Answer, RequestError> {
         let mut headers = Vec::new();
         if let Some(etag) = &validators.etag {

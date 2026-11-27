@@ -47,7 +47,7 @@ fn a_tool_still_missing_after_its_install_says_so() {
     assert_eq!(
         maintenance.problem(),
         Some(&MaintenanceProblem::Launch {
-            tool: "btrfs-assistant",
+            tool: PageTool::Program(Tool::BtrfsAssistant),
             cause: LaunchCause::AbsentAfterInstall,
             reason: "/usr/bin/btrfs-assistant".to_owned(),
         })
@@ -68,7 +68,7 @@ fn rate_mirrors_still_missing_after_its_install_says_so() {
     assert!(matches!(
         maintenance.problem(),
         Some(MaintenanceProblem::Launch {
-            tool: "chaotic-mirrors",
+            tool: PageTool::ChaoticMirrors,
             cause: LaunchCause::AbsentAfterInstall,
             reason: _,
         })

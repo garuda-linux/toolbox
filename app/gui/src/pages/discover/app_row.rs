@@ -8,6 +8,7 @@ use egui::Ui;
 use egui::text::LayoutJob;
 use toolbox_core::features::discover::package;
 use toolbox_core::features::discover::view::{Group, Shown};
+use toolbox_core::features::protection_text_id;
 use toolbox_core::features::toggles::shown::{self as toggled, Control};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::tokens;
@@ -21,7 +22,7 @@ use crate::pages::rows::actions::{CopyName, Named, OpenWebsite, RowKind, Section
 use crate::pages::toggles::control as row_control;
 
 #[derive(Debug)]
-pub struct AppGroup {
+pub(super) struct AppGroup {
     pub id: String,
     pub title: String,
     pub count: String,
@@ -29,7 +30,7 @@ pub struct AppGroup {
 }
 
 #[derive(Debug)]
-pub struct AppRow {
+pub(super) struct AppRow {
     pub id: String,
     pub title: String,
     /// What screen readers say for the row: the title and what waits.
@@ -50,7 +51,7 @@ pub struct AppRow {
     pub menu: String,
 }
 
-pub struct AppRows;
+pub(super) struct AppRows;
 
 impl RowKind for AppRows {
     type Item = AppRow;
@@ -100,7 +101,7 @@ impl AppRow {
         let kept = shown
             .state
             .kept
-            .map(|why| i18n::text(ctx, &format!("protected-{}", why.as_str())));
+            .map(|why| i18n::text(ctx, protection_text_id(why)));
 
         let installed = (control == Control::Remove).then(|| i18n::text(ctx, "packages-installed"));
 

@@ -145,15 +145,21 @@ fn the_lock_entry_takes_a_queued_wish_back_before_it_flips() {
     use crate::Toggle;
 
     assert_eq!(
-        LockAction::of(Some(Toggle::On), Some(false)),
+        LockAction::of(Some(Toggle::On), Some(Toggle::Off)),
         Some(LockAction::UnqueueLock)
     );
     assert_eq!(
         LockAction::of(Some(Toggle::Off), None),
         Some(LockAction::UnqueueUnlock)
     );
-    assert_eq!(LockAction::of(None, Some(true)), Some(LockAction::Unlock));
-    assert_eq!(LockAction::of(None, Some(false)), Some(LockAction::Lock));
+    assert_eq!(
+        LockAction::of(None, Some(Toggle::On)),
+        Some(LockAction::Unlock)
+    );
+    assert_eq!(
+        LockAction::of(None, Some(Toggle::Off)),
+        Some(LockAction::Lock)
+    );
     assert_eq!(LockAction::of(None, None), None);
     assert!(LockAction::UnqueueLock.locked());
     assert!(!LockAction::Unlock.locked());

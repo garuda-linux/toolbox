@@ -69,7 +69,7 @@ fn an_account_refusal_names_the_user_unless_it_is_about_the_group() {
 fn an_account_refusal_shows_the_users_page_text() {
     assert_eq!(
         Refusal::Account(users::Refusal::LastAdmin).text_id(),
-        "account-refusal-last-admin"
+        Some("account-refusal-last-admin")
     );
 }
 

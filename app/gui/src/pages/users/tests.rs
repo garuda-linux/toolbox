@@ -18,7 +18,7 @@ use toolbox_core::features::users::run::{PageRun, RunKind};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::ButtonKind;
-use toolbox_plan::{GroupName, ShellPath, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, ShellPath, UserName};
 use toolbox_services::locks::Locks;
 
 use super::UsersPage;
@@ -45,8 +45,8 @@ fn user(text: &str, uid: u32, gecos: &str) -> User {
         uid,
         gid: uid,
         gecos: toolbox_text::plain(gecos),
-        home: format!("/home/{text}"),
-        shell: "/usr/bin/bash".to_owned(),
+        home: Ok(HomeDirectory::new(format!("/home/{text}")).unwrap()),
+        shell: Ok(ShellPath::new("/usr/bin/bash").unwrap()),
     }
 }
 

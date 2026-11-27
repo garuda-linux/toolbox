@@ -18,14 +18,14 @@ fn install() -> RootAction {
     }
 }
 
-fn answering(lines: &[&str]) -> FakeRunner {
+pub(super) fn answering(lines: &[&str]) -> FakeRunner {
     FakeRunner {
         queries: VecDeque::from([lines.iter().map(|&line| line.to_owned()).collect()]),
         ..FakeRunner::default()
     }
 }
 
-fn said(events: &[Event], text: &str) -> bool {
+pub(super) fn said(events: &[Event], text: &str) -> bool {
     events
         .iter()
         .any(|event| matches!(event, Event::Output { step: _, data } if data.contains(text)))

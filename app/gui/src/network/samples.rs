@@ -16,7 +16,7 @@ pub fn wifi() -> InterfaceCard {
     InterfaceCard {
         connection: plain("network-3"),
         interface: plain("wlan0"),
-        mac: Some("52:54:00:00:00:07".to_owned()),
+        mac: toolbox_plan::MacAddress::new("52:54:00:00:00:07").ok(),
         ipv4: vec![Subnet {
             address: IpAddr::from([192, 168, 178, 30]),
             prefix: 24,
@@ -43,7 +43,7 @@ pub fn ethernet() -> InterfaceCard {
     InterfaceCard {
         connection: plain("Wired connection 1"),
         interface: plain("enp3s0"),
-        mac: Some("52:54:00:00:00:0e".to_owned()),
+        mac: toolbox_plan::MacAddress::new("52:54:00:00:00:0e").ok(),
         ipv4: vec![Subnet {
             address: IpAddr::from([192, 168, 178, 40]),
             prefix: 24,

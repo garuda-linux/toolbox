@@ -224,22 +224,6 @@ impl App {
         self.changes_ui.open = false;
     }
 
-    /// Opens the Console, so the password dialog and the output are seen.
-    /// Waits until every page's guard checked a restored queue, so it never
-    /// runs what a page refuses. Returns whether the run started.
-    fn apply_queue(&mut self) -> bool {
-        let Ok(plan) = self.queue.plan() else {
-            return false;
-        };
-
-        if plan.is_empty() || self.first_read() || self.console.running() {
-            return false;
-        }
-
-        self.queue.sent(&plan);
-        self.run_owned(plan, Owner::Queue)
-    }
-
     pub(super) fn to_service(&self, command: ApplyCommand) {
         if let Some(apply) = &self.apply {
             apply.send(command);
@@ -274,6 +258,8 @@ impl App {
             // The service takes these, see `hand_to_services`.
             PackagesCommand::Show(_)
             | PackagesCommand::OpenAur
+            | PackagesCommand::ReadOrders
+            | PackagesCommand::CancelApply
             | PackagesCommand::Toggle {
                 package: _,
                 wish: _,

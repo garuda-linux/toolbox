@@ -12,7 +12,7 @@ use toolbox_cli::Exit;
 
 use crate::out::{Said, error_object, error_text};
 
-pub fn json_asked<I, S>(args: I) -> bool
+fn json_asked<I, S>(args: I) -> bool
 where
     I: IntoIterator<Item = S>,
     S: AsRef<OsStr>,

@@ -13,16 +13,16 @@ use crate::component::has_plain_components;
 use crate::procedure::FIRST_USER_ID;
 
 /// `PATH_MAX` is far larger, but no home folder lives that deep.
-pub const MAX_HOME_BYTES: usize = 255;
+const MAX_HOME_BYTES: usize = 255;
 
 /// Elsewhere usermod and useradd would put files the user owns into a
 /// tree root trusts, such as `/etc/systemd/system`, or below a shared
 /// folder such as `/tmp`.
-pub const HOME_ROOTS: [&str; 4] = ["/home/", "/srv/", "/var/lib/", "/opt/"];
+const HOME_ROOTS: [&str; 4] = ["/home/", "/srv/", "/var/lib/", "/opt/"];
 
 /// `SYS_UID_MAX` and `UID_MAX` of `/etc/login.defs`: system accounts end
 /// below the first, accounts of people at the second.
-pub const LAST_SYSTEM_USER_ID: u32 = 999;
+const LAST_SYSTEM_USER_ID: u32 = 999;
 pub const LAST_USER_ID: u32 = 60_000;
 
 /// The accounts of people. Root, system accounts and `nobody` lie outside.

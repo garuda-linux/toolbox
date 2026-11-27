@@ -34,7 +34,7 @@ struct Token {
 
 /// What the last line that sets `variable` gives it. `None` when no line
 /// sets it, or when its value needs a shell to work out.
-pub fn grub_value(config: &str, variable: &str) -> Option<String> {
+pub(super) fn grub_value(config: &str, variable: &str) -> Option<String> {
     let found = config
         .split_inclusive('\n')
         .filter_map(|line| assignment(line, variable))
@@ -48,7 +48,7 @@ pub fn grub_value(config: &str, variable: &str) -> Option<String> {
 /// The last line that sets it gets the new value (a shell lets the last
 /// one win), else the last commented-out line of it is switched on, else
 /// a line is added at the end.
-pub fn set_grub_value(config: &str, variable: &str, value: &str) -> String {
+pub(super) fn set_grub_value(config: &str, variable: &str, value: &str) -> String {
     let lines: Vec<&str> = config.split_inclusive('\n').collect();
     let active = lines
         .iter()
@@ -77,7 +77,7 @@ pub fn set_grub_value(config: &str, variable: &str, value: &str) -> String {
         .collect()
 }
 
-pub fn unset_grub_value(config: &str, variable: &str) -> String {
+pub(super) fn unset_grub_value(config: &str, variable: &str) -> String {
     let mut result = String::with_capacity(config.len());
 
     for line in config.split_inclusive('\n') {

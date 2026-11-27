@@ -87,7 +87,9 @@ impl Choices {
                 )
             },
             hblock: flip(
-                snapshot.part::<HblockState>().map(|state| state.0),
+                snapshot
+                    .part::<HblockState>()
+                    .map(|state| Toggle::from_on(state.0)),
                 changes.wish::<Hblock>(&Single),
             ),
             flags: config.map(|config| {
@@ -95,7 +97,8 @@ impl Choices {
                     .into_iter()
                     .map(|flag| {
                         let wish = changes.wish::<GarudaUpdateFlags>(&flag);
-                        (flag, flip(Some(config.0.contains(&flag)), wish))
+                        let system = Toggle::from_on(config.0.contains(&flag));
+                        (flag, flip(Some(system), wish))
                     })
                     .collect()
             }),
@@ -130,10 +133,10 @@ fn read<T>(snapshot: &Snapshot, current: Option<&T>, probes: &[Probe]) -> Read {
     }
 }
 
-fn flip(system: Option<bool>, wish: Option<&Toggle>) -> Flip {
+fn flip(system: Option<Toggle>, wish: Option<&Toggle>) -> Flip {
     Flip {
         known: system.is_some(),
-        on: wish.map_or_else(|| system.unwrap_or_default(), |wish| wish.is_on()),
+        on: wish.map_or_else(|| system.is_some_and(Toggle::is_on), |wish| wish.is_on()),
         queued: wish.is_some(),
     }
 }

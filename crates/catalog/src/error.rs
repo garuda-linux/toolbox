@@ -1,7 +1,9 @@
 use std::io;
 use std::path::PathBuf;
 
-use toolbox_plan::{InvalidConfigWord, InvalidHomePath, InvalidName, InvalidRgb};
+use toolbox_plan::{
+    InvalidConfigText, InvalidConfigWord, InvalidHomePath, InvalidName, InvalidRgb,
+};
 
 #[cfg(test)]
 mod tests;
@@ -31,26 +33,34 @@ pub enum CatalogError {
 
 impl CatalogError {
     /// The kind of failure, which the pages put in their own words.
-    pub const fn code(&self) -> &'static str {
+    pub const fn code(&self) -> LoadCode {
         match self {
-            Self::Read { path: _, error: _ } => "unreadable",
+            Self::Read { path: _, error: _ } => LoadCode::Unreadable,
             Self::Syntax {
                 source_name: _,
                 error: _,
-            } => "syntax",
+            } => LoadCode::Syntax,
             Self::Invalid {
                 source_name: _,
                 id: _,
                 problem: _,
-            } => "invalid",
+            } => LoadCode::Invalid,
         }
     }
+}
+
+/// The kind of a failed load, the pages' text is picked by it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum LoadCode {
+    Unreadable,
+    Syntax,
+    Invalid,
 }
 
 /// The detail is shown apart as plain text.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LoadProblem {
-    pub code: &'static str,
+    pub code: LoadCode,
     pub detail: String,
 }
 
@@ -178,6 +188,9 @@ pub enum Problem {
     /// An INI group, key or value or a JSON key breaks the rule of words.
     #[error("{0}")]
     BadConfigWord(InvalidConfigWord),
+    /// A `user-file` holds text the helper would refuse to write.
+    #[error("{0}")]
+    BadConfigText(InvalidConfigText),
     /// A `user-file` without content would write an empty file.
     #[error("empty content")]
     EmptyContent,

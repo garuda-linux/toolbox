@@ -80,7 +80,7 @@ fn interface_card(ui: &mut Ui, interface: &InterfaceCard) {
                 }
 
                 if let Some(mac) = &interface.mac {
-                    list.row_copied(&labels.mac, mac);
+                    list.row_copied(&labels.mac, mac.as_str());
                 }
 
                 for (label, value, copyable) in &link {

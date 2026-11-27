@@ -25,7 +25,7 @@ use crate::terminal::Terminal;
 use crate::{catalogs, filter};
 
 /// Where the settings come from and where they go.
-pub struct Folders<'a> {
+struct Folders<'a> {
     pub skel_root: &'a Path,
     pub home: &'a Path,
 }

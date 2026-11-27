@@ -13,7 +13,7 @@ use crate::page::PageId;
 use crate::page_ui::{PageLook as _, listed};
 use crate::pages::{PageContext, maintenance};
 
-pub fn page_look(page: PageId) -> Look {
+pub(super) fn page_look(page: PageId) -> Look {
     Look::Glyph(page.icon())
 }
 
@@ -84,7 +84,7 @@ pub fn maintenance(ctx: &Context, needle: &Needle) -> Option<Part> {
     let rows = maintenance::palette::entries()
         .into_iter()
         .map(|(id, tab)| Row {
-            name: i18n::text(ctx, &id).into_owned(),
+            name: i18n::text(ctx, id).into_owned(),
             detail: i18n::text(ctx, tab.text_id()).into_owned(),
             shortcut: None,
             section: Section::Maintenance,

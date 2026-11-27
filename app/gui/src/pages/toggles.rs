@@ -12,7 +12,7 @@ use egui::Ui;
 pub use entry::paint_glyph;
 pub use lead::{LeadChip, LeadSections, NoLead};
 use listed::{Listed, SectionChip, SectionRows};
-use toolbox_catalog::LoadProblem;
+use toolbox_catalog::{LoadCode, LoadProblem};
 use toolbox_core::Snapshot;
 use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::Refusal;
@@ -333,8 +333,17 @@ fn section_title(ctx: &egui::Context, catalog: CatalogId, section: &Section<'_>)
     catalog_text(ctx, catalog, section.section.id(), section.section.title())
 }
 
+/// The ids are literals, so grep and the catalog checks see each one.
+pub(super) const fn problem_id(code: LoadCode) -> &'static str {
+    match code {
+        LoadCode::Unreadable => "toggles-problem-unreadable",
+        LoadCode::Syntax => "toggles-problem-syntax",
+        LoadCode::Invalid => "toggles-problem-invalid",
+    }
+}
+
 fn problem_text(ctx: &egui::Context, problem: &LoadProblem) -> String {
-    let reason = i18n::text(ctx, &format!("toggles-problem-{}", problem.code));
+    let reason = i18n::text(ctx, problem_id(problem.code));
     i18n::text_with(
         ctx,
         "toggles-problem-reason",

@@ -19,13 +19,16 @@ use toolbox_core::features::toggles::shown::sections;
 use toolbox_core::features::toggles::{EntryState, is_offered, state};
 use toolbox_core::features::users::accounts;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
-use toolbox_plan::PEOPLE;
+use toolbox_plan::{
+    GroupName, HomeDirectory, LocaleName, PEOPLE, PackageName, ShellPath, UnitName, UserName,
+};
 use toolbox_services::page::PageId;
+use toolbox_text::OutsideText;
 
 #[derive(Clone, Debug, Serialize)]
 pub struct ServiceRow {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: UnitName,
     /// systemd's `ActiveState`, such as `active` or `failed`.
     pub active: &'static str,
     /// systemd's `SubState`, such as `running` or `exited`.
@@ -34,7 +37,7 @@ pub struct ServiceRow {
     pub at_boot: bool,
     /// systemd's `UnitFileState`, such as `enabled`, `disabled` or `masked`.
     pub file_state: &'static str,
-    pub description: toolbox_text::OutsideText,
+    pub description: OutsideText,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -58,7 +61,7 @@ pub struct ToggleRow {
 )]
 pub struct KernelRow {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: PackageName,
     pub version: String,
     pub installed: bool,
     pub running: bool,
@@ -71,7 +74,7 @@ pub struct KernelRow {
 #[derive(Clone, Debug, Serialize)]
 pub struct LocaleRow {
     #[serde(rename = "id")]
-    pub locale: String,
+    pub locale: LocaleName,
     pub charset: String,
     pub name: Option<String>,
     pub enabled: bool,
@@ -81,18 +84,20 @@ pub struct LocaleRow {
 #[derive(Clone, Debug, Serialize)]
 pub struct UserRow {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: UserName,
     pub uid: u32,
     #[serde(rename = "name")]
-    pub full_name: String,
-    pub home: String,
-    pub shell: String,
+    pub full_name: OutsideText,
+    #[serde(serialize_with = "toolbox_text::serialize_text")]
+    pub home: Result<HomeDirectory, OutsideText>,
+    #[serde(serialize_with = "toolbox_text::serialize_text")]
+    pub shell: Result<ShellPath, OutsideText>,
 }
 
 #[derive(Clone, Debug, Serialize)]
 pub struct GroupRow {
     #[serde(rename = "id")]
-    pub name: String,
+    pub name: GroupName,
     pub gid: u32,
     pub members: Vec<String>,
     pub system: bool,
@@ -102,7 +107,7 @@ pub fn services(units: &[UnitInfo]) -> Vec<ServiceRow> {
     let mut rows: Vec<ServiceRow> = units
         .iter()
         .map(|unit| ServiceRow {
-            name: unit.name.as_str().to_owned(),
+            name: unit.name.clone(),
             active: unit.active.as_str(),
             state: unit.sub_state.clone(),
             at_boot: matches!(unit.file_state, FileState::Enabled),
@@ -172,7 +177,7 @@ pub fn kernels(snapshot: &Snapshot, menus: BootMenus<'_>) -> Option<Vec<KernelRo
         listed
             .iter()
             .map(|kernel| KernelRow {
-                name: kernel.name.as_str().to_owned(),
+                name: kernel.name.clone(),
                 version: kernel
                     .installed
                     .clone()
@@ -190,7 +195,7 @@ pub fn locales(snapshot: &Snapshot) -> Vec<LocaleRow> {
     all_rows(snapshot, &ChangeSet::default())
         .into_iter()
         .map(|row| LocaleRow {
-            locale: row.entry.locale.to_string(),
+            locale: row.entry.locale.clone(),
             charset: row.entry.charset.to_string(),
             name: row.name.map(|name| {
                 if name.territory.is_empty() {
@@ -213,9 +218,9 @@ pub fn users(snapshot: &Snapshot) -> Option<Vec<UserRow>> {
         .users
         .iter()
         .map(|user| UserRow {
-            name: user.name.as_str().to_owned(),
+            name: user.name.clone(),
             uid: user.uid,
-            full_name: user.full_name().to_owned(),
+            full_name: toolbox_text::plain(user.full_name()),
             home: user.home.clone(),
             shell: user.shell.clone(),
         })
@@ -250,7 +255,7 @@ pub fn groups(snapshot: &Snapshot) -> Option<Vec<GroupRow>> {
         .groups
         .iter()
         .map(|group| GroupRow {
-            name: group.name.as_str().to_owned(),
+            name: group.name.clone(),
             gid: group.gid,
             members: group
                 .members

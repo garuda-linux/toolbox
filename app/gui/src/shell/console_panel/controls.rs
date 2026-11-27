@@ -7,6 +7,36 @@ use crate::command::{AppCommand, CommandSender, UiCommand};
 use crate::console::{Console, Status};
 use crate::i18n;
 
+/// The line above the header while a review waits for Continue: the hint and
+/// Continue. The header has no room for either beside its own buttons.
+pub(super) fn review_hint(ui: &mut Ui, console: &Console, commands: &CommandSender) {
+    if !console.review_waits() {
+        return;
+    }
+
+    let ctx = ui.ctx().clone();
+    ui.horizontal_wrapped(|ui| {
+        let hint = i18n::text(&ctx, "console-review-hint");
+        ui.add(egui::Label::new(hint.as_ref()).wrap());
+
+        // Never the default: Enter reaches the review as the terminal's key,
+        // and only a click on this button sends `y`.
+        let proceed = ui
+            .push_id("console-continue", |ui| {
+                pill_button(
+                    ui,
+                    &i18n::text(&ctx, "console-continue"),
+                    ButtonKind::Primary,
+                )
+            })
+            .inner;
+
+        if proceed.clicked() {
+            commands.send(AppCommand::ConsoleInput(b"y\r".to_vec()));
+        }
+    });
+}
+
 /// The status left of them draws more or fewer widgets as the run goes,
 /// which would renumber this group and drop its focus, so the group and
 /// each control keep their own ids. Numbered by place, Close would take

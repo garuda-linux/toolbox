@@ -115,13 +115,50 @@ To install a package from the AUR:
    computer. Click **Install** to queue it, or **Cancel**.
 3. The row says **Builds with Apply**. Apply the queue.
 
-paru builds the package in the Console as your own user, never as root.
-It shows the build script (the PKGBUILD) first and asks before it
-builds, so read it and answer in the Console. It asks for your password
-itself when it installs the result.
+Garuda Toolbox builds the package as your own user, never as root. Before
+anything is built, the Console shows the build files of the package, its
+PKGBUILD and the other files that are not downloads, and waits. Read them.
+Type `y` and press Enter, or click **Continue** in the Console, to go on.
+Any other answer, or **Cancel**, stops the run and nothing is built. The
+packages are installed with your password, asked once for the whole run.
+
+> **Note:** Only the build files that are kept in git are shown. Sources
+> that the build downloads later are not shown.
+
+On a setup that cannot use this path, paru builds the package instead. It
+shows the build script itself and asks for your password for each step, so
+it can ask several times. If **Apply** waits for a build order, see
+[Apply waits for a build order](troubleshooting.md#apply-waits-for-a-build-order).
 
 An installed AUR package is removed like any other package, see
 [Remove a package](#remove-a-package).
+
+### Install from the AUR on the command line
+
+Run `garuda-toolbox packages install --aur octopi-git` to build a package from the AUR.
+
+The command reads the build order of each package, so it can show what gets
+built and installed. Then it prints the plan. Its first step shows the build
+files of each package, the PKGBUILD or what changed since the last build, and
+asks `Build octopi-git?`. Type `y` and press Enter to build. Anything else
+cancels, nothing is installed and the command ends with exit code 3. `--yes`
+does not skip this question, so a script needs a terminal. `--json` refuses
+such a plan, as it cannot ask.
+
+A package that conflicts with an installed one is refused before anything is
+queued, with a message such as `octopi-git conflicts with the installed
+paru-bin. Remove paru-bin first.` Remove the installed package, then install
+again.
+
+Some setups cannot use the build folder that the helper checks, such as a
+home folder that is a link or an account without an entry in `/etc/passwd`.
+Then the command says `this setup uses the old paru path:` and the reason.
+paru builds the package and asks for your password itself, as before, and the
+review above does not happen.
+
+The command line uses the old paru path when it asks for the password through
+`sudo`, because `sudo` does not tell the helper who asked. Use the window or a
+terminal where the password dialog of pkexec works for AUR packages.
 
 ## See a package's details
 

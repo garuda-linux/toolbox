@@ -199,7 +199,7 @@ fn locale_and_dkms_actions_are_accepted_in_a_dry_run() -> TestResult {
     let actions = vec![
         RootAction::SetLocaleEnabled {
             locale: LocaleEntry::parse("de_DE.UTF-8 UTF-8").ok_or("no entry")?,
-            enabled: true,
+            enabled: toolbox_plan::Toggle::On,
         },
         RootAction::GenerateLocales,
         RootAction::SetSystemLocale {

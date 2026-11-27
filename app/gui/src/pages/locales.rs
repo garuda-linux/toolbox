@@ -18,7 +18,7 @@ use toolbox_gui_kit::widgets::{
 use toolbox_gui_kit::{UiExt as _, icons};
 
 use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
-use super::rows::{refused_banner, sort_select};
+use super::rows::{refused_page_banner, sort_select};
 use super::{PageContext, PageView, plan_running};
 use crate::command::{AppCommand, LocaleCommand};
 use crate::i18n;
@@ -306,9 +306,5 @@ fn nothing(ui: &mut Ui, (icon, id): (Icon, &str), search: &mut String) {
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Locales>().refusal();
-    if refused_banner(ui, refused, Tone::Error, "locales-dismiss") {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Locales));
-    }
+    refused_page_banner(ui, context, refused, PageId::Locales, "locales-dismiss");
 }

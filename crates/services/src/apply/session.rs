@@ -36,7 +36,7 @@ enum Turn {
     Ended,
 }
 
-pub struct Session {
+pub(super) struct Session {
     child: Child,
     stdin: UnixStream,
     lines: Lines<BufReader<ChildStdout>>,
@@ -102,7 +102,7 @@ impl Session {
 
     /// Reads the events of a root segment until its last step finished.
     /// `false` when a step failed or the helper ended first.
-    pub async fn segment(
+    pub(super) async fn segment(
         &mut self,
         last: StepId,
         run: &mut Run<'_>,
@@ -126,7 +126,7 @@ impl Session {
     /// Answers the gate before `gate` with `Proceed`, once the helper says
     /// it waits there. `false` when the helper ends first, or a cancel or
     /// finish came, which the helper answers at the gate itself.
-    pub async fn proceed(
+    pub(super) async fn proceed(
         &mut self,
         gate: StepId,
         run: &mut Run<'_>,
@@ -154,7 +154,12 @@ impl Session {
     /// Ends the helper and waits for the process. With `early`, the helper
     /// gets a cancel first, unless it already ended. `true` when the helper
     /// said `Done`, every step ended well and it exited with 0.
-    pub async fn close(mut self, early: bool, run: &mut Run<'_>, launcher: &dyn Launcher) -> bool {
+    pub(super) async fn close(
+        mut self,
+        early: bool,
+        run: &mut Run<'_>,
+        launcher: &dyn Launcher,
+    ) -> bool {
         // A cancel or finish sent before ends the helper on its own.
         if early && !self.ended && !self.stopping {
             self.stopping = true;

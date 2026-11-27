@@ -23,10 +23,14 @@ use toolbox_core::features::kernels::view::{BootMenus, Listing};
 use toolbox_core::features::kernels::{DkmsEntry, DkmsState, set_builds};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::sdboot::SdBootMenu;
-use toolbox_plan::{DkmsBuild as Build, GrubMenu, PackageName, Plan};
+use toolbox_plan::{
+    DefaultEntry, DkmsBuild as Build, DkmsModuleName, GrubMenu, GrubPicture, GrubThemeFile,
+    PackageName, Plan,
+};
 use toolbox_services::dkms::{DkmsFailure, dkms_answer};
 use toolbox_state::boot::BootLoader;
-use toolbox_system::{BootMenuSource as _, Dkms, DkmsSource as _, MenuRead, SystemBootMenu};
+use toolbox_system::{BootMenuSource as _, Dkms, MenuRead, SystemBootMenu};
+use toolbox_text::OutsideText;
 
 pub use self::listing::{entry_listing, module_listing};
 use super::act::run;
@@ -43,20 +47,23 @@ pub const MAX_TIMEOUT: u32 = 300;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct BootView {
-    pub default: String,
+    #[serde(serialize_with = "toolbox_text::serialize_text")]
+    pub default: Result<DefaultEntry, OutsideText>,
     pub remember: bool,
     pub timeout: Option<i64>,
     pub parameters: Option<Vec<String>>,
     pub submenus: bool,
     pub os_prober: bool,
-    pub background: String,
-    pub theme: String,
+    #[serde(serialize_with = "toolbox_text::serialize_optional_text")]
+    pub background: Option<Result<GrubPicture, OutsideText>>,
+    #[serde(serialize_with = "toolbox_text::serialize_optional_text")]
+    pub theme: Option<Result<GrubThemeFile, OutsideText>>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct ModuleRow {
     #[serde(rename = "id")]
-    pub module: String,
+    pub module: DkmsModuleName,
     pub version: String,
     pub kernel: String,
     /// dkms's own word: `added`, `built`, `installed` or `broken`.
@@ -175,7 +182,7 @@ pub fn setting(args: &BootSet, snapshot: &Snapshot) -> Result<Edit, Refused> {
         BootKey::Remember => Edit::Remember {
             on: on_off(value)?,
             fallback: shown(snapshot, &ChangeSet::default())
-                .map(|now| now.default)
+                .map(|now| toolbox_text::checked_text(&now.default).to_owned())
                 .unwrap_or_default(),
         },
         BootKey::Submenus => Edit::Submenus(on_off(value)?),
@@ -283,7 +290,7 @@ fn module_rows(entries: &[DkmsEntry]) -> Vec<ModuleRow> {
     entries
         .iter()
         .map(|entry| ModuleRow {
-            module: entry.module.as_str().to_owned(),
+            module: entry.module.clone(),
             version: entry.version.as_str().to_owned(),
             kernel: entry
                 .kernel

@@ -17,6 +17,7 @@ use egui::{
     Align, Context, CornerRadius, Frame, Id, Label, Layout, Rect, Response, Ui, UiBuilder, vec2,
 };
 use list::steps;
+use toolbox_core::features::console::HelperFailure;
 use toolbox_core::features::console::ending::Ending;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::terminal_view::TerminalView;
@@ -25,6 +26,7 @@ use toolbox_gui_kit::widgets::{Tone, banner, push_height, rich, status_word};
 use toolbox_gui_kit::{UiExt as _, tokens};
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::Mode;
+use toolbox_system::pkexec::Refusal;
 
 use crate::apply::Problem;
 use crate::command::{AppCommand, CommandSender, UiCommand};
@@ -38,7 +40,7 @@ const STATE_SIZE: f32 = SMALL;
 const STEP_ROW_HEIGHT: f32 = tokens::Sizes::DEFAULT.step_row_height;
 
 #[derive(Clone, Copy, Debug)]
-pub struct Sheet {
+pub(super) struct Sheet {
     pub open: bool,
     /// The shortcut opened or closed it, so it jumps rather than slides.
     pub instant: bool,
@@ -104,6 +106,29 @@ pub fn show(
     shown.rect
 }
 
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn refusal_id(refusal: Refusal) -> &'static str {
+    match refusal {
+        Refusal::Dismissed => "refusal-dismissed",
+        Refusal::Denied => "refusal-denied",
+        Refusal::NoAgent => "refusal-no-agent",
+        Refusal::HelperMissing => "refusal-helper-missing",
+        Refusal::Broken => "refusal-broken",
+    }
+}
+
+const fn helper_id(kind: HelperFailure) -> &'static str {
+    match kind {
+        HelperFailure::MissingSecret => "helper-missing-secret",
+        HelperFailure::Start => "helper-start",
+        HelperFailure::Pkexec => "helper-pkexec",
+        HelperFailure::NoPipes => "helper-no-pipes",
+        HelperFailure::Lost => "helper-lost",
+        HelperFailure::Ended => "helper-ended",
+        HelperFailure::UserSteps => "helper-user-steps",
+    }
+}
+
 fn ending_word(ctx: &Context, ending: Ending) -> (String, Tone) {
     match ending {
         Ending::Applied => (
@@ -139,6 +164,8 @@ fn header(
 ) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
+
+    controls::review_hint(ui, console, commands);
 
     // The row is as tall as the push buttons it holds, so the title, the
     // status and the buttons share one middle.
@@ -228,16 +255,12 @@ fn notices(ui: &mut Ui, console: &Console, editing: bool) {
 
     match console.problem() {
         Some(Problem::Refused(refusal)) => {
-            notice(
-                Tone::Error,
-                &i18n::text(&ctx, &format!("refusal-{}", refusal.code())),
-            );
+            notice(Tone::Error, &i18n::text(&ctx, refusal_id(*refusal)));
         }
         Some(Problem::HelperFailed { kind, detail }) => {
-            let id = format!("helper-{}", kind.as_str());
             notice(
                 Tone::Error,
-                &i18n::text_with(&ctx, &id, &[("detail", Arg::from(detail))]),
+                &i18n::text_with(&ctx, helper_id(*kind), &[("detail", Arg::from(detail))]),
             );
         }
         None => {}

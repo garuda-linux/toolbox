@@ -109,7 +109,7 @@ pub fn welcome(ui: &mut Ui) {
     paragraph(ui, &i18n::text(ui.ctx(), "setup-welcome-text"));
 }
 
-pub fn step_heading(ui: &mut Ui, (number, count): (usize, usize), name: &str) {
+pub(super) fn step_heading(ui: &mut Ui, (number, count): (usize, usize), name: &str) {
     let ctx = ui.ctx().clone();
     let words = [
         ("number", Arg::from(number)),

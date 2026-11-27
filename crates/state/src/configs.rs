@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 pub use toolbox_plan::ConfigEntryLocation;
 use toolbox_plan::{ConfigFilePath, FetchRefusal};
+use toolbox_text::OutsideText;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Found {
@@ -14,8 +15,9 @@ pub enum Found {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Link {
-    /// The real path, or as far as the link could be followed.
-    pub target: String,
+    /// The real path, or as far as the link could be followed. Outside
+    /// text, as a link can dangle or lead anywhere.
+    pub target: OutsideText,
     /// Why the helper would not hand the target out. `None` for a link
     /// that is edited like any file.
     pub refusal: Option<FetchRefusal>,
@@ -54,14 +56,14 @@ impl Listing {
 impl Link {
     pub fn to(target: &ConfigFilePath) -> Self {
         Self {
-            target: target.to_string(),
+            target: toolbox_text::plain(target.as_str()),
             refusal: None,
         }
     }
 
     pub fn refused(target: impl Into<String>, reason: FetchRefusal) -> Self {
         Self {
-            target: target.into(),
+            target: toolbox_text::plain(&target.into()),
             refusal: Some(reason),
         }
     }

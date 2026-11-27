@@ -73,7 +73,7 @@ fn an_account_is_locked_and_unlocked() -> TestResult {
     let lock = |locked: bool| -> Result<RootAction, Box<dyn Error>> {
         Ok(RootAction::SetUserLocked {
             user: user(name)?,
-            locked,
+            locked: toolbox_plan::Toggle::from_on(locked),
         })
     };
 

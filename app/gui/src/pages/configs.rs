@@ -20,9 +20,9 @@ use toolbox_gui_kit::theme::PILL_HEIGHT;
 use toolbox_gui_kit::widgets::{ButtonKind, Tone, banner, mono_small, page_toolbar, pill_button};
 
 use super::header::{refresh_header_reading, search};
-use super::rows::refused_banner;
+use super::rows::refused_page_banner;
 use super::{PageContext, PageView};
-use crate::command::{AppCommand, ConfigsCommand};
+use crate::command::ConfigsCommand;
 use crate::configs::Configs;
 use crate::i18n;
 use crate::page::PageId;
@@ -160,11 +160,7 @@ impl ConfigsPage {
 
 fn refusal(ui: &mut Ui, context: &PageContext<'_>) {
     let refused = context.service::<Configs>().refusal();
-    if refused_banner(ui, refused, Tone::Error, "configs-dismiss") {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Configs));
-    }
+    refused_page_banner(ui, context, refused, PageId::Configs, "configs-dismiss");
 }
 
 /// A dialog's `body` above its `buttons`, together as tall as they need

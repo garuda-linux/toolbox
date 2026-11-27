@@ -11,7 +11,7 @@ use std::collections::BTreeSet;
 use serde::{Deserialize, Serialize};
 
 use crate::Toggle;
-use crate::lines::{ending, push_line};
+use crate::lines::{ending, push_line, replace_lines};
 
 /// Relative to `/`, like every path the helper writes below its root.
 pub const GARUDA_UPDATE_CONFIG: &str = "etc/garuda/garuda-update/config";
@@ -102,23 +102,16 @@ impl GarudaUpdateFlag {
             .any(|line| matches!(classify(line, key), Line::Assignment { on: _ }));
 
         let mut placed = assigned;
-        let mut result = String::with_capacity(config.len() + wanted.len() + 1);
-
-        for line in config.split_inclusive('\n') {
+        let (mut result, _) = replace_lines(config, &wanted, |line| {
             let replace = match classify(line, key) {
                 Line::Assignment { on: _ } => true,
                 Line::Commented => on && !placed,
                 Line::Unrelated => false,
             };
 
-            if replace {
-                placed = true;
-                result.push_str(&wanted);
-                result.push_str(ending(line));
-            } else {
-                result.push_str(line);
-            }
-        }
+            placed |= replace;
+            replace
+        });
 
         if on && !placed {
             push_line(&mut result, &wanted);

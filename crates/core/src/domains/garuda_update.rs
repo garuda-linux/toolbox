@@ -33,7 +33,7 @@ impl Domain for GarudaUpdateFlags {
         each(Self::STAGE, changes, |flag, wish| {
             RootAction::SetGarudaUpdateFlag {
                 flag: *flag,
-                enabled: wish.is_on(),
+                enabled: *wish,
             }
         })
     }

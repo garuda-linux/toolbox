@@ -33,7 +33,7 @@ impl Dispatch<WlRegistry, GlobalListContents> for Events {
 
 /// Names `service` as the menu of the window's surface. `false` when the
 /// compositor has no global menu.
-pub fn bind(
+pub(super) fn bind(
     display: WaylandDisplayHandle,
     window: WaylandWindowHandle,
     service: &str,

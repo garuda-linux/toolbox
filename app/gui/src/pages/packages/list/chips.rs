@@ -9,13 +9,13 @@ use toolbox_gui_kit::widgets::chip;
 use super::super::PackagesPage;
 use crate::i18n;
 
-pub struct AurChip {
+pub(super) struct AurChip {
     /// `None` until the AUR's copy is read.
     pub count: Option<usize>,
 }
 
 /// What the chips count. A count that is not known shows none.
-pub struct ChipCounts {
+pub(super) struct ChipCounts {
     /// `None` without pacman's databases.
     pub repository: Option<Counts>,
     pub updates_known: bool,

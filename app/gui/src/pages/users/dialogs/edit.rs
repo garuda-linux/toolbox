@@ -42,7 +42,7 @@ struct Fields {
 
 /// The typed values, each `None` while unchanged.
 struct Changes {
-    full_name: Option<Result<FullName, &'static str>>,
+    full_name: Option<Result<FullName, InvalidFullName>>,
     shell: Option<ShellPath>,
     home: Option<Result<HomeDirectory, InputProblem>>,
 }
@@ -64,7 +64,7 @@ impl Edit {
 
         Self {
             user: row.user.name.clone(),
-            current_home: row.user.home.clone(),
+            current_home: row.user.home_text().to_owned(),
             fields: start.clone(),
             start,
         }
@@ -111,7 +111,7 @@ impl Edit {
         let moved = elsewhere && now.move_files != start.move_files;
         Changes {
             full_name: (now.full_name != start.full_name)
-                .then(|| FullName::new(now.full_name.clone()).map_err(InvalidFullName::as_str)),
+                .then(|| FullName::new(now.full_name.clone())),
             shell: (now.shell != start.shell)
                 .then(|| ShellPath::new(&now.shell).ok())
                 .flatten(),
@@ -146,7 +146,7 @@ impl Edit {
     fn body(&mut self, ui: &mut Ui, ctx: &Context, context: &PageContext<'_>, changes: &Changes) {
         let text = |id: &str| i18n::text(ctx, id).into_owned();
         let problem = match &changes.full_name {
-            Some(Err(code)) => Some(texts::full_name_problem(ctx, code)),
+            Some(Err(rule)) => Some(texts::full_name_problem(ctx, *rule)),
             Some(Ok(_)) | None => None,
         };
 

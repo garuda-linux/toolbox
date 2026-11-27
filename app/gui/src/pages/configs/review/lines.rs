@@ -17,7 +17,7 @@ const TAB_COLUMNS: usize = 4;
 
 /// The lines of the edited file a run of changes covers.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Covered {
+pub(super) struct Covered {
     pub first: u32,
     pub last: u32,
 }

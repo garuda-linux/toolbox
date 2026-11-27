@@ -3,6 +3,12 @@
 //! run there: `TOOLBOX_IT_ARCH=1`, root and `/etc/arch-release`. Elsewhere
 //! they return at once. Run them one at a time (`scripts/arch-it.sh`).
 
+#[path = "arch/aur.rs"]
+mod aur;
+#[path = "arch/aur_gates.rs"]
+mod aur_gates;
+#[path = "arch/aur_refusals.rs"]
+mod aur_refusals;
 #[path = "arch/boot.rs"]
 mod boot;
 #[path = "arch/cmdline.rs"]
@@ -20,6 +26,8 @@ mod homes;
 mod loader;
 #[path = "arch/locales.rs"]
 mod locales;
+#[path = "arch/make_dependencies.rs"]
+mod make_dependencies;
 #[path = "arch/merges.rs"]
 mod merges;
 #[path = "arch/network.rs"]
@@ -49,13 +57,14 @@ use common::{Reply, Run, TestResult, events, helper, helper_answering, outcomes,
 use toolbox_plan::protocol::{Event, Mode, Outcome};
 use toolbox_plan::{Mirrorlist, PackageName, RootAction, TargetList, Upgrader};
 
-const TEST_PACKAGES: [&str; 6] = [
+const TEST_PACKAGES: [&str; 7] = [
     "toolbox-test-a",
     "toolbox-test-dep",
     "toolbox-test-conflict",
     "toolbox-test-up",
     "toolbox-test-on-protected",
     "chaotic-mirrorlist",
+    "toolbox-test-aur",
 ];
 
 /// Runs `actions` for real and returns every step's outcome.

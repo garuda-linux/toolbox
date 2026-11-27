@@ -48,7 +48,7 @@ pub enum LoaderRefusal {
     NotUefi,
 }
 
-pub fn repair_boot(
+pub(super) fn repair_boot(
     system: &InstalledSystem,
     work: &RepairWork,
     passphrase: Option<&Password>,
@@ -113,7 +113,7 @@ pub fn boot_loader_steps(
     }
 }
 
-pub fn grub_steps(system: &InstalledSystem, work: &RepairWork) -> Vec<Invocation> {
+fn grub_steps(system: &InstalledSystem, work: &RepairWork) -> Vec<Invocation> {
     let mut steps = Vec::new();
 
     match work {
@@ -143,7 +143,7 @@ pub fn grub_steps(system: &InstalledSystem, work: &RepairWork) -> Vec<Invocation
 }
 
 /// The images live on the ESP, so even a rebuild alone mounts it.
-pub fn sdboot_steps(
+fn sdboot_steps(
     system: &InstalledSystem,
     work: &RepairWork,
     place: EspPlace,

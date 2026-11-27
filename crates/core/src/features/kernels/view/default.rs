@@ -10,11 +10,13 @@ use crate::features::kernels::{Kernel, KernelReleases};
 /// page resolves it. `saved` keeps its entry in grubenv, which is not
 /// read, so it names none.
 pub fn grub(state: &GrubState, menu: &GrubMenu, kernels: &[Kernel]) -> Option<PackageName> {
-    if state.default == DefaultEntry::Saved.as_str() {
+    if state.default == Ok(DefaultEntry::Saved) {
         return None;
     }
 
-    let entry = menu.find(&state.default).filter(|entry| !entry.submenu)?;
+    let entry = menu
+        .find(toolbox_text::checked_text(&state.default))
+        .filter(|entry| !entry.submenu)?;
 
     // The advanced id names the kernel of its entry. Other entries, such as
     // the top-level one, name the kernel their `linux` line boots.

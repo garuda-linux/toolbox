@@ -20,6 +20,11 @@ pub enum PackagesCommand {
     },
     Show(PackageName),
     OpenAur,
+    /// Reads the build orders of every queued AUR build again, as the hold
+    /// of Apply offers.
+    ReadOrders,
+    /// Drops an Apply that waits for the build orders of the queue.
+    CancelApply,
 }
 
 impl From<PackagesCommand> for Command {

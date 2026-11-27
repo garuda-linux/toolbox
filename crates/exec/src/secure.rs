@@ -185,7 +185,7 @@ fn plain_name(name: &str) -> io::Result<()> {
 /// # Errors
 ///
 /// When `name` is a symlink or cannot be read.
-pub fn read_file(dir: &OwnedFd, name: &str) -> io::Result<Option<Vec<u8>>> {
+fn read_file(dir: &OwnedFd, name: &str) -> io::Result<Option<Vec<u8>>> {
     plain_name(name)?;
 
     let fd = match rustix::fs::openat(dir, name, READ_FLAGS, Mode::empty()) {

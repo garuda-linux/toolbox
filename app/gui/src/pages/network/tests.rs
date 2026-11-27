@@ -216,7 +216,7 @@ fn a_driver_the_app_blacklists_can_be_taken_off() {
         sent(&harness),
         [Command::from(NetworkCommand::Blacklist {
             module: module("iwlwifi"),
-            on: false,
+            on: toolbox_core::Toggle::Off,
         })]
     );
 }

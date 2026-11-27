@@ -4,11 +4,11 @@
 //! `http` or `https` one.
 
 use egui::{Context, Ui};
-use toolbox_cli::output::size;
 use toolbox_core::features::packages::detail::web_address;
 use toolbox_core::features::packages::{InstallReason, PackageDetails};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::{PropertyTexts, property_list, text_link};
+use toolbox_text::size;
 
 use crate::i18n::Arg;
 use crate::packages::Details;
@@ -34,7 +34,7 @@ pub enum Value {
     Web(String, String),
 }
 
-pub fn grid(ui: &mut Ui, facts: &[Fact]) {
+pub(super) fn grid(ui: &mut Ui, facts: &[Fact]) {
     let ctx = ui.ctx().clone();
     let copy = |label: &str| {
         i18n::text_with(&ctx, "packages-copy", &[("label", Arg::from(label))]).into_owned()

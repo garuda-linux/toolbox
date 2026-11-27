@@ -9,6 +9,7 @@ use clap::Parser as _;
 use toolbox_cli::args::Cli;
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_services::catalogs::Catalogs;
+use toolbox_state::aur::{AurRoute, RouteKind};
 
 use super::Copy;
 use crate::parity::COMMANDS;
@@ -24,6 +25,14 @@ fn system_for(domain: &str) -> Snapshot {
     match domain {
         "loader-settings" | "sdboot-kernel" => system::sdboot_install(),
         "system-locale" => system::german_enabled(),
+        "aur-packages" => {
+            let mut snapshot = system::grub_install();
+            snapshot.insert(AurRoute::Refused {
+                kind: RouteKind::Linked,
+                detail: "a folder on the way is missing".to_owned(),
+            });
+            snapshot
+        }
         _ => system::grub_install(),
     }
 }

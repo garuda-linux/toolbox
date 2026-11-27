@@ -7,7 +7,7 @@ use super::{TargetList, UnitOperation, UnitScope, network, on_units, run};
 use crate::procedure::{Builtin, Command, Invocation, Program};
 use crate::{
     BuildRun, ConfigReload, EditCopy, Editor, HomeWrite, HopLimit, HostName, PackageName,
-    PingCount, PingTimeout, UnitName, UserConfigEdit,
+    PingCount, PingTimeout, Toggle, UnitName, UserConfigEdit,
 };
 
 /// Enough history to see why a unit failed without flooding the Console.
@@ -30,6 +30,11 @@ pub enum UserAction {
     BuildAur {
         base: PackageName,
         run: BuildRun,
+    },
+    /// Fetches the build files of every base, shows what changed since the
+    /// last review and asks once. Nothing is built or installed by it.
+    ReviewAur {
+        bases: TargetList<PackageName>,
     },
     EnableUserUnits {
         units: TargetList<UnitName>,
@@ -60,7 +65,8 @@ pub enum UserAction {
     /// The app writes it itself, no program runs.
     EditUserConfig {
         edit: UserConfigEdit,
-        on: bool,
+        #[serde(with = "crate::toggle::as_bool")]
+        on: Toggle,
     },
     ReloadConfig {
         target: ConfigReload,
@@ -101,6 +107,9 @@ impl UserAction {
             Self::BuildAur { base, run } => vec![Invocation::Builtin(Builtin::BuildAur {
                 base: base.clone(),
                 run: run.clone(),
+            })],
+            Self::ReviewAur { bases } => vec![Invocation::Builtin(Builtin::ReviewAur {
+                bases: bases.clone(),
             })],
             Self::EnableUserUnits { units } => on_units(["--user", "enable", "--now"], units),
             Self::DisableUserUnits { units } => on_units(["--user", "disable", "--now"], units),

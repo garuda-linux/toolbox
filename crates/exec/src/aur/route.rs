@@ -79,7 +79,7 @@ pub fn route(root: &Path, uid: u32) -> Result<Route, RouteProblem> {
 /// # Errors
 ///
 /// As [`route`].
-pub fn route_from_home(home: &Path, uid: u32) -> Result<Route, RouteProblem> {
+pub(super) fn route_from_home(home: &Path, uid: u32) -> Result<Route, RouteProblem> {
     walk(home, Path::new(""), home, uid)
 }
 
@@ -89,7 +89,7 @@ pub fn route_from_home(home: &Path, uid: u32) -> Result<Route, RouteProblem> {
 ///
 /// [`RouteProblem::NoAccount`] when no entry has `uid`, or
 /// [`RouteProblem::Passwd`] when the file cannot be read.
-pub fn home_entry(root: &Path, uid: u32) -> Result<PathBuf, RouteProblem> {
+pub(super) fn home_entry(root: &Path, uid: u32) -> Result<PathBuf, RouteProblem> {
     let passwd = lossy(fs::read(root.join(PASSWD)).map_err(RouteProblem::Passwd)?);
 
     passwd_entries(&passwd)

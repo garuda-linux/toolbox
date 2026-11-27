@@ -36,7 +36,7 @@ impl Said {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Sink {
+pub(super) enum Sink {
     /// A change's JSON Lines on standard output.
     Line,
     /// `error:` and `hint:` lines on standard error.
@@ -65,7 +65,7 @@ pub const fn sink(json: Json) -> Sink {
     }
 }
 
-pub const fn lost_sink(json: Json) -> Sink {
+pub(super) const fn lost_sink(json: Json) -> Sink {
     match json {
         Json::Lines | Json::Read => Sink::Kept,
         Json::Off => Sink::Text,
@@ -115,7 +115,13 @@ pub fn warning_object(message: &str) -> String {
     })
 }
 
-pub fn failed_text(paint: Paint, what: &str, raw: &str, verbose: bool, json: bool) -> String {
+pub(super) fn failed_text(
+    paint: Paint,
+    what: &str,
+    raw: &str,
+    verbose: bool,
+    json: bool,
+) -> String {
     if json {
         return crate::apply::error_line(what, Some(raw));
     }

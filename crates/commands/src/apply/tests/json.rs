@@ -147,3 +147,28 @@ fn the_sudo_note_is_a_warning_line_of_the_stream() {
         "{lines:?}"
     );
 }
+
+fn review_plan() -> Plan {
+    let bases =
+        toolbox_plan::TargetList::new([toolbox_plan::PackageName::new("octopi-git").unwrap()])
+            .unwrap();
+
+    Plan::new([toolbox_plan::PlannedAction::User(UserAction::ReviewAur {
+        bases,
+    })])
+}
+
+#[test]
+fn a_review_is_refused_under_json_before_any_step_runs() {
+    let (exit, lines) = carried(review_plan(), json(true, false), helper(Outcome::Succeeded));
+
+    assert_eq!(exit, Exit::NeedsYes, "{lines:?}");
+    assert!(
+        lines.iter().any(|line| line.contains("asks questions")),
+        "{lines:?}"
+    );
+    assert!(
+        !lines.iter().any(|line| line.contains("\"started\"")),
+        "{lines:?}"
+    );
+}

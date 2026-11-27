@@ -188,10 +188,30 @@ fn without_the_databases_the_change_is_unavailable() {
     ));
 }
 
+/// The package name is a plain string in JSON, as before.
+#[test]
+fn a_package_row_as_json_keeps_its_name_as_a_string() {
+    use super::PackageRow;
+
+    let row = PackageRow {
+        name: name("gimp"),
+        description: toolbox_text::plain("Image editor"),
+        version: "2.10-1".to_owned(),
+        repository: Some("extra".to_owned()),
+        size: 2048,
+        installed: None,
+    };
+
+    assert_eq!(
+        serde_json::to_string(&row).unwrap(),
+        r#"{"id":"gimp","description":"Image editor","version":"2.10-1","repository":"extra","size":2048,"installed":null}"#
+    );
+}
+
 #[test]
 fn the_facts_name_every_field() {
     let info = PackageInfo {
-        name: "gimp".to_owned(),
+        name: PackageName::new("gimp").unwrap(),
         description: toolbox_text::plain("About gimp"),
         version: "1.0-1".to_owned(),
         repository: Some("extra".to_owned()),

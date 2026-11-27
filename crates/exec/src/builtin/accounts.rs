@@ -24,7 +24,7 @@ const GROUP_WRITABLE: u32 = 0o020;
 const ROOT_UID: u32 = 0;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Listed {
+enum Listed {
     Id(u32),
     /// No entry, or one whose ids are no numbers.
     Missing,
@@ -33,7 +33,7 @@ pub enum Listed {
 /// # Errors
 ///
 /// When the file cannot be read.
-pub fn user_id(root: &Path, user: &UserName) -> io::Result<Listed> {
+fn user_id(root: &Path, user: &UserName) -> io::Result<Listed> {
     let passwd = lossy(fs::read(root.join(PASSWD))?);
 
     Ok(passwd_entries(&passwd)
@@ -44,11 +44,11 @@ pub fn user_id(root: &Path, user: &UserName) -> io::Result<Listed> {
 /// # Errors
 ///
 /// When the file cannot be read.
-pub fn group_id(root: &Path, group: &GroupName) -> io::Result<Listed> {
+fn group_id(root: &Path, group: &GroupName) -> io::Result<Listed> {
     Ok(gid_of(&lossy(fs::read(root.join(GROUP))?), group.as_str()))
 }
 
-pub fn require_ordinary_user(
+pub(super) fn require_ordinary_user(
     root: &Path,
     step: StepId,
     user: &UserName,
@@ -76,7 +76,7 @@ pub fn require_ordinary_user(
 /// Fails when `home` exists, also as a dangling link: `usermod -d <home>
 /// -m` would write it into `/etc/passwd` and then refuse to move. Fails
 /// too below a folder everyone may write.
-pub fn require_free_home(
+pub(super) fn require_free_home(
     root: &Path,
     step: StepId,
     user: &UserName,
@@ -111,7 +111,7 @@ pub fn require_free_home(
 
 /// Fails below a folder everyone may write, where `useradd -m` would make
 /// the home. A home that exists already is fine: useradd only takes it.
-pub fn require_safe_home(
+pub(super) fn require_safe_home(
     root: &Path,
     step: StepId,
     home: &HomeDirectory,
@@ -179,7 +179,7 @@ fn shared_ancestor(
     None
 }
 
-pub fn require_user_group(
+pub(super) fn require_user_group(
     root: &Path,
     step: StepId,
     group: &GroupName,

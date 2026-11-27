@@ -20,7 +20,7 @@ fn kwin() -> UserConfigEdit {
 fn audio() -> UserConfigEdit {
     UserConfigEdit::File {
         path: HomePath::new(".config/wireplumber/wireplumber.conf.d/x.conf").unwrap(),
-        content: "x\n".to_owned(),
+        content: "x\n".parse().unwrap(),
     }
 }
 

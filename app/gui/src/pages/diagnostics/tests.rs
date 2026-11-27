@@ -60,7 +60,7 @@ fn report() -> Page {
 
     Page {
         state: State::Report,
-        selection: "dmesg".to_owned(),
+        selection: Some(Selection::One(Collector::Dmesg)),
         report: plain.to_owned(),
         shareable: Some(redact(plain, &Known::default())),
         raw: "kernel: hello\n\u{1b}[31mkernel: oops\u{1b}[0m\n".to_owned(),
@@ -71,7 +71,7 @@ fn report() -> Page {
 fn plain_report(text: String) -> Page {
     Page {
         state: State::Report,
-        selection: "dmesg".to_owned(),
+        selection: Some(Selection::One(Collector::Dmesg)),
         report: text.clone(),
         raw: text,
         ..Page::default()
@@ -111,8 +111,8 @@ fn every_report_has_its_row_and_collects_from_it() {
 fn a_running_full_report_names_its_part_and_its_row_cancels_it() {
     let mut harness = page(Page {
         state: State::Running,
-        selection: "all".to_owned(),
-        part: "journalctl".to_owned(),
+        selection: Some(Selection::All),
+        part: Some(Collector::Journal),
         step: 3,
         ..Page::default()
     });
@@ -174,7 +174,7 @@ fn copying_the_report_says_so() {
 fn a_refused_collection_says_why() {
     let harness = page(Page {
         state: State::Refused(Refusal::Dismissed),
-        selection: "dmesg".to_owned(),
+        selection: Some(Selection::One(Collector::Dmesg)),
         ..Page::default()
     });
 

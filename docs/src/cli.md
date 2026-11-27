@@ -246,8 +246,11 @@ Under `--json` the note is a `warning` line.
 queued lock, account removal or group change it reads the lock state of
 the accounts through the helper, for a queued AUR build the package list
 of the AUR. When one of them cannot be read, nothing runs and the exit
-code is 5. A queued AUR build whose build order is not read yet stops it
-the same way, and the message names the packages.
+code is 5. Before the plan, each queued AUR build gets a fresh build order
+from paru, as the window does before every Apply. A build without one stops
+the command the same way, and the message names the package and the reason.
+Under `sudo` a queued AUR build stops it too, with exit code 5: such a build
+needs the window or a polkit agent, so apply it there.
 
 `SIGTERM` (as `kill` sends it) and `SIGHUP` (a closed terminal) count as
 `Ctrl+c` does: the first lets the running step end, a second stops it.
@@ -326,6 +329,16 @@ install date in seconds since 1970. `install` runs `pacman -S --needed`
 for a package a repository offers, `remove` runs `pacman -Rns`, which
 takes the dependencies nothing else needs along. A package that is
 already installed, or not installed for `remove`, says `Nothing to do.`
+
+`install --aur` builds AUR packages. Its plan starts with the build files of
+each package, which the command shows and asks about: type `y` and press
+Enter to build. `--yes` does not skip that question, and `--json` refuses
+such a plan, as it cannot ask. The command exits with 5 when paru gives no
+build order for a package, and names the package and the reason. A package
+that conflicts with an installed one exits with 8 and names the installed
+package. When the helper cannot use the build folder, the command says so
+with a warning, and paru builds the package the old way. See
+[Install from the AUR on the command line](packages.md#install-from-the-aur-on-the-command-line).
 
 ### Kernels
 

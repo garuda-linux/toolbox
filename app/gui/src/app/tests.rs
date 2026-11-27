@@ -1,4 +1,7 @@
+mod dismiss;
 mod looked_at;
+mod orders;
+mod review;
 mod runs;
 
 use egui_kittest::Harness;

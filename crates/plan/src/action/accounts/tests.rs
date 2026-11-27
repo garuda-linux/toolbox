@@ -226,7 +226,7 @@ fn locking_is_guarded_and_unlocking_is_not() {
     assert_eq!(
         shown(&RootAction::SetUserLocked {
             user: user("ada"),
-            locked: true
+            locked: crate::Toggle::On
         }),
         [
             "check that ada is an ordinary account (id 1000 to 60000)",
@@ -236,7 +236,7 @@ fn locking_is_guarded_and_unlocking_is_not() {
     assert_eq!(
         shown(&RootAction::SetUserLocked {
             user: user("ada"),
-            locked: false
+            locked: crate::Toggle::Off
         }),
         ["usermod -U -- ada"]
     );

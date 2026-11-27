@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use toolbox_plan::lines::entries;
-use toolbox_plan::{GroupName, PasswdEntry, ShellPath, UserName, passwd_entries};
+use toolbox_plan::{GroupName, HomeDirectory, PasswdEntry, ShellPath, UserName, passwd_entries};
 use toolbox_state::accounts::{Accounts, Group, User};
 use toolbox_state::parts::{AvailableShells, CurrentShells};
 
@@ -113,8 +113,8 @@ fn user(entry: PasswdEntry<'_>) -> Option<User> {
         gid: entry.gid,
         // Any user may set it with chfn, so it is outside text.
         gecos: toolbox_text::plain(entry.gecos),
-        home: entry.home.to_owned(),
-        shell: entry.shell.to_owned(),
+        home: HomeDirectory::new(entry.home).map_err(|_invalid| toolbox_text::plain(entry.home)),
+        shell: ShellPath::new(entry.shell).map_err(|_invalid| toolbox_text::plain(entry.shell)),
     })
 }
 

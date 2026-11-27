@@ -87,7 +87,7 @@ pub fn dialog(
     dialog_why(ctx, salt, question, (None, ready), body)
 }
 
-pub fn dialog_why(
+fn dialog_why(
     ctx: &Context,
     salt: &str,
     (title, confirm, kind): (&str, &str, ButtonKind),
@@ -145,7 +145,7 @@ pub fn field(
     })
 }
 
-pub fn password_field(
+fn password_field(
     ui: &mut Ui,
     label: &str,
     text: &mut SecretText,
@@ -188,7 +188,7 @@ fn field_with(
 
 /// A check box with its note shown under it, which a tooltip would only
 /// repeat. Screen readers hear the note as the box's description.
-pub fn check_with_note(ui: &mut Ui, on: bool, label: &str, detail: &str) -> bool {
+fn check_with_note(ui: &mut Ui, on: bool, label: &str, detail: &str) -> bool {
     let response = check_row(ui, on, label, "");
     let description = detail.to_owned();
     ui.ctx().accesskit_node_builder(response.id, |node| {
@@ -200,7 +200,7 @@ pub fn check_with_note(ui: &mut Ui, on: bool, label: &str, detail: &str) -> bool
 }
 
 /// The search over the groups of a dialog, named for screen readers.
-pub fn group_search(ui: &mut Ui, search: &mut String) {
+pub(super) fn group_search(ui: &mut Ui, search: &mut String) {
     let hint = i18n::text(ui.ctx(), "users-groups-search-hint").into_owned();
     let name = i18n::text(ui.ctx(), "users-groups-search").into_owned();
     text_field(
@@ -214,7 +214,7 @@ pub fn group_search(ui: &mut Ui, search: &mut String) {
 }
 
 /// Why a dialog's button waits while a plan runs, `None` while it may run.
-pub fn busy_why(ctx: &Context, context: &PageContext<'_>) -> Option<String> {
+fn busy_why(ctx: &Context, context: &PageContext<'_>) -> Option<String> {
     context
         .busy
         .then(|| i18n::text(ctx, "users-add-why-busy").into_owned())

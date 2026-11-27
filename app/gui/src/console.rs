@@ -3,6 +3,7 @@ mod mirror;
 mod tests;
 
 use mirror::MirrorWatch;
+use toolbox_core::features::console::asks_review;
 use toolbox_core::features::console::ending::Ending;
 use toolbox_core::features::diagnostics::{Known, Redacted, redact};
 use toolbox_plan::protocol::{self, Failure, Mode};
@@ -269,6 +270,15 @@ impl Console {
 
     pub const fn share_mut(&mut self) -> &mut Upload {
         &mut self.share
+    }
+
+    /// A running step is the review of a build, which waits for `y` and Enter.
+    pub fn review_waits(&self) -> bool {
+        self.running()
+            && self
+                .steps
+                .iter()
+                .any(|step| step.state == StepState::Running && asks_review(&step.command))
     }
 
     /// Buttons that would start a plan wait while this holds.

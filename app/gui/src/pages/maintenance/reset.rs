@@ -93,7 +93,7 @@ fn entry_row(ui: &mut Ui, context: &PageContext<'_>, entry: &SkelRow, resetting:
     if row.inner.clicked() {
         context.commands.send(MaintenanceCommand::Choose {
             entry: entry.entry.clone(),
-            on: !on,
+            on: toolbox_core::Toggle::from_on(!on),
         });
     }
 }

@@ -30,7 +30,7 @@ pub const MAX_ERROR_BYTES: usize = 64 << 10;
 /// `PIPE_BUF`, what every pipe holds even when the user's pipes were
 /// shrunk. Input is written before the wait, so it must never block,
 /// unless it is [`Policy::written_apart`].
-pub const MAX_STDIN_BYTES: usize = 4096;
+const MAX_STDIN_BYTES: usize = 4096;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Policy<'input> {

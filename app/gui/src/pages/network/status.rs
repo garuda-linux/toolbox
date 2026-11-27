@@ -2,7 +2,7 @@ mod interfaces;
 mod radios;
 
 use egui::{Label, Ui};
-use toolbox_core::features::network::{Connectivity, ServiceRow, service_rows};
+use toolbox_core::features::network::{Connectivity, NetworkUnit, ServiceRow, service_rows};
 use toolbox_core::features::services::{ActiveState, FileState};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::widgets::{
@@ -215,12 +215,19 @@ fn services(ui: &mut Ui, context: &PageContext<'_>) {
     });
 }
 
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn service_title_id(unit: NetworkUnit) -> &'static str {
+    match unit {
+        NetworkUnit::NetworkManager => "network-service-NetworkManager-service",
+        NetworkUnit::Connman => "network-service-connman-service",
+        NetworkUnit::Bluetooth => "network-service-bluetooth-service",
+        NetworkUnit::Geoclue => "network-service-geoclue-service",
+    }
+}
+
 fn service_row(ui: &mut Ui, context: &PageContext<'_>, first: bool, service: &ServiceRow) {
     let ctx = ui.ctx().clone();
-    let title = i18n::text(
-        &ctx,
-        &format!("network-service-{}", service.unit.replace('.', "-")),
-    );
+    let title = i18n::text(&ctx, service_title_id(service.unit));
 
     let (state_id, tone) = state(service);
     let state = i18n::text(&ctx, state_id);

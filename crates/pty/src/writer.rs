@@ -16,7 +16,7 @@ use crate::reader;
 /// Inputs that may wait for the program. The app sends a paste in parts
 /// of at most 64 KiB, so this holds a few MiB. More waiting input means
 /// the program does not read, and is refused instead of piling up.
-pub const INPUT_QUEUE: usize = 32;
+const INPUT_QUEUE: usize = 32;
 
 /// How long one wait for room in the terminal lasts before the thread
 /// looks at the abandon flag again.

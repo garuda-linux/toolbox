@@ -2,10 +2,10 @@ use super::root_actions::every_root_action;
 use crate::procedure::{Builtin, Command, Invocation, Program, initramfs_rebuilds, uki_rebuilds};
 use crate::{Editor, EspPlace, InstalledLoader, boot_loader_steps};
 
-/// The programs a root action must never run: the AUR helper and makepkg run as the
+/// The programs a root action must never run: the AUR helper, makepkg and git run as the
 /// user, and the editors belong to user steps only.
 fn never_as_root(program: Program) -> bool {
-    matches!(program, Program::Paru | Program::Makepkg)
+    matches!(program, Program::Paru | Program::Makepkg | Program::Git)
         || Editor::ALL.iter().any(|editor| editor.program() == program)
 }
 
@@ -25,6 +25,10 @@ fn programs(invocation: &Invocation) -> Vec<Program> {
             run: second,
         }
         | Invocation::RunWithTargetsFrom {
+            query: first,
+            run: second,
+        }
+        | Invocation::RunWithOrphansFrom {
             query: first,
             run: second,
         }
@@ -49,6 +53,7 @@ fn builtin_programs(builtin: &Builtin) -> Vec<Program> {
             reason: _,
         } => vec![Program::Pacman],
         Builtin::BuildAur { base: _, run: _ } => vec![Program::Makepkg],
+        Builtin::ReviewAur { bases: _ } => vec![Program::Paru, Program::Git],
         Builtin::ResolveMerge(merge) => merge.syntax_check().iter().map(Command::program).collect(),
         Builtin::RepairBootLoader { system, work } => loaders()
             .into_iter()

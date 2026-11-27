@@ -50,7 +50,7 @@ impl Pending {
             Self::Mask(scope, unit) => ServiceCommand::Mask {
                 scope,
                 unit,
-                on: true,
+                on: toolbox_core::Toggle::On,
             },
         }
     }

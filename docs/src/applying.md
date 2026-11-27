@@ -45,7 +45,27 @@ that part cannot be read, remove the change from the list.
 
 A queued AUR build whose build order is not read yet holds **Apply** as
 well, with the same tooltip. Take that build out of the list to apply the
-rest.
+rest. See [Apply waits for a build order](troubleshooting.md#apply-waits-for-a-build-order).
+
+Each AUR build in the list says where its build order stands:
+
+- **Reading the build order** while Garuda Toolbox reads it.
+- **Waits for its build order** while no read has answered yet.
+- The reason, such as **has no build order: the AUR does not have it**, when
+  the order could not be read. The banner under the list offers **Read Again**.
+- **Builds ... and installs N repository packages as dependencies** when the
+  order is read. Click **Packages** under it to list every package the build
+  builds and installs. Nothing is left out, scroll the list to see them all.
+- **This setup uses the old paru path** with the reason, when the setup takes
+  paru's own way. Then paru asks for your password for each step.
+
+While the orders are read, **Cancel** beside **Apply** drops the Apply. So
+does closing the list.
+
+When the queue holds AUR builds, Garuda Toolbox reads their build orders
+again before it starts the run. While it reads, **Apply** is greyed out
+and its tooltip says so. A build whose order cannot be read stops the run
+before anything is built.
 
 ## Apply
 

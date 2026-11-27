@@ -26,7 +26,7 @@ fn module_actions_are_accepted_in_a_dry_run() -> TestResult {
         },
         RootAction::SetModuleBlacklisted {
             module,
-            blacklisted: true,
+            blacklisted: toolbox_plan::Toggle::On,
         },
     ];
 

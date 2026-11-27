@@ -1,4 +1,6 @@
 mod aur;
+mod make_dependencies;
+mod switches;
 
 use super::testing::{shown, shown_user, units};
 use super::{RemoteAction, RootAction, TargetList, Upgrader, UserAction};
@@ -275,19 +277,19 @@ fn a_locale_switch_is_one_typed_edit_of_locale_gen() {
     let locale = crate::LocaleEntry::parse("de_DE.UTF-8 UTF-8").unwrap();
     let on = RootAction::SetLocaleEnabled {
         locale: locale.clone(),
-        enabled: true,
+        enabled: crate::Toggle::On,
     };
 
     let off = RootAction::SetLocaleEnabled {
         locale: locale.clone(),
-        enabled: false,
+        enabled: crate::Toggle::Off,
     };
 
     assert_eq!(
         on.procedure(),
         [Invocation::Builtin(Builtin::EditLocaleGen {
             entry: locale,
-            on: true
+            on: crate::Toggle::On
         })]
     );
     assert_eq!(

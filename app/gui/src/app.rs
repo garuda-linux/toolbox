@@ -307,11 +307,12 @@ impl eframe::App for App {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let _ui = tracing::trace_span!("app ui").entered();
         self.remember_page();
+        self.drop_dismissed_apply();
         let changes = self
             .views
             .get(&[], self.queue.revision(), || self.queue.views());
 
-        let held = self.apply_held();
+        let (hold, build_notes) = self.holds(ui.ctx());
         let snapshot = self.current_snapshot();
         let context = PageContext {
             snapshot: &snapshot,
@@ -348,7 +349,8 @@ impl eframe::App for App {
             changes_ui: &mut self.changes_ui,
             reading: &self.reading,
             stopping: self.closing.stopping(),
-            held,
+            held: hold.as_ref(),
+            build_notes: &build_notes,
             toasts: &mut self.toasts,
         };
 

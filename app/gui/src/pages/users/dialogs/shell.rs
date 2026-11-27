@@ -13,14 +13,14 @@ use crate::pages::PageContext;
 /// Whether the dropdown starts with the system's default shell, which a
 /// new account may take and an existing one already has a path for.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ShellDefault {
+pub(super) enum ShellDefault {
     Offered,
     Left,
 }
 
 /// The shells `/etc/shells` lists, after the default when it is offered.
 /// Empty `chosen` is the default.
-pub fn shell_choice(
+pub(super) fn shell_choice(
     ui: &mut Ui,
     context: &PageContext<'_>,
     chosen: &mut String,

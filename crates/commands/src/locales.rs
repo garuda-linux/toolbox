@@ -12,7 +12,7 @@ use toolbox_core::features::locales::{
     Refusal as LocaleRefusal, all_rows, choose_system, language_packs, toggle, wanted_enabled,
 };
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
-use toolbox_plan::Plan;
+use toolbox_plan::{LocaleName, PackageName, Plan};
 
 use super::act::run;
 use super::change::{DATABASES_UNREAD, Refused, fresh, page_edit, why};
@@ -23,9 +23,9 @@ use crate::out::Out;
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct PackRow {
     #[serde(rename = "id")]
-    pub package: String,
-    pub program: String,
-    pub locale: String,
+    pub package: PackageName,
+    pub program: PackageName,
+    pub locale: LocaleName,
     pub installed: bool,
 }
 
@@ -145,8 +145,10 @@ pub fn system_locale_onto(
 /// [`Refused::Unknown`] for a package that is no pack of an enabled
 /// locale.
 pub fn pack(args: &PackArgs, want: Toggle, snapshot: &Snapshot) -> Result<Plan, Refused> {
-    let known = pack_rows(snapshot)
-        .is_some_and(|rows| rows.iter().any(|row| row.package == args.package.as_str()));
+    let known = pack_rows(snapshot).is_some_and(|rows| {
+        rows.iter()
+            .any(|row| row.package.as_str() == args.package.as_str())
+    });
 
     let package = known.then(|| args.package.clone()).ok_or_else(|| {
         Refused::Unknown(format!(
@@ -187,9 +189,9 @@ pub fn pack_rows(snapshot: &Snapshot) -> Option<Vec<PackRow>> {
             .into_iter()
             .map(|pack| PackRow {
                 installed: installed.0.contains(&pack.package),
-                package: pack.package.as_str().to_owned(),
-                program: pack.base.as_str().to_owned(),
-                locale: pack.locale.as_str().to_owned(),
+                package: pack.package.clone(),
+                program: pack.base.clone(),
+                locale: pack.locale.clone(),
             })
             .collect(),
     )
@@ -227,7 +229,7 @@ pub fn pack_listing(rows: &[PackRow]) -> Listing<'_> {
                     (Mark::Off, "")
                 };
 
-                let cells = [row.package.as_str(), &row.locale, state];
+                let cells = [row.package.as_str(), row.locale.as_str(), state];
                 Row::new(mark, cells.map(str::to_owned).to_vec())
             })
             .collect(),

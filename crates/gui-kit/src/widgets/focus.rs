@@ -74,7 +74,7 @@ pub(super) fn field_halo(tokens: &Tokens, fill: Rect, radius: u8) -> [Shape; 2] 
 
 /// Darkly's focus line of an unselected list item (darklystyle.cpp:4183-4222),
 /// which Darkly skips under 10 px wide.
-pub fn item_focus_line(ui: &Ui, response: &Response, rect: Rect, selected: bool) {
+pub(super) fn item_focus_line(ui: &Ui, response: &Response, rect: Rect, selected: bool) {
     if selected || rect.width() < 10.0 || !focus_from_keyboard(ui, response) {
         return;
     }

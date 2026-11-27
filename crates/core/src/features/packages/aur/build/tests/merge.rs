@@ -12,6 +12,7 @@ fn a_queued_repository_name_is_installed_by_name_and_builds_nothing() {
             packages: targets(&["qt-sudo"]),
         }),
         install_dependencies(dependencies(&order)),
+        remove_make_dependencies(make_names(&order)),
     ];
 
     assert_eq!(planned.actions, wanted);
@@ -38,11 +39,13 @@ fn two_queued_packages_sharing_a_dependency_build_and_install_it_once() {
     assert_eq!(
         planned.actions,
         [
+            review(&["alpm_octopi_utils-git", "octopi-git"]),
             install_dependencies(dependencies(&octopi())),
             build_aur("alpm_octopi_utils-git"),
             install_built(&["alpm_octopi_utils-git"], InstallReason::Explicit),
             build_aur("octopi-git"),
             install_built(&["octopi-git"], InstallReason::Explicit),
+            remove_make_dependencies(make_names(&octopi())),
         ]
     );
     assert_eq!(
@@ -57,12 +60,17 @@ fn a_make_dependency_that_is_a_target_elsewhere_is_explicit_and_not_removed() {
     let planned = plan_of(&["octopi-git", "libxt"], &orders);
 
     assert_eq!(
-        planned.actions.first(),
+        planned.actions.get(1),
         Some(&root(RootAction::InstallPackages {
             packages: targets(&["libxt"]),
         }))
     );
-    assert!(!planned.make_only.contains(&package("libxt")));
+    let mut make = make_names(&octopi());
+    make.retain(|name| name.as_str() != "libxt");
+    assert_eq!(
+        planned.actions.last(),
+        Some(&remove_make_dependencies(make))
+    );
 }
 
 #[test]

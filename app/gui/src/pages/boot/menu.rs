@@ -58,13 +58,25 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut E
         let changes = context.changes;
         let submenus = page.submenus();
         let queued_submenus = queued(&ctx, view::is_queued(changes, GrubKey::Submenus));
-        if flipped(ui, "boot-submenus", queued_submenus.as_deref(), submenus) {
+        if flipped(
+            ui,
+            "boot-submenus",
+            "boot-submenus-detail",
+            queued_submenus.as_deref(),
+            submenus,
+        ) {
             send(context, Edit::Submenus(!submenus));
         }
 
         let prober = page.os_prober();
         let queued_prober = queued(&ctx, view::is_queued(changes, GrubKey::OsProber));
-        if flipped(ui, "boot-os-prober", queued_prober.as_deref(), prober) {
+        if flipped(
+            ui,
+            "boot-os-prober",
+            "boot-os-prober-detail",
+            queued_prober.as_deref(),
+            prober,
+        ) {
             send(context, Edit::OsProber(!prober));
         }
     });
@@ -84,17 +96,17 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
         Look::of(ui),
     );
 
-    let rows: Arc<Vec<(String, String)>> = entries.get(&[&value], rest, || {
+    let rows: Arc<Vec<(String, String)>> = entries.get(&[value.unwrap_or_default()], rest, || {
         let mut rows: Vec<(String, String)> = view::entries(menu.known())
             .into_iter()
             .map(|row| (row.entry.clone(), label(&ctx, &row)))
             .collect();
 
-        if !value.is_empty() && !listed {
+        if let Some(value) = value.filter(|_| !listed) {
             let unlisted =
-                i18n::text_with(&ctx, "boot-entry-unlisted", &[("entry", Arg::from(&value))]);
+                i18n::text_with(&ctx, "boot-entry-unlisted", &[("entry", Arg::from(value))]);
 
-            rows.insert(0, (value.clone(), unlisted.into_owned()));
+            rows.insert(0, (value.to_owned(), unlisted.into_owned()));
         }
 
         rows
@@ -105,7 +117,7 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
     } else if unread(menu) {
         i18n::text(&ctx, "boot-default-known")
     } else {
-        i18n::text(&ctx, &format!("boot-default-{}", menu.as_str()))
+        i18n::text(&ctx, state_id(menu))
     };
 
     let title = i18n::text(&ctx, "boot-default");
@@ -121,7 +133,10 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
     let width = wide_control(ui);
     row(ui, true, &words, width, |ui| {
         let names: Vec<&str> = rows.iter().map(|(_, name)| name.as_str()).collect();
-        let current = rows.iter().position(|(entry, _)| *entry == value);
+        let current = rows
+            .iter()
+            .position(|(entry, _)| Some(entry.as_str()) == value);
+
         let last = i18n::text(&ctx, "boot-default-last");
         let enabled = !remembered && !rows.is_empty();
         let picked = ui
@@ -147,18 +162,24 @@ fn remember(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let menu = context.service::<Boot>().menu().known();
     let on = page.remember();
     let tag = queued(&ctx, view::is_queued(changes, GrubKey::SaveDefault));
-    if !flipped(ui, "boot-remember", tag.as_deref(), on) {
+    if !flipped(
+        ui,
+        "boot-remember",
+        "boot-remember-detail",
+        tag.as_deref(),
+        on,
+    ) {
         return;
     }
 
-    let value = page.entry_value(menu);
-    let fallback = if value.is_empty() {
-        view::entries(menu)
-            .first()
-            .map_or_else(|| FIRST_ENTRY.to_owned(), |row| row.entry.clone())
-    } else {
-        value
-    };
+    let fallback = page.entry_value(menu).map_or_else(
+        || {
+            view::entries(menu)
+                .first()
+                .map_or_else(|| FIRST_ENTRY.to_owned(), |row| row.entry.clone())
+        },
+        str::to_owned,
+    );
 
     send(context, Edit::Remember { on: !on, fallback });
 }
@@ -236,9 +257,34 @@ pub(super) fn unread_banner(ui: &mut Ui, context: &PageContext<'_>, menu: &Menu)
         Menu::Read(MenuRead::Refused(Refusal::NoAgent | Refusal::HelperMissing))
     );
 
-    let said = i18n::text(ui.ctx(), &format!("boot-default-{}", menu.as_str()));
+    let said = i18n::text(ui.ctx(), state_id(menu));
     if read_again_banner(ui, Tone::Warning, &said, !futile) {
         context.commands.send(BootCommand::Refresh);
+    }
+}
+
+/// The text of a menu's state. The ids are literals, so grep and the
+/// catalog checks see each one.
+pub(super) const fn state_id(menu: &Menu) -> &'static str {
+    match menu {
+        Menu::NotAsked => "boot-default-not-asked",
+        Menu::Loading => "boot-default-loading",
+        Menu::Read(MenuRead::Known(_) | MenuRead::SdBoot(_)) => "boot-default-known",
+        Menu::Read(MenuRead::Missing) => "boot-default-missing",
+        Menu::Read(MenuRead::Refused(refusal)) => refusal_state_id(*refusal),
+        Menu::Read(MenuRead::Unknown(_) | MenuRead::Unreadable(_) | MenuRead::Cancelled) => {
+            "boot-default-unknown"
+        }
+    }
+}
+
+const fn refusal_state_id(refusal: Refusal) -> &'static str {
+    match refusal {
+        Refusal::Dismissed => "boot-default-dismissed",
+        Refusal::Denied => "boot-default-denied",
+        Refusal::NoAgent => "boot-default-no-agent",
+        Refusal::HelperMissing => "boot-default-helper-missing",
+        Refusal::Broken => "boot-default-broken",
     }
 }
 
@@ -278,12 +324,12 @@ pub(super) fn seconds_field(ui: &mut Ui, ctx: &egui::Context, value: &mut u32) -
     spin_field(ui, value, 0..=TIMEOUT_MAX, TIMEOUT_WIDTH, spin)
 }
 
-/// A row with a switch, titled `id` and described by `<id>-detail`.
+/// A row with a switch, titled `id` and described by `detail`.
 /// Returns whether it was flipped.
-pub(super) fn flipped(ui: &mut Ui, id: &str, queued: Option<&str>, on: bool) -> bool {
+pub(super) fn flipped(ui: &mut Ui, id: &str, detail: &str, queued: Option<&str>, on: bool) -> bool {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, id);
-    let description = i18n::text(&ctx, &format!("{id}-detail"));
+    let description = i18n::text(&ctx, detail);
     let words = Words {
         current: None,
         title: &title,

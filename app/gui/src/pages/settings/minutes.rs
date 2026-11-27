@@ -6,7 +6,7 @@ use toolbox_gui_kit::widgets::{Digits, text_field_with_unit};
 
 /// The minutes being typed and what the last commit was held to.
 #[derive(Debug, Default)]
-pub struct MinutesField {
+pub(super) struct MinutesField {
     /// The text while it is typed, `None` shows the setting.
     typed: Option<String>,
     /// A typed value was refused and became this: a number outside the

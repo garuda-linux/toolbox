@@ -16,7 +16,7 @@ use crate::Source;
 
 /// The feed lists the newest first, Home shows a few of them.
 pub const MAX_POSTS: usize = 10;
-pub const TITLE_CHARS: usize = 200;
+const TITLE_CHARS: usize = 200;
 const LINK_CHARS: usize = 2048;
 /// An item names one or two categories, more are not read.
 const MAX_CATEGORIES: usize = 8;

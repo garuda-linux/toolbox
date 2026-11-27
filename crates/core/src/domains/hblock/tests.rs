@@ -30,7 +30,7 @@ fn switching_on_installs_hblock_first() {
         actions.as_slice(),
         [
             PlannedAction::Root(RootAction::InstallPackages { packages }),
-            PlannedAction::Root(RootAction::SetHblock { enabled: true }),
+            PlannedAction::Root(RootAction::SetHblock { enabled: Toggle::On }),
         ] if packages.iter().map(AsRef::as_ref).eq(["hblock"])
     ));
 }
@@ -43,7 +43,7 @@ fn switching_off_installs_nothing() {
     assert_eq!(
         actions(&changes),
         [PlannedAction::Root(RootAction::SetHblock {
-            enabled: false
+            enabled: Toggle::Off
         })]
     );
     assert_eq!(

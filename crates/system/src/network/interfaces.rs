@@ -15,6 +15,7 @@ use serde::Deserialize;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 pub use system::{property_changes, system_cards};
+use toolbox_plan::MacAddress;
 use toolbox_state::network::{InterfaceCard, Link, Signal, Subnet};
 use toolbox_text::plain;
 
@@ -22,8 +23,8 @@ use crate::bus::CallError;
 
 /// The service and the manager's root object, which the signals of every
 /// object below it match.
-pub const DESTINATION: &str = "org.freedesktop.NetworkManager";
-pub const ROOT_PATH: &str = "/org/freedesktop/NetworkManager";
+const DESTINATION: &str = "org.freedesktop.NetworkManager";
+const ROOT_PATH: &str = "/org/freedesktop/NetworkManager";
 
 const DNS_PATH: &str = "/org/freedesktop/NetworkManager/DnsManager";
 
@@ -48,7 +49,7 @@ const NO_OBJECT: &str = "/";
 
 /// Reads the `GetAll` of one NetworkManager object as a plain JSON map of
 /// its properties, the busctl reply without its type tags.
-pub trait PropertyReads: Sync {
+trait PropertyReads: Sync {
     /// # Errors
     ///
     /// [`CallError::Unavailable`] while NetworkManager does not run or the
@@ -143,7 +144,7 @@ struct AccessPoint {
 ///
 /// What the manager's read failed with: [`CallError::Unavailable`] when
 /// NetworkManager does not run.
-pub async fn cards<R>(reads: &R) -> Result<Vec<InterfaceCard>, CallError>
+async fn cards<R>(reads: &R) -> Result<Vec<InterfaceCard>, CallError>
 where
     R: PropertyReads,
 {
@@ -204,7 +205,7 @@ where
     Ok(Some((active.default || active.default6, card)))
 }
 
-async fn wired<R>(reads: &R, path: &str) -> (Option<String>, Link)
+async fn wired<R>(reads: &R, path: &str) -> (Option<MacAddress>, Link)
 where
     R: PropertyReads,
 {
@@ -215,7 +216,7 @@ where
     (mac, Link::Wired { speed })
 }
 
-async fn wireless<R>(reads: &R, path: &str) -> (Option<String>, Link)
+async fn wireless<R>(reads: &R, path: &str) -> (Option<MacAddress>, Link)
 where
     R: PropertyReads,
 {
@@ -295,8 +296,8 @@ const fn is_link_local(address: IpAddr) -> bool {
 }
 
 /// NetworkManager prints an empty hardware address for a device without one.
-fn hardware(address: &str) -> Option<String> {
-    (!address.is_empty()).then(|| address.to_owned())
+fn hardware(address: &str) -> Option<MacAddress> {
+    MacAddress::new(address).ok()
 }
 
 /// A property read that fails is logged and leaves its part out, so the

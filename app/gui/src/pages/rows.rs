@@ -12,7 +12,10 @@ use toolbox_gui_kit::fonts::{self, BODY, Weight};
 use toolbox_gui_kit::tokens::{self, Tokens};
 use toolbox_gui_kit::widgets::{RowState, Select, Tone, banner, switch};
 
+use super::PageContext;
+use crate::command::AppCommand;
 use crate::i18n;
+use crate::page::PageId;
 use crate::refused::Shown;
 
 pub const MENU_AND_SWITCH: f32 = 90.0;
@@ -93,14 +96,23 @@ pub fn read_again_banner(ui: &mut Ui, tone: Tone, text: &str, again: bool) -> bo
     banner(ui, tone, text, action.as_slice()).value == Some(0)
 }
 
-pub fn refused_banner(
-    ui: &mut Ui,
-    refused: Option<&impl Shown>,
-    tone: Tone,
-    dismiss_id: &str,
-) -> bool {
+fn refused_banner(ui: &mut Ui, refused: Option<&impl Shown>, tone: Tone, dismiss_id: &str) -> bool {
     refused.is_some_and(|refused| {
         let text = refused.text(ui.ctx());
         refusal_banner(ui, tone, &text, dismiss_id)
     })
+}
+
+/// The error banner of a page's refused click. Its dismiss sends
+/// `DismissRefusal` for `page`, which clears the refusal.
+pub fn refused_page_banner(
+    ui: &mut Ui,
+    context: &PageContext<'_>,
+    refused: Option<&impl Shown>,
+    page: PageId,
+    dismiss_id: &str,
+) {
+    if refused_banner(ui, refused, Tone::Error, dismiss_id) {
+        context.commands.send(AppCommand::DismissRefusal(page));
+    }
 }

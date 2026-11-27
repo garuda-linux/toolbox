@@ -38,20 +38,12 @@ pub trait KernelSource: Send + Sync {
     fn releases(&self) -> Result<KernelReleases, ProbeError>;
 }
 
-pub trait DkmsSource: Send + Sync {
-    /// # Errors
-    ///
-    /// [`ProbeError::Unavailable`] without dkms, a failed [`ProbeError`]
-    /// when it prints nothing usable.
-    fn status(&self) -> Result<Vec<DkmsEntry>, ProbeError>;
-}
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SystemKernels {
     root: PathBuf,
 }
 
-/// [`DkmsSource`] by running `dkms status` as the user: `/var/lib/dkms` is
+/// The modules of `dkms status`, run as the user: `/var/lib/dkms` is
 /// world readable.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Dkms {
@@ -131,11 +123,16 @@ impl KernelSource for SystemKernels {
     }
 }
 
-impl DkmsSource for Dkms {
+impl Dkms {
     /// dkms exits with 0 for a broken module and reports it on stderr, so
     /// the exit code tells nothing about the modules. Its output counts
     /// whenever it holds a module.
-    fn status(&self) -> Result<Vec<DkmsEntry>, ProbeError> {
+    ///
+    /// # Errors
+    ///
+    /// [`ProbeError::Unavailable`] without dkms, a failed [`ProbeError`]
+    /// when it prints nothing usable.
+    pub fn status(&self) -> Result<Vec<DkmsEntry>, ProbeError> {
         let finished = command::run(&self.program, &["status"])?;
         let entries = parse_status(&finished.stdout);
 

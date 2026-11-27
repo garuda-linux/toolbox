@@ -28,7 +28,7 @@ const LIST_WIDTH: f32 = 240.0;
 const BODY_HEIGHT: f32 = 480.0;
 
 #[derive(Debug, Default)]
-pub struct MergeDialog {
+pub(super) struct MergeDialog {
     shown: usize,
     picks: BTreeMap<MergeCopy, Vec<Pick>>,
     editing: Option<(MergeCopy, String)>,

@@ -5,7 +5,7 @@
 //! so Home shows the last posts offline too.
 //!
 //! HTTP sits behind [`Transport`] and time behind [`Clock`], so the rules
-//! are tested without a network. [`Https`] is the real transport.
+//! are tested without a network. [`NewsTransport`] is the real transport.
 
 mod cache;
 mod feed;
@@ -18,7 +18,7 @@ use std::time::Duration;
 
 pub use cache::Cache;
 pub use feed::{FeedError, Post};
-pub use https::Https;
+pub use https::NewsTransport;
 pub use merged::Feeds;
 use serde::{Deserialize, Serialize};
 pub use source::Source;

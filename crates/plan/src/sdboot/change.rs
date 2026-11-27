@@ -11,8 +11,8 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use super::{LoaderSettings, LoaderTimeout};
-use crate::LoaderDefault;
 use crate::lines::push_line;
+use crate::{LoaderDefault, Toggle};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -35,9 +35,9 @@ pub enum LoaderKey {
 pub enum LoaderSetting {
     Timeout(Option<LoaderTimeout>),
     Default(Option<LoaderDefault>),
-    Editor(Option<bool>),
-    AutoEntries(Option<bool>),
-    AutoFirmware(Option<bool>),
+    Editor(#[serde(with = "crate::toggle::option_as_bool")] Option<Toggle>),
+    AutoEntries(#[serde(with = "crate::toggle::option_as_bool")] Option<Toggle>),
+    AutoFirmware(#[serde(with = "crate::toggle::option_as_bool")] Option<Toggle>),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, thiserror::Error)]
@@ -90,7 +90,7 @@ impl LoaderSetting {
     }
 
     fn value(&self) -> Option<String> {
-        let switch = |on: bool| if on { "yes" } else { "no" }.to_owned();
+        let switch = |on: Toggle| if on.is_on() { "yes" } else { "no" }.to_owned();
 
         match self {
             Self::Timeout(timeout) => timeout.map(|timeout| timeout.to_string()),

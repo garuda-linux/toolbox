@@ -48,7 +48,7 @@ fn parses_the_three_kinds_of_user_config() {
         file.check(),
         &Check::UserConfig(UserConfigEdit::File {
             path: HomePath::new(".config/a.conf").unwrap(),
-            content: "x = 1\n".to_owned(),
+            content: "x = 1\n".parse().unwrap(),
         })
     );
     assert_eq!(

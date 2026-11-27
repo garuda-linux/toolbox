@@ -10,7 +10,7 @@ use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderSetting, MAX_ENTRIES, SdBootMenu};
 use toolbox_services::boot_menu::Menu;
 
-use super::{heading, note};
+use super::{Proposal, heading, note};
 use crate::boot::Boot;
 use crate::command::BootCommand;
 use crate::i18n;
@@ -19,19 +19,19 @@ use crate::pages::PageContext;
 use crate::pages::rows::read_again_banner;
 use crate::pages::setting_row::{Words, row};
 
-pub fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
+pub(super) fn menu_card(ui: &mut Ui, context: &PageContext<'_>) {
     let menu = context.service::<Boot>().menu();
 
     heading(ui, "boot-menu");
 
-    let state = format!("boot-default-{}", menu.as_str());
+    let state = super::menu::state_id(menu);
     let Some(sdboot) = menu.sdboot() else {
         // The command line below is known without the menu, so the page
         // stays and only this part says why the menu is missing.
         if matches!(menu, Menu::Read(_)) {
             super::menu::unread_banner(ui, context, menu);
         } else {
-            card(ui, |ui| fact(ui, "boot-default", &state));
+            card(ui, |ui| fact(ui, "boot-default", state));
         }
 
         return;
@@ -84,9 +84,9 @@ pub fn proposal(ui: &mut Ui, context: &PageContext<'_>) {
     let menu = context.service::<Boot>().menu();
     let Some(sdboot) = menu.sdboot() else {
         let state = if matches!(menu, Menu::NotAsked | Menu::Loading) {
-            "loading"
+            Proposal::Loading
         } else {
-            "sdboot-none"
+            Proposal::SdBootEmpty
         };
 
         note(ui, context, kernel, state, || {});
@@ -96,10 +96,10 @@ pub fn proposal(ui: &mut Ui, context: &PageContext<'_>) {
     let wanted = menu::wanted(&sdboot.settings, context).default;
     let default = kernel_default(sdboot, kernel, context.snapshot);
     let state = match &default {
-        None => "sdboot-none",
-        Some(_) if wanted.as_ref() == Some(&LoaderDefault::saved()) => "remember",
-        Some(pattern) if wanted.as_ref() == Some(pattern) => "same",
-        Some(_) => "offer",
+        None => Proposal::SdBootEmpty,
+        Some(_) if wanted.as_ref() == Some(&LoaderDefault::saved()) => Proposal::Remember,
+        Some(pattern) if wanted.as_ref() == Some(pattern) => Proposal::Same,
+        Some(_) => Proposal::Offer,
     };
 
     note(ui, context, kernel, state, || {
@@ -109,7 +109,7 @@ pub fn proposal(ui: &mut Ui, context: &PageContext<'_>) {
     });
 }
 
-pub fn no_cmdline_card(ui: &mut Ui) {
+pub(super) fn no_cmdline_card(ui: &mut Ui) {
     heading(ui, "boot-kernel");
     card(ui, |ui| {
         fact(ui, "boot-parameters", "boot-sdboot-no-cmdline");

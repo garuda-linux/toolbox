@@ -11,6 +11,7 @@ use std::fmt;
 use std::time::Duration;
 
 use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
+use toolbox_plan::Toggle;
 
 /// The shortest period, so a check never runs back to back.
 pub const MIN_MINUTES: u16 = 5;
@@ -45,7 +46,8 @@ pub struct Status {
 #[serde(default)]
 struct StatusFile {
     /// `None` in a file of an older version, which had no flag.
-    automatic: Option<bool>,
+    #[serde(with = "toolbox_plan::option_as_bool")]
+    automatic: Option<Toggle>,
     refresh: RefreshInterval,
 }
 
@@ -104,7 +106,7 @@ impl From<StatusFile> for Status {
             RefreshInterval::Off => DEFAULT_MINUTES,
         };
 
-        let on = file.automatic.unwrap_or(true) && file.refresh != RefreshInterval::Off;
+        let on = file.automatic.is_none_or(Toggle::is_on) && file.refresh != RefreshInterval::Off;
         let refresh = if on {
             RefreshInterval::Minutes(kept)
         } else {
@@ -118,7 +120,7 @@ impl From<StatusFile> for Status {
 impl From<Status> for StatusFile {
     fn from(status: Status) -> Self {
         Self {
-            automatic: Some(status.refresh != RefreshInterval::Off),
+            automatic: Some(Toggle::from_on(status.refresh != RefreshInterval::Off)),
             refresh: RefreshInterval::Minutes(status.minutes()),
         }
     }

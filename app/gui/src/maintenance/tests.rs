@@ -297,7 +297,7 @@ fn a_dismissed_problem_and_a_chosen_entry_are_the_services() {
         MaintenanceCommand::DismissProblem,
         MaintenanceCommand::Choose {
             entry: "kitty".to_owned(),
-            on: true,
+            on: Toggle::On,
         },
     ] {
         let handled = maintenance.handle(&AppCommand::Maintenance(command));

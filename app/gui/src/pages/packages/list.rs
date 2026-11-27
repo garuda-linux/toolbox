@@ -236,7 +236,7 @@ fn rows(
 /// asked for its detail view, which the caller opens on its own side. The
 /// row of the open package is selected when `aur` is the side it opened on.
 #[must_use = "a dropped package loses the click that asked to open it"]
-pub fn shown_rows<'rows, S>(
+pub(super) fn shown_rows<'rows, S>(
     page: &mut PackagesPage,
     ui: &mut Ui,
     context: &PageContext<'_>,

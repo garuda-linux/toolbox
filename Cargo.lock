@@ -5730,6 +5730,7 @@ dependencies = [
  "toolbox-plan",
  "toolbox-pty",
  "toolbox-state",
+ "toolbox-text",
  "tracing",
 ]
 
@@ -6008,6 +6009,7 @@ dependencies = [
  "toolbox-calendar",
  "toolbox-catalog",
  "toolbox-exec",
+ "toolbox-fs",
  "toolbox-plan",
  "toolbox-pty",
  "toolbox-state",

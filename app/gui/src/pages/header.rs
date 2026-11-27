@@ -11,12 +11,12 @@ use toolbox_gui_kit::widgets::{
 use crate::i18n;
 
 /// A tab of a page, named by its text id.
-pub trait TabText: Copy + PartialEq {
+pub(super) trait TabText: Copy + PartialEq {
     fn text_id(self) -> &'static str;
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct TabbedIds<'a> {
+pub(super) struct TabbedIds<'a> {
     pub title: &'a str,
     pub subtitle: &'a str,
     /// What screen readers call the row of tabs.
@@ -30,7 +30,7 @@ pub struct Tabbed<T> {
     pub refresh: bool,
 }
 
-pub fn title_header(ui: &mut Ui, title: &str, subtitle: &str) {
+pub(super) fn title_header(ui: &mut Ui, title: &str, subtitle: &str) {
     let ctx = ui.ctx().clone();
     page_header(
         ui,
@@ -43,7 +43,7 @@ pub fn title_header(ui: &mut Ui, title: &str, subtitle: &str) {
 
 /// Returns whether Read again was clicked or F5 pressed. While `reading`,
 /// neither starts a second read.
-pub fn refresh_header_reading(
+pub(super) fn refresh_header_reading(
     ui: &mut Ui,
     (title, subtitle): (&str, &str),
     refresh: &str,
@@ -63,7 +63,7 @@ pub fn refresh_header_reading(
 }
 
 /// The tabs of a page and its Read again, which spins while `reading`.
-pub fn tabbed_header_reading<T>(
+pub(super) fn tabbed_header_reading<T>(
     ui: &mut Ui,
     ids: TabbedIds<'_>,
     tabs: &[T],

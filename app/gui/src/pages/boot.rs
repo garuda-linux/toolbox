@@ -23,7 +23,7 @@ use toolbox_services::boot_menu::Menu;
 use toolbox_system::{FailedProbes, Host, Probe};
 
 use super::header::refresh_header_reading;
-use super::rows::refused_banner;
+use super::rows::refused_page_banner;
 use super::{PageContext, PageView, plan_running};
 use crate::boot::Boot;
 use crate::command::{AppCommand, BootCommand};
@@ -35,6 +35,17 @@ use crate::pages::heading;
 /// Placeholder rows while the system is read, as many as the menu card has.
 const SKELETON_ROWS: usize = 3;
 
+/// What the proposal row says, one text per state.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum Proposal {
+    Loading,
+    Empty,
+    SdBootEmpty,
+    Remember,
+    Same,
+    Offer,
+}
+
 #[derive(Debug, Default)]
 pub struct BootPage {
     entries: menu::EntryRows,
@@ -42,6 +53,20 @@ pub struct BootPage {
     /// The typed parameter was sent last frame. It stays in the field when
     /// it was refused, so it can be corrected.
     sent: Option<String>,
+}
+
+impl Proposal {
+    /// The ids are literals, so grep and the catalog checks see each one.
+    const fn text_id(self) -> &'static str {
+        match self {
+            Self::Loading => "boot-proposal-loading",
+            Self::Empty => "boot-proposal-none",
+            Self::SdBootEmpty => "boot-proposal-sdboot-none",
+            Self::Remember => "boot-proposal-remember",
+            Self::Same => "boot-proposal-same",
+            Self::Offer => "boot-proposal-offer",
+        }
+    }
 }
 
 impl PageView for BootPage {
@@ -193,11 +218,7 @@ fn refusal(ui: &mut Ui, context: &PageContext<'_>) -> bool {
         return risky(ui.ctx(), context, &refusal.subject);
     }
 
-    if refused_banner(ui, Some(refusal), Tone::Error, "boot-dismiss") {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Boot));
-    }
+    refused_page_banner(ui, context, Some(refusal), PageId::Boot, "boot-dismiss");
 
     false
 }
@@ -250,37 +271,39 @@ fn proposal(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let entry = menu.kernel_entry(kernel);
     let current = page.entry_value(menu.known());
     let state = if matches!(menu, Menu::NotAsked | Menu::Loading) {
-        "loading"
-    } else if entry.is_empty() {
-        "none"
+        Proposal::Loading
+    } else if entry.is_none() {
+        Proposal::Empty
     } else if page.remember() {
-        "remember"
+        Proposal::Remember
     } else if entry == current {
-        "same"
+        Proposal::Same
     } else {
-        "offer"
+        Proposal::Offer
     };
 
     note(ui, context, kernel, state, || {
-        send(context, Edit::Default(entry.to_owned()));
+        if let Some(entry) = entry {
+            send(context, Edit::Default(entry.to_owned()));
+        }
     });
 }
 
-fn note(
+pub(super) fn note(
     ui: &mut Ui,
     context: &PageContext<'_>,
     kernel: &PackageName,
-    state: &str,
+    state: Proposal,
     queue: impl FnOnce(),
 ) {
     let ctx = ui.ctx().clone();
     let text = i18n::text_with(
         &ctx,
-        &format!("boot-proposal-{state}"),
+        state.text_id(),
         &[("kernel", Arg::from(kernel.as_str()))],
     );
 
-    let offer = state == "offer";
+    let offer = state == Proposal::Offer;
     let queue_text = i18n::text(&ctx, "boot-proposal-queue");
     let close_text = i18n::text(
         &ctx,

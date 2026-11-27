@@ -7,7 +7,7 @@ use toolbox_calendar::Utc;
 
 /// `now` in UTC as `YYYYMMDD-HHMMSS`. A time before 1970 counts as the
 /// epoch.
-pub fn backup_stamp(now: SystemTime) -> String {
+pub(super) fn backup_stamp(now: SystemTime) -> String {
     let seconds = now
         .duration_since(UNIX_EPOCH)
         .map_or(0, |since| since.as_secs());

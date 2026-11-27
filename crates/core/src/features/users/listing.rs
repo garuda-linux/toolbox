@@ -66,8 +66,8 @@ impl Searchable for UserRow {
             user.name.as_str(),
             self.uid_text.as_str(),
             user.full_name(),
-            user.home.as_str(),
-            user.shell.as_str(),
+            user.home_text(),
+            user.shell_text(),
         ]
         .into_iter()
         .chain(self.groups.iter().map(GroupName::as_str))
@@ -101,8 +101,8 @@ pub fn arrange_users(rows: &mut Vec<UserRow>, search: &str, order: UserOrder) {
         let text = match order {
             UserOrder::Name | UserOrder::Id => None,
             UserOrder::FullName => Some(user.full_name()),
-            UserOrder::Home => Some(user.home.as_str()),
-            UserOrder::Shell => Some(user.shell.as_str()),
+            UserOrder::Home => Some(user.home_text()),
+            UserOrder::Shell => Some(user.shell_text()),
         };
 
         let id = (order == UserOrder::Id).then_some(user.uid);

@@ -103,7 +103,7 @@ fn an_operation_runs_now_or_waits_in_the_queue() {
         [
             Command::from(MaintenanceCommand::Queue {
                 operation: Operation::RemoveOrphans,
-                on: true,
+                on: Toggle::On,
             }),
             Command::from(MaintenanceCommand::RunOperation(Operation::UpgradeSystem)),
         ]
@@ -269,7 +269,7 @@ fn a_chosen_setting_is_reset_after_the_question_lists_its_files() {
         sent(&harness),
         [Command::from(MaintenanceCommand::Choose {
             entry: "kitty".to_owned(),
-            on: true,
+            on: Toggle::On,
         })]
     );
 

@@ -17,6 +17,7 @@ toolbox-fs.workspace = true
 toolbox-plan.workspace = true
 thiserror.workspace = true
 toolbox-pty.workspace = true
+toolbox-text.workspace = true
 
 [dev-dependencies]
 toolbox-fs = { workspace = true, features = ["testing"] }

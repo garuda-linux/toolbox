@@ -48,7 +48,7 @@ where
 
 /// Whether `id` is lowercase words of ASCII letters and digits joined by
 /// single dashes.
-pub fn is_valid_id(id: &str) -> bool {
+fn is_valid_id(id: &str) -> bool {
     id.split('-').all(|word| {
         !word.is_empty()
             && word

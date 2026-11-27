@@ -28,7 +28,10 @@ impl UnprobedReads for Known {
     }
 
     fn aur_names(&self) -> Option<AurNames> {
-        Some(self.read(AurNames(["paru".parse().unwrap()].into())))
+        Some(self.read(AurNames {
+            names: ["paru".parse().unwrap()].into(),
+            ..AurNames::default()
+        }))
     }
 
     fn loader(&self) -> Option<CurrentLoader> {

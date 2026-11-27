@@ -4,7 +4,7 @@
 //! answers from it. Every text of the dump is cleaned before it is kept.
 //!
 //! HTTP sits behind [`Transport`] and time behind [`Clock`], so the rules
-//! are tested without a network. [`Https`] is the real transport.
+//! are tested without a network. [`AurTransport`] is the real transport.
 
 mod cache;
 mod clean;
@@ -19,16 +19,13 @@ use std::time::Duration;
 
 pub use cache::Cache;
 pub use dump::DumpError;
-pub use https::Https;
+pub use https::AurTransport;
 pub use toolbox_https::{Clock, RequestError, SystemClock};
-use toolbox_plan::PackageName;
 use toolbox_state::aur::AurIndex;
 pub use transport::{Answer, Transport, Validators};
 
 /// The app asks the AUR for nothing else.
 pub const DUMP_URL: &str = "https://aur.archlinux.org/packages-meta-ext-v1.json.gz";
-
-pub const PACKAGES_PAGE: &str = "https://aur.archlinux.org/packages/";
 
 /// The AUR builds the dump once a day, and a failing client must not retry in a loop.
 pub const REFRESH_EVERY: Duration = Duration::from_hours(24);
@@ -90,9 +87,3 @@ impl PartialEq for AurError {
 }
 
 impl Eq for AurError {}
-
-/// `https://aur.archlinux.org/packages/<name>`. A [`PackageName`] holds
-/// no `/`, `?` or `#`, so the link stays on that page.
-pub fn package_page(name: &PackageName) -> String {
-    format!("{PACKAGES_PAGE}{name}")
-}

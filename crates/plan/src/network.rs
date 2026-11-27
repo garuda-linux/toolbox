@@ -30,6 +30,37 @@ pub type PingTimeout = Bounded<1, 60>;
 /// live an IP packet can carry.
 pub type HopLimit = Bounded<1, 255>;
 
+/// A hardware address as NetworkManager and the kernel print it. The case
+/// is kept as read, so the page shows the address the device reports.
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MacAddress(String);
+
+validated_string!(MacAddress, InvalidMacAddress);
+
+#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+#[error("{0:?} is no hardware address")]
+pub struct InvalidMacAddress(String);
+
+impl MacAddress {
+    /// # Errors
+    ///
+    /// [`InvalidMacAddress`] for anything but six colon separated hex pairs.
+    pub fn new(value: impl Into<String>) -> Result<Self, InvalidMacAddress> {
+        let value = value.into();
+        let pairs: Vec<&str> = value.split(':').collect();
+        let valid = pairs.len() == 6
+            && pairs
+                .iter()
+                .all(|pair| pair.len() == 2 && pair.bytes().all(|byte| byte.is_ascii_hexdigit()));
+
+        if !valid {
+            return Err(InvalidMacAddress(value));
+        }
+
+        Ok(Self(value))
+    }
+}
+
 /// The module a line of a modprobe file blacklists, in its `_` spelling.
 /// `None` for comments, other commands and names that are no module name.
 pub fn blacklist_entry(line: &str) -> Option<KernelModule> {

@@ -2,8 +2,8 @@ use egui::Ui;
 use toolbox_core::domains::LoaderSettingsDomain;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{Select, segmented, segmented_width};
-use toolbox_plan::LoaderDefault;
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
+use toolbox_plan::{LoaderDefault, Toggle};
 
 use super::super::menu::{FIRST_SECONDS, TIMEOUT_MAX, seconds_field, timeout_widths};
 use super::super::queued;
@@ -221,15 +221,31 @@ fn seconds(
 /// Three ways, as systemd-boot's own default differs between versions
 /// and the page cannot know it. Segments show all three at once, where
 /// four dropdowns read alike until opened.
-fn switch(ui: &mut Ui, context: &PageContext<'_>, key: LoaderKey, value: Option<bool>) {
+fn switch(ui: &mut Ui, context: &PageContext<'_>, key: LoaderKey, value: Option<Toggle>) {
     let ctx = ui.ctx().clone();
-    let id = format!("boot-sdboot-{}", key.as_str());
-    let title = i18n::text(&ctx, &id);
-    let description = i18n::text(&ctx, &format!("{id}-detail"));
+    let (id, detail) = match key {
+        LoaderKey::Editor => ("boot-sdboot-editor", "boot-sdboot-editor-detail"),
+        LoaderKey::AutoEntries => (
+            "boot-sdboot-auto-entries",
+            "boot-sdboot-auto-entries-detail",
+        ),
+        LoaderKey::AutoFirmware => (
+            "boot-sdboot-auto-firmware",
+            "boot-sdboot-auto-firmware-detail",
+        ),
+        LoaderKey::Timeout | LoaderKey::Default => return,
+    };
+
+    let title = i18n::text(&ctx, id);
+    let description = i18n::text(&ctx, detail);
     let default = i18n::text(&ctx, "boot-sdboot-segment-default");
     let on = i18n::text(&ctx, "boot-sdboot-on");
     let off = i18n::text(&ctx, "boot-sdboot-off");
-    let options = [(None, &*default), (Some(true), &*on), (Some(false), &*off)];
+    let options = [
+        (None, &*default),
+        (Some(Toggle::On), &*on),
+        (Some(Toggle::Off), &*off),
+    ];
 
     let names = [&*default, &*on, &*off];
     let width = segmented_width(ui, &names);

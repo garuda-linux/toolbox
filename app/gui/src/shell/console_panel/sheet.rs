@@ -155,7 +155,7 @@ fn frosted(ctx: &Context, frame: Frame) -> Frame {
 
 /// What the terminal's box is filled with: glass over the live blur, so
 /// the sheet reads as one blurred surface, solid without it.
-pub fn terminal_fill(ctx: &Context) -> Color32 {
+pub(super) fn terminal_fill(ctx: &Context) -> Color32 {
     let tokens = tokens::current(ctx);
     if frost::live(ctx) {
         tokens.terminal_glass
@@ -166,7 +166,7 @@ pub fn terminal_fill(ctx: &Context) -> Color32 {
 
 /// The terminal box's edge: a hairline round the glass, as a thin light
 /// glass on the light sheet would leave the box without an edge.
-pub fn terminal_edge(ctx: &Context) -> Stroke {
+pub(super) fn terminal_edge(ctx: &Context) -> Stroke {
     if frost::live(ctx) {
         Stroke::new(1.0, tokens::current(ctx).outline)
     } else {
@@ -352,7 +352,7 @@ fn cover_id() -> Id {
 /// Escape closes the sheet, unless it belongs to what sits above it (a
 /// dialog, an open list, the Changes popover) or to the program in the
 /// terminal.
-pub fn escape_closes(ctx: &Context) -> bool {
+pub(super) fn escape_closes(ctx: &Context) -> bool {
     let busy = ctx.memory(|memory| memory.top_modal_layer().is_some())
         || egui::Popup::is_any_open(ctx)
         || super::super::changes::popover_shows(ctx)
@@ -361,7 +361,7 @@ pub fn escape_closes(ctx: &Context) -> bool {
     !busy && ctx.input_mut(|input| input.consume_key(Modifiers::NONE, Key::Escape))
 }
 
-pub fn terminal_focused(ctx: &Context, focused: bool) {
+pub(super) fn terminal_focused(ctx: &Context, focused: bool) {
     ctx.data_mut(|data| data.insert_temp(terminal_focus_id(), focused));
 }
 

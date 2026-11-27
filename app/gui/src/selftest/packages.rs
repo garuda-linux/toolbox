@@ -118,3 +118,45 @@ pub fn aur_steps() -> Vec<Step> {
         Step::wait("Install yay-bin"),
     ]
 }
+
+/// Queued AUR builds whose orders the sample source answers: octopi-git gets
+/// its order and shows what it builds, toolbox-sample-git has none and holds
+/// Apply with the reason. A dry run skips the user steps, so the review that
+/// waits for Continue is not reached here.
+pub fn aur_orders_steps() -> Vec<Step> {
+    vec![
+        Step::WaitGone("Reading the system…"),
+        Step::shortcut(Key::Num6),
+        Step::WaitContaining("The packages of the repositories"),
+        Step::WaitGone("Reading the package lists…"),
+        Step::Click {
+            role: Some(Role::TextInput),
+            label: "Search packages",
+        },
+        Step::shortcut(Key::A),
+        Step::press(Key::Backspace),
+        Step::button("AUR"),
+        Step::Click {
+            role: Some(Role::ListItem),
+            label: "octopi-git",
+        },
+        Step::wait("Install octopi-git"),
+        Step::click("Install octopi-git"),
+        Step::wait("Build octopi-git from the AUR?"),
+        Step::button("Build and Install"),
+        Step::WaitGone("Build octopi-git from the AUR?"),
+        Step::WaitContaining("Builds alpm_octopi_utils-git, octopi-git."),
+        Step::Shot("packages-aur-orders-ready"),
+        Step::Click {
+            role: Some(Role::ListItem),
+            label: "toolbox-sample-git",
+        },
+        Step::wait("Install toolbox-sample-git"),
+        Step::click("Install toolbox-sample-git"),
+        Step::wait("Build toolbox-sample-git from the AUR?"),
+        Step::button("Build and Install"),
+        Step::WaitGone("Build toolbox-sample-git from the AUR?"),
+        Step::WaitContaining("toolbox-sample-git has no build order"),
+        Step::Shot("packages-aur-orders-missing"),
+    ]
+}

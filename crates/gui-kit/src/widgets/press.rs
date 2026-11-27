@@ -10,7 +10,7 @@ use crate::theme::RADIUS;
 use crate::tokens::Tokens;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Pointer {
+pub(super) enum Pointer {
     Rest,
     Hovered,
     Pressed,
@@ -29,7 +29,7 @@ impl Pointer {
 
     /// Like [`Self::of`], with keyboard focus shown as a hover. A click
     /// focuses without showing it, so only a key shows it.
-    pub fn of_keyboard(ui: &Ui, response: &Response) -> Self {
+    pub(super) fn of_keyboard(ui: &Ui, response: &Response) -> Self {
         let pointer = Self::of(response);
         if pointer == Self::Rest && focus_from_keyboard(ui, response) && ui.is_enabled() {
             Self::Hovered
@@ -49,13 +49,13 @@ impl Pointer {
     }
 
     /// Hovered or pressed: the fill under the pointer shows.
-    pub const fn is_under(self) -> bool {
+    pub(super) const fn is_under(self) -> bool {
         !matches!(self, Self::Rest)
     }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct ItemLook {
+pub(super) struct ItemLook {
     pub fill: Color32,
     pub frame: Color32,
 }
@@ -63,7 +63,7 @@ pub struct ItemLook {
 /// A list or sidebar item as Darkly's item view paints it: the selection
 /// fill when selected, `item_hover` under the pointer, `tint_hover` when
 /// both. Darkly draws no outline on an item, so the frame stays clear.
-pub const fn item_look(tokens: &Tokens, selected: bool, pointer: Pointer) -> ItemLook {
+pub(super) const fn item_look(tokens: &Tokens, selected: bool, pointer: Pointer) -> ItemLook {
     let fill = match (selected, pointer) {
         (false, Pointer::Rest) => Color32::TRANSPARENT,
         (false, _) => tokens.item_hover,
@@ -78,7 +78,7 @@ pub const fn item_look(tokens: &Tokens, selected: bool, pointer: Pointer) -> Ite
 }
 
 /// Paints `look` on `rect` with Darkly's item radius.
-pub fn paint_item(ui: &Ui, rect: Rect, look: ItemLook) {
+pub(super) fn paint_item(ui: &Ui, rect: Rect, look: ItemLook) {
     ui.painter()
         .rect_filled(rect, CornerRadius::same(RADIUS), look.fill);
 }
@@ -86,7 +86,7 @@ pub fn paint_item(ui: &Ui, rect: Rect, look: ItemLook) {
 /// `color` as a control in `ui` draws it. A disabled Ui already fades its
 /// painter, so only a control switched off on its own in an enabled Ui
 /// fades here, by the same `disabled_alpha`.
-pub fn faded(ui: &Ui, color: Color32, enabled: bool) -> Color32 {
+pub(super) fn faded(ui: &Ui, color: Color32, enabled: bool) -> Color32 {
     if enabled || !ui.is_enabled() {
         color
     } else {
@@ -97,7 +97,7 @@ pub fn faded(ui: &Ui, color: Color32, enabled: bool) -> Color32 {
 /// How far the hover fill has faded in under `pointer`: 0 at rest, 1 under
 /// the pointer, eased over the hover fade. Every control that fades its
 /// hover uses this one rule.
-pub fn hover_amount(ui: &Ui, response: &Response, pointer: Pointer) -> f32 {
+pub(super) fn hover_amount(ui: &Ui, response: &Response, pointer: Pointer) -> f32 {
     let seconds = motion::duration(ui.ctx(), motion::HOVER_FADE);
     ui.ctx()
         .animate_bool_with_time(response.id.with("hover"), pointer.is_under(), seconds)
@@ -105,7 +105,12 @@ pub fn hover_amount(ui: &Ui, response: &Response, pointer: Pointer) -> f32 {
 
 /// The hover fill of a row or item: `tokens.item_hover` faded in as a pill
 /// button fades, and one step deeper at once while pressed.
-pub fn hover_fill(ui: &Ui, response: &Response, pointer: Pointer, tokens: &Tokens) -> Color32 {
+pub(super) fn hover_fill(
+    ui: &Ui,
+    response: &Response,
+    pointer: Pointer,
+    tokens: &Tokens,
+) -> Color32 {
     if pointer == Pointer::Pressed {
         return tokens.button_pressed;
     }

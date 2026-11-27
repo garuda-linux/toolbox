@@ -35,6 +35,14 @@ pub(super) fn remove_orphans() -> Invocation {
     }
 }
 
+/// `-Qdtq`, not `-Qdttq`: a package that another one lists as optional stays.
+pub(super) fn remove_make_dependencies(packages: &TargetList<PackageName>) -> Invocation {
+    Invocation::RunWithOrphansFrom {
+        query: pacman(["-Qdtq", "--"]).args(names(packages)),
+        run: pacman(["-Rn", "--noconfirm", "--"]),
+    }
+}
+
 /// pacman refuses `--print` with `--nosave`, which changes no target.
 pub(super) fn remove(packages: &TargetList<PackageName>) -> Invocation {
     Invocation::RunUnlessItRemovesProtected {

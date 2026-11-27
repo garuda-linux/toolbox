@@ -34,7 +34,7 @@ pub struct Listed {
 
 /// A catalog section's chip, as [`super::LeadChip`] is a lead section's.
 #[derive(Debug)]
-pub struct SectionChip {
+pub(super) struct SectionChip {
     pub id: String,
     pub title: String,
     pub tally: Tally,
@@ -45,7 +45,7 @@ pub struct SectionChip {
 }
 
 #[derive(Debug)]
-pub struct SectionRows {
+pub(super) struct SectionRows {
     pub id: String,
     pub title: String,
     /// Such as "2/8".

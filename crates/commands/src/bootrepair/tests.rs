@@ -3,7 +3,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, RepairArgs};
 use toolbox_cli::confirm::Prompt;
 use toolbox_core::features::bootrepair::{Encryption, Firmware, RepairFacts, parse_lsblk};
-use toolbox_plan::{Plan, PlannedAction, RootAction, RootLayout};
+use toolbox_plan::{Plan, PlannedAction, RootAction, RootLayout, VolumeDevice};
 
 use super::{pick_target, repair};
 use crate::change::Refused;
@@ -94,12 +94,41 @@ fn a_target_that_is_not_listed_is_refused() {
     assert_eq!(refused.exit(), Exit::Unavailable);
 }
 
+/// The device is a plain string in JSON, also when no volume device fits it.
+#[test]
+fn a_system_row_as_json_keeps_its_device_as_a_string() {
+    use super::SystemRow;
+
+    let fits = SystemRow {
+        device: Ok(VolumeDevice::new("/dev/sda2").unwrap()),
+        label: toolbox_text::plain("Garuda Linux"),
+        encryption: "none",
+        in_use: true,
+    };
+
+    let outside = SystemRow {
+        device: Err(toolbox_text::plain("/dev/a b")),
+        label: toolbox_text::plain(""),
+        encryption: "luks",
+        in_use: false,
+    };
+
+    assert_eq!(
+        serde_json::to_string(&fits).unwrap(),
+        r#"{"id":"/dev/sda2","name":"Garuda Linux","encryption":"none","in_use":true}"#
+    );
+    assert_eq!(
+        serde_json::to_string(&outside).unwrap(),
+        r#"{"id":"/dev/a b","name":"","encryption":"luks","in_use":false}"#
+    );
+}
+
 #[test]
 fn the_systems_list_counts_the_ones_in_use() {
     use super::{SystemRow, system_listing};
 
     let row = |device: &str, in_use| SystemRow {
-        device: device.to_owned(),
+        device: Ok(VolumeDevice::new(device).unwrap()),
         label: toolbox_text::plain("Garuda Linux"),
         encryption: "none",
         in_use,

@@ -102,17 +102,8 @@ pub trait SyncSource: Send + Sync {
     fn offered(&self) -> Result<SyncPackages, ProbeError>;
 }
 
-pub trait LinuxPackageSource: Send + Sync {
-    /// As [`PackageScan::linux_packages`].
-    ///
-    /// # Errors
-    ///
-    /// As [`PackageScan::linux_packages`].
-    fn linux_packages(&self) -> Result<LinuxPackages, ProbeError>;
-}
-
-/// [`PackageSource`], [`SyncSource`] and [`LinuxPackageSource`] through
-/// libalpm, with the databases a `pacman.conf` names.
+/// [`PackageSource`] and [`SyncSource`] through libalpm, with the databases
+/// a `pacman.conf` names.
 ///
 /// Reading the sync databases means unpacking them whole, so one read
 /// serves every question until `pacman -Sy` replaces a database file.
@@ -154,6 +145,15 @@ impl Libalpm {
     fn conf(&self) -> Result<PacmanConf, ProbeError> {
         pacman_conf::read(&self.config)
     }
+
+    /// The kernel packages, as [`PackageScan::linux_packages`].
+    ///
+    /// # Errors
+    ///
+    /// As [`PackageScan::linux_packages`].
+    pub fn linux_packages(&self) -> Result<LinuxPackages, ProbeError> {
+        self.scan().linux_packages()
+    }
 }
 
 impl PackageSource for Libalpm {
@@ -165,12 +165,6 @@ impl PackageSource for Libalpm {
 impl SyncSource for Libalpm {
     fn offered(&self) -> Result<SyncPackages, ProbeError> {
         self.scan().offered()
-    }
-}
-
-impl LinuxPackageSource for Libalpm {
-    fn linux_packages(&self) -> Result<LinuxPackages, ProbeError> {
-        self.scan().linux_packages()
     }
 }
 

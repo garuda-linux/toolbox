@@ -2,21 +2,21 @@
 //! the entry fields that only make sense with them.
 
 use serde::Deserialize;
-use toolbox_plan::{ConfigReload, ConfigWord, HomePath, UnitName, UserConfigEdit};
+use toolbox_plan::{ConfigReload, ConfigText, ConfigWord, HomePath, UnitName, UserConfigEdit};
 
 use super::extras;
 use crate::{Problem, source};
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct RawUserFile {
+pub(super) struct RawUserFile {
     path: String,
     content: String,
 }
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct RawUserIni {
+pub(super) struct RawUserIni {
     path: String,
     group: String,
     key: String,
@@ -26,26 +26,26 @@ pub struct RawUserIni {
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct RawUserJson {
+pub(super) struct RawUserJson {
     path: String,
     key: String,
 }
 
 impl RawUserFile {
-    pub fn validate(self) -> Result<UserConfigEdit, Problem> {
+    pub(super) fn validate(self) -> Result<UserConfigEdit, Problem> {
         if source::is_blank(&self.content) {
             return Err(Problem::EmptyContent);
         }
 
         Ok(UserConfigEdit::File {
             path: path(self.path)?,
-            content: self.content,
+            content: ConfigText::new(self.content).map_err(Problem::BadConfigText)?,
         })
     }
 }
 
 impl RawUserIni {
-    pub fn validate(self) -> Result<UserConfigEdit, Problem> {
+    pub(super) fn validate(self) -> Result<UserConfigEdit, Problem> {
         Ok(UserConfigEdit::IniKey {
             path: path(self.path)?,
             group: word(self.group)?,
@@ -57,7 +57,7 @@ impl RawUserIni {
 }
 
 impl RawUserJson {
-    pub fn validate(self) -> Result<UserConfigEdit, Problem> {
+    pub(super) fn validate(self) -> Result<UserConfigEdit, Problem> {
         Ok(UserConfigEdit::JsonFlag {
             path: path(self.path)?,
             key: word(self.key)?,
@@ -66,7 +66,10 @@ impl RawUserJson {
 }
 
 /// Units restarted after the edit, which only a user config edit may name.
-pub fn restart_units(names: Vec<String>, edits_config: bool) -> Result<Vec<UnitName>, Problem> {
+pub(super) fn restart_units(
+    names: Vec<String>,
+    edits_config: bool,
+) -> Result<Vec<UnitName>, Problem> {
     if names.is_empty() {
         return Ok(Vec::new());
     }

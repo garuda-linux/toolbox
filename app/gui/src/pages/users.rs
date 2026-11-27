@@ -11,7 +11,7 @@ mod list;
 mod row;
 #[cfg(test)]
 mod tests;
-mod texts;
+pub mod texts;
 
 use egui::Ui;
 use toolbox_core::features::users::run::{PageRun, Retry, RetryStep};
@@ -24,9 +24,9 @@ use toolbox_services::locks::Locks;
 
 use self::dialogs::{AddUser, Dialog, Next};
 use super::header::{TabText, TabbedIds, search, tabbed_header_reading};
-use super::rows::refused_banner;
+use super::rows::refused_page_banner;
 use super::{PageContext, PageView, plan_running};
-use crate::command::{AppCommand, UsersCommand};
+use crate::command::UsersCommand;
 use crate::i18n;
 use crate::page::PageId;
 use crate::users::Users;
@@ -247,11 +247,7 @@ fn notes(ui: &mut Ui, context: &PageContext<'_>, tab: Tab) {
     let ctx = ui.ctx().clone();
     let dismiss = i18n::text(&ctx, "users-dismiss");
     let refused = context.service::<Users>().refusal();
-    if refused_banner(ui, refused, Tone::Error, "users-dismiss") {
-        context
-            .commands
-            .send(AppCommand::DismissRefusal(PageId::Users));
-    }
+    refused_page_banner(ui, context, refused, PageId::Users, "users-dismiss");
 
     let run = context.service::<Users>().run();
     if let Some(text) = texts::run(&ctx, run) {

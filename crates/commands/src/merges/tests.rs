@@ -6,7 +6,7 @@ use toolbox_cli::args::{Cli, Command, Confirm, MergeResolveArgs, MergesCommand};
 use toolbox_cli::output::Mark;
 use toolbox_core::domains::{ConfigMerges, MergeCopies};
 use toolbox_core::{ChangeSet, Snapshot};
-use toolbox_plan::{ConfigText, FetchRefusal, MergeCopy, Resolution};
+use toolbox_plan::{ConfigFilePath, ConfigText, FetchRefusal, MergeCopy, Resolution};
 use toolbox_system::{MergePair, ReadProblem, pkexec};
 
 use super::{MergeRow, onto, rows};
@@ -151,6 +151,35 @@ fn a_copy_without_its_file_takes_its_place() {
     assert_eq!(wish.current, None);
 }
 
+/// The copy and its file are plain strings in JSON, `""` for no file.
+#[test]
+fn a_merge_row_as_json_keeps_copy_and_file_as_strings() {
+    let checked = MergeRow {
+        copy: Ok(MergeCopy::new("/etc/locale.gen.pacsave").unwrap()),
+        file: Some(ConfigFilePath::new("/etc/locale.gen").unwrap()),
+        kind: "saved".to_owned(),
+        state: "1 change".to_owned(),
+        unread: false,
+    };
+
+    let terminal_only = MergeRow {
+        copy: Err(toolbox_text::plain("/etc/shadow.pacnew")),
+        file: None,
+        kind: String::new(),
+        state: "merge it in a terminal".to_owned(),
+        unread: false,
+    };
+
+    assert_eq!(
+        serde_json::to_string(&checked).unwrap(),
+        r#"{"copy":"/etc/locale.gen.pacsave","file":"/etc/locale.gen","kind":"saved","state":"1 change"}"#
+    );
+    assert_eq!(
+        serde_json::to_string(&terminal_only).unwrap(),
+        r#"{"copy":"/etc/shadow.pacnew","file":"","kind":"","state":"merge it in a terminal"}"#
+    );
+}
+
 #[test]
 fn the_list_says_how_each_copy_stands() {
     let paths: Vec<PathBuf> = format!("{PACDIFF_O}/etc/shadow.pacnew\n")
@@ -159,8 +188,8 @@ fn the_list_says_how_each_copy_stands() {
         .collect();
 
     let row = |copy: &str, file: &str, kind: &str, state: &str, unread: bool| MergeRow {
-        copy: copy.to_owned(),
-        file: file.to_owned(),
+        copy: MergeCopy::new(copy).map_err(|_invalid| toolbox_text::plain(copy)),
+        file: (!file.is_empty()).then(|| ConfigFilePath::new(file).unwrap()),
         kind: kind.to_owned(),
         state: state.to_owned(),
         unread,

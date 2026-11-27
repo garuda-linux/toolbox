@@ -13,7 +13,7 @@ use toolbox_services::apply::ApplyCommand;
 use super::{LOOK_AGAIN, Running};
 use crate::terminal::{self, Typed};
 
-pub fn forward_input(run: &Arc<Running>) -> Option<JoinHandle<()>> {
+pub(super) fn forward_input(run: &Arc<Running>) -> Option<JoinHandle<()>> {
     if !std::io::stdin().is_terminal() {
         return None;
     }

@@ -4,6 +4,7 @@
 //! button, and removes all after a question.
 
 mod bar;
+mod build;
 mod buttons;
 mod clear;
 mod held;
@@ -13,7 +14,8 @@ use egui::{
     Context, CornerRadius, Frame, Id, Label, LayerId, Popup, PopupCloseBehavior, PopupKind, Rect,
     RectAlign, Stroke, Ui, vec2,
 };
-use toolbox_core::ChangeView;
+use toolbox_core::domains::AurPackages;
+use toolbox_core::{ChangeView, Domain as _};
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::frost::{self, Glass};
 use toolbox_gui_kit::motion::{self, Timing};
@@ -23,12 +25,13 @@ use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
 use self::bar::count_text;
 pub use self::bar::footer;
+pub use self::build::BuildNote;
 use self::buttons::{apply_button, apply_pill, review_button};
 use self::clear::ask_to_clear;
 use self::held::unread;
 use self::place::{Fit, place};
 use super::PANE_TITLE;
-use crate::command::{AppCommand, CommandSender, UiCommand};
+use crate::command::{AppCommand, CommandSender, PackagesCommand, UiCommand};
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::i18n::changes::sentence;
@@ -41,12 +44,33 @@ pub struct ChangesState {
     /// A destructive command waiting for the user's yes, which the app
     /// sets. Its question shows over the window.
     pub confirming: Option<UiCommand>,
+    /// The popover closed since the app last took this, by Review, Escape or
+    /// a click beside it. A waiting Apply is dropped then.
+    pub dismissed: bool,
+}
+
+impl ChangesState {
+    /// Whether the popover closed since the last call.
+    pub const fn take_dismissed(&mut self) -> bool {
+        std::mem::replace(&mut self.dismissed, false)
+    }
+}
+
+/// Why Apply waits: the id of its text, and the sentence it shows. The
+/// sentence names the packages a build waits for, so it is built with its
+/// arguments.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Hold {
+    pub id: &'static str,
+    pub text: String,
 }
 
 #[derive(Clone, Copy, Debug)]
 pub struct Queued<'view> {
     pub changes: &'view [ChangeView],
-    pub held: Option<&'static str>,
+    pub held: Option<&'view Hold>,
+    /// The notes of the queued AUR builds, by package name.
+    pub notes: &'view [(String, BuildNote)],
     pub running: bool,
     pub console_open: bool,
 }
@@ -64,7 +88,12 @@ fn count_words(ctx: &Context, count: usize, running: bool) -> String {
 /// In the Console's header while it is open, so nothing floats over the
 /// rows above it: the count, Review and Apply. `ui` lays out right to
 /// left, beside the header's Close.
-pub fn inline(ui: &mut Ui, queued: Queued<'_>, state: &mut ChangesState, commands: &CommandSender) {
+pub(super) fn inline(
+    ui: &mut Ui,
+    queued: Queued<'_>,
+    state: &mut ChangesState,
+    commands: &CommandSender,
+) {
     if queued.changes.is_empty() {
         *state = ChangesState::default();
         return;
@@ -94,6 +123,7 @@ fn overlays(
     let Queued {
         changes: list,
         held,
+        notes,
         running: _,
         console_open: _,
     } = queued;
@@ -116,13 +146,17 @@ fn overlays(
 
     if state.open && !dialog {
         let rise = (1.0 - shown) * motion::POPOVER_RISE;
+        let was_open = state.open;
         popover_at(
             ctx,
             (anchor.0, anchor.1, rise),
-            (list, held),
+            (list, held, notes),
             &mut state.open,
             commands,
         );
+
+        // egui closes it on a click beside it, which drops a waiting Apply.
+        state.dismissed |= was_open && !state.open;
     }
 
     if state.confirming == Some(UiCommand::ClearChanges) {
@@ -136,7 +170,7 @@ fn overlays(
 fn popover_at(
     ctx: &Context,
     (review, parent, rise): (Rect, LayerId, f32),
-    (list, held): (&[ChangeView], Option<&'static str>),
+    (list, held, notes): (&[ChangeView], Option<&Hold>, &[(String, BuildNote)]),
     open: &mut bool,
     commands: &CommandSender,
 ) {
@@ -164,7 +198,11 @@ fn popover_at(
         .frame(glass.frame())
         .close_behavior(PopupCloseBehavior::CloseOnClickOutside)
         .open_bool(open)
-        .show(|ui| glass.inside(ui, |ui| popover(ui, list, (held, placed.list), commands)));
+        .show(|ui| {
+            glass.inside(ui, |ui| {
+                popover(ui, list, (held, notes, placed.list), commands)
+            })
+        });
 
     if let Some(shown) = popup {
         let (scrolled, whole) = shown.inner;
@@ -196,7 +234,7 @@ fn glass(ctx: &Context) -> Glass {
 fn popover(
     ui: &mut Ui,
     changes: &[ChangeView],
-    (held, list): (Option<&'static str>, f32),
+    (held, notes, list): (Option<&Hold>, &[(String, BuildNote)], f32),
     commands: &CommandSender,
 ) -> (f32, f32) {
     let ctx = ui.ctx().clone();
@@ -226,12 +264,17 @@ fn popover(
 
     let scrolled = show_scroll(ui, egui::ScrollArea::vertical().max_height(list), |ui| {
         for change in changes {
-            row(ui, change, commands);
+            let note = notes
+                .iter()
+                .find(|(key, _)| *key == change.key && change.domain == AurPackages::ID)
+                .map(|(_, note)| note);
+
+            row(ui, change, note, commands);
         }
     });
 
     match held {
-        Some(reason) => unread(ui, reason, commands),
+        Some(pending) => unread(ui, pending, commands),
         None => held::forget(ui.ctx()),
     }
 
@@ -245,8 +288,9 @@ fn popover(
     (scrolled.inner_rect.height(), scrolled.content_size.y)
 }
 
-/// Remove all at the left, Apply at the right.
-fn list_footer(ui: &mut Ui, count: usize, held: Option<&'static str>, commands: &CommandSender) {
+/// Remove all at the left, Apply at the right. While the build orders of an
+/// Apply are read, Cancel beside Apply drops that Apply.
+fn list_footer(ui: &mut Ui, count: usize, held: Option<&Hold>, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     ui.horizontal(|ui| {
         let remove_all = i18n::text(&ctx, "changes-remove-all-ask");
@@ -259,11 +303,18 @@ fn list_footer(ui: &mut Ui, count: usize, held: Option<&'static str>, commands: 
             if apply_pill(ui, &text, held).clicked() {
                 commands.send(UiCommand::Apply);
             }
+
+            if held.is_some_and(|hold| hold.id == "changes-wait-reading") {
+                let cancel = i18n::text(&ctx, "changes-cancel-apply");
+                if pill_button(ui, &cancel, ButtonKind::Soft).clicked() {
+                    commands.send(PackagesCommand::CancelApply);
+                }
+            }
         });
     });
 }
 
-fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
+fn row(ui: &mut Ui, change: &ChangeView, note: Option<&BuildNote>, commands: &CommandSender) {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
     let words = sentence(&ctx, &change.summary);
@@ -280,6 +331,10 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
                     .circle_filled(dot.center(), cell.x / 2.0, tokens.accent);
                 ui.vertical(|ui| {
                     ui.add(Label::new(rich(ui, &words, Weight::Regular, BODY, tokens.text)).wrap());
+                    if let Some(note) = note {
+                        build::lines(ui, &change.key, note);
+                    }
+
                     if change.outcome.is_failed() {
                         tag(ui, &i18n::text(&ctx, "change-unfinished"), Tone::Warning);
                     }
@@ -300,7 +355,7 @@ fn row(ui: &mut Ui, change: &ChangeView, commands: &CommandSender) {
 
 /// Whether the popover showed last frame, so a key handled before the
 /// footer draws can leave it to the popover.
-pub fn popover_shows(ctx: &Context) -> bool {
+pub(super) fn popover_shows(ctx: &Context) -> bool {
     let layer = LayerId::new(PopupKind::Popup.order(), popover_id());
     ctx.memory(|memory| memory.areas().is_visible(&layer))
 }

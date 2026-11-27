@@ -14,7 +14,7 @@ fn audio() -> UserConfigEdit {
     UserConfigEdit::File {
         path: HomePath::new(".config/wireplumber/wireplumber.conf.d/disable-suspension.conf")
             .unwrap(),
-        content: "x\n".to_owned(),
+        content: "x\n".parse().unwrap(),
     }
 }
 
@@ -28,7 +28,7 @@ fn discord() -> UserConfigEdit {
 fn other_audio() -> UserConfigEdit {
     UserConfigEdit::File {
         path: HomePath::new(".config/pipewire/x.conf").unwrap(),
-        content: "y\n".to_owned(),
+        content: "y\n".parse().unwrap(),
     }
 }
 
@@ -84,15 +84,15 @@ fn edits_run_first_then_one_restart_of_every_unit() {
         [
             PlannedAction::User(UserAction::EditUserConfig {
                 edit: other_audio(),
-                on: true,
+                on: Toggle::On,
             }),
             PlannedAction::User(UserAction::EditUserConfig {
                 edit: audio(),
-                on: true,
+                on: Toggle::On,
             }),
             PlannedAction::User(UserAction::EditUserConfig {
                 edit: discord(),
-                on: false,
+                on: Toggle::Off,
             }),
             PlannedAction::User(UserAction::ControlUserUnits {
                 operation: UnitOperation::Restart,

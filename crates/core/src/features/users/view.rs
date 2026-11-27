@@ -45,12 +45,12 @@ impl Shown {
 impl LockAction {
     /// The entry for a user with `queued` lock wish and `locked` state.
     /// `None` while the state is not known and nothing is queued.
-    pub const fn of(queued: Option<Toggle>, locked: Option<bool>) -> Option<Self> {
+    pub const fn of(queued: Option<Toggle>, locked: Option<Toggle>) -> Option<Self> {
         match (queued, locked) {
             (Some(Toggle::On), _) => Some(Self::UnqueueLock),
             (Some(Toggle::Off), _) => Some(Self::UnqueueUnlock),
-            (None, Some(true)) => Some(Self::Unlock),
-            (None, Some(false)) => Some(Self::Lock),
+            (None, Some(Toggle::On)) => Some(Self::Unlock),
+            (None, Some(Toggle::Off)) => Some(Self::Lock),
             (None, None) => None,
         }
     }
@@ -86,14 +86,14 @@ impl UserRow {
         self.queued
             .shell
             .as_ref()
-            .map_or(self.user.shell.as_str(), ShellPath::as_str)
+            .map_or_else(|| self.user.shell_text(), ShellPath::as_str)
     }
 
     pub fn shown_home(&self) -> &str {
         self.queued
             .home
             .as_ref()
-            .map_or(self.user.home.as_str(), |change| change.home.as_str())
+            .map_or_else(|| self.user.home_text(), |change| change.home.as_str())
     }
 }
 

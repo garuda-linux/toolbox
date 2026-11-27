@@ -6,7 +6,7 @@ mod tests;
 
 use super::{run, systemctl};
 use crate::procedure::{Builtin, Command, Invocation, Program};
-use crate::{HopLimit, HostName, KernelModule, PingCount, PingTimeout};
+use crate::{HopLimit, HostName, KernelModule, PingCount, PingTimeout, Toggle};
 
 const NETWORK_MANAGER: &str = "NetworkManager.service";
 
@@ -18,7 +18,7 @@ const WPA_SUPPLICANT_PROCESS: &str = "wpa_supplicant";
 /// `wpa_supplicant` ends so it starts again with the new device. Every
 /// part must succeed, so the step fails on a system without
 /// NetworkManager or without a running `wpa_supplicant`.
-pub fn load_module(module: &KernelModule) -> Vec<Invocation> {
+pub(super) fn load_module(module: &KernelModule) -> Vec<Invocation> {
     vec![
         stop_network_manager(),
         run(modprobe().args(["--", CFG80211])),
@@ -28,7 +28,7 @@ pub fn load_module(module: &KernelModule) -> Vec<Invocation> {
     ]
 }
 
-pub fn unload_module(module: &KernelModule) -> Vec<Invocation> {
+pub(super) fn unload_module(module: &KernelModule) -> Vec<Invocation> {
     vec![
         stop_network_manager(),
         run(modprobe().args(["-r", "--", module.as_str()])),
@@ -36,7 +36,10 @@ pub fn unload_module(module: &KernelModule) -> Vec<Invocation> {
     ]
 }
 
-pub fn set_module_blacklisted(module: &KernelModule, blacklisted: bool) -> Vec<Invocation> {
+pub(super) fn set_module_blacklisted(
+    module: &KernelModule,
+    blacklisted: Toggle,
+) -> Vec<Invocation> {
     vec![Invocation::Builtin(Builtin::EditModprobeBlacklist {
         module: module.clone(),
         on: blacklisted,
@@ -69,12 +72,12 @@ const fn modprobe() -> Command {
     Command::new(Program::Modprobe)
 }
 
-pub fn stop_network_manager() -> Invocation {
+pub(super) fn stop_network_manager() -> Invocation {
     run(systemctl(["stop", "--", NETWORK_MANAGER]))
 }
 
 /// Runs whatever happened before, so a failed or cancelled step never
 /// leaves the machine without network management.
-pub fn start_network_manager() -> Invocation {
+pub(super) fn start_network_manager() -> Invocation {
     Invocation::Always(systemctl(["start", "--", NETWORK_MANAGER]))
 }

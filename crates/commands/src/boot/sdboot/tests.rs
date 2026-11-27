@@ -2,7 +2,7 @@ use toolbox_cli::args::BootKey;
 use toolbox_core::Snapshot;
 use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
 use toolbox_plan::testing::sdboot::uki;
-use toolbox_plan::{KernelRelease, LoaderDefault, PackageName};
+use toolbox_plan::{KernelRelease, LoaderDefault, PackageName, Toggle};
 use toolbox_state::boot::{KernelCmdline, SdBootKernel};
 use toolbox_state::kernels::KernelReleases;
 
@@ -141,7 +141,7 @@ fn the_words_of_the_menu_settings_are_taken() {
     );
     assert_eq!(
         set(BootKey::Editor, "off"),
-        LoaderSetting::Editor(Some(false))
+        LoaderSetting::Editor(Some(Toggle::Off))
     );
     assert_eq!(
         set(BootKey::AutoFirmware, "none"),
@@ -215,5 +215,26 @@ fn a_kernel_without_an_image_is_refused() {
     assert!(
         matches!(&refused, Refused::Unknown(text) if text.starts_with("systemd-boot has no image of `linux-lts`")),
         "{refused:?}"
+    );
+}
+
+/// `--json` printed the switches as `true`, `false` or `null` before they
+/// were a `Toggle`, and scripts read that form.
+#[test]
+fn the_loader_switches_keep_their_boolean_or_null_json() {
+    let view = super::SdBootView {
+        loader: "systemd-boot",
+        timeout: None,
+        default: None,
+        editor: Some(Toggle::Off),
+        auto_entries: None,
+        auto_firmware: Some(Toggle::On),
+        parameters: None,
+        plymouth: None,
+    };
+
+    assert_eq!(
+        serde_json::to_string(&view).unwrap(),
+        r#"{"loader":"systemd-boot","timeout":null,"default":null,"editor":false,"auto_entries":null,"auto_firmware":true,"parameters":null,"plymouth":null}"#
     );
 }

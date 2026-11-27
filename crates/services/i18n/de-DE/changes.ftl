@@ -37,8 +37,20 @@ change-unfinished = Nicht abgeschlossen
 changes-wait-read = Übernehmen wartet, bis das System gelesen ist.
 changes-wait-locks = Übernehmen wartet auf den Sperrstatus der Konten. Die Seite Benutzer und Gruppen meldet, wenn er nicht gelesen werden kann.
 changes-wait-aur = Übernehmen wartet auf die Paketliste des AUR. Die Seite Pakete meldet, wenn sie nicht gelesen werden kann.
-changes-wait-orders = Übernehmen wartet auf die Build-Reihenfolgen der vorgemerkten AUR-Pakete. Nimm diese Pakete aus den vorgemerkten Änderungen, um den Rest zu übernehmen.
+changes-wait-orders = Übernehmen wartet auf eine Build-Reihenfolge. { $reason }
+changes-wait-order-unknown = { $name } wartet auf seine Build-Reihenfolge.
+changes-wait-reading = Übernehmen wartet, bis die Build-Reihenfolgen von { $names } gelesen sind.
+changes-cancel-apply = Abbrechen
 changes-wait-running = Übernehmen wartet, bis die laufenden Änderungen abgeschlossen sind.
+
+changes-build-reading = Build-Reihenfolge wird gelesen
+changes-build-waiting = Wartet auf seine Build-Reihenfolge
+changes-build-ready = Baut { $bases }. { $count ->
+    [one] Installiert ein Repository-Paket als Abhängigkeit.
+   *[other] Installiert { $count } Repository-Pakete als Abhängigkeiten.
+}
+changes-build-packages = Pakete
+changes-old-path-password = paru fragt bei jedem Schritt nach dem Passwort, daher kann es mehrmals fragen.
 changes-unread-locks = Übernehmen wartet: Der Sperrstatus der Konten konnte nicht gelesen werden.
 changes-unread-aur = Übernehmen wartet: Die Paketliste des AUR konnte nicht gelesen werden.
 

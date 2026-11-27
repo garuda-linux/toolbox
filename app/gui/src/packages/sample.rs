@@ -1,4 +1,4 @@
-//! The AUR of a self-test build's dry run: three fixed packages, so the
+//! The AUR of a self-test build's dry run: fixed packages, so the
 //! self-test never reaches the AUR. Release builds leave them out.
 
 use toolbox_aur::{AurError, AurSource};
@@ -12,7 +12,7 @@ pub struct SampleAur;
 
 impl AurSource for SampleAur {
     fn index(&self) -> Result<AurIndex, AurError> {
-        let packages = [
+        let listed = [
             ("paru-bin", "Feature packed AUR helper", 30.5_f64, None),
             (
                 "yay-bin",
@@ -27,29 +27,35 @@ impl AurSource for SampleAur {
                 Some(DAY),
             ),
         ]
-        .into_iter()
-        .filter_map(|(name, description, popularity, out_of_date)| {
-            Some(AurPackage {
-                name: PackageName::new(name).ok()?,
-                version: toolbox_text::plain("1.0-1"),
-                description: toolbox_text::plain(description),
-                url: Some(toolbox_text::plain("https://example.org/")),
-                votes: 42,
-                popularity,
-                out_of_date,
-                maintainer: Some(toolbox_text::plain("sample")),
-                first_submitted: DAY,
-                last_modified: DAY,
-                depends: vec![toolbox_text::plain("glibc")],
-                make_depends: vec![toolbox_text::plain("cargo")],
-                opt_depends: vec![toolbox_text::plain("git: for -git packages")],
-                provides: Vec::new(),
-                conflicts: Vec::new(),
-                licenses: vec![toolbox_text::plain("GPL-3.0-or-later")],
-                keywords: vec![toolbox_text::plain("helper")],
+        .into_iter();
+
+        // The self-test queues this build, which its order answers with a capture.
+        #[cfg(feature = "selftest")]
+        let listed = listed.chain([("octopi-git", "Frontend for pacman and paru", 3.5_f64, None)]);
+
+        let packages = listed
+            .filter_map(|(name, description, popularity, out_of_date)| {
+                Some(AurPackage {
+                    name: PackageName::new(name).ok()?,
+                    version: toolbox_text::plain("1.0-1"),
+                    description: toolbox_text::plain(description),
+                    url: Some(toolbox_text::plain("https://example.org/")),
+                    votes: 42,
+                    popularity,
+                    out_of_date,
+                    maintainer: Some(toolbox_text::plain("sample")),
+                    first_submitted: DAY,
+                    last_modified: DAY,
+                    depends: vec![toolbox_text::plain("glibc")],
+                    make_depends: vec![toolbox_text::plain("cargo")],
+                    opt_depends: vec![toolbox_text::plain("git: for -git packages")],
+                    provides: Vec::new(),
+                    conflicts: Vec::new(),
+                    licenses: vec![toolbox_text::plain("GPL-3.0-or-later")],
+                    keywords: vec![toolbox_text::plain("helper")],
+                })
             })
-        })
-        .collect();
+            .collect();
 
         Ok(AurIndex {
             packages,

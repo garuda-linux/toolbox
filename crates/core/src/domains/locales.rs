@@ -38,7 +38,7 @@ impl Domain for Locales {
             .iter()
             .map(|(entry, wish)| RootAction::SetLocaleEnabled {
                 locale: (*entry).clone(),
-                enabled: wish.is_on(),
+                enabled: **wish,
             })
             .chain([RootAction::GenerateLocales])
             .map(PlannedAction::Root)

@@ -48,7 +48,7 @@ const AGENT_SHELLS: [&str; 4] = ["gnome-shell", "cinnamon", "cosmic-osd", "soter
 /// agents themselves.
 const NO_AGENTS: [&str; 2] = ["polkitd", "polkit-agent-he"];
 
-pub const PROGRAMS: [&str; 5] = [
+pub(super) const PROGRAMS: [&str; 5] = [
     "checkupdates",
     "paru",
     "garuda-update",
@@ -127,7 +127,7 @@ pub fn agent(names: &[String]) -> Option<String> {
         .cloned()
 }
 
-pub fn gather(runtime: &Runtime) -> Facts {
+pub(super) fn gather(runtime: &Runtime) -> Facts {
     let development = cfg!(debug_assertions);
     let path = std::env::var_os("PATH");
     let helper = helper_path();

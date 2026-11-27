@@ -104,7 +104,7 @@ fn a_locale_button_queues_its_locale() {
         sent(&harness),
         [Command::from(LocaleCommand::Toggle {
             entry: entry("de_DE.UTF-8 UTF-8"),
-            on: true,
+            on: toolbox_core::Toggle::On,
         })]
     );
 }
@@ -219,7 +219,7 @@ fn the_packs_tab_counts_and_queues_the_missing_packs() {
             Command::from(LocaleCommand::AddMissingPacks),
             Command::from(LocaleCommand::TogglePack {
                 package: PackageName::new("firefox-i18n-en-us").unwrap(),
-                on: true,
+                on: toolbox_core::Toggle::On,
             }),
         ]
     );

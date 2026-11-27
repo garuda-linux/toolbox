@@ -6,8 +6,8 @@
 #   --keep  keep the VM afterwards (limactl shell garuda-toolbox-it)
 #   --no-build  take the package of this version from target/arch-package
 #   --suite LIST  comma separated, of basic (the default), upgrade, faults,
-#           accounts and sdboot. Each one after the first starts from a snapshot
-#           taken after the setup.
+#           accounts, sdboot and aur. Each one after the first starts from a
+#           snapshot taken after the setup.
 # GARUDA_LIMA_IMAGE is a path or URL of the qcow2, GARUDA_LIMA_IMAGE_DIGEST
 # its optional "sha256:<hex>" for a URL. Unset, target/lima/garuda-lima.qcow2
 # is used, downloaded from image-builder's packages when it is missing.
@@ -41,7 +41,7 @@ IFS=, read -ra suite_list <<<"$suites"
 }
 for suite in "${suite_list[@]}"; do
   case $suite in
-  basic | upgrade | faults | accounts | sdboot) ;;
+  basic | upgrade | faults | accounts | sdboot | aur) ;;
   *)
     echo "lima-it.sh: unknown suite '$suite'" >&2
     exit 2
@@ -265,6 +265,8 @@ source scripts/lima-it/faults.sh
 source scripts/lima-it/accounts.sh
 # shellcheck source=lima-it/sdboot.sh
 source scripts/lima-it/sdboot.sh
+# shellcheck source=lima-it/aur.sh
+source scripts/lima-it/aur.sh
 
 if [ "${#suite_list[@]}" -gt 1 ] || [ "${suite_list[0]}" != basic ]; then
   # On the disk, or the faults suite's power loss takes the setup with it.

@@ -47,7 +47,7 @@ pub fn paint_top_light(painter: &Painter, rect: Rect, corners: impl Into<CornerR
 /// Darkly's `topHighlight` on a push button's face (darklyhelper.cpp:857):
 /// one pixel of the light end along the top edge, even down both top
 /// corners and gone before the sides. Clear on a light window.
-pub fn paint_button_top_light(painter: &Painter, rect: Rect, radius: u8) {
+pub(super) fn paint_button_top_light(painter: &Painter, rect: Rect, radius: u8) {
     let colour = tokens::current(painter.ctx()).button_top_light;
     if colour.a() == 0 || !rect.is_positive() {
         return;

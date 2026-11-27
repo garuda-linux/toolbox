@@ -13,7 +13,7 @@ fn a_boot_wish_is_queued() {
     let command = AppCommand::Service(ServiceCommand::Enable {
         scope: UnitScope::System,
         unit: sshd(),
-        on: true,
+        on: toolbox_core::Toggle::On,
     });
 
     let handled = Units::default().handle(&command, &ChangeSet::default(), &Snapshot::default());
@@ -27,7 +27,7 @@ fn a_mask_is_queued() {
     let command = AppCommand::Service(ServiceCommand::Mask {
         scope: UnitScope::User,
         unit: sshd(),
-        on: true,
+        on: toolbox_core::Toggle::On,
     });
 
     let handled = Units::default().handle(&command, &ChangeSet::default(), &Snapshot::default());

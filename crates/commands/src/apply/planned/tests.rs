@@ -1,7 +1,11 @@
+use toolbox_cli::args::Confirm;
 use toolbox_cli::output::{Paint, Style};
-use toolbox_plan::{Plan, PlannedAction, RootAction, ShellPath, UserName};
+use toolbox_plan::{
+    PackageName, Plan, PlannedAction, RootAction, ShellPath, TargetList, UserAction, UserName,
+};
 
-use super::planned;
+use super::{planned, planned_out};
+use crate::out::{Out, Settings};
 
 fn shell_change() -> Plan {
     Plan::new([PlannedAction::Root(RootAction::SetShell {
@@ -26,4 +30,27 @@ fn a_step_of_one_part_is_one_line() {
     let text = planned(Paint::new(Style::Plain), &plan);
 
     assert_eq!(text.lines().count(), 3, "{text}");
+}
+
+#[test]
+fn a_review_stays_in_the_printed_plan_under_yes() {
+    let bases = TargetList::new([PackageName::new("octopi-git").unwrap()]).unwrap();
+    let plan = Plan::new([PlannedAction::User(UserAction::ReviewAur { bases })]);
+    let confirm = Confirm {
+        yes: true,
+        dry_run: false,
+        json: false,
+    };
+
+    let mut out = Vec::new();
+
+    let exit = planned_out(
+        Paint::new(Style::Plain),
+        &plan,
+        confirm,
+        &mut Out::new(&mut out, Settings::default()),
+    );
+
+    assert_eq!(exit, None);
+    assert!(String::from_utf8(out).unwrap().contains("octopi-git"));
 }

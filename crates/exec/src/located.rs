@@ -53,7 +53,7 @@ pub fn editor(program: Program) -> Option<PathBuf> {
     editor_path(program.path(), path.as_deref(), Path::is_file)
 }
 
-pub fn editor_path(
+fn editor_path(
     fixed: &str,
     path: Option<&OsStr>,
     exists: impl Fn(&Path) -> bool,

@@ -213,8 +213,8 @@ fn accounts_hold_every_valid_user_and_group_sorted_by_name() {
                 user.uid,
                 user.gid,
                 user.full_name(),
-                user.home.as_str(),
-                user.shell.as_str(),
+                user.home_text(),
+                user.shell_text(),
             )
         })
         .filter(|(name, ..)| ["guest", "nobody", "root", "user"].contains(name))
@@ -257,6 +257,28 @@ fn accounts_hold_every_valid_user_and_group_sorted_by_name() {
         BTreeSet::from([user("guest")])
     );
     assert!(all.members_of(&group("wheel")).is_empty());
+}
+
+/// `/root` and `/` lie outside the home roots, so they stay visible as the
+/// text the file has, while a valid shell path is checked.
+#[test]
+fn a_home_or_shell_no_value_object_takes_stays_as_outside_text() {
+    let all = accounts(PASSWD, GROUP);
+    let root = all.users.iter().find(|user| user.name.as_str() == "root");
+    let nobody = all.users.iter().find(|user| user.name.as_str() == "nobody");
+
+    assert_eq!(
+        root.map(|user| user.home.clone()),
+        Some(Err(toolbox_text::plain("/root")))
+    );
+    assert_eq!(
+        nobody.map(|user| user.shell.clone()),
+        Some(Ok(ShellPath::new("/usr/bin/nologin").unwrap()))
+    );
+    assert_eq!(
+        nobody.map(|user| user.home.clone()),
+        Some(Err(toolbox_text::plain("/")))
+    );
 }
 
 /// The audio line with blanks and a second member added around `guest`.
@@ -305,7 +327,12 @@ fn entries_with_odd_ids_or_repeated_names_are_left_out() {
             .map(toolbox_state::accounts::User::full_name),
         Some("Guest")
     );
-    assert_eq!(all.users.first().map(|user| user.shell.as_str()), Some(""));
+    assert_eq!(
+        all.users
+            .first()
+            .map(toolbox_state::accounts::User::shell_text),
+        Some("")
+    );
     assert_eq!(all.groups.len(), 1);
     assert_eq!(
         all.groups.first().map(|entry| entry.members.clone()),

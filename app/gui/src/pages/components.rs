@@ -5,7 +5,7 @@ use super::catalog::{CatalogKind, CatalogPage};
 use super::toggles::NoLead;
 use crate::catalogs::CatalogId;
 
-pub type ComponentsPage = CatalogPage<Components>;
+pub(super) type ComponentsPage = CatalogPage<Components>;
 
 #[derive(Debug)]
 pub struct Components;

@@ -32,7 +32,7 @@ fn a_fresh_page_is_idle_without_text_or_upload() {
 
     assert_eq!(page.state.as_str(), "idle");
     assert_eq!(page.share, Upload::Idle);
-    assert_eq!((page.selection.as_str(), page.report.as_str()), ("", ""));
+    assert_eq!((page.selection, page.report.as_str()), (None, ""));
 }
 
 #[test]
@@ -55,7 +55,7 @@ fn a_start_shows_the_run_and_takes_the_old_report_away() {
         Changed::Report { ready: false }
     );
     assert_eq!(page.state.as_str(), "running");
-    assert_eq!(page.selection, "all");
+    assert_eq!(page.selection, Some(Selection::All));
     assert_eq!(page.report, "");
 }
 
@@ -70,7 +70,7 @@ fn a_report_is_ready_for_the_clipboard() {
         Changed::Report { ready: true }
     );
     assert_eq!(page.state.as_str(), "report");
-    assert_eq!(page.selection, "dmesg");
+    assert_eq!(page.selection, Some(DMESG));
     assert_eq!(page.report, "kernel log\n");
     assert_eq!(page.problem, "");
 }
@@ -124,16 +124,16 @@ fn a_full_report_counts_its_collectors_from_one() {
         page.apply(DiagnosticsNote::Collecting(Collector::Inxi)),
         Changed::Status
     );
-    assert_eq!((page.part.as_str(), page.step), ("inxi", 1_i32));
+    assert_eq!((page.part, page.step), (Some(Collector::Inxi), 1_i32));
 
     page.apply(DiagnosticsNote::Collecting(Collector::Health));
-    assert_eq!((page.part.as_str(), page.step), ("garuda-health", 6_i32));
+    assert_eq!((page.part, page.step), (Some(Collector::Health), 6_i32));
 
     page.apply(DiagnosticsNote::Finished(
         Selection::All,
         Outcome::Report("full\n".to_owned()),
     ));
-    assert_eq!((page.part.as_str(), page.step), ("", 0_i32));
+    assert_eq!((page.part, page.step), (None, 0_i32));
 }
 
 #[test]
@@ -145,7 +145,7 @@ fn a_cancel_returns_to_idle() {
 
     assert_eq!(page.apply(DiagnosticsNote::Cancelled), Changed::Status);
     assert_eq!(page.state, State::Idle);
-    assert_eq!((page.part.as_str(), page.step), ("", 0_i32));
+    assert_eq!((page.part, page.step), (None, 0_i32));
 }
 
 #[test]

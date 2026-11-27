@@ -3,7 +3,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use toolbox_plan::{GroupName, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, ShellPath, Toggle, UserName};
 use toolbox_text::OutsideText;
 
 /// `UID_MIN` and `UID_MAX` of `/etc/login.defs`: the ids useradd gives to
@@ -17,15 +17,27 @@ pub struct User {
     pub uid: u32,
     pub gid: u32,
     pub gecos: OutsideText,
-    pub home: String,
-    /// As the file has it, which may be empty or a program our rules for
-    /// login shells reject.
-    pub shell: String,
+    /// The home folder of `/etc/passwd`. Text that no [`HomeDirectory`]
+    /// fits stays visible as outside text, so the account is not dropped.
+    pub home: Result<HomeDirectory, OutsideText>,
+    /// The login shell of `/etc/passwd`. Empty or a program our rules for
+    /// login shells reject stay visible as outside text.
+    pub shell: Result<ShellPath, OutsideText>,
 }
 
 impl User {
     pub fn full_name(&self) -> &str {
         self.gecos.split(',').next().unwrap_or_default()
+    }
+
+    /// The home folder as the file has it, checked or not.
+    pub fn home_text(&self) -> &str {
+        toolbox_text::checked_text(&self.home)
+    }
+
+    /// The login shell as the file has it, checked or not.
+    pub fn shell_text(&self) -> &str {
+        toolbox_text::checked_text(&self.shell)
     }
 
     pub const fn is_regular(&self) -> bool {
@@ -72,8 +84,8 @@ pub struct AccountLockFlags(pub BTreeMap<UserName, bool>);
 
 impl AccountLockFlags {
     /// `None` for an account the answer does not name.
-    pub fn is_locked(&self, user: &UserName) -> Option<bool> {
-        self.0.get(user).copied()
+    pub fn is_locked(&self, user: &UserName) -> Option<Toggle> {
+        self.0.get(user).copied().map(Toggle::from_on)
     }
 }
 

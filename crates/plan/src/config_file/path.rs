@@ -23,7 +23,7 @@ pub const CONFIG_ROOTS: [&str; 4] = [
 /// They hold password hashes, keys or passphrases. A prefix also catches
 /// the copies beside a file (`shadow-`, `shadow.pacnew`) and everything in
 /// a folder. The Users page changes the hashes through typed actions.
-pub const WITHHELD_CONFIG_FILES: [&str; 15] = [
+pub(super) const WITHHELD_CONFIG_FILES: [&str; 15] = [
     "/etc/shadow",
     "/etc/gshadow",
     "/etc/security/opasswd",
@@ -47,12 +47,12 @@ pub const WITHHELD_CONFIG_FILES: [&str; 15] = [
 /// A systemd `.netdev` file holds the `PrivateKey=` of a `WireGuard` device,
 /// and it lies in `/etc/systemd/network` beside the files the page edits.
 /// Copies such as `.bak` or `.pacsave` keep the keys under another name.
-pub const WITHHELD_CONFIG_NAMES: [&str; 1] = [".netdev"];
+const WITHHELD_CONFIG_NAMES: [&str; 1] = [".netdev"];
 
 /// Where the helper keeps the previous version of a file it replaced,
 /// relative to `/`. The file's own path follows, so `/etc/fstab` is kept
 /// as `/var/lib/garuda-toolbox/backups/etc/fstab`.
-pub const CONFIG_BACKUPS: &str = "var/lib/garuda-toolbox/backups";
+const CONFIG_BACKUPS: &str = "var/lib/garuda-toolbox/backups";
 
 /// `PATH_MAX` minus room for the backup folder in front of it.
 pub const MAX_PATH_BYTES: usize = 1024;

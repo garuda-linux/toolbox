@@ -62,6 +62,7 @@ users-locks-denied = Es ist nicht bekannt, welche Konten gesperrt sind: Der Pass
 users-locks-no-agent = Es ist nicht bekannt, welche Konten gesperrt sind. In dieser Sitzung läuft kein polkit-Agent (das Programm, das nach dem Passwort fragt, wenn eine App mehr Rechte braucht), daher erschien keine Passwortabfrage.
 users-locks-helper-missing = Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox ist nicht installiert. Garuda Toolbox neu installieren.
 users-locks-unknown = Es ist nicht bekannt, welche Konten gesperrt sind. Das Hilfsprogramm von Garuda Toolbox konnte es nicht auslesen.
+users-locks-broken = Es ist nicht bekannt, welche Konten gesperrt sind. pkexec kann auf diesem System nicht ausgeführt werden.
 
 users-run-password-running = Das Passwort von { $user } wird gesetzt…
 users-run-password-done = Das Passwort von { $user } wurde gesetzt.

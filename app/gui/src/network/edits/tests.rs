@@ -13,7 +13,7 @@ fn a_blacklist_click_before_the_drivers_are_read_is_refused() {
     let mut network = Network::default();
     let command = AppCommand::Network(NetworkCommand::Blacklist {
         module: KernelModule::new("r8169").unwrap(),
-        on: true,
+        on: toolbox_core::Toggle::On,
     });
 
     let handled = network.handle(&command, &ChangeSet::default(), &Snapshot::default());

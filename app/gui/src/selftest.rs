@@ -48,7 +48,7 @@ const SUITE_VARIABLE: &str = "GARUDA_TOOLBOX_SELFTEST_SUITE";
 /// How long one step may wait. A cold first read of the system is slow.
 const PATIENCE: Duration = Duration::from_secs(60);
 
-const SUITES: [(&str, Suite); 22] = [
+const SUITES: [(&str, Suite); 23] = [
     // First, as its Review and Apply… refuses only while nothing is queued.
     ("appmenu", appmenu::steps),
     ("home", home::steps),
@@ -58,6 +58,7 @@ const SUITES: [(&str, Suite); 22] = [
     ("discover", discover::steps),
     ("packages", packages::steps),
     ("packages-aur", packages::aur_steps),
+    ("packages-aur-orders", packages::aur_orders_steps),
     ("services", services::steps),
     ("tweaks", tweaks::steps),
     ("kernels", kernels::steps),

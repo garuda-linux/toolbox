@@ -5,7 +5,7 @@ use std::path::Path;
 use std::sync::Arc;
 use std::time::Duration;
 
-use toolbox_aur::{AurSource, Cache, Https, SystemClock};
+use toolbox_aur::{AurSource, AurTransport, Cache, SystemClock};
 use toolbox_cli::complete::Names;
 use toolbox_config::Paths;
 
@@ -29,7 +29,7 @@ pub fn of() -> Vec<String> {
 pub fn copy() -> Cache {
     Cache::new(
         Paths::from_process().aur_dir(),
-        Arc::new(Https::with_timeout(DOWNLOAD_WAIT)),
+        Arc::new(AurTransport::with_timeout(DOWNLOAD_WAIT)),
         Arc::new(SystemClock),
     )
 }
@@ -37,7 +37,7 @@ pub fn copy() -> Cache {
 /// The list `dir` keeps for the copy's `stamp`, else `read`'s names. They
 /// are kept only when the stamp is the same before and after, so a copy
 /// that was replaced meanwhile never stands for the names of the old one.
-pub fn remembered(
+fn remembered(
     dir: Option<&Path>,
     stamp: impl Fn() -> Option<u64>,
     read: impl FnOnce() -> Vec<String>,

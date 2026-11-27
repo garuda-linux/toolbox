@@ -11,7 +11,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// The Chaotic-AUR list is about 8 KiB, rate-mirrors writes about 14 KiB
 /// for it. Anything near this is not one.
-pub const MAX_MIRRORLIST_BYTES: usize = 64 * 1024;
+const MAX_MIRRORLIST_BYTES: usize = 64 * 1024;
 
 /// The placeholder a dry run plans in place of a ranked list. It is never
 /// ranked and never reaches a mirror.

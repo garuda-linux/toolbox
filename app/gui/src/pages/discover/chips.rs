@@ -7,7 +7,7 @@ use super::category_title;
 use crate::i18n;
 
 #[derive(Debug, Default)]
-pub struct Chips {
+pub(super) struct Chips {
     /// The title of the chip for every category.
     pub all: String,
     /// How many apps every category has together.

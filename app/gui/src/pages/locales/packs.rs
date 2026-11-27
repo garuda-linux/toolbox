@@ -74,8 +74,8 @@ pub fn rows(
                 let locale = super::system::choice(
                     ctx,
                     &shown.locale_code,
-                    &shown.language,
-                    &shown.territory,
+                    shown.language.as_deref(),
+                    shown.territory.as_deref(),
                 );
 
                 let detail = i18n::text_with(
@@ -152,7 +152,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &PackItem, state: &RowState
     }) {
         context.commands.send(LocaleCommand::TogglePack {
             package: item.package.clone(),
-            on: !item.on,
+            on: toolbox_core::Toggle::from_on(!item.on),
         });
     }
 }

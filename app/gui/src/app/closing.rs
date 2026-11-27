@@ -14,7 +14,7 @@ use crate::command::UiCommand;
 use crate::i18n;
 
 #[derive(Debug, Default)]
-pub struct Closing {
+pub(super) struct Closing {
     asking: Option<Question>,
     /// The window closes once the cancelled plan ended, and a note says so
     /// until then.

@@ -85,7 +85,7 @@ impl PackageRow for AurRow<'_> {
 }
 
 /// "1.0-1 · 42 votes". The tag beside the name says where it comes from.
-pub fn version_line(ctx: &Context, entry: &AurPackage) -> String {
+fn version_line(ctx: &Context, entry: &AurPackage) -> String {
     let votes = i18n::text_with(
         ctx,
         "packages-aur-votes",

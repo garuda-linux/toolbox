@@ -195,6 +195,35 @@ Without it every page would be empty.
 Commands that need no catalog, such as `garuda-toolbox status`, keep
 working meanwhile.
 
+## Apply waits for a build order
+
+**Symptoms**
+
+- **Apply** is greyed out and its tooltip says it waits for the build orders
+  of the queued AUR packages.
+- The Console does not open, and the queue keeps the AUR package.
+
+**Cause**
+
+Each queued AUR package needs its build order, the list of the packages paru
+builds and installs with it. Garuda Toolbox reads it from paru when you queue
+the package, and again before every apply. While the read runs, **Apply** waits
+for it. The order cannot be read when paru is missing, the AUR does not have
+the package, or the build folder of your account cannot be used.
+
+**Solution**
+
+1. Wait until **Apply** is no longer greyed out. The read takes a moment.
+2. If it stays greyed out, remove the AUR package from the list with its
+   remove button, then apply the rest.
+3. To try the package again, queue it again from the **Packages** page.
+4. If paru is not installed, install it with the package manager first.
+
+**Prevention**
+
+Queue an AUR package only when its page in the AUR lists it. Apply the queue
+once the read has finished.
+
 ## See also
 
 - [Review and apply changes](applying.md)

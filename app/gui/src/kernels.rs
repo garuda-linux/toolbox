@@ -119,19 +119,13 @@ impl Kernels {
                 };
 
                 queue_or_keep(&mut self.refusal, changes, |changes| {
-                    core_kernels::toggle(
-                        found,
-                        Toggle::from_on(*on),
-                        listing.listed(),
-                        changes,
-                        snapshot,
-                    )
+                    core_kernels::toggle(found, *on, listing.listed(), changes, snapshot)
                 })
             }
             KernelEdit::Headers { kernel, on } => {
                 listing.kernel(kernel).map_or_else(Handled::taken, |found| {
                     queue(changes, |changes| {
-                        set_headers(found, Toggle::from_on(*on), changes, snapshot);
+                        set_headers(found, *on, changes, snapshot);
                     })
                 })
             }
@@ -142,7 +136,7 @@ impl Kernels {
                 listing.kernel(kernel).map_or_else(Handled::taken, |found| {
                     let builds = listing.builds(found, self.dkms_entries());
                     queue(changes, |changes| {
-                        set_builds(&builds, Toggle::from_on(*on), changes, snapshot);
+                        set_builds(&builds, *on, changes, snapshot);
                     })
                 })
             }

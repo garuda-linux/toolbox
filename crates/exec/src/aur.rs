@@ -4,6 +4,7 @@
 //! store so nothing is swapped after the check.
 
 pub mod build;
+pub mod review;
 pub mod route;
 #[cfg(test)]
 mod tests;
@@ -85,7 +86,7 @@ impl From<Errno> for StageError {
 /// The package a file of makepkg holds, from `<name>-<pkgver>-<pkgrel>-<arch>.pkg.tar`
 /// and one of [`COMPRESSIONS`].
 /// pkgver, pkgrel and arch hold no `-`, so the name is all before them.
-pub fn package_of(file: &str) -> Option<&str> {
+fn package_of(file: &str) -> Option<&str> {
     let stem = COMPRESSIONS
         .iter()
         .find_map(|compression| file.strip_suffix(compression)?.strip_suffix(PACKAGE_SUFFIX))?;
@@ -146,7 +147,7 @@ fn hold_store(root: &Path) -> Result<OwnedFd, StageError> {
 /// # Errors
 ///
 /// [`StageError::NoAccount`] when no entry has `uid`.
-pub fn home_of(root: &Path, uid: u32) -> Result<PathBuf, StageError> {
+fn home_of(root: &Path, uid: u32) -> Result<PathBuf, StageError> {
     route::home_entry(root, uid).map_err(StageError::from)
 }
 
@@ -189,7 +190,7 @@ pub fn stage(
 /// # Errors
 ///
 /// When the store or a copy cannot be removed.
-pub fn unstage(root: &Path, run: &BuildRun) -> Result<(), StageError> {
+fn unstage(root: &Path, run: &BuildRun) -> Result<(), StageError> {
     let Some(store) = open_store(root)? else {
         return Ok(());
     };
@@ -205,7 +206,7 @@ pub fn unstage(root: &Path, run: &BuildRun) -> Result<(), StageError> {
 ///
 /// [`StageError`] when the store holds anything but run folders of regular
 /// files, or removal fails.
-pub fn empty_store(root: &Path) -> Result<(), StageError> {
+fn empty_store(root: &Path) -> Result<(), StageError> {
     let Some(store) = open_store(root)? else {
         return Ok(());
     };
@@ -241,7 +242,7 @@ pub fn entries(dir: &OwnedFd) -> io::Result<Vec<CString>> {
     Ok(names)
 }
 
-pub fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError> {
+fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError> {
     match rustix::fs::statat(store, name, AtFlags::SYMLINK_NOFOLLOW) {
         Ok(stat) if FileType::from_raw_mode(stat.st_mode) == FileType::Directory => {}
         Ok(_) => return Err(StageError::NoRunFolder(name.to_string_lossy().into_owned())),
@@ -269,12 +270,7 @@ pub fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError>
     Ok(())
 }
 
-pub fn built_folder(
-    root: &Path,
-    uid: u32,
-    home: &Path,
-    run: &BuildRun,
-) -> Result<OwnedFd, StageError> {
+fn built_folder(root: &Path, uid: u32, home: &Path, run: &BuildRun) -> Result<OwnedFd, StageError> {
     let route = route::walk(root, home, home, uid)?;
     let mut folder = route.folder;
 

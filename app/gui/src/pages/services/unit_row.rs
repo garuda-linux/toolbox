@@ -24,7 +24,7 @@ use crate::i18n::Arg;
 use crate::pages::rows::actions::{CopyName, Named, RowAction, RowKind, Run, Section};
 
 #[derive(Debug)]
-pub struct UnitRow {
+pub(super) struct UnitRow {
     pub unit: UnitName,
     pub scope: UnitScope,
     /// What screen readers say for the row: the name and the state.
@@ -80,7 +80,7 @@ impl UnitRow {
 }
 
 /// The menu of a unit row: what runs at once, then what waits.
-pub struct UnitRows;
+pub(super) struct UnitRows;
 
 impl RowKind for UnitRows {
     type Item = UnitRow;
@@ -181,7 +181,7 @@ impl RowAction<UnitRow> for Mask {
         run.commands.send(ServiceCommand::Mask {
             scope: item.scope,
             unit: item.unit.clone(),
-            on: !item.masked,
+            on: toolbox_core::Toggle::from_on(!item.masked),
         });
     }
 }

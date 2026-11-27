@@ -15,7 +15,7 @@ use toolbox_gui_kit::widgets::{
     pill_button, refresh_button_busy, rich, split_row,
 };
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
-use toolbox_services::home::Overview;
+use toolbox_services::home::{Check, Overview};
 use toolbox_system::{CallError, HealthLevel, Host, Status};
 
 use super::{HomePage, HomeProblem};
@@ -111,7 +111,7 @@ pub(super) fn overview<'read>(
 }
 
 /// How many rows the status shows, for the greeting's summary.
-pub fn attention_rows(overview: &Overview<'_>, reboot: bool) -> usize {
+pub(super) fn attention_rows(overview: &Overview<'_>, reboot: bool) -> usize {
     rows(overview, reboot).into_iter().flatten().count()
 }
 
@@ -177,6 +177,20 @@ fn restart_problem(ui: &mut Ui, context: &PageContext<'_>) {
 }
 
 /// The reasons are a program's words, so they wait behind a button.
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn failed_id(check: Check) -> &'static str {
+    match check {
+        Check::Updates => "home-failed-updates",
+        Check::Aur => "home-failed-aur",
+        Check::Merges => "home-failed-merges",
+        Check::LastUpdate => "home-failed-last-update",
+        Check::Disk => "home-failed-disk",
+        Check::Services => "home-failed-services",
+        Check::Cleanup => "home-failed-cleanup",
+        Check::Health => "home-failed-health",
+    }
+}
+
 fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overview: &Overview<'_>) {
     if overview.failed.is_empty() {
         return;
@@ -204,8 +218,7 @@ fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overvie
     if page.details {
         let tokens = tokens::current(&ctx);
         for (check, reason) in &overview.failed {
-            let id = format!("home-failed-{}", check.as_str());
-            let line = i18n::text_with(&ctx, &id, &[("reason", Arg::from(reason))]);
+            let line = i18n::text_with(&ctx, failed_id(*check), &[("reason", Arg::from(reason))]);
             ui.add(Label::new(rich(ui, &line, Weight::Regular, SMALL, tokens.secondary)).wrap());
         }
     }
@@ -214,7 +227,7 @@ fn failures(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_>, overvie
 }
 
 /// A button that runs a plan at once. It waits while one runs.
-pub fn run_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, run: RunNow, kind: ButtonKind) {
+fn run_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, run: RunNow, kind: ButtonKind) {
     let text = i18n::text(ui.ctx(), id);
     let pressed = ui
         .enabled_ui(!context.busy, |ui| pill_button(ui, &text, kind))
@@ -227,7 +240,7 @@ pub fn run_button(ui: &mut Ui, context: &PageContext<'_>, id: &str, run: RunNow,
 
 /// A row whose one Soft button runs a plan at once. `ids` are the title,
 /// the detail and the button.
-pub fn run_row(
+pub(super) fn run_row(
     ui: &mut Ui,
     context: &PageContext<'_>,
     icon: Icon,

@@ -66,7 +66,7 @@ pub fn update(ui: &Ui, (list, row): (Id, Id), change: impl FnOnce(&mut RowMemory
 /// Drops what the rows that left `items` kept, once the item set
 /// changed. The set is told by its length and its first and last keys,
 /// so a frame reads two rows, not all of them.
-pub fn sweep<R>(ui: &Ui, list: Id, items: &R)
+pub(super) fn sweep<R>(ui: &Ui, list: Id, items: &R)
 where
     R: Rows + ?Sized,
 {

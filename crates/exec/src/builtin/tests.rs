@@ -184,7 +184,7 @@ fn a_file_already_as_wanted_skips() {
     let root = tempfile::tempdir().unwrap();
     let builtin = Builtin::SetGarudaUpdateFlag {
         flag: GarudaUpdateFlag::UpdateAur,
-        on: false,
+        on: toolbox_plan::Toggle::Off,
     };
 
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Skipped);

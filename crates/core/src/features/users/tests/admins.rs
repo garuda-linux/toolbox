@@ -154,7 +154,13 @@ fn without_wheel_no_admin_loses_the_rights() {
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(
+            &grace,
+            Toggle::On,
+            Some(Toggle::Off),
+            &mut changes,
+            &snapshot
+        ),
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
@@ -180,7 +186,13 @@ fn without_wheel_a_user_outside_the_admin_groups_still_changes() {
     let grace = user_name("grace");
 
     assert_eq!(
-        set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(
+            &grace,
+            Toggle::On,
+            Some(Toggle::Off),
+            &mut changes,
+            &snapshot
+        ),
         Ok(())
     );
     assert_eq!(
@@ -211,7 +223,7 @@ fn with_no_admin_left_after_the_queue_a_member_of_wheel_keeps_the_rights() {
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::On, Some(Toggle::Off), &mut changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
@@ -255,12 +267,12 @@ fn the_last_admin_is_not_locked() {
     let ada = user_name("ada");
 
     assert_eq!(
-        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::On, Some(Toggle::Off), &mut changes, &snapshot),
         Err(Refusal::LastAdminLock)
     );
     assert!(changes.is_empty(), "{changes:?}");
     assert_eq!(
-        set_locked(&ada, Toggle::Off, Some(true), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::Off, Some(Toggle::On), &mut changes, &snapshot),
         Ok(()),
         "unlocking is always allowed"
     );
@@ -275,7 +287,7 @@ fn one_of_two_admins_may_be_locked() {
         set_locked(
             &user_name("ada"),
             Toggle::On,
-            Some(false),
+            Some(Toggle::Off),
             &mut changes,
             &snapshot
         ),
@@ -297,7 +309,7 @@ fn an_admin_whose_peer_leaves_is_not_locked() {
         set_locked(
             &user_name("ada"),
             Toggle::On,
-            Some(false),
+            Some(Toggle::Off),
             &mut changes,
             &snapshot
         ),

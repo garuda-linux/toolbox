@@ -18,7 +18,7 @@ use toolbox_https::{Attempt, Clock, SystemClock, due, next_attempt};
 use toolbox_state::aur::AurIndex;
 
 use crate::dump::parse;
-use crate::https::Https;
+use crate::https::AurTransport;
 use crate::transport::{Answer, Transport, Validators};
 use crate::{AurError, AurSource, DUMP_URL, DownloadError, REFRESH_EVERY};
 
@@ -73,7 +73,7 @@ impl Cache {
 
     #[must_use = "the cache does nothing until asked"]
     pub fn system(folder: PathBuf) -> Self {
-        Self::new(folder, Arc::new(Https::new()), Arc::new(SystemClock))
+        Self::new(folder, Arc::new(AurTransport::new()), Arc::new(SystemClock))
     }
 
     /// When the copy was last written, in seconds since the epoch, `None`

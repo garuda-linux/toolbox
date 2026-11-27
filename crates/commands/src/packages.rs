@@ -2,7 +2,7 @@
 //! installed packages or the AUR, one package shown, and an install or a
 //! removal through the page's own rule.
 
-mod aur;
+pub(crate) mod aur;
 mod rows;
 #[cfg(test)]
 mod tests;
@@ -25,12 +25,15 @@ use toolbox_core::features::packages::list::{Catalog, Filter};
 use toolbox_core::features::packages::queue::{Refusal, toggle};
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::{PackageName, Plan, Protection};
-use toolbox_system::{Libalpm, PackageIndexSource, PackageSource as _, ProbeError};
+use toolbox_system::{
+    Libalpm, PackageIndexSource, PackageSource as _, Paru, ProbeError, RouteSource as _,
+    SystemRoute,
+};
 
 use super::act::run;
 use super::change::{DATABASES_UNREAD, Refused, fresh};
 use super::out::{failure, print};
-use super::{spinner, system, unavailable};
+use super::{root, spinner, system, unavailable};
 use crate::out::Out;
 
 pub fn command(command: PackagesCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
@@ -39,13 +42,7 @@ pub fn command(command: PackagesCommand, runtime: &Runtime, out: &mut Out<'_>) -
         PackagesCommand::Search(args) => search(&args, &Libalpm::system(), out),
         PackagesCommand::Show(args) if args.aur => show_aur(&args, &aur_copy(), out),
         PackagesCommand::Show(args) => show(&args, &Libalpm::system(), out),
-        PackagesCommand::Install(args) => run(
-            install(&args, &aur_copy(), &system()),
-            args.confirm,
-            None,
-            runtime,
-            out,
-        ),
+        PackagesCommand::Install(args) => install_command(&args, runtime, out),
         PackagesCommand::Remove(args) => run(
             change(&args, Toggle::Off, &system()),
             args.confirm,
@@ -54,6 +51,29 @@ pub fn command(command: PackagesCommand, runtime: &Runtime, out: &mut Out<'_>) -
             out,
         ),
     }
+}
+
+fn install_command(args: &PackageInstall, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
+    let aur = aur_copy();
+    let mut system = system();
+    root::sudo_route(out.settings(), &mut system);
+    if args.aur {
+        aur::warn_old_path(out.settings(), &system);
+    }
+
+    let planned = if args.aur {
+        aur::plan_install(
+            &args.packages,
+            &aur,
+            &system,
+            &Paru::default(),
+            SystemRoute::system().route(),
+        )
+    } else {
+        install(args, &aur, &system)
+    };
+
+    run(planned, args.confirm, None, runtime, out)
 }
 
 /// The rows of the picked chip whose name or description holds the text.
@@ -337,7 +357,8 @@ fn wish_onto(
         | Refusal::RunningUnknown
         | Refusal::LastKernel
         | Refusal::Protected(_)
-        | Refusal::TakesAlong(_)) => kept_package(package.as_str(), kept, refused.subject.as_str()),
+        | Refusal::TakesAlong(_)
+        | Refusal::Conflicts) => kept_package(package.as_str(), kept, refused.subject.as_str()),
     })
 }
 
@@ -347,6 +368,9 @@ fn wish_onto(
 pub(crate) fn kept_package(package: &str, refusal: Refusal, along: &str) -> Refused {
     Refused::Rule(match refusal {
         Refusal::Protected(why) => format!("{package} stays installed: {}", protection(why)),
+        Refusal::Conflicts => {
+            format!("{package} conflicts with the installed {along}. Remove {along} first.")
+        }
         Refusal::TakesAlong(why) => format!(
             "{package} stays installed: removing it would also remove {along}, and {}",
             protection(why)

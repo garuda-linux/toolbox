@@ -38,7 +38,7 @@ pub type BootloaderId = Name<BootloaderIdRule>;
 pub struct DiskRule;
 pub struct PartitionRule;
 pub struct VolumeRule;
-pub struct MapperRule;
+struct MapperRule;
 pub struct BootloaderIdRule;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

@@ -28,12 +28,12 @@ pub fn height(ui: &Ui) -> f32 {
 /// Whether screen readers hear the unit's state change: on the row the
 /// keyboard is on, and on a failure wherever it shows. Every row live
 /// would read the whole list at each relist.
-pub fn announced(state: &RowState, tone: Tone) -> bool {
+fn announced(state: &RowState, tone: Tone) -> bool {
     tone == Tone::Error || state.response.has_focus()
 }
 
 /// "At boot" centred over the switches at the rows' right edge.
-pub fn column_caption(ui: &mut Ui) {
+pub(super) fn column_caption(ui: &mut Ui) {
     let caption = i18n::text(ui.ctx(), "services-at-boot");
     let secondary = ui.tokens().secondary;
     let size = line(ui, &caption, Weight::Regular, SMALL, secondary).size();
@@ -110,7 +110,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
                 context.commands.send(ServiceCommand::Enable {
                     scope: row.scope,
                     unit: row.unit.clone(),
-                    on: !row.enabled,
+                    on: toolbox_core::Toggle::from_on(!row.enabled),
                 });
             }
         },

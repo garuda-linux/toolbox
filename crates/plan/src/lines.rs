@@ -35,3 +35,26 @@ pub fn push_line(text: &mut String, line: &str) {
     text.push_str(line);
     text.push('\n');
 }
+
+/// `config` with every line `replace` takes swapped for `wanted`, each
+/// keeping its own break. The flag tells whether any line was taken.
+pub fn replace_lines(
+    config: &str,
+    wanted: &str,
+    mut replace: impl FnMut(&str) -> bool,
+) -> (String, bool) {
+    let mut placed = false;
+    let mut result = String::with_capacity(config.len() + wanted.len() + 1);
+
+    for line in config.split_inclusive('\n') {
+        if replace(line) {
+            placed = true;
+            result.push_str(wanted);
+            result.push_str(ending(line));
+        } else {
+            result.push_str(line);
+        }
+    }
+
+    (result, placed)
+}

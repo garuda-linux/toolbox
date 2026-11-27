@@ -47,7 +47,7 @@ pub use action::{
     EmptyTargetList, LoaderRefusal, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope,
     Upgrader, UserAction, boot_loader_steps,
 };
-pub use aur::{AUR_BUILT, AUR_STORE, InstallReason, MAKEPKG_ARGS, PARU_CLONE};
+pub use aur::{AUR_BUILT, AUR_CLONE, AUR_STORE, InstallReason, MAKEPKG_ARGS, REVIEW_TAIL};
 pub use bounded::{Bounded, OutOfRange};
 pub use config_file::{
     CONFIG_ROOTS, ConfigEntryLocation, ConfigFilePath, ConfigText, ConfigWrite, FetchAnswer,
@@ -82,8 +82,8 @@ pub use name::{
 };
 pub use network::{
     DEFAULT_HOPS, DEFAULT_PING_TIMEOUT, DEFAULT_PINGS, DEFAULT_TEST_HOST, HopLimit,
-    MODPROBE_BLACKLIST, PingCount, PingTimeout, blacklist_entry, blacklisted_modules,
-    set_blacklisted,
+    InvalidMacAddress, MODPROBE_BLACKLIST, MacAddress, PingCount, PingTimeout, blacklist_entry,
+    blacklisted_modules, set_blacklisted,
 };
 pub use page_name::{InvalidPageName, MAX_PAGE_NAME_BYTES, PageName};
 pub use plan::{Plan, PlannedAction, Segment, Step, StepId};
@@ -103,7 +103,7 @@ pub use settings::{
     WifiBackend,
 };
 pub use shell::{InvalidShellPath, ShellPath};
-pub use toggle::Toggle;
+pub use toggle::{Toggle, option_as_bool};
 pub use user_config::{
     ConfigReload, ConfigWord, EditError, HomePath, InvalidConfigWord, InvalidHomePath, Rewrite,
     UserConfigEdit,

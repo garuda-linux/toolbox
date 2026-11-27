@@ -1,15 +1,15 @@
 //! The words of the Boot Repair page that the page and its dialog share.
 
 use egui::Context;
-use toolbox_cli::output::size;
 use toolbox_core::features::bootrepair::page::{Progress, TargetChoice};
 use toolbox_core::features::bootrepair::{Encryption, Firmware, System};
 use toolbox_plan::{Name, RootLayout};
+use toolbox_text::size;
 
 use crate::i18n;
 
 /// "/dev/sda2 · Garuda · 200.0 GiB · btrfs", with the parts that are known.
-pub fn system_line(system: &System) -> String {
+pub(super) fn system_line(system: &System) -> String {
     line([
         Some(system.device().to_owned()),
         Some(system.label.to_string()),
@@ -19,7 +19,7 @@ pub fn system_line(system: &System) -> String {
 }
 
 /// The same for a place the boot loader can go.
-pub fn target_line(choice: &TargetChoice) -> String {
+pub(super) fn target_line(choice: &TargetChoice) -> String {
     let device = choice.target.device();
 
     line([
@@ -44,7 +44,7 @@ pub fn disks(system: &System) -> String {
     disks.join(", ")
 }
 
-pub fn firmware(ctx: &Context, firmware: Firmware) -> (String, String) {
+pub(super) fn firmware(ctx: &Context, firmware: Firmware) -> (String, String) {
     let (name, detail) = match firmware {
         Firmware::Uefi => ("repair-uefi", "repair-uefi-detail"),
         Firmware::Bios => ("repair-bios", "repair-bios-detail"),
@@ -56,7 +56,7 @@ pub fn firmware(ctx: &Context, firmware: Firmware) -> (String, String) {
     )
 }
 
-pub fn encryption(ctx: &Context, encryption: Encryption) -> String {
+pub(super) fn encryption(ctx: &Context, encryption: Encryption) -> String {
     let id = match encryption {
         Encryption::None => "repair-encryption-none",
         Encryption::Locked => "repair-encryption-locked",
@@ -67,7 +67,12 @@ pub fn encryption(ctx: &Context, encryption: Encryption) -> String {
 }
 
 pub fn layout(ctx: &Context, layout: RootLayout) -> String {
-    i18n::text(ctx, &format!("repair-layout-{}", layout.as_str())).into_owned()
+    let id = match layout {
+        RootLayout::Plain => "repair-layout-plain",
+        RootLayout::Subvolume => "repair-layout-subvolume",
+    };
+
+    i18n::text(ctx, id).into_owned()
 }
 
 /// How the repair this page started went, `None` without one.
@@ -84,6 +89,11 @@ pub fn progress(ctx: &Context, progress: Progress) -> Option<String> {
 }
 
 /// The layout as the choice on the page names it.
-pub fn layout_short(ctx: &Context, layout: RootLayout) -> String {
-    i18n::text(ctx, &format!("repair-layout-{}-short", layout.as_str())).into_owned()
+pub(super) fn layout_short(ctx: &Context, layout: RootLayout) -> String {
+    let id = match layout {
+        RootLayout::Plain => "repair-layout-plain-short",
+        RootLayout::Subvolume => "repair-layout-subvolume-short",
+    };
+
+    i18n::text(ctx, id).into_owned()
 }

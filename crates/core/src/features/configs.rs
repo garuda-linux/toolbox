@@ -19,6 +19,7 @@ use toolbox_plan::{
     ConfigFilePath, EditCopy, Editor, FetchRefusal, HomePath, Plan, RootAction, UserAction,
 };
 pub use toolbox_state::configs::{ConfigEntryLocation, ConfigEntrySpec, Found, Link, Listing};
+use toolbox_text::OutsideText;
 
 use self::session::EditWrite;
 use super::search::{Needle, Searchable};
@@ -86,8 +87,9 @@ pub struct Row {
     /// accounts, so the helper does not write it.
     pub read_only: bool,
     pub link: bool,
-    /// Where a link leads, as far as it could be followed.
-    pub target: String,
+    /// Where a link leads, as far as it could be followed. `None` without
+    /// a link.
+    pub target: Option<OutsideText>,
     /// The code of why a link is not edited here, or empty.
     pub refusal: &'static str,
     pub expanded: bool,
@@ -327,7 +329,7 @@ fn file_row(base: Row, link: Option<&Link>) -> Row {
         kind: RowKind::File,
         action: action(base.admin, base.read_only, refusal.is_some()),
         link: link.is_some(),
-        target: link.map(|link| link.target.clone()).unwrap_or_default(),
+        target: link.map(|link| link.target.clone()),
         refusal: refusal.map(FetchRefusal::as_str).unwrap_or_default(),
         ..base
     }

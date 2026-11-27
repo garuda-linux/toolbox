@@ -19,11 +19,11 @@ const TIMEOUT: Duration = Duration::from_secs(30);
 const MAX_BYTES: u64 = 1 << 20;
 
 /// Blocks while a request runs, so call it off the GUI thread.
-pub struct Https {
+pub struct NewsTransport {
     https: toolbox_https::Https,
 }
 
-impl Https {
+impl NewsTransport {
     /// A transport that reaches only the host of `source`'s feed.
     #[must_use = "the transport does nothing until a request is sent"]
     pub fn new(source: Source) -> Self {
@@ -38,7 +38,7 @@ impl Https {
     }
 }
 
-impl Transport for Https {
+impl Transport for NewsTransport {
     fn get(&self, url: &str) -> Result<Vec<u8>, RequestError> {
         let response = self.https.get(url, &[])?;
         if response.status() != StatusCode::OK {

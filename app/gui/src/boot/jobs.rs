@@ -122,7 +122,7 @@ impl Jobs {
     }
 
     /// Starts a read of the menu. Returns whether one started.
-    pub fn read_menu(&mut self) -> bool {
+    pub(super) fn read_menu(&mut self) -> bool {
         self.read.read()
     }
 
@@ -130,7 +130,7 @@ impl Jobs {
         self.read.running()
     }
 
-    pub fn menu_read(&mut self) -> Option<MenuRead> {
+    pub(super) fn menu_read(&mut self) -> Option<MenuRead> {
         self.read.take()
     }
 

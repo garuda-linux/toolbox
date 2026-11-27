@@ -2,7 +2,7 @@ use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 
 use tempfile::TempDir;
-use toolbox_catalog::COMPONENTS;
+use toolbox_catalog::{COMPONENTS, LoadCode};
 
 use super::{AppCatalogs, CatalogId, Toggles, catalog_dir_in};
 use crate::page::PageId;
@@ -58,7 +58,7 @@ fn a_missing_catalog_is_a_problem_not_a_stop() {
 
     let problem = Toggles::load(empty.path(), COMPONENTS).catalog.unwrap_err();
 
-    assert_eq!(problem.code, "unreadable");
+    assert_eq!(problem.code, LoadCode::Unreadable);
 }
 
 #[test]
@@ -151,7 +151,7 @@ fn a_broken_category_leaves_the_others() {
 
     let loaded = AppCatalogs::load(dir.path());
 
-    assert_eq!(loaded.problem.unwrap().code, "unreadable");
+    assert_eq!(loaded.problem.unwrap().code, LoadCode::Unreadable);
     assert!(loaded.apps.all().all(|hit| hit.category.id() == "science"));
     assert!(loaded.apps.all().next().is_some());
 }

@@ -7,6 +7,7 @@ mod tests;
 use std::fmt::Write as _;
 
 use toolbox_cli::output::{Mark, Row};
+use toolbox_plan::ShellPath;
 
 use super::{GroupRow, KernelRow, LocaleRow, ServiceRow, ToggleRow, UserRow};
 use crate::out::Listing;
@@ -36,7 +37,7 @@ pub fn services(rows: &[ServiceRow], user: bool) -> Listing<'_> {
                 };
 
                 let boot = if row.at_boot { "at boot" } else { "" };
-                Row::cells(mark, &[&row.name, state, boot])
+                Row::cells(mark, &[row.name.as_str(), state, boot])
             })
             .collect(),
         hint: Some(format!("garuda-toolbox services start{user} <name>")),
@@ -96,7 +97,7 @@ pub fn kernels(rows: &[KernelRow]) -> Listing<'_> {
 
                 let default = if row.default { "default" } else { "" };
 
-                Row::cells(mark, &[&row.name, &row.version, state, default])
+                Row::cells(mark, &[row.name.as_str(), &row.version, state, default])
             })
             .collect(),
         hint: Some("garuda-toolbox kernels install <name>".to_owned()),
@@ -119,7 +120,7 @@ pub fn locales(rows: &[LocaleRow]) -> Listing<'_> {
                     (false, false) => (Mark::Off, ""),
                 };
 
-                Row::cells(mark, &[&row.locale, &row.charset, state])
+                Row::cells(mark, &[row.locale.as_str(), &row.charset, state])
             })
             .collect(),
         hint: Some("garuda-toolbox locales enable <locale>".to_owned()),
@@ -143,7 +144,17 @@ pub fn users(rows: &[UserRow], hidden: usize) -> Listing<'_> {
         head: &["USER", "NAME", "SHELL"],
         rows: rows
             .iter()
-            .map(|row| Row::cells(Mark::Blank, &[&row.name, &row.full_name, &row.shell]))
+            .map(|row| {
+                let shell = row
+                    .shell
+                    .as_ref()
+                    .map_or_else(|text| text.as_str(), ShellPath::as_str);
+
+                Row::cells(
+                    Mark::Blank,
+                    &[row.name.as_str(), row.full_name.as_str(), shell],
+                )
+            })
             .collect(),
         hint,
     }
@@ -156,7 +167,7 @@ pub fn groups(rows: &[GroupRow]) -> Listing<'_> {
         head: &["GROUP", "MEMBERS"],
         rows: rows
             .iter()
-            .map(|row| Row::plain(vec![row.name.clone(), row.members.join(", ")]))
+            .map(|row| Row::plain(vec![row.name.as_str().to_owned(), row.members.join(", ")]))
             .collect(),
         hint: None,
     }

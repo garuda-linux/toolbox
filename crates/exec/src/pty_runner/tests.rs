@@ -322,9 +322,9 @@ fn builtins_and_feeds_go_through_the_runner() {
     let builtin = Builtin::EditUserConfig {
         edit: UserConfigEdit::File {
             path: HomePath::new(".config/app.conf").unwrap(),
-            content: "on = true\n".to_owned(),
+            content: "on = true\n".parse().unwrap(),
         },
-        on: true,
+        on: toolbox_plan::Toggle::On,
     };
 
     assert!(matches!(

@@ -14,6 +14,7 @@ use toolbox_state::boot::{BootLoader, SdBootKernel};
 pub use toolbox_state::probes::{FailedProbes, Probe};
 
 use crate::accounts::{AccountSource, EtcAccounts};
+use crate::aur_route::{RouteSource, SystemRoute, probe_route};
 use crate::boot::{BootSource, SystemBoot};
 use crate::error::ProbeError;
 use crate::host::{Host, HostSource, SystemHost};
@@ -44,6 +45,8 @@ pub struct Sources {
     pub modules: Arc<dyn ModuleSource>,
     /// The copies pacman left, for the queued merges.
     pub merges: Arc<dyn MergeSource>,
+    /// The helper's check of the user's way to the build folder.
+    pub route: Arc<dyn RouteSource>,
     /// The edits the catalogs offer, so the probe reads only their files.
     pub config_edits: Arc<[UserConfigEdit]>,
 }
@@ -69,6 +72,7 @@ impl Sources {
             user_configs: Arc::new(HomeConfigs::from_env()),
             modules: Arc::new(SystemModules::system()),
             merges: Arc::new(Pacdiff::new()),
+            route: Arc::new(SystemRoute::system()),
             config_edits: Arc::from([]),
         }
     }
@@ -138,6 +142,7 @@ pub fn probe_snapshot(sources: &Sources) -> (Snapshot, Vec<ProbeIssue>) {
         Probe::Merges,
         merge_copies(sources.merges.as_ref()),
     );
+    snapshot.insert(probe_route(sources.route.as_ref()));
     snapshot.insert(host);
     snapshot.insert(failed_probes(&issues));
 

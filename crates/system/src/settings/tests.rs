@@ -4,6 +4,7 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::path::PathBuf;
 
 use tempfile::TempDir;
+use toolbox_fs::testing::as_person;
 use toolbox_plan::{
     DNS_CONFIG, DnsProvider, GarudaUpdateFlag, KernelModule, Toggle, WIFI_BACKEND_CONFIG,
     WifiBackend, set_blacklisted,
@@ -13,7 +14,7 @@ use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig
 
 use super::{EtcSettings, SettingsSource as _, blocks_domains, parse_dns};
 use crate::ProbeError;
-use crate::test_support::{as_person, write};
+use crate::test_support::write;
 
 /// The Lima VM's `/etc/hosts` before and after `hblock`, the latter cut
 /// to its first 80 lines.

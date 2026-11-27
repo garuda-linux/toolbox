@@ -14,14 +14,14 @@ use std::fmt;
 use egui::{Context, Ui};
 use toolbox_core::features::users::home::check_uid;
 use toolbox_core::features::users::input::{
-    self, AddForm, InputProblem, NewAccount, add_blocker, login_from_full_name,
+    self, AddBlocker, AddForm, InputProblem, NewAccount, add_blocker, login_from_full_name,
 };
 use toolbox_core::features::users::now::check_new_name;
 use toolbox_core::features::users::run::{Retry, RunKind};
 use toolbox_core::features::users::view;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{ButtonKind, disclosure};
-use toolbox_plan::{FullName, GroupName, InvalidFullName, NewUser, UserName};
+use toolbox_plan::{FullName, GroupName, NewUser, UserName};
 
 use super::password::PasswordPair;
 use super::shell::{ShellDefault, shell_choice};
@@ -166,9 +166,8 @@ impl AddUser {
         let problems = Problems {
             name: name.err().filter(|_| !self.name.is_empty()).map(named),
             full_name: FullName::new(self.full_name.clone())
-                .map_err(InvalidFullName::as_str)
                 .err()
-                .map(|code| texts::full_name_problem(ctx, code)),
+                .map(|rule| texts::full_name_problem(ctx, rule)),
             home: (!self.no_home && !self.home.is_empty())
                 .then(|| input::home(&self.home).err())
                 .flatten()
@@ -217,13 +216,13 @@ impl AddUser {
                 && problems.uid.is_none(),
         };
 
-        let code = match add_blocker(&form) {
-            Some(blocker) => blocker.as_str(),
-            None if context.busy => "busy",
+        let id = match add_blocker(&form) {
+            Some(blocker) => blocker_id(blocker),
+            None if context.busy => "users-add-why-busy",
             None => return None,
         };
 
-        Some(i18n::text(ctx, &format!("users-add-why-{code}")).into_owned())
+        Some(i18n::text(ctx, id).into_owned())
     }
 
     fn required(
@@ -283,5 +282,16 @@ impl AddUser {
 
             ui.add_space(ui.tokens().sizes.card_gap);
         }
+    }
+}
+
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn blocker_id(blocker: AddBlocker) -> &'static str {
+    match blocker {
+        AddBlocker::NoName => "users-add-why-no-name",
+        AddBlocker::BadName => "users-add-why-bad-name",
+        AddBlocker::NoPassword => "users-add-why-no-password",
+        AddBlocker::NoRepeat => "users-add-why-no-repeat",
+        AddBlocker::Fields => "users-add-why-fields",
     }
 }

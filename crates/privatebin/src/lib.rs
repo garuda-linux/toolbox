@@ -7,4 +7,4 @@ mod https;
 pub mod paste;
 
 pub use client::{Paste, RequestError, SERVER, Transport, UploadError, upload};
-pub use https::Https;
+pub use https::PrivateBinTransport;

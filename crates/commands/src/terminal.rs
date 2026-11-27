@@ -205,7 +205,7 @@ fn tty() -> Option<File> {
 /// Reads one secret line byte by byte from a terminal without line
 /// editing: Return or a line feed ends it, Backspace takes back the last
 /// character. A secret cut short is overwritten before it is dropped.
-pub fn read_secret(input: &mut dyn Read) -> Typed {
+fn read_secret(input: &mut dyn Read) -> Typed {
     let mut typed: Vec<u8> = Vec::with_capacity(MAX_PASSWORD_BYTES + 1);
     let mut byte = [0_u8];
 

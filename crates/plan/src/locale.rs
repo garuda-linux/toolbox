@@ -9,7 +9,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-use crate::lines::{ending, push_line};
+use crate::lines::{push_line, replace_lines};
 use crate::{Charset, LocaleName, Toggle};
 
 /// Relative to `/`, like every path the helper writes below its root.
@@ -199,18 +199,7 @@ pub fn system_lang(config: &str) -> Option<LocaleName> {
 /// regional formats (`LC_TIME` and the like) keep their own locales.
 pub fn set_system_lang(config: &str, locale: &LocaleName) -> String {
     let wanted = format!("{LANG}={locale}");
-    let mut placed = false;
-    let mut result = String::with_capacity(config.len() + wanted.len() + 1);
-
-    for line in config.split_inclusive('\n') {
-        if lang_value(line).is_some() {
-            placed = true;
-            result.push_str(&wanted);
-            result.push_str(ending(line));
-        } else {
-            result.push_str(line);
-        }
-    }
+    let (mut result, placed) = replace_lines(config, &wanted, |line| lang_value(line).is_some());
 
     if !placed {
         push_line(&mut result, &wanted);

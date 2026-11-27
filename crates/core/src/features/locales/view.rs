@@ -24,8 +24,10 @@ pub struct LanguagePackRow {
     pub pack: String,
     pub base: String,
     pub locale_code: String,
-    pub language: String,
-    pub territory: String,
+    /// `None` where the system names no language for the locale.
+    pub language: Option<String>,
+    /// `None` where the language has no territory.
+    pub territory: Option<String>,
     pub installed: bool,
     pub on: bool,
     pub queued: Option<Toggle>,
@@ -45,26 +47,17 @@ pub fn locales(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<LocaleRow> {
     all_rows(snapshot, changes)
 }
 
-pub fn system_current(snapshot: &Snapshot) -> String {
-    snapshot
-        .part::<CurrentSystemLocale>()
-        .and_then(|current| current.0.as_ref())
-        .map_or("", LocaleName::as_str)
-        .to_owned()
+pub fn system_current(snapshot: &Snapshot) -> Option<LocaleName> {
+    snapshot.part::<CurrentSystemLocale>()?.0.clone()
 }
 
-pub fn system_queued(changes: &ChangeSet) -> String {
-    changes
-        .wish::<SystemLocales>(&Single)
-        .map_or("", LocaleName::as_str)
-        .to_owned()
+pub fn system_queued(changes: &ChangeSet) -> Option<LocaleName> {
+    changes.wish::<SystemLocales>(&Single).cloned()
 }
 
 /// The language the page shows: the queued one, else the current.
-pub fn system_shown(snapshot: &Snapshot, changes: &ChangeSet) -> String {
-    Some(system_queued(changes))
-        .filter(|queued| !queued.is_empty())
-        .unwrap_or_else(|| system_current(snapshot))
+pub fn system_shown(snapshot: &Snapshot, changes: &ChangeSet) -> Option<LocaleName> {
+    system_queued(changes).or_else(|| system_current(snapshot))
 }
 
 pub fn system_choices(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<String> {
@@ -75,8 +68,11 @@ pub fn system_choices(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<String> {
 }
 
 /// The language and territory of each system choice, in the same order,
-/// empty where the system names no language for a locale.
-pub fn system_choice_names(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<(String, String)> {
+/// `None` where the system names none.
+pub fn system_choice_names(
+    snapshot: &Snapshot,
+    changes: &ChangeSet,
+) -> Vec<(Option<String>, Option<String>)> {
     let names = snapshot.part::<LocaleNames>();
 
     offered(snapshot, changes)
@@ -84,7 +80,10 @@ pub fn system_choice_names(snapshot: &Snapshot, changes: &ChangeSet) -> Vec<(Str
         .map(|locale| {
             let name = names.and_then(|names| names.of(locale));
 
-            (language(name), territory(name))
+            (
+                language(name).map(str::to_owned),
+                territory(name).map(str::to_owned),
+            )
         })
         .collect()
 }
@@ -215,18 +214,20 @@ fn pack_row(row: &PackRow) -> LanguagePackRow {
         pack: row.pack.package.as_str().to_owned(),
         base: row.pack.base.as_str().to_owned(),
         locale_code: row.pack.locale.as_str().to_owned(),
-        language: language(row.name.as_ref()),
-        territory: territory(row.name.as_ref()),
+        language: language(row.name.as_ref()).map(str::to_owned),
+        territory: territory(row.name.as_ref()).map(str::to_owned),
         installed: row.installed,
         on: row.is_on(),
         queued: row.queued,
     }
 }
 
-fn language(name: Option<&LanguageName>) -> String {
-    name.map_or("", |name| name.language.as_str()).to_owned()
+fn language(name: Option<&LanguageName>) -> Option<&str> {
+    name.map(|name| name.language.as_str())
+        .filter(|text| !text.is_empty())
 }
 
-fn territory(name: Option<&LanguageName>) -> String {
-    name.map_or("", |name| name.territory.as_str()).to_owned()
+fn territory(name: Option<&LanguageName>) -> Option<&str> {
+    name.map(|name| name.territory.as_str())
+        .filter(|text| !text.is_empty())
 }

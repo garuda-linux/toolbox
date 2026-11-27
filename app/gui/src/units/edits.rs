@@ -6,7 +6,7 @@
 mod tests;
 
 use toolbox_core::features::services::{self, UnitWish};
-use toolbox_core::{ChangeSet, Snapshot, Toggle};
+use toolbox_core::{ChangeSet, Snapshot};
 
 use super::Units;
 use crate::command::{AppCommand, ServiceCommand};
@@ -25,12 +25,8 @@ impl Units {
         };
 
         let (scope, unit, wish) = match command {
-            ServiceCommand::Enable { scope, unit, on } => {
-                (scope, unit, UnitWish::AtBoot(Toggle::from_on(*on)))
-            }
-            ServiceCommand::Mask { scope, unit, on } => {
-                (scope, unit, UnitWish::Masked(Toggle::from_on(*on)))
-            }
+            ServiceCommand::Enable { scope, unit, on } => (scope, unit, UnitWish::AtBoot(*on)),
+            ServiceCommand::Mask { scope, unit, on } => (scope, unit, UnitWish::Masked(*on)),
             ServiceCommand::Refresh(scope) => {
                 self.refresh(*scope);
                 return Handled::taken();

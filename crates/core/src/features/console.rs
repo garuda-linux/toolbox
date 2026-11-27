@@ -6,6 +6,8 @@ pub mod ending;
 #[cfg(test)]
 mod tests;
 
+use toolbox_plan::REVIEW_TAIL;
+
 /// The helper or the steps that run as the user failed outside a step.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]
 #[strum(serialize_all = "kebab-case")]
@@ -30,4 +32,10 @@ impl HelperFailure {
     pub fn as_str(self) -> &'static str {
         self.into()
     }
+}
+
+/// Whether a running step's command is the review that waits for `y` and
+/// Enter before any build. The Console shows Continue and Cancel for it only.
+pub fn asks_review(command: &str) -> bool {
+    command.starts_with("paru -G -- ") && command.ends_with(REVIEW_TAIL)
 }

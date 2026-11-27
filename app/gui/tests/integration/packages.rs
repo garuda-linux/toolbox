@@ -14,6 +14,7 @@ use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui::packages::{PackagesSetup, SampleAur};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, PreferencesSetup, Setup, snapshot};
+use toolbox_state::aur::{AurRoute, RouteKind};
 
 use self::source::{Database, Log};
 use crate::common::{Fixture, SMALLEST, TALL, WIDTH, packages, queued_shown, type_into};
@@ -27,6 +28,12 @@ fn system() -> Snapshot {
     snapshot.insert(InstalledPackages(packages(&INSTALLED)));
     snapshot.insert(SyncPackages(packages(&OFFERED)));
     snapshot.insert(PackageGraph::default());
+
+    // The helper refuses this build folder, so an AUR build takes paru's own path.
+    snapshot.insert(AurRoute::Refused {
+        kind: RouteKind::Linked,
+        detail: "the home folder is a link".to_owned(),
+    });
     snapshot
 }
 
@@ -91,6 +98,8 @@ pub fn launch(
                         source: Arc::new(Database::captured()),
                         log: Arc::new(Log),
                         aur: source,
+                        orders: Arc::new(toolbox_system::SampleAurOrders),
+                        route: Arc::new(toolbox_system::SampleRoute),
                     }),
                     system_language,
                     preferences: preferences(aur),

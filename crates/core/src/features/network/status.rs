@@ -5,20 +5,41 @@ pub use toolbox_state::network::{
 };
 use toolbox_state::services::{ActiveState, FileState, UnitInfo};
 
-pub const SERVICES: [&str; 3] = [
-    "NetworkManager.service",
-    "connman.service",
-    "bluetooth.service",
-];
+/// The units of the services tab.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum NetworkUnit {
+    NetworkManager,
+    Connman,
+    Bluetooth,
+    /// The location service desktops ask for the position. It starts on
+    /// demand over D-Bus and has no enabled state of its own.
+    Geoclue,
+}
 
-/// The location service desktops ask for the position. It starts on
-/// demand over D-Bus and has no enabled state of its own.
-pub const GEOCLUE: &str = "geoclue.service";
+impl NetworkUnit {
+    /// In the order the tab lists them.
+    pub const ALL: [Self; 4] = [
+        Self::NetworkManager,
+        Self::Connman,
+        Self::Bluetooth,
+        Self::Geoclue,
+    ];
+
+    /// The name systemd lists the unit under.
+    pub const fn unit(self) -> &'static str {
+        match self {
+            Self::NetworkManager => "NetworkManager.service",
+            Self::Connman => "connman.service",
+            Self::Bluetooth => "bluetooth.service",
+            Self::Geoclue => "geoclue.service",
+        }
+    }
+}
 
 /// One service of the tab.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ServiceRow {
-    pub unit: &'static str,
+    pub unit: NetworkUnit,
     pub active: ActiveState,
     pub file_state: FileState,
 }
@@ -58,16 +79,15 @@ pub fn flight_mode(radios: &[Radio]) -> bool {
 /// them. A unit systemd does not list, or lists without a unit file, is
 /// not installed and left out.
 pub fn service_rows(units: &[UnitInfo]) -> Vec<ServiceRow> {
-    SERVICES
+    NetworkUnit::ALL
         .into_iter()
-        .chain([GEOCLUE])
-        .filter_map(|name| {
-            let unit = units
-                .iter()
-                .find(|unit| unit.name.as_str() == name && unit.file_state != FileState::Unknown)?;
+        .filter_map(|network| {
+            let unit = units.iter().find(|unit| {
+                unit.name.as_str() == network.unit() && unit.file_state != FileState::Unknown
+            })?;
 
             Some(ServiceRow {
-                unit: name,
+                unit: network,
                 active: unit.active,
                 file_state: unit.file_state,
             })
@@ -75,12 +95,15 @@ pub fn service_rows(units: &[UnitInfo]) -> Vec<ServiceRow> {
         .collect()
 }
 
-/// Starts one of [`SERVICES`] at once in the Console. `None` for any
-/// other unit: the Services page starts those.
+/// Starts a service at once in the Console. `None` for the location
+/// service: the Services page starts that one.
 #[must_use = "a plan does nothing until it is run"]
-pub fn plan_start(unit: &str) -> Option<Plan> {
-    let name = SERVICES.into_iter().find(|service| *service == unit)?;
-    let service = UnitName::new(name).ok()?;
+pub fn plan_start(unit: NetworkUnit) -> Option<Plan> {
+    if unit == NetworkUnit::Geoclue {
+        return None;
+    }
+
+    let service = UnitName::new(unit.unit()).ok()?;
 
     Some(Plan::root(RootAction::ControlUnits {
         operation: UnitOperation::Start,

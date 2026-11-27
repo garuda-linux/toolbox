@@ -25,7 +25,7 @@ const PARAMETER_MARKS: &str = "_-.,:=/@+%!~^[]";
 /// off. One ending in `=` matches every value, one with a value only that
 /// value, a bare one itself with or without a value. The name is compared
 /// with `_` read as `-`, the value never.
-pub const RISKY_PARAMETERS: [&str; 19] = [
+const RISKY_PARAMETERS: [&str; 19] = [
     "init=",
     "rd.break",
     "rdinit=",

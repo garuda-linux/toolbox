@@ -4,6 +4,7 @@
 use serde::Serialize;
 use toolbox_cli::output::Paint;
 use toolbox_core::features::network::{InterfaceCard, Link, Signal, SignalQuality};
+use toolbox_plan::MacAddress;
 use toolbox_services::i18n::{Arg, FALLBACK, text_in, text_with_in};
 use toolbox_text::OutsideText;
 
@@ -12,7 +13,7 @@ use toolbox_text::OutsideText;
 pub struct InterfaceView {
     pub connection: OutsideText,
     pub interface: OutsideText,
-    pub mac: Option<String>,
+    pub mac: Option<MacAddress>,
     pub ipv4: Vec<String>,
     pub ipv6: Vec<String>,
     pub dns: Vec<String>,
@@ -24,7 +25,7 @@ pub struct InterfaceView {
 }
 
 /// The cards as the command's views, in the order the cards come.
-pub fn interface_views(cards: &[InterfaceCard]) -> Vec<InterfaceView> {
+pub(super) fn interface_views(cards: &[InterfaceCard]) -> Vec<InterfaceView> {
     cards
         .iter()
         .map(|card| {
@@ -52,7 +53,7 @@ pub fn interface_views(cards: &[InterfaceCard]) -> Vec<InterfaceView> {
 
 /// A card's facts: the connection as the title, then the rows the card
 /// has. Several addresses or servers share a row, separated by commas.
-pub fn interface_facts(paint: Paint, card: &InterfaceView) -> String {
+pub(super) fn interface_facts(paint: Paint, card: &InterfaceView) -> String {
     let mut rows: Vec<(&str, String)> = vec![("interface", card.interface.to_string())];
     if !card.ipv4.is_empty() {
         rows.push(("ipv4", card.ipv4.join(", ")));
@@ -67,7 +68,7 @@ pub fn interface_facts(paint: Paint, card: &InterfaceView) -> String {
     }
 
     if let Some(mac) = &card.mac {
-        rows.push(("mac", mac.clone()));
+        rows.push(("mac", mac.to_string()));
     }
 
     if let Some(speed) = card.speed {
@@ -92,7 +93,7 @@ pub fn interface_facts(paint: Paint, card: &InterfaceView) -> String {
 
 /// The signal as the window words it, such as "Good (57 %)", from the same
 /// Fluent texts. The thresholds are nmcli's.
-pub fn signal_text(percent: u8) -> String {
+pub(super) fn signal_text(percent: u8) -> String {
     let quality = Signal { percent }.quality();
     let id = match quality {
         SignalQuality::Excellent => "network-signal-excellent",

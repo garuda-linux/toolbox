@@ -1,5 +1,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use toolbox_plan::LocaleName;
+
 use super::{
     LanguagePackRow, LocaleRow, add_missing_packs, drop_stranded_packs, locales as all_locales,
     locales_known, pack_rows, packs as pack_list, packs_known, packs_missing as missing,
@@ -79,8 +81,11 @@ fn a_system_without_generated_locales_is_unknown() {
         locales(&snapshot, &changes, &Filter::default()),
         Vec::<LocaleRow>::new()
     );
-    assert_eq!(system_current(&snapshot), "en_US.UTF-8");
-    assert_eq!(system_queued(&changes), "");
+    assert_eq!(
+        system_current(&snapshot).as_ref().map(LocaleName::as_str),
+        Some("en_US.UTF-8")
+    );
+    assert_eq!(system_queued(&changes), None);
     assert_eq!(system_choices(&snapshot, &changes), Vec::<String>::new());
     assert!(!packs_known(&snapshot, &changes));
     assert_eq!(packs_missing(&snapshot, &changes), 0);
@@ -139,16 +144,26 @@ fn the_system_language_offers_enabled_and_queued_locales() {
     changes.want::<Locales>(locale_entry("de_DE.UTF-8 UTF-8"), Toggle::On, &snapshot);
     changes.want::<SystemLocales>(Single, locale("de_DE.UTF-8"), &snapshot);
 
-    assert_eq!(system_current(&snapshot), "en_US.UTF-8");
-    assert_eq!(system_queued(&changes), "de_DE.UTF-8");
     assert_eq!(
-        system_shown(&snapshot, &changes),
-        "de_DE.UTF-8",
+        system_current(&snapshot).as_ref().map(LocaleName::as_str),
+        Some("en_US.UTF-8")
+    );
+    assert_eq!(
+        system_queued(&changes).as_ref().map(LocaleName::as_str),
+        Some("de_DE.UTF-8")
+    );
+    assert_eq!(
+        system_shown(&snapshot, &changes)
+            .as_ref()
+            .map(LocaleName::as_str),
+        Some("de_DE.UTF-8"),
         "the queued language wins"
     );
     assert_eq!(
-        system_shown(&snapshot, &ChangeSet::default()),
-        "en_US.UTF-8",
+        system_shown(&snapshot, &ChangeSet::default())
+            .as_ref()
+            .map(LocaleName::as_str),
+        Some("en_US.UTF-8"),
         "without a queued language the current one shows"
     );
     assert_eq!(
@@ -171,8 +186,8 @@ fn packs_follow_the_enabled_locales_and_count_what_is_missing() {
                 pack: "firefox-i18n-en-us".to_owned(),
                 base: "firefox".to_owned(),
                 locale_code: "en_US.UTF-8".to_owned(),
-                language: "American English".to_owned(),
-                territory: "United States".to_owned(),
+                language: Some("American English".to_owned()),
+                territory: Some("United States".to_owned()),
                 installed: false,
                 on: false,
                 queued: None,
@@ -181,8 +196,8 @@ fn packs_follow_the_enabled_locales_and_count_what_is_missing() {
                 pack: "hunspell-en_us".to_owned(),
                 base: "hunspell".to_owned(),
                 locale_code: "en_US.UTF-8".to_owned(),
-                language: "American English".to_owned(),
-                territory: "United States".to_owned(),
+                language: Some("American English".to_owned()),
+                territory: Some("United States".to_owned()),
                 installed: true,
                 on: true,
                 queued: None,
@@ -234,8 +249,11 @@ fn every_system_choice_carries_its_language_where_one_is_known() {
     assert_eq!(
         system_choice_names(&snapshot, &changes),
         [
-            (String::new(), String::new()),
-            ("American English".to_owned(), "United States".to_owned()),
+            (None, None),
+            (
+                Some("American English".to_owned()),
+                Some("United States".to_owned())
+            ),
         ]
     );
 }

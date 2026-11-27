@@ -8,7 +8,7 @@ use toolbox_core::Owners;
 use toolbox_plan::Plan;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub enum Applying {
+pub(super) enum Applying {
     #[default]
     None,
     /// Sent to the helper, which has not started it. Another plan may

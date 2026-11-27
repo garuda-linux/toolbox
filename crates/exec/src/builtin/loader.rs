@@ -15,7 +15,7 @@ const BACKUP: &str = "loader.conf.bak";
 ///
 /// When no ESP is mounted, a folder on the way is a symlink, the file is
 /// a symlink or not UTF-8, or the write fails.
-pub fn edit_loader_conf(root: &Path, change: &LoaderChange) -> io::Result<FileChange> {
+pub(super) fn edit_loader_conf(root: &Path, change: &LoaderChange) -> io::Result<FileChange> {
     let path = crate::sdboot::esp(root)?.loader_conf();
 
     let (dir, name) = secure::open_parent(root, path)?;

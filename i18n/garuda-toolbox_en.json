@@ -196,6 +196,40 @@
       "string": "Other changes are still being applied, so this did not run. Try again once they are done."
     }
   },
+  "aur": {
+    "aur-old-path": {
+      "string": "This setup uses the old paru path: {reason}",
+      "developer_comment": "Why a setup builds an AUR package through paru's own way. $reason is one\nof the aur-route texts below."
+    },
+    "aur-route-no-account": {
+      "string": "the account has no entry in /etc/passwd, as with systemd-homed or LDAP accounts"
+    },
+    "aur-route-linked": {
+      "string": "the home folder or ~/.cache is a link, or a folder the build needs is missing"
+    },
+    "aur-route-shared": {
+      "string": "a folder the build uses can be written by other users"
+    },
+    "aur-route-through-sudo": {
+      "string": "the command line asks for the password through sudo, which does not say who asked"
+    },
+    "aur-route-other": {
+      "string": "the build folder cannot be checked"
+    },
+    "aur-order-unread": {
+      "string": "{name} has no build order yet: paru could not be asked.",
+      "developer_comment": "Why a queued AUR build has no build order yet. $name is the package."
+    },
+    "aur-order-route": {
+      "string": "{name} has no build order: its build folder cannot be used."
+    },
+    "aur-order-missing": {
+      "string": "{name} has no build order: the AUR does not have it."
+    },
+    "aur-order-not-named": {
+      "string": "{name} has no build order: paru does not build it from the AUR."
+    }
+  },
   "boot": {
     "page-boot-subtitle": {
       "string": "Applying the changes writes /etc/default/grub, keeps the old file as a backup and builds the boot menu again."
@@ -4195,11 +4229,39 @@
       "string": "Apply waits for the package list of the AUR. The Packages page says when it cannot be read."
     },
     "changes-wait-orders": {
-      "string": "Apply waits for the build orders of the queued AUR packages. Take those packages out of the queue to apply the rest.",
-      "developer_comment": "Why Apply is disabled while a queued AUR build has no build order yet."
+      "string": "Apply waits for a build order. {reason}",
+      "developer_comment": "Why Apply is disabled while a queued AUR build has no build order yet. $reason\nnames the package and why its order is missing."
+    },
+    "changes-wait-order-unknown": {
+      "string": "{name} waits for its build order.",
+      "developer_comment": "A queued AUR build that no read has answered yet. $name is the package."
+    },
+    "changes-wait-reading": {
+      "string": "Apply waits until the build orders of {names} are read.",
+      "developer_comment": "Why Apply is disabled while the build orders of the queued AUR packages are\nread. $names lists the packages."
+    },
+    "changes-cancel-apply": {
+      "string": "Cancel",
+      "developer_comment": "Drops an Apply that waits for the build orders."
     },
     "changes-wait-running": {
       "string": "Apply waits until the changes being applied are done."
+    },
+    "changes-build-reading": {
+      "string": "Reading the build order",
+      "developer_comment": "The lines under a queued AUR package. $bases are the packages paru builds,\n$count the repository packages it installs as dependencies."
+    },
+    "changes-build-waiting": {
+      "string": "Waits for its build order"
+    },
+    "changes-build-ready": {
+      "string": "Builds {bases}. {count, plural, one {Installs one repository package as a dependency.} other {Installs {count} repository packages as dependencies.}}"
+    },
+    "changes-build-packages": {
+      "string": "Packages"
+    },
+    "changes-old-path-password": {
+      "string": "paru asks for the password for each step, so it may ask several times."
     },
     "changes-unread-locks": {
       "string": "Apply waits: the lock state of the accounts could not be read.",
@@ -5044,6 +5106,13 @@
     },
     "console-cancel": {
       "string": "Cancel"
+    },
+    "console-continue": {
+      "string": "Continue"
+    },
+    "console-review-hint": {
+      "string": "The build files are shown above. Continue sends y and Enter, so the build goes on. Cancel stops the plan.",
+      "developer_comment": "Above the review buttons, while a build waits for its answer."
     },
     "console-hide": {
       "string": "Hide the Console"
@@ -7003,6 +7072,9 @@
     "packages-refused-last-kernel": {
       "string": "{name} is the last installed kernel. Install another one before you remove it."
     },
+    "packages-refused-conflicts": {
+      "string": "{name} is installed and conflicts with the AUR package you chose. Remove {name} first."
+    },
     "packages-dismiss": {
       "string": "Dismiss"
     },
@@ -7260,6 +7332,10 @@
     },
     "packages-aur-install-body": {
       "string": "Built from a community script on your computer. paru shows the build script in the Console before it builds."
+    },
+    "packages-aur-install-body-split": {
+      "string": "Built from a community script on your computer. The Console shows the build files for your review before anything is built or installed.",
+      "developer_comment": "The same question on the split path, where the app shows the build files."
     },
     "packages-aur-install-confirm": {
       "string": "Build and Install"
@@ -8744,6 +8820,9 @@
     },
     "users-locks-unknown": {
       "string": "Which accounts are locked is not known: the helper of Garuda Toolbox could not read it."
+    },
+    "users-locks-broken": {
+      "string": "Which accounts are locked is not known: pkexec cannot run on this system."
     },
     "users-run-password-running": {
       "string": "Setting the password of {user}…"

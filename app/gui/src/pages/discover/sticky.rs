@@ -10,7 +10,7 @@ use super::app_row::AppGroup;
 /// Where a group's heading and rows lie. The positions count from the top
 /// of the list's content, so they hold while the list scrolls.
 #[derive(Clone, Copy, Debug)]
-pub struct Mark {
+pub(super) struct Mark {
     pub top: f32,
     pub heading_bottom: f32,
     pub end: f32,

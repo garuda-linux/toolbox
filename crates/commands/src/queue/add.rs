@@ -21,7 +21,7 @@ use toolbox_core::features::services::critical;
 use crate::change::KernelChange;
 
 #[derive(Debug)]
-pub enum Queueable<'a> {
+pub(super) enum Queueable<'a> {
     Toggle(&'a EntryArgs, Toggle),
     App(&'a EntryArgs, Toggle),
     Unit(UnitChange, &'a UnitArgs),
@@ -115,7 +115,7 @@ impl NotQueued {
     clippy::too_many_lines,
     reason = "one arm per change command, a new command fails to compile until it is sorted in"
 )]
-pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
+pub(super) fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
     let confirm = command.confirm().ok_or(NotQueued::Reads)?;
     if confirm.yes || confirm.dry_run || confirm.json {
         return Err(NotQueued::Flag);

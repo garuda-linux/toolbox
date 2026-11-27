@@ -210,8 +210,8 @@ fn a_refused_click_says_why_until_dismissed() {
             uid: 1000,
             gid: 1000,
             gecos: toolbox_text::plain(""),
-            home: "/home/nico".to_owned(),
-            shell: "/usr/bin/bash".to_owned(),
+            home: Ok("/home/nico".parse().unwrap()),
+            shell: Ok("/usr/bin/bash".parse().unwrap()),
         }],
         groups: vec![Group {
             name: "nico".parse().unwrap(),

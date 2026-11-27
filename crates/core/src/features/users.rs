@@ -194,13 +194,13 @@ pub fn set_groups(
 pub fn set_locked(
     user: &UserName,
     wish: Toggle,
-    known: Option<bool>,
+    known: Option<Toggle>,
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refusal> {
     lockable(user, wish, changes, snapshot)?;
 
-    if changes.wish::<AccountLocks>(user) == Some(&wish) || known == Some(wish.is_on()) {
+    if changes.wish::<AccountLocks>(user) == Some(&wish) || known == Some(wish) {
         changes.remove::<AccountLocks>(user);
     } else {
         changes.want::<AccountLocks>(user.clone(), wish, snapshot);

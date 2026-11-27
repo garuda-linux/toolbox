@@ -75,9 +75,9 @@ fn a_user_file_is_not_the_helpers_to_change() {
     let edit = Builtin::EditUserConfig {
         edit: UserConfigEdit::File {
             path: HomePath::new(".config/app.conf").unwrap(),
-            content: "on = true\n".to_owned(),
+            content: "on = true\n".parse().unwrap(),
         },
-        on: true,
+        on: toolbox_plan::Toggle::On,
     };
 
     let root = tempfile::tempdir().unwrap();
@@ -93,7 +93,7 @@ fn blacklisting_a_module_is_one_step() {
     let root = tempfile::tempdir().unwrap();
     let builtin = Builtin::EditModprobeBlacklist {
         module: KernelModule::new("nouveau").unwrap(),
-        on: true,
+        on: toolbox_plan::Toggle::On,
     };
 
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Succeeded);
@@ -111,7 +111,7 @@ fn blacklisting_a_module_is_one_step() {
     fs::write(blocked.path().join("etc/modprobe.d"), "").unwrap();
     let blocked_builtin = Builtin::EditModprobeBlacklist {
         module: KernelModule::new("nouveau").unwrap(),
-        on: false,
+        on: toolbox_plan::Toggle::Off,
     };
 
     assert_failed(outcome_of(blocked.path(), &blocked_builtin));
@@ -228,7 +228,7 @@ fn taking_a_module_off_a_missing_folder_changes_nothing() {
     let root = tempfile::tempdir().unwrap();
     let builtin = Builtin::EditModprobeBlacklist {
         module: KernelModule::new("nouveau").unwrap(),
-        on: false,
+        on: toolbox_plan::Toggle::Off,
     };
 
     assert_eq!(outcome_of(root.path(), &builtin), Outcome::Skipped);

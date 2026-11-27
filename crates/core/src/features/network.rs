@@ -17,9 +17,9 @@ pub use drivers::{
     plan_unload, recheck_blacklist, set_blacklisted, visible,
 };
 pub use status::{
-    Connectivity, DefaultRoute, GEOCLUE, Radio, RadioAccess, RadioKind, RadioSummary, RadioTarget,
-    SERVICES, ServiceRow, flight_mode, plan_start, public_address, radio_summary, rfkill_arguments,
-    service_rows,
+    Connectivity, DefaultRoute, NetworkUnit, Radio, RadioAccess, RadioKind, RadioSummary,
+    RadioTarget, ServiceRow, flight_mode, plan_start, public_address, radio_summary,
+    rfkill_arguments, service_rows,
 };
 pub use toolbox_state::network::hardware::{
     Device, DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices,

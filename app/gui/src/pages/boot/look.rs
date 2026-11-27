@@ -22,19 +22,27 @@ use crate::pages::setting_row::{Words, row, wide_control};
 
 struct FileField<'a> {
     kind: FileKind,
-    id: &'static str,
     path: &'a str,
     queued: bool,
     /// The path came from elsewhere, so there is nothing to clear.
     note: Option<String>,
 }
 
+/// The texts of a file row. The ids are literals, so grep and the catalog
+/// checks see each one.
+struct FileIds {
+    name: &'static str,
+    detail: &'static str,
+    title: &'static str,
+    filter: &'static str,
+}
+
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let ctx = ui.ctx().clone();
     heading(ui, "boot-look");
     let splash = page.flag(Flag::Splash);
-    let background = page.background();
-    let theme = page.theme();
+    let background = page.background().unwrap_or_default();
+    let theme = page.theme().unwrap_or_default();
     let from_theme = page.background_from_theme();
 
     // Beside the rows whose Choose did nothing, since a cancelled dialog
@@ -55,7 +63,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
             context,
             &FileField {
                 kind: FileKind::Background,
-                id: "boot-background",
                 path: background,
                 queued: view::is_queued(context.changes, GrubKey::Background),
                 note: from_theme
@@ -69,7 +76,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
             context,
             &FileField {
                 kind: FileKind::Theme,
-                id: "boot-theme",
                 path: theme,
                 queued: view::is_queued(context.changes, GrubKey::Theme),
                 note: None,
@@ -79,8 +85,25 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     });
 }
 
+const fn file_ids(kind: FileKind) -> FileIds {
+    match kind {
+        FileKind::Background => FileIds {
+            name: "boot-background",
+            detail: "boot-background-detail",
+            title: "boot-background-title",
+            filter: "boot-background-filter",
+        },
+        FileKind::Theme => FileIds {
+            name: "boot-theme",
+            detail: "boot-theme-detail",
+            title: "boot-theme-title",
+            filter: "boot-theme-filter",
+        },
+    }
+}
+
 /// systemd-boot has no menu picture or theme.
-pub fn plymouth_card(ui: &mut Ui, context: &PageContext<'_>) {
+pub(super) fn plymouth_card(ui: &mut Ui, context: &PageContext<'_>) {
     heading(ui, "boot-look");
     card(ui, |ui| plymouth(ui, context));
 }
@@ -99,7 +122,7 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
 
     let title = i18n::text(&ctx, "boot-plymouth");
     let description = i18n::text(&ctx, description);
-    let tag = queued(&ctx, !view::plymouth_theme_queued(changes).is_empty());
+    let tag = queued(&ctx, view::plymouth_theme_queued(changes).is_some());
     let words = Words {
         current: None,
         title: &title,
@@ -112,9 +135,13 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
     row(ui, true, &words, width, |ui| {
         let themes = view::plymouth_themes(snapshot);
         let names: Vec<&str> = themes.iter().map(String::as_str).collect();
-        let shown = view::plymouth_shown(snapshot, changes);
-        let current = themes.iter().position(|theme| *theme == shown);
+        let shown = view::plymouth_shown(snapshot, changes).map(|theme| theme.as_str().to_owned());
+        let current = themes
+            .iter()
+            .position(|theme| Some(theme) == shown.as_ref());
+
         let none = i18n::text(&ctx, "boot-plymouth-none");
+
         let picked = ui
             .enabled_ui(installed && !themes.is_empty(), |ui| {
                 Select::new(&title, &names)
@@ -133,8 +160,9 @@ fn plymouth(ui: &mut Ui, context: &PageContext<'_>) {
 
 fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bool) {
     let ctx = ui.ctx().clone();
-    let title = i18n::text(&ctx, field.id);
-    let description = i18n::text(&ctx, &format!("{}-detail", field.id));
+    let ids = file_ids(field.kind);
+    let title = i18n::text(&ctx, ids.name);
+    let description = i18n::text(&ctx, ids.detail);
     let tag = queued(&ctx, field.queued);
 
     // The file chosen now reads as part of the row's words, so a long path
@@ -169,8 +197,8 @@ fn file(ui: &mut Ui, context: &PageContext<'_>, field: &FileField<'_>, first: bo
         if chosen.clicked() {
             context.commands.send(BootCommand::Choose {
                 kind: field.kind,
-                title: i18n::text(&ctx, &format!("{}-title", field.id)).into_owned(),
-                filter: i18n::text(&ctx, &format!("{}-filter", field.id)).into_owned(),
+                title: i18n::text(&ctx, ids.title).into_owned(),
+                filter: i18n::text(&ctx, ids.filter).into_owned(),
             });
         }
 

@@ -13,7 +13,7 @@ use tracing_subscriber::EnvFilter;
 const OURS: [&str; 2] = ["toolbox_", "garuda_toolbox"];
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum Origin {
+pub(super) enum Origin {
     Settings,
     Override(String),
     Rejected { value: String, error: String },
@@ -22,7 +22,7 @@ pub enum Origin {
 /// Our crates at `level`. Dependencies stay at warn so their chatter stays
 /// out of the log, and reach info only at trace ("Everything").
 #[must_use = "the filter does nothing until installed"]
-pub fn settings_filter(level: LevelFilter) -> EnvFilter {
+pub(super) fn settings_filter(level: LevelFilter) -> EnvFilter {
     if level == LevelFilter::TRACE {
         return parsed(&directives(LevelFilter::INFO, level));
     }
@@ -34,7 +34,7 @@ pub fn settings_filter(level: LevelFilter) -> EnvFilter {
 }
 
 #[must_use = "the filter does nothing until installed"]
-pub fn chosen(level: LevelFilter, variable: Option<&OsStr>) -> (EnvFilter, Origin) {
+pub(super) fn chosen(level: LevelFilter, variable: Option<&OsStr>) -> (EnvFilter, Origin) {
     let Some(variable) = variable.filter(|value| !value.is_empty()) else {
         return (settings_filter(level), Origin::Settings);
     };
@@ -55,11 +55,11 @@ pub fn chosen(level: LevelFilter, variable: Option<&OsStr>) -> (EnvFilter, Origi
 }
 
 #[must_use = "the filter does nothing until installed"]
-pub fn profiler_filter() -> EnvFilter {
+pub(super) fn profiler_filter() -> EnvFilter {
     parsed(&directives(LevelFilter::WARN, LevelFilter::TRACE))
 }
 
-pub fn describe(level: LevelFilter, origin: &Origin) -> String {
+pub(super) fn describe(level: LevelFilter, origin: &Origin) -> String {
     match origin {
         Origin::Override(value) => format!("log filter {value}"),
         Origin::Settings | Origin::Rejected { value: _, error: _ } => {

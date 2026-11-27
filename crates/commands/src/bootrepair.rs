@@ -31,8 +31,9 @@ use crate::out::Out;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct SystemRow {
-    #[serde(rename = "id")]
-    pub device: String,
+    /// Outside text when no volume device fits the path, so the row stays.
+    #[serde(rename = "id", serialize_with = "toolbox_text::serialize_text")]
+    pub device: Result<VolumeDevice, toolbox_text::OutsideText>,
     #[serde(rename = "name")]
     pub label: toolbox_text::OutsideText,
     pub encryption: &'static str,
@@ -207,7 +208,8 @@ fn status(read: Read, live: bool, facts: &RepairFacts, out: &mut Out<'_>) -> Exi
             .systems
             .iter()
             .map(|system| SystemRow {
-                device: system.device().to_owned(),
+                device: VolumeDevice::new(system.device())
+                    .map_err(|_invalid| toolbox_text::plain(system.device())),
                 label: system.label.clone(),
                 encryption: system.encryption.as_str(),
                 in_use: system.in_use,
@@ -273,7 +275,7 @@ pub fn system_listing(rows: &[SystemRow]) -> Listing<'_> {
             .map(|row| {
                 let state = if row.in_use { "in use" } else { row.encryption };
                 Row::plain(vec![
-                    row.device.clone(),
+                    toolbox_text::checked_text(&row.device).to_owned(),
                     row.label.to_string(),
                     state.to_owned(),
                 ])

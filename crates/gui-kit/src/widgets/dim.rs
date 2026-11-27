@@ -29,7 +29,7 @@ pub fn dimmed<R>(ui: &mut Ui, busy: bool, body: impl FnOnce(&mut Ui) -> R) -> R 
 /// How far `tokens.dim` sits from the card towards the text, from 0 to 1.
 /// A picture painted at this opacity on the card fades as far as a title
 /// in `tokens.dim` does.
-pub fn dim_opacity(tokens: &Tokens) -> f32 {
+pub(super) fn dim_opacity(tokens: &Tokens) -> f32 {
     let distance = |colour: egui::Color32| {
         colour
             .to_array()

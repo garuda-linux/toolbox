@@ -4,6 +4,7 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 
 use tempfile::TempDir;
+use toolbox_fs::testing::as_person;
 use toolbox_state::network::{
     Connectivity, DefaultRoute, DeviceKind, Radio, RadioAccess, RadioKind, RadioTarget,
 };
@@ -12,7 +13,7 @@ use zbus::OwnedVariant;
 use super::network_manager::connectivity_from_value;
 use super::{NetworkPrograms, NetworkSource as _, SystemNetwork, parse_default_route};
 use crate::ProbeError;
-use crate::test_support::{as_person, fake_program, write};
+use crate::test_support::{fake_program, write};
 
 /// The Lima VM with a `wg0` link added after its DHCP route.
 const ROUTES: &str = include_str!("fixtures/ip-route-default-two.json");

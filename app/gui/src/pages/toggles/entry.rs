@@ -4,6 +4,7 @@ use std::sync::Arc;
 use egui::{Label, Rect, Ui};
 use toolbox_catalog::{Check, ToggleEntry};
 use toolbox_core::Toggle;
+use toolbox_core::features::protection_text_id;
 use toolbox_core::features::search::Needle;
 use toolbox_core::features::toggles::shown::{Control, Entry};
 use toolbox_gui_kit::UiExt as _;
@@ -163,7 +164,7 @@ pub fn note(
     kind: Control,
 ) -> Option<(std::borrow::Cow<'static, str>, Tone)> {
     if let Some(why) = entry.state.kept {
-        let text = i18n::text(ctx, &format!("protected-{}", why.as_str()));
+        let text = i18n::text(ctx, protection_text_id(why));
         return Some((text, Tone::Neutral));
     }
 
@@ -208,7 +209,7 @@ pub fn status(catalog: CatalogId, entry: &Entry<'_>, kind: Control) -> Option<&'
 
 /// What picks the hue of the entry's letter tile: the package it checks,
 /// so it matches the package's tile on other pages, else its catalog id.
-pub fn tile_package(entry: &ToggleEntry) -> &str {
+pub(super) fn tile_package(entry: &ToggleEntry) -> &str {
     match entry.check() {
         Check::Package(package) => package.as_str(),
         Check::Service(_) | Check::UserService(_) | Check::Group(_) | Check::UserConfig(_) => {
@@ -219,7 +220,7 @@ pub fn tile_package(entry: &ToggleEntry) -> &str {
 
 /// The entry's picture: the icon theme's own when it has one, else the
 /// one the catalog ships.
-pub fn picture_file(
+pub(super) fn picture_file(
     context: &PageContext<'_>,
     id: CatalogId,
     entry: &Entry<'_>,

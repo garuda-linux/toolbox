@@ -6,7 +6,7 @@ use tempfile::TempDir;
 use toolbox_plan::{KernelRelease, PackageName};
 use toolbox_state::kernels::{DkmsState, KernelReleases, RunningKernel};
 
-use super::{Dkms, DkmsSource as _, KernelSource as _, SystemKernels};
+use super::{Dkms, KernelSource as _, SystemKernels};
 use crate::ProbeError;
 use crate::test_support::fake_program;
 

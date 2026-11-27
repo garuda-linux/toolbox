@@ -21,7 +21,7 @@ use super::{LINUX, description, failed, size};
 use crate::error::ProbeError;
 
 #[derive(Debug, Default, PartialEq, Eq)]
-pub struct SyncRead {
+pub(super) struct SyncRead {
     pub offered: SyncPackages,
     /// The packages whose name starts with `linux`, repositories in the
     /// order of `pacman.conf`, names sorted within one, as `pacman -Ss`
@@ -42,7 +42,7 @@ struct Database {
 }
 
 #[derive(Debug, Default)]
-pub struct SyncCache {
+pub(super) struct SyncCache {
     last: Mutex<Option<(Vec<Database>, Arc<SyncRead>)>>,
 }
 

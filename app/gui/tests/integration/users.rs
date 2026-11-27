@@ -17,7 +17,7 @@ use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_gui::queue::Queue;
 use toolbox_gui::users::UsersSetup;
 use toolbox_gui::{App, Setup, snapshot};
-use toolbox_plan::{GroupName, ShellPath, UserName};
+use toolbox_plan::{GroupName, HomeDirectory, ShellPath, UserName};
 use toolbox_system::{LockProblem, LockSource, Probe, ProbeError, ProbeIssue};
 
 use crate::common::{HEIGHT, queued_shown, type_into, window};
@@ -63,8 +63,8 @@ fn user(text: &str, uid: u32, gecos: &str) -> User {
         uid,
         gid: uid,
         gecos: toolbox_text::plain(gecos),
-        home: format!("/home/{text}"),
-        shell: "/usr/bin/fish".to_owned(),
+        home: Ok(HomeDirectory::new(format!("/home/{text}")).unwrap()),
+        shell: Ok(ShellPath::new("/usr/bin/fish").unwrap()),
     }
 }
 

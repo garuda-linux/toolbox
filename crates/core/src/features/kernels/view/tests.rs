@@ -1,3 +1,5 @@
+use toolbox_plan::KernelRelease;
+
 use super::{BootMenus, Listing, Row};
 use crate::domains::{DkmsBuilds, Packages};
 use crate::features::kernels::{ModuleState, RunningKernel};
@@ -15,7 +17,7 @@ fn row<'rows>(rows: &'rows [Row], name: &str) -> &'rows Row {
 fn without_package_databases_there_is_no_listing() {
     let mut snapshot = Snapshot::default();
     snapshot.insert(RunningKernel {
-        release: toolbox_plan::KernelRelease::new("6.12.30").unwrap(),
+        release: KernelRelease::new("6.12.30").unwrap(),
         package: None,
     });
 
@@ -130,7 +132,10 @@ fn the_listing_finds_the_running_kernel_and_the_builds() {
         listing.listed().running.map(|kernel| kernel.name.as_str()),
         Some("linux")
     );
-    assert_eq!(super::release(&snapshot), "6.14.0-arch3-1");
+    assert_eq!(
+        super::release(&snapshot).map(KernelRelease::as_str),
+        Some("6.14.0-arch3-1")
+    );
     assert!(listing.kernel(&package("linux-nope")).is_none());
     assert_eq!(listing.builds(linux, &dkms()), [vboxhost_build()]);
     assert_eq!(listing.builds(lts, &dkms()), []);

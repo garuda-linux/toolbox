@@ -28,18 +28,48 @@ fn a_build_with_make_lines_installs_its_dependencies_and_reports_the_make_names(
     let order = capture(AUR_SYNC_VOTE_STDOUT);
     let planned = plan_of(&["aur-sync-vote"], std::slice::from_ref(&order));
 
-    assert_eq!(planned.actions.len(), 3);
     assert_eq!(
-        planned.actions[0],
-        install_dependencies(dependencies(&order))
+        planned.actions,
+        [
+            review(&["aur-sync-vote"]),
+            install_dependencies(dependencies(&order)),
+            build_aur("aur-sync-vote"),
+            install_built(&["aur-sync-vote"], InstallReason::Explicit),
+            remove_make_dependencies(make_names(&order)),
+        ]
     );
-    assert_eq!(planned.actions[1], build_aur("aur-sync-vote"));
-    assert_eq!(
-        planned.actions[2],
-        install_built(&["aur-sync-vote"], InstallReason::Explicit)
+    assert_eq!(make_names(&order).len(), 10);
+}
+
+#[test]
+fn a_plan_of_repository_targets_has_no_review() {
+    let order = capture(FIREFOX_STDOUT);
+    let planned = plan_of(&["firefox"], std::slice::from_ref(&order));
+
+    assert!(!planned.actions.iter().any(is_review));
+    assert_eq!(planned.bases, Vec::<PackageName>::new());
+}
+
+#[test]
+fn a_plan_without_make_only_names_has_no_removal() {
+    let firefox = capture(FIREFOX_STDOUT);
+    let nvidia = capture(NVIDIA_SPLIT_STDOUT);
+
+    assert!(
+        !plan_of(&["firefox"], std::slice::from_ref(&firefox))
+            .actions
+            .iter()
+            .any(is_removal)
     );
-    assert_eq!(planned.make_only.len(), 10);
-    assert_eq!(planned.make_only, make_names(&order));
+    assert!(
+        !plan_of(
+            &["nvidia-470xx-utils", "opencl-nvidia-470xx"],
+            std::slice::from_ref(&nvidia)
+        )
+        .actions
+        .iter()
+        .any(is_removal)
+    );
 }
 
 #[test]
@@ -50,21 +80,19 @@ fn a_split_package_is_built_once_and_its_packages_are_installed() {
         std::slice::from_ref(&order),
     );
 
-    assert_eq!(planned.actions.len(), 3);
     assert_eq!(
-        planned.actions[0],
-        install_dependencies(dependencies(&order))
-    );
-    assert_eq!(planned.actions[1], build_aur("nvidia-470xx-utils"));
-    assert_eq!(
-        planned.actions[2],
-        install_built(
-            &["nvidia-470xx-utils", "opencl-nvidia-470xx"],
-            InstallReason::Explicit
-        )
+        planned.actions,
+        [
+            review(&["nvidia-470xx-utils"]),
+            install_dependencies(dependencies(&order)),
+            build_aur("nvidia-470xx-utils"),
+            install_built(
+                &["nvidia-470xx-utils", "opencl-nvidia-470xx"],
+                InstallReason::Explicit
+            ),
+        ]
     );
     assert_eq!(planned.bases, [package("nvidia-470xx-utils")]);
-    assert_eq!(planned.make_only, Vec::<PackageName>::new());
 }
 
 #[test]

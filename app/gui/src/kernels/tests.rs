@@ -10,7 +10,7 @@ use crate::pages::kernels::fixtures::{dkms, package, system};
 fn toggle(kernel: &str, on: bool) -> AppCommand {
     AppCommand::Kernel(KernelCommand::Edit(KernelEdit::Toggle {
         kernel: package(kernel),
-        on,
+        on: toolbox_core::Toggle::from_on(on),
     }))
 }
 

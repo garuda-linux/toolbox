@@ -95,7 +95,7 @@ impl Flag {
     }
 }
 
-pub fn is_flag_parameter(parameter: &str) -> bool {
+pub(super) fn is_flag_parameter(parameter: &str) -> bool {
     Flag::ALL.iter().any(|flag| flag.matches(parameter))
 }
 

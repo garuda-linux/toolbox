@@ -1,9 +1,9 @@
 use std::time::SystemTime;
 
 use serde::Serialize;
-use toolbox_cli::output::size;
 use toolbox_core::features::status::{cleanup_due, disk_low};
 use toolbox_system::Facts;
+use toolbox_text::size;
 
 use super::{Part, Shown, counted, counted_part, joined_or_none, part, row};
 

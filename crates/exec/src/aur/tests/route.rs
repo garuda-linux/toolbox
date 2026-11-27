@@ -66,8 +66,15 @@ fn early_cases() -> Vec<Case> {
             kind: "NoAccount",
             other_user: false,
             setup: |root| {
-                let passwd = PASSWD.replace("user:x:1000:1000:", "user:x:4242:1000:");
-                fs::write(root.join("etc/passwd"), passwd).unwrap();
+                // The capture may hold an account with the uid the tests run as.
+                let caller = uid().to_string();
+                let renumbered = PASSWD.replace("user:x:1000:1000:", "user:x:4242:1000:");
+                let others: Vec<&str> = renumbered
+                    .lines()
+                    .filter(|line| line.split(':').nth(2) != Some(caller.as_str()))
+                    .collect();
+
+                fs::write(root.join("etc/passwd"), others.join("\n")).unwrap();
             },
         },
         Case {

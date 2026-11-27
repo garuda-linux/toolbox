@@ -28,10 +28,10 @@ fn a_queue_restored_with_a_waiting_build_is_held_until_the_build_is_taken_out() 
     )
     .unwrap();
     let mut parts = package_parts();
-    parts.insert(AurNames(BTreeSet::from([
-        package("yay-bin"),
-        package("paru-bin"),
-    ])));
+    parts.insert(AurNames {
+        names: BTreeSet::from([package("yay-bin"), package("paru-bin")]),
+        ..AurNames::default()
+    });
 
     let (changes, problems) = read(&path, &parts);
     assert!(problems.is_empty(), "{problems:?}");

@@ -34,7 +34,13 @@ fn a_link_to_an_editable_file_is_edited_and_names_its_target() {
         (Some(Action::Edit), true, true, "")
     );
     assert_eq!(linked.path, "/etc/default/grub");
-    assert_eq!(linked.target, "/etc/default/grub.real");
+    assert_eq!(
+        linked
+            .target
+            .as_ref()
+            .map(toolbox_text::OutsideText::as_str),
+        Some("/etc/default/grub.real")
+    );
 }
 
 #[test]
@@ -55,7 +61,13 @@ fn a_refused_link_offers_nothing_and_carries_the_reason() {
             (linked.action, linked.admin, linked.link, linked.refusal),
             (None, true, true, code)
         );
-        assert_eq!(linked.target, "/usr/lib/os-release");
+        assert_eq!(
+            linked
+                .target
+                .as_ref()
+                .map(toolbox_text::OutsideText::as_str),
+            Some("/usr/lib/os-release")
+        );
     }
 }
 
@@ -64,13 +76,8 @@ fn a_plain_file_has_no_target() {
     let plain = row(Found::File { link: None }, "grub");
 
     assert_eq!(
-        (
-            plain.action,
-            plain.link,
-            plain.target.as_str(),
-            plain.refusal
-        ),
-        (Some(Action::Edit), false, "", "")
+        (plain.action, plain.link, plain.target, plain.refusal),
+        (Some(Action::Edit), false, None, "")
     );
 }
 

@@ -27,7 +27,7 @@ const ATTEMPTS: u32 = 16;
 const EXTENSION: &str = "stderr";
 
 #[derive(Debug)]
-pub struct StderrFile {
+pub(super) struct StderrFile {
     path: PathBuf,
 }
 
@@ -93,7 +93,7 @@ impl StderrFile {
 /// file, which then has no name. The files of this start stay, as the
 /// sweep may run after its first program started. Blocks, so it runs on
 /// a blocking thread.
-pub fn sweep(log_dir: &Path) {
+pub(super) fn sweep(log_dir: &Path) {
     let Ok(entries) = std::fs::read_dir(log_dir.join(FOLDER)) else {
         return;
     };

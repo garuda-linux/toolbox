@@ -11,8 +11,8 @@ use toolbox_core::domains::{
 };
 use toolbox_plan::sdboot::{LoaderSettings, SdBootMenu};
 use toolbox_plan::{
-    ConfigText, GroupName, GrubState, KernelRelease, LocaleEntry, MergeCopy, PackageName,
-    PlymouthTheme, ShellPath, UnitName, UserName, system_lang,
+    ConfigText, GroupName, GrubState, HomeDirectory, KernelRelease, LocaleEntry, MergeCopy,
+    PackageName, PlymouthTheme, ShellPath, UnitName, UserName, system_lang,
 };
 use toolbox_state::boot::KernelCmdline;
 use toolbox_state::kernels::{
@@ -51,8 +51,8 @@ fn user(name: &str, uid: u32) -> User {
         uid,
         gid: uid,
         gecos: toolbox_text::plain(""),
-        home: format!("/home/{name}"),
-        shell: "/usr/bin/bash".parse().unwrap(),
+        home: Ok(HomeDirectory::new(format!("/home/{name}")).unwrap()),
+        shell: Ok("/usr/bin/bash".parse().unwrap()),
     }
 }
 

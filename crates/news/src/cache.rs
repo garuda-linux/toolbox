@@ -15,7 +15,7 @@ use toolbox_fs::{Permissions, Replace};
 use toolbox_https::{Attempt, due, next_attempt};
 
 use crate::feed::parse;
-use crate::https::Https;
+use crate::https::NewsTransport;
 use crate::{
     Clock, News, NewsError, NewsSource, REFRESH_EVERY, Source, StorageStep, SystemClock, Transport,
 };
@@ -63,7 +63,7 @@ impl Cache {
         Self::new(
             folder,
             source,
-            Arc::new(Https::new(source)),
+            Arc::new(NewsTransport::new(source)),
             Arc::new(SystemClock),
         )
     }

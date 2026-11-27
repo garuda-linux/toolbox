@@ -88,7 +88,7 @@ impl Domain for UserConfigs {
             .iter()
             .map(|(edit, wish)| UserAction::EditUserConfig {
                 edit: (*edit).clone(),
-                on: wish.toggle.is_on(),
+                on: wish.toggle,
             })
             .chain(restart)
             .chain(

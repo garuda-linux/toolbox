@@ -1,11 +1,12 @@
 use toolbox_cli::output::{Mark, Row};
+use toolbox_plan::{HomeDirectory, LocaleName, PackageName, ShellPath, UnitName, UserName};
 
 use super::super::{KernelRow, LocaleRow, ServiceRow, ToggleRow, UserRow};
 use super::{kernels, locales, services, toggles, users};
 
 fn service(name: &str, active: &'static str, at_boot: bool) -> ServiceRow {
     ServiceRow {
-        name: name.to_owned(),
+        name: UnitName::new(name).unwrap(),
         active,
         state: "running".to_owned(),
         at_boot,
@@ -93,7 +94,7 @@ fn toggles_are_marked_and_say_on_off_or_unknown() {
 
 fn kernel(name: &str, installed: bool, running: bool) -> KernelRow {
     KernelRow {
-        name: name.to_owned(),
+        name: PackageName::new(name).unwrap(),
         version: "6.1".to_owned(),
         installed,
         running,
@@ -146,7 +147,7 @@ fn the_default_kernel_has_a_column_of_its_own() {
 #[test]
 fn locales_mark_the_enabled_ones_and_name_the_system_one() {
     let row = |locale: &str, enabled, system| LocaleRow {
-        locale: locale.to_owned(),
+        locale: LocaleName::new(locale).unwrap(),
         charset: "UTF-8".to_owned(),
         name: None,
         enabled,
@@ -175,11 +176,11 @@ fn locales_mark_the_enabled_ones_and_name_the_system_one() {
 #[test]
 fn hidden_accounts_are_counted_and_all_is_hinted() {
     let ada = UserRow {
-        name: "ada".to_owned(),
+        name: UserName::new("ada").unwrap(),
         uid: 1000,
-        full_name: "Ada".to_owned(),
-        home: "/home/ada".to_owned(),
-        shell: "/bin/fish".to_owned(),
+        full_name: toolbox_text::plain("Ada"),
+        home: Ok(HomeDirectory::new("/home/ada").unwrap()),
+        shell: Ok(ShellPath::new("/bin/fish").unwrap()),
     };
 
     let listing = users(std::slice::from_ref(&ada), 31);

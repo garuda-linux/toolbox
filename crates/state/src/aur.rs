@@ -48,3 +48,33 @@ pub struct AurIndex {
     #[serde(skip)]
     pub stale: bool,
 }
+
+/// Whether the helper accepts this user's way to the build folder. The
+/// split path needs `Accepted`. A refused setup builds through paru.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum AurRoute {
+    Accepted,
+    Refused {
+        kind: RouteKind,
+        /// The problem as the helper's check words it, for `-v` and logs.
+        detail: String,
+    },
+}
+
+impl crate::Part for AurRoute {}
+
+/// The refusals a text can tell apart. Every other problem is `Other`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, strum::IntoStaticStr, strum::EnumIter)]
+#[strum(serialize_all = "kebab-case")]
+pub enum RouteKind {
+    /// No account in `/etc/passwd` for the user, as with systemd-homed.
+    NoAccount,
+    /// The home or `~/.cache` is a link, or a folder on the way is missing.
+    Linked,
+    /// A folder on the way may be written by group or others.
+    Shared,
+    /// The command line starts the helper through sudo, which does not say
+    /// who asked, so the split path is not used.
+    ThroughSudo,
+    Other,
+}

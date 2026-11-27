@@ -9,7 +9,7 @@ use fixture::{GEGL, GIMP, MPV, System, YT_DLP};
 use toolbox_plan::PackageName;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
 
-use super::{Libalpm, LinuxPackageSource as _, PackageSource as _, SyncSource as _};
+use super::{Libalpm, PackageSource as _, SyncSource as _};
 use crate::ProbeError;
 
 fn names(names: &[&str]) -> std::collections::BTreeSet<PackageName> {

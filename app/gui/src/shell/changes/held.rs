@@ -6,6 +6,7 @@ use egui::{Id, Ui};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{Tone, banner};
 
+use super::Hold;
 use crate::command::{Command, CommandSender, PackagesCommand, UsersCommand};
 use crate::i18n;
 
@@ -21,6 +22,7 @@ fn read_again(reason: &str) -> Option<Command> {
     match reason {
         "changes-unread-locks" => Some(UsersCommand::Refresh.into()),
         "changes-unread-aur" => Some(PackagesCommand::Refresh.into()),
+        "changes-wait-orders" => Some(PackagesCommand::ReadOrders.into()),
         _ => None,
     }
 }
@@ -33,9 +35,22 @@ fn part(reason: &str) -> Option<&'static str> {
     }
 }
 
-pub fn unread(ui: &mut Ui, reason: &'static str, commands: &CommandSender) {
+pub fn unread(ui: &mut Ui, hold: &Hold, commands: &CommandSender) {
+    let reason = hold.id;
     let Some(part) = part(reason) else {
-        forget(ui.ctx());
+        if let Some(again) = read_again(reason) {
+            let button = i18n::text(ui.ctx(), "common-read-again");
+            ui.add_space(ui.tokens().sizes.control_gap);
+            if banner(ui, Tone::Warning, &hold.text, &[&*button])
+                .value
+                .is_some()
+            {
+                commands.send(again);
+            }
+        } else {
+            forget(ui.ctx());
+        }
+
         return;
     };
 

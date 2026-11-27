@@ -13,10 +13,11 @@ use crate::settings::{
     DNS_CONFIG, NETWORKMANAGER_CONF_D, OLD_WIFI_BACKEND_CONFIG, WIFI_BACKEND_CONFIG,
 };
 use crate::{
-    AUR_BUILT, AUR_STORE, BuildRun, ConfigWrite, DnsProvider, GarudaUpdateFlag, GroupName,
-    GrubSettings, HomeDirectory, HomeWrite, InstallReason, InstalledSystem, KernelModule,
-    KernelParameters, LocaleEntry, LocaleName, MAKEPKG_ARGS, MergeResolve, Mirrorlist, PARU_CLONE,
-    PackageName, RepairWork, ShellPath, TargetList, Toggle, UserConfigEdit, UserName, WifiBackend,
+    AUR_BUILT, AUR_CLONE, AUR_STORE, BuildRun, ConfigWrite, DnsProvider, GarudaUpdateFlag,
+    GroupName, GrubSettings, HomeDirectory, HomeWrite, InstallReason, InstalledSystem,
+    KernelModule, KernelParameters, LocaleEntry, LocaleName, MAKEPKG_ARGS, MergeResolve,
+    Mirrorlist, PackageName, REVIEW_TAIL, RepairWork, ShellPath, TargetList, Toggle,
+    UserConfigEdit, UserName, WifiBackend,
 };
 
 /// Work the helper does itself instead of running a program, because it
@@ -41,13 +42,13 @@ pub enum Builtin {
     WriteWifiBackend(WifiBackend),
     /// Sets one switch in garuda-update's config, creating the file when
     /// it is missing.
-    SetGarudaUpdateFlag { flag: GarudaUpdateFlag, on: bool },
+    SetGarudaUpdateFlag { flag: GarudaUpdateFlag, on: Toggle },
     /// Turns one edit of a config file in the user's home on or off. Runs
     /// only in the app, as the user: the helper has no home to edit.
-    EditUserConfig { edit: UserConfigEdit, on: bool },
+    EditUserConfig { edit: UserConfigEdit, on: Toggle },
     /// Switches one line of `/etc/locale.gen` on or off, every other byte
     /// kept.
-    EditLocaleGen { entry: LocaleEntry, on: bool },
+    EditLocaleGen { entry: LocaleEntry, on: Toggle },
     /// Sets `LANG` in `/etc/locale.conf`. Fails unless `/etc/locale.gen`
     /// has a locale enabled that provides it: a `LANG` without its locale
     /// leaves every program with the C locale and warnings.
@@ -95,9 +96,13 @@ pub enum Builtin {
     /// `makepkg` without `-s` in paru's clone of `base`, with `PKGDEST` at
     /// the run's folder. Runs only in the app, as the user.
     BuildAur { base: PackageName, run: BuildRun },
+    /// `paru -G` of every base into the app's clone folder, then the
+    /// changes to each build file, and one question before anything is
+    /// built. Runs only in the app, as the user, never as root.
+    ReviewAur { bases: TargetList<PackageName> },
     /// Adds a module to the app's own modprobe file or takes it out again.
     /// No other modprobe file is ever written.
-    EditModprobeBlacklist { module: KernelModule, on: bool },
+    EditModprobeBlacklist { module: KernelModule, on: Toggle },
     /// Sets variables of `/etc/default/grub` and keeps the old file
     /// beside it. Fails without the file: GRUB is not the boot loader then.
     EditGrubDefaults(GrubSettings),
@@ -171,17 +176,15 @@ impl Builtin {
             Self::SetGarudaUpdateFlag { flag, on } => {
                 let name = flag.key();
 
-                if *on {
+                if on.is_on() {
                     write!(out, "set {name}=1 in /{GARUDA_UPDATE_CONFIG}")
                 } else {
                     write!(out, "comment out {name} in /{GARUDA_UPDATE_CONFIG}")
                 }
             }
-            Self::EditUserConfig { edit, on } => {
-                out.write_str(&edit.describe(Toggle::from_on(*on)))
-            }
+            Self::EditUserConfig { edit, on } => out.write_str(&edit.describe(*on)),
             Self::EditLocaleGen { entry, on } => {
-                let verb = if *on { "enable" } else { "comment out" };
+                let verb = if on.is_on() { "enable" } else { "comment out" };
                 write!(out, "{verb} `{entry}` in /{LOCALE_GEN}")
             }
             Self::RequireOrdinaryUser(user) => ordinary_user_check(out, user),
@@ -217,12 +220,21 @@ impl Builtin {
             Self::BuildAur { base, run } => {
                 write!(
                     out,
-                    "PKGDEST=~/{AUR_BUILT}/{run} makepkg {}, in ~/{PARU_CLONE}/{base}",
+                    "PKGDEST=~/{AUR_BUILT}/{run} makepkg {}, in ~/{AUR_CLONE}/{base}",
                     MAKEPKG_ARGS.join(" "),
                 )
             }
+            Self::ReviewAur { bases } => {
+                let names: Vec<&str> = bases.iter().map(PackageName::as_str).collect();
+
+                write!(
+                    out,
+                    "paru -G -- {} in ~/{AUR_CLONE}{REVIEW_TAIL}",
+                    names.join(" "),
+                )
+            }
             Self::EditModprobeBlacklist { module, on } => {
-                let verb = if *on { "add" } else { "remove" };
+                let verb = if on.is_on() { "add" } else { "remove" };
                 write!(out, "{verb} `blacklist {module}` in /{MODPROBE_BLACKLIST}")
             }
             Self::EditGrubDefaults(settings) => write!(out, "set {settings} in /{GRUB_DEFAULTS}"),

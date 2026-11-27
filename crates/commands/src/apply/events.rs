@@ -70,7 +70,7 @@ enum Ended {
     Skipped,
 }
 
-pub struct Events {
+pub(super) struct Events {
     /// The plan's steps in their order, each with its command lines.
     steps: Vec<(StepId, Vec<String>)>,
     begun: HashMap<StepId, Instant>,
@@ -220,7 +220,7 @@ pub fn error(text: &str, detail: Option<&str>) -> String {
 }
 
 /// An `error` line with its hint and the program's own words apart.
-pub fn error_with(message: &str, hint: Option<&str>, detail: Option<&str>) -> String {
+pub(super) fn error_with(message: &str, hint: Option<&str>, detail: Option<&str>) -> String {
     json_line(&Line::Error {
         message,
         detail: detail.filter(|detail| !detail.trim().is_empty()),
@@ -243,21 +243,23 @@ pub fn nothing() -> String {
     format!("{}{}", planned(&Plan::new([])), done(true))
 }
 
-/// A step that wants answers typed while it runs: paru's questions or an
+/// A step that wants answers typed while it runs: paru's questions, the AUR
+/// review or an
 /// editor. JSON Lines leave nobody to type them.
-pub const fn needs_typing(action: &PlannedAction) -> bool {
+pub(super) const fn needs_typing(action: &PlannedAction) -> bool {
     matches!(
         action,
         PlannedAction::User(
             UserAction::UpgradeAur
                 | UserAction::InstallAur { packages: _ }
+                | UserAction::ReviewAur { bases: _ }
                 | UserAction::EditFile { editor: _, copy: _ }
         )
     )
 }
 
 /// Whether `report` ends the plan, so a quiet run stops reading there.
-pub const fn finishes(report: &Report) -> bool {
+pub(super) const fn finishes(report: &Report) -> bool {
     matches!(
         report,
         Report::PlanFinished {

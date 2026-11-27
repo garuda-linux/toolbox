@@ -17,12 +17,13 @@ pub use reload::ConfigReload;
 use serde::{Deserialize, Serialize};
 
 use crate::Toggle;
+use crate::config_file::ConfigText;
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case")]
 pub enum UserConfigEdit {
     /// On: the file exists. Turning on writes `content`, off removes it.
-    File { path: HomePath, content: String },
+    File { path: HomePath, content: ConfigText },
     /// On: `key` in `[group]` has the value `on`. Off writes `off`, but only
     /// over an existing entry: a missing key already means the default.
     IniKey {
@@ -105,8 +106,8 @@ impl UserConfigEdit {
         let on = wish.is_on();
         match self {
             Self::File { path: _, content } => Ok(match (current, on) {
-                (Some(bytes), true) if bytes == content.as_bytes() => Rewrite::Unchanged,
-                (Some(_) | None, true) => Rewrite::Write(content.clone()),
+                (Some(bytes), true) if bytes == content.as_str().as_bytes() => Rewrite::Unchanged,
+                (Some(_) | None, true) => Rewrite::Write(content.as_str().to_owned()),
                 (Some(_), false) => Rewrite::Remove,
                 (None, false) => Rewrite::Unchanged,
             }),

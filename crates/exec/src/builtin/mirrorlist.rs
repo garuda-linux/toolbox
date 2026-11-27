@@ -16,7 +16,7 @@ use crate::secure;
 ///
 /// When `etc/pacman.d` below `root` is missing or reached through a
 /// symlink, or the write fails.
-pub fn install_mirrorlist(root: &Path, mirrorlist: &Mirrorlist) -> io::Result<bool> {
+pub(super) fn install_mirrorlist(root: &Path, mirrorlist: &Mirrorlist) -> io::Result<bool> {
     let (dir, name) = secure::open_parent(root, CHAOTIC_MIRRORLIST)?;
     let backup = format!("{name}.bak");
 

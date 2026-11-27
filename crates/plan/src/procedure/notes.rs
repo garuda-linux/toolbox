@@ -43,6 +43,7 @@ impl Builtin {
                 reason: _,
             }
             | Self::BuildAur { base: _, run: _ }
+            | Self::ReviewAur { bases: _ }
             | Self::EditModprobeBlacklist { module: _, on: _ }
             | Self::EditGrubDefaults(_)
             | Self::EditLoaderConf(_)

@@ -28,14 +28,14 @@ enum DiskError {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub struct DeviceNumber {
+pub(super) struct DeviceNumber {
     pub major: u32,
     pub minor: u32,
 }
 
 /// What a block device is, by its folder in `/sys`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Kind {
+pub(super) enum Kind {
     Disk,
     Partition,
     /// A device-mapper or RAID device that lies on other devices.
@@ -50,14 +50,14 @@ pub struct Mount {
 
 /// Looks at device nodes. Tests answer from a list, since only root can
 /// make a block device node.
-pub trait Nodes {
+pub(super) trait Nodes {
     /// The number of the block device at `path`, `None` when there is
     /// none. With `follow` a symlink leads to its target, as the names
     /// below `/dev/mapper` do. Without it only the node itself counts.
     fn block_device(&self, path: &Path, follow: bool) -> Option<DeviceNumber>;
 }
 
-pub struct DeviceNodes;
+pub(super) struct DeviceNodes;
 
 impl Nodes for DeviceNodes {
     fn block_device(&self, path: &Path, follow: bool) -> Option<DeviceNumber> {
@@ -117,7 +117,7 @@ pub fn kind(root: &Path, device: DeviceNumber) -> io::Result<Kind> {
 ///
 /// When `/sys` below `root` does not know the device or the stack is
 /// deeper than any real one.
-pub fn disks(root: &Path, device: DeviceNumber) -> io::Result<BTreeSet<String>> {
+pub(super) fn disks(root: &Path, device: DeviceNumber) -> io::Result<BTreeSet<String>> {
     let mut found = BTreeSet::new();
 
     collect_disks(&device_folder(root, device)?, MAX_STACK, &mut found)?;
@@ -160,7 +160,7 @@ fn collect_disks(folder: &Path, depth: usize, found: &mut BTreeSet<String>) -> i
 
 /// One property udev keeps for `device`, such as `ID_FS_TYPE`. `None`
 /// when udev has no record or the record lacks the property.
-pub fn property(root: &Path, device: DeviceNumber, key: &str) -> Option<String> {
+pub(super) fn property(root: &Path, device: DeviceNumber, key: &str) -> Option<String> {
     let record = lossy(
         std::fs::read(root.join(format!("run/udev/data/b{}:{}", device.major, device.minor)))
             .ok()?,

@@ -192,7 +192,7 @@ fn named(real: &RealPath, asked: &ConfigFilePath) -> String {
 }
 
 /// English, like every message of a step in the Console.
-pub const fn refusal_text(reason: FetchRefusal) -> &'static str {
+pub(super) const fn refusal_text(reason: FetchRefusal) -> &'static str {
     match reason {
         FetchRefusal::Missing => "the file does not exist",
         FetchRefusal::Link => "a link stands in its place since it was looked at",

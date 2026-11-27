@@ -2,7 +2,7 @@
 mod tests;
 
 use toolbox_plan::sdboot::{LoaderChange, LoaderKey, LoaderSetting, LoaderTimeout};
-use toolbox_plan::{PlannedAction, RootAction};
+use toolbox_plan::{PlannedAction, RootAction, Toggle};
 pub use toolbox_state::boot::CurrentLoader;
 
 use crate::domain::{Domain, Stage, Staged, Summary};
@@ -74,10 +74,10 @@ impl Domain for LoaderSettingsDomain {
     }
 
     fn summary(_item: &LoaderKey, wish: &LoaderSetting) -> Summary {
-        let switch = |on: Option<bool>, [yes, no, unset]: [SummaryCode; 3]| {
+        let switch = |on: Option<Toggle>, [yes, no, unset]: [SummaryCode; 3]| {
             Summary::plain(match on {
-                Some(true) => yes,
-                Some(false) => no,
+                Some(Toggle::On) => yes,
+                Some(Toggle::Off) => no,
                 None => unset,
             })
         };

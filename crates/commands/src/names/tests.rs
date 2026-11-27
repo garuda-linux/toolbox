@@ -2,7 +2,9 @@ use toolbox_catalog::ToggleCatalog;
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, AvailableShells, Group, User};
 use toolbox_core::features::locales::{SupportedLocales, parse_supported};
-use toolbox_plan::{GroupName, GrubPlatform, ShellPath, UserName};
+use toolbox_plan::{
+    GroupName, GrubPlatform, HomeDirectory, LocaleName, PackageName, ShellPath, UserName,
+};
 
 use super::{
     app_categories, entry_ids, group_names, guide_pages, locale_names, pack_names, package_names,
@@ -34,8 +36,8 @@ fn user(name: &str, uid: u32) -> User {
         uid,
         gid: uid,
         gecos: toolbox_text::plain(""),
-        home: format!("/home/{name}"),
-        shell: "/usr/bin/fish".to_owned(),
+        home: Ok(HomeDirectory::new(format!("/home/{name}")).unwrap()),
+        shell: Ok(ShellPath::new("/usr/bin/fish").unwrap()),
     }
 }
 
@@ -131,7 +133,7 @@ fn nothing_read_gives_no_names() {
 #[test]
 fn packages_come_by_their_names() {
     let found = ["gimp", "git"]
-        .map(|name| toolbox_plan::PackageName::new(name).unwrap())
+        .map(|name| PackageName::new(name).unwrap())
         .into();
 
     assert_eq!(package_names(&found), ["gimp", "git"]);
@@ -140,9 +142,9 @@ fn packages_come_by_their_names() {
 #[test]
 fn packs_split_into_installed_and_not() {
     let pack = |package: &str, installed| PackRow {
-        package: package.to_owned(),
-        program: "firefox".to_owned(),
-        locale: "de".to_owned(),
+        package: PackageName::new(package).unwrap(),
+        program: PackageName::new("firefox").unwrap(),
+        locale: LocaleName::new("de").unwrap(),
         installed,
     };
 

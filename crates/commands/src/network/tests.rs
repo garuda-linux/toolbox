@@ -1,3 +1,5 @@
+mod json;
+
 use std::net::IpAddr;
 
 use toolbox_cli::Exit;
@@ -7,7 +9,7 @@ use toolbox_core::features::network::{
     DefaultRoute, Device, InterfaceCard, Link, ModuleFacts, Radio, RadioAccess, RadioKind,
     RadioTarget, Signal, Subnet, loaded_modules, network_modules,
 };
-use toolbox_plan::{HostName, Toggle};
+use toolbox_plan::{HostName, KernelModule, Toggle};
 use toolbox_system::{NetworkSource, ProbeError};
 
 use super::interfaces::{interface_views, signal_text};
@@ -171,7 +173,7 @@ fn drivers_are_on_unless_blacklisted() {
     use super::{DriverLine, driver_listing};
 
     let line = |module: &str, loaded, blacklisted| DriverLine {
-        module: module.to_owned(),
+        module: KernelModule::new(module).unwrap(),
         category: "ethernet",
         loaded,
         blacklisted,
@@ -196,8 +198,8 @@ fn the_radios_are_a_marked_list() {
     use super::{StatusView, radio_listing};
 
     let view = StatusView {
-        wifi: Some(true),
-        bluetooth: Some(false),
+        wifi: Some(Toggle::On),
+        bluetooth: Some(Toggle::Off),
         ..StatusView::default()
     };
 
@@ -257,7 +259,7 @@ fn a_card_keeps_its_addresses_and_its_link_as_plain_values() {
     let card = InterfaceCard {
         connection: toolbox_text::plain("network-3"),
         interface: toolbox_text::plain("wlan0"),
-        mac: Some("52:54:00:00:00:07".to_owned()),
+        mac: Some(toolbox_plan::MacAddress::new("52:54:00:00:00:07").unwrap()),
         ipv4: vec![Subnet {
             address: IpAddr::from([192, 168, 178, 30]),
             prefix: 24,
@@ -389,5 +391,5 @@ fn wifi_is_on_unless_every_wifi_radio_is_blocked() {
         },
     ]);
 
-    assert_eq!(view(&source).wifi, Some(true));
+    assert_eq!(view(&source).wifi, Some(Toggle::On));
 }

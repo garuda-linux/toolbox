@@ -6,6 +6,7 @@ mod dependencies;
 mod extra;
 mod finish;
 mod gates;
+mod make_dependencies;
 mod orphans;
 mod span;
 mod wifi;
@@ -81,6 +82,7 @@ impl Runner for FakeRunner {
         self.ran.push(match kind {
             QueryKind::Listing => format!("query: {command}"),
             QueryKind::Deptest => format!("deptest: {command}"),
+            QueryKind::Orphans => format!("orphans: {command}"),
         });
         Ok(self.queries.pop_front().unwrap_or_default())
     }

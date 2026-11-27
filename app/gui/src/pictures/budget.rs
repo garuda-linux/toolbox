@@ -10,7 +10,7 @@ use std::collections::VecDeque;
 
 /// The pictures drawn, the one drawn longest ago first.
 #[derive(Debug)]
-pub struct Budget {
+pub(super) struct Budget {
     limit: usize,
     drawn: VecDeque<String>,
 }

@@ -29,7 +29,7 @@ fn audio() -> UserConfigEdit {
     UserConfigEdit::File {
         path: HomePath::new(".config/wireplumber/wireplumber.conf.d/disable-suspension.conf")
             .unwrap(),
-        content: "monitor.alsa.rules = []\n".to_owned(),
+        content: "monitor.alsa.rules = []\n".parse().unwrap(),
     }
 }
 
@@ -199,7 +199,7 @@ fn the_step_names_the_file_and_fails_without_a_home() {
     let home = tempfile::tempdir().unwrap();
     let builtin = Builtin::EditUserConfig {
         edit: kwin(),
-        on: true,
+        on: Toggle::On,
     };
 
     let mut events = Vec::new();

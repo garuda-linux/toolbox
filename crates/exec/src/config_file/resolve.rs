@@ -21,7 +21,7 @@ const MAX_SHOWN_CHARACTERS: usize = 1024;
 
 /// A path without a symlink on its way, at the time it was looked at.
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct RealPath {
+pub(super) struct RealPath {
     pub path: ConfigFilePath,
     /// The path that was asked for led here through a symlink.
     pub linked: bool,

@@ -5,7 +5,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-use crate::LoaderDefault;
+use crate::{LoaderDefault, Toggle};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -33,9 +33,12 @@ impl fmt::Display for LoaderTimeout {
 pub struct LoaderSettings {
     pub timeout: Option<LoaderTimeout>,
     pub default: Option<LoaderDefault>,
-    pub editor: Option<bool>,
-    pub auto_entries: Option<bool>,
-    pub auto_firmware: Option<bool>,
+    #[serde(default, with = "crate::toggle::option_as_bool")]
+    pub editor: Option<Toggle>,
+    #[serde(default, with = "crate::toggle::option_as_bool")]
+    pub auto_entries: Option<Toggle>,
+    #[serde(default, with = "crate::toggle::option_as_bool")]
+    pub auto_firmware: Option<Toggle>,
 }
 
 impl LoaderSettings {
@@ -77,10 +80,10 @@ fn timeout(value: &str) -> Option<LoaderTimeout> {
 }
 
 /// The words systemd's `parse_boolean` takes.
-fn switch(value: &str) -> Option<bool> {
+fn switch(value: &str) -> Option<Toggle> {
     match value {
-        "1" | "yes" | "y" | "true" | "t" | "on" => Some(true),
-        "0" | "no" | "n" | "false" | "f" | "off" => Some(false),
+        "1" | "yes" | "y" | "true" | "t" | "on" => Some(Toggle::On),
+        "0" | "no" | "n" | "false" | "f" | "off" => Some(Toggle::Off),
         _ => None,
     }
 }

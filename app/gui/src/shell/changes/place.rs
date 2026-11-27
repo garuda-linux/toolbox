@@ -5,7 +5,7 @@ use egui::Rect;
 
 /// The popover's height in parts, as the last frame measured it.
 #[derive(Clone, Copy, Debug, Default)]
-pub struct Fit {
+pub(super) struct Fit {
     /// All but the list.
     pub chrome: f32,
     /// The list's whole height, scrolled or not.

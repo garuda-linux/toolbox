@@ -30,7 +30,7 @@ fn system() -> Snapshot {
 fn toggle(line: &str, on: bool) -> AppCommand {
     AppCommand::Locale(LocaleCommand::Toggle {
         entry: entry(line),
-        on,
+        on: toolbox_core::Toggle::from_on(on),
     })
 }
 

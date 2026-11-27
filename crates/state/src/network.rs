@@ -10,6 +10,7 @@ pub use drivers::{
     BlacklistEntry, Category, ModuleFacts, NetworkModule, loaded_modules, network_modules,
 };
 pub use hardware::{Device, DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices};
+use toolbox_plan::MacAddress;
 use toolbox_text::OutsideText;
 
 /// What NetworkManager says about the way to the internet
@@ -69,7 +70,7 @@ pub struct InterfaceCard {
     /// text too.
     pub interface: OutsideText,
     /// `None` when NetworkManager gives no hardware address for the device.
-    pub mac: Option<String>,
+    pub mac: Option<MacAddress>,
     pub ipv4: Vec<Subnet>,
     /// Global and unique local addresses first, link-local last.
     pub ipv6: Vec<Subnet>,

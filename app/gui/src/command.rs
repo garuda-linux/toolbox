@@ -132,12 +132,12 @@ pub enum ServiceCommand {
     Enable {
         scope: UnitScope,
         unit: UnitName,
-        on: bool,
+        on: Toggle,
     },
     Mask {
         scope: UnitScope,
         unit: UnitName,
-        on: bool,
+        on: Toggle,
     },
     Refresh(UnitScope),
 }
@@ -160,9 +160,9 @@ pub enum DiscoverCommand {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LocaleCommand {
-    Toggle { entry: LocaleEntry, on: bool },
+    Toggle { entry: LocaleEntry, on: Toggle },
     System(LocaleName),
-    TogglePack { package: PackageName, on: bool },
+    TogglePack { package: PackageName, on: Toggle },
     AddMissingPacks,
     Refresh,
 }
@@ -214,15 +214,15 @@ pub enum KernelEdit {
     /// takes that back.
     Toggle {
         kernel: PackageName,
-        on: bool,
+        on: Toggle,
     },
     Headers {
         kernel: PackageName,
-        on: bool,
+        on: Toggle,
     },
     Builds {
         kernel: PackageName,
-        on: bool,
+        on: Toggle,
     },
     AllHeaders,
     AllBuilds,

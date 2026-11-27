@@ -4,7 +4,7 @@ use super::RefusalText;
 use crate::features::boot::edit::EditCode;
 use crate::features::configs::session::ProblemCode;
 use crate::features::users::input::InputProblem;
-use crate::features::{ReasonCode, boot, kernels, locales, packages, users};
+use crate::features::{ReasonCode, boot, kernels, locales, packages, toggles, users};
 
 #[test]
 fn the_code_is_the_kebab_name() {
@@ -15,11 +15,11 @@ fn the_code_is_the_kebab_name() {
 fn the_text_id_joins_the_prefix_and_the_code() {
     assert_eq!(
         kernels::Refusal::RunningUnknown.text_id(),
-        "kernels-refusal-running-unknown"
+        Some("kernels-refusal-running-unknown")
     );
     assert_eq!(
         users::Refusal::HomeTaken.text_id(),
-        "users-refused-home-taken"
+        Some("users-refused-home-taken")
     );
 }
 
@@ -30,11 +30,11 @@ fn a_package_rule_keeps_its_text_and_reason() {
 
     assert_eq!(
         kernels::Refusal::Package(along).text_id(),
-        "protected-along"
+        Some("protected-along")
     );
     assert_eq!(
         locales::Refusal::Package(along).text_id(),
-        "protected-along"
+        Some("protected-along")
     );
     assert_eq!(
         kernels::Refusal::Package(along).protection(),
@@ -47,21 +47,27 @@ fn a_package_rule_keeps_its_text_and_reason() {
 fn a_config_file_problem_has_a_text_of_the_configs_page() {
     assert_eq!(
         ProblemCode::ReadFailed.text_id(),
-        "configs-problem-read-failed"
+        Some("configs-problem-read-failed")
     );
-    assert_eq!(ProblemCode::NoAgent.text_id(), "configs-problem-no-agent");
+    assert_eq!(
+        ProblemCode::NoAgent.text_id(),
+        Some("configs-problem-no-agent")
+    );
 }
 
 #[test]
 fn a_boot_value_that_breaks_its_rule_names_the_rule() {
     assert_eq!(
         EditCode::Rule(ReasonCode::InvalidPath).text_id(),
-        "boot-refused-invalid-path"
+        Some("boot-refused-invalid-path")
     );
     assert_eq!(
         EditCode::Refused(boot::Refusal::UnknownTheme).text_id(),
-        "boot-refused-unknown-theme"
+        Some("boot-refused-unknown-theme")
     );
+    assert_eq!(EditCode::NeedsConfirm.text_id(), None);
+    assert_eq!(toggles::Refusal::Unmet.text_id(), None);
+    assert_eq!(toggles::Refusal::Unknown.text_id(), None);
     assert_eq!(EditCode::NeedsConfirm.code(), "needs-confirm");
 }
 
@@ -79,11 +85,11 @@ fn a_typed_account_value_takes_the_text_of_its_field() {
     assert_eq!(
         ids,
         [
-            "users-name-too-long",
-            "users-home-outside-roots",
-            "users-full-name-leading-dash",
-            "users-refused-group-exists",
-            "users-refused-uid-invalid",
+            Some("users-name-too-long"),
+            Some("users-home-outside-roots"),
+            Some("users-full-name-leading-dash"),
+            Some("users-refused-group-exists"),
+            Some("users-refused-uid-invalid"),
         ]
     );
 }

@@ -16,7 +16,7 @@ use toolbox_calendar::{SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, da
 ///
 /// The old format has no zone. It is read as UTC: without a time zone
 /// database the local offset is unknown.
-pub fn parse_timestamp(text: &str) -> Option<SystemTime> {
+pub(super) fn parse_timestamp(text: &str) -> Option<SystemTime> {
     let (date, clock, offset) = if let Some((date, rest)) = text.split_once('T') {
         let zone_at = rest.find(['+', '-', 'Z'])?;
         let (clock, zone) = rest.split_at_checked(zone_at)?;

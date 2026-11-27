@@ -347,7 +347,7 @@ fn buttons(ui: &mut Ui, context: &PageContext<'_>, driver: &DriverRow) {
             let wanted = driver.queued.map_or(driver.own, Toggle::is_on);
             context.commands.send(NetworkCommand::Blacklist {
                 module: driver.name.clone(),
-                on: !wanted,
+                on: Toggle::from_on(!wanted),
             });
         }
     });

@@ -116,9 +116,57 @@ impl Repair {
         Self::ALL.into_iter().find(|repair| repair.key() == key)
     }
 
-    /// The id of its name on the Repairs tab.
-    pub fn text_id(self) -> String {
-        format!("maintenance-repair-{}", self.key())
+    /// The id of its name on the Repairs tab. The ids are literals, so grep
+    /// and the catalog checks see each one.
+    pub const fn text_id(self) -> &'static str {
+        match self {
+            Self::HealthCheck => "maintenance-repair-health-check",
+            Self::HealthFix => "maintenance-repair-health-fix",
+            Self::Remote(RemoteAction::Fix) => "maintenance-repair-remote-fix",
+            Self::Remote(RemoteAction::Keyring) => "maintenance-repair-remote-keyring",
+            Self::Remote(RemoteAction::FullFix) => "maintenance-repair-remote-full-fix",
+            Self::Remote(RemoteAction::ResetAudio) => "maintenance-repair-remote-reset-audio",
+            Self::Remote(RemoteAction::ResetSnapper) => "maintenance-repair-remote-reset-snapper",
+            Self::Remote(RemoteAction::Reinstall) => "maintenance-repair-remote-reinstall",
+        }
+    }
+
+    pub const fn detail_id(self) -> &'static str {
+        match self {
+            Self::HealthCheck => "maintenance-repair-health-check-detail",
+            Self::HealthFix => "maintenance-repair-health-fix-detail",
+            Self::Remote(RemoteAction::Fix) => "maintenance-repair-remote-fix-detail",
+            Self::Remote(RemoteAction::Keyring) => "maintenance-repair-remote-keyring-detail",
+            Self::Remote(RemoteAction::FullFix) => "maintenance-repair-remote-full-fix-detail",
+            Self::Remote(RemoteAction::ResetAudio) => {
+                "maintenance-repair-remote-reset-audio-detail"
+            }
+            Self::Remote(RemoteAction::ResetSnapper) => {
+                "maintenance-repair-remote-reset-snapper-detail"
+            }
+            Self::Remote(RemoteAction::Reinstall) => "maintenance-repair-remote-reinstall-detail",
+        }
+    }
+
+    /// The question before the task, for those that ask first. `None` for
+    /// the ones that run at once, see [`Self::asks_first`].
+    pub const fn question_id(self) -> Option<&'static str> {
+        match self {
+            Self::HealthCheck | Self::HealthFix | Self::Remote(RemoteAction::Keyring) => None,
+            Self::Remote(RemoteAction::Fix) => Some("maintenance-repair-remote-fix-question"),
+            Self::Remote(RemoteAction::FullFix) => {
+                Some("maintenance-repair-remote-full-fix-question")
+            }
+            Self::Remote(RemoteAction::ResetAudio) => {
+                Some("maintenance-repair-remote-reset-audio-question")
+            }
+            Self::Remote(RemoteAction::ResetSnapper) => {
+                Some("maintenance-repair-remote-reset-snapper-question")
+            }
+            Self::Remote(RemoteAction::Reinstall) => {
+                Some("maintenance-repair-remote-reinstall-question")
+            }
+        }
     }
 
     /// It reinstalls packages or throws away what the user had
@@ -155,9 +203,16 @@ impl PageTool {
         }
     }
 
-    /// The id of its name on the Common tab.
-    pub fn text_id(self) -> String {
-        format!("maintenance-tool-{}", self.key())
+    /// The id of its name on the Common tab. The ids are literals, so grep
+    /// and the catalog checks see each one.
+    pub const fn text_id(self) -> &'static str {
+        match self {
+            Self::Program(Tool::ArchMirrors) => "maintenance-tool-arch-mirrors",
+            Self::Program(Tool::BtrfsAssistant) => "maintenance-tool-btrfs-assistant",
+            Self::Program(Tool::EditRepositories) => "maintenance-tool-edit-repositories",
+            Self::Program(Tool::MergePacdiff) => "maintenance-tool-merge-pacdiff",
+            Self::ChaoticMirrors => "maintenance-tool-chaotic-mirrors",
+        }
     }
 }
 

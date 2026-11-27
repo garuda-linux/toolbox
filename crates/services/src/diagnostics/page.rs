@@ -7,7 +7,7 @@ mod tests;
 use std::time::Instant;
 
 use toolbox_pty::strip_ansi;
-use toolbox_state::diagnostics::{Collector, Outcome, Redacted, Refusal};
+use toolbox_state::diagnostics::{Collector, Outcome, Redacted, Refusal, Selection};
 
 use super::service::DiagnosticsNote;
 use crate::share::{ShareNote, Upload};
@@ -35,8 +35,8 @@ pub enum Changed {
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct Page {
     pub state: State,
-    pub selection: String,
-    pub part: String,
+    pub selection: Option<Selection>,
+    pub part: Option<Collector>,
     /// Its place among the collectors of a full report, from 1.
     pub step: i32,
     /// The report as plain text: what is copied.
@@ -72,7 +72,7 @@ impl Page {
         match note {
             DiagnosticsNote::Started(selection) => {
                 self.state = State::Running;
-                selection.as_str().clone_into(&mut self.selection);
+                self.selection = Some(selection);
                 self.clear_result();
 
                 // The last link belongs to the report this run replaces.
@@ -80,12 +80,12 @@ impl Page {
                 Changed::Report { ready: false }
             }
             DiagnosticsNote::Collecting(collector) => {
-                collector.as_str().clone_into(&mut self.part);
+                self.part = Some(collector);
                 self.step = step_of(collector);
                 Changed::Status
             }
             DiagnosticsNote::Finished(selection, outcome) => {
-                selection.as_str().clone_into(&mut self.selection);
+                self.selection = Some(selection);
                 self.clear_result();
                 self.finish(outcome)
             }
@@ -160,7 +160,7 @@ impl Page {
         self.shareable = None;
         self.problem.clear();
         self.collected = None;
-        self.part.clear();
+        self.part = None;
         self.step = 0_i32;
     }
 }

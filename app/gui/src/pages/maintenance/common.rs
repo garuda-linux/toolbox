@@ -56,9 +56,8 @@ fn operation_row(
     asking: &mut Option<Asked>,
 ) {
     let ctx = ui.ctx().clone();
-    let id = operation.operation.text_id();
-    let detail = i18n::text(&ctx, &format!("{id}-detail"));
-    let title = i18n::text(&ctx, &id);
+    let detail = i18n::text(&ctx, operation.operation.detail_id());
+    let title = i18n::text(&ctx, operation.operation.text_id());
     let queued = if operation.queued {
         i18n::text(&ctx, "maintenance-queued")
     } else {
@@ -72,12 +71,12 @@ fn operation_row(
             // Each Queue names its task, so a screen reader tells the rows'
             // buttons apart.
             let queue = if operation.queued {
-                "maintenance-unqueue".to_owned()
+                "maintenance-unqueue"
             } else {
-                format!("{id}-queue")
+                operation.operation.queue_id()
             };
 
-            let queue = i18n::text(&ctx, &queue);
+            let queue = i18n::text(&ctx, queue);
             let queue = ui.enabled_ui(!context.busy, |ui| {
                 pill_button_at_least(ui, &queue, ButtonKind::Soft, queue_width)
             });
@@ -85,7 +84,7 @@ fn operation_row(
             if queue.inner.clicked() {
                 context.commands.send(MaintenanceCommand::Queue {
                     operation: operation.operation,
-                    on: !operation.queued,
+                    on: toolbox_core::Toggle::from_on(!operation.queued),
                 });
             }
 
@@ -130,7 +129,7 @@ fn tool_row(ui: &mut Ui, context: &PageContext<'_>, (tool, button_width): (&Tool
         "maintenance-install-open"
     };
 
-    let title = i18n::text(&ctx, &id);
+    let title = i18n::text(&ctx, id);
     let words = ActionRow::new(tool_icon(tool.tool), &title).detail(&detail);
     let not_installed = i18n::text(&ctx, "maintenance-not-installed");
     let words = if tool.installed {
@@ -197,13 +196,8 @@ const fn tool_icon(tool: PageTool) -> Icon {
 /// Queue buttons share one width and their Run now buttons line up.
 fn queue_width(ui: &Ui, rows: &[OperationRow]) -> f32 {
     rows.iter()
-        .flat_map(|row| {
-            [
-                format!("{}-queue", row.operation.text_id()),
-                "maintenance-unqueue".to_owned(),
-            ]
-        })
-        .map(|id| pill_width(ui, &i18n::text(ui.ctx(), &id)))
+        .flat_map(|row| [row.operation.queue_id(), "maintenance-unqueue"])
+        .map(|id| pill_width(ui, &i18n::text(ui.ctx(), id)))
         .fold(0.0_f32, f32::max)
 }
 

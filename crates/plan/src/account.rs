@@ -17,7 +17,7 @@ pub use shadow::Caller;
 use crate::{GroupName, ShellPath, UserName};
 
 /// Far above any real name, far below what `/etc/passwd` lines may hold.
-pub const MAX_FULL_NAME_BYTES: usize = 128;
+const MAX_FULL_NAME_BYTES: usize = 128;
 
 /// `/etc/shadow`, relative to `/`. Only the helper reads it.
 pub const SHADOW: &str = "etc/shadow";

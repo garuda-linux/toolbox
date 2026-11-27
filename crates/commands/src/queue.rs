@@ -6,6 +6,7 @@
 mod add;
 mod build;
 mod ready;
+mod run;
 mod said;
 mod show;
 mod store;
@@ -17,12 +18,12 @@ use std::io::Write as _;
 use tokio::runtime::Runtime;
 use toolbox_aur::{AurSource, Cache};
 use toolbox_cli::Exit;
-use toolbox_cli::args::{Confirm, QueueAdd, QueueCommand, Read};
+use toolbox_cli::args::{QueueAdd, QueueCommand, Read};
 use toolbox_cli::confirm::consent;
 use toolbox_cli::output::json;
 use toolbox_config::Paths;
 use toolbox_core::features::Unchecked;
-use toolbox_core::{ChangeSet, Owners, SavedChanges, Snapshot, Summary, domains, plan, planned};
+use toolbox_core::{ChangeSet, Owners, SavedChanges, Snapshot, Summary, domains, plan};
 use toolbox_plan::{PlannedAction, StepId};
 use toolbox_services::catalogs::Catalogs;
 use toolbox_services::queue::edit::QueueEdit;
@@ -31,9 +32,9 @@ use self::said::{changes, done, say, waiting, words};
 use self::show::Unpicked;
 use self::store::{Problem, Store};
 use super::change::Refused;
-use super::out::write_listing;
+use super::out::{warn, write_listing};
 use super::terminal::Terminal;
-use super::{apply, catalogs, root, snapshot, spinner};
+use super::{apply, catalogs, packages, root, snapshot, spinner};
 use crate::out::Out;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -58,7 +59,8 @@ struct Context<'a> {
 pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let quiet = matches!(&command, QueueCommand::Show(read) if read.json);
     let catalogs = catalogs();
-    let system = spinner::while_reading(quiet || out.quiet(), || snapshot(&catalogs));
+    let mut system = spinner::while_reading(quiet || out.quiet(), || snapshot(&catalogs));
+    root::sudo_route(out.settings(), &mut system);
     let path = Paths::from_process().staged_changes_file();
 
     let store = match store::open(runtime.handle(), path, out.settings()) {
@@ -102,13 +104,13 @@ pub fn command(command: QueueCommand, runtime: &Runtime, out: &mut Out<'_>) -> E
                 Err(failed) => failed.say(out),
             }
         }
-        QueueCommand::Apply(confirm) => apply_queue(confirm, &context, out),
+        QueueCommand::Apply(confirm) => run::apply_queue(confirm, &context, out),
     }
 }
 
 /// The queue as the window would show it against `snapshot`, after every
 /// page's guard.
-pub fn restored(saved: &SavedChanges, snapshot: &Snapshot) -> ChangeSet {
+fn restored(saved: &SavedChanges, snapshot: &Snapshot) -> ChangeSet {
     let mut changes = restore(saved, snapshot);
     Unchecked::all().recheck(&mut changes, snapshot);
     changes
@@ -133,7 +135,7 @@ fn restore(saved: &SavedChanges, snapshot: &Snapshot) -> ChangeSet {
 ///
 /// [`Failed`] for a refused change, one the queue has already, or a queue
 /// that did not take it.
-pub fn add_change(
+fn add_change(
     store: &dyn Store,
     snapshot: &Snapshot,
     build: impl FnOnce(&mut ChangeSet) -> Result<(), Refused>,
@@ -150,7 +152,7 @@ pub fn add_change(
 /// # Errors
 ///
 /// [`Failed`] for no such change or a queue that did not take it back.
-pub fn remove_change(
+fn remove_change(
     store: &dyn Store,
     snapshot: &Snapshot,
     selector: &str,
@@ -170,7 +172,7 @@ pub fn remove_change(
 ///
 /// [`Failed::Nothing`] for an empty queue, or a queue that did not take
 /// it back.
-pub fn clear_all(store: &dyn Store) -> Result<usize, Failed> {
+fn clear_all(store: &dyn Store) -> Result<usize, Failed> {
     let changes = restored(&store.saved().map_err(Failed::Store)?, &Snapshot::default());
     let removals = changes
         .views()
@@ -190,7 +192,7 @@ pub fn clear_all(store: &dyn Store) -> Result<usize, Failed> {
 /// # Errors
 ///
 /// [`Failed::Store`] when the queue could not be written.
-pub fn settle(
+fn settle(
     store: &dyn Store,
     after: &Snapshot,
     owners: &Owners,
@@ -270,6 +272,12 @@ fn add(args: &QueueAdd, context: &Context<'_>, out: &mut Out<'_>) -> Exit {
         build::build(&change, &sources, system, changes)
     });
 
+    if added.is_ok()
+        && let Some(note) = aur_note(&change, system)
+    {
+        warn(out.settings(), &note);
+    }
+
     match added {
         Ok(count) => done(&format!("Queued, {}", waiting(count)), store, out),
         Err(failed) => failed.say(out),
@@ -319,73 +327,17 @@ fn show(store: &dyn Store, system: &Snapshot, read: Read, out: &mut Out<'_>) -> 
     exit
 }
 
-/// The window's queue belongs to the window, so a change never runs twice.
-fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out<'_>) -> Exit {
-    let Context {
-        store,
-        catalogs,
-        system,
-        runtime,
-        aur,
-    } = *context;
+/// The note of an AUR install queued on the old paru path, with the reason.
+fn aur_note(change: &add::Queueable<'_>, system: &Snapshot) -> Option<String> {
+    let add::Queueable::Install(args) = change else {
+        return None;
+    };
 
-    if store.in_window() {
-        say(
-            out,
-            "the window holds the queue, so only the window applies it",
-            "apply it in the window, or close the window",
-        );
-        return Exit::Unavailable;
+    if !args.aur {
+        return None;
     }
 
-    let saved = match store.saved() {
-        Ok(saved) => saved,
-        Err(problem) => return Failed::Store(problem).say(out),
-    };
-
-    let reads = ready::HelperReads {
-        settings: out.settings(),
-        aur,
-    };
-
-    let changes = match ready::checked(&saved, system, &reads) {
-        Ok(changes) => changes,
-        Err(refusal) => return ready::refused(refusal, out),
-    };
-
-    let (planned, owners) = planned(&changes);
-    let ended = apply::carry_out_steps(
-        planned.clone(),
-        confirm,
-        None,
-        runtime.handle(),
-        root::launcher(out.settings()),
-        &mut Terminal {
-            color: out.settings().color,
-        },
-        out,
-    );
-
-    let exit = ended.exit;
-    let succeeded: Vec<PlannedAction> = planned
-        .steps()
-        .iter()
-        .filter(|step| ended.succeeded.contains(&step.id))
-        .map(|step| step.action.clone())
-        .collect();
-
-    let ran = !confirm.dry_run && !matches!(exit, Exit::Declined | Exit::NeedsYes | Exit::Usage);
-    if ran
-        && let Err(failed) = settle(
-            store,
-            &ready::after(snapshot(catalogs), &changes, &reads),
-            &owners,
-            |step| ended.ended_well(step),
-            &succeeded,
-        )
-    {
-        failed.say(out);
-    }
-
-    exit
+    system
+        .part::<toolbox_state::aur::AurRoute>()
+        .and_then(packages::aur::old_path_note)
 }

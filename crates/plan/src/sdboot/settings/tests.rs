@@ -1,5 +1,5 @@
 use super::{LoaderSettings, LoaderTimeout};
-use crate::LoaderDefault;
+use crate::{LoaderDefault, Toggle};
 
 /// `/efi/loader/loader.conf` of the Garuda Lima image, as `bootctl
 /// install` writes it.
@@ -23,7 +23,7 @@ fn garuda_common_settings_switches_the_firmware_entry_on() {
     assert_eq!(
         settings,
         LoaderSettings {
-            auto_firmware: Some(true),
+            auto_firmware: Some(Toggle::On),
             ..LoaderSettings::default()
         }
     );
@@ -38,7 +38,7 @@ fn the_man_pages_example_is_read_whole() {
         settings.default,
         Some(LoaderDefault::new("01234567890abcdef1234567890abdf0-*").unwrap())
     );
-    assert_eq!(settings.editor, Some(false));
+    assert_eq!(settings.editor, Some(Toggle::Off));
 }
 
 /// The image's own commented lines, switched on.

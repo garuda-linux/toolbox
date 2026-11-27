@@ -14,7 +14,7 @@ const MAX_URL: usize = 2048;
 /// with it, or a unit enabled once the packages are there.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "kebab-case")]
-pub enum RawAlso {
+pub(super) enum RawAlso {
     Package(String),
     Service(String),
     UserService(String),
@@ -22,7 +22,7 @@ pub enum RawAlso {
 
 /// None of it decides the shown state, the check does.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
-pub struct Also {
+pub(super) struct Also {
     pub packages: Vec<PackageName>,
     pub units: Vec<UnitName>,
     pub user_units: Vec<UnitName>,
@@ -64,7 +64,7 @@ pub fn also(raw: Option<Vec<RawAlso>>, check: &Check) -> Result<Also, Problem> {
     Ok(also)
 }
 
-pub fn push_unit(
+pub(super) fn push_unit(
     units: &mut Vec<UnitName>,
     name: String,
     twice: fn(String) -> Problem,
@@ -81,7 +81,7 @@ pub fn push_unit(
 
 /// `XDG_CURRENT_DESKTOP` names. An empty list in the file would hide the
 /// entry everywhere, so it is refused rather than read as "any".
-pub fn desktops(names: Option<Vec<String>>) -> Result<Vec<String>, Problem> {
+pub(super) fn desktops(names: Option<Vec<String>>) -> Result<Vec<String>, Problem> {
     let Some(names) = names else {
         return Ok(Vec::new());
     };

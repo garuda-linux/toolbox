@@ -9,7 +9,7 @@ use crate::component::has_plain_components;
 use crate::shown::Shown;
 
 /// `PATH_MAX` is far larger, but no shell lives that deep.
-pub const MAX_SHELL_PATH_BYTES: usize = 255;
+const MAX_SHELL_PATH_BYTES: usize = 255;
 
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
 pub enum InvalidShellPath {

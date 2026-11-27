@@ -71,11 +71,7 @@ pub fn run(program: &OsStr, args: &[&str]) -> Result<Finished, ProbeError> {
 /// error (missing means unavailable, anything else failed), and so is one
 /// that runs past `deadline`: it and everything it started get SIGTERM,
 /// then SIGKILL after a grace.
-pub fn run_within(
-    program: &OsStr,
-    args: &[&str],
-    deadline: Duration,
-) -> Result<Finished, ProbeError> {
+fn run_within(program: &OsStr, args: &[&str], deadline: Duration) -> Result<Finished, ProbeError> {
     let started = Instant::now();
     let command_line = format!("{} {}", program.display(), args.join(" "));
     let mut command = Command::new(program);

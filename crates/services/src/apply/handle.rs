@@ -23,7 +23,7 @@ pub struct ApplyHandle {
 }
 
 #[derive(Clone, Debug)]
-pub struct Reporter {
+pub(super) struct Reporter {
     pub(super) reports: Waking<Report>,
     pub(super) gate: OutputGate,
 }

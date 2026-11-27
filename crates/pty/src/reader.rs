@@ -100,7 +100,7 @@ pub fn wait_ready(
 /// The text decodable from `pending`, which is drained by as much. A
 /// character cut off by the end of a read stays for the next one, and so
 /// does a partial character behind invalid bytes.
-pub fn take_text(pending: &mut Vec<u8>) -> String {
+fn take_text(pending: &mut Vec<u8>) -> String {
     let mut text = String::new();
     let mut taken = 0;
 

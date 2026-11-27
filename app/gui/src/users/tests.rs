@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use tokio::runtime::Runtime;
 use toolbox_core::features::users::run::{PageRun, RunKind};
-use toolbox_plan::UserName;
+use toolbox_plan::{Toggle, UserName};
 use toolbox_services::locks::Locks;
 use toolbox_system::pkexec::Refusal;
 use toolbox_system::{LockProblem, LockSource};
@@ -74,7 +74,7 @@ fn opening_asks_once_and_the_flags_reach_the_snapshot() {
     settle(&mut users);
     users.open();
 
-    assert_eq!(users.locks().of(&name("ada")), Some(true));
+    assert_eq!(users.locks().of(&name("ada")), Some(Toggle::On));
     assert!(users.flags().is_some());
     assert_eq!(helper.reads.load(Ordering::SeqCst), 1);
 }

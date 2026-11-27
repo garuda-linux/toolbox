@@ -55,7 +55,7 @@ impl<R: RefusalText, S: Subject> Shown for Refused<R, S> {
         let why = self
             .refusal
             .protection()
-            .map(|why| i18n::text(ctx, &protection_text_id(why)));
+            .map(|why| i18n::text(ctx, protection_text_id(why)));
 
         let mut args: Vec<_> = self
             .subject
@@ -66,7 +66,9 @@ impl<R: RefusalText, S: Subject> Shown for Refused<R, S> {
             .collect();
 
         args.extend_from_slice(more);
-        i18n::text_with(ctx, &self.refusal.text_id(), &args).into_owned()
+        self.refusal.text_id().map_or_else(String::new, |id| {
+            i18n::text_with(ctx, id, &args).into_owned()
+        })
     }
 }
 

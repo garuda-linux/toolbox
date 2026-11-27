@@ -10,7 +10,7 @@ use std::time::{Duration, Instant};
 use tempfile::TempDir;
 use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::{Answer, Event, Failure, Outcome};
-use toolbox_plan::{ConfigFilePath, ConfigText, StepId};
+use toolbox_plan::{AUR_CLONE, ConfigFilePath, ConfigText, StepId};
 
 use crate::apply::EventSink;
 
@@ -121,4 +121,49 @@ pub fn path(text: &str) -> ConfigFilePath {
 
 pub fn text(content: &str) -> ConfigText {
     ConfigText::new(content).unwrap()
+}
+
+/// The git of the test machine, found on `PATH`.
+pub fn git_program() -> PathBuf {
+    std::env::var_os("PATH")
+        .and_then(|path| {
+            std::env::split_paths(&path)
+                .map(|folder| folder.join("git"))
+                .find(|candidate| candidate.is_file())
+        })
+        .expect("git is on PATH")
+}
+
+/// The clone of `base` below `home`, as `paru -G` leaves one, with its one
+/// commit marked reviewed. A build of it passes the review's guard.
+pub fn reviewed_clone(home: &Path, base: &str) -> PathBuf {
+    let folder = home.join(AUR_CLONE).join(base);
+    fs::create_dir_all(&folder).unwrap();
+    fs::write(folder.join("PKGBUILD"), format!("pkgname={base}\n")).unwrap();
+
+    for args in [
+        &["init", "-q"][..],
+        &["add", "--all"],
+        &["commit", "-q", "-m", "reviewed"],
+        &["update-ref", "refs/garuda-toolbox/reviewed", "HEAD"],
+    ] {
+        let status = std::process::Command::new(git_program())
+            .current_dir(&folder)
+            .env("GIT_CONFIG_GLOBAL", "/dev/null")
+            .args([
+                "-c",
+                "user.name=ada",
+                "-c",
+                "user.email=ada@example.invalid",
+                "-c",
+                "commit.gpgSign=false",
+            ])
+            .args(args)
+            .status()
+            .unwrap();
+
+        assert!(status.success(), "git {args:?}");
+    }
+
+    folder
 }

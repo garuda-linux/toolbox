@@ -10,7 +10,7 @@ use toolbox_plan::{MergeCopy, UnitScope};
 use toolbox_services::programs::Programs;
 use toolbox_services::units::{Systemd, UnitList, UnitLister as _};
 use toolbox_state::kernels::DkmsEntry;
-use toolbox_system::{Dkms, DkmsSource as _, MergePair, ProbeError, SystemConfigFiles, read_pair};
+use toolbox_system::{Dkms, MergePair, ProbeError, SystemConfigFiles, read_pair};
 
 use crate::out::Settings;
 
@@ -20,7 +20,7 @@ pub trait SystemReads {
 
     /// # Errors
     ///
-    /// As [`toolbox_system::DkmsSource::status`].
+    /// As [`toolbox_system::Dkms::status`].
     fn dkms(&self) -> Result<Vec<DkmsEntry>, ProbeError>;
 
     /// Whether garuda-update is installed, which the upgrade prefers.

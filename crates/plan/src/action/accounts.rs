@@ -7,14 +7,16 @@ mod tests;
 
 use super::run;
 use crate::procedure::{Builtin, Command, Invocation, Program};
-use crate::{FullName, GroupName, HomeChange, HomeFolder, NewHome, NewUser, Password, UserName};
+use crate::{
+    FullName, GroupName, HomeChange, HomeFolder, NewHome, NewUser, Password, Toggle, UserName,
+};
 
 /// The home folder is always asked for or refused with a flag (`-m`,
 /// `-M`), so `CREATE_HOME` of `/etc/login.defs` decides nothing. `-m`
 /// makes it from `/etc/skel`. The shell is checked like in `SetShell`:
 /// useradd as root takes any program. The user id comes without `-o`, so
 /// useradd refuses one that is in use.
-pub fn create_user(user: &NewUser) -> Vec<Invocation> {
+pub(super) fn create_user(user: &NewUser) -> Vec<Invocation> {
     let user = user.parts();
     let mut steps = Vec::new();
     let mut command = Command::new(Program::Useradd);
@@ -60,14 +62,14 @@ pub fn create_user(user: &NewUser) -> Vec<Invocation> {
 
 /// chpasswd reads `user:password` lines from its standard input and
 /// prints nothing on success.
-pub fn set_password(user: &UserName, password: Option<&Password>) -> Vec<Invocation> {
+pub(super) fn set_password(user: &UserName, password: Option<&Password>) -> Vec<Invocation> {
     vec![Invocation::Feed {
         command: Command::new(Program::Chpasswd),
         input: password.map(|password| password.chpasswd_input(user)),
     }]
 }
 
-pub fn delete_user(user: &UserName, home: HomeFolder) -> Vec<Invocation> {
+pub(super) fn delete_user(user: &UserName, home: HomeFolder) -> Vec<Invocation> {
     let command = Command::new(Program::Userdel);
     let command = match home {
         HomeFolder::Keep => command,
@@ -81,11 +83,11 @@ pub fn delete_user(user: &UserName, home: HomeFolder) -> Vec<Invocation> {
 }
 
 /// Unlocking root is harmless, locking it can shut the last way in.
-pub fn set_locked(user: &UserName, locked: bool) -> Vec<Invocation> {
-    let flag = if locked { "-L" } else { "-U" };
+pub(super) fn set_locked(user: &UserName, locked: Toggle) -> Vec<Invocation> {
+    let flag = if locked.is_on() { "-L" } else { "-U" };
     let change = run(Command::new(Program::Usermod).args([flag, "--", user.as_str()]));
 
-    if locked {
+    if locked.is_on() {
         vec![
             Invocation::Builtin(Builtin::RequireOrdinaryUser(user.clone())),
             change,
@@ -98,7 +100,7 @@ pub fn set_locked(user: &UserName, locked: bool) -> Vec<Invocation> {
 /// `-m` moves the content of the old folder to the new one, which usermod
 /// creates. Without it only the entry in `/etc/passwd` changes. usermod
 /// refuses an account that still runs a program.
-pub fn set_home_folder(user: &UserName, change: &HomeChange) -> Vec<Invocation> {
+pub(super) fn set_home_folder(user: &UserName, change: &HomeChange) -> Vec<Invocation> {
     let command = Command::new(Program::Usermod).args(["-d", change.home.as_str()]);
     let command = if change.move_files {
         command.arg("-m")
@@ -123,7 +125,7 @@ pub fn set_home_folder(user: &UserName, change: &HomeChange) -> Vec<Invocation> 
 
 /// chfn changes only the name part of the GECOS field. `usermod -c` would
 /// replace the whole field and drop room and phone numbers.
-pub fn set_full_name(user: &UserName, full_name: &FullName) -> Vec<Invocation> {
+pub(super) fn set_full_name(user: &UserName, full_name: &FullName) -> Vec<Invocation> {
     vec![run(Command::new(Program::Chfn).args([
         "-f",
         full_name.as_str(),
@@ -132,13 +134,13 @@ pub fn set_full_name(user: &UserName, full_name: &FullName) -> Vec<Invocation> {
     ]))]
 }
 
-pub fn create_group(group: &GroupName) -> Vec<Invocation> {
+pub(super) fn create_group(group: &GroupName) -> Vec<Invocation> {
     vec![run(
         Command::new(Program::Groupadd).args(["--", group.as_str()])
     )]
 }
 
-pub fn delete_group(group: &GroupName) -> Vec<Invocation> {
+pub(super) fn delete_group(group: &GroupName) -> Vec<Invocation> {
     vec![
         Invocation::Builtin(Builtin::RequireUserGroup(group.clone())),
         run(Command::new(Program::Groupdel).args(["--", group.as_str()])),

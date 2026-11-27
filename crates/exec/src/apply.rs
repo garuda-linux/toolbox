@@ -109,6 +109,10 @@ fn program_name(procedure: &[Invocation]) -> &'static str {
                 query: _,
                 run: command,
             }
+            | Invocation::RunWithOrphansFrom {
+                query: _,
+                run: command,
+            }
             | Invocation::RunWithUnmetFrom {
                 test: _,
                 run: command,
@@ -228,6 +232,10 @@ fn guarded(
     })
 }
 
+#[expect(
+    clippy::too_many_lines,
+    reason = "one arm per invocation, a new one fails to compile until it has its executor"
+)]
 fn run_once(
     step: StepId,
     invocation: &Invocation,
@@ -243,6 +251,9 @@ fn run_once(
         Invocation::Run(command) => runner.run(step, command, sink),
         Invocation::RunWithTargetsFrom { query, run } => {
             targets::repeated(step, query, run, runner, sink)
+        }
+        Invocation::RunWithOrphansFrom { query, run } => {
+            targets::orphans(step, query, run, runner, sink)
         }
         Invocation::RunWithUnmetFrom { test, run } => targets::unmet(step, test, run, runner, sink),
         Invocation::RunUnlessItRemovesProtected { preview, run } => {

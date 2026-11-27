@@ -29,10 +29,17 @@ pub enum Asked {
 }
 
 impl Asked {
-    fn text_id(self) -> String {
+    const fn text_id(self) -> &'static str {
         match self {
             Self::Operation(operation) => operation.text_id(),
             Self::Repair(repair) => repair.text_id(),
+        }
+    }
+
+    const fn question_id(self) -> Option<&'static str> {
+        match self {
+            Self::Operation(operation) => Some(operation.question_id()),
+            Self::Repair(repair) => repair.question_id(),
         }
     }
 
@@ -112,37 +119,42 @@ fn missing_banner(ui: &mut Ui, context: &PageContext<'_>, rows: &[RepairRow]) {
 
 /// Returns whether its Run was clicked.
 fn repair_row(ui: &mut Ui, context: &PageContext<'_>, repair: &RepairRow) -> bool {
-    let id = repair.repair.text_id();
-    let detail = i18n::text(ui.ctx(), &format!("{id}-detail"));
+    let detail = i18n::text(ui.ctx(), repair.repair.detail_id());
     let mut clicked = false;
 
     // The whole row greys, icon and words too, not its button alone.
     ui.enabled_ui(repair.available, |ui| {
-        row(ui, repair_icon(repair.repair), &id, &detail, |ui| {
-            if !repair.available {
-                let needs = i18n::text_with(
-                    ui.ctx(),
-                    "maintenance-repair-needs",
-                    &[("package", Arg::from(repair.needs.as_str()))],
-                );
+        row(
+            ui,
+            repair_icon(repair.repair),
+            repair.repair.text_id(),
+            &detail,
+            |ui| {
+                if !repair.available {
+                    let needs = i18n::text_with(
+                        ui.ctx(),
+                        "maintenance-repair-needs",
+                        &[("package", Arg::from(repair.needs.as_str()))],
+                    );
 
-                let sizes = ui.tokens().sizes;
-                let secondary = ui.tokens().secondary;
-                ui.label(rich(ui, &needs, Weight::Regular, SMALL, secondary));
-                ui.add_space(sizes.text_to_control - sizes.control_gap);
-            }
+                    let sizes = ui.tokens().sizes;
+                    let secondary = ui.tokens().secondary;
+                    ui.label(rich(ui, &needs, Weight::Regular, SMALL, secondary));
+                    ui.add_space(sizes.text_to_control - sizes.control_gap);
+                }
 
-            let text = i18n::text(ui.ctx(), "maintenance-run");
+                let text = i18n::text(ui.ctx(), "maintenance-run");
 
-            // Inside the greyed row a second disable would fade it twice.
-            clicked = if repair.available && context.busy {
-                ui.enabled_ui(false, |ui| pill_button(ui, &text, ButtonKind::Soft))
-                    .inner
-                    .clicked()
-            } else {
-                pill_button(ui, &text, ButtonKind::Soft).clicked()
-            };
-        });
+                // Inside the greyed row a second disable would fade it twice.
+                clicked = if repair.available && context.busy {
+                    ui.enabled_ui(false, |ui| pill_button(ui, &text, ButtonKind::Soft))
+                        .inner
+                        .clicked()
+                } else {
+                    pill_button(ui, &text, ButtonKind::Soft).clicked()
+                };
+            },
+        );
     });
 
     clicked
@@ -158,7 +170,7 @@ pub(super) fn ask(
 ) {
     let id = asked.text_id();
 
-    let name = i18n::text(ctx, &id);
+    let name = i18n::text(ctx, id);
     let title = i18n::text_with(
         ctx,
         "maintenance-repair-question",
@@ -167,7 +179,11 @@ pub(super) fn ask(
 
     let close = i18n::text(ctx, "dialog-close");
 
-    let body = i18n::text(ctx, &format!("{id}-question"));
+    let body = asked
+        .question_id()
+        .map(|question| i18n::text(ctx, question))
+        .unwrap_or_default();
+
     let cancel = i18n::text(ctx, "maintenance-repair-cancel");
     let texts = Question {
         title: &title,

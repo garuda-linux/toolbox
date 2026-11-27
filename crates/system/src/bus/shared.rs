@@ -19,7 +19,7 @@ static SHARED: Buses<Connection> = Buses::new();
 
 /// The connections, `None` until first used or after a failure.
 #[derive(Debug)]
-pub struct Buses<C> {
+struct Buses<C> {
     system: Mutex<Option<C>>,
     user: Mutex<Option<C>>,
 }
@@ -54,7 +54,7 @@ impl<C: Clone> Buses<C> {
         Ok(connection)
     }
 
-    pub fn forget(&self, scope: UnitScope) {
+    fn forget(&self, scope: UnitScope) {
         self.slot(scope).lock().take();
     }
 

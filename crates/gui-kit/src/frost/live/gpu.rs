@@ -29,7 +29,7 @@ const MOST_TEXELS: f32 = 4096.0;
 /// The blur's own resolution: a quarter of the window's.
 const DOWNSCALE: f32 = 4.0;
 
-pub struct Target {
+pub(super) struct Target {
     size: [u32; 2],
     views: [wgpu::TextureView; 3],
     steps: [wgpu::Buffer; 4],
@@ -170,7 +170,7 @@ impl Target {
     }
 
     /// The texture this target last drew into, to free when it goes.
-    pub const fn texture(&self) -> Option<TextureId> {
+    pub(super) const fn texture(&self) -> Option<TextureId> {
         self.texture
     }
 

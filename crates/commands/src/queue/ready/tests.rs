@@ -12,9 +12,12 @@ use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Toggle};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings};
 use toolbox_plan::{PackageName, UserName};
+use toolbox_services::aur_orders::needing;
 use toolbox_services::unprobed::UnprobedReads;
+use toolbox_state::testing::aur::order::OCTOPI_GIT_STDOUT;
+use toolbox_system::testing::aur_orders::FakeAurOrders;
 
-use super::{after, checked, refused};
+use super::{after, checked, filled, refused, sudo_waits};
 use crate::out::{Json, Out, Settings};
 
 /// Answers what it was given and counts how often it was asked.
@@ -112,7 +115,10 @@ fn a_restored_lock_without_the_flags_is_refused() {
 #[test]
 fn a_restored_build_reads_the_names_of_the_aur() {
     let reads = Reads {
-        names: Some(AurNames(BTreeSet::new())),
+        names: Some(AurNames {
+            names: BTreeSet::new(),
+            ..AurNames::default()
+        }),
         ..Reads::default()
     };
 
@@ -189,23 +195,6 @@ fn waiting_build(names: &[&str]) -> SavedChanges {
 }
 
 #[test]
-fn a_build_waiting_for_its_order_is_refused_with_its_name() {
-    let reads = Reads {
-        names: Some(AurNames(BTreeSet::from([
-            PackageName::new("yay-bin").unwrap()
-        ]))),
-        ..Reads::default()
-    };
-
-    assert_eq!(
-        checked(&waiting_build(&["yay-bin"]), &system(), &reads).err(),
-        Some(Refusal::OrderWaits {
-            names: vec![PackageName::new("yay-bin").unwrap()],
-        })
-    );
-}
-
-#[test]
 fn a_refusal_names_the_waiting_packages_and_exits_unavailable() {
     let mut out = Vec::new();
     let settings = Settings {
@@ -251,4 +240,77 @@ fn a_refusal_under_json_is_one_error_line() {
         "{said}"
     );
     assert_eq!(said.lines().count(), 1, "{said}");
+}
+
+#[test]
+fn a_build_waiting_for_its_order_is_read_before_the_plan_and_refused_without_one() {
+    let reads = Reads {
+        names: Some(AurNames {
+            names: BTreeSet::from([PackageName::new("yay-bin").unwrap()]),
+            ..AurNames::default()
+        }),
+        ..Reads::default()
+    };
+
+    let mut changes = checked(&waiting_build(&["yay-bin"]), &system(), &reads).unwrap();
+    let source = FakeAurOrders::new(vec![("yay-bin", Err("paru is not installed"))]);
+
+    let refused = filled(&mut changes, &system(), Ok(()), &source).unwrap_err();
+
+    assert_eq!(
+        refused.message(),
+        "`yay-bin` has no build order: paru could not be asked\ncheck that paru runs, then try again"
+    );
+    assert_eq!(needing(&changes), [PackageName::new("yay-bin").unwrap()]);
+}
+
+#[test]
+fn a_build_with_its_order_is_built_before_the_plan() {
+    let reads = Reads {
+        names: Some(AurNames {
+            names: BTreeSet::from([PackageName::new("octopi-git").unwrap()]),
+            ..AurNames::default()
+        }),
+        ..Reads::default()
+    };
+
+    let saved = waiting_build(&["octopi-git"]);
+    let mut changes = checked(&saved, &system(), &reads).unwrap();
+
+    let source = FakeAurOrders::new(vec![("octopi-git", Ok(OCTOPI_GIT_STDOUT))]);
+
+    filled(&mut changes, &system(), Ok(()), &source).unwrap();
+
+    assert!(matches!(
+        changes.wish::<AurPackages>(&PackageName::new("octopi-git").unwrap()),
+        Some(AurWish::Built(_))
+    ));
+}
+
+#[test]
+fn under_sudo_a_waiting_build_is_refused_and_a_paru_build_is_not() {
+    let mut changes = ChangeSet::default();
+    changes.want::<AurPackages>(
+        PackageName::new("yay-bin").unwrap(),
+        AurWish::Waiting,
+        &Snapshot::default(),
+    );
+    let refused = sudo_waits(&changes, true).unwrap_err();
+
+    assert!(
+        refused
+            .message()
+            .starts_with("yay-bin need the window or a polkit agent"),
+        "{}",
+        refused.message()
+    );
+    assert_eq!(sudo_waits(&changes, false), Ok(()));
+
+    let mut paru = ChangeSet::default();
+    paru.want::<AurPackages>(
+        PackageName::new("yay-bin").unwrap(),
+        AurWish::Paru,
+        &Snapshot::default(),
+    );
+    assert_eq!(sudo_waits(&paru, true), Ok(()));
 }

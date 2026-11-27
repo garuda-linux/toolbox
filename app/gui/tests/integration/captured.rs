@@ -112,6 +112,7 @@ pub fn launch_covered(builder: HarnessBuilder<App>, setup: Setup) -> Harness<'st
     step_until(&mut harness, "every read", |harness| {
         !harness.state().awaits_reads()
     });
+    toolbox_gui_kit::testing::forget_rows(&harness.ctx);
     harness.run();
 
     harness

@@ -34,7 +34,7 @@ fn of_two_admins_only_one_is_queued_to_lock() {
         set_locked(
             &user_name("ada"),
             Toggle::On,
-            Some(false),
+            Some(Toggle::Off),
             &mut changes,
             &snapshot
         ),
@@ -44,7 +44,7 @@ fn of_two_admins_only_one_is_queued_to_lock() {
         set_locked(
             &user_name("grace"),
             Toggle::On,
-            Some(false),
+            Some(Toggle::Off),
             &mut changes,
             &snapshot
         ),
@@ -64,7 +64,7 @@ fn a_locked_admin_does_not_count_as_remaining() {
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::On, Some(Toggle::Off), &mut changes, &snapshot),
         Err(Refusal::LastAdminLock)
     );
     assert_eq!(
@@ -88,7 +88,7 @@ fn a_queued_unlock_makes_a_locked_admin_count_again() {
     set_locked(
         &user_name("grace"),
         Toggle::Off,
-        Some(true),
+        Some(Toggle::On),
         &mut changes,
         &snapshot,
     )
@@ -165,7 +165,7 @@ fn only_accounts_with_an_id_from_1000_to_60000_are_locked() {
             set_locked(
                 &user_name(name),
                 Toggle::On,
-                Some(false),
+                Some(Toggle::Off),
                 &mut changes,
                 &snapshot
             ),
@@ -176,7 +176,7 @@ fn only_accounts_with_an_id_from_1000_to_60000_are_locked() {
             set_locked(
                 &user_name(name),
                 Toggle::Off,
-                Some(true),
+                Some(Toggle::On),
                 &mut changes,
                 &snapshot
             ),
@@ -217,7 +217,7 @@ fn the_range_includes_1000_and_60000_and_no_id_beside_them() {
             set_locked(
                 &user_name(name),
                 Toggle::On,
-                Some(false),
+                Some(Toggle::Off),
                 &mut changes,
                 &snapshot
             ),
@@ -304,4 +304,85 @@ fn a_restored_removal_of_one_of_two_unlocked_admins_stays() {
 
     assert_eq!(recheck_locks(&mut changes, &known), Some(0));
     assert_eq!(queued(&changes), ["removed-users ada"]);
+}
+
+#[test]
+fn the_current_user_cannot_lock_or_remove_itself() {
+    let snapshot = snapshot();
+    let mut changes = ChangeSet::default();
+
+    assert_eq!(
+        set_locked(
+            &user_name("ada"),
+            Toggle::On,
+            Some(Toggle::Off),
+            &mut changes,
+            &snapshot
+        ),
+        Err(Refusal::CurrentUser)
+    );
+    assert_eq!(
+        remove_user(&user_name("ada"), HomeFolder::Keep, &mut changes, &snapshot),
+        Err(Refusal::CurrentUser)
+    );
+
+    set_locked(
+        &user_name("ada"),
+        Toggle::Off,
+        None,
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
+    assert_eq!(queued(&changes), ["account-locks ada"]);
+}
+
+#[test]
+fn a_lock_queues_once_and_a_second_click_takes_it_back() {
+    let snapshot = snapshot();
+    let mut changes = ChangeSet::default();
+    let grace = user_name("grace");
+
+    set_locked(
+        &grace,
+        Toggle::On,
+        Some(Toggle::Off),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
+    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::On));
+
+    set_locked(
+        &grace,
+        Toggle::On,
+        Some(Toggle::Off),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
+    assert!(changes.is_empty());
+
+    set_locked(
+        &grace,
+        Toggle::On,
+        Some(Toggle::On),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
+    set_locked(
+        &grace,
+        Toggle::Off,
+        Some(Toggle::Off),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
+    assert!(changes.is_empty());
+
+    set_locked(&grace, Toggle::Off, None, &mut changes, &snapshot).unwrap();
+    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::Off));
+    set_locked(&grace, Toggle::On, None, &mut changes, &snapshot).unwrap();
+    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::On));
 }

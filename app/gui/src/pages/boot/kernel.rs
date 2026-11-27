@@ -53,8 +53,8 @@ pub fn show(
         for flag in Flag::ALL {
             let on = page.flag(flag);
             let tag = queued(&ctx, queued_flags.contains(&flag.as_str()));
-            let id = format!("boot-flag-{}", flag.as_str());
-            if flipped(ui, &id, tag.as_deref(), on) {
+            let (id, detail) = flag_ids(flag);
+            if flipped(ui, id, detail, tag.as_deref(), on) {
                 send(context, Edit::Flag(flag, !on));
             }
         }
@@ -171,6 +171,20 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
 
 /// A parameter that stays. Screen readers hear why as its description,
 /// the pointer sees it in a tooltip.
+/// The title and the description of a kernel flag. The ids are literals, so
+/// grep and the catalog checks see each one.
+const fn flag_ids(flag: Flag) -> (&'static str, &'static str) {
+    match flag {
+        Flag::Quiet => ("boot-flag-quiet", "boot-flag-quiet-detail"),
+        Flag::Splash => ("boot-flag-splash", "boot-flag-splash-detail"),
+        Flag::MitigationsOff => (
+            "boot-flag-mitigations-off",
+            "boot-flag-mitigations-off-detail",
+        ),
+        Flag::SysRq => ("boot-flag-sysrq", "boot-flag-sysrq-detail"),
+    }
+}
+
 fn kept_tag(ui: &mut Ui, item: &str, why: &str) {
     let shown = locked_tag(ui, item);
     let described = why.to_owned();

@@ -115,7 +115,7 @@ impl FileLogger {
         self.quiet.store(true, Ordering::Relaxed);
     }
 
-    pub fn echoes(&self) -> bool {
+    fn echoes(&self) -> bool {
         !self.quiet.load(Ordering::Relaxed)
     }
 

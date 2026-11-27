@@ -306,9 +306,9 @@ fn pictures_and_themes_are_plain_absolute_paths_of_their_type() {
     }
 
     for config in [INSTALLED_GRUB, LIMA_GRUB] {
-        let theme = GrubState::read(config).theme;
+        let theme = GrubState::read(config).theme.unwrap().unwrap();
 
-        assert_eq!(GrubThemeFile::new(&theme).unwrap().as_str(), theme);
+        assert_eq!(GrubThemeFile::new(theme.as_str()).unwrap(), theme);
     }
 }
 

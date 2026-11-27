@@ -94,7 +94,10 @@ impl DiagnosticsPage {
         let tokens = ui.tokens();
         let diagnostics = context.service::<Diagnostics>();
         let page = diagnostics.page();
-        let caption = super::name(&ctx, &page.selection);
+        let caption = page.selection.map_or_else(String::new, |selection| {
+            super::selection_name(&ctx, selection)
+        });
+
         let meta = meta(&ctx, page.collected, diagnostics.lines().len());
 
         ui.horizontal_wrapped(|ui| {

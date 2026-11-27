@@ -33,6 +33,7 @@ packages-refused-unread = { $name } cannot be queued yet: the installed packages
 packages-refused-running-kernel = { $name } is the kernel that runs right now, so it stays installed.
 packages-refused-running-unknown = { $name } stays: the kernel that runs right now is not known, so no kernel can be removed. Restart the computer and try again.
 packages-refused-last-kernel = { $name } is the last installed kernel. Install another one before you remove it.
+packages-refused-conflicts = { $name } is installed and conflicts with the AUR package you chose. Remove { $name } first.
 packages-dismiss = Dismiss
 # A row button's name for screen readers: $action is the button, such as Install, $name the package.
 packages-action-name = { $action } { $name }
@@ -158,6 +159,8 @@ packages-aur-votes = { $count ->
 # The question before an AUR build.
 packages-aur-install-title = Build { $package } from the AUR?
 packages-aur-install-body = Built from a community script on your computer. paru shows the build script in the Console before it builds.
+# The same question on the split path, where the app shows the build files.
+packages-aur-install-body-split = Built from a community script on your computer. The Console shows the build files for your review before anything is built or installed.
 packages-aur-install-confirm = Build and Install
 
 packages-aur-maintainer = Maintainer

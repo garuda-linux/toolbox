@@ -228,7 +228,7 @@ fn space_on_a_focused_unit_flips_its_boot_switch() {
         [Command::from(ServiceCommand::Enable {
             scope: UnitScope::System,
             unit: UnitName::new("sshd.service").unwrap(),
-            on: false,
+            on: toolbox_core::Toggle::Off,
         })]
     );
 }

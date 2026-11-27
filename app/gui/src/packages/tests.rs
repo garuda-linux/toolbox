@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod orders;
+
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Duration;
@@ -10,6 +13,7 @@ use toolbox_core::features::packages::{
     IndexEntry, InstallReason, Installed, Origin, PackageDetails, PackageIndex,
 };
 use toolbox_plan::PackageName;
+use toolbox_system::testing::aur_orders::FakeAurOrders;
 use toolbox_system::{PackageIndexSource, ProbeError, RecentLogSource};
 
 use super::{Packages, PackagesSetup, Read};
@@ -113,6 +117,8 @@ fn with_aur(runtime: &Runtime, machine: &Arc<Machine>, aur: &Arc<Aur>) -> Packag
             source: Arc::<Machine>::clone(machine),
             log: Arc::new(Log),
             aur: Arc::<Aur>::clone(aur),
+            orders: Arc::new(FakeAurOrders::new(Vec::new())),
+            route: Arc::new(toolbox_system::SampleRoute),
         }),
         egui::Context::default(),
     )

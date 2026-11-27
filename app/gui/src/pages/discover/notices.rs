@@ -9,7 +9,7 @@ use toolbox_gui_kit::widgets::{Tone, banner};
 
 use super::super::PageContext;
 use super::super::rows::refusal_banner;
-use super::super::toggles::refusal_text;
+use super::super::toggles::{self, refusal_text};
 use crate::command::AppCommand;
 use crate::i18n;
 use crate::i18n::Arg;
@@ -19,7 +19,7 @@ use crate::toggle_pages::TogglePages;
 pub fn notices(ui: &mut Ui, context: &PageContext<'_>, problem: Option<&LoadProblem>) {
     let ctx = ui.ctx().clone();
     if let Some(problem) = problem {
-        let reason = i18n::text(&ctx, &format!("toggles-problem-{}", problem.code));
+        let reason = i18n::text(&ctx, toggles::problem_id(problem.code));
         let text = i18n::text_with(
             &ctx,
             "discover-problem-reason",

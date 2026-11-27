@@ -61,19 +61,19 @@ fn unloading_a_module_starts_network_manager_again() {
 fn blacklisting_edits_only_the_apps_own_file() {
     let on = RootAction::SetModuleBlacklisted {
         module: module("mt76-usb"),
-        blacklisted: true,
+        blacklisted: crate::Toggle::On,
     };
 
     let off = RootAction::SetModuleBlacklisted {
         module: module("wl"),
-        blacklisted: false,
+        blacklisted: crate::Toggle::Off,
     };
 
     assert_eq!(
         on.procedure(),
         [Invocation::Builtin(Builtin::EditModprobeBlacklist {
             module: module("mt76_usb"),
-            on: true,
+            on: crate::Toggle::On,
         })]
     );
     assert_eq!(
@@ -105,7 +105,7 @@ fn a_module_that_is_an_option_a_path_or_two_lines_is_refused_on_decode() {
 fn module_actions_survive_the_wire() {
     let action = RootAction::SetModuleBlacklisted {
         module: module("b43"),
-        blacklisted: true,
+        blacklisted: crate::Toggle::On,
     };
 
     let json = serde_json::to_string(&action).unwrap();

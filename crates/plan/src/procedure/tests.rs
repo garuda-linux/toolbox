@@ -55,10 +55,13 @@ fn targets_from_a_query_show_as_command_substitution() {
 fn an_edit_user_config_describes_itself() {
     let edit = UserConfigEdit::File {
         path: HomePath::new(".config/app.conf").unwrap(),
-        content: "on = true\n".to_owned(),
+        content: "on = true\n".parse().unwrap(),
     };
 
-    let builtin = Builtin::EditUserConfig { edit, on: true };
+    let builtin = Builtin::EditUserConfig {
+        edit,
+        on: crate::Toggle::On,
+    };
 
     assert!(builtin.to_string().contains("app.conf"));
 }

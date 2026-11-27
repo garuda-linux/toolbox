@@ -3,7 +3,6 @@
 
 use egui::accesskit::Role;
 use egui::{Align, CursorIcon, Frame, Layout, Response, Sense, Ui, UiBuilder, WidgetInfo};
-use toolbox_cli::output::size;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
 use toolbox_gui_kit::widgets::{Tone, focus_from_keyboard, light_rim, meter, rich, status_tile};
@@ -11,6 +10,7 @@ use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_services::home::Overview;
 use toolbox_services::home::stats::{Figure, Standing, Stat, Tile, tiles};
 use toolbox_system::HealthLevel;
+use toolbox_text::size;
 
 use crate::command::MaintenanceCommand;
 use crate::i18n;
@@ -58,11 +58,21 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, overview: Option<&Overview<'
     }
 }
 
+/// The ids are literals, so grep and the catalog checks see each one.
+const fn stat_id(stat: Stat) -> &'static str {
+    match stat {
+        Stat::Updates => "home-stat-updates",
+        Stat::Disk => "home-stat-disk",
+        Stat::Health => "home-stat-health",
+        Stat::LastUpdate => "home-stat-last-update",
+    }
+}
+
 /// A link named by the tile's name and figure.
 fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
     let ctx = ui.ctx().clone();
     let tokens = tokens::current(&ctx);
-    let name = i18n::text(&ctx, &format!("home-stat-{}", tile.stat.key()));
+    let name = i18n::text(&ctx, stat_id(tile.stat));
     let value = figure(&ctx, tile);
     let tone = match tile.standing {
         Standing::Fine => Tone::Success,

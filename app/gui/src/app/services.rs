@@ -1,6 +1,8 @@
 //! What the app takes in from its services each frame: the apply
 //! service's reports, the snapshot and what the page services took in.
 
+mod orders;
+
 use std::sync::Arc;
 
 use toolbox_core::Snapshot;
@@ -197,6 +199,10 @@ impl App {
             return Some("changes-wait-read");
         }
 
+        if self.services.packages.reading_orders() {
+            return Some("changes-wait-reading");
+        }
+
         self.queue
             .holding()
             .next()
@@ -271,8 +277,10 @@ impl App {
 
     pub(super) fn take_services(&mut self, ctx: &egui::Context) {
         self.take_page_services(ctx);
+        self.take_orders();
         self.take_output_share(ctx);
         self.read_held_parts();
+        self.ask_orders();
 
         // The writer logged why, the toast says that a restart loses it.
         if self.queue.not_kept().is_some() {

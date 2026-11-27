@@ -14,10 +14,10 @@ use crate::interrupt;
 use crate::out::{Out, Settings};
 
 #[test]
-fn a_cancelled_step_ends_the_command_as_cancelled() {
+fn a_step_cancelled_with_no_key_pressed_ends_the_command_as_declined() {
     let (exit, out) = run(plan(), true, &mut terminal(&[]), Outcome::Cancelled);
 
-    assert_eq!(exit, Exit::Interrupted);
+    assert_eq!(exit, Exit::Declined);
     let last = out.lines().last().unwrap_or_default();
     assert!(
         last.starts_with("Cancelled  (") && last.ends_with(" s)"),

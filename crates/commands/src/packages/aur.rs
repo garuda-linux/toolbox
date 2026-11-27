@@ -2,18 +2,22 @@
 //! copy of its daily dump, searched in the page's order, one package's
 //! facts, and builds through paru as the page queues them.
 
+mod install;
+
+pub use install::{filled, old_path_note, plan_install, warn_old_path};
 #[cfg(test)]
 mod tests;
 
 use std::collections::BTreeSet;
 
 use serde::Serialize;
-use toolbox_aur::{AurError, AurSource, package_page};
+use toolbox_aur::{AurError, AurSource};
 use toolbox_cli::output::{Mark, Paint, Row};
 use toolbox_core::features::packages::aur::{AurCatalog, AurPackage, row_state, toggle};
 use toolbox_core::features::packages::queue::Refusal;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::PackageName;
+use toolbox_services::aur_page::package_page;
 use toolbox_text::OutsideText;
 
 use super::super::change::Refused;
@@ -127,7 +131,7 @@ pub fn found(
 /// # Errors
 ///
 /// [`AurError`] when there is no copy of the AUR.
-pub fn aur_info(
+pub(super) fn aur_info(
     package: &PackageName,
     aur: &dyn AurSource,
     installed: &BTreeSet<PackageName>,
@@ -159,6 +163,8 @@ pub fn install_onto(
             .map_err(|error| Refused::Unavailable(error.to_string()))?,
     );
 
+    let snapshot = &with_names(snapshot, &catalog);
+
     // Every name is checked before the first is queued, so a refused
     // command leaves no part of itself behind.
     for package in packages {
@@ -187,7 +193,8 @@ pub fn install_onto(
                 | Refusal::RunningUnknown
                 | Refusal::LastKernel
                 | Refusal::Protected(_)
-                | Refusal::TakesAlong(_)) => {
+                | Refusal::TakesAlong(_)
+                | Refusal::Conflicts) => {
                     super::kept_package(package.as_str(), kept, refused.subject.as_str())
                 }
             }
@@ -195,6 +202,15 @@ pub fn install_onto(
     }
 
     Ok(())
+}
+
+/// The snapshot with the AUR's names of `catalog`, which the split path
+/// checks conflicts against.
+fn with_names(snapshot: &Snapshot, catalog: &AurCatalog) -> Snapshot {
+    let mut snapshot = snapshot.clone();
+
+    snapshot.insert(catalog.names());
+    snapshot
 }
 
 /// The AUR packages, on when installed, with the command that shows one.
@@ -273,7 +289,7 @@ pub fn aur_info_text(paint: Paint, info: &AurInfo) -> String {
 }
 
 /// Why there is no copy yet, with the day of the next allowed download.
-pub fn waiting_text(next: i64) -> String {
+pub(super) fn waiting_text(next: i64) -> String {
     format!(
         "the AUR's package list could not be downloaded, the next try is on {} (UTC)",
         moment(next)

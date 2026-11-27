@@ -83,7 +83,7 @@ impl Domain for AccountLocks {
         each(Self::STAGE, changes, |user, wish| {
             RootAction::SetUserLocked {
                 user: user.clone(),
-                locked: wish.is_on(),
+                locked: *wish,
             }
         })
     }
@@ -147,7 +147,7 @@ impl Domain for HomeFolders {
     fn is_satisfied(item: &UserName, wish: &HomeChange, state: &Accounts) -> bool {
         state
             .user(item)
-            .is_some_and(|user| user.home == wish.home.as_str())
+            .is_some_and(|user| user.home_text() == wish.home.as_str())
     }
 
     fn plan(changes: &[(&UserName, &HomeChange)]) -> Vec<Staged> {

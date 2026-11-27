@@ -55,7 +55,7 @@ fn listed_name(entry: &LocaleEntry) -> String {
 fn switch(entry: &LocaleEntry, enabled: bool) -> RootAction {
     RootAction::SetLocaleEnabled {
         locale: entry.clone(),
-        enabled,
+        enabled: Toggle::from_on(enabled),
     }
 }
 

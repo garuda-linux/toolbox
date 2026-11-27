@@ -15,7 +15,7 @@ use crate::client::Transport;
 const TIMEOUT: Duration = Duration::from_mins(2);
 
 /// Must match the host of [`crate::client::SERVER`], which a test checks.
-pub const HOST: &str = "bin.garudalinux.org";
+const HOST: &str = "bin.garudalinux.org";
 
 /// A paste answer is one short JSON object.
 const MAX_ANSWER_BYTES: u64 = 64 << 10;
@@ -24,11 +24,11 @@ const MAX_ANSWER_BYTES: u64 = 64 << 10;
 const REQUESTED_WITH: HeaderName = HeaderName::from_static("x-requested-with");
 
 /// Blocks while a request runs, so call it off the GUI thread.
-pub struct Https {
+pub struct PrivateBinTransport {
     https: toolbox_https::Https,
 }
 
-impl Https {
+impl PrivateBinTransport {
     #[must_use = "the transport does nothing until a request is sent"]
     pub fn new() -> Self {
         Self {
@@ -42,13 +42,13 @@ impl Https {
     }
 }
 
-impl Default for Https {
+impl Default for PrivateBinTransport {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Transport for Https {
+impl Transport for PrivateBinTransport {
     fn post(&self, url: &str, body: &str) -> Result<String, RequestError> {
         let response = self.https.post(
             url,

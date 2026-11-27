@@ -35,7 +35,7 @@ const PART_TYPE: &str = "ID_PART_ENTRY_TYPE";
 const LOOP_BACKING: &str = "ID_LOOP_BACKING_FILENAME";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Moment {
+pub(super) enum Moment {
     /// Nothing is mounted yet. A mount below the repair's folder is a
     /// leftover of an earlier repair.
     Before,
@@ -77,7 +77,7 @@ pub fn check(system: &System<'_>, action: &RootAction) -> Result<(), PreflightEr
 /// # Errors
 ///
 /// The reason a device is unusable, in words for the Console.
-pub fn devices(
+pub(super) fn devices(
     system: &System<'_>,
     installed: &InstalledSystem,
     work: &RepairWork,

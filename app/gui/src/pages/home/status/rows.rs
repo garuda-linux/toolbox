@@ -1,5 +1,4 @@
 use egui::Ui;
-use toolbox_cli::output::size;
 use toolbox_core::features::maintenance::page::{PageTool, installed, operations};
 use toolbox_core::features::maintenance::{Operation, RunNow, Tool, upgrade_queued};
 use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, pill_button, text_button, text_link};
@@ -7,6 +6,7 @@ use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitName;
 use toolbox_services::home::Overview;
 use toolbox_system::HealthLevel;
+use toolbox_text::size;
 
 use super::super::HomePage;
 use super::{run_button, run_row};
@@ -278,7 +278,7 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
                 for operation in cleanup {
                     context.commands.send(MaintenanceCommand::Queue {
                         operation,
-                        on: !queued,
+                        on: toolbox_core::Toggle::from_on(!queued),
                     });
                 }
             }

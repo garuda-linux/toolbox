@@ -294,6 +294,17 @@ struct Measuring {
     seen: u64,
 }
 
+/// Drops what every list remembers of its rows. A list's length counts
+/// the measured height of each row it ever drew, so a picture taken after
+/// reads landed in a varying number of frames needs this first.
+#[cfg(any(test, feature = "testing"))]
+pub fn forget_rows(ctx: &egui::Context) {
+    ctx.data_mut(|data| {
+        data.remove_by_type::<memory::RowMemory>();
+        data.remove_by_type::<(Measuring, Offsets)>();
+    });
+}
+
 /// A drawn row whose height is not its place in the kept offsets, as
 /// after rows swapped places, makes them stale.
 fn check_place(ui: &Ui, list: Id, (offsets, index): (&Offsets, usize), height: f32) {

@@ -14,7 +14,7 @@ use toolbox_services::apply::Report;
 const TAIL: usize = 256;
 
 #[derive(Debug, Default)]
-pub struct Gate(Mutex<State>);
+pub(super) struct Gate(Mutex<State>);
 
 #[derive(Debug, Default)]
 struct State {
@@ -90,7 +90,7 @@ impl State {
     }
 }
 
-pub fn asks_secret(tail: &str) -> bool {
+fn asks_secret(tail: &str) -> bool {
     let line = tail.trim_end().to_lowercase();
     let asks = line.ends_with(':') || line.ends_with('?');
     let secret = ["password", "passphrase", "passwort", "kennwort"]

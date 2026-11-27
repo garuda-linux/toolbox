@@ -2,10 +2,10 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{BootKey, BootSet, Confirm, DkmsBuild};
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{CurrentGrub, InstalledPackages};
-use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
+use toolbox_plan::{DefaultEntry, DkmsModuleName, GrubMenu, GrubPlatform, GrubState, MenuEntryId};
 use toolbox_system::Host;
 
-use super::{build, default_kernel, set};
+use super::{BootView, build, default_kernel, set};
 
 /// `/etc/default/grub` and `grub.cfg` of a Garuda Mokka install, UUIDs
 /// of `grub.cfg` replaced by `x`.
@@ -82,6 +82,24 @@ fn without_pacman_s_databases_no_build_is_planned() {
     );
 }
 
+/// The module is a plain name in JSON, as before.
+#[test]
+fn a_module_row_as_json_keeps_its_module_as_a_string() {
+    use super::ModuleRow;
+
+    let row = ModuleRow {
+        module: DkmsModuleName::new("nvidia").unwrap(),
+        version: "550.1".to_owned(),
+        kernel: "linux-garuda".to_owned(),
+        state: "installed",
+    };
+
+    assert_eq!(
+        serde_json::to_string(&row).unwrap(),
+        r#"{"id":"nvidia","version":"550.1","kernel":"linux-garuda","state":"installed"}"#
+    );
+}
+
 #[test]
 fn dkms_modules_are_marked_by_their_build() {
     use toolbox_cli::output::Mark;
@@ -89,7 +107,7 @@ fn dkms_modules_are_marked_by_their_build() {
     use super::{ModuleRow, module_listing};
 
     let row = |module: &str, state| ModuleRow {
-        module: module.to_owned(),
+        module: DkmsModuleName::new(module).unwrap(),
         version: "1.0".to_owned(),
         kernel: "6.1.0".to_owned(),
         state,
@@ -137,7 +155,7 @@ fn a_dkms_row_as_json_names_its_state() {
     use super::ModuleRow;
 
     let row = serde_json::to_value(ModuleRow {
-        module: "nvidia".to_owned(),
+        module: DkmsModuleName::new("nvidia").unwrap(),
         version: "1.0".to_owned(),
         kernel: "6.1.0".to_owned(),
         state: "installed",
@@ -193,4 +211,25 @@ fn a_refused_boot_change_under_json_is_one_error_line() {
         "{text}"
     );
     assert_eq!(text.lines().count(), 1, "{text}");
+}
+
+/// Default, background and theme are one string each, as before the check,
+/// and an unset picture is the empty string.
+#[test]
+fn a_boot_view_as_json_keeps_its_strings() {
+    let view = BootView {
+        default: Ok(DefaultEntry::Entry(MenuEntryId::new("0").unwrap())),
+        remember: false,
+        timeout: Some(5),
+        parameters: None,
+        submenus: true,
+        os_prober: false,
+        background: None,
+        theme: Some(Err(toolbox_text::plain("/usr/share/a b/theme.txt"))),
+    };
+
+    assert_eq!(
+        serde_json::to_string(&view).unwrap(),
+        r#"{"default":"0","remember":false,"timeout":5,"parameters":null,"submenus":true,"os_prober":false,"background":"","theme":"/usr/share/a b/theme.txt"}"#
+    );
 }

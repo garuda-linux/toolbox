@@ -39,7 +39,7 @@ enum RefusedFile {
 ///
 /// When `/etc/kernel/install.conf` or `/etc/fstab` of the mounted system
 /// is there but cannot be read.
-pub fn installed_loader(root: &Path) -> io::Result<InstalledLoader> {
+pub(super) fn installed_loader(root: &Path) -> io::Result<InstalledLoader> {
     let install_conf = text(root, "etc/kernel", "install.conf")?;
     let fstab = text(root, "etc", "fstab")?;
 
@@ -86,7 +86,7 @@ pub fn has(root: &Path, program: Program) -> io::Result<bool> {
 /// # Errors
 ///
 /// As [`has`].
-pub fn has_uki_builder(root: &Path) -> io::Result<bool> {
+pub(super) fn has_uki_builder(root: &Path) -> io::Result<bool> {
     for command in uki_rebuilds() {
         if has(root, command.program())? {
             return Ok(true);

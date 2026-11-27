@@ -11,7 +11,7 @@ use egui::{
 
 /// Which arrow keys move the stop.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Axes {
+pub(super) enum Axes {
     /// Up and Down, for the rows of a list.
     Vertical,
     /// All four arrows, for a line of chips.
@@ -20,7 +20,7 @@ pub enum Axes {
 
 /// How a group reads its keys and where its stop rests.
 #[derive(Clone, Copy, Debug)]
-pub struct Setup {
+pub(super) struct Setup {
     /// The stop while no item holds the focus. `None` keeps the stop where
     /// the focus left it, and a group without a stop yet starts at the
     /// first item.
@@ -38,7 +38,7 @@ struct State {
 
 /// One frame of a group, read before its items are drawn.
 #[derive(Clone, Copy, Debug)]
-pub struct Roving {
+pub(super) struct Roving {
     group: Id,
     axes: Axes,
     stop: usize,
@@ -109,7 +109,7 @@ impl Roving {
     }
 
     /// Whether item `index` is the Tab stop, the only focusable item.
-    pub const fn is_stop(&self, index: usize) -> bool {
+    pub(super) const fn is_stop(&self, index: usize) -> bool {
         self.stop == index
     }
 
@@ -280,7 +280,7 @@ fn read_keys(input: &mut InputState, axes: Axes) -> (Option<Step>, bool) {
 
 /// The Sense of an item: the stop takes the focus, the others only the
 /// click, so Tab reaches one item of the group.
-pub fn sense(is_stop: bool) -> Sense {
+pub(super) fn sense(is_stop: bool) -> Sense {
     if is_stop {
         Sense::click()
     } else {

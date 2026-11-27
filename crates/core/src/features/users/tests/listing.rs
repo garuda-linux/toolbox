@@ -1,3 +1,5 @@
+use toolbox_plan::{HomeDirectory, ShellPath};
+
 use super::super::add_group;
 use super::super::listing::{GroupOrder, UserOrder, arrange_groups, arrange_users};
 use super::super::rows::{group_choices, group_rows, user_rows};
@@ -10,16 +12,16 @@ use crate::{ChangeSet, Snapshot};
 fn snapshot() -> Snapshot {
     let mut ada = user("ada", 1002, 1002);
     ada.gecos = toolbox_text::plain("Zoe Adams,Room 4");
-    ada.home = "/srv/people/ada".to_owned();
-    ada.shell = "/usr/bin/zsh".to_owned();
+    ada.home = Ok(HomeDirectory::new("/srv/people/ada").unwrap());
+    ada.shell = Ok(ShellPath::new("/usr/bin/zsh").unwrap());
 
     let mut bob = user("bob", 1001, 1001);
     bob.gecos = toolbox_text::plain("anna Bobson");
-    bob.shell = String::new();
+    bob.shell = Err(toolbox_text::plain(""));
 
     let mut cy = user("cy", 1000, 1000);
     cy.gecos = toolbox_text::plain("");
-    cy.shell = "/usr/bin/Fish".to_owned();
+    cy.shell = Ok(ShellPath::new("/usr/bin/Fish").unwrap());
 
     let mut snapshot = Snapshot::default();
 

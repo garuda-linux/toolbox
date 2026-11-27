@@ -63,7 +63,7 @@ pub fn read(dir: &Path, names: Names, now: u64) -> Option<Vec<String>> {
 
 /// The list in `dir` for `names` when it was written with `stamp`, however
 /// long ago. For names that change only when a file they come from does.
-pub fn read_stamped(dir: &Path, names: Names, stamp: u64) -> Option<Vec<String>> {
+pub(super) fn read_stamped(dir: &Path, names: Names, stamp: u64) -> Option<Vec<String>> {
     let (written, found) = stored(dir, names)?;
     (written == stamp).then_some(found)
 }

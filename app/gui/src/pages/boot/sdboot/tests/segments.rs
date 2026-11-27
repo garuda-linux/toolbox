@@ -1,6 +1,7 @@
 use egui::accesskit::{Role, Toggled};
 use egui::vec2;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use toolbox_plan::Toggle;
 use toolbox_plan::sdboot::LoaderSetting;
 
 use super::{LOADER_CONF, Shown, image_menu, loader, sent, shown};
@@ -28,7 +29,10 @@ fn a_switch_takes_on_off_or_systemd_boots_own_default() {
 
     segment(&mut harness, "Edit entries at boot", "Off");
 
-    assert_eq!(sent(&harness), [loader(LoaderSetting::Editor(Some(false)))]);
+    assert_eq!(
+        sent(&harness),
+        [loader(LoaderSetting::Editor(Some(Toggle::Off)))]
+    );
 }
 
 /// The firmware entry is unset in that `loader.conf`, so its Default sends nothing.

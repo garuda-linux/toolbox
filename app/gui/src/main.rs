@@ -34,9 +34,7 @@ use toolbox_log::subscriber;
 use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_services::dkms::{Dkms as DkmsAnswer, dkms_answer};
-use toolbox_system::{
-    Dkms, DkmsSource as _, FactSources, Facts, Status, probe_facts, probe_snapshot, probe_status,
-};
+use toolbox_system::{Dkms, FactSources, Facts, Status, probe_facts, probe_snapshot, probe_status};
 use tracing::level_filters::LevelFilter;
 
 use self::ports::{

@@ -18,11 +18,11 @@ use toolbox_services::i18n::{Arg, FALLBACK, text_in, text_with_in};
 
 /// A switch the catalog lacks. The commands check the id first, so this
 /// stays a fallback.
-pub fn switch_unknown() -> Cow<'static, str> {
+pub(super) fn switch_unknown() -> Cow<'static, str> {
     text_in(FALLBACK, "cli-switch-unknown")
 }
 
-pub fn switch_unmet() -> Cow<'static, str> {
+pub(super) fn switch_unmet() -> Cow<'static, str> {
     text_in(FALLBACK, "cli-switch-unmet")
 }
 
@@ -86,7 +86,7 @@ pub fn boot_edit(problem: EditProblem, value: &str) -> String {
 }
 
 /// `name` is the account or the group the Users page's text names.
-pub fn membership(refusal: AccountRefusal, name: &str) -> String {
+pub(super) fn membership(refusal: AccountRefusal, name: &str) -> String {
     let why = account(refusal);
     text_with_in(
         &FALLBACK,

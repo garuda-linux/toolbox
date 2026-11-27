@@ -1,3 +1,4 @@
+mod console;
 mod program;
 mod query;
 #[cfg(test)]
@@ -7,13 +8,13 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{Receiver, RecvTimeoutError, TryRecvError};
-use std::time::{Duration, Instant, SystemTime};
+use std::time::{Duration, Instant};
 use std::{fmt, io, thread};
 
 pub use query::QueryKind;
 use toolbox_plan::procedure::{Builtin, Command, Program};
 use toolbox_plan::protocol::{Answer, Event, Outcome};
-use toolbox_plan::{BuildRun, Caller, ConfigText, PackageName, SecretInput, StepId};
+use toolbox_plan::{Caller, ConfigText, SecretInput, StepId};
 use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, PtyCommand, Session, TerminalSize};
 
 use self::program::{after, forward_rest, pty_command, report};
@@ -25,10 +26,10 @@ use crate::{aur, check};
 
 /// pkexec gives a minimal environment. Programs get only this, never
 /// anything the caller could have set.
-pub const SYSTEM_PATH: &str = "/usr/local/sbin:/usr/local/bin:/usr/bin";
+const SYSTEM_PATH: &str = "/usr/local/sbin:/usr/local/bin:/usr/bin";
 
 /// Programs print in English so their output stays parseable.
-pub const LOCALE: &str = "C.UTF-8";
+const LOCALE: &str = "C.UTF-8";
 
 const POLL_INTERVAL: Duration = Duration::from_millis(50);
 
@@ -246,33 +247,6 @@ impl PtyRunner {
             Err(error) => failure(step, sink, &format!("lost track of {what}: {error}")),
         }
     }
-
-    /// `makepkg` of an AUR build as the user. Only the app has a home to
-    /// build in, so the helper fails here before anything starts.
-    fn build_aur(
-        &mut self,
-        step: StepId,
-        makepkg: &Path,
-        (base, run): (&PackageName, &BuildRun),
-        sink: &mut dyn EventSink,
-    ) -> Outcome {
-        if self.cancelled_before() {
-            return Outcome::Cancelled;
-        }
-
-        let Some(home) = self.home.as_deref() else {
-            return failure(
-                step,
-                sink,
-                "an AUR build runs as the user, and this process has no home",
-            );
-        };
-
-        match aur::build::prepare(home, makepkg, base, run, SystemTime::now()) {
-            Ok(pty) => self.spawn_pty(step, &"makepkg", &pty, sink),
-            Err(error) => failure(step, sink, &error.to_string()),
-        }
-    }
 }
 
 impl Runner for PtyRunner {
@@ -304,6 +278,12 @@ impl Runner for PtyRunner {
     }
 
     fn builtin(&mut self, step: StepId, builtin: &Builtin, sink: &mut dyn EventSink) -> Outcome {
+        if let Builtin::ReviewAur { bases } = builtin {
+            let paru = crate::located::program(Program::Paru, Environment::Inherited);
+            let git = crate::located::program(Program::Git, Environment::Clean);
+            return aur::review::run(self, (paru.as_path(), git.as_path()), step, bases, sink);
+        }
+
         let Builtin::BuildAur { base, run } = builtin else {
             return builtin::execute(
                 Path::new(SYSTEM_ROOT),
@@ -315,7 +295,8 @@ impl Runner for PtyRunner {
         };
 
         let makepkg = crate::located::program(Program::Makepkg, self.environment);
-        self.build_aur(step, &makepkg, (base, run), sink)
+        let git = crate::located::program(Program::Git, Environment::Clean);
+        self.build_aur(step, (makepkg.as_path(), git.as_path()), (base, run), sink)
     }
 
     fn feed(

@@ -47,14 +47,22 @@ pub(super) fn show(read: Read, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
         let facts = paint.facts(
             "Boot menu",
             &[
-                ("default", &view.default),
+                ("default", toolbox_text::checked_text(&view.default)),
                 ("remember", on_off_text(view.remember)),
                 ("timeout", &timeout),
                 ("parameters", &parameters),
                 ("submenus", on_off_text(view.submenus)),
                 ("os-prober", on_off_text(view.os_prober)),
-                ("background", &view.background),
-                ("theme", &view.theme),
+                (
+                    "background",
+                    view.background
+                        .as_ref()
+                        .map_or("", toolbox_text::checked_text),
+                ),
+                (
+                    "theme",
+                    view.theme.as_ref().map_or("", toolbox_text::checked_text),
+                ),
             ],
         );
 

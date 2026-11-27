@@ -21,7 +21,7 @@ fn word(value: &str) -> ConfigWord {
 fn file() -> UserConfigEdit {
     UserConfigEdit::File {
         path: path(".config/wireplumber/wireplumber.conf.d/disable-suspension.conf"),
-        content: "monitor.alsa.rules = []\n".to_owned(),
+        content: "monitor.alsa.rules = []\n".parse().unwrap(),
     }
 }
 
@@ -101,6 +101,25 @@ fn config_words_cannot_change_the_structure_of_a_file() {
         ConfigWord::new(" x"),
         Err(InvalidConfigWord::Padded(_))
     ));
+}
+
+#[test]
+fn config_words_refuse_hidden_characters() {
+    for character in ['\u{202e}', '\u{200b}', '\u{feff}'] {
+        let value = format!("a{character}b");
+
+        assert_eq!(
+            ConfigWord::new(value),
+            Err(InvalidConfigWord::InvalidCharacter(character))
+        );
+    }
+}
+
+#[test]
+fn a_user_file_with_a_nul_byte_is_refused_when_decoded() {
+    let json = r#"{"kind":"file","path":".config/x.conf","content":"a\u0000b"}"#;
+
+    serde_json::from_str::<UserConfigEdit>(json).unwrap_err();
 }
 
 #[test]

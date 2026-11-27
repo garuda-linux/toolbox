@@ -23,7 +23,7 @@ use toolbox_cli::args::Confirm;
 use toolbox_cli::confirm::{Prompt, consent};
 use toolbox_core::features::console::HelperFailure;
 use toolbox_plan::protocol::{Event, Mode, Outcome};
-use toolbox_plan::{Plan, StepId};
+use toolbox_plan::{Plan, PlannedAction, RootAction, StepId, UserAction};
 use toolbox_services::apply::{self, ApplyCommand, ApplyHandle, Launcher, PlanId, Problem, Report};
 use toolbox_services::waking::Wake;
 use toolbox_system::pkexec::Refusal;
@@ -152,7 +152,10 @@ pub fn carry_out_steps(
         return Ended::early(exit);
     }
 
-    let fallback = prompt.is_terminal().then(|| launcher.fallback()).flatten();
+    let fallback = (prompt.is_terminal() && !split_build(&plan))
+        .then(|| launcher.fallback())
+        .flatten();
+
     let json = confirm.json;
     let first = Attempt {
         runtime,
@@ -213,6 +216,24 @@ pub fn set_apart(prompt: &dyn Prompt, yes: bool, out: &mut Out<'_>) {
     if !yes && prompt.is_terminal() {
         writeln!(out).ok();
     }
+}
+
+/// Whether the plan has steps of the split AUR path. Those never fall back to
+/// sudo: the helper finds the build folder through the caller of its stdin,
+/// which sudo has not been shown to keep.
+fn split_build(plan: &Plan) -> bool {
+    plan.steps().iter().any(|step| {
+        matches!(
+            step.action,
+            PlannedAction::User(
+                UserAction::ReviewAur { bases: _ } | UserAction::BuildAur { base: _, run: _ }
+            ) | PlannedAction::Root(RootAction::InstallBuilt {
+                run: _,
+                packages: _,
+                reason: _,
+            })
+        )
+    })
 }
 
 fn run_once(plan: Plan, attempt: Attempt<'_>, out: &mut Out<'_>) -> Ended {
