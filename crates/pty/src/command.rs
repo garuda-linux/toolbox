@@ -5,6 +5,8 @@ use std::ffi::{OsStr, OsString};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+use rustix::fs::Mode;
+
 use crate::{DEFAULT_SIZE, TerminalSize, clamped};
 
 /// Programs pick colours and line drawing from it. Set last, so no extra
@@ -20,6 +22,8 @@ pub struct PtyCommand {
     env: Vec<(OsString, OsString)>,
     env_clear: bool,
     size: TerminalSize,
+    folder: Option<PathBuf>,
+    umask: Option<Mode>,
 }
 
 impl PtyCommand {
@@ -34,6 +38,8 @@ impl PtyCommand {
             env: Vec::new(),
             env_clear: false,
             size: DEFAULT_SIZE,
+            folder: None,
+            umask: None,
         }
     }
 
@@ -76,6 +82,30 @@ impl PtyCommand {
         self
     }
 
+    /// Without a folder the program starts in the working folder of this
+    /// process.
+    #[must_use = "the builder returns the changed command"]
+    pub fn in_folder<P>(mut self, folder: P) -> Self
+    where
+        P: AsRef<Path>,
+    {
+        self.folder = Some(folder.as_ref().to_owned());
+        self
+    }
+
+    /// Sets the umask of the program alone, in the child before it starts.
+    /// This process keeps its own umask.
+    #[must_use = "the builder returns the changed command"]
+    pub const fn umask(mut self, mask: Mode) -> Self {
+        self.umask = Some(mask);
+        self
+    }
+
+    /// The umask the child gets, if one was set.
+    pub(crate) const fn child_umask(&self) -> Option<Mode> {
+        self.umask
+    }
+
     #[must_use = "the builder returns the changed command"]
     pub fn size(mut self, size: TerminalSize) -> Self {
         self.size = clamped(size);
@@ -93,6 +123,10 @@ impl PtyCommand {
     pub(crate) fn to_command(&self) -> Command {
         let mut command = Command::new(&self.program);
         command.args(&self.args);
+
+        if let Some(folder) = &self.folder {
+            command.current_dir(folder);
+        }
 
         if self.env_clear {
             command.env_clear();

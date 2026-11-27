@@ -15,8 +15,8 @@ use crate::settings::{
 use crate::{
     AUR_BUILT, AUR_STORE, BuildRun, ConfigWrite, DnsProvider, GarudaUpdateFlag, GroupName,
     GrubSettings, HomeDirectory, HomeWrite, InstallReason, InstalledSystem, KernelModule,
-    KernelParameters, LocaleEntry, LocaleName, MergeResolve, Mirrorlist, PARU_CLONE, PackageName,
-    RepairWork, ShellPath, TargetList, Toggle, UserConfigEdit, UserName, WifiBackend,
+    KernelParameters, LocaleEntry, LocaleName, MAKEPKG_ARGS, MergeResolve, Mirrorlist, PARU_CLONE,
+    PackageName, RepairWork, ShellPath, TargetList, Toggle, UserConfigEdit, UserName, WifiBackend,
 };
 
 /// Work the helper does itself instead of running a program, because it
@@ -217,7 +217,8 @@ impl Builtin {
             Self::BuildAur { base, run } => {
                 write!(
                     out,
-                    "PKGDEST=~/{AUR_BUILT}/{run} makepkg, in ~/{PARU_CLONE}/{base}"
+                    "PKGDEST=~/{AUR_BUILT}/{run} makepkg {}, in ~/{PARU_CLONE}/{base}",
+                    MAKEPKG_ARGS.join(" "),
                 )
             }
             Self::EditModprobeBlacklist { module, on } => {

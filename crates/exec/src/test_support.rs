@@ -2,11 +2,14 @@
 
 use std::fs;
 use std::os::unix::fs::PermissionsExt as _;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::sync::mpsc::Sender;
+use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
+use tempfile::TempDir;
 use toolbox_plan::procedure::Builtin;
-use toolbox_plan::protocol::{Event, Failure, Outcome};
+use toolbox_plan::protocol::{Answer, Event, Failure, Outcome};
 use toolbox_plan::{ConfigFilePath, ConfigText, StepId};
 
 use crate::apply::EventSink;
@@ -75,10 +78,41 @@ pub fn gone(pid_file: &Path) -> bool {
     let started = Instant::now();
 
     while process.exists() && started.elapsed() < SOON {
-        std::thread::sleep(Duration::from_millis(10));
+        thread::sleep(Duration::from_millis(10));
     }
 
     !process.exists()
+}
+
+/// A temporary root with the home of `ada` below it, 0700 and empty. The
+/// home is returned canonical, so a program that prints it matches.
+pub fn ada_home() -> (TempDir, PathBuf) {
+    let root = tempfile::tempdir().unwrap();
+    let home = root.path().canonicalize().unwrap().join("home/ada");
+    fs::create_dir_all(&home).unwrap();
+    fs::set_permissions(&home, fs::Permissions::from_mode(0o700)).unwrap();
+
+    (root, home)
+}
+
+/// Sends `answer` to a runner once `delay` has passed, from a thread of its own.
+pub fn answer_after(app: Sender<Answer>, delay: Duration, answer: Answer) -> JoinHandle<()> {
+    thread::Builder::new()
+        .name("test-answer".to_owned())
+        .spawn(move || {
+            thread::sleep(delay);
+            app.send(answer).unwrap();
+        })
+        .unwrap()
+}
+
+/// An executable shell script that runs `body`, to stand in for a program.
+pub fn stand_in(dir: &Path, body: &str) -> PathBuf {
+    let program = dir.join("makepkg");
+    fs::write(&program, format!("#!/bin/sh\n{body}\n")).unwrap();
+    fs::set_permissions(&program, fs::Permissions::from_mode(0o755)).unwrap();
+
+    program
 }
 
 pub fn path(text: &str) -> ConfigFilePath {

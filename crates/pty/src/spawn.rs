@@ -53,6 +53,7 @@ pub fn spawn(command: &PtyCommand) -> io::Result<(Child, File)> {
         .map_err(|error| stage_error("size a terminal", error))?;
 
     let mut process = command.to_command();
+    let umask = command.child_umask();
     process
         .stdin(Stdio::from(slave.try_clone()?))
         .stdout(Stdio::from(slave.try_clone()?))
@@ -66,10 +67,15 @@ pub fn spawn(command: &PtyCommand) -> io::Result<(Child, File)> {
     // the default SIGINT and SIGQUIT and no blocked signals, a new
     // session, then the terminal on stdin as its controlling tty.
     unsafe {
-        process.pre_exec(|| {
+        process.pre_exec(move || {
             default_signals()?;
             rustix::process::setsid()?;
             rustix::process::ioctl_tiocsctty(rustix::stdio::stdin())?;
+
+            if let Some(mask) = umask {
+                rustix::process::umask(mask);
+            }
+
             Ok(())
         });
     }

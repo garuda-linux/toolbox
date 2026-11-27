@@ -3,6 +3,7 @@
 //! the user's own and closed to others, and the files are copied into root's
 //! store so nothing is swapped after the check.
 
+pub mod build;
 #[cfg(test)]
 mod tests;
 
@@ -234,7 +235,7 @@ fn open_store(root: &Path) -> io::Result<Option<OwnedFd>> {
 
 /// The names in `dir` but `.` and `..`, as bytes: a name that is no UTF-8
 /// is removed or refused too.
-fn entries(dir: &OwnedFd) -> io::Result<Vec<CString>> {
+pub fn entries(dir: &OwnedFd) -> io::Result<Vec<CString>> {
     let mut names = Vec::new();
 
     for entry in rustix::fs::Dir::read_from(dir)? {
@@ -248,7 +249,7 @@ fn entries(dir: &OwnedFd) -> io::Result<Vec<CString>> {
     Ok(names)
 }
 
-fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError> {
+pub fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError> {
     match rustix::fs::statat(store, name, AtFlags::SYMLINK_NOFOLLOW) {
         Ok(stat) if FileType::from_raw_mode(stat.st_mode) == FileType::Directory => {}
         Ok(_) => return Err(StageError::NoRunFolder(name.to_string_lossy().into_owned())),
@@ -276,7 +277,12 @@ fn remove_run_folder(store: &OwnedFd, name: &CStr) -> Result<(), StageError> {
     Ok(())
 }
 
-fn built_folder(root: &Path, uid: u32, home: &Path, run: &BuildRun) -> Result<OwnedFd, StageError> {
+pub fn built_folder(
+    root: &Path,
+    uid: u32,
+    home: &Path,
+    run: &BuildRun,
+) -> Result<OwnedFd, StageError> {
     let mut folder = secure::open_dir(root, home)?;
     owned_and_closed(&folder, uid, &home.display().to_string())?;
 

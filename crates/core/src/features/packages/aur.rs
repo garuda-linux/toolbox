@@ -4,6 +4,7 @@
 //! way people look for a package. Installs are paru builds, removals are
 //! the packages domain's.
 
+pub mod build;
 #[cfg(test)]
 mod tests;
 

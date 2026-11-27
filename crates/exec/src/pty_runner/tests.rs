@@ -1,3 +1,4 @@
+mod build;
 mod gates;
 mod late;
 
@@ -14,7 +15,7 @@ use toolbox_pty::{DEFAULT_SIZE, Exit, PtyCommand, Session};
 
 use super::{Environment, Guard, PtyRunner, QueryKind, pty_command};
 use crate::apply::Runner as _;
-use crate::test_support::printed;
+use crate::test_support::{answer_after, printed};
 
 /// Nanoseconds this thread spent on a CPU so far.
 fn cpu_time() -> u64 {
@@ -248,13 +249,7 @@ fn a_cancel_answer_stops_the_running_program() {
         Session::spawn(&PtyCommand::new("/bin/sh").args(["-c", "read -r line"])).unwrap();
 
     let started = Instant::now();
-    let canceller = thread::Builder::new()
-        .name("test-cancel".to_owned())
-        .spawn(move || {
-            thread::sleep(Duration::from_millis(200));
-            app.send(Answer::Cancel).unwrap();
-        })
-        .unwrap();
+    let canceller = answer_after(app, Duration::from_millis(200), Answer::Cancel);
 
     runner
         .pump(StepId::new(1), &mut session, &mut Vec::<Event>::new())

@@ -104,7 +104,7 @@ fn a_build_runs_makepkg_as_the_user_into_its_run() {
     assert_eq!(
         shown_user(&action),
         [
-            "PKGDEST=~/.cache/garuda-toolbox/aur-built/1a2b makepkg, in ~/.cache/paru/clone/octopi-git"
+            "PKGDEST=~/.cache/garuda-toolbox/aur-built/1a2b makepkg -f -C, in ~/.cache/paru/clone/octopi-git"
         ]
     );
 }

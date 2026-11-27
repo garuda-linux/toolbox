@@ -174,6 +174,33 @@ paru resolves and fetches, `makepkg` builds as the user, the helper
 installs what was built (`crates/exec/src/aur.rs`). The request carries a
 `BuildRun` and package names, never a path.
 
+The build is the `BuildAur` builtin, run by the app only
+(`crates/exec/src/aur/build.rs`). The helper fails it, as it has no home.
+
+- `makepkg` runs as the user in `~/.cache/paru/clone/<base>`, with
+  `PKGDEST=~/.cache/garuda-toolbox/aur-built/<run>` and the arguments
+  `-f -C` (`MAKEPKG_ARGS`). It never gets `-s`, `-i`, `-c` or `-r`, so
+  no step of it calls sudo or pacman. These flags are unconfirmed against a
+  real `makepkg` run.
+- The clone folder must be a folder reached without a link below the
+  home. Otherwise the step fails and names the folder, and nothing starts.
+- Folders of `~/.cache/garuda-toolbox` and `aur-built` that are missing
+  are made with mode 0755, so the helper's check of each folder passes
+  under the usual umasks (022, 002, 077). The run folder is made, then set
+  to 0700 whatever the umask.
+- Before each build the app removes the run folders of `aur-built` that
+  are older than a day. Nothing is followed. A run folder that holds more
+  than regular files, or a link, stays.
+- A run folder that already exists is reused. `-f` rebuilds over its
+  package files.
+- The package files get their mode from makepkg's umask, so makepkg runs
+  with umask 022 (`MAKEPKG_UMASK`, set by `PtyCommand::umask` in the child
+  between fork and exec). The app keeps its own umask. A file is therefore
+  0644 whatever the user's umask, and the helper's check (`stage`, which
+  refuses group or other write) accepts it. Tests:
+  `a_package_file_is_accepted_by_the_helper_under_umask_002` and
+  `..._077` in `crates/exec/src/pty_runner/tests/build.rs`.
+
 - The caller is the peer of stdin ([The helper](#the-helper)). The home
   is the one `/etc/passwd` names for it.
 - The run folder `~/.cache/garuda-toolbox/aur-built/<run>` is reached

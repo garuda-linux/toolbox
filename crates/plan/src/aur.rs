@@ -11,6 +11,13 @@ pub const PARU_CLONE: &str = ".cache/paru/clone";
 /// The helper cannot read the user's `XDG_CACHE_HOME`.
 pub const AUR_BUILT: &str = ".cache/garuda-toolbox/aur-built";
 
+/// The options of an AUR build's makepkg.
+///
+/// They rebuild over a package file that exists and clean the source folder
+/// first. Dependencies, installing and cleaning up are the helper's, so
+/// `-s`, `-i`, `-c` and `-r` stay out.
+pub const MAKEPKG_ARGS: [&str; 2] = ["-f", "-C"];
+
 /// Relative to `/`: where the helper copies built packages before
 /// `pacman -U`, so no other user can swap a file after the check.
 pub const AUR_STORE: &str = "var/cache/garuda-toolbox/aur";

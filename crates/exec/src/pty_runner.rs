@@ -7,21 +7,21 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{Receiver, RecvTimeoutError, TryRecvError};
-use std::time::{Duration, Instant};
-use std::{io, thread};
+use std::time::{Duration, Instant, SystemTime};
+use std::{fmt, io, thread};
 
 pub use query::QueryKind;
-use toolbox_plan::procedure::{Builtin, Command};
+use toolbox_plan::procedure::{Builtin, Command, Program};
 use toolbox_plan::protocol::{Answer, Event, Outcome};
-use toolbox_plan::{Caller, ConfigText, SecretInput, StepId};
-use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, Session, TerminalSize};
+use toolbox_plan::{BuildRun, Caller, ConfigText, PackageName, SecretInput, StepId};
+use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, PtyCommand, Session, TerminalSize};
 
 use self::program::{after, forward_rest, pty_command, report};
 use crate::apply::{EventSink, Runner};
 use crate::builtin::{self, SYSTEM_ROOT};
-use crate::check;
 use crate::feed::feed;
 use crate::report::failure;
+use crate::{aur, check};
 
 /// pkexec gives a minimal environment. Programs get only this, never
 /// anything the caller could have set.
@@ -219,21 +219,58 @@ impl PtyRunner {
     }
 
     fn execute(&mut self, step: StepId, command: &Command, sink: &mut dyn EventSink) -> Outcome {
-        let mut session = match Session::spawn(&pty_command(
-            &crate::located::program(command.program(), self.environment),
-            command,
-            self.size,
-            self.environment,
-        )) {
+        let program = crate::located::program(command.program(), self.environment);
+        let pty = pty_command(&program, command, self.size, self.environment);
+
+        self.spawn_pty(step, command, &pty, sink)
+    }
+
+    /// Runs `pty` in a terminal and reports how it ended. `what` names the
+    /// program in the errors.
+    fn spawn_pty(
+        &mut self,
+        step: StepId,
+        what: &dyn fmt::Display,
+        pty: &PtyCommand,
+        sink: &mut dyn EventSink,
+    ) -> Outcome {
+        let mut session = match Session::spawn(pty) {
             Ok(session) => session,
-            Err(error) => return failure(step, sink, &format!("cannot start {command}: {error}")),
+            Err(error) => return failure(step, sink, &format!("cannot start {what}: {error}")),
         };
 
         let cancelled = self.cancelled && self.guard == Guard::Cancellable;
 
         match self.pump(step, &mut session, sink) {
             Ok(exit) => after(step, exit, cancelled, sink),
-            Err(error) => failure(step, sink, &format!("lost track of {command}: {error}")),
+            Err(error) => failure(step, sink, &format!("lost track of {what}: {error}")),
+        }
+    }
+
+    /// `makepkg` of an AUR build as the user. Only the app has a home to
+    /// build in, so the helper fails here before anything starts.
+    fn build_aur(
+        &mut self,
+        step: StepId,
+        makepkg: &Path,
+        (base, run): (&PackageName, &BuildRun),
+        sink: &mut dyn EventSink,
+    ) -> Outcome {
+        if self.cancelled_before() {
+            return Outcome::Cancelled;
+        }
+
+        let Some(home) = self.home.as_deref() else {
+            return failure(
+                step,
+                sink,
+                "an AUR build runs as the user, and this process has no home",
+            );
+        };
+
+        match aur::build::prepare(home, makepkg, base, run, SystemTime::now()) {
+            Ok(pty) => self.spawn_pty(step, &"makepkg", &pty, sink),
+            Err(error) => failure(step, sink, &error.to_string()),
         }
     }
 }
@@ -267,13 +304,18 @@ impl Runner for PtyRunner {
     }
 
     fn builtin(&mut self, step: StepId, builtin: &Builtin, sink: &mut dyn EventSink) -> Outcome {
-        builtin::execute(
-            Path::new(SYSTEM_ROOT),
-            self.home.as_deref(),
-            step,
-            builtin,
-            sink,
-        )
+        let Builtin::BuildAur { base, run } = builtin else {
+            return builtin::execute(
+                Path::new(SYSTEM_ROOT),
+                self.home.as_deref(),
+                step,
+                builtin,
+                sink,
+            );
+        };
+
+        let makepkg = crate::located::program(Program::Makepkg, self.environment);
+        self.build_aur(step, &makepkg, (base, run), sink)
     }
 
     fn feed(

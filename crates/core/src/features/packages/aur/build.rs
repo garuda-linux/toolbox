@@ -1,0 +1,243 @@
+//! The plan of an AUR install through paru: the repository packages first,
+//! then each pkgbase built as the user and installed by the helper.
+
+#[cfg(test)]
+mod tests;
+
+use std::collections::BTreeSet;
+
+use toolbox_plan::{
+    BuildRun, InstallReason, PackageName, PlannedAction, RootAction, TargetList, UserAction,
+};
+use toolbox_state::aur::order::{AurOrder, Role};
+use toolbox_text::OutsideText;
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct BuildPlan {
+    pub actions: Vec<PlannedAction>,
+    pub bases: Vec<PackageName>,
+    pub make_only: Vec<PackageName>,
+}
+
+/// What stops a plan. Paru's `MISSING` names are outside text. A queued name
+/// that no order mentions is one the user asked for.
+#[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+#[error("paru names no package for some queued names")]
+pub struct Missing {
+    pub paru: Vec<OutsideText>,
+    pub unordered: Vec<PackageName>,
+}
+
+/// The lines of all orders, each name once.
+struct Merged {
+    repo: Vec<(PackageName, Role)>,
+    aur: Vec<(PackageName, Role)>,
+    pkgbases: Vec<(PackageName, PackageName)>,
+}
+
+impl Merged {
+    fn of(orders: &[AurOrder]) -> Self {
+        let mut merged = Self {
+            repo: Vec::new(),
+            aur: Vec::new(),
+            pkgbases: Vec::new(),
+        };
+
+        for order in orders {
+            for line in &order.repo {
+                merge(&mut merged.repo, &line.name, line.role);
+            }
+
+            for build in &order.builds {
+                merge(&mut merged.aur, &build.name, build.role);
+                if !merged.pkgbases.iter().any(|(name, _)| *name == build.name) {
+                    merged
+                        .pkgbases
+                        .push((build.name.clone(), build.base.clone()));
+                }
+            }
+        }
+
+        merged
+    }
+
+    /// The pkgbases in the order their first package appears.
+    fn bases(&self) -> Vec<PackageName> {
+        let mut bases: Vec<PackageName> = Vec::new();
+        for (name, _) in &self.aur {
+            if let Some(base) = base_of(&self.pkgbases, name)
+                && !bases.contains(base)
+            {
+                bases.push(base.clone());
+            }
+        }
+
+        bases
+    }
+
+    fn actions(
+        &self,
+        bases: &[PackageName],
+        run: &BuildRun,
+        installed: &BTreeSet<PackageName>,
+    ) -> Vec<PlannedAction> {
+        let mut actions = Vec::new();
+
+        let targets = names_with(&self.repo, |role| role == Role::Target);
+        let dependencies = names_with(&self.repo, |role| role != Role::Target);
+        if let Ok(packages) = TargetList::new(targets) {
+            actions.push(PlannedAction::Root(RootAction::InstallPackages {
+                packages,
+            }));
+        }
+
+        if let Ok(packages) = TargetList::new(dependencies) {
+            actions.push(PlannedAction::Root(RootAction::InstallDependencies {
+                packages,
+            }));
+        }
+
+        for base in bases {
+            actions.push(PlannedAction::User(UserAction::BuildAur {
+                base: base.clone(),
+                run: run.clone(),
+            }));
+
+            for reason in [
+                InstallReason::Dependency,
+                InstallReason::Keep,
+                InstallReason::Explicit,
+            ] {
+                let of_reason = self
+                    .aur
+                    .iter()
+                    .filter(|(name, role)| {
+                        base_of(&self.pkgbases, name) == Some(base)
+                            && reason_of(name, *role, installed) == reason
+                    })
+                    .map(|(name, _)| name.clone());
+
+                if let Ok(packages) = TargetList::new(of_reason) {
+                    actions.push(PlannedAction::Root(RootAction::InstallBuilt {
+                        run: run.clone(),
+                        packages,
+                        reason,
+                    }));
+                }
+            }
+        }
+
+        actions
+    }
+}
+
+/// Merges the orders of the queued packages into one plan. A repeated line
+/// keeps the position of its first occurrence and the strongest role.
+///
+/// # Errors
+///
+/// [`Missing`] when an order has a `MISSING` line or a queued name is in no
+/// order. No plan is made then.
+pub fn plan(
+    queued: &[PackageName],
+    orders: &[AurOrder],
+    run: &BuildRun,
+    installed: &BTreeSet<PackageName>,
+) -> Result<BuildPlan, Missing> {
+    check(queued, orders)?;
+
+    let merged = Merged::of(orders);
+    let bases = merged.bases();
+    let actions = merged.actions(&bases, run, installed);
+
+    let make_only: BTreeSet<PackageName> = merged
+        .repo
+        .iter()
+        .chain(merged.aur.iter())
+        .filter(|(name, role)| *role == Role::Make && !installed.contains(name))
+        .map(|(name, _)| name.clone())
+        .collect();
+
+    Ok(BuildPlan {
+        actions,
+        bases,
+        make_only: make_only.into_iter().collect(),
+    })
+}
+
+/// # Errors
+///
+/// [`Missing`] for each `MISSING` line and each queued name in no order.
+fn check(queued: &[PackageName], orders: &[AurOrder]) -> Result<(), Missing> {
+    let mut paru: Vec<OutsideText> = Vec::new();
+    for line in orders.iter().flat_map(|order| order.missing.iter()) {
+        if !paru.contains(line) {
+            paru.push(line.clone());
+        }
+    }
+
+    let unordered: Vec<PackageName> = queued
+        .iter()
+        .filter(|name| !orders.iter().any(|order| mentions(order, name)))
+        .cloned()
+        .collect();
+
+    if paru.is_empty() && unordered.is_empty() {
+        Ok(())
+    } else {
+        Err(Missing { paru, unordered })
+    }
+}
+
+fn mentions(order: &AurOrder, name: &PackageName) -> bool {
+    order.repo.iter().any(|line| line.name == *name)
+        || order.builds.iter().any(|build| build.name == *name)
+}
+
+/// The pkgbase of a built package, the first order that names it decides.
+fn base_of<'list>(
+    pkgbases: &'list [(PackageName, PackageName)],
+    name: &PackageName,
+) -> Option<&'list PackageName> {
+    pkgbases
+        .iter()
+        .find(|(known, _)| known == name)
+        .map(|(_, base)| base)
+}
+
+fn merge(lines: &mut Vec<(PackageName, Role)>, name: &PackageName, role: Role) {
+    match lines.iter_mut().find(|(known, _)| known == name) {
+        Some((_, kept)) => *kept = stronger(*kept, role),
+        None => lines.push((name.clone(), role)),
+    }
+}
+
+/// TARGET over DEP over MAKE.
+const fn stronger(left: Role, right: Role) -> Role {
+    match (left, right) {
+        (Role::Target, _) | (_, Role::Target) => Role::Target,
+        (Role::Dependency, _) | (_, Role::Dependency) => Role::Dependency,
+        (Role::Make, Role::Make) => Role::Make,
+    }
+}
+
+fn names_with(lines: &[(PackageName, Role)], wanted: impl Fn(Role) -> bool) -> Vec<PackageName> {
+    lines
+        .iter()
+        .filter(|(_, role)| wanted(*role))
+        .map(|(name, _)| name.clone())
+        .collect()
+}
+
+/// A package that is installed keeps its reason. A queued target is
+/// explicit, any other package is a dependency.
+fn reason_of(name: &PackageName, role: Role, installed: &BTreeSet<PackageName>) -> InstallReason {
+    if installed.contains(name) {
+        return InstallReason::Keep;
+    }
+
+    match role {
+        Role::Target => InstallReason::Explicit,
+        Role::Dependency | Role::Make => InstallReason::Dependency,
+    }
+}

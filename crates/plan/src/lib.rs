@@ -47,7 +47,7 @@ pub use action::{
     EmptyTargetList, LoaderRefusal, RemoteAction, RootAction, TargetList, UnitOperation, UnitScope,
     Upgrader, UserAction, boot_loader_steps,
 };
-pub use aur::{AUR_BUILT, AUR_STORE, InstallReason, PARU_CLONE};
+pub use aur::{AUR_BUILT, AUR_STORE, InstallReason, MAKEPKG_ARGS, PARU_CLONE};
 pub use bounded::{Bounded, OutOfRange};
 pub use config_file::{
     CONFIG_ROOTS, ConfigEntryLocation, ConfigFilePath, ConfigText, ConfigWrite, FetchAnswer,
