@@ -113,7 +113,7 @@ fn a_grub_menu_lists_every_entry_under_its_submenu() {
     let menu = menu();
     let rows: Vec<(String, String, String)> = entries(Some(&menu))
         .into_iter()
-        .map(|row| (row.entry, row.title, row.parent))
+        .map(|row| (row.entry, row.title.into_string(), row.parent))
         .collect();
 
     let advanced = "Advanced options for Garuda Linux";

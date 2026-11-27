@@ -25,7 +25,7 @@ pub struct AurRow {
     #[serde(rename = "id")]
     pub name: String,
     pub description: OutsideText,
-    pub version: String,
+    pub version: OutsideText,
     pub votes: u32,
     pub popularity: f64,
     /// Seconds since the epoch when it was flagged out of date.
@@ -38,7 +38,7 @@ pub struct AurRow {
 pub struct AurInfo {
     #[serde(rename = "id")]
     pub name: String,
-    pub version: String,
+    pub version: OutsideText,
     pub description: OutsideText,
     pub url: Option<OutsideText>,
     pub votes: u32,
@@ -49,11 +49,11 @@ pub struct AurInfo {
     pub first_submitted: i64,
     /// Seconds since the epoch.
     pub last_modified: i64,
-    pub depends: Vec<String>,
-    pub make_depends: Vec<String>,
-    pub opt_depends: Vec<String>,
-    pub provides: Vec<String>,
-    pub conflicts: Vec<String>,
+    pub depends: Vec<OutsideText>,
+    pub make_depends: Vec<OutsideText>,
+    pub opt_depends: Vec<OutsideText>,
+    pub provides: Vec<OutsideText>,
+    pub conflicts: Vec<OutsideText>,
     pub licenses: Vec<OutsideText>,
     pub keywords: Vec<OutsideText>,
     pub aur_page: String,
@@ -236,7 +236,7 @@ pub fn aur_info_text(paint: Paint, info: &AurInfo) -> String {
     let none = || "none".to_owned();
     let facts: Vec<(&str, String)> = vec![
         ("description", info.description.to_string()),
-        ("version", info.version.clone()),
+        ("version", info.version.to_string()),
         (
             "installed",
             if info.installed { "yes" } else { "no" }.to_owned(),

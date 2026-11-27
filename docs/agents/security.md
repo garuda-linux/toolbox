@@ -25,6 +25,27 @@ The app refuses to start as root.
 - `apply` reads one `Request` from stdin and validates every step before
   the first runs. One invalid step rejects the request. A refused name is
   quoted with at most 64 characters, control characters spelled out.
+- One `apply` is one session: a flat list of steps, one password, one
+  process. A request may name gates (`Request::gates`), steps before which
+  the helper waits. Gates are validated with the steps, before the first
+  one runs: a gate on a step the request lacks, on the first step, or
+  named twice rejects the request (`RequestError::UnknownGate`,
+  `GateOnFirstStep`, `DuplicateGate`). A request without gates is
+  unchanged.
+- At a gate the helper sends `Event::Waiting { step }` and runs the step only
+  after `Answer::Proceed { step }` with the same step id. While it waits it
+  reads nothing else but `Cancel`, `Finish` (both end the run), `Resize`
+  (kept for the next program), and the input lines, which are dropped. A
+  closed stdin, SIGTERM and SIGHUP also end the run. A `Proceed` for another
+  step, or one that comes when no gate waits, is ignored with a warning, and
+  the wait goes on. Nothing is kept for a later gate, so a `Proceed` cannot
+  pass a gate it was not sent for. A dry run waits at its gates too, so the
+  app's flow is the same in both modes.
+- A run that ends at a gate reports that step `Cancelled`, reports no
+  step after it and sends `Done`, as a cancel does. The `Invocation::Always`
+  parts of the steps before the gate already ran, inside their own step.
+- The helper holds no lock while it waits. The AUR store `flock` is taken
+  inside one stage (`crates/exec/src/aur.rs`), so a gate never sits on it.
 - Programs run as argv at their fixed path (`Program::path`) with a clean
   environment: `PATH` is `/usr/local/sbin:/usr/local/bin:/usr/bin`
   (`SYSTEM_PATH`, `crates/exec/src/pty_runner.rs`), the locale fixed.
@@ -38,6 +59,20 @@ The app refuses to start as root.
   caller's `PATH` (`crates/exec/src/located.rs`).
 - A closed stdin interrupts the program and skips the rest. Every client
   keeps stdin open until the `done` event.
+- The app runs one session per plan (`crates/services/src/apply/session.rs`).
+  It starts the helper at the plan's first root segment, with the root steps
+  of the whole plan and a gate before the first step of each later root
+  segment. A plan that starts with user steps asks for no password until
+  its first root step runs, and a declined first user step never starts the
+  helper. The helper's `Waiting` is not shown in the Console. The app
+  answers it with `Proceed` only after the user steps before the gate ended
+  well, and only after `Waiting` came. Keys and resizes typed during a user
+  step go to that step, never to the helper. When the plan stops early, the
+  app sends `Cancel` to a helper at its gate, reads its `Done` and reaps it.
+  A root step that fails ends the helper itself, as before.
+- The secrets of every step in the request are sent with the request, so a
+  password for a step behind a gate arrives before the first step runs. A
+  missing one fails the whole request before the helper starts.
 - Stdin of `apply` is a socket pair the app makes. The helper takes the
   caller from its `SO_PEERCRED` (`app/helper/src/read.rs`). Root, a system
   account and `nobody` are no caller. A pipe names none, so `InstallBuilt`

@@ -3,6 +3,7 @@ use std::io::{Read as _, Write as _};
 use flate2::Compression;
 use flate2::read::GzDecoder;
 use flate2::write::GzEncoder;
+use toolbox_text::OutsideText;
 
 use super::{AurPackage, DumpError, parse, parse_capped};
 
@@ -53,7 +54,7 @@ fn every_kept_field_is_read() {
     assert_eq!(ime.first_submitted, 1_792_590_299);
     assert_eq!(ime.last_modified, 1_793_978_572);
     assert_eq!(ime.depends.len(), 11);
-    assert_eq!(ime.depends.first().map(String::as_str), Some("cairo"));
+    assert_eq!(ime.depends.first().map(OutsideText::as_str), Some("cairo"));
     assert_eq!(
         ime.make_depends,
         ["go", "rust", "pkgconf", "fcitx5", "ibus"]

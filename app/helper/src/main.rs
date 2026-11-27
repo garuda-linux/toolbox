@@ -29,7 +29,7 @@ use std::sync::atomic::AtomicBool;
 
 use rustix::process::{DumpableBehavior, Resource, Rlimit};
 use signal_hook::consts::{SIGHUP, SIGINT, SIGTERM};
-use toolbox_exec::{Environment, EventSink as _, PtyRunner, apply, preflight};
+use toolbox_exec::{Environment, EventSink as _, PtyRunner, apply_gated, preflight};
 use toolbox_plan::protocol::{Event, Mode};
 
 use crate::io::{StdoutSink, note, read_request, read_secrets, refuse, spawn_answer_reader};
@@ -130,7 +130,13 @@ fn run() -> ExitCode {
         .stop_on(stop_on_signals())
         .for_caller(caller);
 
-    if apply(request.mode, &request.steps, &mut runner, &mut sink) {
+    if apply_gated(
+        request.mode,
+        &request.steps,
+        &request.gates,
+        &mut runner,
+        &mut sink,
+    ) {
         ExitCode::SUCCESS
     } else {
         ExitCode::FAILURE

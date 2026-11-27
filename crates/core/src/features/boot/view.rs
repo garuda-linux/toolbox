@@ -5,6 +5,7 @@ use serde::Serialize;
 use toolbox_plan::{
     DefaultEntry, GrubKey, GrubMenu, GrubTimeout, KernelParameters, MenuEntry, PlymouthTheme,
 };
+use toolbox_text::OutsideText;
 
 use super::{Flag, PictureSource, VirtualMachine, free_parameters, is_protected, shown};
 use crate::domains::{
@@ -16,7 +17,7 @@ use crate::{ChangeSet, Single, Snapshot};
 pub struct EntryRow {
     #[serde(rename = "id")]
     pub entry: String,
-    pub title: String,
+    pub title: OutsideText,
     pub parent: String,
 }
 
@@ -250,7 +251,7 @@ pub fn entries(menu: Option<&GrubMenu>) -> Vec<EntryRow> {
             .filter(|entry| !entry.submenu)
             .map(|entry| EntryRow {
                 entry: entry.id.as_str().to_owned(),
-                title: entry.title.clone().into_string(),
+                title: entry.title.clone(),
                 parent: entry.parent.clone().unwrap_or_default(),
             })
             .collect()

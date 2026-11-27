@@ -2,7 +2,9 @@
 //! for and the results the worker threads bring back.
 
 use toolbox_plan::{ConfigText, EditCopy, Editor, FetchRefusal};
+use toolbox_text::OutsideText;
 
+use super::super::diff::Diff;
 use super::file::{EditWrite, EditedFile};
 
 /// What a step needs done outside the state.
@@ -38,13 +40,30 @@ pub enum Compared {
     Changed(Changes),
 }
 
+impl Compared {
+    pub fn between(original: ConfigText, edited: ConfigText) -> Self {
+        if original == edited {
+            return Self::Unchanged;
+        }
+
+        let diff = Diff::new(original.as_str(), edited.as_str());
+        Self::Changed(Changes {
+            plain: diff.plain(),
+            added: diff.added(),
+            removed: diff.removed(),
+            original,
+            edited,
+        })
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Changes {
     /// The file as it is now, which the write must still find.
     pub original: ConfigText,
     pub edited: ConfigText,
     /// `+` and `-` in front of the lines, as `diff -u` prints them.
-    pub plain: String,
+    pub plain: OutsideText,
     pub added: usize,
     pub removed: usize,
 }
@@ -54,7 +73,7 @@ pub struct Changes {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Problem {
     pub code: ProblemCode,
-    pub detail: String,
+    pub detail: OutsideText,
 }
 
 /// The password dialog's answers mirror `pkexec::Refusal` and the helper's
@@ -105,10 +124,10 @@ impl From<FetchRefusal> for ProblemCode {
 }
 
 impl Problem {
-    pub fn new(code: ProblemCode, detail: impl Into<String>) -> Self {
+    pub fn new(code: ProblemCode, detail: impl AsRef<str>) -> Self {
         Self {
             code,
-            detail: detail.into(),
+            detail: OutsideText::keep_lines(detail.as_ref()),
         }
     }
 }

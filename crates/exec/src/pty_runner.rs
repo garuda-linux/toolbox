@@ -1,3 +1,4 @@
+mod program;
 mod query;
 #[cfg(test)]
 mod tests;
@@ -13,13 +14,14 @@ pub use query::QueryKind;
 use toolbox_plan::procedure::{Builtin, Command};
 use toolbox_plan::protocol::{Answer, Event, Outcome};
 use toolbox_plan::{Caller, ConfigText, SecretInput, StepId};
-use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, PtyCommand, Session, TerminalSize};
+use toolbox_pty::{Chunk, DEFAULT_SIZE, Exit, Session, TerminalSize};
 
+use self::program::{after, forward_rest, pty_command, report};
 use crate::apply::{EventSink, Runner};
 use crate::builtin::{self, SYSTEM_ROOT};
 use crate::check;
 use crate::feed::feed;
-use crate::report::{ended, failure, note};
+use crate::report::failure;
 
 /// pkexec gives a minimal environment. Programs get only this, never
 /// anything the caller could have set.
@@ -115,6 +117,12 @@ impl PtyRunner {
         self
     }
 
+    fn stop_requested(&self) -> bool {
+        self.stop
+            .as_ref()
+            .is_some_and(|stop| stop.load(Ordering::Relaxed))
+    }
+
     fn cancel(&mut self, session: Option<&mut Session>) {
         if let Some(running) = session
             && !self.cancelled
@@ -129,12 +137,7 @@ impl PtyRunner {
     /// Applies waiting answers. A closed channel means the app is gone,
     /// which cancels: nothing should keep running as root without a UI.
     fn take_answers(&mut self, mut session: Option<&mut Session>) {
-        if !self.cancelled
-            && self
-                .stop
-                .as_ref()
-                .is_some_and(|stop| stop.load(Ordering::Relaxed))
-        {
+        if !self.cancelled && self.stop_requested() {
             tracing::info!("asked to stop by a signal");
             self.cancel(session.as_deref_mut());
         }
@@ -168,6 +171,9 @@ impl PtyRunner {
                     }
                 }
                 (Answer::Finish, _) => self.finishing = true,
+                (Answer::Proceed { step: _ }, _) => {
+                    tracing::warn!("ignoring a proceed that no gate waits for");
+                }
                 (Answer::Input { data: _ }, None) => {}
             }
         }
@@ -306,72 +312,40 @@ impl Runner for PtyRunner {
         self.caller
     }
 
-    fn finish_requested(&mut self) -> bool {
+    /// Keystrokes and secrets are dropped here: no program is running that
+    /// could take them.
+    fn wait_to_proceed(&mut self, step: StepId, sink: &mut dyn EventSink) -> bool {
+        // Answers that came before the gate are stale, so none is kept for it.
         self.take_answers(None);
-        self.finishing
-    }
-}
+        sink.send(Event::Waiting { step });
 
-fn pty_command(
-    program: &Path,
-    command: &Command,
-    size: TerminalSize,
-    environment: Environment,
-) -> PtyCommand {
-    let base = PtyCommand::new(program)
-        .args(command.arguments())
-        .size(size);
+        loop {
+            if self.stop_requested() {
+                tracing::info!("asked to stop by a signal");
+                self.cancel(None);
+            }
 
-    let base = match environment {
-        Environment::Clean => base.env_clear(),
-        Environment::Inherited => base,
-    };
+            if self.cancelled || self.finishing {
+                return false;
+            }
 
-    environment
-        .variables()
-        .iter()
-        .chain(command.variables())
-        .fold(base, |pty, (key, value)| pty.env(key, value))
-}
-
-/// The last lines of a failing program say why. They are read until the
-/// terminal closes, but a program that left a child holding it open does
-/// not hold the step longer than [`LAST_OUTPUT`].
-fn forward_rest(step: StepId, session: &Session, sink: &mut dyn EventSink) {
-    let end = Instant::now() + LAST_OUTPUT;
-
-    loop {
-        let left = end.saturating_duration_since(Instant::now());
-
-        match session.output().recv_timeout(left) {
-            Ok(Chunk::Text(data)) => sink.send(Event::Output { step, data }),
-            Ok(Chunk::Closed) | Err(RecvTimeoutError::Disconnected) => return,
-            Err(RecvTimeoutError::Timeout) => {
-                tracing::warn!("the terminal stayed open after the program ended");
-                return;
+            match self.answers.recv_timeout(POLL_INTERVAL) {
+                Ok(Answer::Proceed { step: answered }) if answered == step => return true,
+                Ok(Answer::Proceed { step: _ }) => {
+                    tracing::warn!("ignoring a proceed that does not match the gate");
+                }
+                Ok(Answer::Cancel) | Err(RecvTimeoutError::Disconnected) => self.cancel(None),
+                Ok(Answer::Finish) => self.finishing = true,
+                Ok(Answer::Resize { size }) => {
+                    self.size = TerminalSize::from((size.columns, size.rows));
+                }
+                Ok(Answer::Input { data: _ }) | Err(RecvTimeoutError::Timeout) => {}
             }
         }
     }
-}
 
-fn report(result: io::Result<()>, what: &str) {
-    if let Err(error) = result {
-        tracing::warn!("cannot {what} the running program: {error}");
-    }
-}
-
-/// A cancel read in the same pass as a clean exit came too late: the
-/// program finished its work, `pacman -S` may have committed.
-fn after(step: StepId, exit: Exit, cancelled: bool, sink: &mut dyn EventSink) -> Outcome {
-    match (exit, cancelled) {
-        (Exit::Code(0), true) => note(
-            step,
-            sink,
-            "the cancel came after the program had finished",
-            Outcome::Succeeded,
-        ),
-        (_, true) => Outcome::Cancelled,
-        (Exit::Code(0), false) => Outcome::Succeeded,
-        (exit, false) => ended(exit),
+    fn finish_requested(&mut self) -> bool {
+        self.take_answers(None);
+        self.finishing
     }
 }

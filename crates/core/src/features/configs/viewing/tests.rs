@@ -1,4 +1,4 @@
-use toolbox_plan::{ConfigFilePath, ConfigText};
+use toolbox_plan::ConfigFilePath;
 
 use super::super::session::{Problem, ProblemCode};
 use super::{Viewed, Viewing};
@@ -34,7 +34,7 @@ fn shown(viewing: &Viewing) -> Shown {
 fn text(path_text: &str, content: &str) -> Viewed {
     Viewed {
         path: path(path_text),
-        content: ConfigText::new(content).unwrap(),
+        content: toolbox_text::OutsideText::keep_lines(content),
     }
 }
 

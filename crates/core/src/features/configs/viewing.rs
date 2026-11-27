@@ -1,7 +1,8 @@
 #[cfg(test)]
 mod tests;
 
-use toolbox_plan::{ConfigFilePath, ConfigText};
+use toolbox_plan::ConfigFilePath;
+use toolbox_text::OutsideText;
 
 use super::Refusal;
 use super::session::Problem;
@@ -20,7 +21,7 @@ pub enum Phase {
 pub struct Viewed {
     /// Where the text was read: the path, or where its links lead.
     pub path: ConfigFilePath,
-    pub content: ConfigText,
+    pub content: OutsideText,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]

@@ -13,7 +13,7 @@ use crate::{ChangeSet, Snapshot, Toggle};
 fn aur(name: &str, description: &str, popularity: f64) -> AurPackage {
     AurPackage {
         name: package(name),
-        version: "1.0-1".to_owned(),
+        version: toolbox_text::plain("1.0-1"),
         description: toolbox_text::plain(description),
         url: None,
         votes: 1,

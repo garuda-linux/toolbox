@@ -4,8 +4,11 @@ use std::time::{Duration, Instant};
 
 use parking_lot::Mutex;
 use rustix::process::{Signal, getpid, kill_process};
+use toolbox_plan::StepId;
+use toolbox_plan::protocol::Answer;
 
 use super::stop_on_signals;
+use crate::io::spawn_answer_reader;
 
 /// Signals reach every handler of the process, and `cargo test` runs the
 /// tests of one binary as threads of one process. A test that sends one
@@ -14,6 +17,19 @@ static SIGNALS: Mutex<()> = Mutex::new(());
 
 /// Sent to this very process: without the handlers the first one would
 /// end the test run.
+#[test]
+fn a_proceed_line_reaches_the_runner() {
+    let line = b"{\"type\":\"proceed\",\"step\":2}\n".to_vec();
+    let answers = spawn_answer_reader(std::io::Cursor::new(line));
+
+    assert_eq!(
+        answers.recv(),
+        Ok(Answer::Proceed {
+            step: StepId::new(2)
+        })
+    );
+}
+
 #[test]
 fn the_signals_that_end_a_program_only_set_the_flag() {
     let _signals = SIGNALS.lock();

@@ -9,13 +9,14 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::runtime::Handle;
 use toolbox_catalog::{ConfigFileCatalog, LoadProblem};
 use toolbox_core::features::configs::session::{
-    Changes, Compared, EditedFile, Fetched, Problem, ProblemCode,
+    Compared, EditedFile, Fetched, Problem, ProblemCode,
 };
 use toolbox_core::features::configs::viewing::Viewed;
-use toolbox_core::features::configs::{Diff, Listing, Target, choose_editor};
+use toolbox_core::features::configs::{Listing, Target, choose_editor};
 use toolbox_plan::{ConfigFilePath, ConfigText, EditCopy, Editor, FetchRefusal, InvalidConfigText};
 use toolbox_services::configs::specs;
 use toolbox_system::{ConfigFileSource, EditFolder, Editing, ReadProblem, pkexec};
+use toolbox_text::OutsideText;
 
 use super::turns::{Turn, Turns};
 use crate::lane::Lane;
@@ -157,7 +158,15 @@ impl Jobs {
     pub fn view(&self, number: u64, path: ConfigFilePath) {
         self.blocking(
             "view",
-            move |tools| Landed::Viewed(number, tools.read(&path)),
+            move |tools| {
+                Landed::Viewed(
+                    number,
+                    tools.read(&path).map(|(path, content)| Viewed {
+                        path,
+                        content: OutsideText::keep_lines(content.as_str()),
+                    }),
+                )
+            },
             move || Landed::Viewed(number, Err(stopped())),
         );
     }
@@ -181,7 +190,7 @@ impl Jobs {
                 Landed::Compared(
                     tools
                         .read_edited(&file)
-                        .map(|(_, content)| changes(content, edited)),
+                        .map(|(_, content)| Compared::between(content, edited)),
                 )
             },
             || Landed::Compared(Err(stopped())),
@@ -263,7 +272,7 @@ impl Tools {
         match file {
             EditedFile::Root(path) => self
                 .read(path)
-                .map(|read| (EditedFile::Root(read.path), read.content)),
+                .map(|(path, content)| (EditedFile::Root(path), content)),
             EditedFile::Home(path) => {
                 let real = self
                     .source
@@ -280,7 +289,8 @@ impl Tools {
             .after_edit(&self.copies, copy)
             .map_err(|error| Problem::new(ProblemCode::CopyFailed, error.to_string()))?;
 
-        self.edited(copy).map(|edited| changes(original, edited))
+        self.edited(copy)
+            .map(|edited| Compared::between(original, edited))
     }
 
     fn clear(&self) {
@@ -299,13 +309,10 @@ impl Tools {
             .ok_or_else(|| Problem::new(ProblemCode::NoEditor, ""))
     }
 
-    fn read(&self, path: &ConfigFilePath) -> Result<Viewed, Problem> {
+    fn read(&self, path: &ConfigFilePath) -> Result<(ConfigFilePath, ConfigText), Problem> {
         self.source
             .read(path, &self.cancel)
-            .map(|read| Viewed {
-                path: read.path,
-                content: read.content,
-            })
+            .map(|read| (read.path, read.content))
             .map_err(problem_of)
     }
 
@@ -368,21 +375,4 @@ const fn not_run(refusal: pkexec::Refusal) -> ProblemCode {
         pkexec::Refusal::HelperMissing => ProblemCode::HelperMissing,
         pkexec::Refusal::Broken => ProblemCode::Broken,
     }
-}
-
-fn changes(original: ConfigText, edited: ConfigText) -> Compared {
-    if original == edited {
-        return Compared::Unchanged;
-    }
-
-    let diff = Diff::new(original.as_str(), edited.as_str());
-    let plain = diff.plain();
-    let (added, removed) = (diff.added(), diff.removed());
-    Compared::Changed(Changes {
-        original,
-        edited,
-        plain,
-        added,
-        removed,
-    })
 }

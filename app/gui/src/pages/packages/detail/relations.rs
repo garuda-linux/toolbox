@@ -87,12 +87,15 @@ pub fn gap(ui: &Ui) -> f32 {
 /// What the package depends on: the packages with "+N more", then the
 /// sonames of its libraries behind "+N libraries", as they only repeat
 /// what the packages bring.
-pub fn dependencies(
+pub fn dependencies<T>(
     ui: &mut Ui,
-    values: &[String],
+    values: &[T],
     lookup: &dyn Fn(&str) -> Option<PackageName>,
     unfolded: &mut Unfolded,
-) -> Option<PackageName> {
+) -> Option<PackageName>
+where
+    T: AsRef<str>,
+{
     heading(ui, "packages-depends", values.len());
     if values.is_empty() {
         none(ui);

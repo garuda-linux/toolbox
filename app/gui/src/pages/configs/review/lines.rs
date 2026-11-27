@@ -10,6 +10,7 @@ use std::sync::Arc;
 
 use egui::{Context, Id};
 use toolbox_core::features::configs::hunk_lines;
+use toolbox_text::OutsideText;
 
 /// egui lays a tab out as this many spaces.
 const TAB_COLUMNS: usize = 4;
@@ -41,12 +42,12 @@ pub struct Row {
     pub new: Option<u32>,
     /// The line as the plain diff has it, its `+` or `-` included, which a
     /// screen reader hears.
-    pub line: String,
+    pub line: OutsideText,
 }
 
-#[derive(Debug, Default, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Rows {
-    pub source: String,
+    pub source: OutsideText,
     pub lines: Vec<Row>,
     /// The most columns a line's text takes, a tab as [`TAB_COLUMNS`].
     pub columns: u16,
@@ -58,13 +59,13 @@ impl Row {
     pub fn text(&self) -> &str {
         match self.kind {
             Kind::Same | Kind::Added | Kind::Removed => self.line.get(1..).unwrap_or_default(),
-            Kind::Hunk(_) | Kind::Note => &self.line,
+            Kind::Hunk(_) | Kind::Note => self.line.as_str(),
         }
     }
 }
 
 impl Rows {
-    pub fn parse(plain: &str) -> Self {
+    pub fn parse(plain: &OutsideText) -> Self {
         let mut rows = Vec::new();
         let (mut old, mut new) = (0_u32, 0_u32);
 
@@ -77,7 +78,7 @@ impl Rows {
                     kind: Kind::Hunk(Covered { first, last }),
                     old: None,
                     new: None,
-                    line: line.to_owned(),
+                    line: OutsideText::keep_lines(line),
                 });
                 continue;
             }
@@ -93,7 +94,7 @@ impl Rows {
                 kind,
                 old: numbers.0,
                 new: numbers.1,
-                line: line.to_owned(),
+                line: OutsideText::keep_lines(line),
             });
         }
 
@@ -112,7 +113,7 @@ impl Rows {
             .unwrap_or(1);
 
         Self {
-            source: plain.to_owned(),
+            source: plain.clone(),
             lines: rows,
             columns: u16::try_from(widest).unwrap_or(u16::MAX),
             digits: u16::try_from(highest.checked_ilog10().unwrap_or(0) + 1).unwrap_or(u16::MAX),
@@ -122,11 +123,11 @@ impl Rows {
 
 /// The rows of `plain`, split again only when the text differs from the
 /// last frame's.
-pub fn cached(ctx: &Context, plain: &str) -> Arc<Rows> {
+pub fn cached(ctx: &Context, plain: &OutsideText) -> Arc<Rows> {
     let id = Id::unique("toolbox_gui::configs::review::rows");
     let kept = ctx.data(|data| data.get_temp::<Arc<Rows>>(id));
 
-    if let Some(rows) = kept.filter(|rows| rows.source == plain) {
+    if let Some(rows) = kept.filter(|rows| rows.source == *plain) {
         return rows;
     }
 

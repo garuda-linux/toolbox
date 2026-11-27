@@ -56,7 +56,7 @@ fn line_of<'text>(listing: &'text str, start: &str) -> &'text str {
 fn pci_devices_are_kinded_by_class_code() {
     let found: Vec<(DeviceKind, String)> = pci_devices(LAPTOP_LSPCI)
         .into_iter()
-        .map(|device| (device.kind, device.description))
+        .map(|device| (device.kind, device.description.to_string()))
         .collect();
 
     assert_eq!(
@@ -78,7 +78,7 @@ fn pci_devices_are_kinded_by_class_code() {
 
     let lima: Vec<_> = pci_devices(LIMA_LSPCI)
         .into_iter()
-        .map(|device| (device.kind, device.description))
+        .map(|device| (device.kind, device.description.to_string()))
         .collect();
 
     assert_eq!(
@@ -111,7 +111,7 @@ fn a_bluetooth_interface_makes_a_usb_device_bluetooth() {
     let found: Vec<(DeviceKind, String)> =
         usb_devices(LAPTOP_LSUSB, &[laptop_ethernet(), laptop_bluetooth()])
             .into_iter()
-            .map(|device| (device.kind, device.description))
+            .map(|device| (device.kind, device.description.to_string()))
             .collect();
 
     assert_eq!(
@@ -191,4 +191,27 @@ fn lines_that_are_no_device_lines_are_left_out() {
     assert_eq!(pci_devices(&ethernet.replace(" [0200]", "")), []);
     assert_eq!(usb_devices("", &[]), []);
     assert_eq!(usb_devices(adapter.get(..33).unwrap(), &[]), []);
+}
+
+/// The laptop's Realtek and Foxconn names with a right-to-left override
+/// (U+202E) and a zero-width space (U+200B) in each. The devices must come
+/// out as the clean capture gives them, in the name and in the copied line.
+#[test]
+fn hidden_characters_in_a_device_name_do_not_come_out() {
+    let pci = LAPTOP_LSPCI.replacen("Realtek", "Real\u{202e}te\u{200b}k", 1);
+    let usb = LAPTOP_LSUSB.replacen("Foxconn", "Fox\u{202e}conn\u{200b}", 1);
+    assert_ne!(pci, LAPTOP_LSPCI, "the capture has no Realtek");
+    assert_ne!(usb, LAPTOP_LSUSB, "the capture has no Foxconn");
+
+    let bluetooth = [laptop_bluetooth()];
+
+    assert_eq!(pci_devices(&pci), pci_devices(LAPTOP_LSPCI));
+    assert_eq!(
+        usb_devices(&usb, &bluetooth),
+        usb_devices(LAPTOP_LSUSB, &bluetooth)
+    );
+    assert_eq!(
+        copy_text(&pci_devices(&pci)),
+        copy_text(&pci_devices(LAPTOP_LSPCI))
+    );
 }

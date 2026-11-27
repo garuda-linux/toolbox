@@ -6,6 +6,7 @@
 use std::net::{IpAddr, Ipv6Addr};
 
 use toolbox_core::features::network::{InterfaceCard, Link, Signal, Subnet};
+use toolbox_text::plain;
 
 pub fn cards() -> Vec<InterfaceCard> {
     vec![wifi(), ethernet()]
@@ -13,8 +14,8 @@ pub fn cards() -> Vec<InterfaceCard> {
 
 pub fn wifi() -> InterfaceCard {
     InterfaceCard {
-        connection: "network-3".to_owned(),
-        interface: "wlan0".to_owned(),
+        connection: plain("network-3"),
+        interface: plain("wlan0"),
         mac: Some("52:54:00:00:00:07".to_owned()),
         ipv4: vec![Subnet {
             address: IpAddr::from([192, 168, 178, 30]),
@@ -32,7 +33,7 @@ pub fn wifi() -> InterfaceCard {
         ],
         dns: vec![IpAddr::from([192, 168, 178, 1])],
         link: Link::Wireless {
-            ssid: Some("network-3".to_owned()),
+            ssid: Some(plain("network-3")),
             signal: Some(Signal { percent: 57 }),
         },
     }
@@ -40,8 +41,8 @@ pub fn wifi() -> InterfaceCard {
 
 pub fn ethernet() -> InterfaceCard {
     InterfaceCard {
-        connection: "Wired connection 1".to_owned(),
-        interface: "enp3s0".to_owned(),
+        connection: plain("Wired connection 1"),
+        interface: plain("enp3s0"),
         mac: Some("52:54:00:00:00:0e".to_owned()),
         ipv4: vec![Subnet {
             address: IpAddr::from([192, 168, 178, 40]),

@@ -11,6 +11,18 @@ fn an_overlong_word_is_refused_with_its_limit() {
 }
 
 #[test]
+fn a_home_path_refuses_zero_width_and_bidi_characters_by_name() {
+    assert_eq!(
+        HomePath::new(".config/a\u{200b}b"),
+        Err(InvalidHomePath::InvalidCharacter('\u{200b}'))
+    );
+    assert_eq!(
+        HomePath::new(".config/a\u{202e}b"),
+        Err(InvalidHomePath::InvalidCharacter('\u{202e}'))
+    );
+}
+
+#[test]
 fn a_home_path_refuses_a_nul_byte_by_name() {
     assert_eq!(
         HomePath::new("a\0b"),

@@ -27,6 +27,7 @@ pub fn printed(events: &[Event]) -> String {
             Event::Accepted
             | Event::Rejected { reason: _ }
             | Event::Started { step: _ }
+            | Event::Waiting { step: _ }
             | Event::Finished {
                 step: _,
                 outcome: _,

@@ -31,7 +31,7 @@ impl AurSource for SampleAur {
         .filter_map(|(name, description, popularity, out_of_date)| {
             Some(AurPackage {
                 name: PackageName::new(name).ok()?,
-                version: "1.0-1".to_owned(),
+                version: toolbox_text::plain("1.0-1"),
                 description: toolbox_text::plain(description),
                 url: Some(toolbox_text::plain("https://example.org/")),
                 votes: 42,
@@ -40,9 +40,9 @@ impl AurSource for SampleAur {
                 maintainer: Some(toolbox_text::plain("sample")),
                 first_submitted: DAY,
                 last_modified: DAY,
-                depends: vec!["glibc".to_owned()],
-                make_depends: vec!["cargo".to_owned()],
-                opt_depends: vec!["git: for -git packages".to_owned()],
+                depends: vec![toolbox_text::plain("glibc")],
+                make_depends: vec![toolbox_text::plain("cargo")],
+                opt_depends: vec![toolbox_text::plain("git: for -git packages")],
                 provides: Vec::new(),
                 conflicts: Vec::new(),
                 licenses: vec![toolbox_text::plain("GPL-3.0-or-later")],

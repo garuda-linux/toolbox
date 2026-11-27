@@ -51,7 +51,7 @@ impl AurSource for Copy {
 fn package(name: &str) -> AurPackage {
     AurPackage {
         name: PackageName::new(name).unwrap(),
-        version: "1.0-1".to_owned(),
+        version: toolbox_text::plain("1.0-1"),
         description: toolbox_text::plain(""),
         url: None,
         votes: 0,

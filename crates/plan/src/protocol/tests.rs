@@ -1,3 +1,4 @@
+mod gates;
 mod protected;
 mod unknown_fields;
 

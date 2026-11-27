@@ -24,7 +24,7 @@ mod test_support;
 pub mod testing;
 mod uki;
 
-pub use apply::{EventSink, Procedure, Runner, apply, step_span};
+pub use apply::{EventSink, Procedure, Runner, apply, apply_gated, step_span};
 pub use builtin::FileChange;
 pub use capture::{CaptureError, Captured, Exited, MAX_ERROR_BYTES, Policy, capture, run_captured};
 pub use config_file::{

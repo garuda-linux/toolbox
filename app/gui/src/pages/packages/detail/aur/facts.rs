@@ -71,7 +71,7 @@ fn facts(ctx: &Context, entry: &AurPackage, local: Option<&PackageDetails>) -> V
         if let Some(own) = info
             .installed
             .as_ref()
-            .filter(|own| own.version != entry.version)
+            .filter(|own| own.version != entry.version.as_str())
         {
             facts.push(fact(
                 "packages-info-installed-version",

@@ -297,14 +297,14 @@ pub(super) fn flipped(ui: &mut Ui, id: &str, queued: Option<&str>, on: bool) -> 
 
 fn label(ctx: &egui::Context, row: &EntryRow) -> String {
     if row.parent.is_empty() {
-        return row.title.clone();
+        return row.title.as_str().to_owned();
     }
 
     i18n::text_with(
         ctx,
         "boot-entry-in",
         &[
-            ("title", Arg::from(&row.title)),
+            ("title", Arg::from(row.title.as_str())),
             ("parent", Arg::from(&row.parent)),
         ],
     )

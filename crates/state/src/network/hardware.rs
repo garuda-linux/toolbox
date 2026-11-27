@@ -1,6 +1,8 @@
 //! The Hardware tab: the network devices `lspci -nn` and `lsusb` list,
 //! with the interface classes of `/sys/bus/usb/devices`. All of it is
-//! untrusted text: it is sorted into kinds here and shown as plain text.
+//! untrusted text: it is sorted into kinds here and kept as [`OutsideText`].
+
+use toolbox_text::{OutsideText, plain};
 
 const PCI_ETHERNET: &str = "0200";
 /// Every other PCI network controller, in practice Wi-Fi cards.
@@ -51,9 +53,9 @@ pub struct UsbInterface {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Device {
     pub kind: DeviceKind,
-    pub description: String,
+    pub description: OutsideText,
     /// The whole line, which is what gets copied.
-    pub raw: String,
+    pub raw: OutsideText,
 }
 
 impl UsbId {
@@ -100,8 +102,8 @@ pub fn pci_devices(lspci: &str) -> Vec<Device> {
 
             Some(Device {
                 kind,
-                description: description.to_owned(),
-                raw: line.to_owned(),
+                description: plain(description),
+                raw: plain(line),
             })
         })
         .collect()
@@ -119,6 +121,7 @@ pub fn usb_devices(lsusb: &str, interfaces: &[UsbInterface]) -> Vec<Device> {
         .filter_map(|line| {
             let line = line.trim();
             let (id, description) = usb_description(line)?;
+            let description = plain(description);
             let words = description.to_lowercase();
             let has = |list: &[&str]| list.iter().any(|word| words.contains(word));
             let bluetooth = interfaces
@@ -138,15 +141,15 @@ pub fn usb_devices(lsusb: &str, interfaces: &[UsbInterface]) -> Vec<Device> {
 
             Some(Device {
                 kind,
-                description: description.to_owned(),
-                raw: line.to_owned(),
+                description,
+                raw: plain(line),
             })
         })
         .collect()
 }
 
 /// What "copy all" puts on the clipboard: the lines as the programs
-/// printed them.
+/// printed them, without their hidden characters.
 pub fn copy_text<'a>(devices: impl IntoIterator<Item = &'a Device>) -> String {
     devices
         .into_iter()

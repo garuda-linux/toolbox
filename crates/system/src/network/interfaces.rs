@@ -16,6 +16,7 @@ use serde::de::DeserializeOwned;
 use serde_json::Value;
 pub use system::{property_changes, system_cards};
 use toolbox_state::network::{InterfaceCard, Link, Signal, Subnet};
+use toolbox_text::plain;
 
 use crate::bus::CallError;
 
@@ -191,11 +192,11 @@ where
     ipv6.sort_by_key(|subnet| is_link_local(subnet.address));
 
     let card = InterfaceCard {
-        connection: active.id,
+        connection: plain(&active.id),
         dns: servers(dns, &device.interface),
         ipv4: addresses(reads, &device.ip4_config, IP4).await,
         ipv6,
-        interface: device.interface,
+        interface: plain(&device.interface),
         mac,
         link,
     };
@@ -234,7 +235,7 @@ where
 
     let ssid = point
         .as_ref()
-        .map(|point| String::from_utf8_lossy(&point.ssid).into_owned())
+        .map(|point| plain(&String::from_utf8_lossy(&point.ssid)))
         .filter(|ssid| !ssid.is_empty());
 
     let signal = point.map(|point| Signal {

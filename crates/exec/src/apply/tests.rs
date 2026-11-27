@@ -5,6 +5,7 @@ mod cleanup;
 mod dependencies;
 mod extra;
 mod finish;
+mod gates;
 mod orphans;
 mod span;
 mod wifi;
@@ -16,7 +17,7 @@ use toolbox_plan::procedure::{Builtin, Command};
 use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, Request};
 use toolbox_plan::{ConfigText, RootAction, SecretInput, Step, StepId};
 
-use super::{EventSink, Runner, apply};
+use super::{EventSink, Runner, apply_gated};
 use crate::QueryKind;
 
 #[derive(Default)]
@@ -29,12 +30,20 @@ struct FakeRunner {
     /// Part of a command at which `run` panics, as a bug in a runner would.
     panics_at: Option<&'static str>,
     finish_after: Option<usize>,
+    /// One answer per wait at a gate, then go on.
+    proceeds: VecDeque<bool>,
 }
 
 impl Runner for FakeRunner {
     fn finish_requested(&mut self) -> bool {
         self.finish_after
             .is_some_and(|after| self.ran.len() >= after)
+    }
+
+    fn wait_to_proceed(&mut self, step: StepId, sink: &mut dyn EventSink) -> bool {
+        self.ran.push("wait".to_owned());
+        sink.send(Event::Waiting { step });
+        self.proceeds.pop_front().unwrap_or(true)
     }
 
     fn run(&mut self, _step: StepId, command: &Command, _sink: &mut dyn EventSink) -> Outcome {
@@ -107,7 +116,7 @@ impl Runner for FakeRunner {
 }
 
 fn run(request: &Request, runner: &mut FakeRunner, events: &mut Vec<Event>) -> bool {
-    apply(request.mode, &request.steps, runner, events)
+    apply_gated(request.mode, &request.steps, &request.gates, runner, events)
 }
 
 fn request(mode: Mode, actions: Vec<RootAction>) -> Request {
@@ -130,6 +139,7 @@ fn finished(events: &[Event]) -> Vec<(StepId, Outcome)> {
             Event::Accepted
             | Event::Rejected { reason: _ }
             | Event::Started { step: _ }
+            | Event::Waiting { step: _ }
             | Event::Output { step: _, data: _ }
             | Event::Done => None,
         })

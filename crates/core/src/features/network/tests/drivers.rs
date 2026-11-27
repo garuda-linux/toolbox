@@ -28,7 +28,7 @@ pub(super) fn module(name: &str) -> KernelModule {
 pub(super) fn entry(name: &str, file: &str) -> BlacklistEntry {
     BlacklistEntry {
         module: module(name),
-        file: file.to_owned(),
+        file: toolbox_text::plain(file),
         own: file == OWN_FILE,
     }
 }

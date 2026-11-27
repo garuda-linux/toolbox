@@ -1,6 +1,8 @@
 mod budget;
 mod finish;
+mod gates;
 mod secrets;
+mod session;
 mod size;
 mod stdin;
 

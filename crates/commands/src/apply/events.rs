@@ -109,7 +109,8 @@ impl Events {
             Report::Step(Event::Rejected { reason }) => {
                 error("the helper refused the change", Some(reason))
             }
-            Report::Step(Event::Accepted | Event::Done) | Report::CancelWaits => String::new(),
+            Report::Step(Event::Accepted | Event::Waiting { step: _ } | Event::Done)
+            | Report::CancelWaits => String::new(),
             Report::Problem(Problem::Refused(refusal)) => {
                 let (said, hint) = refused(*refusal);
                 error_with(&format!("not carried out: {said}"), Some(hint), None)

@@ -11,6 +11,59 @@ use super::FakeRunner;
 use crate::QueryKind;
 use crate::apply::{EventSink, Runner};
 
+struct QueryFails;
+
+impl Runner for QueryFails {
+    fn run(&mut self, _step: StepId, _command: &Command, _sink: &mut dyn EventSink) -> Outcome {
+        Outcome::Succeeded
+    }
+
+    fn run_always(
+        &mut self,
+        _step: StepId,
+        _command: &Command,
+        _sink: &mut dyn EventSink,
+    ) -> Outcome {
+        Outcome::Succeeded
+    }
+
+    fn query(&mut self, _command: &Command, _kind: QueryKind) -> io::Result<Vec<String>> {
+        Err(io::Error::other("pacman is not installed"))
+    }
+
+    fn finish_requested(&mut self) -> bool {
+        false
+    }
+
+    fn wait_to_proceed(&mut self, _step: StepId, _sink: &mut dyn EventSink) -> bool {
+        true
+    }
+
+    fn builtin(&mut self, _step: StepId, _builtin: &Builtin, _sink: &mut dyn EventSink) -> Outcome {
+        Outcome::Succeeded
+    }
+
+    fn feed(
+        &mut self,
+        _step: StepId,
+        _command: &Command,
+        _input: &SecretInput,
+        _sink: &mut dyn EventSink,
+    ) -> Outcome {
+        Outcome::Succeeded
+    }
+
+    fn check(
+        &mut self,
+        _step: StepId,
+        _command: &Command,
+        _text: &ConfigText,
+        _sink: &mut dyn EventSink,
+    ) -> Outcome {
+        Outcome::Succeeded
+    }
+}
+
 #[test]
 fn user_actions_list_their_invocations() {
     let action = UserAction::EditFile {
@@ -52,60 +105,6 @@ fn an_always_step_runs_through_run_always() {
 
 #[test]
 fn a_failing_query_fails_its_step() {
-    struct QueryFails;
-
-    impl Runner for QueryFails {
-        fn run(&mut self, _step: StepId, _command: &Command, _sink: &mut dyn EventSink) -> Outcome {
-            Outcome::Succeeded
-        }
-
-        fn run_always(
-            &mut self,
-            _step: StepId,
-            _command: &Command,
-            _sink: &mut dyn EventSink,
-        ) -> Outcome {
-            Outcome::Succeeded
-        }
-
-        fn query(&mut self, _command: &Command, _kind: QueryKind) -> io::Result<Vec<String>> {
-            Err(io::Error::other("pacman is not installed"))
-        }
-
-        fn finish_requested(&mut self) -> bool {
-            false
-        }
-
-        fn builtin(
-            &mut self,
-            _step: StepId,
-            _builtin: &Builtin,
-            _sink: &mut dyn EventSink,
-        ) -> Outcome {
-            Outcome::Succeeded
-        }
-
-        fn feed(
-            &mut self,
-            _step: StepId,
-            _command: &Command,
-            _input: &SecretInput,
-            _sink: &mut dyn EventSink,
-        ) -> Outcome {
-            Outcome::Succeeded
-        }
-
-        fn check(
-            &mut self,
-            _step: StepId,
-            _command: &Command,
-            _text: &ConfigText,
-            _sink: &mut dyn EventSink,
-        ) -> Outcome {
-            Outcome::Succeeded
-        }
-    }
-
     let mut runner = QueryFails;
     let mut events = Vec::new();
     let query = Command::new(Program::Pacman);

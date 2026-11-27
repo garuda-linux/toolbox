@@ -122,6 +122,21 @@ fn a_copy_is_a_file_directly_in_an_edit_folder() {
 }
 
 #[test]
+fn a_copy_names_its_hidden_character() {
+    let hidden = ['\u{200b}', '\u{202e}'];
+
+    for character in hidden {
+        let text = format!("/run/user/1000/garuda-toolbox/edit/a{character}b");
+
+        assert_eq!(
+            EditCopy::new(text).unwrap_err(),
+            InvalidEditCopy::InvalidCharacter(character),
+            "{character:?}"
+        );
+    }
+}
+
+#[test]
 fn a_copy_cannot_climb_or_be_relative() {
     assert_eq!(
         EditCopy::new("run/garuda-toolbox/edit/x").unwrap_err(),

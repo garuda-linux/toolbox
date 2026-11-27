@@ -42,10 +42,13 @@ pub fn target(catalog: &Catalog, dependency: &str) -> Option<PackageName> {
     catalog.provider(wanted).cloned()
 }
 
-pub fn by_kind(dependencies: &[String]) -> ByKind<'_> {
+pub fn by_kind<T>(dependencies: &[T]) -> ByKind<'_>
+where
+    T: AsRef<str>,
+{
     let (libraries, packages) = dependencies
         .iter()
-        .map(String::as_str)
+        .map(AsRef::as_ref)
         .partition(|dependency| dependency_name(dependency).ends_with(LIBRARY_END));
 
     ByKind {

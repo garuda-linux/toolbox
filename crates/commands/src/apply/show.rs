@@ -106,7 +106,8 @@ impl Show {
 
                 self.line(&text)
             }
-            Report::Step(Event::Accepted | Event::Done) | Report::CancelWaits => String::new(),
+            Report::Step(Event::Accepted | Event::Waiting { step: _ } | Event::Done)
+            | Report::CancelWaits => String::new(),
             Report::Problem(problem) => self.problem(problem),
             Report::Busy { plan: _ } => {
                 let text = self.paint.error("another change is still running");

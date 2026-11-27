@@ -4,8 +4,7 @@ mod leftover;
 mod read;
 #[cfg(test)]
 mod tests;
-
-use std::collections::HashSet;
+mod validate;
 
 use serde::de::{DeserializeOwned, Error as _};
 use serde::{Deserialize, Deserializer, Serialize};
@@ -13,11 +12,11 @@ use serde::{Deserialize, Deserializer, Serialize};
 pub use self::leftover::Leftover;
 pub use self::read::{ProgramAnswer, ReadKind};
 use crate::shown::Shown;
-use crate::{PackageName, Password, RootAction, Step, StepId, protection};
+use crate::{PackageName, Password, RootAction, Step, StepId};
 
 /// Bumped whenever a message changes shape. App and helper ship together,
 /// so a mismatch means a broken install or a stale helper.
-pub const PROTOCOL_VERSION: u32 = 22;
+pub const PROTOCOL_VERSION: u32 = 23;
 
 /// The most text one [`Answer::Input`] carries. The sender splits a longer paste.
 pub const MAX_INPUT_BYTES: usize = 64 << 10;
@@ -49,6 +48,11 @@ pub struct Request {
     pub version: u32,
     pub mode: Mode,
     pub steps: Vec<Step<RootAction>>,
+    /// Steps the helper waits before: it reports [`Event::Waiting`] and runs
+    /// the step once the app sends [`Answer::Proceed`] for that step. Never
+    /// the first step.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub gates: Vec<StepId>,
 }
 
 #[derive(Deserialize)]
@@ -69,6 +73,12 @@ pub enum RequestError {
     TooManySteps { max: usize },
     #[error("step {0} appears twice")]
     DuplicateStep(StepId),
+    #[error("the gate names step {0}, which the request does not have")]
+    UnknownGate(StepId),
+    #[error("the gate on step {0} is the first step, which the helper starts for")]
+    GateOnFirstStep(StepId),
+    #[error("step {0} is gated twice")]
+    DuplicateGate(StepId),
     #[error("the secret for step {0} is missing or misplaced")]
     MissingSecret(StepId),
     /// The app refuses this first. A request that still names one did not
@@ -95,6 +105,7 @@ impl Request {
             version: PROTOCOL_VERSION,
             mode,
             steps,
+            gates: Vec::new(),
         }
     }
 
@@ -121,34 +132,6 @@ impl Request {
 
         request.validate()?;
         Ok(request)
-    }
-
-    /// # Errors
-    ///
-    /// [`RequestError`] for a version mismatch, no steps, too many steps,
-    /// a step id used twice or the removal of a protected package.
-    pub fn validate(&self) -> Result<(), RequestError> {
-        if self.version != PROTOCOL_VERSION {
-            return Err(RequestError::VersionMismatch {
-                expected: PROTOCOL_VERSION,
-                got: self.version,
-            });
-        }
-
-        if self.steps.is_empty() {
-            return Err(RequestError::NoSteps);
-        }
-
-        if self.steps.len() > MAX_STEPS {
-            return Err(RequestError::TooManySteps { max: MAX_STEPS });
-        }
-
-        let mut seen = HashSet::new();
-        if let Some(step) = self.steps.iter().find(|step| !seen.insert(step.id)) {
-            return Err(RequestError::DuplicateStep(step.id));
-        }
-
-        self.steps.iter().try_for_each(refuse_protected)
     }
 
     /// A dry run needs none: nothing runs.
@@ -188,6 +171,11 @@ pub enum Event {
     Accepted,
     Rejected {
         reason: String,
+    },
+    /// The helper holds before this step until the app answers
+    /// [`Answer::Proceed`], [`Answer::Cancel`] or [`Answer::Finish`].
+    Waiting {
+        step: StepId,
     },
     Started {
         step: StepId,
@@ -259,6 +247,11 @@ pub enum Answer {
     Cancel,
     /// An [`Answer::Cancel`] after it still stops the running step.
     Finish,
+    /// Goes on past the gate the helper waits at. The helper passes a gate
+    /// only for the step it sent in [`Event::Waiting`].
+    Proceed {
+        step: StepId,
+    },
 }
 
 impl Answer {
@@ -348,20 +341,4 @@ where
     }
 
     Ok(serde_json::from_str(line)?)
-}
-
-fn refuse_protected(step: &Step<RootAction>) -> Result<(), RequestError> {
-    let RootAction::RemovePackages { packages } = &step.action else {
-        return Ok(());
-    };
-
-    packages
-        .iter()
-        .find(|package| protection(package).is_some())
-        .map_or(Ok(()), |package| {
-            Err(RequestError::Protected {
-                step: step.id,
-                package: package.clone(),
-            })
-        })
 }

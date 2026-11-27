@@ -47,7 +47,7 @@ fn changed(original: &str, edited: &str) -> Compared {
     Compared::Changed(Changes {
         original: text(original),
         edited: text(edited),
-        plain: "-a = 1\n+a = 2\n".to_owned(),
+        plain: toolbox_text::OutsideText::keep_lines("-a = 1\n+a = 2\n"),
         added: 1,
         removed: 1,
     })

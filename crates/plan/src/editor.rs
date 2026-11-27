@@ -147,7 +147,8 @@ impl EditCopy {
     /// # Errors
     ///
     /// [`InvalidEditCopy`] for a path that is overlong, relative, has a
-    /// control character or an empty, `.` or `..` component, or is no
+    /// [hidden](toolbox_text::is_hidden) character or an empty, `.` or `..`
+    /// component, or is no
     /// file directly in a `garuda-toolbox/edit` folder.
     pub fn new(value: impl Into<String>) -> Result<Self, InvalidEditCopy> {
         let value = value.into();
@@ -160,7 +161,10 @@ impl EditCopy {
 
         // Before anything that quotes the value: an escape sequence never
         // reaches a message.
-        if let Some(character) = value.chars().find(|character| character.is_control()) {
+        if let Some(character) = value
+            .chars()
+            .find(|character| toolbox_text::is_hidden(*character))
+        {
             return Err(InvalidEditCopy::InvalidCharacter(character));
         }
 

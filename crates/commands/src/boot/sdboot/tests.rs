@@ -90,7 +90,7 @@ fn a_set_timeout_is_shown_as_loader_conf_spells_it() {
 fn both_ukis_of_the_image_can_be_the_default() {
     let shown: Vec<(String, String)> = rows(&image_menu(LOADER_CONF))
         .into_iter()
-        .map(|row| (row.entry, row.title))
+        .map(|row| (row.entry, row.title.into_string()))
         .collect();
 
     assert_eq!(

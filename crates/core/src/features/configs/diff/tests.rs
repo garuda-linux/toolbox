@@ -1,4 +1,7 @@
+use toolbox_plan::ConfigText;
+
 use super::{Change, Diff, hunk_lines};
+use crate::features::configs::session::Compared;
 
 fn is_empty(diff: &Diff<'_>) -> bool {
     diff.lines().iter().all(|line| line.change == Change::Same)
@@ -109,4 +112,17 @@ fn a_hunk_that_only_removes_names_the_line_it_follows() {
 fn a_changed_line_is_no_hunk_header() {
     assert_eq!(hunk_lines("+GRUB_TIMEOUT=5"), None);
     assert_eq!(hunk_lines("@@ broken @@"), None);
+}
+
+#[test]
+fn a_hidden_character_of_an_edit_stays_out_of_the_changes() {
+    let edited = ConfigText::new("a = \u{202e}2\u{200b}\n".to_owned()).unwrap();
+    let original = ConfigText::new("a = 1\n".to_owned()).unwrap();
+
+    let Compared::Changed(changes) = Compared::between(original, edited) else {
+        panic!("the texts differ");
+    };
+
+    assert_eq!(changes.plain, "@@ -1,1 +1,1 @@\n-a = 1\n+a = 2\n");
+    assert_eq!(changes.edited.as_str(), "a = \u{202e}2\u{200b}\n");
 }

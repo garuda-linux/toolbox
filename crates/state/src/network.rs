@@ -10,6 +10,7 @@ pub use drivers::{
     BlacklistEntry, Category, ModuleFacts, NetworkModule, loaded_modules, network_modules,
 };
 pub use hardware::{Device, DeviceKind, UsbInterface, copy_text, pci_devices, usb_devices};
+use toolbox_text::OutsideText;
 
 /// What NetworkManager says about the way to the internet
 /// (`NMConnectivityState`).
@@ -61,10 +62,12 @@ pub struct RadioSummary {
 /// device with the connection it carries.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct InterfaceCard {
-    /// The active connection's name, the card's title.
-    pub connection: String,
-    /// A kernel name, shown as plain text.
-    pub interface: String,
+    /// The active connection's name, the card's title. A name the user or
+    /// a network chose, so it is outside text.
+    pub connection: OutsideText,
+    /// A kernel name. The kernel allows most bytes in it, so it is outside
+    /// text too.
+    pub interface: OutsideText,
     /// `None` when NetworkManager gives no hardware address for the device.
     pub mac: Option<String>,
     pub ipv4: Vec<Subnet>,
@@ -91,7 +94,7 @@ pub enum Link {
     },
     Wireless {
         /// `None` when the device has no active access point.
-        ssid: Option<String>,
+        ssid: Option<OutsideText>,
         signal: Option<Signal>,
     },
 }

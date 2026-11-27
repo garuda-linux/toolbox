@@ -46,7 +46,7 @@ pub fn entry_listing(rows: &[EntryRow]) -> Listing<'_> {
         head: &["ENTRY", "TITLE"],
         rows: rows
             .iter()
-            .map(|row| Row::plain(vec![row.entry.clone(), row.title.clone()]))
+            .map(|row| Row::plain(vec![row.entry.clone(), row.title.as_str().to_owned()]))
             .collect(),
         hint: (!rows.is_empty()).then(|| "garuda-toolbox boot set default <entry>".to_owned()),
     }

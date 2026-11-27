@@ -101,7 +101,9 @@ pub fn reviewing_of(file: EditedFile) -> Session {
         Changes {
             original: text("GRUB_TIMEOUT=5\n"),
             edited: text("GRUB_TIMEOUT=2\n"),
-            plain: "@@ -1,1 +1,1 @@\n-GRUB_TIMEOUT=5\n+GRUB_TIMEOUT=2\n".to_owned(),
+            plain: toolbox_text::OutsideText::keep_lines(
+                "@@ -1,1 +1,1 @@\n-GRUB_TIMEOUT=5\n+GRUB_TIMEOUT=2\n",
+            ),
             added: 1,
             removed: 1,
         },
@@ -134,7 +136,7 @@ pub fn viewing_of(content: &str) -> Viewing {
         number,
         Ok(Viewed {
             path: path("/etc/sudoers"),
-            content: text(content),
+            content: toolbox_text::OutsideText::keep_lines(content),
         }),
     );
     viewing

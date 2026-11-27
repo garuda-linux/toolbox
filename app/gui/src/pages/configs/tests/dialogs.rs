@@ -207,7 +207,7 @@ fn long_review() -> Session {
         Changes {
             original: super::text(&original),
             edited: super::text(&edited),
-            plain,
+            plain: toolbox_text::OutsideText::keep_lines(&plain),
             added: 300,
             removed: 300,
         },

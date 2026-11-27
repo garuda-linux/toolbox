@@ -325,9 +325,13 @@ only `/usr/share/garuda-toolbox/catalog` and never the source tree.
 1. A page sends an intent. The feature module queues the wish or drops
    what the system already has. A change equal to the `Snapshot` cancels
    out.
-2. Apply builds the `Plan`. User steps run in the app, the root steps
-   in one `pkexec garuda-toolbox-helper apply` (`auth_admin_keep`), so one
-   password per apply. A protocol change bumps `PROTOCOL_VERSION`.
+2. Apply builds the `Plan`. User steps run in the app. The root steps of
+   the whole plan run in one `pkexec garuda-toolbox-helper apply`
+   (`auth_admin_keep`), so one password per apply. The app starts it at the
+   plan's first root step, keeps it across the user steps, passes each later
+   root segment's gate and ends it when the plan stops
+   ([security.md](security.md#the-helper)). A protocol change bumps
+   `PROTOCOL_VERSION`.
 3. A failed step stops the plan. Steps that did not run stay queued. The
    snapshot is read again.
 4. Every step a domain planned belongs to all of that domain's queued

@@ -156,7 +156,7 @@ fn a_boot_entry_as_json_has_its_id() {
 
     let row = serde_json::to_value(EntryRow {
         entry: "gnulinux-simple-1".to_owned(),
-        title: "Garuda Linux".to_owned(),
+        title: toolbox_text::plain("Garuda Linux"),
         parent: String::new(),
     })
     .unwrap();

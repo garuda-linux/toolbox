@@ -1,85 +1,41 @@
 //! How a single command runs is the [`Runner`]'s business, so this order of events is tested without root or real programs.
 //! The helper runs root steps with it, the app user steps.
 
+mod runner;
 mod targets;
 #[cfg(test)]
 mod tests;
 
-use std::io;
 use std::panic::{self, AssertUnwindSafe};
 use std::path::Path;
 
 use toolbox_plan::procedure::{Builtin, Command, Invocation};
 use toolbox_plan::protocol::{Event, Failure, Leftover, Mode, Outcome};
-use toolbox_plan::{Caller, ConfigText, RootAction, SecretInput, Step, StepId, UserAction};
+use toolbox_plan::{Step, StepId};
 
+pub use self::runner::{EventSink, Procedure, Runner};
 use crate::builtin::SYSTEM_ROOT;
 use crate::report::{failure, note};
-use crate::{QueryKind, aur, initramfs, merge, repair, uki};
-
-pub trait Procedure {
-    fn procedure(&self) -> Vec<Invocation>;
-}
-
-impl Procedure for RootAction {
-    fn procedure(&self) -> Vec<Invocation> {
-        Self::procedure(self)
-    }
-}
-
-impl Procedure for UserAction {
-    fn procedure(&self) -> Vec<Invocation> {
-        Self::procedure(self)
-    }
-}
-
-pub trait EventSink {
-    fn send(&mut self, event: Event);
-}
-
-pub trait Runner {
-    fn run(&mut self, step: StepId, command: &Command, sink: &mut dyn EventSink) -> Outcome;
-
-    /// Like [`Runner::run`], but also after a cancel, and a cancel while
-    /// it runs does not stop it ([`Invocation::Always`]).
-    fn run_always(&mut self, step: StepId, command: &Command, sink: &mut dyn EventSink) -> Outcome;
-
-    /// # Errors
-    ///
-    /// When the command cannot start or ends in a way `kind` takes as no answer.
-    fn query(&mut self, command: &Command, kind: QueryKind) -> io::Result<Vec<String>>;
-
-    fn builtin(&mut self, step: StepId, builtin: &Builtin, sink: &mut dyn EventSink) -> Outcome;
-
-    /// Whatever the program prints is reported with the secret taken out.
-    fn feed(
-        &mut self,
-        step: StepId,
-        command: &Command,
-        input: &SecretInput,
-        sink: &mut dyn EventSink,
-    ) -> Outcome;
-
-    /// Without a PTY and without a secret, so what it prints is reported as it is.
-    fn check(
-        &mut self,
-        step: StepId,
-        command: &Command,
-        text: &ConfigText,
-        sink: &mut dyn EventSink,
-    ) -> Outcome;
-
-    fn finish_requested(&mut self) -> bool;
-
-    /// Only the helper knows the account whose built AUR packages it may install.
-    fn caller(&self) -> Option<Caller> {
-        None
-    }
-}
+use crate::{aur, initramfs, merge, repair, uki};
 
 pub fn apply<A>(
     mode: Mode,
     steps: &[Step<A>],
+    runner: &mut dyn Runner,
+    sink: &mut dyn EventSink,
+) -> bool
+where
+    A: Procedure,
+{
+    apply_gated(mode, steps, &[], runner, sink)
+}
+
+/// Like [`apply`], but first waits before each step named in `gates`, and
+/// the run ends where the wait does.
+pub fn apply_gated<A>(
+    mode: Mode,
+    steps: &[Step<A>],
+    gates: &[StepId],
     runner: &mut dyn Runner,
     sink: &mut dyn EventSink,
 ) -> bool
@@ -94,14 +50,19 @@ where
         // Built once: a config file write carries its whole text.
         let procedure = step.action.procedure();
         let _step = span(step, &procedure).entered();
+        let proceeds = !gates.contains(&step.id) || runner.wait_to_proceed(step.id, sink);
         sink.send(Event::Started { step: step.id });
 
         // Reported, not left out: a plan whose rest is missing would read
         // as finished.
-        let outcome = match mode {
-            Mode::DryRun => Outcome::Skipped,
-            Mode::Run if runner.finish_requested() => Outcome::Cancelled,
-            Mode::Run => run_procedure(step.id, &procedure, runner, sink),
+        let outcome = if proceeds {
+            match mode {
+                Mode::DryRun => Outcome::Skipped,
+                Mode::Run if runner.finish_requested() => Outcome::Cancelled,
+                Mode::Run => run_procedure(step.id, &procedure, runner, sink),
+            }
+        } else {
+            Outcome::Cancelled
         };
 
         let ok = matches!(outcome, Outcome::Succeeded | Outcome::Skipped);

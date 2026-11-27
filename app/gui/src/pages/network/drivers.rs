@@ -309,7 +309,17 @@ fn detail(ctx: &egui::Context, driver: &DriverRow) -> String {
         None if !driver.other_files.is_empty() => i18n::text_with(
             ctx,
             "network-driver-other-files",
-            &[("files", Arg::from(&driver.other_files.join(", ")))],
+            &[(
+                "files",
+                Arg::from(
+                    &driver
+                        .other_files
+                        .iter()
+                        .map(toolbox_text::OutsideText::as_str)
+                        .collect::<Vec<_>>()
+                        .join(", "),
+                ),
+            )],
         )
         .into_owned(),
         None => String::new(),

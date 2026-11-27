@@ -258,7 +258,7 @@ fn paint_row(ui: &mut Ui, row: &Row, look: &Look, width: f32) {
                 look.font.clone(),
                 tokens.text,
             );
-            row.line.clone()
+            row.line.to_string()
         }
         Kind::Note => {
             painter.text(
@@ -268,7 +268,7 @@ fn paint_row(ui: &mut Ui, row: &Row, look: &Look, width: f32) {
                 look.font.clone(),
                 tokens.secondary,
             );
-            row.line.clone()
+            row.line.to_string()
         }
     };
 

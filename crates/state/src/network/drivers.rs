@@ -8,6 +8,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_plan::KernelModule;
+use toolbox_text::OutsideText;
 
 const NETWORK_DRIVERS: &str = "kernel/drivers/net/";
 
@@ -36,7 +37,8 @@ pub struct NetworkModule {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BlacklistEntry {
     pub module: KernelModule,
-    pub file: String,
+    /// The path of the modprobe file, outside text since a file name is one.
+    pub file: OutsideText,
     /// The app's own file, the only one it changes.
     pub own: bool,
 }

@@ -255,8 +255,8 @@ fn json_stays_json_when_a_read_fails() {
 #[test]
 fn a_card_keeps_its_addresses_and_its_link_as_plain_values() {
     let card = InterfaceCard {
-        connection: "network-3".to_owned(),
-        interface: "wlan0".to_owned(),
+        connection: toolbox_text::plain("network-3"),
+        interface: toolbox_text::plain("wlan0"),
         mac: Some("52:54:00:00:00:07".to_owned()),
         ipv4: vec![Subnet {
             address: IpAddr::from([192, 168, 178, 30]),
@@ -265,7 +265,7 @@ fn a_card_keeps_its_addresses_and_its_link_as_plain_values() {
         ipv6: Vec::new(),
         dns: vec![IpAddr::from([192, 168, 178, 1])],
         link: Link::Wireless {
-            ssid: Some("network-3".to_owned()),
+            ssid: Some(toolbox_text::plain("network-3")),
             signal: Some(Signal { percent: 57 }),
         },
     };
@@ -278,6 +278,10 @@ fn a_card_keeps_its_addresses_and_its_link_as_plain_values() {
     assert_eq!(views[0].ssid.as_deref(), Some("network-3"));
     assert_eq!(views[0].signal, Some(57));
     assert_eq!(views[0].speed, None);
+
+    let json = serde_json::to_value(&views[0]).unwrap();
+    assert_eq!(json["connection"], "network-3");
+    assert_eq!(json["ssid"], "network-3");
 }
 
 #[test]

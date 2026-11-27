@@ -52,7 +52,7 @@ fn blacklists(facts: &ModuleFacts) -> Vec<(String, String, bool)> {
     facts
         .blacklists
         .iter()
-        .map(|entry| (entry.module.to_string(), entry.file.clone(), entry.own))
+        .map(|entry| (entry.module.to_string(), entry.file.to_string(), entry.own))
         .collect()
 }
 
@@ -261,5 +261,27 @@ fn without_proc_the_modules_are_unavailable() {
     assert_eq!(
         SystemModules::new(root.path()).facts(),
         Err(ProbeError::Unavailable)
+    );
+}
+
+/// A conf file whose name holds U+202E (a right-to-left override), so
+/// the name shows as `blacklist.conf` and the blacklist keeps its file.
+#[test]
+fn a_file_name_with_hidden_characters_is_shown_without_them() {
+    let (root, modules) = system();
+
+    write(
+        root.path(),
+        "etc/modprobe.d/black\u{202e}list.conf",
+        conf_with("blacklist pcspkr\n"),
+    );
+
+    assert_eq!(
+        blacklists(&modules.facts().unwrap()),
+        [(
+            "pcspkr".to_owned(),
+            "/etc/modprobe.d/blacklist.conf".to_owned(),
+            false
+        )]
     );
 }

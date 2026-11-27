@@ -65,6 +65,8 @@ fn a_shell_path_refuses_each_hidden_character_by_name() {
         ("/bin/\tsh", '\t'),
         ("/bin/sh\u{7f}", '\u{7f}'),
         ("/bin/\u{a0}sh", '\u{a0}'),
+        ("/bin/\u{200b}sh", '\u{200b}'),
+        ("/bin/\u{202e}sh", '\u{202e}'),
     ] {
         assert_eq!(
             ShellPath::new(path).unwrap_err(),

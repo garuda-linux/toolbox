@@ -130,8 +130,8 @@ fn subnet(text: &str, prefix: u8) -> Subnet {
 
 fn wlan0_card() -> InterfaceCard {
     InterfaceCard {
-        connection: "network-3".to_owned(),
-        interface: "wlan0".to_owned(),
+        connection: toolbox_text::plain("network-3"),
+        interface: toolbox_text::plain("wlan0"),
         mac: Some("52:54:00:00:00:07".to_owned()),
         ipv4: vec![subnet("192.168.178.30", 24)],
         ipv6: vec![
@@ -143,7 +143,7 @@ fn wlan0_card() -> InterfaceCard {
         ],
         dns: vec![ip("192.168.178.1"), ip("fd00::a"), ip("2001:db8::4")],
         link: Link::Wireless {
-            ssid: Some("network-3".to_owned()),
+            ssid: Some(toolbox_text::plain("network-3")),
             signal: Some(Signal { percent: 57 }),
         },
     }
@@ -259,4 +259,48 @@ fn signal_words_follow_nmcli_thresholds() {
     assert_eq!(quality(31), SignalQuality::Fair);
     assert_eq!(quality(30), SignalQuality::Weak);
     assert_eq!(quality(0), SignalQuality::Weak);
+}
+
+/// The Wi-Fi card with U+202E (a right-to-left override) in the interface
+/// name and in the connection name, and U+200B (a zero-width space) in the
+/// connection name and in the SSID bytes (`ne` then E2 80 8B, then
+/// `twork-3`). The first reply of an object wins the lookup, so the edited
+/// replies go in front of the capture's.
+#[tokio::test]
+async fn hidden_characters_in_connection_interface_and_ssid_do_not_come_out() {
+    let device = changed(
+        WLAN0,
+        r#""Interface":{"type":"s","data":"wlan0"}"#,
+        r#""Interface":{"type":"s","data":"wl\u202ean0"}"#,
+    );
+
+    let active = changed(
+        WLAN0_ACTIVE,
+        r#""Id":{"type":"s","data":"network-3"}"#,
+        r#""Id":{"type":"s","data":"net\u202ework\u200b-3"}"#,
+    );
+
+    let point = changed(
+        ACCESS_POINT_5,
+        r#""Ssid":{"type":"ay","data":[110,101,116,119,111,114,107,45,51]}"#,
+        r#""Ssid":{"type":"ay","data":[110,101,226,128,139,116,119,111,114,107,45,51]}"#,
+    );
+
+    let mut table = bare_metal();
+    table.insert(0, object(&format!("{DEVICES}4"), DEVICE, &device));
+    table.insert(
+        0,
+        object(&format!("{ACTIVE_CONNECTIONS}3"), ACTIVE, &active),
+    );
+    table.insert(
+        0,
+        object(&format!("{ACCESS_POINTS}5"), ACCESS_POINT, &point),
+    );
+
+    let cards = cards(&Replies(table)).await.unwrap();
+
+    assert_eq!(cards.len(), 1);
+    assert_eq!(cards[0].connection, "network-3");
+    assert_eq!(cards[0].interface, "wlan0");
+    assert_eq!(cards[0].link, wlan0_card().link);
 }

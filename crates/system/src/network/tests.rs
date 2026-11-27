@@ -306,7 +306,7 @@ fn devices(root: &Path, lspci: &str, lsusb: &str) -> Vec<(DeviceKind, String)> {
         .unwrap()
         .into_iter()
         .chain(network.usb_devices().unwrap())
-        .map(|device| (device.kind, device.description))
+        .map(|device| (device.kind, device.description.to_string()))
         .collect()
 }
 

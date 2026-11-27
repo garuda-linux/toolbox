@@ -10,6 +10,7 @@ use std::path::{Path, PathBuf};
 
 use toolbox_plan::{KernelRelease, MODPROBE_BLACKLIST, blacklist_entry};
 use toolbox_state::network::{BlacklistEntry, ModuleFacts, loaded_modules, network_modules};
+use toolbox_text::plain;
 
 use crate::error::{ProbeError, from_io};
 use crate::files;
@@ -84,7 +85,7 @@ impl SystemModules {
                     .filter_map(blacklist_entry)
                     .map(|module| BlacklistEntry {
                         module,
-                        file: shown.clone(),
+                        file: plain(&shown),
                         own,
                     })
                     .collect::<Vec<_>>()

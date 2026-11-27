@@ -2,6 +2,7 @@
 mod tests;
 
 use serde::{Deserialize, Serialize};
+use toolbox_text::{OutsideText, plain, plain_up_to};
 
 use crate::{KernelRelease, LoaderDefault, LoaderEntryId};
 
@@ -22,10 +23,10 @@ pub enum EntryKind {
 #[serde(deny_unknown_fields)]
 pub struct LoaderEntry {
     pub id: LoaderEntryId,
-    pub title: String,
-    pub version: Option<String>,
+    pub title: OutsideText,
+    pub version: Option<OutsideText>,
     pub uname: Option<KernelRelease>,
-    pub sort_key: Option<String>,
+    pub sort_key: Option<OutsideText>,
     pub kind: EntryKind,
 }
 
@@ -39,14 +40,14 @@ impl LoaderEntry {
             .unwrap_or_else(|| id.as_str().to_owned());
 
         Some(Self {
-            title: shown(&title),
+            title: plain_up_to(&title, MAX_TEXT_CHARS),
             version: field("VERSION_ID")
                 .or_else(|| field("BUILD_ID"))
-                .map(|value| shown(&value)),
+                .map(|value| plain_up_to(&value, MAX_TEXT_CHARS)),
             uname: uname.and_then(|value| KernelRelease::new(value.trim()).ok()),
             sort_key: field("IMAGE_ID")
                 .or_else(|| field("ID"))
-                .map(|value| shown(&value)),
+                .map(|value| plain_up_to(&value, MAX_TEXT_CHARS)),
             kind: EntryKind::Uki,
             id,
         })
@@ -61,12 +62,12 @@ impl LoaderEntry {
                         .split_once(|character: char| character.is_ascii_whitespace())
                 })
                 .filter(|(key, _)| *key == name)
-                .map(|(_, value)| shown(value.trim()))
+                .map(|(_, value)| plain_up_to(value.trim(), MAX_TEXT_CHARS))
                 .next_back()
         };
 
         Some(Self {
-            title: field("title").unwrap_or_else(|| id.as_str().to_owned()),
+            title: field("title").unwrap_or_else(|| plain(id.as_str())),
             version: field("version"),
             uname: None,
             sort_key: field("sort-key"),
@@ -159,11 +160,4 @@ fn os_release_value(text: &str, name: &str) -> Option<String> {
                 .to_owned()
         })
         .rfind(|value| !value.is_empty())
-}
-
-fn shown(text: &str) -> String {
-    text.chars()
-        .filter(|character| !character.is_control())
-        .take(MAX_TEXT_CHARS)
-        .collect()
 }

@@ -65,12 +65,12 @@ fn facts() -> ModuleFacts {
         blacklists: vec![
             BlacklistEntry {
                 module: module("iwlwifi"),
-                file: "/etc/modprobe.d/garuda-toolbox-blacklist.conf".to_owned(),
+                file: toolbox_text::plain("/etc/modprobe.d/garuda-toolbox-blacklist.conf"),
                 own: true,
             },
             BlacklistEntry {
                 module: module("r8169"),
-                file: "/usr/lib/modprobe.d/vendor.conf".to_owned(),
+                file: toolbox_text::plain("/usr/lib/modprobe.d/vendor.conf"),
                 own: false,
             },
         ],

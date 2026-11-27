@@ -142,7 +142,7 @@ fn system() -> Snapshot {
         ],
         blacklists: vec![BlacklistEntry {
             module: module("pcspkr"),
-            file: "/usr/lib/modprobe.d/quiet.conf".to_owned(),
+            file: toolbox_text::plain("/usr/lib/modprobe.d/quiet.conf"),
             own: false,
         }],
     });

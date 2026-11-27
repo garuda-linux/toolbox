@@ -85,6 +85,26 @@ fn control_characters_leave_the_title() {
     assert_eq!(entry.title, "Garuda[31m Linux");
 }
 
+/// The captured `PRETTY_NAME` and the type one fields get a bidi override,
+/// a zero-width space and an isolate inside the test. The entry must give
+/// out none of them.
+#[test]
+fn hidden_characters_leave_the_texts() {
+    let os_release =
+        section(UKI, ".osrel").replace("\"Garuda Linux\"", "\"Garuda\u{202e}\u{200b} Linux\"");
+
+    let uki = LoaderEntry::uki("garuda-7.3.1-1-garuda.efi", &os_release, None).unwrap();
+    assert_eq!(uki.title, "Garuda Linux");
+
+    let text = "title    Garuda\u{202e} Linux\u{200b} snapshot 7\nversion  7\u{2066}\nsort-key snapper\u{200b}-sdboot\nuki      /EFI/snapper-sdboot/7/snapshot.efi\n";
+    let entry = LoaderEntry::type_one("snapper-sdboot-7.conf", text).unwrap();
+
+    assert_eq!(entry.title, "Garuda Linux snapshot 7");
+    assert_eq!(entry.version.as_deref(), Some("7"));
+    assert_eq!(entry.sort_key.as_deref(), Some("snapper-sdboot"));
+    assert!(entry.is_snapshot());
+}
+
 fn image_menu() -> SdBootMenu {
     SdBootMenu {
         settings: LoaderSettings::default(),

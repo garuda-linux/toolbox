@@ -59,7 +59,8 @@ impl HomePath {
     /// # Errors
     ///
     /// [`InvalidHomePath`] for an empty, overlong or absolute path, one with
-    /// a control character, or one with an empty, `.` or `..` component.
+    /// a [hidden](toolbox_text::is_hidden) character, or one with an empty,
+    /// `.` or `..` component.
     pub fn new(value: impl Into<String>) -> Result<Self, InvalidHomePath> {
         let value = value.into();
 
@@ -75,7 +76,10 @@ impl HomePath {
 
         // Before anything that quotes the value: an escape sequence never
         // reaches a message.
-        if let Some(character) = value.chars().find(|character| character.is_control()) {
+        if let Some(character) = value
+            .chars()
+            .find(|character| toolbox_text::is_hidden(*character))
+        {
             return Err(InvalidHomePath::InvalidCharacter(character));
         }
 

@@ -2,16 +2,15 @@
 //! The steps run on a blocking thread (the PTY runner is synchronous),
 //! answers reach it through a channel.
 
-use std::path::PathBuf;
-use std::sync::mpsc;
+use std::sync::{Arc, mpsc};
 
 use tokio::runtime::Handle;
 use toolbox_core::features::console::HelperFailure;
-use toolbox_exec::{Environment, EventSink, PtyRunner, apply};
-use toolbox_plan::protocol::{Event, Mode};
+use toolbox_exec::EventSink;
+use toolbox_plan::protocol::Event;
 use toolbox_plan::{Step, UserAction};
 
-use super::{Reporter, Run};
+use super::{Launcher, Reporter, Run};
 
 struct ReportSink {
     reporter: Reporter,
@@ -24,7 +23,11 @@ impl EventSink for ReportSink {
     }
 }
 
-pub async fn run(steps: Vec<Step<UserAction>>, run: &mut Run<'_>, mode: Mode) -> bool {
+pub async fn run(
+    steps: Vec<Step<UserAction>>,
+    run: &mut Run<'_>,
+    launcher: &Arc<dyn Launcher>,
+) -> bool {
     let (answers, received) = mpsc::channel();
     if let Some(size) = run.starting_size() {
         // The receiver is alive until the runner ends, below.
@@ -38,15 +41,10 @@ pub async fn run(steps: Vec<Step<UserAction>>, run: &mut Run<'_>, mode: Mode) ->
 
     // The blocking thread does not inherit the plan's span by itself.
     let plan = tracing::Span::current();
+    let launcher = Arc::clone(launcher);
     let mut task = tokio::task::spawn_blocking(move || {
         let _plan = plan.entered();
-        let runner = PtyRunner::new(received, Environment::Inherited);
-        let mut runner = match std::env::var_os("HOME").filter(|home| !home.is_empty()) {
-            Some(home) => runner.with_home(PathBuf::from(home)),
-            None => runner,
-        };
-
-        apply(mode, &steps, &mut runner, &mut sink)
+        launcher.user_steps(&steps, received, &mut sink)
     });
 
     loop {

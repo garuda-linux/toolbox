@@ -6,11 +6,13 @@ mod tests;
 
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
+use std::sync::mpsc::Receiver;
 
 use fluent_templates::LanguageIdentifier;
 use tokio::process::Command;
-use toolbox_plan::ConfigFilePath;
-use toolbox_plan::protocol::{Mode, ReadKind};
+use toolbox_exec::{Environment, EventSink, PtyRunner, apply};
+use toolbox_plan::protocol::{Answer, Mode, ReadKind};
+use toolbox_plan::{ConfigFilePath, Step, UserAction};
 use toolbox_system::pkexec::{self, Refusal};
 use toolbox_system::{HelperFetch, HelperReads};
 
@@ -63,6 +65,23 @@ pub trait Launcher: Send + Sync {
     /// its own exit status and words. `None` when the helper ran.
     fn refusal(&self, code: Option<i32>, stderr: &str) -> Option<Refusal> {
         pkexec::refusal(code, stderr)
+    }
+
+    /// The user steps of a segment, run as the user with the Console's
+    /// answers. A test launcher replaces the runner here.
+    fn user_steps(
+        &self,
+        steps: &[Step<UserAction>],
+        answers: Receiver<Answer>,
+        sink: &mut dyn EventSink,
+    ) -> bool {
+        let runner = PtyRunner::new(answers, Environment::Inherited);
+        let mut runner = match std::env::var_os("HOME").filter(|home| !home.is_empty()) {
+            Some(home) => runner.with_home(PathBuf::from(home)),
+            None => runner,
+        };
+
+        apply(self.mode(), steps, &mut runner, sink)
     }
 }
 

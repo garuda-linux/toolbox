@@ -110,7 +110,7 @@ fn link_rows(ctx: &egui::Context, link: &Link) -> Vec<(String, String, bool)> {
         Link::Wireless { ssid, signal } => {
             let mut rows = Vec::new();
             if let Some(ssid) = ssid {
-                rows.push((text("network-card-ssid"), ssid.clone(), true));
+                rows.push((text("network-card-ssid"), ssid.to_string(), true));
             }
 
             if let Some(signal) = signal {

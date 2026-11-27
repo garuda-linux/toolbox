@@ -165,7 +165,9 @@ impl Console {
                 self.rejected = Some(reason);
                 return;
             }
-            protocol::Event::Accepted | protocol::Event::Done => return,
+            protocol::Event::Accepted
+            | protocol::Event::Waiting { step: _ }
+            | protocol::Event::Done => return,
         };
 
         if let Some(row) = self.steps.iter_mut().find(|row| row.id == step) {

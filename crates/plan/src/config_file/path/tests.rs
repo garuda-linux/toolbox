@@ -6,6 +6,10 @@ fn non_ascii_characters_are_refused() {
         ConfigFilePath::new("/etc/schön.conf").unwrap_err(),
         InvalidConfigFilePath::InvalidCharacter('ö')
     );
+    assert_eq!(
+        ConfigFilePath::new("/etc/\u{202e}fstab").unwrap_err(),
+        InvalidConfigFilePath::InvalidCharacter('\u{202e}')
+    );
 }
 
 #[test]

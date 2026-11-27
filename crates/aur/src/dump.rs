@@ -15,7 +15,6 @@ use serde::Deserialize;
 use serde::de::{Deserializer as _, Error as _, SeqAccess, Visitor};
 use toolbox_plan::PackageName;
 use toolbox_state::aur::AurPackage;
-use toolbox_text::OutsideText;
 
 use crate::clean::{
     DESCRIPTION_CHARS, MAINTAINER_CHARS, URL_CHARS, VERSION_CHARS, list, optional, plain,
@@ -141,16 +140,10 @@ fn parse_capped(
 fn cleaned(raw: Raw) -> Option<AurPackage> {
     let name = PackageName::new(raw.name?).ok()?;
     let texts = |values: Option<Vec<String>>| list(&values.unwrap_or_default());
-    let names = |values: Option<Vec<String>>| {
-        texts(values)
-            .into_iter()
-            .map(OutsideText::into_string)
-            .collect()
-    };
 
     Some(AurPackage {
         name,
-        version: plain(raw.version.as_deref().unwrap_or_default(), VERSION_CHARS).into_string(),
+        version: plain(raw.version.as_deref().unwrap_or_default(), VERSION_CHARS),
         description: plain(
             raw.description.as_deref().unwrap_or_default(),
             DESCRIPTION_CHARS,
@@ -167,11 +160,11 @@ fn cleaned(raw: Raw) -> Option<AurPackage> {
         maintainer: optional(raw.maintainer.as_deref(), MAINTAINER_CHARS),
         first_submitted: raw.first_submitted.unwrap_or_default(),
         last_modified: raw.last_modified.unwrap_or_default(),
-        depends: names(raw.depends),
-        make_depends: names(raw.make_depends),
-        opt_depends: names(raw.opt_depends),
-        provides: names(raw.provides),
-        conflicts: names(raw.conflicts),
+        depends: texts(raw.depends),
+        make_depends: texts(raw.make_depends),
+        opt_depends: texts(raw.opt_depends),
+        provides: texts(raw.provides),
+        conflicts: texts(raw.conflicts),
         licenses: texts(raw.license),
         keywords: texts(raw.keywords),
     })

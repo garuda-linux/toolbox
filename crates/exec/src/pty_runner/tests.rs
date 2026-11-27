@@ -1,3 +1,4 @@
+mod gates;
 mod late;
 
 use std::path::Path;

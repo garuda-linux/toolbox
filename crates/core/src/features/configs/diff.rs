@@ -6,6 +6,8 @@ mod tests;
 
 use std::fmt::Write as _;
 
+use toolbox_text::OutsideText;
+
 /// Unchanged lines shown around a change, as `diff -u` does.
 const CONTEXT: usize = 3;
 
@@ -101,7 +103,7 @@ impl<'text> Diff<'text> {
     /// The changes with a few lines around each, `+` and `-` in front,
     /// like `diff -u` prints them. Plain text for the screen reader, copy
     /// and themes without colours.
-    pub fn plain(&self) -> String {
+    pub fn plain(&self) -> OutsideText {
         let mut text = String::new();
 
         for hunk in self.hunks() {
@@ -120,7 +122,7 @@ impl<'text> Diff<'text> {
             }
         }
 
-        text
+        OutsideText::keep_lines(&text)
     }
 
     /// The changed lines with [`CONTEXT`] unchanged ones around them.

@@ -12,6 +12,7 @@ use toolbox_plan::{KernelModule, Plan, RootAction};
 pub use toolbox_state::network::drivers::{
     BlacklistEntry, Category, ModuleFacts, NetworkModule, loaded_modules, network_modules,
 };
+use toolbox_text::OutsideText;
 
 use crate::domains::ModuleBlacklist;
 use crate::features::drop_refused;
@@ -37,7 +38,7 @@ pub struct DriverRow {
     pub own: bool,
     /// Other files that blacklist it. The app shows them and leaves them
     /// alone.
-    pub other_files: Vec<String>,
+    pub other_files: Vec<OutsideText>,
     pub queued: Option<Toggle>,
 }
 
@@ -116,7 +117,8 @@ pub fn driver_rows(facts: &ModuleFacts, changes: &ChangeSet) -> Vec<DriverRow> {
 
             let loaded = facts.loaded.contains(name);
             let own = listed(true).next().is_some();
-            let other_files: Vec<String> = listed(false).map(|entry| entry.file.clone()).collect();
+            let other_files: Vec<OutsideText> =
+                listed(false).map(|entry| entry.file.clone()).collect();
 
             DriverRow {
                 name: name.clone(),

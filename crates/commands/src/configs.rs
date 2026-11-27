@@ -329,7 +329,7 @@ fn review(
         }
     };
 
-    let shown = OutsideText::keep_lines(&Diff::new(original.as_str(), edited.as_str()).plain());
+    let shown = Diff::new(original.as_str(), edited.as_str()).plain();
     let Some(plan) = write_back(file, original, edited) else {
         writeln!(out, "Nothing to do, the file is unchanged").ok();
         return Exit::Success;

@@ -13,7 +13,7 @@ use toolbox_text::OutsideText;
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct AurPackage {
     pub name: PackageName,
-    pub version: String,
+    pub version: OutsideText,
     pub description: OutsideText,
     /// The upstream website as the PKGBUILD names it, not checked.
     pub url: Option<OutsideText>,
@@ -28,12 +28,12 @@ pub struct AurPackage {
     pub first_submitted: i64,
     /// Seconds since the epoch.
     pub last_modified: i64,
-    pub depends: Vec<String>,
-    pub make_depends: Vec<String>,
+    pub depends: Vec<OutsideText>,
+    pub make_depends: Vec<OutsideText>,
     /// As makepkg writes them: `name: what it adds`.
-    pub opt_depends: Vec<String>,
-    pub provides: Vec<String>,
-    pub conflicts: Vec<String>,
+    pub opt_depends: Vec<OutsideText>,
+    pub provides: Vec<OutsideText>,
+    pub conflicts: Vec<OutsideText>,
     pub licenses: Vec<OutsideText>,
     pub keywords: Vec<OutsideText>,
 }

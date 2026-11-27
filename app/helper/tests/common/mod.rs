@@ -65,6 +65,12 @@ pub fn run_helper(
         let event = decode::<Event>(&line).ok();
         let done = event == Some(Event::Done);
 
+        // The app goes on at every gate. A test that stops at one closes stdin instead.
+        if let Some(Event::Waiting { step }) = &event {
+            input.write_all(encode(&Answer::Proceed { step: *step })?.as_bytes())?;
+            input.flush()?;
+        }
+
         if let Some(Event::Output { step: _, data }) = &event
             && let Some(answer) = reply.take_if(|answer| data.contains(answer.asked))
         {
@@ -128,6 +134,7 @@ pub fn outcomes(run: &Run) -> Result<Vec<Outcome>, Box<dyn Error>> {
             Event::Accepted
             | Event::Rejected { reason: _ }
             | Event::Started { step: _ }
+            | Event::Waiting { step: _ }
             | Event::Output { step: _, data: _ }
             | Event::Done => None,
         })

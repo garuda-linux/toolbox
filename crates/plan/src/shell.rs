@@ -35,8 +35,8 @@ impl ShellPath {
     /// # Errors
     ///
     /// [`InvalidShellPath`] for an empty, overlong or relative path, one
-    /// with whitespace, a control character or `:`, or one with an empty,
-    /// `.` or `..` component.
+    /// with whitespace, a [hidden](toolbox_text::is_hidden) character or
+    /// `:`, or one with an empty, `.` or `..` component.
     pub fn new(value: impl Into<String>) -> Result<Self, InvalidShellPath> {
         let value = value.into();
 
@@ -52,7 +52,7 @@ impl ShellPath {
 
         // `:` separates the fields of `/etc/passwd`.
         if let Some(character) = value.chars().find(|character| {
-            character.is_whitespace() || character.is_control() || *character == ':'
+            character.is_whitespace() || toolbox_text::is_hidden(*character) || *character == ':'
         }) {
             return Err(InvalidShellPath::InvalidCharacter(character));
         }

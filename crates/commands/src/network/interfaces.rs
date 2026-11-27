@@ -5,19 +5,20 @@ use serde::Serialize;
 use toolbox_cli::output::Paint;
 use toolbox_core::features::network::{InterfaceCard, Link, Signal, SignalQuality};
 use toolbox_services::i18n::{Arg, FALLBACK, text_in, text_with_in};
+use toolbox_text::OutsideText;
 
 /// An interface card as the command shows it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct InterfaceView {
-    pub connection: String,
-    pub interface: String,
+    pub connection: OutsideText,
+    pub interface: OutsideText,
     pub mac: Option<String>,
     pub ipv4: Vec<String>,
     pub ipv6: Vec<String>,
     pub dns: Vec<String>,
     /// Megabits per second of a wire, `None` while the link reports none.
     pub speed: Option<u32>,
-    pub ssid: Option<String>,
+    pub ssid: Option<OutsideText>,
     /// Percent of the active access point.
     pub signal: Option<u8>,
 }
@@ -52,7 +53,7 @@ pub fn interface_views(cards: &[InterfaceCard]) -> Vec<InterfaceView> {
 /// A card's facts: the connection as the title, then the rows the card
 /// has. Several addresses or servers share a row, separated by commas.
 pub fn interface_facts(paint: Paint, card: &InterfaceView) -> String {
-    let mut rows: Vec<(&str, String)> = vec![("interface", card.interface.clone())];
+    let mut rows: Vec<(&str, String)> = vec![("interface", card.interface.to_string())];
     if !card.ipv4.is_empty() {
         rows.push(("ipv4", card.ipv4.join(", ")));
     }
@@ -74,7 +75,7 @@ pub fn interface_facts(paint: Paint, card: &InterfaceView) -> String {
     }
 
     if let Some(ssid) = &card.ssid {
-        rows.push(("ssid", ssid.clone()));
+        rows.push(("ssid", ssid.to_string()));
     }
 
     if let Some(percent) = card.signal {

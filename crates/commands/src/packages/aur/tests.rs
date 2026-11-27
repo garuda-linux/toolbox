@@ -37,7 +37,7 @@ fn name(text: &str) -> PackageName {
 fn package(text: &str, popularity: f64) -> AurPackage {
     AurPackage {
         name: name(text),
-        version: "1.0-1".to_owned(),
+        version: toolbox_text::plain("1.0-1"),
         description: toolbox_text::plain(&format!("About {text}")),
         url: Some(toolbox_text::plain("https://example.org")),
         votes: 7,
@@ -46,8 +46,8 @@ fn package(text: &str, popularity: f64) -> AurPackage {
         maintainer: Some(toolbox_text::plain("someone")),
         first_submitted: 1_736_467_200,
         last_modified: 1_736_467_200,
-        depends: vec!["glibc".to_owned()],
-        make_depends: vec!["cargo".to_owned()],
+        depends: vec![toolbox_text::plain("glibc")],
+        make_depends: vec![toolbox_text::plain("cargo")],
         opt_depends: Vec::new(),
         provides: Vec::new(),
         conflicts: Vec::new(),
