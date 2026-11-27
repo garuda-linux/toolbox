@@ -22,7 +22,7 @@ fn queued_changes_survive_a_save_and_restore() {
     let mut changes = ChangeSet::default();
     changes.want::<Packages>(package("mpv"), Toggle::On, &Snapshot::default());
     changes.want::<Groups>(
-        membership("nico", "docker"),
+        membership("ada", "docker"),
         Toggle::Off,
         &Snapshot::default(),
     );
@@ -100,6 +100,10 @@ fn unknown_domains_and_invalid_items_are_skipped_and_reported() {
         problems[0],
         RestoreProblem::UnknownDomain("kernels".to_owned())
     );
+    assert!(matches!(
+        problems.get(1),
+        Some(RestoreProblem::Malformed { domain, error: _ }) if domain == "packages"
+    ));
 }
 
 #[test]

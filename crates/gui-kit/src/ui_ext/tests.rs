@@ -22,17 +22,6 @@ fn an_icon_button_is_found_and_pressed_by_its_alt_text() {
 }
 
 #[test]
-fn a_warning_label_is_named_by_its_text() {
-    let mut harness = harness(300.0, 200.0).build_ui(|ui| {
-        ui.warning_label("Careful");
-    });
-
-    harness.run();
-
-    assert!(harness.query_by_label("Careful").is_some());
-}
-
-#[test]
 fn a_loading_indicator_is_named_by_its_text() {
     let mut harness = harness(300.0, 100.0).build_ui(|ui| {
         ui.loading("Reading packages");

@@ -11,23 +11,29 @@ use crate::{ChangeSet, Toggle};
 fn user_rows_filter_people_and_show_what_is_queued() {
     let mut snapshot = snapshot();
 
-    // Joining wheel makes ada an admin, whose lock needs the flags.
-    snapshot.insert(lock_flags(&[("ada", false), ("nico", false)]));
+    // Joining wheel makes grace an admin, whose lock needs the flags.
+    snapshot.insert(lock_flags(&[("grace", false), ("ada", false)]));
     let accounts = snapshot.part::<Accounts>().unwrap();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
-    set_groups(&ada, &groups(&["makers", "wheel"]), &mut changes, &snapshot).unwrap();
-    set_locked(&ada, Toggle::On, None, &mut changes, &snapshot).unwrap();
+    set_groups(
+        &grace,
+        &groups(&["makers", "wheel"]),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
+    set_locked(&grace, Toggle::On, None, &mut changes, &snapshot).unwrap();
 
     let people = user_rows(accounts, &snapshot, &changes, true);
     let names: Vec<&str> = people.iter().map(|row| row.user.name.as_str()).collect();
 
-    assert_eq!(names, ["ada", "nico"]);
+    assert_eq!(names, ["grace", "ada"]);
 
     let row = people.first().unwrap();
 
-    assert_eq!(row.groups, groups(&["ada", "audio", "makers"]));
+    assert_eq!(row.groups, groups(&["grace", "audio", "makers"]));
     assert!(!row.current && row.editable);
     assert_eq!(row.queued.lock, Some(Toggle::On));
     assert_eq!(row.queued.joins, groups(&["wheel"]));
@@ -64,12 +70,12 @@ fn group_rows_show_members_queued_groups_and_what_can_go() {
     assert_eq!(find("makers").queued, Some(Toggle::Off));
     assert_eq!(find("wheel").queued, None);
     assert!(find("wheel").system && !find("makers").system);
-    assert!(find("nico").primary && !find("makers").primary && !find("crafts").primary);
+    assert!(find("ada").primary && !find("makers").primary && !find("crafts").primary);
     assert_eq!(
         find("makers").members,
-        BTreeSet::from([user_name("ada"), user_name("nico")])
+        BTreeSet::from([user_name("grace"), user_name("ada")])
     );
-    assert_eq!(find("nico").members, BTreeSet::from([user_name("nico")]));
+    assert_eq!(find("ada").members, BTreeSet::from([user_name("ada")]));
 }
 
 #[test]
@@ -77,13 +83,19 @@ fn group_choices_show_the_state_after_the_queue() {
     let snapshot = snapshot();
     let accounts = snapshot.part::<Accounts>().unwrap();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
     add_group(&group_name("crafts"), &mut changes, &snapshot).unwrap();
     remove_group(&group_name("makers"), &mut changes, &snapshot).unwrap();
-    set_groups(&ada, &groups(&["crafts", "wheel"]), &mut changes, &snapshot).unwrap();
+    set_groups(
+        &grace,
+        &groups(&["crafts", "wheel"]),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
 
-    let choices = group_choices(&ada, accounts, &changes);
+    let choices = group_choices(&grace, accounts, &changes);
     let state: Vec<(&str, bool, bool)> = choices
         .iter()
         .map(|choice| (choice.group.as_str(), choice.member, choice.primary))
@@ -92,11 +104,11 @@ fn group_choices_show_the_state_after_the_queue() {
     assert_eq!(
         state,
         [
-            ("ada", true, true),
+            ("ada", false, false),
             ("audio", false, false),
             ("crafts", true, false),
+            ("grace", true, true),
             ("http", false, false),
-            ("nico", false, false),
             ("root", false, false),
             ("wheel", true, false),
         ]

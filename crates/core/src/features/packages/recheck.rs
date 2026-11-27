@@ -10,9 +10,10 @@ mod tests;
 use toolbox_plan::PackageName;
 use toolbox_state::packages::PackageGraph;
 
-use super::protected::{self, CascadeRefusal};
+use super::queue::{self, Refusal};
 use crate::domains::Packages;
-use crate::{ChangeSet, Snapshot, Toggle};
+use crate::features::Refused;
+use crate::{ChangeSet, Snapshot};
 
 /// Drops the removals the package rules refuse. Returns how many went,
 /// `None` while a removal waits for the graph.
@@ -20,12 +21,7 @@ use crate::{ChangeSet, Snapshot, Toggle};
 /// The removals are checked in queue order against the batch so far, so
 /// of two that free a protected dependency only together the later goes.
 pub fn recheck(changes: &mut ChangeSet, snapshot: &Snapshot) -> Option<usize> {
-    let removals: Vec<PackageName> = changes
-        .queued::<Packages>()
-        .into_iter()
-        .filter(|(_, wish)| *wish == Toggle::Off)
-        .map(|(package, _)| package)
-        .collect();
+    let removals = queue::queued_removals(changes);
 
     if removals.is_empty() {
         return Some(0);
@@ -51,18 +47,24 @@ pub fn recheck(changes: &mut ChangeSet, snapshot: &Snapshot) -> Option<usize> {
 }
 
 fn refusal(package: &PackageName, kept: &[PackageName], snapshot: &Snapshot) -> Option<String> {
-    if let Err(why) = protected::may_remove(package) {
-        return Some(format!("it is protected ({why:?})"));
-    }
-
     let mut batch = kept.to_vec();
     batch.push(package.clone());
 
-    match protected::may_remove_with_cascade(&batch, snapshot) {
-        Ok(()) => None,
-        Err(CascadeRefusal::TakesAlong(why, along)) => {
-            Some(format!("it takes the protected {along} along ({why:?})"))
+    queue::protection_over(std::slice::from_ref(package), &batch, snapshot)
+        .err()
+        .map(|refused| why(&refused))
+}
+
+fn why(refused: &Refused<Refusal, PackageName>) -> String {
+    match refused.refusal {
+        Refusal::Protected(why) => format!("it is protected ({why:?})"),
+        Refusal::TakesAlong(why) => {
+            format!("it takes the protected {} along ({why:?})", refused.subject)
         }
-        Err(CascadeRefusal::Unread) => Some("the dependencies are not known".to_owned()),
+        Refusal::Unread => "the dependencies are not known".to_owned(),
+        other @ (Refusal::NotOffered
+        | Refusal::RunningKernel
+        | Refusal::RunningUnknown
+        | Refusal::LastKernel) => format!("{other:?}"),
     }
 }

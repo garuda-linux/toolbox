@@ -29,7 +29,6 @@ mod loading;
 mod mark_word;
 mod menu;
 mod meter;
-mod metric;
 mod modal;
 mod nav;
 mod number;
@@ -62,8 +61,8 @@ pub use banner::banner;
 pub use buttons::{
     ButtonKind, icon_button, icon_button_padding, icon_button_width, named_pill_button,
     pill_button, pill_button_at_least, pill_button_with_icon, pill_button_with_icon_at_least,
-    pill_width, pill_width_with_icon, push_height, refresh_button, refresh_button_busy,
-    right_buttons, sidebar_button,
+    pill_width, pill_width_with_icon, push_height, refresh_button_busy, right_buttons,
+    sidebar_button,
 };
 pub use card::{card, card_row, card_row_with, light_rim, padded_card};
 pub use check_row::{CHECK_ROW_HEIGHT, CheckRowTexts, check_row, check_row_with_line};
@@ -73,7 +72,7 @@ pub use chip::{
 };
 pub use choice::Choice;
 pub use corner_button::corner_button;
-pub use dim::{dim_opacity, dim_picture, dimmed};
+pub use dim::{dim_picture, dimmed};
 pub use empty::{empty_state, empty_state_action, empty_state_with};
 pub use field::{forget_text, text_field, text_field_with_unit};
 pub use focus::{edge_ring, focus_from_keyboard, install as install_focus};
@@ -83,22 +82,19 @@ pub use heading::{
     section_heading, section_intro, toolbar_end_inset,
 };
 pub use highlight::{highlighted, matches};
-pub use icon_tile::{TileSize, paint_icon};
+pub use icon_tile::{ICON_EDGE, paint_icon};
 pub use layout::{
-    MIN_TEXT_WIDTH, split_row, split_row_in, title_capitals_top, title_line, title_line_height,
-    trailing,
+    MIN_TEXT_WIDTH, split_row, split_row_in, title_capitals_top, title_line, trailing,
 };
 pub use letter_tile::{hue_of, initial, paint_letter_tile};
-pub use link_row::{link_row, link_row_at_least};
-use list::text_line_height;
+pub use link_row::link_row_at_least;
 pub use list::{
     ListItem, RowHeights, RowList, RowState, Rows, row_height, text_block_height,
     text_block_height_with,
 };
 pub use loading::{loading_indicator, loading_label};
-pub use menu::{menu_action, menu_button, menu_heading, menu_item, menu_separator};
+pub use menu::{menu_action, menu_button, menu_heading, menu_item};
 pub use meter::meter;
-pub use metric::{MetricKind, MetricText, metric};
 pub use modal::{
     Asked, Confirmation, DialogWidth, ModalOutcome, ModalWrapper, Pending, Question,
     confirm_buttons, confirm_buttons_when, confirm_buttons_why, question,
@@ -108,11 +104,11 @@ pub use nav::{
     EdgeFade, HIGHLIGHT_TOP, ICON as NAV_ICON, NAV_INSET, NavLook, SIDE_INSET, group_label,
     group_label_height, highlight_rect, nav_divider, nav_divider_height, nav_row,
 };
-pub use number::{Digits, number_field, number_field_with_unit};
+pub use number::{Digits, number_field};
 pub use page::{BodyShape, PageParts, cover_page_bottom, page_layout_shaped, start_page_entry};
 pub use property::{PropertyList, PropertyTexts, property_list, property_text_rise};
 pub use removable::{lock_mark, locked_tag, removable_tag};
-pub use row_menu::{row_context_menu, row_menu};
+pub use row_menu::row_menu;
 pub use search::{SearchTexts, request_search_focus, search_field, search_field_unrequested};
 pub use secret::SecretText;
 pub use secret_field::{SecretTexts, secret_field};
@@ -123,7 +119,7 @@ pub use spin::{SpinTexts, spin_field};
 pub use status_tile::{paint_status_tile, status_tile, status_word};
 pub use switch::{switch, tristate_switch};
 pub use text::{line, mono_small, rich};
-pub use text_box::{text_box, text_box_at, text_box_filling};
+pub use text_box::{text_box, text_box_at};
 pub use text_link::{counted_disclosure, disclosure, text_button, text_link};
 pub use tile::link_tile;
 pub use top_light::paint_top_light;

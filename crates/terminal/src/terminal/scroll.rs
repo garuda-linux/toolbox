@@ -1,6 +1,5 @@
-//! The view's own scroll position, kept by the engine as alacritty keeps
-//! it: output that arrives while the view is scrolled up moves the offset
-//! along, so the lines the user reads stay where they are.
+//! Output that arrives while the view is scrolled up moves the offset
+//! along, so the lines the user reads stay put.
 
 #[cfg(test)]
 mod tests;

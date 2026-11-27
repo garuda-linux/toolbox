@@ -109,8 +109,7 @@ pub(super) fn lightbox(ctx: &egui::Context, src: &str, alt: &str) -> bool {
     !(outcome.closed || outcome.inner)
 }
 
-/// The image cache key of a picture in a theme. Each theme's capture has its
-/// own key, so the cache keeps both.
+/// Each theme's capture has its own key, so the cache keeps both.
 fn picture_key(src: &str, dark: bool) -> String {
     let theme = if dark { "dark" } else { "light" };
     format!("bytes://guide/{theme}/{src}")

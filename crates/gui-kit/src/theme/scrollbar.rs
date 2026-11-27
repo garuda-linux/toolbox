@@ -4,8 +4,8 @@
 //! as its bars take the strip width as their hit area. Its own bars are
 //! drawn invisible (see [`super::write`]), so this pass adds the handle and
 //! the groove in Darkly's sizes and colours. [`show_scroll`] and its
-//! variants are the only way to show a `ScrollArea`, as the lint
-//! `scroll-bars` holds the rest of the app to them.
+//! variants are the only way to show a `ScrollArea`, the `scroll-bars` lint
+//! checks it.
 
 #[cfg(test)]
 mod tests;
@@ -15,6 +15,7 @@ use std::ops::Range;
 use egui::scroll_area::{ScrollArea, ScrollAreaOutput, ScrollBarVisibility};
 use egui::{Color32, Context, CornerRadius, Rangef, Rect, Ui, lerp, pos2};
 
+use crate::motion;
 use crate::tokens::{self, Tokens};
 
 /// The strip a bar takes beside the content: Darkly's `ScrollBar_Extend`
@@ -91,11 +92,7 @@ pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>, taken: Rect) 
     let ctx = ui.ctx();
     let tokens = tokens::current(ctx);
     let focused = is_focused(ctx, output);
-    let time = if super::reduced_motion(ctx) {
-        0.0
-    } else {
-        TIME
-    };
+    let time = motion::duration(ctx, TIME);
 
     let overflows = |along: usize| output.content_size[along] > output.inner_rect.size()[along];
     for along in [0, 1] {
@@ -139,7 +136,6 @@ pub(super) fn paint_bars<R>(ui: &Ui, output: &ScrollAreaOutput<R>, taken: Rect) 
 
 /// The colour of the handle: the hover colour over the strip, the focus
 /// colour while the scrolled content has focus, else the text at half alpha.
-/// The alpha share rises from 0.7 at rest to the full colour under the pointer.
 fn handle_colour(tokens: &Tokens, hovered: bool, focused: bool, groove_t: f32) -> Color32 {
     let base = if hovered {
         tokens.decoration_hover

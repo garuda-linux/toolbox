@@ -1,6 +1,5 @@
 //! What the Network page asks outside the snapshot: NetworkManager's
-//! connectivity over D-Bus. The public address is `toolbox-services`'s,
-//! and what the page does outside a plan is in `actions`.
+//! connectivity over D-Bus. The public address is `toolbox-services`'s.
 
 use std::time::Duration;
 

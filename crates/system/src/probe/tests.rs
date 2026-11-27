@@ -24,8 +24,8 @@ use super::{Host, Probe, ProbeIssue, Sources, probe_snapshot};
 use crate::ProbeError;
 use crate::units::{SystemUnitFiles, UserUnitFiles};
 
-fn nico() -> UserName {
-    UserName::new("nico").unwrap()
+fn ada() -> UserName {
+    UserName::new("ada").unwrap()
 }
 
 fn installed() -> InstalledPackages {
@@ -68,24 +68,24 @@ fn units() -> FakeUnits {
 fn accounts() -> Accounts {
     Accounts {
         users: vec![User {
-            name: nico(),
+            name: ada(),
             uid: 1000,
             gid: 1000,
-            gecos: toolbox_text::plain("Nico"),
-            home: "/home/nico".to_owned(),
+            gecos: toolbox_text::plain("Ada Lovelace"),
+            home: "/home/ada".to_owned(),
             shell: "/usr/bin/fish".to_owned(),
         }],
         groups: vec![Group {
             name: GroupName::new("wheel").unwrap(),
             gid: 998,
-            members: BTreeSet::from([nico()]),
+            members: BTreeSet::from([ada()]),
         }],
     }
 }
 
 fn host() -> FakeHost {
     FakeHost {
-        user: Ok(nico()),
+        user: Ok(ada()),
         live_iso: Ok(true),
         desktops: Ok(vec!["KDE".to_owned()]),
         edition: Ok(Some("dr460nized".to_owned())),
@@ -118,11 +118,11 @@ fn every_part_is_filled_when_all_probes_answer() {
     assert_eq!(snapshot.part::<MaskedUnits>(), Some(&masked()));
     assert_eq!(snapshot.part::<MaskedUserUnits>(), Some(&masked_user()));
     assert_eq!(snapshot.part::<Accounts>(), Some(&accounts()));
-    assert_eq!(snapshot.part::<CurrentUser>(), Some(&CurrentUser(nico())));
+    assert_eq!(snapshot.part::<CurrentUser>(), Some(&CurrentUser(ada())));
     assert_eq!(
         snapshot.part::<Host>(),
         Some(&Host {
-            user: Some(nico()),
+            user: Some(ada()),
             live_iso: true,
             desktops: vec!["KDE".to_owned()],
             edition: Some("dr460nized".to_owned()),
@@ -155,7 +155,7 @@ fn a_missing_package_manager_leaves_only_its_parts_out() {
     assert_eq!(snapshot.part::<PackageGraph>(), None);
     assert_eq!(snapshot.part::<EnabledUnits>(), Some(&enabled()));
     assert_eq!(snapshot.part::<Accounts>(), Some(&accounts()));
-    assert_eq!(snapshot.part::<CurrentUser>(), Some(&CurrentUser(nico())));
+    assert_eq!(snapshot.part::<CurrentUser>(), Some(&CurrentUser(ada())));
 }
 
 /// Never synced databases hide no catalog entry, they only leave the
@@ -215,7 +215,7 @@ fn failed_host_facts_fall_back_and_are_reported() {
     let (snapshot, issues) = probe_snapshot(&sources(
         FakePackages::new(Ok(installed())),
         FakeHost {
-            user: Ok(nico()),
+            user: Ok(ada()),
             live_iso: Err(broken()),
             desktops: Err(broken()),
             edition: Err(ProbeError::Unavailable),
@@ -237,7 +237,7 @@ fn failed_host_facts_fall_back_and_are_reported() {
     assert_eq!(
         snapshot.part::<Host>(),
         Some(&Host {
-            user: Some(nico()),
+            user: Some(ada()),
             ..Host::default()
         })
     );

@@ -1,10 +1,9 @@
 //! The app's logic without I/O: queued changes, the system snapshot they
 //! are compared with, and the planner that orders them. Probes and runners
-//! live elsewhere and pass their results in.
+//! pass their results in.
 //!
-//! New kinds of changes are new [`Domain`]s (see `domains/` for examples).
-//! The change set, the snapshot and the planner work with any of them. To
-//! survive a restart, a domain also needs its line in [`domains::all`].
+//! A new kind of change is a new [`Domain`] (see `domains/`). To survive a
+//! restart, it also needs its line in [`domains::all`].
 
 #[macro_use]
 mod macros;

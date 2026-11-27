@@ -11,7 +11,6 @@ const CURL_404: &str = "The requested URL returned error: 404";
 
 #[test]
 fn a_file_the_mirror_no_longer_has_is_a_missing_mirror_file() {
-    assert_eq!(include_str!("fixtures/pacman-404.code").trim(), "1");
     assert!(mirror_missing(PACMAN_7));
 
     // pacman 6 put the status text after the code.

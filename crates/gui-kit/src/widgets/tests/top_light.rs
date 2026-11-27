@@ -2,7 +2,7 @@ use egui::epaint::RectShape;
 use egui::{Color32, CornerRadius, Id, Margin, Rect, Shape, Theme, Ui};
 use egui_kittest::Harness;
 
-use super::super::{MetricKind, MetricText, ModalWrapper, card, link_tile, metric};
+use super::super::{ModalWrapper, card, link_tile};
 use crate::frost::Glass;
 use crate::icons;
 use crate::testing::{harness, rims_in, top_lights};
@@ -89,21 +89,6 @@ fn a_card_casts_darklys_group_box_shadow_one_pixel_down() {
             "{theme:?}: the shadow is not one pixel down"
         );
     }
-}
-
-#[test]
-fn a_dark_metric_has_no_light() {
-    let harness = shown(Theme::Dark, |ui| {
-        let text = MetricText {
-            name: "Updates pending",
-            value: Some("2"),
-            detail: "",
-        };
-
-        metric(ui, MetricKind::Secondary, text, true).rect
-    });
-
-    assert_eq!(top_lights(&harness).len(), 0);
 }
 
 #[test]

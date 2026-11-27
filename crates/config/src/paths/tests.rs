@@ -19,17 +19,17 @@ fn env(pairs: &[(&str, &str)]) -> impl Fn(&str) -> Option<OsString> {
 
 #[test]
 fn the_home_is_the_named_one_else_root() {
-    let named = Paths::from_env(env(&[("HOME", "/home/nico")]));
+    let named = Paths::from_env(env(&[("HOME", "/home/ada")]));
     let unnamed = Paths::from_env(env(&[]));
 
-    assert_eq!(named.home(), PathBuf::from("/home/nico"));
+    assert_eq!(named.home(), PathBuf::from("/home/ada"));
     assert_eq!(unnamed.home(), PathBuf::from("/root"));
 }
 
 #[test]
 fn xdg_variables_win_over_home() {
     let paths = Paths::from_env(env(&[
-        ("HOME", "/home/nico"),
+        ("HOME", "/home/ada"),
         ("XDG_CONFIG_HOME", "/cfg"),
         ("XDG_STATE_HOME", "/state"),
         ("XDG_CACHE_HOME", "/cache"),
@@ -47,56 +47,56 @@ fn xdg_variables_win_over_home() {
 
 #[test]
 fn home_gives_the_xdg_defaults() {
-    let paths = Paths::from_env(env(&[("HOME", "/home/nico")]));
+    let paths = Paths::from_env(env(&[("HOME", "/home/ada")]));
 
     assert_eq!(
         paths.settings_file(),
-        PathBuf::from("/home/nico/.config/garuda-toolbox/settings.toml")
+        PathBuf::from("/home/ada/.config/garuda-toolbox/settings.toml")
     );
     assert_eq!(
         paths.state_dir(),
-        PathBuf::from("/home/nico/.local/state/garuda-toolbox")
+        PathBuf::from("/home/ada/.local/state/garuda-toolbox")
     );
     assert_eq!(
         paths.cache_dir(),
-        PathBuf::from("/home/nico/.cache/garuda-toolbox")
+        PathBuf::from("/home/ada/.cache/garuda-toolbox")
     );
 }
 
 #[test]
 fn relative_xdg_values_are_ignored_as_the_spec_says() {
-    let paths = Paths::from_env(env(&[("HOME", "/home/nico"), ("XDG_CONFIG_HOME", "cfg")]));
+    let paths = Paths::from_env(env(&[("HOME", "/home/ada"), ("XDG_CONFIG_HOME", "cfg")]));
 
     assert_eq!(
         paths.autostart_dir(),
-        PathBuf::from("/home/nico/.config/autostart")
+        PathBuf::from("/home/ada/.config/autostart")
     );
 }
 
 #[test]
 fn state_files_live_below_the_state_dir() {
-    let paths = Paths::from_env(env(&[("HOME", "/home/nico")]));
+    let paths = Paths::from_env(env(&[("HOME", "/home/ada")]));
 
     assert_eq!(
         paths.staged_changes_file(),
-        PathBuf::from("/home/nico/.local/state/garuda-toolbox/changes.json")
+        PathBuf::from("/home/ada/.local/state/garuda-toolbox/changes.json")
     );
     assert_eq!(
         paths.crash_file(),
-        PathBuf::from("/home/nico/.local/state/garuda-toolbox/crash.log")
+        PathBuf::from("/home/ada/.local/state/garuda-toolbox/crash.log")
     );
 }
 
 #[test]
 fn relative_folders_and_a_missing_home_fall_back() {
     let paths = Paths::from_env(env(&[
-        ("HOME", "/home/nico"),
+        ("HOME", "/home/ada"),
         ("XDG_STATE_HOME", "relative"),
     ]));
 
     assert_eq!(
         paths.state_dir(),
-        PathBuf::from("/home/nico/.local/state/garuda-toolbox")
+        PathBuf::from("/home/ada/.local/state/garuda-toolbox")
     );
 
     let rootless = Paths::from_env(env(&[]));
@@ -126,13 +126,13 @@ fn the_process_paths_name_the_app() {
 
 #[test]
 fn the_own_state_folder_needs_a_home_or_a_state_home() {
-    let homed = Paths::from_env(env(&[("HOME", "/home/nico")]));
+    let homed = Paths::from_env(env(&[("HOME", "/home/ada")]));
     let stated = Paths::from_env(env(&[("XDG_STATE_HOME", "/state")]));
     let relative = Paths::from_env(env(&[("XDG_STATE_HOME", "state")]));
 
     assert_eq!(
         homed.own_state_dir(),
-        Some(PathBuf::from("/home/nico/.local/state/garuda-toolbox"))
+        Some(PathBuf::from("/home/ada/.local/state/garuda-toolbox"))
     );
     assert_eq!(
         stated.own_state_dir(),
@@ -146,7 +146,7 @@ fn the_own_state_folder_needs_a_home_or_a_state_home() {
 /// app was started in.
 #[test]
 fn a_relative_home_counts_as_none() {
-    let paths = Paths::from_env(env(&[("HOME", "home/nico")]));
+    let paths = Paths::from_env(env(&[("HOME", "home/ada")]));
 
     assert_eq!(paths.home(), PathBuf::from("/root"));
     assert_eq!(paths.own_state_dir(), None);

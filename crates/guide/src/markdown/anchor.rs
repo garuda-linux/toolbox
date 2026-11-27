@@ -26,7 +26,7 @@ impl Anchors {
 
 /// The id of a heading with the words `text`: lower case, spaces turned
 /// into `-`, everything but letters, digits, `-` and `_` left out.
-pub fn slug(text: &str) -> String {
+fn slug(text: &str) -> String {
     text.trim()
         .chars()
         .filter_map(|char| {

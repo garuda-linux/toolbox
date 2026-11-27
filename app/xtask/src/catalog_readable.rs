@@ -12,7 +12,7 @@ use toolbox_catalog::{ConfigFileCatalog, ConfigSection};
 use toolbox_plan::ConfigEntryLocation;
 
 use crate::catalogs::SOURCE_DIR;
-use crate::{Failure, flags, root};
+use crate::{Failure, flags, read_optional, root};
 
 /// The generated file, relative to the repository root.
 pub const TARGET: &str = "crates/plan/src/config_file/readable.rs";
@@ -83,8 +83,6 @@ pub fn render(table: &Readable) -> String {
     )
 }
 
-/// One `pub const` array in the layout rustfmt gives it: on one line
-/// while it fits, else one item per line.
 fn constant(docs: &str, name: &str, items: &[String]) -> String {
     let quoted: Vec<String> = items.iter().map(|item| format!("{item:?}")).collect();
     let head = format!("pub const {name}: [&str; {}] = ", items.len());
@@ -117,7 +115,7 @@ pub fn catalog_readable(args: &[String]) -> Result<String, Failure> {
     let table = readable(&catalog);
     let text = render(&table);
     let target = root().join(TARGET);
-    let current = fs::read_to_string(&target).unwrap_or_default();
+    let current = read_optional(&target).map_err(|problem| Failure::Problems(vec![problem]))?;
 
     if current != text {
         if check {

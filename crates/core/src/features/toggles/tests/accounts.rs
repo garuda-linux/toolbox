@@ -19,7 +19,7 @@ icon = "x"
 id = "own-group"
 title = "Own group"
 description = "The primary group of the test user."
-check = { group = "nico" }
+check = { group = "ada" }
 
 [[section.entry]]
 id = "cups"
@@ -51,17 +51,17 @@ fn a_group_toggle_never_leaves_the_primary_group() {
         Refusal::Account(users::Refusal::PrimaryGroup)
     );
     assert_eq!(refused.refusal.code(), "primary-group");
-    assert_eq!(refused.subject, "nico", "the text names the group");
+    assert_eq!(refused.subject, "ada", "the text names the group");
     assert!(changes.is_empty(), "{changes:?}");
 }
 
 #[test]
 fn an_account_refusal_names_the_user_unless_it_is_about_the_group() {
-    let membership = membership("ada", "lp");
+    let membership = membership("grace", "lp");
     let last_admin = Refusal::of_membership(users::Refusal::LastAdmin, &membership);
     let primary = Refusal::of_membership(users::Refusal::PrimaryGroup, &membership);
 
-    assert_eq!(last_admin.subject, "ada");
+    assert_eq!(last_admin.subject, "grace");
     assert_eq!(primary.subject, "lp");
 }
 

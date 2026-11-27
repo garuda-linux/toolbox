@@ -17,7 +17,7 @@ use super::super::{
 use crate::palette::Palette;
 use crate::testing::harness;
 use crate::theme;
-use crate::tokens::{Tokens, darkly, mix};
+use crate::tokens::{Tokens, mix};
 
 const FRAME: f32 = 1.0 / 60.0;
 
@@ -43,53 +43,6 @@ pub(super) fn repaint_delay<State>(harness: &Harness<'_, State>) -> Duration {
 
 fn tokens() -> Tokens {
     Tokens::derive(&Palette::fallback(Theme::Dark), Theme::Dark)
-}
-
-#[test]
-fn buttons_fill_as_darkly_draws_them_and_have_no_outline() {
-    let tokens = tokens();
-    let button = tokens.input;
-
-    assert_eq!(ButtonKind::Soft.fill(&tokens, Pointer::Rest), button);
-    assert_eq!(
-        ButtonKind::Soft.fill(&tokens, Pointer::Hovered),
-        tokens.button_hover
-    );
-    assert_eq!(
-        ButtonKind::Soft.fill(&tokens, Pointer::Pressed),
-        tokens.button_pressed
-    );
-
-    assert_eq!(
-        ButtonKind::Primary.fill(&tokens, Pointer::Rest),
-        tokens.default_button
-    );
-    assert_eq!(
-        ButtonKind::Primary.fill(&tokens, Pointer::Hovered),
-        darkly::lighter(tokens.default_button, 1.05)
-    );
-    assert_eq!(
-        ButtonKind::Primary.fill(&tokens, Pointer::Pressed),
-        tokens.button_pressed
-    );
-}
-
-#[test]
-fn a_ghost_button_is_a_flat_tool_button_without_a_frame() {
-    let tokens = tokens();
-
-    assert_eq!(
-        ButtonKind::Ghost.fill(&tokens, Pointer::Rest),
-        Color32::TRANSPARENT
-    );
-    assert_eq!(
-        ButtonKind::Ghost.fill(&tokens, Pointer::Hovered),
-        tokens.text.gamma_multiply(0.1)
-    );
-    assert_eq!(
-        ButtonKind::Ghost.fill(&tokens, Pointer::Pressed),
-        tokens.text.gamma_multiply(0.2)
-    );
 }
 
 #[test]

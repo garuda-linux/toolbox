@@ -53,9 +53,6 @@ impl Autostart {
         Ok(())
     }
 
-    /// Also removes the entries of the former name, which would start the
-    /// app a second time.
-    ///
     /// # Errors
     ///
     /// When an existing entry cannot be removed.

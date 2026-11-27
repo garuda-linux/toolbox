@@ -10,6 +10,13 @@ fn bidi_and_zero_width_characters_are_found() {
 }
 
 #[test]
+fn the_line_and_paragraph_separators_and_the_arabic_mark_are_found() {
+    for letter in ['\u{2028}', '\u{2029}', '\u{61C}'] {
+        assert_eq!(hidden(&format!("Neu{letter}starten")), Some(letter));
+    }
+}
+
+#[test]
 fn plain_text_line_breaks_and_tabs_pass() {
     assert_eq!(hidden("Neu starten\n\tjetzt, äöü"), None);
 }
@@ -23,7 +30,6 @@ fn a_file_with_english_ids_and_placeables_matches() {
 }
 
 #[test]
-fn a_foreign_id_or_placeable_does_not() {
+fn a_foreign_id_does_not() {
     matches_english("pages", ENGLISH, "other = Hallo\n").unwrap_err();
-    matches_english("pages", ENGLISH, "bye = Tschüss { $home }\n").unwrap_err();
 }

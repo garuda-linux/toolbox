@@ -36,8 +36,6 @@ fn load_reports_every_broken_catalog() {
     let errors = load(dir.path()).unwrap_err();
     let messages: Vec<String> = errors.iter().map(ToString::to_string).collect();
 
-    // Skel first, then the toggle catalogs, the apps, the config files
-    // and the colour schemes.
     let expected: Vec<&str> = std::iter::once(OTHER_FILES[0])
         .chain(TOGGLE_FILES)
         .chain(APPS)

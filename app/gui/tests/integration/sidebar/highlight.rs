@@ -21,8 +21,6 @@ struct Middles {
     highlight: f32,
 }
 
-/// The open entry's highlight is a 30 point pill, 6 points in from the
-/// row's sides and top, and it ends at the row's bottom.
 #[test]
 fn the_open_entry_highlight_sits_inside_its_row() {
     let harness = open_harness(Some(PageId::Home));

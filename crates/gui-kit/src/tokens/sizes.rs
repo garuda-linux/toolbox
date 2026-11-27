@@ -59,10 +59,6 @@ pub struct Sizes {
     /// A row's or a page title's text and the controls beside it, and a
     /// property's label and its value.
     pub text_to_control: f32,
-    /// The tinted square behind a row's icon, and behind a section's or a
-    /// one-line row's.
-    pub icon_tile: f32,
-    pub icon_tile_small: f32,
     pub meter_height: f32,
     /// A row's 32 px picture and the title beside it, on every page alike.
     pub picture_gap: f32,
@@ -79,7 +75,7 @@ pub struct Sizes {
     pub popover_gap: f32,
     /// Between the sidebar's groups when their headings are hidden.
     pub nav_group_gap: f32,
-    /// A sidebar entry, the pitch of KDE's sidebar in the reference render.
+    /// A sidebar entry, the pitch of KDE's sidebar.
     pub nav_row_height: f32,
     /// The gaps while the entries at normal size would not fit the
     /// sidebar's height. The entries keep their height and the list scrolls.
@@ -165,8 +161,6 @@ impl Sizes {
         inset: 6.0,
         text_to_icon: LARGE_SPACING,
         text_to_control: LARGE_SPACING,
-        icon_tile: 36.0,
-        icon_tile_small: 28.0,
         meter_height: 4.0,
         picture_gap: 10.0,
         logo_gap: 18.0,

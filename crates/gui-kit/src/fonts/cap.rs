@@ -30,8 +30,6 @@ pub fn cap_centring(data: &[u8], index: u32) -> f32 {
         return 0.0;
     };
 
-    // From the line's top, in font units: the box's middle and the
-    // capital's middle.
     let line = metrics.ascent - metrics.descent + metrics.leading;
     let shift = line / 2.0 - (metrics.ascent - cap_middle);
     shift / em

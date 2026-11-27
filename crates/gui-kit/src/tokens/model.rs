@@ -72,7 +72,7 @@ pub struct Tokens {
     /// separator's faint share with the glass.
     pub rule: Color32,
     /// Darkly's frame outline of a card: the window mixed toward the text by a quarter
-    /// (darklyhelper.cpp:127). Widgets draw it in phase B.
+    /// (darklyhelper.cpp:127).
     pub card_outline: Color32,
     /// Darkly's separator: the rule under a toolbar and the footer's line.
     /// The text at 16 of 255 on a dark window, the shadow shade at 16 on a light one.
@@ -130,7 +130,6 @@ pub struct Tokens {
     /// Kirigami's active text and the Complementary set, see [`roles`].
     pub roles: Roles,
     pub error: Color32,
-    pub on_error: Color32,
     pub top_light: Color32,
     /// Darkly's top highlight on a push button: the light end at 30 of 255
     /// on a dark window (darklyhelper.h:247), clear on a light one.

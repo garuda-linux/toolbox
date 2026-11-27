@@ -60,7 +60,6 @@ pub fn app_with(dry_run: bool) -> Reading {
     app_on(dry_run, Theme::Dark)
 }
 
-/// As [`app_with`], drawn on `theme`.
 pub fn app_on(dry_run: bool, theme: Theme) -> Reading {
     app_sized(HEIGHT, dry_run, theme)
 }

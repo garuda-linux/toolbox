@@ -106,7 +106,8 @@ every release. `scripts/release.sh` asks for it.
   the [CLI fallback](docs/agents/security.md#sudo-on-the-command-line).
   `paru` runs as the user.
 - Every visible string is a Fluent text in `crates/services/i18n/en-US` with its
-  German counterpart, looked up by id.
+  German counterpart, looked up by id. The command line's output is
+  English ([ui-rules.md](docs/agents/ui-rules.md#command-line)).
 - No `std::sync` lock across `.await`, blocking work in `spawn_blocking`,
   the egui frame never blocks.
 - New files must be `git add`ed before `nix build` sees them.

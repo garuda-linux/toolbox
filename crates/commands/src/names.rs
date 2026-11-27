@@ -4,7 +4,6 @@
 //! [`of`] is the [`toolbox_cli::complete::Source`] the binary hands to
 //! the completion. It reads only what the user may read: no helper, no
 //! root, no password dialog. A part that cannot be read gives no names.
-//! The functions below it pick the names out of what was read.
 
 #[cfg(test)]
 mod tests;
@@ -27,7 +26,7 @@ use toolbox_core::features::boot::shown;
 use toolbox_core::features::boot::view::entries;
 use toolbox_core::features::discover::Apps;
 use toolbox_core::features::kernels::view::BootMenus;
-use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs};
+use toolbox_core::features::maintenance::page::{AUR_UPGRADE, operation_keys, repairs};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{ConfigFilePath, GRUB_CONFIG, GrubMenu, GrubPlatform, PackageName, UnitScope};
 use toolbox_services::catalogs::catalog_dir_from_env;
@@ -263,8 +262,7 @@ pub fn group_names(snapshot: &Snapshot) -> Vec<String> {
 /// Every task and repair `maintenance run` takes, whether or not its
 /// program is installed.
 pub fn task_ids() -> Vec<String> {
-    OPERATION_KEYS
-        .into_iter()
+    operation_keys()
         .chain([AUR_UPGRADE, crate::mirrors::RANK_MIRRORS])
         .map(str::to_owned)
         .chain(

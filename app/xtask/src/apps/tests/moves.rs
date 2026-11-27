@@ -16,7 +16,7 @@ fn documents(apps: Vec<super::super::App>) -> Lists {
 
 #[test]
 fn an_app_the_wiki_lists_with_another_first_package_is_a_move() {
-    // Changed: the wiki's AbiWord names abiword-gtk2 first.
+    // The wiki names abiword-gtk2 first, the shipped catalog has abiword.
     let lists = documents(vec![
         app("AbiWord", &["abiword-gtk2"]),
         app("Acme", &["plan9port"]),

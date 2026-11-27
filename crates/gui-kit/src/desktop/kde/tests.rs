@@ -135,8 +135,6 @@ fn an_empty_file_overrides_nothing() {
 
 #[test]
 fn an_animation_speed_of_zero_turns_animations_off() {
-    // The written file edited to a slower speed, a word and another
-    // section.
     let slow = NO_ANIMATIONS.replace("Factor=0", "Factor=2.5");
     let word = NO_ANIMATIONS.replace("Factor=0", "Factor=fast");
     let elsewhere = NO_ANIMATIONS.replace("[KDE]", "[General]");

@@ -1,13 +1,8 @@
 //! Garuda Toolbox's command line, free of egui and of the system.
 //!
-//! `args` is what the one binary accepts. Without a subcommand it opens
-//! the window, with one it answers in the terminal. `exit` names the exit
-//! codes scripts can rely on, `output` how answers are printed, and
-//! `confirm` the question before a change, behind a prompt port so the
-//! tests need no terminal. `complete` answers the shell's Tab with names
-//! the app finds, `suggest` the closest name to one the system lacks. The
-//! app crate runs the commands, `xtask` makes the completion hooks and
-//! the man page.
+//! Without a subcommand the binary opens the window, with one it answers in
+//! the terminal. `confirm` takes its question through a port, so the tests
+//! need no terminal.
 
 pub mod args;
 pub mod complete;

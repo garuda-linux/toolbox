@@ -106,13 +106,12 @@ fn nothing_to_do_under_json_is_an_empty_plan_and_ends_with_0() {
 
 #[test]
 fn every_task_says_what_it_does_in_the_words_of_the_page() {
-    use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs};
+    use toolbox_core::features::maintenance::page::{AUR_UPGRADE, operation_keys, repairs};
 
     use super::{RANK_MIRRORS, about};
 
     let repairs = repairs(|_| true);
-    let ids = OPERATION_KEYS
-        .into_iter()
+    let ids = operation_keys()
         .chain([AUR_UPGRADE, RANK_MIRRORS])
         .chain(repairs.iter().map(|row| row.repair.key()));
 

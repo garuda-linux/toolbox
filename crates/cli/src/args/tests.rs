@@ -172,6 +172,9 @@ fn every_example_heading_takes_the_help_header_style() {
         helps.push(sub.render_help().ansi().to_string());
     }
 
+    let with_example = helps.iter().filter(|help| help.contains("Example")).count();
+    assert!(with_example > 0, "no help has an example");
+
     for help in helps {
         if help.contains("Example") {
             assert!(

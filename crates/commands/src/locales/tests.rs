@@ -58,3 +58,33 @@ fn installed_packs_are_on() {
     assert_eq!(listing.summary.as_deref(), Some("2, 1 installed"));
     assert!(listing.hint.unwrap().contains("locales packs install"));
 }
+
+/// A locale change refused under `--json` is one JSON Lines error on
+/// standard output, with the unavailable exit code.
+#[test]
+fn a_refused_locale_change_under_json_is_one_error_line() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let planned = switch(&locale("xx_XX.UTF-8"), Toggle::On, &Snapshot::default());
+    let confirm = Confirm {
+        yes: true,
+        json: true,
+        ..Confirm::default()
+    };
+
+    let mut out = Vec::new();
+    let exit = crate::act::run(
+        planned,
+        confirm,
+        None,
+        &runtime,
+        &mut crate::out::Out::new(&mut out, crate::out::Settings::default()),
+    );
+
+    let text = String::from_utf8(out).unwrap();
+    assert_eq!(exit, Exit::Unavailable);
+    assert!(
+        text.starts_with(r#"{"schema":1,"event":"error","message":"#),
+        "{text}"
+    );
+    assert_eq!(text.lines().count(), 1, "{text}");
+}

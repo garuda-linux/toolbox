@@ -37,7 +37,7 @@ fn reads_each_edit_and_leaves_out_what_cannot_be_read() {
     fs::create_dir_all(home.path().join(".config/folder")).unwrap();
     fs::write(
         home.path().join(".config/kwinrc"),
-        "[Windows]\nBorderlessMaximizedWindows=true\n",
+        toolbox_plan::testing::user_config::INSTALLED_KWINRC,
     )
     .unwrap();
 

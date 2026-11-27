@@ -7,7 +7,7 @@ use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use egui_kittest::{Harness, SnapshotResults};
 
 use super::super::{
-    NavLook, Select, check_row, link_row, link_tile, menu_button, menu_item, nav_row,
+    NavLook, Select, check_row, link_row_at_least, link_tile, menu_button, menu_item, nav_row,
 };
 use crate::icons;
 use crate::testing::{harness, painted_text};
@@ -174,7 +174,7 @@ fn labels(theme: Theme) -> Harness<'static> {
                 ui.set_width(160.0);
                 nav_row(ui, icons::GO_HOME, GERMAN, false, NAV);
                 ui.add_space(12.0);
-                _ = link_row(ui, icons::TOOLS, GERMAN, Role::Link);
+                _ = link_row_at_least(ui, icons::TOOLS, GERMAN, Role::Link, 0.0);
                 ui.add_space(12.0);
                 _ = check_row(ui, true, GERMAN, "");
             });

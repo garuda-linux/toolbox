@@ -109,7 +109,8 @@ fn sort<S>(harness: &Harness<'_, S>, label: &str) -> Rect {
 }
 
 /// The painted gaps between neighbouring groups of one row, row by row and
-/// left to right, each one that is not a group gap told as a miss.
+/// left to right, each one that is not a group gap told as a miss. A group
+/// that wraps off its neighbour's row is a miss too, as its gap is no gap.
 fn misses(page: &str, width: f32, mut groups: Vec<Group>) -> Vec<String> {
     groups.sort_by(|(_, one), (_, other)| {
         if same_row(*one, *other) {
@@ -121,16 +122,22 @@ fn misses(page: &str, width: f32, mut groups: Vec<Group>) -> Vec<String> {
 
     groups
         .windows(2)
-        .filter_map(|pair| match pair {
-            [(left_name, left), (right_name, right)] if same_row(*left, *right) => {
-                Some((*left_name, *right_name, right.left() - left.right()))
+        .filter_map(|pair| {
+            let [(left_name, left), (right_name, right)] = pair else {
+                return None;
+            };
+
+            if !same_row(*left, *right) {
+                return Some(format!(
+                    "{page} at {width}: {left_name} and {right_name} are not on one row"
+                ));
             }
-            _ => None,
-        })
-        .filter(|(left, right, gap)| (gap - wanted(left, right)).abs() > 0.5)
-        .map(|(left, right, gap)| {
-            let wanted = wanted(left, right);
-            format!("{page} at {width}: {left} to {right} paints {gap} px, wanted {wanted}")
+
+            let gap = right.left() - left.right();
+            let wanted = wanted(left_name, right_name);
+            ((gap - wanted).abs() > 0.5).then(|| {
+                format!("{page} at {width}: {left_name} to {right_name} paints {gap} px, wanted {wanted}")
+            })
         })
         .collect()
 }
@@ -172,22 +179,61 @@ fn locales(width: f32, packs: bool) -> Harness<'static, PageState<LocalesPage>> 
     harness
 }
 
+/// The rows of the services toolbar: one row at the wide widths. At the
+/// narrowest the tabs and Read again drop under the title, and search and
+/// sort keep their row.
+#[track_caller]
+fn assert_services_rows(width: f32, groups: &[Group]) {
+    let rect = |name: &str| {
+        groups
+            .iter()
+            .find(|(group, _)| *group == name)
+            .map_or(Rect::NOTHING, |(_, rect)| *rect)
+    };
+
+    let dropped = width == SMALLEST;
+
+    assert!(
+        same_row(rect("search"), rect("sort")),
+        "search and sort at {width} points are not on one row"
+    );
+    assert!(
+        same_row(rect("tabs"), rect("refresh")),
+        "the tabs and Read again at {width} points are not on one row"
+    );
+    assert_eq!(
+        same_row(rect("tabs"), rect("search")),
+        !dropped,
+        "the tabs at {width} points are on the search's row: {}",
+        !dropped
+    );
+}
+
 #[test]
 fn the_services_toolbar_paints_its_groups_eight_px_apart() {
     let mut missed = Vec::new();
     for width in [WIDE, MEDIUM, SMALLEST] {
         let harness = services_header(width);
-        let groups = vec![
-            (
-                "search",
-                painted_node(&harness, Role::TextInput, "Search services"),
-            ),
-            ("sort", sort(&harness, "Sort services")),
-            ("tabs", tabs(&harness, ["System", "User"])),
-            ("refresh", read_again(&harness)),
-        ];
+        let search = (
+            "search",
+            painted_node(&harness, Role::TextInput, "Search services"),
+        );
 
-        missed.extend(misses("Services", width, groups));
+        let sort = ("sort", sort(&harness, "Sort services"));
+        let tabs = ("tabs", tabs(&harness, ["System", "User"]));
+        let refresh = ("refresh", read_again(&harness));
+        let groups = [search, sort, tabs, refresh];
+        assert_services_rows(width, &groups);
+
+        let rows = if width == SMALLEST {
+            vec![vec![search, sort], vec![tabs, refresh]]
+        } else {
+            vec![groups.to_vec()]
+        };
+
+        for row in rows {
+            missed.extend(misses("Services", width, row));
+        }
     }
 
     assert_none(&missed);

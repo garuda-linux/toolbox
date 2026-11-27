@@ -61,7 +61,6 @@ fn card_top<S>(harness: &Harness<'_, S>, top: f32) -> f32 {
         .expect("the text shows in a card")
 }
 
-/// The history's first line starts the card's padding into its card.
 #[test]
 fn the_history_starts_one_card_padding_into_its_card() {
     let harness = unfolded();
@@ -76,8 +75,6 @@ fn the_history_starts_one_card_padding_into_its_card() {
     );
 }
 
-/// The filter sits a tight gap under the fold's line, which is as tall as
-/// Copy list beside it, and the files' card a control gap under the filter.
 #[test]
 fn the_files_card_starts_under_the_filter_under_copy_list() {
     let harness = unfolded();

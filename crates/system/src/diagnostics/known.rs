@@ -22,7 +22,7 @@ const SERIALS: [&str; 4] = [
 ];
 
 /// What vendors write where a serial belongs. Replacing it would hide
-/// words in the rest of the report and protect no one.
+/// words in the rest of the report.
 const FILLERS: [&str; 8] = [
     "to be filled by o.e.m.",
     "default string",
@@ -80,7 +80,10 @@ pub fn of_process(roots: &KnownRoots) -> Known {
 }
 
 fn first_line(path: &Path) -> Option<String> {
-    let text = fs::read_to_string(path).ok()?;
+    let text = fs::read_to_string(path)
+        .inspect_err(|error| tracing::debug!("{}: {error}", path.display()))
+        .ok()?;
+
     let line = text.lines().next()?.trim();
 
     (!line.is_empty()).then(|| line.to_owned())

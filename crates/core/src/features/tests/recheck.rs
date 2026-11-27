@@ -44,7 +44,7 @@ fn without_page_reads() -> Snapshot {
     let mut snapshot = Snapshot::default();
 
     snapshot.insert(Accounts::default());
-    snapshot.insert(CurrentUser(user_name("nico")));
+    snapshot.insert(CurrentUser(user_name("ada")));
     snapshot.insert(EnabledLocales(BTreeSet::new()));
     snapshot.insert(CurrentSystemLocale(None));
     snapshot.insert(PlymouthState {
@@ -119,7 +119,7 @@ fn restored_locks_wait_for_the_lock_flags() {
     let mut without_flags = Snapshot::default();
 
     without_flags.insert(Accounts::default());
-    without_flags.insert(CurrentUser(user_name("nico")));
+    without_flags.insert(CurrentUser(user_name("ada")));
     removal(&mut changes);
     changes.want::<AccountLocks>(user_name("ghost"), Toggle::On, &Snapshot::default());
 
@@ -184,7 +184,7 @@ fn a_waiting_guard_holds_back_the_plan_of_its_domains() {
     let mut changes = ChangeSet::default();
     let mut snapshot = without_page_reads();
     snapshot.insert(LinuxPackages::default());
-    changes.want::<AccountLocks>(user_name("nico"), Toggle::On, &Snapshot::default());
+    changes.want::<AccountLocks>(user_name("ada"), Toggle::On, &Snapshot::default());
 
     unchecked.recheck(&mut changes, &snapshot);
 
@@ -230,7 +230,7 @@ fn every_guard_that_holds_a_change_back_is_named() {
     let mut changes = ChangeSet::default();
     let mut snapshot = without_page_reads();
     snapshot.insert(LinuxPackages::default());
-    changes.want::<AccountLocks>(user_name("nico"), Toggle::On, &Snapshot::default());
+    changes.want::<AccountLocks>(user_name("ada"), Toggle::On, &Snapshot::default());
     changes.want::<AurPackages>(package("yay-bin"), Queued, &Snapshot::default());
 
     unchecked.recheck(&mut changes, &snapshot);

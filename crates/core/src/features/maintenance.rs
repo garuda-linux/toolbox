@@ -237,7 +237,7 @@ impl Domain for Operations {
 }
 
 /// A graphical program the page starts detached, as the user.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::IntoStaticStr, strum::EnumString)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, strum::IntoStaticStr)]
 #[strum(serialize_all = "kebab-case")]
 pub enum Tool {
     ArchMirrors,
@@ -256,10 +256,6 @@ impl Tool {
 
     pub fn id(self) -> &'static str {
         self.into()
-    }
-
-    pub fn from_id(id: &str) -> Option<Self> {
-        id.parse().ok()
     }
 
     pub const fn program(self) -> &'static str {

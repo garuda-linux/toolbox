@@ -7,7 +7,6 @@ use toolbox_core::features::packages::{InstallReason, LocalNode, Origin, Package
 use super::{entry, fixture_with, listed, node};
 use crate::pages::packages::PackagesPage;
 
-/// gimp lists the leftover dependency as optional.
 fn catalog() -> Arc<Catalog> {
     let extra = || Origin::Repository("extra".to_owned());
     Arc::new(Catalog::new(PackageIndex {

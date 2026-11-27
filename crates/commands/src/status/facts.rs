@@ -44,9 +44,12 @@ pub fn facts_view(facts: &Facts, now: SystemTime) -> FactsView {
             foreign: count.foreign,
         }),
         kernel: part(&facts.kernel, Clone::clone),
-        uptime_hours: part(&facts.booted, |booted| {
-            now.duration_since(*booted)
-                .map_or(0, |up| up.as_secs() / SECONDS_PER_HOUR)
+        uptime_hours: part(&facts.booted, |booted| match now.duration_since(*booted) {
+            Ok(up) => up.as_secs() / SECONDS_PER_HOUR,
+            Err(error) => {
+                tracing::warn!("the boot time is after the clock: {error}");
+                0
+            }
         }),
         disk: part(&facts.disk, |disk| Disk {
             total_bytes: disk.total,

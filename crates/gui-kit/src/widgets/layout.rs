@@ -4,9 +4,11 @@
 mod title;
 
 use egui::{Align, Id, Layout, Ui, UiBuilder, Vec2, vec2};
+#[cfg(test)]
+pub use title::title_line_height;
 pub(super) use title::{capitals_in_line, last_descent, raised_column, slack_below};
 use title::{tail_id, title_tail};
-pub use title::{title_capitals_top, title_line, title_line_height};
+pub use title::{title_capitals_top, title_line};
 
 use super::card::in_card_row;
 use super::list::memory::{self, Size};
@@ -15,16 +17,7 @@ use crate::tokens;
 
 /// Narrower than this, a row's text would wrap after every word or two.
 pub const MIN_TEXT_WIDTH: f32 = 240.0;
-/// A measured size that moves less than this, in points, has settled.
 pub(super) const SETTLED: f32 = 0.5;
-
-/// What a remembered size that moved does to the frame.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub(super) enum Redraw {
-    /// Every change discards the pass, for a band whose old size would
-    /// show for one frame.
-    Discards,
-}
 
 /// A size kept from one frame for the next.
 pub(super) trait Measure: Copy + Send + Sync + 'static {
@@ -81,25 +74,20 @@ pub(super) fn remember_width(
 }
 
 /// Keeps the size `now` for `id` unless it settled at `kept`, the one
-/// store of every size measured to lay out the next frame.
-pub(super) fn remember<T>(
-    ui: &Ui,
-    id: Id,
-    kept: Option<T>,
-    now: T,
-    (redraw, reason): (Redraw, &'static str),
-) where
+/// store of every size measured to lay out the next frame. Every change
+/// discards the pass, for a band whose old size would show for one frame.
+pub(super) fn remember<T>(ui: &Ui, id: Id, kept: Option<T>, now: T, reason: &'static str)
+where
     T: Measure,
 {
     if kept.is_none_or(|was| was.moved(now)) {
         ui.data_mut(|data| data.insert_temp(id, now));
-        remeasured(ui, kept.is_none() || redraw == Redraw::Discards, reason);
+        ui.ctx().request_discard(reason);
     }
 }
 
 /// Redraws after a size changed. A discard repeats the clicks of its
-/// pass, so egui's Grid discards only a first measurement's, and so do
-/// the sizes that do not ask for [`Redraw::Discards`].
+/// pass, so egui's Grid discards only a first measurement's.
 pub(super) fn remeasured(ui: &Ui, discard: bool, reason: &'static str) {
     if discard {
         ui.ctx().request_discard(reason);

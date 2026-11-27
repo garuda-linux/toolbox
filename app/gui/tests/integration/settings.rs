@@ -42,7 +42,6 @@ pub fn settings() -> (Harness<'static, App>, Arc<Recorder>) {
     settings_on(Theme::Dark)
 }
 
-/// The Settings page drawn on `theme`, with that theme's desktop look.
 pub fn settings_on(theme: Theme) -> (Harness<'static, App>, Arc<Recorder>) {
     settings_on_with(theme, false)
 }

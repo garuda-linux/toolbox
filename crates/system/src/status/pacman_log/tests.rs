@@ -77,8 +77,9 @@ fn old_and_new_formats_mix_in_one_log() {
 }
 
 /// Scriptlets print whatever they like, a broken byte must not hide the
-/// lines after it. The made-up lines go before the Lima log's last
-/// completed transaction.
+/// lines after it. The made-up lines sit before and after the Lima log's
+/// last completed transaction. The last one is a `[PACMAN]` line, which is
+/// no ALPM transaction.
 #[test]
 fn invalid_utf8_and_odd_lines_are_skipped() {
     let completed = LOG.rfind("[2026-11-08T17:36:00+0100] [ALPM] transaction completed");

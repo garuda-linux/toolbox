@@ -8,16 +8,16 @@ use std::os::unix::fs::{MetadataExt as _, PermissionsExt as _, symlink};
 use std::path::Path;
 
 use tempfile::TempDir;
+use toolbox_fs::testing::as_person;
 use toolbox_plan::protocol::{Failure, Outcome};
 use toolbox_plan::{ConfigFilePath, ConfigWrite, FetchRefusal, Fingerprint, StepId};
 
-use super::super::write::write_real;
+use super::super::write::{Replaced, write_real};
 use super::super::{
     ConfigRead, Found, ReadError, WriteError, execute, inspect, read_config_file, read_real,
     resolve,
 };
 use super::{BACKUPS, fifo, path, refused, text, write_config_file};
-use crate::builtin::FileChange;
 use crate::test_support::printed;
 
 const OLD: &str = "old = 1\n";
@@ -41,7 +41,7 @@ fn is_link(path: &Path) -> bool {
     fs::symlink_metadata(path).unwrap().file_type().is_symlink()
 }
 
-fn write(root: &TempDir, file: &str) -> Result<FileChange, WriteError> {
+fn write(root: &TempDir, file: &str) -> Result<Replaced, WriteError> {
     write_config_file(
         root.path(),
         &path(file),
@@ -50,7 +50,7 @@ fn write(root: &TempDir, file: &str) -> Result<FileChange, WriteError> {
     )
 }
 
-fn refusal(result: Result<FileChange, WriteError>, what: impl Display) -> FetchRefusal {
+fn refusal(result: Result<Replaced, WriteError>, what: impl Display) -> FetchRefusal {
     match result {
         Err(WriteError::Refused(reason)) => reason,
         other => panic!("the write of {what} was not refused: {other:?}"),
@@ -99,7 +99,7 @@ fn a_write_through_a_link_replaces_the_target_and_keeps_the_link() {
     let target = root.path().join("etc/real/app.conf");
     let before = fs::metadata(&target).unwrap();
 
-    assert_eq!(write(&root, "/etc/app.conf").unwrap(), FileChange::Written);
+    assert_eq!(write(&root, "/etc/app.conf").unwrap(), Replaced::Written);
 
     let after = fs::metadata(&target).unwrap();
 
@@ -148,10 +148,7 @@ fn a_chain_of_links_ends_at_the_last_target() {
             .path,
         path("/etc/real/app.conf")
     );
-    assert_eq!(
-        write(&root, "/etc/first.conf").unwrap(),
-        FileChange::Written
-    );
+    assert_eq!(write(&root, "/etc/first.conf").unwrap(), Replaced::Written);
     assert_eq!(
         fs::read_to_string(root.path().join("etc/real/app.conf")).unwrap(),
         NEW
@@ -366,17 +363,18 @@ fn the_step_names_the_file_that_was_written() {
 
 #[test]
 fn a_link_whose_way_the_user_may_not_walk_is_hidden_not_refused() {
-    if rustix::process::geteuid().is_root() {
-        return;
-    }
-
     let root = system();
     let private = root.path().join("etc/real");
 
+    fs::set_permissions(root.path(), fs::Permissions::from_mode(0o755)).unwrap();
     fs::set_permissions(&private, fs::Permissions::from_mode(0o000)).unwrap();
 
-    let found = inspect(root.path(), &path("/etc/app.conf"));
-    let read = read_config_file(root.path(), &path("/etc/app.conf"));
+    let (found, read) = as_person(|| {
+        (
+            inspect(root.path(), &path("/etc/app.conf")),
+            read_config_file(root.path(), &path("/etc/app.conf")),
+        )
+    });
 
     fs::set_permissions(&private, fs::Permissions::from_mode(0o755)).unwrap();
     assert_eq!(found, Found::Hidden);

@@ -28,7 +28,7 @@ use toolbox_plan::{PackageName, Plan, Protection};
 use toolbox_system::{Libalpm, PackageIndexSource, PackageSource as _, ProbeError};
 
 use super::act::run;
-use super::change::{Refused, fresh};
+use super::change::{DATABASES_UNREAD, Refused, fresh};
 use super::out::{failure, print};
 use super::{spinner, system, unavailable};
 use crate::out::Out;
@@ -233,9 +233,9 @@ fn aur_unreadable(error: &AurError, out: &mut Out<'_>) -> Exit {
 
 fn unreadable(error: &ProbeError, out: &mut Out<'_>) -> Exit {
     match error.reason() {
-        None => unavailable("pacman's databases could not be read", out),
+        None => unavailable(DATABASES_UNREAD, out),
         Some(reason) => {
-            failure(out, "pacman's databases could not be read", &reason);
+            failure(out, DATABASES_UNREAD, &reason);
             Exit::Failure
         }
     }
@@ -322,7 +322,7 @@ fn wish_onto(
     }
 
     toggle(package, want, snapshot, changes).map_err(|refused| match refused.refusal {
-        Refusal::Unread => Refused::Unavailable("pacman's databases could not be read".to_owned()),
+        Refusal::Unread => Refused::databases_unread(),
         Refusal::NotOffered => Refused::Unknown(format!(
             "`{package}` is in no configured repository, see `packages search`"
         ))

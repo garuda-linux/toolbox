@@ -13,7 +13,6 @@ use crate::network::{Address, Hardware, Network, Read};
 use crate::page_service::Services;
 use crate::testing::{PageFixture, rect_of};
 
-/// Neither lspci nor lsusb is installed.
 fn without_tools() -> Shown {
     let status = network().status().cloned();
     let hardware = Hardware {

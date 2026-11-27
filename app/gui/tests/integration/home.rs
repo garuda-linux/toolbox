@@ -113,7 +113,6 @@ pub fn home_with(
     home_with_on(system, status, facts, Theme::Dark)
 }
 
-/// As [`home_with`], drawn on `theme`.
 pub fn home_with_on(
     system: Snapshot,
     status: Status,

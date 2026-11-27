@@ -49,8 +49,6 @@ pub struct Console {
     output: bool,
     share: Upload,
     mirror: MirrorWatch,
-    /// Plans started so far, so each one's end shows once as new.
-    runs: u64,
     /// The id of the last plan sent, so the next one gets a new one.
     sent: PlanId,
     /// What a shared output must not name.
@@ -70,7 +68,6 @@ impl Console {
             rejected: None,
             refused: false,
             cancel_waits: false,
-            runs: 0,
             sent: PlanId::default(),
             output: false,
             share: Upload::default(),
@@ -86,11 +83,6 @@ impl Console {
         }
     }
 
-    /// The number of the plan shown, counting from 1. 0 before any.
-    pub const fn run(&self) -> u64 {
-        self.runs
-    }
-
     pub fn take(&mut self, report: Report) {
         match report {
             Report::PlanStarted { plan, steps } => {
@@ -104,7 +96,6 @@ impl Console {
                     .collect();
                 self.wipe_output();
                 self.status = Status::Running;
-                self.runs += 1;
                 self.problem = None;
                 self.rejected = None;
                 self.refused = false;

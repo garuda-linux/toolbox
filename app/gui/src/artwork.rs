@@ -4,6 +4,8 @@
 
 use std::sync::Arc;
 
+use toolbox_gui_kit::row_cache::Same;
+
 use crate::desktop::icon_files::AppIcons;
 use crate::pictures::Pictures;
 
@@ -25,6 +27,12 @@ impl Artwork {
 
     pub fn app_icons(&self) -> Option<&AppIcons> {
         self.app_icons.as_deref()
+    }
+
+    /// Identifies the icons for a cache. The weak handle keeps the old
+    /// icons' address from being given to new ones.
+    pub fn app_icons_identity(&self) -> Option<Same<AppIcons>> {
+        self.app_icons.as_ref().map(Same::of)
     }
 
     pub const fn pictures(&self) -> Option<&Pictures> {

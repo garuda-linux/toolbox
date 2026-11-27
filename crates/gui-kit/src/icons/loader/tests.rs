@@ -31,10 +31,14 @@ fn settled(loader: &ThemeLoader, ctx: &egui::Context, uri: &str) -> ImageLoadRes
     let deadline = Instant::now() + PATIENCE;
     loop {
         let result = loader.load(ctx, uri, HINT);
-        if !matches!(result, Ok(ImagePoll::Pending { size: _ })) || Instant::now() > deadline {
+        if !matches!(result, Ok(ImagePoll::Pending { size: _ })) {
             return result;
         }
 
+        assert!(
+            Instant::now() < deadline,
+            "{uri} is still pending after {PATIENCE:?}"
+        );
         std::thread::sleep(Duration::from_millis(5));
     }
 }

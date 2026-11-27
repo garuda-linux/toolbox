@@ -235,7 +235,6 @@ const TOKEN_CONCEPTS: &[(&str, &[&str])] = &[
 const ABBREVIATIONS: &[(&str, &str)] = &[
     ("num", "number"),
     ("nr", "number"),
-    ("no", "number"),
     ("qty", "quantity"),
     ("amt", "amount"),
     ("desc", "description"),

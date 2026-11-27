@@ -1,7 +1,3 @@
-//! The details beside the list: a row opens them, Escape and Back close
-//! them, a narrow page shows them alone, and the text holds at the narrowest
-//! two-column width in both languages.
-
 use std::sync::Arc;
 
 use egui::accesskit::Role;

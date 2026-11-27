@@ -41,9 +41,9 @@ pub const CHECK_RADIUS: u8 = 5;
 /// Tool buttons at rest: 9 less half a frame pen, 8.5 rounded up to 9
 /// (darklyhelper.cpp:908). Sunken ones take 9.
 pub const TOOL_BUTTON_RADIUS: u8 = 9;
-/// The tile behind a row's icon, [`crate::tokens::Sizes::icon_tile`].
+/// The tile behind a row's icon.
 pub const TILE_RADIUS: u8 = 6;
-/// The tile behind a section's icon, [`crate::tokens::Sizes::icon_tile_small`].
+/// The tile behind a section's icon.
 pub const SMALL_TILE_RADIUS: u8 = 5;
 pub const LARGE_TILE_RADIUS: u8 = 8;
 /// The least height of a card row's line and of a banner's action row.

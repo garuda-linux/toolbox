@@ -23,18 +23,18 @@ fn a_restored_membership_the_page_refuses_is_dropped() {
         ),
         (
             "groups",
-            json!({ "user": "ada", "group": "ada" }),
+            json!({ "user": "grace", "group": "grace" }),
             json!("off"),
         ),
         (
             "groups",
-            json!({ "user": "ada", "group": "wheel" }),
+            json!({ "user": "grace", "group": "wheel" }),
             json!("on"),
         ),
     ]);
 
     assert_eq!(recheck_groups(&mut changes, &snapshot()), Some(3));
-    assert_eq!(queued(&changes), ["groups ada wheel"]);
+    assert_eq!(queued(&changes), ["groups grace wheel"]);
 }
 
 /// A catalog toggle may queue a group its package creates.
@@ -42,19 +42,19 @@ fn a_restored_membership_the_page_refuses_is_dropped() {
 fn a_restored_membership_of_a_group_still_to_come_stays() {
     let mut changes = restore_saved(&[(
         "groups",
-        json!({ "user": "nico", "group": "docker" }),
+        json!({ "user": "ada", "group": "docker" }),
         json!("on"),
     )]);
 
     assert_eq!(recheck_groups(&mut changes, &snapshot()), Some(0));
-    assert_eq!(queued(&changes), ["groups nico docker"]);
+    assert_eq!(queued(&changes), ["groups ada docker"]);
 }
 
 #[test]
 fn a_restored_removal_of_a_system_or_primary_group_is_dropped() {
     let mut changes = restore_saved(&[
         ("removed-groups", json!("http"), json!(null)),
-        ("removed-groups", json!("ada"), json!(null)),
+        ("removed-groups", json!("grace"), json!(null)),
         ("removed-groups", json!("makers"), json!(null)),
     ]);
 

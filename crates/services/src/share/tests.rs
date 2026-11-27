@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tokio::runtime::Handle;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
@@ -27,7 +27,13 @@ impl Transport for Gate {
     fn post(&self, _url: &str, _body: &str) -> Result<String, RequestError> {
         self.posts.fetch_add(1, Ordering::SeqCst);
 
+        let deadline = Instant::now() + Duration::from_secs(10);
+
         while !self.open.load(Ordering::SeqCst) {
+            if Instant::now() >= deadline {
+                return Err(RequestError::NoAnswer("the gate never opened".to_owned()));
+            }
+
             std::thread::sleep(Duration::from_millis(5));
         }
 

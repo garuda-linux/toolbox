@@ -73,8 +73,6 @@ pub struct Setup {
     pub catalogs: Catalogs,
     /// The session's `XDG_CURRENT_DESKTOP`, split at its colons.
     pub desktops: Vec<String>,
-    /// The version About shows. The default is fixed for tests, so a
-    /// release changes no snapshot.
     pub version: &'static str,
     /// The helper runs in dry-run mode: nothing is changed, the status bar
     /// says so.

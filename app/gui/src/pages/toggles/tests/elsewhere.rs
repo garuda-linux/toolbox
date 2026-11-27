@@ -1,6 +1,3 @@
-//! A picked chip plus a search that only other sections match names the
-//! section and offers to show every match, keeping the search.
-
 use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 

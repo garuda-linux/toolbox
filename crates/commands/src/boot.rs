@@ -37,6 +37,10 @@ use super::out::failure;
 use super::{system, unavailable};
 use crate::out::{Out, Settings};
 
+/// The longest timeout in seconds the page takes, for GRUB and systemd-boot
+/// alike.
+pub const MAX_TIMEOUT: u32 = 300;
+
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct BootView {
     pub default: String,
@@ -165,7 +169,7 @@ pub fn setting(args: &BootSet, snapshot: &Snapshot) -> Result<Edit, Refused> {
         BootKey::Default => Edit::Default(value.to_owned()),
         BootKey::Timeout => Edit::Timeout(value.parse().map_err(|_nan| {
             Refused::Rule(format!(
-                "`{value}` is no number of seconds, 0 to 300, or -1 to wait for a key"
+                "`{value}` is no number of seconds, 0 to {MAX_TIMEOUT}, or -1 to wait for a key"
             ))
         })?),
         BootKey::Remember => Edit::Remember {
@@ -242,8 +246,8 @@ pub fn build_onto(
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
-    let listing = Listing::of(snapshot, BootMenus::default())
-        .ok_or_else(|| Refused::Rule("pacman's databases could not be read".to_owned()))?;
+    let listing =
+        Listing::of(snapshot, BootMenus::default()).ok_or_else(Refused::databases_unread)?;
 
     let kernels = listing.kernels();
 

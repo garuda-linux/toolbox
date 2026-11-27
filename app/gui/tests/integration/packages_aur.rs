@@ -138,8 +138,8 @@ fn snapshots() {
     ask_install(harness, "Install");
     results.add(harness.try_snapshot("packages/aur_install_narrow"));
 
-    // The first Escape closes the question. On this narrow page the details
-    // of yay-bin still replace the list, so the second one returns to it.
+    // On this narrow page yay-bin's details still replace the list, so a
+    // second Escape returns to it.
     harness.key_press(egui::Key::Escape);
     settle(harness);
     harness.key_press(egui::Key::Escape);

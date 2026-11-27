@@ -14,7 +14,7 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("dns", &["tweaks", "dns", "cloudflare"]),
     (
         "full-names",
-        &["users", "edit", "ada", "--full-name", "Ada"],
+        &["users", "edit", "hopper", "--full-name", "Grace Hopper"],
     ),
     (
         "garuda-update-flags",
@@ -23,15 +23,18 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("grub-settings", &["boot", "set", "timeout", "3"]),
     ("loader-settings", &["boot", "set", "editor", "off"]),
     ("sdboot-kernel", &["boot", "param", "add", "nowatchdog"]),
-    ("groups", &["users", "edit", "ada", "--add-group", "wheel"]),
+    (
+        "groups",
+        &["users", "edit", "hopper", "--add-group", "wheel"],
+    ),
     (
         "home-folders",
-        &["users", "edit", "ada", "--home", "/home/lovelace"],
+        &["users", "edit", "hopper", "--home", "/home/lovelace"],
     ),
     ("locales", &["locales", "enable", "de_DE.UTF-8"]),
     (
         "login-shells",
-        &["users", "edit", "ada", "--shell", "/usr/bin/fish"],
+        &["users", "edit", "hopper", "--shell", "/usr/bin/fish"],
     ),
     (
         "module-blacklist",
@@ -59,12 +62,9 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("wifi-backend", &["tweaks", "wifi-backend", "iwd"]),
 ];
 
-/// Domains the window queues that no command does yet, each with why.
-pub const NO_COMMAND: &[(&str, &str)] = &[];
-
 pub const AT_ONCE: &[(&str, &[&str])] = &[
     ("add user", &["users", "add", "grace", "--password-stdin"]),
-    ("set password", &["users", "password", "ada"]),
+    ("set password", &["users", "password", "hopper"]),
     ("service now", &["services", "restart", "sshd.service"]),
     ("update", &["update", "--aur"]),
     ("rank mirrors", &["maintenance", "run", "rank-mirrors"]),

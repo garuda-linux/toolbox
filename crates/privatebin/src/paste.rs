@@ -133,7 +133,7 @@ fn compress(text: &str) -> Result<Vec<u8>, SealError> {
     ))
 }
 
-/// Deterministic given the secrets, so a known answer can be compared byte for byte.
+/// Deterministic given the secrets.
 fn encrypt(compressed: &[u8], secrets: &Secrets) -> Result<PasteRequest, SealError> {
     let adata = Adata(
         Spec(

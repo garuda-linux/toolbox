@@ -12,7 +12,6 @@ use crate::{icons, tokens};
 /// A glyph snaps to whole pixels, so its centre can be half a point off.
 const SNAP: f32 = 1.0;
 
-/// Off by less than this, two centres count as one.
 const SAME: f32 = 0.5;
 
 /// Two centres of text count as one, as the ink of a line is not its box.

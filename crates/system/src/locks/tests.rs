@@ -26,11 +26,11 @@ fn helper(path: PathBuf) -> HelperLocks {
 #[test]
 fn the_answer_becomes_a_map_of_flags() {
     let locks = parse(
-        "{\"locks\":[{\"user\":\"nico\",\"locked\":false},{\"user\":\"guest\",\"locked\":true}]}\n",
+        "{\"locks\":[{\"user\":\"ada\",\"locked\":false},{\"user\":\"guest\",\"locked\":true}]}\n",
     )
     .unwrap();
 
-    assert_eq!(locks.get(&UserName::new("nico").unwrap()), Some(&false));
+    assert_eq!(locks.get(&UserName::new("ada").unwrap()), Some(&false));
     assert_eq!(locks.get(&UserName::new("guest").unwrap()), Some(&true));
     assert_eq!(locks.len(), 2);
 }
@@ -41,7 +41,7 @@ fn anything_else_is_no_answer() {
         "",
         "not json",
         "{\"locks\":[{\"user\":\"Bad Name\",\"locked\":true}]}",
-        "{\"locks\":[{\"user\":\"nico\",\"locked\":\"$y$hash\"}]}",
+        "{\"locks\":[{\"user\":\"ada\",\"locked\":\"$y$hash\"}]}",
         "{\"other\":1}",
     ] {
         assert_eq!(parse(answer), None, "{answer}");
@@ -81,10 +81,18 @@ fn a_refusal_of_pkexec_is_told_apart_by_its_code_and_words() {
 
     for (stderr, code, refusal) in [
         ("", 126_i32, Refusal::Dismissed),
-        ("Not authorized", 127_i32, Refusal::Denied),
-        ("No authentication agent found.", 127_i32, Refusal::NoAgent),
         (
-            "Cannot run program /helper: No such file or directory",
+            include_str!("../pkexec/fixtures/not-authorized.stderr"),
+            127_i32,
+            Refusal::Denied,
+        ),
+        (
+            include_str!("../pkexec/fixtures/no-agent-found.stderr"),
+            127_i32,
+            Refusal::NoAgent,
+        ),
+        (
+            include_str!("../pkexec/fixtures/missing-program.stderr"),
             127_i32,
             Refusal::HelperMissing,
         ),

@@ -9,7 +9,6 @@ use crate::tokens::{self, set_page_hue};
 /// Two centres count as one, within the ink of a line rather than its box.
 const TEXT: f32 = 1.0;
 
-/// Off by less than this, two centres count as one.
 const SAME: f32 = 0.5;
 
 /// A glyph snaps to whole pixels, so its centre can be half a point off.

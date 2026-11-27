@@ -11,8 +11,13 @@ use super::out::{say_error, style_on};
 use crate::out::Out;
 
 pub fn completions(args: &Completions, out: &mut Out<'_>) -> Exit {
-    toolbox_cli::complete::registration(args.shell, out);
-    Exit::Success
+    match toolbox_cli::complete::registration(args.shell, out) {
+        Ok(()) => Exit::Success,
+        Err(error) => {
+            crate::out::lost(out.settings(), error.kind());
+            Exit::Failure
+        }
+    }
 }
 
 /// The long help of the command the words name, the whole program without

@@ -34,13 +34,11 @@ pub(super) const FIRST_SECONDS: u32 = 5;
 const FIRST_ENTRY: &str = "0";
 /// Room for the timeout's spin field, steppers and unit included.
 pub(super) const TIMEOUT_WIDTH: f32 = 120.0;
-/// The mode dropdown with the seconds field beside it.
 const TIMEOUT_CONTROL_WIDTH: f32 = 400.0;
 const TIMEOUT_SELECT_WIDTH: f32 = 160.0;
 
-/// The default entry's choices as entry and name. The shown default keys
-/// it as its text, beside the menu, whether the menu lists the default,
-/// and the look.
+/// The default entry's choices as entry and name, keyed by the shown default,
+/// whether the menu lists the default, and the look.
 pub type EntryRows = RowCache<(Same<Menu>, bool, Look), Vec<(String, String)>>;
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut EntryRows) {
@@ -72,8 +70,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut E
     });
 }
 
-/// The entries to pick from, and the default as GRUB has it. A default
-/// the menu does not list comes first, so it still shows.
+/// A default the menu does not list comes first, so it still shows.
 fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &mut EntryRows) {
     let ctx = ui.ctx().clone();
     let menu = context.service::<Boot>().menu();
@@ -103,7 +100,6 @@ fn default_entry(ui: &mut Ui, context: &PageContext<'_>, page: &Page, entries: &
         rows
     });
 
-    // The banner over the card says why the menu is missing.
     let description = if remembered {
         i18n::text(&ctx, "boot-default-remembered")
     } else if unread(menu) {
@@ -168,7 +164,7 @@ fn remember(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
 }
 
 /// Seconds or a menu that waits for a key, the two ways GRUB reads its
-/// number, as systemd-boot's timeout row shows its modes.
+/// number.
 fn timeout(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     let ctx = ui.ctx().clone();
     let changes = context.changes;
@@ -233,7 +229,7 @@ pub(super) fn timeout_widths(ui: &Ui, in_seconds: bool) -> (f32, f32) {
 }
 
 /// Why the menu could not be read, with Read again where a second read
-/// can work. Without an agent or the helper it is refused alike.
+/// can work.
 pub(super) fn unread_banner(ui: &mut Ui, context: &PageContext<'_>, menu: &Menu) {
     let futile = matches!(
         menu,
@@ -260,7 +256,7 @@ const fn unread(menu: &Menu) -> bool {
     )
 }
 
-/// The timeout's seconds as one spin field. Returns whether they changed.
+/// Returns whether they changed.
 pub(super) fn seconds_field(ui: &mut Ui, ctx: &egui::Context, value: &mut u32) -> bool {
     let texts = [
         "boot-timeout-seconds",
@@ -299,7 +295,6 @@ pub(super) fn flipped(ui: &mut Ui, id: &str, queued: Option<&str>, on: bool) -> 
     switch_row(ui, false, &words, on, true)
 }
 
-/// An entry's name, with the submenu that holds it.
 fn label(ctx: &egui::Context, row: &EntryRow) -> String {
     if row.parent.is_empty() {
         return row.title.clone();

@@ -223,8 +223,7 @@ impl LocalesPage {
             i18n::text(&ctx, "locales-packs-intro-plain")
         };
 
-        // Missing packs warn as the Kernels page's missing headers do, and
-        // its banner's buttons, on a wash of their own, need no rim.
+        // Missing packs warn as the Kernels page's missing headers do.
         let tone = if missing > 0 {
             Tone::Warning
         } else {

@@ -39,7 +39,6 @@ pub struct CheckRowTexts<'a> {
     pub full: &'a str,
 }
 
-/// What a row says: its label, the line under it and the tooltip.
 #[derive(Clone, Copy)]
 struct Words<'a> {
     label: &'a str,
@@ -47,9 +46,7 @@ struct Words<'a> {
     tooltip: &'a str,
 }
 
-/// A check box named `label`, `tooltip` on hover when not empty. A click
-/// reports `clicked`, the caller flips its state. Disabled through
-/// `add_enabled_ui`.
+/// A check box labelled `label`, with `tooltip` shown on hover when not empty.
 pub fn check_row(ui: &mut Ui, on: bool, label: &str, tooltip: &str) -> Response {
     let words = Words {
         label,

@@ -20,6 +20,12 @@ const USAGE_EXIT: u8 = 2;
 /// helper's memory stays bounded whatever the app sends.
 pub const ANSWER_QUEUE: usize = 64;
 
+enum AnswerLine {
+    Line(String),
+    Rejected(&'static str),
+    End,
+}
+
 /// Flushed per line, so the app sees output as it happens.
 pub struct StdoutSink;
 
@@ -133,15 +139,21 @@ where
     let reader = std::thread::Builder::new()
         .name("answers".to_owned())
         .spawn(move || {
-            while let Ok(Some(line)) = read_line(&mut input) {
-                match decode::<Answer>(&line) {
-                    Ok(answer) => {
-                        if sender.send(answer).is_err() {
-                            return;
+            loop {
+                match read_answer_line(&mut input) {
+                    Ok(AnswerLine::Line(line)) => match decode::<Answer>(&line) {
+                        Ok(answer) => {
+                            if sender.send(answer).is_err() {
+                                return;
+                            }
                         }
+                        // Without the decoder's message: it may quote what it read.
+                        Err(_) => note("ignoring an unreadable answer"),
+                    },
+                    Ok(AnswerLine::Rejected(reason)) => {
+                        note(&format!("ignoring an answer: {reason}"));
                     }
-                    // Without the decoder's message: it may quote what it read.
-                    Err(_) => note("ignoring an unreadable answer"),
+                    Ok(AnswerLine::End) | Err(_) => return,
                 }
             }
         });
@@ -153,6 +165,41 @@ where
     }
 
     receiver
+}
+
+/// A line that is too long or not UTF-8 is rejected and skipped. A line cut
+/// at the limit is drained to its newline, so its tail never becomes an answer.
+fn read_answer_line<R>(input: &mut R) -> io::Result<AnswerLine>
+where
+    R: BufRead,
+{
+    let mut line = Vec::new();
+    let limit = u64::try_from(MAX_LINE_BYTES)
+        .unwrap_or(u64::MAX)
+        .saturating_add(1);
+
+    if input.by_ref().take(limit).read_until(b'\n', &mut line)? == 0 {
+        return Ok(AnswerLine::End);
+    }
+
+    if line.len() > MAX_LINE_BYTES {
+        if !line.ends_with(b"\n") {
+            drain_line(input);
+        }
+
+        line.fill(0);
+        return Ok(AnswerLine::Rejected("line too long"));
+    }
+
+    match String::from_utf8(line) {
+        Ok(text) => Ok(AnswerLine::Line(
+            text.trim_end_matches(['\n', '\r']).to_owned(),
+        )),
+        Err(error) => {
+            error.into_bytes().fill(0);
+            Ok(AnswerLine::Rejected("line is not UTF-8"))
+        }
+    }
 }
 
 /// Longer lines than the protocol allows are an error, never buffered whole.

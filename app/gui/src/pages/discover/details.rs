@@ -97,7 +97,6 @@ fn back(ui: &mut Ui) -> bool {
         .clicked()
 }
 
-/// The picture, the name and the description, then the button of the app.
 fn header(ui: &mut Ui, context: &PageContext<'_>, detail: &Detail) {
     let row = &detail.row;
     let ink = tokens::current(ui.ctx()).text;
@@ -119,7 +118,6 @@ fn header(ui: &mut Ui, context: &PageContext<'_>, detail: &Detail) {
     });
 }
 
-/// The button that queues the app's change, and what waits beside it.
 fn button(ui: &mut Ui, context: &PageContext<'_>, row: &AppRow) {
     ui.horizontal(|ui| {
         if control::press(ui, row::button(context, row)) {

@@ -91,7 +91,6 @@ pub fn configs() -> Fixture {
     configs_on(Theme::Dark)
 }
 
-/// The Config Files page drawn on `theme`, with that theme's desktop look.
 pub fn configs_on(theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let folder = tempfile::tempdir().unwrap();

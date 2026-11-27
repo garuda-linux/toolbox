@@ -18,7 +18,6 @@ fn packages(names: &[&str]) -> TargetList<PackageName> {
     .unwrap_or_else(|error| panic!("{error}"))
 }
 
-/// A system update, then an install of cowsay: steps 1 and 2.
 fn plan() -> Plan {
     Plan::new([
         PlannedAction::Root(RootAction::UpgradeSystem {
@@ -106,8 +105,6 @@ fn the_next_plan_and_a_refused_one_keep_the_steps_apart() {
     assert_eq!(watch.offer(), None);
 }
 
-/// Two plans sent within one frame: the second is refused, the first
-/// keeps its own install steps.
 #[test]
 fn a_refused_plan_sent_after_the_first_leaves_its_steps_alone() {
     let mut watch = MirrorWatch::default();

@@ -60,16 +60,20 @@ fn cascade(refusal: CascadeRefusal, package: &PackageName) -> Refused<Refusal, P
     }
 }
 
-/// The removals queued in the packages domain plus `adding`: the targets
-/// of the next apply's one `pacman -Rns`.
-pub fn removal_batch(changes: &ChangeSet, adding: &[PackageName]) -> Vec<PackageName> {
-    let mut batch: Vec<PackageName> = changes
+/// The queued removals of the packages domain, in queue order.
+pub(super) fn queued_removals(changes: &ChangeSet) -> Vec<PackageName> {
+    changes
         .queued::<Packages>()
         .into_iter()
         .filter(|(_, wish)| !wish.is_on())
         .map(|(package, _)| package)
-        .collect();
+        .collect()
+}
 
+/// The removals queued in the packages domain plus `adding`: the targets
+/// of the next apply's one `pacman -Rns`.
+pub fn removal_batch(changes: &ChangeSet, adding: &[PackageName]) -> Vec<PackageName> {
+    let mut batch = queued_removals(changes);
     batch.extend(adding.iter().cloned());
     batch
 }
@@ -123,6 +127,20 @@ pub(crate) fn protection_allows(
     changes: &ChangeSet,
     snapshot: &Snapshot,
 ) -> Result<(), Refused<Refusal, PackageName>> {
+    protection_over(packages, &removal_batch(changes, packages), snapshot)
+}
+
+/// [`protection_allows`] over the given `batch` instead of the queue, for
+/// a caller that judges the removals one after another.
+///
+/// # Errors
+///
+/// As [`protection_allows`].
+pub(super) fn protection_over(
+    packages: &[PackageName],
+    batch: &[PackageName],
+    snapshot: &Snapshot,
+) -> Result<(), Refused<Refusal, PackageName>> {
     let Some(first) = packages.first() else {
         return Ok(());
     };
@@ -131,8 +149,7 @@ pub(crate) fn protection_allows(
         protected::may_remove(package).map_err(|why| Refusal::Protected(why).of(package))?;
     }
 
-    let batch = removal_batch(changes, packages);
-    protected::may_remove_with_cascade(&batch, snapshot).map_err(|refusal| cascade(refusal, first))
+    protected::may_remove_with_cascade(batch, snapshot).map_err(|refusal| cascade(refusal, first))
 }
 
 /// # Errors

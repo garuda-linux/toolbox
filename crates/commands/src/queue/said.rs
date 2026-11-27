@@ -9,6 +9,7 @@ use toolbox_instance::bus::queue::Refusal;
 
 use super::Failed;
 use super::store::{Problem, Store};
+use crate::change::Refused;
 use crate::out::{Out, failure, say_error};
 
 impl Failed {
@@ -23,9 +24,15 @@ impl Failed {
 
     pub(super) fn say(&self, out: &mut Out<'_>) -> Exit {
         match self {
-            Self::Refused(refused) => {
-                writeln!(out, "{}", refused.line(out.paint())).ok();
-            }
+            Self::Refused(refused) => match refused {
+                Refused::Unknown(_) | Refused::Rule(_) | Refused::Unavailable(_) => {
+                    say_error(out, refused.message());
+                }
+                Refused::NothingToDo(message) => {
+                    writeln!(out, "{message}").ok();
+                }
+                Refused::Interrupted => {}
+            },
             Self::Unpicked(unpicked) => match unpicked.message().split_once('\n') {
                 Some((error, hint)) => say(out, error, hint),
                 None => say_error(out, unpicked.message()),
@@ -74,8 +81,7 @@ const fn refused_words(refusal: Refusal) -> (&'static str, &'static str) {
 }
 
 pub(super) fn say(out: &mut Out<'_>, error: &str, hint: &str) {
-    let paint = out.paint();
-    writeln!(out, "{}\n{}", paint.error(error), paint.hint(hint)).ok();
+    say_error(out, &format!("{error}\n{hint}"));
 }
 
 /// What an edit ends with: where the queue is now, and what comes next.

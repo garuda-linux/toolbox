@@ -1,12 +1,9 @@
-//! Every timing of the app's motion in one place, and the few ways it
-//! moves: things that appear and leave, and jumps for what the keyboard
-//! started.
+//! Every timing of the app's motion.
 //!
-//! A productivity tool moves little. Motion is opacity, small offsets
-//! and timing, never scale. Entering eases out, leaving runs straight,
-//! except a sheet, which speeds up as it leaves ([`slide`]).
-//! With less motion asked for ([`theme::reduced_motion`]) every duration
-//! is zero, so nothing moves and nothing asks for extra frames.
+//! Motion is opacity and small offsets, never scale. Entering eases out,
+//! leaving runs straight, except a sheet, which speeds up as it leaves
+//! ([`slide`]). With less motion asked for ([`theme::reduced_motion`]) every
+//! duration is zero, so nothing moves and nothing asks for extra frames.
 
 #[cfg(test)]
 mod tests;

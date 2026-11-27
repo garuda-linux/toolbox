@@ -44,7 +44,6 @@ fn app(catalogs: Catalogs, system: Snapshot, dry_run: bool) -> (Harness<'static,
     app_on(catalogs, system, dry_run, Theme::Dark)
 }
 
-/// As [`app`], drawn on `theme`.
 fn app_on(
     catalogs: Catalogs,
     system: Snapshot,
@@ -83,7 +82,6 @@ pub fn components(system: Snapshot) -> (Harness<'static, App>, Runtime) {
     components_on(system, Theme::Dark)
 }
 
-/// The Components page drawn on `theme`, with that theme's desktop look.
 pub fn components_on(system: Snapshot, theme: Theme) -> (Harness<'static, App>, Runtime) {
     app_on(source_catalogs(), system, false, theme)
 }

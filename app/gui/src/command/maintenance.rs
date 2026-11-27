@@ -6,19 +6,18 @@ use toolbox_core::features::maintenance::page::{PageTool, Repair};
 use super::{AppCommand, Command};
 use crate::pages::maintenance::Tab;
 
-/// Each kind of task has its own command, so each names its own type.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum MaintenanceCommand {
-    /// Runs operation `0` at once in the Console.
+    /// Runs the operation at once in the Console.
     RunOperation(Operation),
-    /// Runs repair `0` at once in the Console.
+    /// Runs the repair at once in the Console.
     RunRepair(Repair),
     /// Queues operation `operation` for the next apply, or takes it back.
     Queue {
         operation: Operation,
         on: bool,
     },
-    /// Opens tool `0`, or installs it first and opens it then.
+    /// Opens the tool, or installs it first and opens it then.
     OpenTool(PageTool),
     /// Installs every package a greyed repair needs, in one plan.
     InstallMissing,
@@ -32,7 +31,7 @@ pub enum MaintenanceCommand {
     },
     /// Copies the chosen settings from `/etc/skel`, once the user agreed.
     Reset,
-    /// Opens the page on tab `0`, for an entry picked in the palette.
+    /// Opens the page on the tab, for an entry picked in the palette.
     Reveal(Tab),
     Refresh,
 }

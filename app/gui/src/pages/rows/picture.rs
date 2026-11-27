@@ -112,7 +112,7 @@ const fn pixel_count(pixels: f32) -> u32 {
 /// How far below the row's top the picture starts: at the top of the
 /// title's capitals, so the title never looks pushed down beside it.
 /// `wrap` as the row's [`title_line`](toolbox_gui_kit::widgets::title_line).
-pub fn picture_top(ui: &Ui, wrap: bool) -> f32 {
+fn picture_top(ui: &Ui, wrap: bool) -> f32 {
     title_capitals_top(ui, font(ui.style(), Weight::SemiBold, BODY), wrap).max(0.0)
 }
 

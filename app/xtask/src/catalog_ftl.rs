@@ -14,7 +14,7 @@ use toolbox_catalog::{ColourSchemeCatalog, ConfigFileCatalog, ToggleCatalog};
 
 use crate::catalogs::{SOURCE_DIR, TOGGLE_FILES};
 use crate::translations::{plain_value, unmarked_values};
-use crate::{ENGLISH, Failure, LOCALES_DIR, flags, root};
+use crate::{ENGLISH, Failure, LOCALES_DIR, flags, read_optional, root};
 
 const FILE: &str = "catalog.ftl";
 pub const UNTRANSLATED: &str = "# untranslated";
@@ -143,7 +143,7 @@ pub fn catalog_ftl(args: &[String]) -> Result<String, Failure> {
 
     for locale in locale_names(&locales).map_err(|problem| Failure::Problems(vec![problem]))? {
         let target = locales.join(&locale).join(FILE);
-        let current = fs::read_to_string(&target).unwrap_or_default();
+        let current = read_optional(&target).map_err(|problem| Failure::Problems(vec![problem]))?;
         let text = locale_file(&locale, &all, &current);
 
         if current == text {

@@ -34,8 +34,7 @@ pub use palette::Palette;
 pub use ui_ext::UiExt;
 
 /// The fallback look: bundled fonts at the default size and the Catppuccin
-/// palettes. Call it before the first frame, as the app and every test
-/// harness do. The desktop's look replaces parts of it later.
+/// palettes. The desktop's look replaces parts of it later.
 pub fn install(ctx: &Context) {
     jxl::register();
     image_loaders(ctx);

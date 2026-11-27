@@ -125,9 +125,9 @@ where
     }
 }
 
-/// Lines are read as lossy UTF-8: scriptlets print anything, and one bad byte must
-/// not hide the lines after it. Lines whose timestamp cannot be read are
-/// skipped.
+/// Lines are read as lossy UTF-8: scriptlets print anything, and one bad
+/// byte must not hide the lines after it. Lines whose timestamp cannot be
+/// read are skipped.
 ///
 /// # Errors
 ///

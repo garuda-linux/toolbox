@@ -26,22 +26,22 @@ pub(super) fn with_admins(admins: &str, members: &[&str]) -> Snapshot {
 }
 
 fn with_sudo_and_wheel() -> Snapshot {
-    let mut snapshot = with_admins("sudo", &["nico"]);
+    let mut snapshot = with_admins("sudo", &["ada"]);
     let mut accounts = snapshot.part::<Accounts>().unwrap().clone();
 
-    accounts.groups.push(group("wheel", 998, &["nico"]));
+    accounts.groups.push(group("wheel", 998, &["ada"]));
     snapshot.insert(accounts);
     snapshot
 }
 
 #[test]
 fn the_last_member_of_sudo_stays_an_admin() {
-    let snapshot = with_admins("sudo", &["nico"]);
+    let snapshot = with_admins("sudo", &["ada"]);
     let mut changes = ChangeSet::default();
 
     assert_eq!(
         set_groups(
-            &user_name("nico"),
+            &user_name("ada"),
             &groups(&["makers"]),
             &mut changes,
             &snapshot
@@ -53,13 +53,18 @@ fn the_last_member_of_sudo_stays_an_admin() {
 
 #[test]
 fn the_last_member_of_sudo_is_not_removed() {
-    let mut snapshot = with_admins("sudo", &["ada"]);
+    let mut snapshot = with_admins("sudo", &["grace"]);
     let mut changes = ChangeSet::default();
 
-    snapshot.insert(CurrentUser(user_name("nico")));
+    snapshot.insert(CurrentUser(user_name("ada")));
 
     assert_eq!(
-        remove_user(&user_name("ada"), HomeFolder::Keep, &mut changes, &snapshot),
+        remove_user(
+            &user_name("grace"),
+            HomeFolder::Keep,
+            &mut changes,
+            &snapshot
+        ),
         Err(Refusal::LastAdmin)
     );
 }
@@ -70,17 +75,17 @@ fn a_member_of_both_admin_groups_may_leave_one() {
     let mut changes = ChangeSet::default();
 
     set_groups(
-        &user_name("nico"),
+        &user_name("ada"),
         &groups(&["makers", "sudo"]),
         &mut changes,
         &snapshot,
     )
     .unwrap();
-    assert_eq!(queued(&changes), ["groups nico wheel"]);
+    assert_eq!(queued(&changes), ["groups ada wheel"]);
 
     assert_eq!(
         set_groups(
-            &user_name("nico"),
+            &user_name("ada"),
             &groups(&["makers"]),
             &mut changes,
             &snapshot
@@ -91,19 +96,19 @@ fn a_member_of_both_admin_groups_may_leave_one() {
 
 #[test]
 fn one_membership_meets_the_same_guards() {
-    let snapshot = with_admins("sudo", &["nico"]);
+    let snapshot = with_admins("sudo", &["ada"]);
     let changes = ChangeSet::default();
     let leave = |user: &str, group: &str| {
         membership_allowed(&membership(user, group), Toggle::Off, &changes, &snapshot)
     };
 
-    assert_eq!(leave("nico", "sudo"), Err(Refusal::LastAdmin));
-    assert_eq!(leave("nico", "nico"), Err(Refusal::PrimaryGroup));
+    assert_eq!(leave("ada", "sudo"), Err(Refusal::LastAdmin));
+    assert_eq!(leave("ada", "ada"), Err(Refusal::PrimaryGroup));
     assert_eq!(leave("root", "audio"), Err(Refusal::Root));
-    assert_eq!(leave("ada", "audio"), Ok(()));
+    assert_eq!(leave("grace", "audio"), Ok(()));
     assert_eq!(
         membership_allowed(
-            &membership("ada", "docker"),
+            &membership("grace", "docker"),
             Toggle::On,
             &changes,
             &snapshot
@@ -120,7 +125,7 @@ fn a_member_of_both_admin_groups_may_leave_one_alone() {
 
     assert_eq!(
         membership_allowed(
-            &membership("nico", "wheel"),
+            &membership("ada", "wheel"),
             Toggle::Off,
             &changes,
             &snapshot
@@ -128,15 +133,10 @@ fn a_member_of_both_admin_groups_may_leave_one_alone() {
         Ok(())
     );
 
-    changes.want::<Groups>(membership("nico", "wheel"), Toggle::Off, &snapshot);
+    changes.want::<Groups>(membership("ada", "wheel"), Toggle::Off, &snapshot);
 
     assert_eq!(
-        membership_allowed(
-            &membership("nico", "sudo"),
-            Toggle::Off,
-            &changes,
-            &snapshot
-        ),
+        membership_allowed(&membership("ada", "sudo"), Toggle::Off, &changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
 }
@@ -145,24 +145,29 @@ fn a_member_of_both_admin_groups_may_leave_one_alone() {
 /// member of `sudo` loses the rights, even with a second member.
 #[test]
 fn without_wheel_no_admin_loses_the_rights() {
-    let snapshot = with_admins("sudo", &["nico", "ada"]);
+    let snapshot = with_admins("sudo", &["ada", "grace"]);
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
     assert_eq!(
-        remove_user(&ada, HomeFolder::Keep, &mut changes, &snapshot),
+        remove_user(&grace, HomeFolder::Keep, &mut changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        membership_allowed(&membership("ada", "sudo"), Toggle::Off, &changes, &snapshot),
+        membership_allowed(
+            &membership("grace", "sudo"),
+            Toggle::Off,
+            &changes,
+            &snapshot
+        ),
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        set_groups(&ada, &groups(&["audio"]), &mut changes, &snapshot),
+        set_groups(&grace, &groups(&["audio"]), &mut changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
     assert!(changes.is_empty(), "{changes:?}");
@@ -170,19 +175,19 @@ fn without_wheel_no_admin_loses_the_rights() {
 
 #[test]
 fn without_wheel_a_user_outside_the_admin_groups_still_changes() {
-    let snapshot = with_admins("sudo", &["nico"]);
+    let snapshot = with_admins("sudo", &["ada"]);
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
     assert_eq!(
-        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot),
         Ok(())
     );
     assert_eq!(
-        remove_user(&ada, HomeFolder::Keep, &mut changes, &snapshot),
+        remove_user(&grace, HomeFolder::Keep, &mut changes, &snapshot),
         Ok(())
     );
-    assert_eq!(queued(&changes), ["removed-users ada"]);
+    assert_eq!(queued(&changes), ["removed-users grace"]);
 }
 
 /// A queue that takes the rights of every admin already leaves none to
@@ -191,14 +196,14 @@ fn without_wheel_a_user_outside_the_admin_groups_still_changes() {
 fn with_no_admin_left_after_the_queue_a_member_of_wheel_keeps_the_rights() {
     let mut snapshot = snapshot();
     let mut changes = ChangeSet::default();
-    let nico = user_name("nico");
+    let ada = user_name("ada");
 
-    snapshot.insert(CurrentUser(user_name("ada")));
-    changes.want::<Groups>(membership("nico", "wheel"), Toggle::Off, &snapshot);
+    snapshot.insert(CurrentUser(user_name("grace")));
+    changes.want::<Groups>(membership("ada", "wheel"), Toggle::Off, &snapshot);
 
     assert_eq!(
         membership_allowed(
-            &membership("nico", "wheel"),
+            &membership("ada", "wheel"),
             Toggle::Off,
             &changes,
             &snapshot
@@ -206,24 +211,24 @@ fn with_no_admin_left_after_the_queue_a_member_of_wheel_keeps_the_rights() {
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        set_locked(&nico, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        remove_user(&nico, HomeFolder::Keep, &mut changes, &snapshot),
+        remove_user(&ada, HomeFolder::Keep, &mut changes, &snapshot),
         Err(Refusal::LastAdmin)
     );
-    assert_eq!(changes.wish::<RemovedUsers>(&nico), None);
+    assert_eq!(changes.wish::<RemovedUsers>(&ada), None);
 }
 
 #[test]
 fn without_wheel_a_restored_removal_or_lock_of_a_sudo_member_is_dropped() {
-    let mut snapshot = with_admins("sudo", &["nico", "ada"]);
+    let mut snapshot = with_admins("sudo", &["ada", "grace"]);
     let mut changes = ChangeSet::default();
 
-    snapshot.insert(lock_flags(&[("nico", false), ("ada", false)]));
-    changes.want::<RemovedUsers>(user_name("ada"), HomeFolder::Keep, &snapshot);
-    changes.want::<AccountLocks>(user_name("ada"), Toggle::On, &snapshot);
+    snapshot.insert(lock_flags(&[("ada", false), ("grace", false)]));
+    changes.want::<RemovedUsers>(user_name("grace"), HomeFolder::Keep, &snapshot);
+    changes.want::<AccountLocks>(user_name("grace"), Toggle::On, &snapshot);
 
     assert_eq!(recheck(&mut changes, &snapshot), Some(1));
     assert_eq!(recheck_locks(&mut changes, &snapshot), Some(1));
@@ -231,8 +236,7 @@ fn without_wheel_a_restored_removal_or_lock_of_a_sudo_member_is_dropped() {
 }
 
 /// The fixture with `members` in `wheel` and `http` running the app, so
-/// any admin may be locked as far as the own session goes. The helper
-/// said that no password is locked.
+/// any admin may be locked as far as the own session goes.
 pub(super) fn with_wheel(members: &[&str]) -> Snapshot {
     let mut snapshot = with_admins("wheel", members);
     let unlocked: Vec<(&str, bool)> = members.iter().map(|member| (*member, false)).collect();
@@ -246,17 +250,17 @@ pub(super) fn with_wheel(members: &[&str]) -> Snapshot {
 /// use it.
 #[test]
 fn the_last_admin_is_not_locked() {
-    let snapshot = with_wheel(&["nico"]);
+    let snapshot = with_wheel(&["ada"]);
     let mut changes = ChangeSet::default();
-    let nico = user_name("nico");
+    let ada = user_name("ada");
 
     assert_eq!(
-        set_locked(&nico, Toggle::On, Some(false), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot),
         Err(Refusal::LastAdminLock)
     );
     assert!(changes.is_empty(), "{changes:?}");
     assert_eq!(
-        set_locked(&nico, Toggle::Off, Some(true), &mut changes, &snapshot),
+        set_locked(&ada, Toggle::Off, Some(true), &mut changes, &snapshot),
         Ok(()),
         "unlocking is always allowed"
     );
@@ -264,12 +268,12 @@ fn the_last_admin_is_not_locked() {
 
 #[test]
 fn one_of_two_admins_may_be_locked() {
-    let snapshot = with_wheel(&["nico", "ada"]);
+    let snapshot = with_wheel(&["ada", "grace"]);
     let mut changes = ChangeSet::default();
 
     assert_eq!(
         set_locked(
-            &user_name("nico"),
+            &user_name("ada"),
             Toggle::On,
             Some(false),
             &mut changes,
@@ -277,21 +281,21 @@ fn one_of_two_admins_may_be_locked() {
         ),
         Ok(())
     );
-    assert_eq!(queued(&changes), ["account-locks nico"]);
+    assert_eq!(queued(&changes), ["account-locks ada"]);
 }
 
 /// Once the other admin is queued to leave `wheel`, the one left is the
 /// last.
 #[test]
 fn an_admin_whose_peer_leaves_is_not_locked() {
-    let snapshot = with_wheel(&["nico", "ada"]);
+    let snapshot = with_wheel(&["ada", "grace"]);
     let mut changes = ChangeSet::default();
 
-    changes.want::<Groups>(membership("ada", "wheel"), Toggle::Off, &snapshot);
+    changes.want::<Groups>(membership("grace", "wheel"), Toggle::Off, &snapshot);
 
     assert_eq!(
         set_locked(
-            &user_name("nico"),
+            &user_name("ada"),
             Toggle::On,
             Some(false),
             &mut changes,
@@ -303,11 +307,21 @@ fn an_admin_whose_peer_leaves_is_not_locked() {
 
 #[test]
 fn a_restored_lock_of_the_last_admin_is_dropped() {
-    let snapshot = with_wheel(&["nico"]);
+    let snapshot = with_wheel(&["ada"]);
     let mut changes = ChangeSet::default();
 
-    changes.want::<AccountLocks>(user_name("nico"), Toggle::On, &snapshot);
+    changes.want::<AccountLocks>(user_name("ada"), Toggle::On, &snapshot);
 
     assert_eq!(recheck_locks(&mut changes, &snapshot), Some(1));
     assert!(changes.is_empty(), "{changes:?}");
+}
+
+#[test]
+fn the_admin_groups_are_wheel_and_sudo() {
+    assert_eq!(
+        super::super::ADMIN_GROUPS
+            .each_ref()
+            .map(toolbox_plan::Name::as_str),
+        ["wheel", "sudo"]
+    );
 }

@@ -65,6 +65,13 @@ fn apply(actions: Vec<RootAction>) -> Result<Vec<Outcome>, Box<dyn Error>> {
     apply_answering(actions, None)
 }
 
+/// The outcomes of a run and the text the helper printed about it.
+fn apply_printed(actions: Vec<RootAction>) -> Result<(Vec<Outcome>, String), Box<dyn Error>> {
+    let output = helper_answering(&["apply"], &request(Mode::Run, actions)?, None)?;
+
+    Ok((outcomes(&output)?, printed(&output)?))
+}
+
 /// [`apply`] that answers a question of the running program, as a person
 /// in the Console does. A program that asks waits for it, else for ever.
 fn apply_answering(

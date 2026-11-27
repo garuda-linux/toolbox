@@ -47,8 +47,11 @@ The app refuses to start as root.
   never get the helper's signal. SIGINT is ignored, because Ctrl+C reaches
   the command line too, which answers `Answer::Finish`, then
   `Answer::Cancel` on the second press.
-- A panic fails its step. A panic in an `Always` command ends the helper,
-  so cleanup commands stay simple. The release profile keeps unwinding.
+- A panic fails its step. The step's `Invocation::Always` commands still
+  run after it, each from scratch. A panic in one of them fails that
+  command alone and the later ones still run (`guarded` in
+  `crates/exec/src/apply.rs`, `crates/exec/src/apply/tests/panics.rs`).
+  The release profile keeps unwinding.
 - `Answer::Input` above 64 KiB (`MAX_INPUT_BYTES`) is refused. The app
   splits pastes and strips control characters but tab and line breaks (`toolbox_terminal::encode_paste`). Input and
   output queues are bounded,

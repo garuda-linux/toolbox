@@ -180,7 +180,6 @@ fn button_room_below(harness: &super::Shown, label: &str) -> f32 {
     harness.ctx.content_rect().bottom() - button.bottom()
 }
 
-/// The right edges of the title bar's `close` and of the last `footer` button.
 fn right_edges(harness: &super::Shown, close: &str, footer: &str) -> (f32, f32) {
     let title = harness.query_all_by_label(close).next().unwrap().rect();
     let button = harness.query_all_by_label(footer).last().unwrap().rect();

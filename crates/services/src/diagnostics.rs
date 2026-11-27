@@ -1,6 +1,5 @@
 //! What the Diagnostics page keeps between frames: the last report in its
-//! plain and coloured forms and the upload, fed by the diagnostics
-//! service of `toolbox-system`.
+//! plain and coloured forms and the upload.
 //!
 //! The service answers on its own threads, so its notes come through a
 //! channel that wakes the frame.

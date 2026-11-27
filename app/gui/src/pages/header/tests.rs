@@ -253,7 +253,19 @@ fn the_sort_rect_stands_the_painted_insets_short_of_the_tabs() {
         let sort = rect_of(&harness, Role::ComboBox, "Sort services");
         let system = rect_of(&harness, Role::RadioButton, "System");
 
-        if same_row(sort, system) {
+        // Below the narrowest width's title the tabs drop to a row of
+        // their own, so the sort has no tab neighbour there.
+        let beside_tabs = width != SMALLEST;
+        assert!(
+            same_row(search, sort),
+            "the search at {width} points leaves the sort's row"
+        );
+        assert_eq!(
+            same_row(sort, system),
+            beside_tabs,
+            "the sort and the tabs at {width} points"
+        );
+        if beside_tabs {
             assert_gap(
                 width,
                 "sort to the tabs",
@@ -262,14 +274,11 @@ fn the_sort_rect_stands_the_painted_insets_short_of_the_tabs() {
             );
         }
 
-        // The gap to the sort is measured on the painted shapes in `painted`.
-        if same_row(search, sort) {
-            assert!(
-                search.width() >= SEARCH_LEAST - 0.5,
-                "search at {width} points is {} px, wanted at least {SEARCH_LEAST}",
-                search.width()
-            );
-        }
+        assert!(
+            search.width() >= SEARCH_LEAST - 0.5,
+            "search at {width} points is {} px, wanted at least {SEARCH_LEAST}",
+            search.width()
+        );
     }
 }
 

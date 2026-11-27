@@ -266,22 +266,6 @@ fn paint_item_fill(ui: &Ui, rect: Rect, pointer: Pointer, tokens: &Tokens) {
         .rect_filled(rect.shrink(inset), CornerRadius::same(RADIUS), fill);
 }
 
-/// A 1 point rule between the groups of a menu, inset from both edges by
-/// the item inset, in the separator colour.
-pub fn menu_separator(ui: &mut Ui) {
-    let tokens = tokens::current(ui.ctx());
-    let (rect, _) = ui.allocate_exact_size(vec2(menu_room(ui), 1.0), Sense::hover());
-    let y = rect.top() + 0.5;
-    let stroke = egui::Stroke::new(1.0, tokens.separator);
-    ui.painter().line_segment(
-        [
-            pos2(rect.left() + ITEM_INSET, y),
-            pos2(rect.right() - ITEM_INSET, y),
-        ],
-        stroke,
-    );
-}
-
 pub fn menu_heading(ui: &mut Ui, text: &str) {
     let tokens = tokens::current(ui.ctx());
     let galley = line(ui, text, Weight::SemiBold, SMALL, tokens.secondary);

@@ -13,7 +13,7 @@ use crate::testing::{FixedClock, until};
 /// 2026-10-18 12:41:05 UTC.
 const COLLECTED: i64 = 1_792_327_265_i64;
 
-/// Answers dmesg with a red line and the journal with nothing.
+/// Answers dmesg with a red line and every other collector as unavailable.
 struct Fake;
 
 impl DiagnosticSource for Fake {

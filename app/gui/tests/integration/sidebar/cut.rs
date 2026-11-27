@@ -11,7 +11,7 @@ use toolbox_gui_kit::tokens;
 
 use crate::common::{HEIGHT, SMALLEST, launch_in, window};
 
-const HEADINGS: [&str; 3] = ["INSTALL", "SYSTEM", "CARE"];
+const HEADINGS: [&str; 3] = ["Install", "System", "Care"];
 
 /// The collapsed rail at some height: its entries with their rects, the
 /// heights of the dividers drawn above its bottom cut edge, and that edge.
@@ -107,12 +107,24 @@ fn no_group_heading_shows_cut_by_an_edge() {
         (600.0, PageId::Diagnostics),
     ] {
         let harness = app_on(height, page);
-        for edge in cut_edges(&harness) {
-            for heading in HEADINGS {
-                let Some(text) = painted_text(&harness, heading) else {
-                    continue;
-                };
+        let edges = cut_edges(&harness);
+        assert!(
+            !edges.is_empty(),
+            "{height} on {page:?}: no cut edge to test"
+        );
 
+        let headings: Vec<_> = HEADINGS
+            .iter()
+            .filter_map(|heading| Some((*heading, painted_text(&harness, heading)?)))
+            .collect();
+
+        assert!(
+            !headings.is_empty(),
+            "{height} on {page:?}: no group heading is painted"
+        );
+
+        for edge in edges {
+            for (heading, text) in &headings {
                 let rect = text.galley.rect.translate(text.pos.to_vec2());
                 assert!(
                     rect.bottom() <= edge + 0.5 || rect.top() >= edge - 0.5,

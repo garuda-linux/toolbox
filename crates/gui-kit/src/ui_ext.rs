@@ -6,10 +6,8 @@ mod tests;
 
 use egui::{Color32, Image, InnerResponse, Response, Role, TextStyle, Ui, WidgetInfo, vec2};
 
-use crate::fonts::{BODY, Weight};
 use crate::icons::{self, Icon};
 use crate::tokens::{self, Tokens};
-use crate::widgets::rich;
 
 /// An icon is this much taller than a line of body text, so it reads as
 /// one with the text beside it.
@@ -33,13 +31,6 @@ pub trait UiExt {
         } else {
             ui.add_enabled_ui(false, add)
         }
-    }
-
-    /// In the body font as every other text, in the warning colour.
-    fn warning_label(&mut self, text: &str) -> Response {
-        let ui = self.ui_mut();
-        let colour = tokens::current(ui.ctx()).warning;
-        ui.label(rich(ui, text, Weight::Regular, BODY, colour))
     }
 
     /// Pulsing dots with what is being waited for, one line tall.

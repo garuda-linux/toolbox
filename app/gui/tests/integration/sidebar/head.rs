@@ -38,9 +38,7 @@ fn the_sidebar_names_no_app_above_its_search() {
     assert!(!named);
 }
 
-/// The field starts where an entry's highlight starts and the collapse
-/// toggle beside it ends where the highlight ends, also while the list's
-/// scrollbar takes room.
+/// The row's edges meet the entries also while a scrollbar takes room.
 fn head_row_spans_the_entries(height: f32) {
     let harness = app(height, false);
     let highlight = home_highlight(&harness);

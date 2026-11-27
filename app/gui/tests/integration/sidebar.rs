@@ -348,8 +348,7 @@ fn a_packed_group_heading_keeps_ten_above_and_four_below() {
     }
 }
 
-/// The packed list fits a window of 902, so every entry shows without a
-/// scroll and no fade marks a cut edge.
+/// The packed spacing fits a window of 902 points.
 #[test]
 fn a_window_of_902_shows_every_entry_packed_without_scrolling() {
     let harness = app(902.0, false);

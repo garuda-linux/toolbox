@@ -18,9 +18,7 @@ const BUTTON_EXTRA_WIDTH: f32 = 5.0;
 pub(in crate::widgets) const BLUR_PER_RADIUS: u8 = 2;
 
 /// Darkly's push button face (`buttonBackgroundColor`, darklyhelper.cpp
-/// 255-275, and `renderButtonFrame`, 811-885): the focus fills it, the
-/// hover lightens the button colour by 5 %, lightened twice from the focus
-/// fill when both, and a press darkens the focus colour by 10 %.
+/// 255-275, and `renderButtonFrame`, 811-885).
 pub(in crate::widgets) fn push_fill(
     tokens: &Tokens,
     base: Color32,
@@ -66,9 +64,7 @@ pub(in crate::widgets) fn press_overlay(tokens: &Tokens) -> Color32 {
     darkly::darker(tokens.decoration_focus, 2.0).gamma_multiply(0.5)
 }
 
-/// A flat icon button's fill (`toolButtonColor`, darklyhelper.cpp
-/// 285-319): the text colour at a tenth under the pointer, at a fifth
-/// while pressed, the focus colour when only the focus holds it.
+/// A flat icon button's fill (`toolButtonColor`, darklyhelper.cpp 285-319).
 pub(in crate::widgets) fn tool_fill(
     tokens: &Tokens,
     pointer: Pointer,

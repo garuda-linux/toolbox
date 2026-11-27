@@ -1,8 +1,6 @@
 //! The report with the programs' colours, in the theme's ANSI palette as
-//! the Console has it, under a header line: the report's name, when it
-//! came in, its line count, then the search and the report's buttons. A
-//! report holds up to megabytes, so only the rows in view are laid out.
-//! Long lines wrap at the edge.
+//! the Console has it. A report holds up to megabytes, so only the rows in
+//! view are laid out. Long lines wrap at the edge.
 
 use egui::{Label, ScrollArea, TextStyle, Ui};
 use toolbox_calendar::Utc;
@@ -91,7 +89,6 @@ impl DiagnosticsPage {
         .widget_info(|| egui::WidgetInfo::labeled(egui::accesskit::Role::Document, true, &*label));
     }
 
-    /// The report's name, when it came in, its line count, then the controls.
     fn header(&mut self, ui: &mut Ui, context: &PageContext<'_>) {
         let ctx = ui.ctx().clone();
         let tokens = ui.tokens();

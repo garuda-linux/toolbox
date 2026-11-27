@@ -24,7 +24,7 @@ check = { user-service = "backup.timer" }
 id = "primary-group"
 title = "Primary group"
 description = "G"
-check = { group = "nico" }
+check = { group = "ada" }
 
 [[section.entry]]
 id = "shell"
@@ -46,10 +46,10 @@ fn nina_primary() -> Snapshot {
     let mut snapshot = Snapshot::default();
 
     snapshot.insert(Accounts {
-        users: vec![user("nico", 1000, 1000)],
-        groups: vec![group("nico", 1000, &["nico"])],
+        users: vec![user("ada", 1000, 1000)],
+        groups: vec![group("ada", 1000, &["ada"])],
     });
-    snapshot.insert(CurrentUser(user_name("nico")));
+    snapshot.insert(CurrentUser(user_name("ada")));
     snapshot
 }
 
@@ -148,7 +148,7 @@ fn a_rival_that_refuses_stays_on() {
         Some(&Toggle::On)
     );
     assert_eq!(
-        changes.wish::<Groups>(&membership("nico", "nico")),
+        changes.wish::<Groups>(&membership("ada", "ada")),
         None,
         "the refused removal is not queued"
     );

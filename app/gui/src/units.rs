@@ -111,7 +111,6 @@ impl Units {
         self.refused
     }
 
-    /// Whether App sent the last control or journal, which runs at once.
     pub const fn set_refused(&mut self, refused: bool) {
         self.refused = refused;
     }

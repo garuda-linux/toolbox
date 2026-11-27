@@ -9,7 +9,7 @@ use crate::test_support::user_name;
 
 fn everything(home: &str) -> AccountEdit {
     AccountEdit {
-        full_name: Some(FullName::new("Ada King").unwrap()),
+        full_name: Some(FullName::new("Grace King").unwrap()),
         shell: Some(ShellPath::new("/usr/bin/fish").unwrap()),
         home: Some(HomeChange {
             home: HomeDirectory::new(home).unwrap(),
@@ -24,8 +24,8 @@ fn one_edit_queues_name_shell_and_home_together() {
     let mut changes = ChangeSet::default();
 
     set_account(
-        &user_name("ada"),
-        everything("/srv/ada"),
+        &user_name("grace"),
+        everything("/srv/grace"),
         &mut changes,
         &snapshot,
     )
@@ -35,7 +35,11 @@ fn one_edit_queues_name_shell_and_home_together() {
     shown.sort();
     assert_eq!(
         shown,
-        ["full-names ada", "home-folders ada", "login-shells ada"]
+        [
+            "full-names grace",
+            "home-folders grace",
+            "login-shells grace"
+        ]
     );
 }
 
@@ -47,14 +51,14 @@ fn a_refused_part_queues_nothing_of_the_edit() {
     let mut changes = ChangeSet::default();
 
     for (user, edit, refusal) in [
-        ("nico", everything("/srv/nico"), Refusal::CurrentUser),
+        ("ada", everything("/srv/ada"), Refusal::CurrentUser),
         ("http", everything("/srv/http"), Refusal::OutsideUserRange),
-        ("ada", everything("/home/nico"), Refusal::HomeTaken),
+        ("grace", everything("/home/ada"), Refusal::HomeTaken),
         (
-            "ada",
+            "grace",
             AccountEdit {
                 shell: Some(ShellPath::new("/usr/bin/false").unwrap()),
-                ..everything("/srv/ada")
+                ..everything("/srv/grace")
             },
             Refusal::ShellNotListed,
         ),
@@ -79,9 +83,9 @@ fn a_refused_part_queues_nothing_of_the_edit() {
 fn the_dialog_learns_before_a_click_whether_the_home_may_move() {
     let snapshot = snapshot();
 
-    assert_eq!(home_movable(&user_name("ada"), &snapshot), Ok(()));
+    assert_eq!(home_movable(&user_name("grace"), &snapshot), Ok(()));
     assert_eq!(
-        home_movable(&user_name("nico"), &snapshot),
+        home_movable(&user_name("ada"), &snapshot),
         Err(Refusal::CurrentUser)
     );
     assert_eq!(
@@ -90,12 +94,12 @@ fn the_dialog_learns_before_a_click_whether_the_home_may_move() {
     );
 
     let name_only = AccountEdit {
-        full_name: Some(FullName::new("Nico J.").unwrap()),
+        full_name: Some(FullName::new("Ada L.").unwrap()),
         ..AccountEdit::default()
     };
 
     assert_eq!(
-        check_account(&user_name("nico"), &name_only, &snapshot),
+        check_account(&user_name("ada"), &name_only, &snapshot),
         Ok(())
     );
 }

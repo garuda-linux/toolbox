@@ -93,7 +93,7 @@ fn slaves(folder: &Path) -> io::Result<Vec<PathBuf>> {
 }
 
 fn kind_of(folder: &Path) -> io::Result<Kind> {
-    if folder.join("partition").exists() {
+    if folder.join("partition").try_exists()? {
         Ok(Kind::Partition)
     } else if slaves(folder)?.is_empty() {
         Ok(Kind::Disk)

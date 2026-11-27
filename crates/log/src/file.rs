@@ -54,8 +54,8 @@ struct Sink {
     size: u64,
 }
 
-/// Lost lines since the last one that landed. A full disk fails every
-/// line, so only the first failure of a streak reaches stderr.
+/// A full disk fails every line, so only the first failure of a streak
+/// reaches stderr.
 #[derive(Default)]
 struct Streak {
     failing: bool,
@@ -232,8 +232,11 @@ fn open_sink(path: &Path) -> io::Result<Sink> {
         .metadata()
         .is_ok_and(|meta| meta.permissions().mode() & 0o777 != 0o600);
 
-    if looser {
-        file.set_permissions(fs::Permissions::from_mode(0o600)).ok();
+    if looser && let Err(error) = file.set_permissions(fs::Permissions::from_mode(0o600)) {
+        report(&format!(
+            "cannot restrict the log {}: {error}",
+            path.display()
+        ));
     }
 
     let size = file.metadata().map_or(0, |meta| meta.len());

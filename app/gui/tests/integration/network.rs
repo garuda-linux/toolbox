@@ -154,7 +154,6 @@ pub fn network() -> Fixture {
     network_on(Theme::Dark)
 }
 
-/// The Network page drawn on `theme`, with that theme's desktop look.
 pub fn network_on(theme: Theme) -> Fixture {
     network_with_on(system(), Vec::new(), theme)
 }
@@ -165,7 +164,6 @@ pub fn network_with(probed: Snapshot, issues: Vec<ProbeIssue>) -> Fixture {
     network_with_on(probed, issues, Theme::Dark)
 }
 
-/// As [`network_with`], drawn on `theme`.
 pub fn network_with_on(probed: Snapshot, issues: Vec<ProbeIssue>, theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();

@@ -102,11 +102,7 @@ fn a_program_that_reads_nothing_ends_the_check_with_its_answer() {
 fn a_program_that_never_reads_is_stopped_at_the_deadline() {
     let started = Instant::now();
 
-    let (outcome, said) = checked(
-        "while :; do :; done",
-        &long_text(),
-        Duration::from_millis(300),
-    );
+    let (outcome, said) = checked("while :; do :; done", &long_text(), Duration::from_secs(1));
 
     assert!(started.elapsed() < Duration::from_secs(20));
     assert_eq!(
@@ -118,7 +114,7 @@ fn a_program_that_never_reads_is_stopped_at_the_deadline() {
     );
     assert_eq!(
         said,
-        "visudo: it did not end within 0 seconds and was stopped\r\n"
+        "visudo: it did not end within 1 seconds and was stopped\r\n"
     );
 }
 

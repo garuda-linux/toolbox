@@ -5,7 +5,7 @@
 
 use egui::{Color32, Pos2, Rect, Response, Role, Sense, Ui, Vec2, vec2};
 
-use super::icon_tile::{TileSize, paint_icon};
+use super::icon_tile::{ICON_EDGE, paint_icon};
 use super::mark_word::mark_and_word;
 use super::{Tone, line, status_dot};
 use crate::fonts::{SMALL, Weight};
@@ -43,14 +43,14 @@ impl Tone {
     }
 }
 
-pub fn paint_status_tile(ui: &Ui, centre: Pos2, size: TileSize, tone: Tone) {
-    paint_icon(ui, centre, size, tone.glyph());
+pub fn paint_status_tile(ui: &Ui, centre: Pos2, tone: Tone) {
+    paint_icon(ui, centre, tone.glyph());
 }
 
-pub fn status_tile(ui: &mut Ui, size: TileSize, tone: Tone) -> Rect {
-    let edge = size.edge();
+pub fn status_tile(ui: &mut Ui, tone: Tone) -> Rect {
+    let edge = ICON_EDGE;
     let (rect, _) = ui.allocate_exact_size(vec2(edge, edge), Sense::hover());
-    paint_status_tile(ui, rect.center(), size, tone);
+    paint_status_tile(ui, rect.center(), tone);
     rect
 }
 
@@ -71,7 +71,7 @@ pub fn status_word(ui: &mut Ui, label: &str, tone: Tone) -> Response {
 
 fn marked_word(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let edge = TileSize::Line.edge();
+    let edge = ICON_EDGE;
     let gap = tokens.sizes.text_to_icon;
     let text = line(ui, label, Weight::Medium, SMALL, tokens.secondary);
     mark_and_word(
@@ -79,6 +79,6 @@ fn marked_word(ui: &mut Ui, label: &str, tone: Tone) -> Response {
         (Vec2::splat(edge), gap),
         text,
         (Role::Label, label),
-        |ui, mark| paint_status_tile(ui, mark.center(), TileSize::Line, tone),
+        |ui, mark| paint_status_tile(ui, mark.center(), tone),
     )
 }

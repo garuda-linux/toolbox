@@ -3,9 +3,8 @@
 //! start hands its wish over and exits. The first one then asks for its
 //! window to come to the front.
 //!
-//! `activation` holds the wish as plain values, `bus` the D-Bus side. Egui
-//! free, so the app's tests drive it with fakes and never need a session
-//! bus.
+//! Egui free, so the app's tests drive it with fakes and never need a
+//! session bus.
 
 pub mod activation;
 pub mod bus;

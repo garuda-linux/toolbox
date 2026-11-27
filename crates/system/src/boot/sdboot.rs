@@ -25,8 +25,7 @@ const INSTALL_CONF: &str = "etc/kernel/install.conf";
 const PROC_CMDLINE: &str = "proc/cmdline";
 
 impl SystemBootMenu {
-    /// The ESP is usually root's alone, so this may start the helper. Call
-    /// it off the GUI thread and only when the page asks.
+    /// The ESP is usually root's alone, so this may start the helper.
     pub(super) fn sdboot_menu(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
         match sdboot_menu(&self.root) {
             Ok(mut menu) => {
@@ -93,7 +92,12 @@ fn default_through_helper(
                     None
                 }
             }
-            Ok(ProgramAnswer::Missing) | Err(_) => None,
+            Ok(ProgramAnswer::Missing) => None,
+            Err(error) => {
+                tracing::warn!("bootctl answer skipped: {error}");
+
+                None
+            }
         },
         HelperRun::Refused(_) | HelperRun::Failed(_) | HelperRun::Cancelled => None,
     }

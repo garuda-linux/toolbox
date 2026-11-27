@@ -18,8 +18,8 @@ use crate::testing::PageFixture;
 
 const COPY: &str = "/etc/pacman.conf.pacnew";
 
-/// The Lima VM's `/etc/pacman.conf` with `Color` commented out, so its
-/// `.pacnew`, the capture itself, switches it on again.
+/// The file in use: the capture with `Color` commented out, so the `.pacnew`
+/// turns it back on.
 fn current() -> String {
     PACMAN_CONF.replacen("\nColor\n", "\n#Color\n", 1)
 }

@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use serde_json::Value as Json;
 
@@ -90,10 +90,13 @@ pub fn i18n_export(args: &[String]) -> Result<String, Failure> {
     Ok(report)
 }
 
-fn codes() -> Vec<String> {
-    let Ok(entries) = fs::read_dir(root().join(JSON_DIR)) else {
-        return Vec::new();
-    };
+fn codes() -> Result<Vec<String>, Failure> {
+    codes_in(&root().join(JSON_DIR))
+}
+
+pub(super) fn codes_in(dir: &Path) -> Result<Vec<String>, Failure> {
+    let entries =
+        fs::read_dir(dir).map_err(|error| problem(format!("{}: {error}", dir.display())))?;
 
     let mut found: Vec<String> = entries
         .flatten()
@@ -110,7 +113,7 @@ fn codes() -> Vec<String> {
         .collect();
 
     found.sort();
-    found
+    Ok(found)
 }
 
 /// `cargo xtask i18n-import [--check] [--dry-run]`: writes the
@@ -127,7 +130,7 @@ pub fn i18n_import(args: &[String]) -> Result<String, Failure> {
     let mut changed_paths = Vec::new();
     let mut problems = Vec::new();
 
-    for code in codes() {
+    for code in codes()? {
         let folder = folder_for(&code, &folders);
         let path = json_path(&code);
         let text = fs::read_to_string(&path)

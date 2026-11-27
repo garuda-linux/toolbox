@@ -56,6 +56,7 @@ impl Merges {
     }
 
     /// For tests, which read nothing.
+    #[cfg(any(test, feature = "testing"))]
     pub fn set_pairs(&mut self, pairs: Vec<MergePair>) {
         self.pairs = Loadable::Loaded(Arc::new(pairs));
     }

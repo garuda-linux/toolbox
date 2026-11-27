@@ -1,30 +1,4 @@
-//! The user's settings file, `settings.toml`:
-//!
-//! ```toml
-//! [general]
-//! language = "de"        # missing: follow the system
-//! log_level = "info"
-//!
-//! [diagnostics]
-//! copy_to_clipboard = false
-//!
-//! [services]
-//! show_user_units = false
-//!
-//! [packages]
-//! show_aur = false       # the AUR chip and its daily download
-//!
-//! [status]
-//! automatic = true       # false: only when the user asks
-//! refresh = "1h"         # 5m to 24h, such as 45m or 3h, kept while off
-//!
-//! [window]
-//! blur_desktop = false   # the desktop behind the window, where the compositor blurs it
-//!
-//! [colours]
-//! dark_scheme = "nord"   # missing: the desktop's colours
-//! light_scheme = "catppuccin-latte"
-//! ```
+//! The user's settings file, `settings.toml`, read and written here.
 //!
 //! Keys the app no longer has, such as an older version's `[appearance]`
 //! blur, are skipped on load and dropped at the next save.

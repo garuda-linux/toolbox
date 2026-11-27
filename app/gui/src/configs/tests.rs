@@ -235,8 +235,6 @@ fn an_edit_runs_the_editor_and_writes_after_the_review() {
     ));
 }
 
-/// Closing the window asks while the review waits, and leaving takes the
-/// private copy along.
 #[test]
 fn a_reviewed_edit_is_unapplied_and_leaving_removes_its_copy() {
     let (_runtime, _machine, folder, mut configs) = configs();

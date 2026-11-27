@@ -1,13 +1,5 @@
 //! The checks of entries that edit a config file in the user's home, and
 //! the entry fields that only make sense with them.
-//!
-//! ```toml
-//! check = { user-file = { path = ".config/x/y.conf", content = "…" } }
-//! check = { user-ini = { path = ".config/kwinrc", group = "Windows", key = "K", on = "true", off = "false" } }
-//! check = { user-json = { path = ".config/discord/settings.json", key = "SKIP_HOST_UPDATE" } }
-//! restart-user-units = ["pipewire.service"]
-//! reload = "kwin"
-//! ```
 
 use serde::Deserialize;
 use toolbox_plan::{ConfigReload, ConfigWord, HomePath, UnitName, UserConfigEdit};

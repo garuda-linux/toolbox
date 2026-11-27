@@ -10,7 +10,7 @@ use std::collections::BTreeMap;
 use toolbox_catalog::{Check, ToggleCatalog};
 use toolbox_state::packages::PackageGraph;
 
-use super::{EntryState, state, toggle};
+use super::{EntryState, Refusal, state, toggle};
 use crate::domains::{
     CurrentUser, EnabledUnits, Groups, InstalledPackages, Packages, SystemUnits, UserConfigStates,
     UserConfigWish, UserConfigs,
@@ -97,7 +97,7 @@ fn snapshot(installed: &[&str], enabled: &[&str], groups: &[&str]) -> Snapshot {
         enabled.iter().map(|name| unit(name)).collect(),
     ));
     snapshot.insert(nina_in(groups));
-    snapshot.insert(CurrentUser(user_name("nico")));
+    snapshot.insert(CurrentUser(user_name("ada")));
     snapshot.insert(PackageGraph::default());
     snapshot
 }
@@ -178,7 +178,7 @@ fn an_entry_waits_for_what_it_requires() {
     let mut changes = ChangeSet::default();
 
     assert!(!shown("docker-service", &system, &changes).available);
-    toggle(
+    let refused = toggle(
         &catalog(),
         "docker-service",
         Toggle::On,
@@ -186,6 +186,8 @@ fn an_entry_waits_for_what_it_requires() {
         &mut changes,
     )
     .unwrap_err();
+
+    assert_eq!(refused.refusal, Refusal::Unmet);
     assert!(changes.is_empty());
 
     toggle(&catalog(), "docker", Toggle::On, &system, &mut changes).unwrap();
@@ -233,14 +235,14 @@ fn turning_off_keeps_dependents_that_are_on_in_the_system() {
     toggle(&catalog(), "docker", Toggle::Off, &system, &mut changes).unwrap();
 
     assert_eq!(changes.len(), 1, "only the package removal is queued");
-    assert_eq!(changes.wish::<Groups>(&membership("nico", "docker")), None);
+    assert_eq!(changes.wish::<Groups>(&membership("ada", "docker")), None);
 }
 
 #[test]
 fn unknown_ids_change_nothing() {
     let mut changes = ChangeSet::default();
 
-    toggle(
+    let refused = toggle(
         &catalog(),
         "nope",
         Toggle::On,
@@ -248,6 +250,8 @@ fn unknown_ids_change_nothing() {
         &mut changes,
     )
     .unwrap_err();
+
+    assert_eq!(refused.refusal, Refusal::Unknown);
     assert!(changes.is_empty());
 }
 

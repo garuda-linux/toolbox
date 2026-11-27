@@ -43,10 +43,9 @@ fn temporary(dir: &Path) -> Option<PathBuf> {
 }
 
 /// Creates `dir` as 0700 when it is missing, then checks what is there.
-/// The temporary folder is shared by every user: another one may have made
-/// `dir` first, as a link to their own place or open for writing, and
-/// would then read or swap the log. So only a real folder of ours that
-/// nobody else can write counts. The check never follows a link.
+/// The temporary folder is shared, so another user may have made `dir`
+/// first as a link or as a writable folder. Only a real folder of ours that
+/// nobody else can write counts, and the check never follows a link.
 fn private_folder(dir: &Path) -> Result<(), NotPrivate> {
     if let Err(error) = std::fs::DirBuilder::new().mode(0o700).create(dir)
         && error.kind() != std::io::ErrorKind::AlreadyExists

@@ -170,8 +170,8 @@ pub const fn colour([red, green, blue]: [u8; 3]) -> Color32 {
 /// lightness and chroma a scheme's own hues take.
 ///
 /// Red, orange, olive, green, teal, blue, indigo and purple at one OKLCH
-/// lightness, muted so a page of them stays calm, each dark enough for a
-/// white letter at 4.5:1. The light theme's are a step lighter.
+/// lightness, each dark enough for a white letter at 4.5:1. The light
+/// theme's are a step lighter.
 #[expect(
     clippy::disallowed_methods,
     reason = "the palette is where colours are made"

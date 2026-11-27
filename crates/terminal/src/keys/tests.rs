@@ -10,6 +10,29 @@ const APPLICATION: KeyMode = KeyMode {
     bracketed_paste: true,
 };
 
+impl Modifiers {
+    pub(crate) const ALT: Self = Self {
+        shift: false,
+        alt: true,
+        control: false,
+    };
+    pub(crate) const CONTROL: Self = Self {
+        shift: false,
+        alt: false,
+        control: true,
+    };
+    pub(crate) const NONE: Self = Self {
+        shift: false,
+        alt: false,
+        control: false,
+    };
+    pub(crate) const SHIFT: Self = Self {
+        shift: true,
+        alt: false,
+        control: false,
+    };
+}
+
 fn plain(key: Key) -> Vec<u8> {
     encode_key(key, Modifiers::NONE, NORMAL)
 }

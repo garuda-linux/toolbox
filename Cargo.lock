@@ -5705,6 +5705,7 @@ name = "toolbox-core"
 version = "6.3.0"
 dependencies = [
  "criterion",
+ "proptest",
  "serde",
  "serde_json",
  "strum",
@@ -5841,6 +5842,7 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.21",
  "toolbox-exec",
+ "toolbox-fs",
  "toolbox-plan",
  "toolbox-state",
  "toolbox-system",
@@ -6050,6 +6052,7 @@ dependencies = [
  "toolbox-plan",
  "toolbox-state",
  "toolbox-system",
+ "toolbox-text",
 ]
 
 [[package]]

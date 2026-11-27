@@ -25,6 +25,20 @@ fn a_disk_its_partition_and_a_mapped_device_are_told_apart() {
 }
 
 #[test]
+fn a_partition_entry_that_cannot_be_looked_up_is_an_error_not_a_disk() {
+    let machine = Machine::bare_metal();
+    let folder = machine
+        .root()
+        .join("sys/dev/block/259:4")
+        .canonicalize()
+        .unwrap();
+
+    std::os::unix::fs::symlink("partition", folder.join("partition")).unwrap();
+
+    kind(machine.root(), number(259, 4)).unwrap_err();
+}
+
+#[test]
 fn a_partition_lies_on_its_disk() {
     let machine = Machine::bare_metal();
 

@@ -163,11 +163,11 @@ fn reconciling_drops_what_an_apply_already_did() {
 fn the_review_page_can_remove_a_change_by_domain_and_key() {
     let mut changes = ChangeSet::default();
     changes.want::<Packages>(package("mpv"), Toggle::On, &snapshot());
-    changes.want::<Groups>(membership("nico", "docker"), Toggle::On, &snapshot());
+    changes.want::<Groups>(membership("ada", "docker"), Toggle::On, &snapshot());
 
     assert!(changes.remove_key("packages", "mpv"));
     assert!(!changes.remove_key("packages", "mpv"));
-    assert!(!changes.remove_key("units", "nico docker"));
+    assert!(!changes.remove_key("units", "ada docker"));
     assert_eq!(changes.len(), 1);
 }
 

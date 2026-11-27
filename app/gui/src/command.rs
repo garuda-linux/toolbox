@@ -169,7 +169,7 @@ pub enum LocaleCommand {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum ConsoleCommand {
-    /// Uploads `0`, the output the user saw in the question and agreed to.
+    /// Uploads the output, which the user agreed to share.
     Share(String),
     HideShare,
     /// Updates the system, then runs the install that met a file its

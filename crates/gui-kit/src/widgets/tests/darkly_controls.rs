@@ -6,7 +6,7 @@ use egui::{Color32, Rect, Theme, pos2, vec2};
 use super::super::check::{box_fill, partial};
 use super::super::press::Pointer;
 use super::super::segmented::{corners, segment_fill, tab_fill};
-use super::super::switch::{highlight_colour, knob_colours, track_colours};
+use super::super::switch::{knob_colours, track_colours};
 use super::darkly_buttons::tokens;
 use crate::theme::{RADIUS, TAB_RADIUS};
 use crate::tokens::{darkly, mix};
@@ -90,8 +90,7 @@ fn a_switch_track_and_knob_keep_their_shape_with_darkly_highlight() {
             "{theme:?}: on, the track keeps its colour and the frame turns"
         );
         assert_eq!(
-            highlight_colour(&tokens),
-            accent,
+            tokens.accent_tint, accent,
             "{theme:?}: the highlight is the selection colour (Highlight), over the part the knob has passed"
         );
         let (knob, knob_frame) = (tokens.field, mix(tokens.field, text, 0.2));

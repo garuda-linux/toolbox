@@ -294,7 +294,6 @@ fn retired_services_are_no_longer_listed() {
     }
 }
 
-/// Each help row is centred on the fact beside it.
 #[test]
 fn each_help_row_lines_up_with_a_fact() {
     let (mut harness, _opened) = page();

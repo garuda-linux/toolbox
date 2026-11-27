@@ -5,7 +5,7 @@ use super::planned;
 
 fn shell_change() -> Plan {
     Plan::new([PlannedAction::Root(RootAction::SetShell {
-        user: UserName::new("nico").unwrap(),
+        user: UserName::new("ada").unwrap(),
         shell: ShellPath::new("/usr/bin/fish").unwrap(),
     })])
 }
@@ -16,7 +16,7 @@ fn each_part_of_a_step_has_its_own_line_under_the_first() {
         planned(Paint::new(Style::Plain), &shell_change()),
         "Planned  (1 step)\n\n  \
          check that /usr/bin/fish is listed in /etc/shells\n    \
-         chsh -s /usr/bin/fish -- nico\n"
+         chsh -s /usr/bin/fish -- ada\n"
     );
 }
 

@@ -1,10 +1,6 @@
-//! Two columns side by side, as Kirigami's `ColumnView` lays them out.
-//!
-//! Once a row is open, a list sits at the left and its details beside it.
-//! Each column scrolls on its own, clips what it draws to its own width, and
-//! a 1 px line in the separator colour runs between them, with a gap on
-//! each side. Until a row is open the list takes the full width. Below the
-//! width that fits two columns only the details show.
+//! Two columns side by side, as Kirigami's `ColumnView` lays them out. Each
+//! column scrolls on its own. Below the width that fits two columns, an open
+//! row shows only its details.
 
 use egui::{Id, Rect, ScrollArea, Stroke, Ui, UiBuilder, pos2, vec2};
 
@@ -94,9 +90,8 @@ impl<'a> Columns<'a> {
     }
 }
 
-/// One column in its own scroll area, which keeps its place of its own. The
-/// child's clip is its own rectangle, as the parent's clip spans both
-/// columns.
+/// One column in its own scroll area. The child's clip is its own rectangle,
+/// as the parent's clip spans both columns.
 fn column(ui: &mut Ui, salt: Id, rect: Rect, body: impl FnOnce(&mut Ui)) {
     let mut child = ui.new_child(UiBuilder::new().max_rect(rect));
     child.set_clip_rect(rect.intersect(child.clip_rect()));

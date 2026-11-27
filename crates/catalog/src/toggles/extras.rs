@@ -1,15 +1,6 @@
 //! Entry fields beside the check: the packages and units that come along
 //! with an entry's package, its desktops, its picture, its glyph and its
 //! website.
-//!
-//! ```toml
-//! check = { package = "gamemode" }
-//! also = [{ package = "lib32-gamemode" }, { service = "gamemoded.service" }]
-//! desktop = ["KDE"]
-//! icon = "gamemode.png"
-//! glyph = "input-gamepad"
-//! url = "https://github.com/FeralInteractive/gamemode"
-//! ```
 
 use serde::Deserialize;
 use toolbox_plan::{PackageName, UnitName};

@@ -2,7 +2,7 @@ use egui::Shape;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::{menu_button, menu_item, menu_separator};
+use super::super::{menu_button, menu_item};
 use crate::testing::harness;
 use crate::tokens;
 
@@ -95,48 +95,6 @@ fn a_menu_is_as_wide_as_its_widest_entry() {
 
     let item = harness.get_by_label("Copy").rect();
     assert!(item.width() < 120.0, "the menu is {} wide", item.width());
-}
-
-#[test]
-fn a_menu_separator_is_a_rule_inset_ten_points_in_the_separator_colour() {
-    let mut harness = harness(300.0, 300.0).build_ui(|ui| {
-        menu_button(ui, "More actions", |ui| {
-            drop(menu_item(ui, "Copy"));
-            menu_separator(ui);
-            drop(menu_item(ui, "Paste"));
-        });
-    });
-
-    harness.run();
-    harness.get_by_label("More actions").click_accesskit();
-    harness.run();
-
-    let copy = harness.get_by_label("Copy").rect();
-    let paste = harness.get_by_label("Paste").rect();
-    let separator = tokens::current(&harness.ctx).separator;
-    let rule = harness.output().shapes.iter().find_map(|clipped| {
-        let Shape::LineSegment { points, stroke } = &clipped.shape else {
-            return None;
-        };
-
-        let between = points[0].y > copy.bottom() && points[0].y < paste.top();
-        let level = (points[0].y - points[1].y).abs() < 0.01;
-        (stroke.color == separator && level && between).then_some(*points)
-    });
-
-    let [left, right] = rule.expect("the separator's rule");
-    assert!(
-        left.y > copy.bottom() && left.y < paste.top(),
-        "rule at {left:?} between entries"
-    );
-    assert!(
-        (left.x - (copy.left() + 10.0)).abs() < 0.5,
-        "{left:?} in {copy:?}"
-    );
-    assert!(
-        (right.x - (copy.right() - 10.0)).abs() < 0.5,
-        "{right:?} in {copy:?}"
-    );
 }
 
 /// Darkly's strong focus draws a selected item's text in the highlighted

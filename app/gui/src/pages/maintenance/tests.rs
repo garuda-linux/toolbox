@@ -148,8 +148,14 @@ fn a_running_plan_rests_every_button_that_starts_one() {
     });
 
     assert!(harness.query_by_label(PLAN_RUNNING).is_some());
-    assert!(disabled(&harness, "Run Now").iter().all(|rests| *rests));
-    assert!(disabled(&harness, "Open").iter().all(|rests| *rests));
+    let run_now = disabled(&harness, "Run Now");
+    let open = disabled(&harness, "Open");
+    assert!(
+        !run_now.is_empty() && !open.is_empty(),
+        "no buttons to check"
+    );
+    assert!(run_now.iter().all(|rests| *rests));
+    assert!(open.iter().all(|rests| *rests));
 }
 
 #[test]

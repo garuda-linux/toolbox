@@ -45,30 +45,6 @@ pub struct Modifiers {
     pub control: bool,
 }
 
-#[cfg(test)]
-impl Modifiers {
-    pub(crate) const ALT: Self = Self {
-        shift: false,
-        alt: true,
-        control: false,
-    };
-    pub(crate) const CONTROL: Self = Self {
-        shift: false,
-        alt: false,
-        control: true,
-    };
-    pub(crate) const NONE: Self = Self {
-        shift: false,
-        alt: false,
-        control: false,
-    };
-    pub(crate) const SHIFT: Self = Self {
-        shift: true,
-        alt: false,
-        control: false,
-    };
-}
-
 impl Modifiers {
     /// xterm's modifier parameter, `None` without modifiers.
     fn parameter(self) -> Option<u8> {

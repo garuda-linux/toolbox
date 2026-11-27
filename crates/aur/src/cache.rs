@@ -71,7 +71,6 @@ impl Cache {
         }
     }
 
-    /// The copy in `folder`, downloaded over HTTPS by the system's clock.
     #[must_use = "the cache does nothing until asked"]
     pub fn system(folder: PathBuf) -> Self {
         Self::new(folder, Arc::new(Https::new()), Arc::new(SystemClock))
@@ -165,9 +164,16 @@ impl Cache {
                     stale: false,
                 };
 
-                self.write(INDEX_FILE, &index)?;
-                meta.validators = validators;
-                meta.failed = false;
+                // The flag stays set when the copy is not stored, so the
+                // validators of a copy that is not there are not kept either.
+                match self.write(INDEX_FILE, &index) {
+                    Ok(()) => {
+                        meta.validators = validators;
+                        meta.failed = false;
+                    }
+                    Err(error) => tracing::warn!("the AUR's package list was not stored: {error}"),
+                }
+
                 Refreshed::Fresh(index)
             }
             Ok(None) => {

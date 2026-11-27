@@ -90,7 +90,7 @@ impl Domain for LoaderSettingsDomain {
                 Summary::of(SummaryCode::LoaderTimeoutMenu, word.to_string())
             }
             LoaderSetting::Timeout(None) => Summary::plain(SummaryCode::LoaderTimeoutUnset),
-            LoaderSetting::Default(Some(default)) if default.as_str() == "@saved" => {
+            LoaderSetting::Default(Some(default)) if default.is_saved() => {
                 Summary::plain(SummaryCode::LoaderDefaultSaved)
             }
             LoaderSetting::Default(Some(default)) => {

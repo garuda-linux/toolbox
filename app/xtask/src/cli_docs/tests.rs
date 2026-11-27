@@ -3,7 +3,12 @@ use crate::Failure;
 
 #[test]
 fn every_shell_and_the_man_page_get_a_file() {
-    let names: Vec<String> = files().into_iter().map(|(name, _)| name).take(4).collect();
+    let names: Vec<String> = files()
+        .unwrap()
+        .into_iter()
+        .map(|(name, _)| name)
+        .take(4)
+        .collect();
 
     assert_eq!(
         names,
@@ -18,7 +23,7 @@ fn every_shell_and_the_man_page_get_a_file() {
 
 #[test]
 fn each_hook_asks_the_binary_on_the_path_for_its_shell() {
-    for (name, bytes) in files().into_iter().take(3) {
+    for (name, bytes) in files().unwrap().into_iter().take(3) {
         let text = String::from_utf8_lossy(&bytes);
         let shell = match name.as_str() {
             "garuda-toolbox.bash" => "bash",
@@ -40,7 +45,7 @@ fn each_hook_asks_the_binary_on_the_path_for_its_shell() {
 
 #[test]
 fn the_zsh_hook_answers_its_first_tab_when_autoloaded() {
-    let made = files();
+    let made = files().unwrap();
     let zsh = made
         .iter()
         .find(|(name, _)| name == "_garuda-toolbox")
@@ -54,7 +59,7 @@ fn the_zsh_hook_answers_its_first_tab_when_autoloaded() {
 
 #[test]
 fn the_man_page_knows_every_command() {
-    let made = files();
+    let made = files().unwrap();
     let main = made
         .iter()
         .find(|(name, _)| name == "garuda-toolbox.1")
@@ -78,7 +83,7 @@ fn check_finds_a_stale_file_and_write_fixes_it() {
 
 #[test]
 fn every_page_the_man_page_refers_to_is_made() {
-    let made = files();
+    let made = files().unwrap();
     let names: Vec<String> = made.iter().map(|(name, _)| name.clone()).collect();
     let main = made
         .iter()
@@ -96,6 +101,7 @@ fn every_page_the_man_page_refers_to_is_made() {
 
 fn pages() -> Vec<(String, String)> {
     files()
+        .unwrap()
         .into_iter()
         .filter(|(name, _)| name.ends_with(".1"))
         .map(|(name, bytes)| (name, String::from_utf8_lossy(&bytes).into_owned()))
@@ -218,7 +224,7 @@ fn the_man_page_lists_the_environment() {
 
 #[test]
 fn the_hooks_are_what_the_completions_command_prints() {
-    let made = files();
+    let made = files().unwrap();
 
     for (shell, name) in [
         (clap_complete::Shell::Bash, "garuda-toolbox.bash"),
@@ -226,7 +232,7 @@ fn the_hooks_are_what_the_completions_command_prints() {
         (clap_complete::Shell::Zsh, "_garuda-toolbox"),
     ] {
         let mut printed = Vec::new();
-        toolbox_cli::complete::registration(shell, &mut printed);
+        toolbox_cli::complete::registration(shell, &mut printed).unwrap();
 
         let hook = made.iter().find(|(file, _)| file == name).unwrap();
         assert_eq!(hook.1, printed, "{name}");

@@ -231,7 +231,7 @@ fn kernels(list: &KernelsList, out: &mut Out<'_>) -> Exit {
             out,
             listing::kernels,
         ),
-        None => unavailable("pacman's databases could not be read", out),
+        None => unavailable(change::DATABASES_UNREAD, out),
     }
 }
 

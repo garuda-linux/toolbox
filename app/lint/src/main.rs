@@ -18,7 +18,7 @@ use std::process::ExitCode;
 use finding::Located;
 
 const DEFAULT_ROOTS: [&str; 2] = ["app", "crates"];
-const SKIPPED_DIRS: [&str; 5] = ["target", ".git", ".direnv", "node_modules", "result"];
+const SKIPPED_DIRS: [&str; 4] = ["target", ".git", ".direnv", "node_modules"];
 
 fn main() -> ExitCode {
     let args: Vec<PathBuf> = std::env::args_os().skip(1).map(PathBuf::from).collect();
@@ -41,8 +41,9 @@ fn main() -> ExitCode {
 
 fn run(roots: &[PathBuf]) -> Result<usize, String> {
     let mut files = Vec::new();
+    let repo = std::env::current_dir().map_err(|err| format!("cannot read the folder: {err}"))?;
     for root in roots {
-        collect_files(root, &mut files)?;
+        collect_files(root, &mut files, &repo)?;
     }
 
     files.sort();
@@ -83,7 +84,14 @@ fn run(roots: &[PathBuf]) -> Result<usize, String> {
     Ok(count)
 }
 
-fn collect_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
+/// The `result` link that `nix build` leaves in the repository root points
+/// at build output. A folder of that name anywhere else is source.
+fn is_build_result(child: &Path, repo: &Path) -> bool {
+    child.file_name().is_some_and(|name| name == "result")
+        && child.parent().and_then(|parent| parent.canonicalize().ok()) == repo.canonicalize().ok()
+}
+
+fn collect_files(path: &Path, files: &mut Vec<PathBuf>, repo: &Path) -> Result<(), String> {
     if path.is_file() {
         if source::is_linted(path) {
             files.push(path.to_owned());
@@ -101,10 +109,11 @@ fn collect_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
         let skipped = child
             .file_name()
             .and_then(|name| name.to_str())
-            .is_some_and(|name| SKIPPED_DIRS.contains(&name));
+            .is_some_and(|name| SKIPPED_DIRS.contains(&name))
+            || is_build_result(&child, repo);
 
         if !skipped {
-            collect_files(&child, files)?;
+            collect_files(&child, files, repo)?;
         }
     }
 

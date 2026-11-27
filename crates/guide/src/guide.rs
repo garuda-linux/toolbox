@@ -14,10 +14,6 @@ use crate::summary;
 pub struct Guide {
     parts: Vec<GuidePart>,
     pages: Vec<Page>,
-    /// Names the summary lists without a file, for the tests that guard
-    /// the summary.
-    #[cfg(test)]
-    missing: Vec<String>,
     index: Index,
 }
 
@@ -53,15 +49,11 @@ impl Guide {
     pub fn new(summary: &str, sources: &[(&str, &str)]) -> Self {
         let mut parts = Vec::new();
         let mut pages = Vec::new();
-        #[cfg(test)]
-        let mut missing = Vec::new();
 
         for part in summary::parse(summary) {
             let first = pages.len();
             for entry in part.entries {
                 let Some((_, source)) = sources.iter().find(|(file, _)| *file == entry.file) else {
-                    #[cfg(test)]
-                    missing.push(entry.file);
                     continue;
                 };
 
@@ -78,8 +70,6 @@ impl Guide {
         Self {
             parts,
             pages,
-            #[cfg(test)]
-            missing,
             index,
         }
     }
@@ -92,9 +82,15 @@ impl Guide {
         &self.pages
     }
 
+    /// The files the summary names without a page in `sources`.
     #[cfg(test)]
-    pub fn missing(&self) -> &[String] {
-        &self.missing
+    pub fn missing(summary: &str, sources: &[(&str, &str)]) -> Vec<String> {
+        summary::parse(summary)
+            .into_iter()
+            .flat_map(|part| part.entries)
+            .map(|entry| entry.file)
+            .filter(|file| !sources.iter().any(|(name, _)| *name == file.as_str()))
+            .collect()
     }
 
     pub fn page(&self, file: &str) -> Option<&Page> {

@@ -23,7 +23,6 @@ fn the_same_inputs_find_nothing_again() {
     found.update(TEXT, "x", Some(4));
     assert_eq!(found.rows().as_ptr(), rows);
 
-    // Another query keeps the rows and finds only the matches.
     found.update(TEXT, "foo", Some(4));
     assert_eq!((found.rows().as_ptr(), found.count()), (rows, 1));
 

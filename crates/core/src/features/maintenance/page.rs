@@ -39,15 +39,6 @@ const OPERATIONS: [Operation; 5] = [
     Operation::RemoveDatabaseLock,
 ];
 
-/// The keys of [`OPERATIONS`], which the command line takes.
-pub const OPERATION_KEYS: [&str; 5] = [
-    UPGRADE_SYSTEM,
-    Operation::RemoveOrphans.key(),
-    Operation::CleanPackageCache.key(),
-    Operation::RefreshKeyring.key(),
-    Operation::RemoveDatabaseLock.key(),
-];
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperationRow {
     pub operation: Operation,
@@ -168,6 +159,11 @@ impl PageTool {
     pub fn text_id(self) -> String {
         format!("maintenance-tool-{}", self.key())
     }
+}
+
+/// The keys of [`OPERATIONS`], which the command line takes.
+pub fn operation_keys() -> impl Iterator<Item = &'static str> {
+    OPERATIONS.into_iter().map(Operation::key)
 }
 
 /// The upgrader the system has: garuda-update when installed. Without the

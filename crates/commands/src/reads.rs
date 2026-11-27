@@ -16,8 +16,7 @@ pub const fn json_read(command: &Command) -> bool {
     matches!(read_json(command), Some(true))
 }
 
-/// `Some(json)` for a command that only reads, with whether it reads as
-/// JSON. The pager and the JSON errors both go by this one table.
+/// `Some(json)` for a command that only reads, with whether it reads as JSON.
 #[expect(
     clippy::too_many_lines,
     reason = "one table with an arm per read, so a new command must say whether it reads"

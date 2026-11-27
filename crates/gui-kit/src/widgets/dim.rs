@@ -13,9 +13,7 @@ const BUSY_OPACITY: f32 = 0.55;
 /// wraps it either way, so a plan that starts or ends keeps the ids
 /// inside.
 pub fn dimmed<R>(ui: &mut Ui, busy: bool, body: impl FnOnce(&mut Ui) -> R) -> R {
-    // The next automatic id is stable while the widgets before it are, as
-    // in a row with its own scope id, and differs between two calls in one
-    // ui.
+    // Stable while the widgets before it are, and different for each call in one ui.
     let id = ui.next_auto_id().with("toolbox_gui_kit::dim");
     let dim = motion::presence(ui.ctx(), id, busy, Timing::both(motion::DIM_FADE));
     ui.scope(|ui| {

@@ -259,7 +259,7 @@ fn the_registration_asks_the_binary_for_the_names() {
         clap_complete::Shell::Zsh,
     ] {
         let mut text = Vec::new();
-        registration(shell, &mut text);
+        registration(shell, &mut text).unwrap();
         let text = String::from_utf8(text).unwrap();
 
         assert!(text.contains("COMPLETE"), "{shell} sets no COMPLETE");
@@ -270,9 +270,30 @@ fn the_registration_asks_the_binary_for_the_names() {
 #[test]
 fn the_zsh_registration_answers_its_first_tab_when_autoloaded() {
     let mut text = Vec::new();
-    registration(clap_complete::Shell::Zsh, &mut text);
+    registration(clap_complete::Shell::Zsh, &mut text).unwrap();
     let text = String::from_utf8(text).unwrap();
 
     assert!(text.starts_with("#compdef garuda-toolbox"));
     assert!(text.contains("_clap_dynamic_completer_garuda_toolbox \"$@\""));
+}
+
+/// A registration that cannot be written says so, so a full disk does not
+/// leave a script cut short with success.
+#[test]
+fn a_registration_that_cannot_be_written_is_an_error() {
+    struct Full;
+
+    impl std::io::Write for Full {
+        fn write(&mut self, _buf: &[u8]) -> std::io::Result<usize> {
+            Err(std::io::ErrorKind::StorageFull.into())
+        }
+
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+
+    let result = registration(clap_complete::Shell::Bash, &mut Full);
+
+    assert_eq!(result.unwrap_err().kind(), std::io::ErrorKind::StorageFull);
 }

@@ -1,25 +1,8 @@
 //! Toggle catalogs: on/off entries grouped in sections, each entry shown as
 //! on when its `check` holds. `components.toml`, `settings.toml`,
-//! `gaming.toml` and `setup.toml` share the schema.
-//!
-//! ```toml
-//! [[section]]
-//! id = "containers"
-//! title = "Containers"
-//! icon = "docker"
-//!
-//! [[section.entry]]
-//! id = "enabled-docker"
-//! title = "Docker service"
-//! description = "Runs the background daemon …"
-//! check = { service = "docker.service" }
-//! requires = { all = ["docker"] }
-//! ```
-//!
-//! Entries that edit a config file in the user's home have their own
-//! checks and fields, see the `user_config` module. `also`, `desktop`,
-//! `icon`, `glyph` and `url` are in the `extras` module, `conflicts` in its
-//! own.
+//! `gaming.toml` and `setup.toml` share the schema. The checks of entries
+//! that edit a user config file are in `user_config`, the entry fields in
+//! `extras`, and `conflicts` in its own module.
 
 mod conflicts;
 mod duplicates;

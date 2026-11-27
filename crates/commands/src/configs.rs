@@ -127,8 +127,9 @@ fn file_listing(rows: &[FileRow]) -> Shown<'_> {
         (false, false) => "",
     };
 
-    let root = rows.iter().filter(|row| note(row) == "root").count();
     let read_only = rows.iter().filter(|row| row.read_only).count();
+    let needs_root = |row: &&FileRow| row.admin && !row.read_only;
+    let root = rows.iter().filter(needs_root).count();
     let mut summary = vec![rows.len().to_string()];
     match root {
         0 => {}

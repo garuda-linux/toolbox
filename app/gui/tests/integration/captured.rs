@@ -188,10 +188,9 @@ fn catalog_packages(catalogs: &Catalogs) -> BTreeSet<PackageName> {
     names
 }
 
-/// A system that was read as the probe reads the Lima VM. Steam is
-/// installed, the kernels of [`crate::kernels::system`] are too, and no
-/// unit is enabled. The account, locale, GRUB and tweak parts come from the
-/// captures or from the values the probe gives them.
+/// The Lima VM as the probe reads it, with Steam and the kernels of
+/// [`crate::kernels::system`] installed and no unit enabled. Parts without
+/// a capture take the values the probe gives them.
 pub fn sample_reader(
     ctx: &egui::Context,
     catalogs: &Catalogs,

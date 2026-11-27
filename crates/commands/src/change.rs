@@ -20,6 +20,10 @@ use toolbox_plan::{PackageName, Plan, Upgrader};
 
 pub use self::service::{UnitLookup, service, service_onto};
 
+/// What a read of pacman's databases that failed is called on the command
+/// line, with `not available:` in front as [`crate::out::unavailable`] adds it.
+pub const DATABASES_UNREAD: &str = "pacman's databases could not be read";
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Refused {
     Unknown(String),
@@ -46,6 +50,11 @@ pub enum KernelChange {
 }
 
 impl Refused {
+    /// The change needs pacman's databases, which could not be read.
+    pub fn databases_unread() -> Self {
+        Self::Unavailable(format!("not available: {DATABASES_UNREAD}"))
+    }
+
     pub const fn exit(&self) -> Exit {
         match self {
             Self::Unknown(_) | Self::Unavailable(_) => Exit::Unavailable,

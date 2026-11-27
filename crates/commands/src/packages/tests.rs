@@ -213,3 +213,34 @@ fn the_facts_name_every_field() {
         assert!(text.contains(fact), "{fact} in {text}");
     }
 }
+
+/// A change the databases refuse under `--json` is one JSON Lines error on
+/// standard output, with the unavailable exit code.
+#[test]
+fn a_refused_package_change_under_json_is_one_error_line() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let planned = change(&args("gimp"), Toggle::On, &Snapshot::default());
+    let confirm = Confirm {
+        yes: true,
+        json: true,
+        ..Confirm::default()
+    };
+
+    let mut out = Vec::new();
+    let exit = crate::act::run(
+        planned,
+        confirm,
+        None,
+        &runtime,
+        &mut crate::out::Out::new(&mut out, crate::out::Settings::default()),
+    );
+
+    assert_eq!(exit, toolbox_cli::Exit::Unavailable);
+    assert_eq!(
+        String::from_utf8(out).unwrap(),
+        concat!(
+            r#"{"schema":1,"event":"error","message":"not available: pacman's databases could not be read"}"#,
+            "\n"
+        )
+    );
+}

@@ -83,24 +83,12 @@ impl<'text> Diff<'text> {
         &self.lines
     }
 
-    #[cfg(test)]
-    fn is_empty(&self) -> bool {
-        self.lines.iter().all(|line| line.change == Change::Same)
-    }
-
     pub fn added(&self) -> usize {
         self.count(Change::Added)
     }
 
     pub fn removed(&self) -> usize {
         self.count(Change::Removed)
-    }
-
-    /// The changes with a few lines around each, `+` and `-` in front,
-    /// like `diff -u` prints them. Plain text for the screen reader, copy
-    /// and themes without colours.
-    pub fn plain(&self) -> String {
-        self.render()
     }
 
     fn count(&self, change: Change) -> usize {
@@ -110,7 +98,10 @@ impl<'text> Diff<'text> {
             .count()
     }
 
-    fn render(&self) -> String {
+    /// The changes with a few lines around each, `+` and `-` in front,
+    /// like `diff -u` prints them. Plain text for the screen reader, copy
+    /// and themes without colours.
+    pub fn plain(&self) -> String {
         let mut text = String::new();
 
         for hunk in self.hunks() {
@@ -291,8 +282,7 @@ fn push_line(text: &mut String, line: Line<'_>) {
 }
 
 /// The first and last line of the new text a hunk header of
-/// [`Diff::plain`] covers, so a review can say "Lines 3 to 6" instead of
-/// showing diff markup. A hunk that only removes covers the line before.
+/// [`Diff::plain`] covers. A hunk that only removes covers the line before.
 pub fn hunk_lines(line: &str) -> Option<(u32, u32)> {
     let new = line
         .strip_prefix("@@ -")?

@@ -211,19 +211,6 @@ fn the_fitting_size_is_clamped_and_reported_once() {
 }
 
 #[test]
-fn each_started_plan_has_its_own_number() {
-    let mut console = Console::new();
-    assert_eq!(console.run(), 0);
-
-    started(&mut console);
-    console.take(finished(true));
-    assert_eq!(console.run(), 1, "its end keeps the number");
-
-    started(&mut console);
-    assert_eq!(console.run(), 2);
-}
-
-#[test]
 fn the_ending_counts_the_steps_that_had_nothing_to_do() {
     let mut console = Console::new();
     started(&mut console);

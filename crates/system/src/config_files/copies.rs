@@ -158,7 +158,6 @@ impl EditFolder {
             .write_all(STAND_IN_LINE.as_bytes())
     }
 
-    /// A copy of another folder is none of this one's business.
     fn owned(&self, copy: &EditCopy) -> io::Result<()> {
         if Path::new(copy.as_str()).parent() == Some(self.dir.as_path()) {
             Ok(())

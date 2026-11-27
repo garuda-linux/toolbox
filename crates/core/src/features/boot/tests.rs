@@ -19,8 +19,7 @@ use crate::domains::{
 use crate::test_support::{package, packages, plymouth_theme};
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
-pub(super) const ARCH: &str =
-    "GRUB_DEFAULT=0\nGRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX_DEFAULT=\"loglevel=3 quiet\"\n";
+pub(super) const LIMA: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
 
 pub(super) fn system(defaults: &str, installed: &[&str]) -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -100,13 +99,13 @@ fn without_the_grub_file_nothing_is_shown_and_nothing_queues() {
 
 #[test]
 fn the_page_shows_the_file_with_the_queue_on_top() {
-    let state = system(ARCH, &[]);
+    let state = system(LIMA, &[]);
     let mut changes = ChangeSet::default();
     let before = shown(&state, &changes).unwrap();
 
     assert_eq!(before.default, "0");
     assert_eq!(before.timeout, Some(5));
-    assert!(!before.remember && before.submenus && !before.os_prober);
+    assert!(!before.remember && before.submenus && before.os_prober);
 
     set(
         GrubSetting::Timeout(GrubTimeout::new(9).unwrap()),
@@ -146,7 +145,7 @@ fn the_page_shows_the_file_with_the_queue_on_top() {
 
 #[test]
 fn parameters_are_added_once_and_removed_from_the_queued_list() {
-    let state = system(ARCH, &[]);
+    let state = system(LIMA, &[]);
     let mut changes = ChangeSet::default();
 
     add_parameter(parameter("nowatchdog"), &mut changes, &state).unwrap();
@@ -174,7 +173,7 @@ fn parameters_are_added_once_and_removed_from_the_queued_list() {
 
 #[test]
 fn taking_an_added_parameter_back_empties_the_queue() {
-    let state = system(ARCH, &[]);
+    let state = system(LIMA, &[]);
     let mut changes = ChangeSet::default();
 
     add_parameter(parameter("nowatchdog"), &mut changes, &state).unwrap();
@@ -185,7 +184,7 @@ fn taking_an_added_parameter_back_empties_the_queue() {
 
 #[test]
 fn the_switches_write_their_parameters() {
-    let state = system(ARCH, &["plymouth"]);
+    let state = system(LIMA, &["plymouth"]);
     let mut changes = ChangeSet::default();
 
     set_flag(Flag::MitigationsOff, Toggle::On, &mut changes, &state).unwrap();
@@ -212,7 +211,7 @@ fn the_switches_write_their_parameters() {
 
 #[test]
 fn the_splash_queues_plymouth_while_it_is_missing() {
-    let state = system(ARCH, &[]);
+    let state = system(LIMA, &[]);
     let mut changes = ChangeSet::default();
 
     set_flag(Flag::Splash, Toggle::On, &mut changes, &state).unwrap();
@@ -288,7 +287,7 @@ fn a_full_command_line_takes_no_more() {
 
 #[test]
 fn remembering_sets_both_variables_and_forgetting_names_an_entry_again() {
-    let state = system(ARCH, &[]);
+    let state = system(LIMA, &[]);
     let mut changes = ChangeSet::default();
 
     set_remember(Toggle::On, entry("fallback"), &mut changes, &state).unwrap();
@@ -329,8 +328,8 @@ fn remembering_sets_both_variables_and_forgetting_names_an_entry_again() {
 
 #[test]
 fn only_an_installed_plymouth_theme_can_be_chosen() {
-    let without = system(ARCH, &[]);
-    let with = with_plymouth(system(ARCH, &["plymouth"]));
+    let without = system(LIMA, &[]);
+    let with = with_plymouth(system(LIMA, &["plymouth"]));
     let mut changes = ChangeSet::default();
 
     assert_eq!(

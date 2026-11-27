@@ -40,6 +40,8 @@ pub struct MergeRow {
     pub file: String,
     pub kind: String,
     pub state: String,
+    #[serde(skip)]
+    pub unread: bool,
 }
 
 impl filter::Named for MergeRow {
@@ -117,17 +119,22 @@ pub fn rows(paths: &[PathBuf], read: &dyn Fn(&MergeCopy) -> MergePair) -> Vec<Me
             let shown = path.display().to_string();
 
             match MergeCopy::new(shown.as_str()) {
-                Ok(copy) => MergeRow {
-                    copy: shown,
-                    file: copy.original().to_string(),
-                    kind: copy.kind().as_str().to_owned(),
-                    state: state(&read(&copy)),
-                },
+                Ok(copy) => {
+                    let pair = read(&copy);
+                    MergeRow {
+                        copy: shown,
+                        file: copy.original().to_string(),
+                        kind: copy.kind().as_str().to_owned(),
+                        state: state(&pair),
+                        unread: texts(&pair).is_err(),
+                    }
+                }
                 Err(_withheld) => MergeRow {
                     copy: shown,
                     file: String::new(),
                     kind: String::new(),
                     state: TERMINAL_ONLY.to_owned(),
+                    unread: false,
                 },
             }
         })
@@ -188,7 +195,7 @@ fn listing(rows: &[MergeRow]) -> Listing<'_> {
         rows: rows
             .iter()
             .map(|row| {
-                let mark = if row.state.starts_with("not read") {
+                let mark = if row.unread {
                     Mark::Unknown
                 } else {
                     Mark::Blank

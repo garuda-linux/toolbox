@@ -12,10 +12,10 @@ use std::sync::Arc;
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use toolbox_core::Snapshot;
 use toolbox_core::domains::{Accounts, AvailableShells, CurrentUser, Group, User};
 use toolbox_core::features::users::Refusal;
 use toolbox_core::features::users::run::{PageRun, RunKind};
+use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::{GroupName, ShellPath, UserName};
@@ -58,7 +58,7 @@ fn group(text: &str, gid: u32, members: &[&str]) -> Group {
     }
 }
 
-/// `nico` (logged in, admin), `ada` and the service `http`, and the group
+/// `grace` (logged in, admin), `ada` and the service `http`, and the group
 /// `video` beside their own ones.
 pub fn system() -> Snapshot {
     let mut snapshot = Snapshot::default();
@@ -66,17 +66,17 @@ pub fn system() -> Snapshot {
         users: vec![
             user("ada", 1001, "Ada Lovelace"),
             user("http", 33, ""),
-            user("nico", 1000, "Nico"),
+            user("grace", 1000, "Grace Hopper"),
         ],
         groups: vec![
             group("ada", 1001, &[]),
             group("http", 33, &[]),
-            group("nico", 1000, &[]),
+            group("grace", 1000, &[]),
             group("video", 1500, &["ada"]),
-            group("wheel", 998, &["nico"]),
+            group("wheel", 998, &["grace"]),
         ],
     });
-    snapshot.insert(CurrentUser(name("nico")));
+    snapshot.insert(CurrentUser(name("grace")));
     snapshot.insert(AvailableShells(vec![
         ShellPath::new("/usr/bin/bash").unwrap(),
         ShellPath::new("/usr/bin/fish").unwrap(),
@@ -85,7 +85,7 @@ pub fn system() -> Snapshot {
 }
 
 fn unlocked() -> Users {
-    let flags = BTreeMap::from([(name("ada"), false), (name("nico"), false)]);
+    let flags = BTreeMap::from([(name("ada"), false), (name("grace"), false)]);
     Users::showing(Locks::Known(flags), PageRun::None)
 }
 
@@ -94,8 +94,13 @@ pub fn page(users: Users) -> Shown {
 }
 
 pub fn page_on(snapshot: Snapshot, users: Users) -> Shown {
+    page_with_queue(snapshot, users, ChangeSet::default())
+}
+
+pub fn page_with_queue(snapshot: Snapshot, users: Users, changes: ChangeSet) -> Shown {
     let mut harness = PageFixture {
         snapshot: Arc::new(snapshot),
+        changes,
         services: Services {
             users,
             ..Services::default()
@@ -196,14 +201,14 @@ fn a_refused_click_names_the_account_until_dismissed() {
     let mut users = unlocked();
     users.set_refusal(Some(Refused {
         refusal: Refusal::LastAdmin,
-        subject: "nico".to_owned(),
+        subject: "grace".to_owned(),
     }));
 
     let mut harness = page(users);
 
     assert!(
         harness
-            .query_by_label_contains("nico is the last member of the groups wheel and sudo")
+            .query_by_label_contains("grace is the last member of the groups wheel and sudo")
             .is_some()
     );
 
@@ -297,7 +302,7 @@ fn every_row_offers_edit_and_its_menu_at_its_right() {
     let harness = page(unlocked());
 
     assert!(harness.query_by_label("Set Password…").is_none());
-    for user in ["ada", "nico"] {
+    for user in ["ada", "grace"] {
         let edit_name = format!("Edit {user}…");
         let more_name = format!("More actions for {user}");
         let edit = harness.get_by_role_and_label(Role::Button, &edit_name);

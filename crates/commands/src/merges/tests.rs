@@ -1,7 +1,9 @@
 use std::path::PathBuf;
 
 use clap::Parser as _;
-use toolbox_cli::args::{Cli, Command, MergeResolveArgs, MergesCommand};
+use toolbox_cli::Exit;
+use toolbox_cli::args::{Cli, Command, Confirm, MergeResolveArgs, MergesCommand};
+use toolbox_cli::output::Mark;
 use toolbox_core::domains::{ConfigMerges, MergeCopies};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{ConfigText, FetchRefusal, MergeCopy, Resolution};
@@ -156,38 +158,100 @@ fn the_list_says_how_each_copy_stands() {
         .map(PathBuf::from)
         .collect();
 
-    let read = |found: &MergeCopy| match found.as_str() {
+    let row = |copy: &str, file: &str, kind: &str, state: &str, unread: bool| MergeRow {
+        copy: copy.to_owned(),
+        file: file.to_owned(),
+        kind: kind.to_owned(),
+        state: state.to_owned(),
+        unread,
+    };
+
+    assert_eq!(
+        rows(&paths, &lima_reads),
+        [
+            row(
+                "/etc/locale.gen.pacsave",
+                "/etc/locale.gen",
+                "saved",
+                "not read, only root may read it",
+                true
+            ),
+            row(
+                "/etc/pacman.conf.pacnew",
+                "/etc/pacman.conf",
+                "new",
+                "1 change",
+                false
+            ),
+            row(
+                "/etc/shadow.pacnew",
+                "",
+                "",
+                "merge it in a terminal",
+                false
+            ),
+        ]
+    );
+}
+
+/// A copy whose files could not be read is unknown, one that was read has
+/// no mark of its own, whatever its state says.
+#[test]
+fn a_copy_not_read_is_marked_unknown_and_a_read_one_is_blank() {
+    let paths: Vec<PathBuf> = PACDIFF_O.lines().map(PathBuf::from).collect();
+    let listed_rows = rows(&paths, &lima_reads);
+    let listed = super::listing(&listed_rows);
+    let mark_of = |copy: &str| {
+        listed
+            .rows
+            .iter()
+            .find(|row| row.cells[0] == copy)
+            .map(|row| row.mark)
+    };
+
+    assert_eq!(mark_of("/etc/locale.gen.pacsave"), Some(Mark::Unknown));
+    assert_eq!(mark_of("/etc/pacman.conf.pacnew"), Some(Mark::Blank));
+}
+
+/// The Lima VM's copies: `pacman.conf` reads, the others need root.
+fn lima_reads(found: &MergeCopy) -> MergePair {
+    match found.as_str() {
         "/etc/pacman.conf.pacnew" => pair(found.as_str(), &newer(), Some(PACMAN_CONF)),
         _ => MergePair {
             copy: found.clone(),
             copied: Err(ReadProblem::NotRun(pkexec::Refusal::Dismissed)),
             current: Err(ReadProblem::Refused(FetchRefusal::Missing)),
         },
+    }
+}
+
+/// A merge the page refuses under `--json` is one JSON Lines error on
+/// standard output, with the page rule's exit code.
+#[test]
+fn a_refused_merge_under_json_is_one_error_line() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let same = pair("/etc/pacman.conf.pacnew", PACMAN_CONF, Some(PACMAN_CONF));
+    let refused = queued(&["/etc/pacman.conf.pacnew", "--take-new"], &same).unwrap_err();
+    let confirm = Confirm {
+        yes: true,
+        json: true,
+        ..Confirm::default()
     };
 
-    let row = |copy: &str, file: &str, kind: &str, state: &str| MergeRow {
-        copy: copy.to_owned(),
-        file: file.to_owned(),
-        kind: kind.to_owned(),
-        state: state.to_owned(),
-    };
-
-    assert_eq!(
-        rows(&paths, &read),
-        [
-            row(
-                "/etc/locale.gen.pacsave",
-                "/etc/locale.gen",
-                "saved",
-                "not read, only root may read it"
-            ),
-            row(
-                "/etc/pacman.conf.pacnew",
-                "/etc/pacman.conf",
-                "new",
-                "1 change"
-            ),
-            row("/etc/shadow.pacnew", "", "", "merge it in a terminal"),
-        ]
+    let mut out = Vec::new();
+    let exit = crate::act::run(
+        Err(refused),
+        confirm,
+        None,
+        &runtime,
+        &mut crate::out::Out::new(&mut out, crate::out::Settings::default()),
     );
+
+    let text = String::from_utf8(out).unwrap();
+    assert_eq!(exit, Exit::PageRule);
+    assert!(
+        text.starts_with(r#"{"schema":1,"event":"error","message":"#),
+        "{text}"
+    );
+    assert_eq!(text.lines().count(), 1, "{text}");
 }

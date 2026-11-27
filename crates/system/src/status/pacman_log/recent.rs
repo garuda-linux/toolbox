@@ -6,8 +6,7 @@ use std::io::{self, Read, Seek, SeekFrom};
 use super::{PacmanLog, open_log, unreadable, whole_lines};
 use crate::error::ProbeError;
 
-/// The log of an old system has tens of megabytes. The history of one
-/// package shows what fits in this many of its newest.
+/// The history of one package shows what fits in this many of its newest.
 const RECENT_BYTES: u64 = 4 * 1024 * 1024;
 
 pub trait RecentLogSource: Send + Sync {

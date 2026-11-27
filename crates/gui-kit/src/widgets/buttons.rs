@@ -11,12 +11,6 @@
 //!   that opens the question stays Soft and the question's answer is Danger.
 //! - Ghost has no fill at rest and reads as a label, so pages do not use
 //!   it for a lone action.
-//! - On every row, item rows (a file, a driver, a user) and task rows (a
-//!   maintenance job, a next step) alike, actions sit at the right,
-//!   centred on the row. When that leaves the words less than
-//!   [`MIN_TEXT_WIDTH`](super::layout::MIN_TEXT_WIDTH) (about 30
-//!   characters), they drop under the words at the left. `split_row` and
-//!   `ActionRow` do this.
 //!
 //! Push and flat icon buttons follow Darkly 0.5.45: a 1 px outline on a
 //! raised face, the face inset 2 px, the focus as the fill, and the sizes of
@@ -32,8 +26,7 @@ pub(super) mod look;
 
 pub(super) use flat::paint_small_button;
 pub use flat::{
-    icon_button, icon_button_padding, icon_button_width, refresh_button, refresh_button_busy,
-    sidebar_button,
+    icon_button, icon_button_padding, icon_button_width, refresh_button_busy, sidebar_button,
 };
 use look::{press_overlay, push_fill, push_shadow, push_width, tool_fill};
 
@@ -49,8 +42,8 @@ use crate::tokens::{self, Tokens};
 /// Darkly's `Frame_FrameWidth`, the room round a push button's face.
 const FRAME: f32 = 2.0;
 /// Darkly's `ButtonHeight` (3), the margins above and below (12) and the
-/// frame on both sides (4), one pixel less than their sum of 19, so the
-/// height stays even on the 16 px text.
+/// frame on both sides (4) sum to 19. One less keeps the height even on the
+/// 16 px text.
 pub(super) const BUTTON_EXTRA_HEIGHT: f32 = 18.0;
 const ICON_SIZE: f32 = 16.0;
 /// Darkly's `Button_ItemSpacing`, between a push button's icon and its text.
@@ -90,25 +83,14 @@ impl ButtonKind {
         }
     }
 
-    pub(super) fn fill(self, tokens: &Tokens, pointer: Pointer) -> Color32 {
-        self.focused_fill(tokens, pointer, false)
-    }
-
     fn focused_fill(self, tokens: &Tokens, pointer: Pointer, focused: bool) -> Color32 {
         match self {
-            // Darkly's flat tool button: the text colour under the pointer,
-            // the focus colour when only the focus holds it.
+            // Darkly's flat tool button.
             Self::Ghost => tool_fill(tokens, pointer, focused).unwrap_or(Color32::TRANSPARENT),
             Self::Primary | Self::Soft | Self::Danger => {
                 push_fill(tokens, self.base(tokens), pointer, focused)
             }
         }
-    }
-
-    /// The fill at rest, for tests that tell the kinds apart by it. Danger
-    /// shares Soft's fill, as KDE has no red button.
-    pub fn rest_fill(self, tokens: &Tokens) -> Color32 {
-        self.fill(tokens, Pointer::Rest)
     }
 
     /// Whether the fill under the pointer is the keyboard focus fill, which

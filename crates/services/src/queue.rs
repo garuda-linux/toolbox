@@ -49,8 +49,8 @@ pub struct Queue {
 }
 
 impl Queue {
-    /// A queue that is never written, for tests: changes the user queued
-    /// in this session, which met every guard when they were queued.
+    /// A queue that is never written: changes the user queued in this
+    /// session, which met every guard when they were queued.
     pub fn in_memory(changes: ChangeSet) -> Self {
         Self {
             unchecked: Unchecked::default(),
@@ -62,6 +62,7 @@ impl Queue {
     }
 
     /// [`Queue::in_memory`] as a restored queue, whose guards still wait.
+    #[cfg(any(test, feature = "testing"))]
     pub fn restored_in_memory(changes: ChangeSet) -> Self {
         Self {
             unchecked: unchecked(&changes),
@@ -242,7 +243,6 @@ impl Queue {
         self.save();
     }
 
-    /// Changes with every change to the queue.
     pub const fn revision(&self) -> u64 {
         self.revision
     }

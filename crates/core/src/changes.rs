@@ -118,7 +118,6 @@ impl ChangeSet {
         }
     }
 
-    /// Returns whether one was queued.
     pub fn remove_key(&mut self, domain: &str, key: &str) -> bool {
         self.queue_of_mut(domain)
             .is_some_and(|queue| queue.remove_key(key))

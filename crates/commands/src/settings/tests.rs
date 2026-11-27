@@ -2,7 +2,7 @@ use toolbox_catalog::ColourSchemeCatalog;
 use toolbox_cli::args::SettingKey;
 use toolbox_config::{RefreshInterval, Settings};
 
-use super::{rows, set, value};
+use super::{SettingError, rows, set, value};
 
 #[test]
 fn every_setting_reads_back_what_it_was_set_to() {
@@ -49,34 +49,24 @@ fn the_system_language_and_no_update_check_have_words() {
 
 #[test]
 fn bad_values_say_what_they_should_have_been() {
-    set(
-        Settings::default(),
-        SettingKey::LogLevel,
-        "loud",
-        &schemes(),
-    )
-    .unwrap_err();
-    set(
-        Settings::default(),
-        SettingKey::UpdateCheck,
-        "soon",
-        &schemes(),
-    )
-    .unwrap_err();
-    set(
-        Settings::default(),
-        SettingKey::Language,
-        "Deutsch!",
-        &schemes(),
-    )
-    .unwrap_err();
-    set(
-        Settings::default(),
-        SettingKey::StartAtLogin,
-        "on",
-        &schemes(),
-    )
-    .unwrap_err();
+    let refused = |key, value| set(Settings::default(), key, value, &schemes()).unwrap_err();
+
+    assert!(matches!(
+        refused(SettingKey::LogLevel, "loud"),
+        SettingError::Word(_)
+    ));
+    assert!(matches!(
+        refused(SettingKey::UpdateCheck, "soon"),
+        SettingError::Minutes(_)
+    ));
+    assert!(matches!(
+        refused(SettingKey::Language, "Deutsch!"),
+        SettingError::Language(_)
+    ));
+    assert_eq!(
+        refused(SettingKey::StartAtLogin, "on"),
+        SettingError::NotInFile
+    );
 }
 
 #[test]
@@ -227,4 +217,26 @@ fn a_refused_value_reads_as_before_the_error_type() {
         refused(SettingKey::StartAtLogin, "on"),
         "start at login is no setting of the file"
     );
+}
+
+/// A broken file under `--json` leaves standard output to the JSON of the
+/// command, its note goes to standard error as an object.
+#[test]
+fn an_unusable_file_under_json_does_not_write_to_standard_output() {
+    use crate::out::{Json, Out, Settings as OutSettings};
+
+    let dir = tempfile::tempdir().unwrap();
+    let file = dir.path().join("settings.toml");
+    std::fs::write(&file, "this is = not [toml").unwrap();
+    let problem = Settings::load(&file).problem.unwrap();
+
+    let mut stdout = Vec::new();
+    let settings = OutSettings {
+        json: Json::Read,
+        ..OutSettings::default()
+    };
+
+    super::unusable(&problem, &Out::new(&mut stdout, settings));
+
+    assert_eq!(stdout, Vec::<u8>::new());
 }

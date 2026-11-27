@@ -62,7 +62,7 @@ pub fn format_record(
 }
 
 /// UTC ISO 8601 with milliseconds.
-pub fn timestamp(time: SystemTime) -> String {
+fn timestamp(time: SystemTime) -> String {
     let since = time.duration_since(UNIX_EPOCH).unwrap_or_default();
     let Utc {
         year,

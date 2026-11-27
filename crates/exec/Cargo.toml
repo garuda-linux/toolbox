@@ -19,6 +19,7 @@ thiserror.workspace = true
 toolbox-pty.workspace = true
 
 [dev-dependencies]
+toolbox-fs = { workspace = true, features = ["testing"] }
 toolbox-plan = { workspace = true, features = ["testing"] }
 toolbox-state = { workspace = true, features = ["testing"] }
 serde_json.workspace = true

@@ -133,8 +133,3 @@ fn copy_name_copies_and_says_so() {
         })]
     );
 }
-
-#[test]
-fn the_theme_is_asked_for_pictures_of_the_size_the_rows_draw() {
-    assert!((f32::from(super::PICTURE_PIXELS) - super::PICTURE_SIZE).abs() < f32::EPSILON);
-}

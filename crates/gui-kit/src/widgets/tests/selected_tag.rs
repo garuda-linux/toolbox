@@ -29,6 +29,6 @@ fn a_tag_on_a_selected_row_is_drawn_in_the_selection_text() {
 
         assert_eq!(ink, tokens.on_tint, "{theme:?}");
         let ratio = contrast(ink, tokens.accent_tint);
-        assert!(ratio >= 3.0, "{theme:?}: tag {ratio:.2}:1 on the selection");
+        assert!(ratio >= 4.5, "{theme:?}: tag {ratio:.2}:1 on the selection");
     }
 }

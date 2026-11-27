@@ -122,31 +122,29 @@ pub(super) fn shadow_shade(window: Color32, contrast: Option<i8>) -> Color32 {
     // Very dark (kcolorscheme.cpp:576) and very light colours (:591)
     // take their own steps.
     if luma < 0.006 {
-        return shade(window, 0.03 + 0.60 * contrast, 0.0);
+        return shade(window, 0.03 + 0.60 * contrast);
     }
 
     if luma > 0.93 {
-        return shade(window, -0.10 - 0.90 * contrast, 0.0);
+        return shade(window, -0.10 - 0.90 * contrast);
     }
 
     let dark_amount = (-luma) * (0.55 + contrast * 0.35);
-    darken(shade(window, dark_amount, 0.0), 0.5 + 0.3 * luma, 1.0)
+    darken(shade(window, dark_amount), 0.5 + 0.3 * luma)
 }
 
-/// `KColorUtils::shade` (kcolorutils.cpp:89): luma and chroma moved by
-/// steps, each held within 0 to 1.
-fn shade(colour: Color32, luma: f32, chroma: f32) -> Color32 {
+/// `KColorUtils::shade` (kcolorutils.cpp:89): luma moved by a step, held
+/// within 0 to 1.
+fn shade(colour: Color32, luma: f32) -> Color32 {
     let mut khcy = Khcy::of(colour);
     khcy.luma = normalize(khcy.luma + luma);
-    khcy.chroma = normalize(khcy.chroma + chroma);
     khcy.colour()
 }
 
-/// `KColorUtils::darken` (kcolorutils.cpp:81): luma and chroma scaled.
-fn darken(colour: Color32, luma: f32, chroma: f32) -> Color32 {
+/// `KColorUtils::darken` (kcolorutils.cpp:81): luma scaled.
+fn darken(colour: Color32, luma: f32) -> Color32 {
     let mut khcy = Khcy::of(colour);
     khcy.luma = normalize(khcy.luma * (1.0 - luma));
-    khcy.chroma = normalize(khcy.chroma * chroma);
     khcy.colour()
 }
 

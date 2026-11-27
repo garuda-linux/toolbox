@@ -33,7 +33,7 @@ fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
 
     snapshot.insert(Accounts {
-        users: vec![user("nico", 1000, 1000)],
+        users: vec![user("ada", 1000, 1000)],
         groups: vec![group("wheel", 998, &[])],
     });
     snapshot.insert(AvailableShells(vec![
@@ -46,11 +46,11 @@ fn snapshot() -> Snapshot {
 fn typed_names_get_the_code_of_the_rule_they_break() {
     for (text, code) in [
         ("", "empty"),
-        ("Ada", "invalid-start"),
+        ("Grace", "invalid-start"),
         ("1ada", "invalid-start"),
-        ("-ada", "invalid-start"),
-        ("ada lovelace", "invalid-character"),
-        ("ada:x", "invalid-character"),
+        ("-grace", "invalid-start"),
+        ("grace lovelace", "invalid-character"),
+        ("grace:x", "invalid-character"),
         ("adä", "invalid-character"),
         ("a2345678901234567890123456789012x", "too-long"),
     ] {
@@ -72,18 +72,32 @@ fn the_add_user_fields_are_checked_field_by_field() {
 
     for (input, code) in [
         (filled("", "", "", empty.clone()), "empty"),
-        (filled("Ada", "", "", empty.clone()), "invalid-start"),
-        (filled("nico", "", "", empty.clone()), "user-exists"),
+        (filled("Grace", "", "", empty.clone()), "invalid-start"),
+        (filled("ada", "", "", empty.clone()), "user-exists"),
         (filled("wheel", "", "", empty.clone()), "group-exists"),
-        (filled("ada", "a:b", "", empty.clone()), "invalid-character"),
-        (filled("ada", " Ada", "", empty.clone()), "outer-blank"),
-        (filled("ada", "", "bash", empty.clone()), "shell-not-listed"),
-        (filled("ada", "", "/usr/bin/zsh", empty), "shell-not-listed"),
         (
-            filled("ada", "", "", Some(BTreeSet::from([group_name("ghosts")]))),
+            filled("grace", "a:b", "", empty.clone()),
+            "invalid-character",
+        ),
+        (filled("grace", " Grace", "", empty.clone()), "outer-blank"),
+        (
+            filled("grace", "", "bash", empty.clone()),
+            "shell-not-listed",
+        ),
+        (
+            filled("grace", "", "/usr/bin/zsh", empty),
+            "shell-not-listed",
+        ),
+        (
+            filled(
+                "grace",
+                "",
+                "",
+                Some(BTreeSet::from([group_name("ghosts")])),
+            ),
             "unknown-group",
         ),
-        (filled("ada", "", "", None), "invalid"),
+        (filled("grace", "", "", None), "invalid"),
     ] {
         assert_eq!(
             new_account(&input, &snapshot).err().map(RefusalText::code),
@@ -98,8 +112,8 @@ fn a_checked_add_user_form_builds_the_user() {
     let member = Some(BTreeSet::from([group_name("wheel")]));
     let user = new_account(
         &NewAccount {
-            name: "ada",
-            full_name: "Ada Lovelace",
+            name: "grace",
+            full_name: "Grace Lovelace",
             shell: "/usr/bin/bash",
             groups: member,
             home: "",
@@ -111,21 +125,21 @@ fn a_checked_add_user_form_builds_the_user() {
     )
     .unwrap();
 
-    assert_eq!(user.parts().name.as_str(), "ada");
-    assert_eq!(user.parts().full_name.as_str(), "Ada Lovelace");
+    assert_eq!(user.parts().name.as_str(), "grace");
+    assert_eq!(user.parts().full_name.as_str(), "Grace Lovelace");
     assert_eq!(
         user.parts().shell.as_ref().map(ShellPath::as_str),
         Some("/usr/bin/bash")
     );
     assert_eq!(user.parts().groups.len(), 1);
     assert_eq!(
-        new_account(&filled("ada", "", "", Some(BTreeSet::new())), &snapshot)
+        new_account(&filled("grace", "", "", Some(BTreeSet::new())), &snapshot)
             .map(|created| created.into_parts().shell),
         Ok(None)
     );
     assert_eq!(
         new_account(
-            &filled("ada", "", "", Some(BTreeSet::new())),
+            &filled("grace", "", "", Some(BTreeSet::new())),
             &Snapshot::default()
         )
         .err(),
@@ -158,33 +172,33 @@ fn the_add_button_names_the_first_thing_that_holds_it() {
         Some(AddBlocker::NoName)
     );
     assert_eq!(
-        add_blocker(&form("Ada!", false, "", "")),
+        add_blocker(&form("Grace!", false, "", "")),
         Some(AddBlocker::BadName)
     );
     assert_eq!(
-        add_blocker(&form("ada", true, "", "")),
+        add_blocker(&form("grace", true, "", "")),
         Some(AddBlocker::NoPassword)
     );
     assert_eq!(
-        add_blocker(&form("ada", true, "one", "")),
+        add_blocker(&form("grace", true, "one", "")),
         Some(AddBlocker::NoRepeat)
     );
     assert_eq!(
-        add_blocker(&form("ada", true, "one", "two")),
+        add_blocker(&form("grace", true, "one", "two")),
         Some(AddBlocker::Fields)
     );
-    assert_eq!(add_blocker(&form("ada", true, "one", "one")), None);
+    assert_eq!(add_blocker(&form("grace", true, "one", "one")), None);
 
     let rest = AddForm {
         rest_ok: false,
-        ..form("ada", true, "one", "one")
+        ..form("grace", true, "one", "one")
     };
 
     assert_eq!(add_blocker(&rest), Some(AddBlocker::Fields));
 
     let weak = AddForm {
         password_ok: false,
-        ..form("ada", true, "one", "one")
+        ..form("grace", true, "one", "one")
     };
 
     assert_eq!(add_blocker(&weak), Some(AddBlocker::Fields));
@@ -195,7 +209,7 @@ fn the_add_button_names_the_first_thing_that_holds_it() {
 #[test]
 fn the_login_follows_the_first_word_of_the_full_name() {
     for (full_name, login) in [
-        ("Ada Lovelace", "ada"),
+        ("Grace Lovelace", "grace"),
         ("  Grace   Hopper", "grace"),
         ("Jürgen Groß", "juergen"),
         ("Émile Zola", "emile"),

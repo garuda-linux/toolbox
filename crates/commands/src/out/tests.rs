@@ -1,9 +1,21 @@
 use toolbox_cli::Exit;
-use toolbox_cli::output::{Paint, Style};
+use toolbox_cli::output::{ColorMode, Paint, Style};
 
-use super::failure_text;
+use super::{Json, Settings, failure_text};
 
 const PLAIN: Paint = Paint::new(Style::Plain);
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            color: ColorMode::Auto,
+            width: None,
+            quiet: false,
+            verbose: false,
+            json: Json::Off,
+        }
+    }
+}
 
 #[test]
 fn a_failure_is_one_line_and_a_hint() {
@@ -110,8 +122,7 @@ fn a_read_failure_under_json_carries_the_program_text() {
 }
 
 /// Under a read's `--json` standard error holds the JSON objects alone,
-/// so a script parses every line of it. Text output keeps its `error:`
-/// lines, and a change its JSON Lines on standard output.
+/// so a script parses every line of it.
 #[test]
 fn a_read_under_json_keeps_its_error_for_the_object_alone() {
     use super::{Json, Sink, sink};

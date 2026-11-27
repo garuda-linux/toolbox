@@ -82,7 +82,7 @@ where
 /// A tabbed header whose title and subtitle are given as words rather
 /// than text ids, such as a package's name and description. `ids.title`
 /// and `ids.subtitle` are not read.
-pub fn tabbed_header_of<T>(
+fn tabbed_header_of<T>(
     ui: &mut Ui,
     (title, subtitle): (&str, &str),
     ids: TabbedIds<'_>,
@@ -144,7 +144,7 @@ pub fn search(ui: &mut Ui, text: &mut String, name: &str, hint: &str) -> Respons
 
 /// `wanted`, or less when the `room` left of the row holds no more, never
 /// less than [`SEARCH_LEAST`] so the field keeps its hint and clear button.
-pub const fn field_width(room: f32, wanted: f32) -> f32 {
+const fn field_width(room: f32, wanted: f32) -> f32 {
     wanted.min(room).max(SEARCH_LEAST)
 }
 
@@ -155,8 +155,6 @@ fn tabs_and_refresh_width(ui: &Ui, labels: &[&str]) -> f32 {
     segmented_width(ui, labels) + icon_button_width()
 }
 
-/// While a read runs the button spins and is named Reading, and a click or
-/// F5 starts no second read, see `refresh_button_busy`.
 fn read_again(ui: &mut Ui, name: &str, reading: bool) -> bool {
     let busy = reading.then(|| {
         let ctx = ui.ctx().clone();

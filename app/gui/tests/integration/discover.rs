@@ -62,7 +62,6 @@ pub fn pictured(
     pictured_on(catalogs, system, pictures, Theme::Dark)
 }
 
-/// As [`pictured`], drawn on `theme`.
 pub fn pictured_on(
     catalogs: Catalogs,
     system: Snapshot,
@@ -223,8 +222,8 @@ fn a_search_without_hits_says_so_and_clears() {
     assert!(row_shown(&harness, "Kate"));
 }
 
-#[test]
 /// Firefox is installed, aerc comes first by name in Internet.
+#[test]
 fn selected_first_puts_installed_apps_on_top() {
     let mut installed = system();
     installed.insert(InstalledPackages(packages(&["firefox", "kate"])));

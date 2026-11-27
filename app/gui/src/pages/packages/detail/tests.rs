@@ -32,7 +32,6 @@ fn showing(details: Details) -> Harness<'static, PageState<PackagesPage>> {
     harness
 }
 
-/// gimp with `edit` made to its details.
 fn gimp_with(edit: impl FnOnce(&mut toolbox_core::features::packages::PackageDetails)) -> Details {
     let mut details = gimp_details();
     if let Read::Known(Some(info)) = &mut details.info {

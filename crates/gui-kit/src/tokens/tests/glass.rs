@@ -13,7 +13,7 @@ use super::frost::laid_on;
 use crate::palette::Palette;
 use crate::testing::desktop::kde::INSTALLED_KDEGLOBALS;
 
-/// The alpha a share of opacity gives, rounded as `gamma_multiply` rounds.
+/// The alpha a share of opacity gives, before `gamma_multiply` rounds it.
 fn alpha_of(share: f32) -> f32 {
     255.0 * share
 }

@@ -8,7 +8,7 @@ use egui::{Color32, Theme};
 use super::super::Tokens;
 use super::letters::{fills, grey};
 use crate::oklch::{hue_chroma, lightness};
-use crate::palette::{Palette, letter_hues};
+use crate::palette::Palette;
 
 /// Nord's official colours, a muted scheme.
 fn nord() -> Palette {
@@ -99,7 +99,7 @@ fn mean(fills: &[Color32]) -> (f32, f32) {
 fn a_muted_scheme_gives_softer_tiles_than_a_vivid_one() {
     let (_, muted) = softness(&nord(), Theme::Dark);
     let (_, vivid) = softness(&dracula(), Theme::Dark);
-    let (_, fallback) = mean(&letter_hues(Theme::Dark));
+    let (_, fallback) = softness(&Palette::fallback(Theme::Dark), Theme::Dark);
 
     assert!(
         muted < fallback - 0.01,
@@ -131,7 +131,7 @@ fn the_fallback_as_a_scheme_keeps_the_fallback_s_softness() {
 #[test]
 fn a_grey_scheme_keeps_the_fallback_s_chroma() {
     let (_, chroma) = softness(&grey(), Theme::Dark);
-    let (_, fallback) = mean(&letter_hues(Theme::Dark));
+    let (_, fallback) = softness(&Palette::fallback(Theme::Dark), Theme::Dark);
 
     assert!(
         (chroma - fallback).abs() < 0.01,

@@ -36,7 +36,7 @@ pub struct TerminalView<'a> {
     label: &'a str,
     /// How to leave, which the locked keys hide. Read with the name.
     hint: Option<&'a str>,
-    /// What the grid lies on, [`crate::Tokens::terminal`] unless set.
+    /// The grid's colour, the terminal's fill unless set.
     ground: Option<Color32>,
     /// Whether a program runs in it. Without one the cursor hides, as
     /// nothing reads what is typed.

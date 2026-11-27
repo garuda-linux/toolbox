@@ -8,7 +8,7 @@ use toolbox_catalog::{SkelCatalog, SkelEntry};
 
 use super::{Backup, SkelError, available, reset};
 
-/// Bash, GTK and ZSH, as `skel.toml` lists them.
+/// Three entries in the shape of `skel.toml`, not the shipped list.
 const CATALOG: &str = r#"
 [[config]]
 id = "bash"

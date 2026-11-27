@@ -31,7 +31,7 @@ constants of `crates/gui-kit/src/icons.rs`, colour icons those of
   toasts, error rows, empty states and Home status rows show this mark.
 - Row icons: `Icon::for_row` maps a glyph to the colour icon KDE apps use
   for the same thing (`colour::of_row`). A glyph with no colour file keeps
-  its symbol. Row icons draw on no tile, at 22 px (`TileSize::Row`), in the
+  its symbol. Row icons draw on no tile, at 22 px (`ICON_EDGE`), in the
   text colour for a glyph.
 - Sidebar entries draw their page icon at 22 px in a 36 px entry
   (`widgets::nav`, `Sizes::nav_row_height`). A monochrome page icon takes
@@ -79,54 +79,51 @@ constants of `crates/gui-kit/src/icons.rs`, colour icons those of
 
 ## Meanings besides pages
 
-| Meaning                     | Glyph                                         | Where                                                                     |
-| --------------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
-| Search                      | `SYSTEM_SEARCH`                               | search fields, no-match empty states, the palette's search commands       |
-| Configuration file to merge | `VCS_DIFF`                                    | Home status row, the files of the merge dialog                            |
-| Plain text file             | `TEXT_X_GENERIC`                              | Config Files sections without a known icon                                |
-| Information                 | `DIALOG_INFORMATION`                          | banners, toasts, empty states, Console notes                              |
-| Warning                     | `DIALOG_WARNING`                              | banners, Home rows                                                        |
-| Error                       | `DIALOG_ERROR`                                | banners, toasts, empty states, Home rows                                  |
-| Success                     | `DIALOG_POSITIVE`                             | success banners                                                           |
-| Read again, refresh         | `VIEW_REFRESH`                                | header refresh, status bar, Services Reload                               |
-| Restart needed              | `SYSTEM_REBOOT`                               | Home status row                                                           |
-| Reset to defaults           | `DOCUMENT_REVERT`                             | Maintenance Reset, Reset Snapper                                          |
-| Boot menu                   | `FORMAT_LIST_UNORDERED`                       | Boot Options menu                                                         |
-| Health check                | `VIEW_TASK`                                   | Maintenance Repairs                                                       |
-| Web service, web page       | `GLOBE`                                       | SearXNG tile, wiki row actions, Config Files                              |
-| Exorcist                    | `DRAW_CROSS`                                  | About "Call the exorcist"                                                 |
-| Game launchers              | `GAMES_CONFIG_BOARD`                          | Gaming catalog section                                                    |
-| Appearance                  | `PREFERENCES_DESKTOP_THEME_GLOBAL`            | Settings section, Boot Options "Look"                                     |
-| Behaviour, time             | `CHRONOMETER`                                 | Settings section, Home "last update" row                                  |
-| Bluetooth                   | `PREFERENCES_SYSTEM_BLUETOOTH`                | Network radios, Components section                                        |
-| Wi-Fi network card          | `NETWORK_WIRELESS`                            | Network page interface cards of a Wi-Fi device                            |
-| Wired network card          | `NETWORK_WIRED`                               | Network page interface cards of a wire, drivers and hardware empty states |
-| Keys, passwords, firewall   | `SECURITY_HIGH`                               | Maintenance keyring, Vaultwarden, Components Firewall                     |
-| Copy                        | `EDIT_COPY`                                   | row actions, property rows                                                |
-| Terminal, command           | `UTILITIES_TERMINAL`                          | row actions, kernel parameters, Home steps                                |
-| More actions                | `OVERFLOW_MENU`                               | row menus                                                                 |
-| Repairs                     | `GAMES_SOLVE`                                 | Maintenance Repairs                                                       |
-| Health fix                  | `GAMES_HINT`                                  | Maintenance "Repair system health"                                        |
-| Wiki, documentation         | `DOCUMENTATION`                               | About wiki rows                                                           |
-| Configuration file preview  | `DOCUMENT_PREVIEW`                            | Config Files reading and no-files states                                  |
-| Picked, done                | `CHECKMARK`                                   | Setup Assistant summary headings                                          |
-| Start, Stop                 | `MEDIA_PLAYBACK_START`, `MEDIA_PLAYBACK_STOP` | Services row menu                                                         |
-| Restart                     | `MEDIA_PLAYLIST_REPEAT`                       | Services row menu                                                         |
-| Mask, Unmask                | `OBJECT_LOCKED`, `OBJECT_UNLOCKED`            | Services row menu                                                         |
-| Show, hide a password       | `VIEW_VISIBLE`, `VIEW_HIDDEN`                 | password fields (`widgets::secret_field`)                                 |
-| Login shell                 | `DIALOG_SCRIPTS`                              | Tweaks "Login shell" row                                                  |
-| DNS servers                 | `NETWORK_SERVER`                              | Tweaks "DNS server" row                                                   |
-| Wi-Fi backend               | `NETWORK_WIRELESS_SIGNAL_GOOD`                | Tweaks "Wi-Fi backend" row                                                |
-| Ad blocking                 | `DIALOG_CANCEL`                               | Tweaks "Ad blocking" row                                                  |
-| Mirrorlist refresh          | `VIEW_LIST_DETAILS`                           | Tweaks Garuda Update "Skip mirrorlist refresh" row                        |
-| AUR updates                 | `APPLICATIONS_DEVELOPMENT`                    | Tweaks Garuda Update "Update AUR packages" row                            |
-| Non-interactive pacman      | `DIALOG_OK`                                   | Tweaks Garuda Update "Non-interactive pacman" row                         |
-| Disk space check            | `DRIVE_HARDDISK`                              | Tweaks Garuda Update "Skip disk space check" row                          |
-| Installed kernels           | `CHECKBOX`                                    | Kernels "Installed" rows                                                  |
-| Zoom in, out, reset         | `ZOOM_IN`, `ZOOM_OUT`, `ZOOM_ORIGINAL`        | palette commands                                                          |
-| Kernels to install          | `FOLDER_DOWNLOAD`                             | Kernels "Available" rows                                                  |
-| Queued changes: Apply       | `DIALOG_OK_APPLY`                             | Changes footer and popover Apply (`shell/changes/buttons.rs`)             |
-| Queued changes: Review      | `DOCUMENT_PREVIEW`                            | Changes footer and popover toggle (Review, Hide)                          |
+| Meaning                     | Glyph                                                          | Where                                                                     |
+| --------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Search                      | `SYSTEM_SEARCH`                                                | search fields, no-match empty states, the palette's search commands       |
+| Configuration file to merge | `VCS_DIFF`                                                     | Home status row, the files of the merge dialog                            |
+| Plain text file             | `TEXT_X_GENERIC`                                               | Config Files sections without a known icon                                |
+| Information                 | `DIALOG_INFORMATION`                                           | banners, toasts, empty states, Console notes                              |
+| Warning                     | `DIALOG_WARNING`                                               | banners, Home rows                                                        |
+| Error                       | `DIALOG_ERROR`                                                 | banners, toasts, empty states, Home rows                                  |
+| Success                     | `DIALOG_POSITIVE`                                              | success banners                                                           |
+| Read again, refresh         | `VIEW_REFRESH`                                                 | header refresh, status bar, Services Reload                               |
+| Restart needed              | `SYSTEM_REBOOT`                                                | Home status row                                                           |
+| Reset to defaults           | `DOCUMENT_REVERT`                                              | Maintenance Reset, Reset Snapper                                          |
+| Health check                | `VIEW_TASK`                                                    | Maintenance Repairs                                                       |
+| Web service, web page       | `GLOBE`                                                        | SearXNG tile, wiki row actions, Config Files                              |
+| Exorcist                    | `DRAW_CROSS`                                                   | About "Call the exorcist"                                                 |
+| Game launchers              | `GAMES_CONFIG_BOARD`                                           | Gaming catalog section                                                    |
+| Behaviour, time             | `CHRONOMETER`                                                  | Settings section, Home "last update" row                                  |
+| Bluetooth                   | `PREFERENCES_SYSTEM_BLUETOOTH`                                 | Network radios, Components section                                        |
+| Wired network card          | `NETWORK_WIRED`                                                | Network page interface cards of a wire, drivers and hardware empty states |
+| Keys, passwords, firewall   | `SECURITY_HIGH`                                                | Maintenance keyring, Vaultwarden, Components Firewall                     |
+| Copy                        | `EDIT_COPY`                                                    | row actions, property rows                                                |
+| Terminal, command           | `UTILITIES_TERMINAL`                                           | row actions, kernel parameters, Home steps                                |
+| More actions                | `OVERFLOW_MENU`                                                | row menus                                                                 |
+| Repair rows                 | `CONFIGURE`, `SECURITY_HIGH`, `RUN_BUILD`, `AUDIO_VOLUME_HIGH` | Maintenance Repairs, after the health rows (`repair_icon`)                |
+| Health fix                  | `GAMES_HINT`                                                   | Maintenance "Repair system health"                                        |
+| Wiki, documentation         | `DOCUMENTATION`                                                | About wiki rows                                                           |
+| Configuration file preview  | `DOCUMENT_PREVIEW`                                             | Config Files reading and no-files states                                  |
+| Picked, done                | `CHECKMARK`                                                    | Setup Assistant summary headings                                          |
+| Start, Stop                 | `MEDIA_PLAYBACK_START`, `MEDIA_PLAYBACK_STOP`                  | Services row menu                                                         |
+| Restart                     | `MEDIA_PLAYLIST_REPEAT`                                        | Services row menu                                                         |
+| Mask, Unmask                | `OBJECT_LOCKED`, `OBJECT_UNLOCKED`                             | Services row menu                                                         |
+| Show, hide a password       | `VIEW_VISIBLE`, `VIEW_HIDDEN`                                  | password fields (`widgets::secret_field`)                                 |
+| Login shell                 | `DIALOG_SCRIPTS`                                               | Tweaks "Login shell" row                                                  |
+| DNS servers                 | `NETWORK_SERVER`                                               | Tweaks "DNS server" row                                                   |
+| Wi-Fi backend               | `NETWORK_WIRELESS_SIGNAL_GOOD`                                 | Tweaks "Wi-Fi backend" row                                                |
+| Ad blocking                 | `DIALOG_CANCEL`                                                | Tweaks "Ad blocking" row                                                  |
+| Mirrorlist refresh          | `VIEW_LIST_DETAILS`                                            | Tweaks Garuda Update "Skip mirrorlist refresh" row                        |
+| AUR updates                 | `APPLICATIONS_DEVELOPMENT`                                     | Tweaks Garuda Update "Update AUR packages" row                            |
+| Non-interactive pacman      | `DIALOG_OK`                                                    | Tweaks Garuda Update "Non-interactive pacman" row                         |
+| Disk space check            | `DRIVE_HARDDISK`                                               | Tweaks Garuda Update "Skip disk space check" row                          |
+| Installed kernels           | `CHECKBOX`                                                     | Kernels "Installed" rows                                                  |
+| Zoom in, out, reset         | `ZOOM_IN`, `ZOOM_OUT`, `ZOOM_ORIGINAL`                         | palette commands                                                          |
+| Kernels to install          | `FOLDER_DOWNLOAD`                                              | Kernels "Available" rows                                                  |
+| Queued changes: Apply       | `DIALOG_OK_APPLY`                                              | Changes footer and popover Apply (`shell/changes/buttons.rs`)             |
+| Queued changes: Review      | `DOCUMENT_PREVIEW`                                             | Changes footer and popover toggle (Review, Hide)                          |
 
 Page glyphs reused for their topic: `DRIVE_HARDDISK_ROOT` (Config Files
 "Bootloader") and `OFFICE_REPORT` (Settings "Diagnostics").

@@ -49,14 +49,20 @@ fn turn(harness: &Harness<'_>) -> f32 {
         }
     });
 
-    turned.unwrap_or_else(|| {
-        assert!(
+    // At rest the arrow is a small rectangle, which must sit inside the box.
+
+    let combo = harness
+        .get_by_role_and_label(Role::ComboBox, "Sort by")
+        .rect();
+
+    turned
+        .or_else(|| {
             inks.iter()
-                .any(|ink| !tinted_rects(harness, *ink).is_empty()),
-            "no chevron"
-        );
-        0.0
-    })
+                .flat_map(|ink| tinted_rects(harness, *ink))
+                .any(|rect| combo.contains(rect.center()))
+                .then_some(0.0)
+        })
+        .expect("the chevron is painted as a mesh or a tinted rectangle")
 }
 
 fn open(harness: &mut Harness<'_>) {

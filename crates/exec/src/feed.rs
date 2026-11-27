@@ -56,8 +56,6 @@ pub fn feed(
     report(step, command, result, input, sink)
 }
 
-/// Turns what the program printed and how it ended into events, with the
-/// secret taken out of the text.
 fn report(
     step: StepId,
     command: &Command,
@@ -89,8 +87,7 @@ fn report(
 }
 
 /// `program` and `deadline` are parameters so tests can run a stand-in.
-/// No cancel reaches it, and the whole output is kept: it is scrubbed
-/// before anyone sees it.
+/// The whole output is kept, since it is scrubbed before anyone sees it.
 fn run(
     program: impl AsRef<std::ffi::OsStr>,
     command: &Command,

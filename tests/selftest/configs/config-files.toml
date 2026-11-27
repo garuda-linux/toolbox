@@ -1,6 +1,6 @@
 # Paths below `root/` and `home/` stand in for the system's and the user's files.
-# `scripts/selftest.sh` adds what git cannot keep: `os-release`, the root-only
-# `modprobe.d` file, `sudoers` and `home/.bashrc`.
+# `scripts/selftest.sh` adds what git cannot keep: `os-release`, `sudoers` and
+# `home/.bashrc`.
 
 [[section]]
 id = "bootloader"

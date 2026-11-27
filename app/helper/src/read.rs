@@ -9,10 +9,12 @@
 //! users) never may.
 
 #[cfg(test)]
+mod capped_tests;
+#[cfg(test)]
 mod tests;
 
 use std::fs::File;
-use std::io::{self, Read as _};
+use std::io::{self, Read};
 use std::os::fd::AsFd;
 use std::path::Path;
 use std::process::{Command, ExitCode};
@@ -57,7 +59,6 @@ pub fn run(command: &str, kind: &str) -> ExitCode {
         return refuse("it does not know this kind of read");
     };
 
-    // Only the lock flags depend on who asks.
     let caller = match kind {
         ReadKind::ShadowLocks => match caller_of(io::stdin()) {
             Ok(caller) => Some(caller),
@@ -133,17 +134,30 @@ fn read_text<E>(path: &Path, answer: impl FnOnce(&str) -> Result<String, E>) -> 
 where
     E: Into<Box<dyn std::error::Error + Send + Sync>>,
 {
-    let mut content = read_capped(path)?;
-    let line = std::str::from_utf8(&content)
-        .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, ReadError::NotText))
-        .and_then(|text| answer(text).map_err(io::Error::other));
+    let mut content = Vec::new();
+    let line = text_answer(path, &mut content, answer);
 
     content.fill(0);
     line
 }
 
-/// Runs the kind's own program with its own arguments and variables in a
-/// clean environment. Nothing of the command comes from the caller.
+fn text_answer<E>(
+    path: &Path,
+    content: &mut Vec<u8>,
+    answer: impl FnOnce(&str) -> Result<String, E>,
+) -> io::Result<String>
+where
+    E: Into<Box<dyn std::error::Error + Send + Sync>>,
+{
+    fill_capped(File::open(path)?, content)?;
+
+    let text = std::str::from_utf8(content.as_slice())
+        .map_err(|_not_text| io::Error::new(io::ErrorKind::InvalidData, ReadError::NotText))?;
+
+    answer(text).map_err(io::Error::other)
+}
+
+/// Nothing of the command comes from the caller.
 fn run_program(root: &Path, kind: ReadKind) -> io::Result<ProgramAnswer> {
     let (program, arguments) = kind
         .program()
@@ -185,17 +199,24 @@ fn run_program(root: &Path, kind: ReadKind) -> io::Result<ProgramAnswer> {
 
 fn read_capped(path: &Path) -> io::Result<Vec<u8>> {
     let mut content = Vec::new();
-    let read = File::open(path)?
-        .take(MAX_FILE_BYTES.saturating_add(1))
-        .read_to_end(&mut content)?;
 
-    if u64::try_from(read).unwrap_or(u64::MAX) > MAX_FILE_BYTES {
-        content.fill(0);
-        return Err(io::Error::new(
-            io::ErrorKind::InvalidData,
-            ReadError::TooLarge,
-        ));
-    }
-
+    fill_capped(File::open(path)?, &mut content)?;
     Ok(content)
+}
+
+/// Appends at most the limit of `source` to `content`. What was read is
+/// overwritten when the read fails or runs past the limit.
+fn fill_capped(source: impl Read, content: &mut Vec<u8>) -> io::Result<()> {
+    let read = source
+        .take(MAX_FILE_BYTES.saturating_add(1))
+        .read_to_end(content);
+
+    let failure = match read {
+        Ok(read) if u64::try_from(read).unwrap_or(u64::MAX) <= MAX_FILE_BYTES => return Ok(()),
+        Ok(_) => io::Error::new(io::ErrorKind::InvalidData, ReadError::TooLarge),
+        Err(error) => error,
+    };
+
+    content.fill(0);
+    Err(failure)
 }

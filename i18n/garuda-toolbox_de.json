@@ -5628,9 +5628,6 @@
     "home-install-button": {
       "string": "Installation starten"
     },
-    "home-install-failed": {
-      "string": "Das Installationsprogramm ließ sich nicht starten: {reason}"
-    },
     "home-programs-failed": {
       "string": "Die Suche nach den Werkzeugen des Live-Systems ist fehlgeschlagen."
     },

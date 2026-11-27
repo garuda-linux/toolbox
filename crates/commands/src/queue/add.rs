@@ -15,7 +15,7 @@ use toolbox_cli::args::{
     UserArgs, UsersCommand,
 };
 use toolbox_core::Toggle;
-use toolbox_core::features::maintenance::page::OPERATION_KEYS;
+use toolbox_core::features::maintenance::page::operation_keys;
 use toolbox_core::features::services::critical;
 
 use crate::change::KernelChange;
@@ -154,7 +154,7 @@ pub fn queueable(command: &Command) -> Result<Queueable<'_>, NotQueued> {
             Ok(Queueable::Kernel(args, KernelChange::Headers))
         }
         Command::Maintenance(MaintenanceCommand::Run(args))
-            if OPERATION_KEYS.contains(&args.task.as_str()) =>
+            if operation_keys().any(|key| key == args.task.as_str()) =>
         {
             Ok(Queueable::Task(args))
         }

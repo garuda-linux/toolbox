@@ -9,11 +9,11 @@ use super::{log_dir, private_folder, temporary};
 
 #[test]
 fn the_state_folder_keeps_the_log_when_there_is_a_home() {
-    let paths = Paths::from_env(|key| (key == "HOME").then(|| OsString::from("/home/nico")));
+    let paths = Paths::from_env(|key| (key == "HOME").then(|| OsString::from("/home/ada")));
 
     assert_eq!(
         log_dir(&paths),
-        Some(PathBuf::from("/home/nico/.local/state/garuda-toolbox"))
+        Some(PathBuf::from("/home/ada/.local/state/garuda-toolbox"))
     );
 }
 

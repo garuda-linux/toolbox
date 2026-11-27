@@ -1,6 +1,5 @@
-//! The parts under the columns: the installed files, folded at first,
-//! with Copy list and a filter, and the package's newest lines of
-//! pacman's log, open at first, with Show all.
+//! The parts under the columns: the installed files and the package's
+//! newest lines of pacman's log.
 
 use std::borrow::Cow;
 use std::sync::Arc;

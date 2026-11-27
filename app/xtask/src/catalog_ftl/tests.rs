@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use toolbox_catalog::{ConfigFileCatalog, ToggleCatalog};
 
 use super::{config_messages, kept, messages, render};
+use crate::read_optional;
 use crate::translations::plain_value;
 
 const CATALOG: &str = r#"
@@ -140,4 +141,18 @@ fn colour_schemes_give_their_names() {
         id: "catalog-colour-schemes-nord-light".to_owned(),
         english: "Nord light".to_owned(),
     }));
+}
+
+#[test]
+fn a_file_that_is_not_utf8_is_an_error_and_a_missing_one_is_empty() {
+    let dir = std::env::temp_dir().join(format!("xtask-read-optional-{}", std::process::id()));
+    std::fs::create_dir_all(&dir).expect("a temp folder");
+    let path = dir.join("catalog.ftl");
+    std::fs::write(&path, [0xff_u8, 0xfe, b'x']).expect("a file");
+
+    let error = read_optional(&path).expect_err("bytes that are not UTF-8 are an error");
+    assert!(error.contains("cannot read"), "{error}");
+    assert_eq!(read_optional(&dir.join("missing.ftl")), Ok(String::new()));
+
+    std::fs::remove_dir_all(&dir).expect("the temp folder goes");
 }

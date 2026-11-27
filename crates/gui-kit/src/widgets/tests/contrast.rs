@@ -64,7 +64,12 @@ fn a_disabled_button_keeps_its_colours_under_egui_s_fade_alone() {
 
         // Breeze draws every push button's text in the normal text colour, and
         // a Primary button fills with the accent blended into the field.
-        let (ink, fill) = (tokens.text, kind.rest_fill(&tokens));
+        let ink = tokens.text;
+        let fill = if kind == ButtonKind::Primary {
+            tokens.default_button
+        } else {
+            tokens.input
+        };
 
         let alpha = harness.ctx.global_style().visuals.disabled_alpha;
         let text = painted_text(&harness, "Add user…").expect("the text is painted");

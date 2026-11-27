@@ -2,7 +2,7 @@
 //!
 //! Read the text, run the editor on a private copy, show what changed,
 //! write it back. The app does the work each step asks for, so the order
-//! of things is tested here without a window, files or a helper.
+//! is tested here without a window, files or a helper.
 
 mod file;
 mod news;

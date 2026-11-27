@@ -4,7 +4,7 @@
 use toolbox_plan::{GrubKey, GrubSetting, GrubTimeout, KernelParameters};
 
 use super::super::{recheck, recheck_grub};
-use super::{ARCH, system, with_plymouth};
+use super::{LIMA, system, with_plymouth};
 use crate::domains::{GrubDefaults, PlymouthThemes};
 use crate::test_support::plymouth_theme;
 use crate::{ChangeSet, Single, Snapshot};
@@ -23,7 +23,7 @@ fn restore_line(changes: &mut ChangeSet, words: &str) {
 
 #[test]
 fn a_restored_plymouth_theme_that_is_not_installed_is_dropped() {
-    let snapshot = with_plymouth(system(ARCH, &["plymouth"]));
+    let snapshot = with_plymouth(system(LIMA, &["plymouth"]));
     let mut changes = ChangeSet::default();
 
     changes.want::<PlymouthThemes>(Single, plymouth_theme("no-such-theme"), &snapshot);
@@ -34,7 +34,7 @@ fn a_restored_plymouth_theme_that_is_not_installed_is_dropped() {
 
 #[test]
 fn an_installed_restored_plymouth_theme_keeps_its_wish() {
-    let snapshot = with_plymouth(system(ARCH, &["plymouth"]));
+    let snapshot = with_plymouth(system(LIMA, &["plymouth"]));
     let mut changes = ChangeSet::default();
 
     changes.want::<PlymouthThemes>(Single, plymouth_theme("spinner"), &snapshot);
@@ -44,7 +44,7 @@ fn an_installed_restored_plymouth_theme_keeps_its_wish() {
 
 #[test]
 fn a_restored_plymouth_theme_waits_for_the_theme_list() {
-    let snapshot = system(ARCH, &["plymouth"]);
+    let snapshot = system(LIMA, &["plymouth"]);
     let mut changes = ChangeSet::default();
 
     changes.want::<PlymouthThemes>(Single, plymouth_theme("no-such-theme"), &snapshot);
@@ -80,7 +80,7 @@ fn a_restored_command_line_over_a_plain_one_stays() {
 
     restore_line(&mut changes, "quiet splash");
 
-    assert_eq!(recheck_grub(&mut changes, &system(ARCH, &[])), Some(0));
+    assert_eq!(recheck_grub(&mut changes, &system(LIMA, &[])), Some(0));
     assert_eq!(changes.len(), 1);
 }
 

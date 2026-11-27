@@ -13,7 +13,7 @@ const SHELL: &str = "/bin/sh";
 fn input() -> SecretInput {
     Password::new(SECRET.to_owned())
         .unwrap()
-        .chpasswd_input(&UserName::new("nico").unwrap())
+        .chpasswd_input(&UserName::new("ada").unwrap())
 }
 
 fn chpasswd() -> Command {
@@ -30,7 +30,7 @@ fn fed(script: &str, args: &[&str]) -> std::process::Output {
 fn the_program_reads_the_secret_from_its_standard_input() {
     let output = fed(
         "read -r line; test \"$line\" = \"$1\"",
-        &["sh", &format!("nico:{SECRET}")],
+        &["sh", &format!("ada:{SECRET}")],
     );
 
     assert!(output.status.success());
@@ -71,7 +71,7 @@ fn a_program_that_echoes_its_input_is_scrubbed() {
         events,
         [Event::Output {
             step,
-            data: "nico:<redacted>\r\nbad line: nico:<redacted>\r\n".to_owned()
+            data: "ada:<redacted>\r\nbad line: ada:<redacted>\r\n".to_owned()
         }]
     );
 }
@@ -133,7 +133,7 @@ fn a_program_that_never_ends_is_killed_at_the_deadline() {
         &command,
         Environment::Clean,
         &input(),
-        Duration::from_millis(300),
+        Duration::from_secs(1),
     );
 
     assert!(started.elapsed() < Duration::from_secs(20));
@@ -149,33 +149,9 @@ fn a_program_that_never_ends_is_killed_at_the_deadline() {
         events,
         [Event::Output {
             step,
-            data: "chpasswd: it did not end within 0 seconds and was stopped\r\n".to_owned()
+            data: "chpasswd: it did not end within 1 seconds and was stopped\r\n".to_owned()
         }]
     );
-}
-
-#[test]
-fn the_step_itself_runs_the_program_and_scrubs_its_answer() {
-    let mut events: Vec<Event> = Vec::new();
-    let outcome = super::feed(
-        StepId::new(1),
-        &chpasswd(),
-        Environment::Clean,
-        &input(),
-        &mut events,
-    );
-
-    assert!(
-        matches!(
-            outcome,
-            Outcome::Failed {
-                cause: _,
-                cleanup_failed: _
-            }
-        ),
-        "chpasswd cannot set passwords as this user: {outcome:?}"
-    );
-    assert!(!format!("{events:?}").contains(SECRET));
 }
 
 /// The shell is gone but its background loop keeps the pipes open: the

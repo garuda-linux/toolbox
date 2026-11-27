@@ -1,12 +1,8 @@
 //! The tiles that stand in for a missing app picture, in hues taken from the
 //! desktop's colour scheme.
 //!
-//! The accent, the status colours and the link colours each give a hue, and
-//! turns of the accent fill up the rest. All eight share one lightness and
-//! one chroma, so no tile shouts over the others. They start from
-//! [`crate::palette::letter_hues`] and move with the scheme's own colours, so
-//! a muted scheme gives softer tiles. Without a scheme read, the fallback
-//! fills stay.
+//! They start from [`crate::palette::letter_hues`] and move with the scheme's
+//! own colours, so a muted scheme gives softer tiles.
 
 use std::array;
 
@@ -49,7 +45,6 @@ pub struct LetterTiles {
 }
 
 impl LetterTiles {
-    /// The letter is the theme's text, which stands in for white on a fill.
     pub(super) fn derive(palette: &Palette, card: Color32, ends: Ends, theme: Theme) -> Self {
         let fills = if *palette == Palette::fallback(theme) {
             letter_hues(theme)

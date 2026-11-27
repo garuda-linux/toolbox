@@ -118,11 +118,16 @@ fn a_finished_plan_reads_an_asked_menu_again() {
     boot.open(true);
     settle(&mut boot, |boot, _| boot.menu().known().is_some());
     boot.plan_finished();
-    settle(&mut boot, |_, _| source.0.load(Ordering::SeqCst) == 2);
-
     assert!(
         boot.menu().known().is_some(),
-        "the old menu shows meanwhile"
+        "the old menu shows while the menu is read again"
+    );
+
+    settle(&mut boot, |_, _| source.0.load(Ordering::SeqCst) == 2);
+    assert_eq!(
+        source.0.load(Ordering::SeqCst),
+        2,
+        "the menu was read again"
     );
 }
 

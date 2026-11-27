@@ -22,7 +22,6 @@ const FIXED_CATALOGS: usize = 3;
 const LOCALES_DIR: &str = "crates/services/i18n";
 const ENGLISH: &str = "en-US";
 
-/// Name, argument synopsis and function of every task.
 const TASKS: [(&str, &str, Task); 9] = [
     ("catalog-ftl", "[--check]", catalog_ftl::catalog_ftl),
     (
@@ -56,7 +55,6 @@ type Task = fn(&[String]) -> Result<String, Failure>;
 
 #[derive(Debug)]
 enum Failure {
-    /// The arguments do not fit the task.
     Usage,
     /// The task ran and found problems, one line each.
     Problems(Vec<String>),
@@ -121,6 +119,17 @@ fn flags<'a>(args: &[String], allowed: &[&'a str]) -> Option<Vec<&'a str>> {
 /// The repository root: xtask always runs from the source tree.
 fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
+}
+
+/// The text of a file that may not exist yet. Any other failure, such as
+/// bytes that are not UTF-8, stops the task, so a write never replaces a
+/// file that could not be read.
+pub(crate) fn read_optional(path: &Path) -> Result<String, String> {
+    match std::fs::read_to_string(path) {
+        Ok(text) => Ok(text),
+        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(String::new()),
+        Err(error) => Err(format!("cannot read {}: {error}", path.display())),
+    }
 }
 
 /// A pattern that fails to compile is a mistake in xtask. Skipping it would

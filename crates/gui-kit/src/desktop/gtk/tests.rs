@@ -73,8 +73,7 @@ fn libadwaita_names_win_over_gtk3_names_in_any_order() {
 
 #[test]
 fn short_hex_rgb_rgba_and_references_resolve() {
-    // Sweet-Dark defines `wm_highlight` as `rgba(0, 0, 0, 0)`. The other
-    // forms are added.
+    // Sweet-Dark defines `wm_highlight` as `rgba(0, 0, 0, 0)`.
     let colors = parse(&format!(
         "{SWEET_DARK}\n\
          @define-color purple rgb(203, 166, 247);\n\

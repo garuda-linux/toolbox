@@ -3,6 +3,7 @@
 use std::io;
 use std::os::fd::OwnedFd;
 use std::os::unix::net::UnixStream;
+use std::os::unix::process::CommandExt as _;
 use std::process::{Command, Output, Stdio};
 
 use rustix::process::{Uid, geteuid};
@@ -12,10 +13,31 @@ use rustix::thread::set_thread_res_uid;
 /// the account: only the socket's peer counts.
 const PERSON: u32 = 1000;
 
+/// The uid of `nobody`, which owns nothing the tests change.
+const NOBODY: u32 = 0xFFFE;
+
 /// The helper with stdin a socket whose peer is a person. Run as root,
 /// this thread alone takes the person's uid while it makes the socket,
-/// which is what the peer reads.
-pub fn output(args: &[&str]) -> io::Result<Output> {
+/// which is what the peer reads. With `unprivileged` the helper runs as
+/// `nobody` too, so it is no root whoever runs the suite.
+pub fn output(args: &[&str], unprivileged: bool) -> io::Result<Output> {
+    run(command(args, unprivileged))
+}
+
+/// The helper as [`output`] runs it, but not yet started.
+pub fn command(args: &[&str], unprivileged: bool) -> Command {
+    let mut command = Command::new(env!("CARGO_BIN_EXE_garuda-toolbox-helper"));
+
+    command.args(args);
+
+    if unprivileged && geteuid().is_root() {
+        command.uid(NOBODY).gid(NOBODY);
+    }
+
+    command
+}
+
+fn run(mut command: Command) -> io::Result<Output> {
     let root = geteuid().is_root();
 
     if root {
@@ -29,10 +51,7 @@ pub fn output(args: &[&str]) -> io::Result<Output> {
     }
 
     let (app, helper) = pair?;
-    let output = Command::new(env!("CARGO_BIN_EXE_garuda-toolbox-helper"))
-        .args(args)
-        .stdin(Stdio::from(OwnedFd::from(helper)))
-        .output();
+    let output = command.stdin(Stdio::from(OwnedFd::from(helper))).output();
 
     drop(app);
     output

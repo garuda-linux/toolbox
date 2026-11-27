@@ -1,7 +1,6 @@
 //! Garuda's and Arch's news in one list, newest first. Titles are the
 //! sites' words, shown as plain text. A title opens its post only when the
-//! link leads into its source's site, which the news crate already
-//! checked and this page checks again.
+//! link leads into its source's site.
 
 use egui::{Align, Label, Layout, Ui, vec2};
 use toolbox_gui_kit::fonts::{BODY, SECTION, SMALL, Weight};

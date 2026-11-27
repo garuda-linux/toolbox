@@ -102,6 +102,7 @@ impl Home {
     }
 
     /// For tests, which read nothing.
+    #[cfg(any(test, feature = "testing"))]
     pub const fn merges_mut(&mut self) -> &mut Merges {
         &mut self.merges
     }

@@ -13,7 +13,7 @@ fn account<'fields>(
     system: bool,
 ) -> NewAccount<'fields> {
     NewAccount {
-        name: "ada",
+        name: "grace",
         full_name: "",
         shell: "",
         groups: Some(BTreeSet::new()),
@@ -50,18 +50,18 @@ fn a_typed_user_id_is_a_number_in_range_or_blank() {
 #[test]
 fn a_typed_home_folder_gets_the_code_of_its_rule() {
     assert_eq!(
-        home("/srv/ada").map(|path| path.to_string()),
-        Ok("/srv/ada".to_owned())
+        home("/srv/grace").map(|path| path.to_string()),
+        Ok("/srv/grace".to_owned())
     );
 
     for (text, code) in [
         ("", "home-empty"),
-        ("srv/ada", "home-not-absolute"),
+        ("srv/grace", "home-not-absolute"),
         ("/srv/../etc", "home-invalid-component"),
-        ("/srv/ada/", "home-invalid-component"),
+        ("/srv/grace/", "home-invalid-component"),
         ("/srv/a:b", "home-invalid-character"),
-        ("/srv/ada ", "home-outer-blank"),
-        ("/tmp/ada", "home-outside-roots"),
+        ("/srv/grace ", "home-outer-blank"),
+        ("/tmp/grace", "home-outside-roots"),
     ] {
         assert_eq!(
             home(text).err().map(RefusalText::code),
@@ -80,9 +80,12 @@ fn the_fields_place_the_account_where_the_dialog_says() {
     assert_eq!(plain.parts().uid, None);
     assert!(!plain.parts().system);
 
-    let placed = new_account(&account("/srv/ada", "1500", false, false), &snapshot).unwrap();
+    let placed = new_account(&account("/srv/grace", "1500", false, false), &snapshot).unwrap();
 
-    assert_eq!(placed.parts().home, NewHome::At(home("/srv/ada").unwrap()));
+    assert_eq!(
+        placed.parts().home,
+        NewHome::At(home("/srv/grace").unwrap())
+    );
     assert_eq!(placed.parts().uid.map(UserId::get), Some(1500));
 
     let service = new_account(&account("/srv/ignored", "450", true, true), &snapshot).unwrap();
@@ -101,7 +104,7 @@ fn the_fields_refuse_bad_placements_with_a_code() {
             account("/home/../root", "", false, false),
             "home-invalid-component",
         ),
-        (account("/home/nico", "", false, false), "home-taken"),
+        (account("/home/ada", "", false, false), "home-taken"),
         (account("", "abc", false, false), "uid-invalid"),
         (account("", "0", false, false), "uid-invalid"),
         (account("", "1000", false, false), "uid-in-use"),

@@ -79,6 +79,10 @@ fn a_service_that_is_not_installed_is_not_listed() {
 
     harness.run();
 
+    assert!(
+        harness.query_by_label("NetworkManager").is_some(),
+        "the installed unit is not listed"
+    );
     assert!(harness.query_by_label("ConnMan").is_none());
     assert!(harness.query_by_label("Not installed").is_none());
 }

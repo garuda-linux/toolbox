@@ -108,8 +108,6 @@ type Restore = fn(&mut ChangeSet, &SavedChange, &Snapshot) -> Result<(), Restore
 struct Entry {
     restore: Restore,
     codes: &'static [SummaryCode],
-    #[cfg(test)]
-    one_off: bool,
     stage: Stage,
 }
 
@@ -146,8 +144,6 @@ impl Domains {
         let entry = Entry {
             restore: restore::<D>,
             codes: D::CODES,
-            #[cfg(test)]
-            one_off: D::ONE_OFF,
             stage: D::STAGE,
         };
 
@@ -161,12 +157,6 @@ impl Domains {
         let mut ids: Vec<&'static str> = self.entries.keys().copied().collect();
         ids.sort_unstable();
         ids
-    }
-
-    /// Whether the domain with `id` is a [`Domain::ONE_OFF`] one.
-    #[cfg(test)]
-    pub(crate) fn is_one_off(&self, id: &str) -> bool {
-        self.entries.get(id).is_some_and(|entry| entry.one_off)
     }
 
     /// Whether a registered domain gives `code`.

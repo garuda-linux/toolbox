@@ -12,7 +12,7 @@ fn user(name: &str) -> UserName {
 
 fn known() -> Locks {
     Locks::of_answer(Ok(BTreeMap::from([
-        (user("nico"), false),
+        (user("ada"), false),
         (user("guest"), true),
     ])))
 }
@@ -22,8 +22,8 @@ fn an_answer_names_each_accounts_flag() {
     let locks = known();
 
     assert_eq!(locks.of(&user("guest")), Some(true));
-    assert_eq!(locks.of(&user("nico")), Some(false));
-    assert_eq!(locks.of(&user("ada")), None, "not in the answer");
+    assert_eq!(locks.of(&user("ada")), Some(false));
+    assert_eq!(locks.of(&user("grace")), None, "not in the answer");
     assert_eq!(locks.code(), "known");
     assert!(locks.flags().is_some());
 }
@@ -35,7 +35,7 @@ fn a_refused_or_failed_read_leaves_the_flags_unknown() {
     let failed = Locks::of_answer(Err(LockProblem::Failed(HelperError::TimedOut)));
 
     for locks in [&refused, &failed, &Locks::NotAsked, &Locks::Loading] {
-        assert_eq!(locks.of(&user("nico")), None, "{locks:?}");
+        assert_eq!(locks.of(&user("ada")), None, "{locks:?}");
         assert_eq!(locks.flags(), None, "{locks:?}");
     }
 

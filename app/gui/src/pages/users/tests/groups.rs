@@ -1,7 +1,9 @@
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
+use toolbox_core::ChangeSet;
+use toolbox_core::features::users::add_group;
 
-use super::{page, unlocked};
+use super::{group_name, page, page_with_queue, system, unlocked};
 
 fn groups_tab() -> super::Shown {
     let mut harness = page(unlocked());
@@ -10,6 +12,28 @@ fn groups_tab() -> super::Shown {
         .click();
     harness.run();
     harness
+}
+
+#[test]
+fn a_group_queued_as_new_is_refused_when_it_is_typed_again() {
+    let snapshot = system();
+    let mut changes = ChangeSet::default();
+    add_group(&group_name("games"), &mut changes, &snapshot).expect("games is queued");
+    let mut harness = page_with_queue(snapshot, unlocked(), changes);
+    harness
+        .get_by_role_and_label(Role::RadioButton, "Groups")
+        .click();
+    harness.run();
+
+    harness.get_by_label("Add Group…").click();
+    harness.run();
+    super::dialogs::type_into(&mut harness, Role::TextInput, "Group name", "games");
+
+    assert!(
+        harness
+            .query_by_label("A group named games exists already.")
+            .is_some()
+    );
 }
 
 /// `groupdel` refuses a group that is an account's primary one.

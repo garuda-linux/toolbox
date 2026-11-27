@@ -3,14 +3,12 @@ use egui::epaint::text::CharIndex;
 use egui::{Key, TextBuffer as _, TextEdit};
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
-use super::super::{number_field, number_field_with_unit, text_field_with_unit};
+use super::super::{number_field, text_field_with_unit};
 use super::committed;
 use super::digits::Digits;
-use crate::testing::{harness, painted_text, text_colour};
+use crate::testing::{harness, painted_text};
 
 const WIDTH: f32 = 72.0;
-/// The boot timeout's field, which holds "300 s".
-const UNIT_WIDTH: f32 = 72.0;
 
 fn shown(value: u32) -> egui_kittest::Harness<'static, u32> {
     let mut harness = harness(300.0, 80.0).build_ui_state(
@@ -85,18 +83,6 @@ fn letters_are_not_typed_and_escape_keeps_the_value() {
     assert_eq!(*harness.state(), 12);
 }
 
-fn with_unit(value: u32, width: f32) -> egui_kittest::Harness<'static, u32> {
-    let mut harness = harness(300.0, 80.0).build_ui_state(
-        move |ui, value: &mut u32| {
-            number_field_with_unit(ui, value, 0..=300, width, ("Pings", "Pings", "s"));
-        },
-        value,
-    );
-
-    harness.run();
-    harness
-}
-
 fn painted_at<State>(harness: &egui_kittest::Harness<'_, State>, text: &str) -> egui::Rect {
     let shape = painted_text(harness, text).expect("the text is painted");
     shape.galley.rect.translate(shape.pos.to_vec2())
@@ -121,20 +107,6 @@ fn assert_centred_group<State>(
 }
 
 #[test]
-fn a_number_and_its_unit_are_one_group_centred_in_the_field() {
-    for (value, digits) in [(5, "5"), (300, "300")] {
-        let harness = with_unit(value, UNIT_WIDTH);
-        assert_centred_group(&harness, (Role::SpinButton, "Pings"), (digits, "s"));
-    }
-
-    let harness = with_unit(5, UNIT_WIDTH);
-    assert_eq!(
-        text_colour(&harness, "s"),
-        Some(crate::tokens::current(&harness.ctx).secondary)
-    );
-}
-
-#[test]
 fn a_text_field_with_a_unit_centres_the_two_as_well() {
     let mut harness = harness(300.0, 80.0).build_ui(|ui| {
         let mut text = "60".to_owned();
@@ -144,14 +116,6 @@ fn a_text_field_with_a_unit_centres_the_two_as_well() {
 
     harness.run();
     assert_centred_group(&harness, (Role::TextInput, "Minutes"), ("60", "min"));
-}
-
-#[test]
-fn a_field_with_a_unit_still_takes_only_the_number() {
-    let mut harness = with_unit(5, UNIT_WIDTH);
-    type_and_press(&mut harness, "12", Key::Enter);
-
-    assert_eq!(*harness.state(), 12);
 }
 
 #[test]

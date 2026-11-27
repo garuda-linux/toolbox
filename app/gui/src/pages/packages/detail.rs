@@ -35,9 +35,7 @@ use crate::packages::{Details, Packages, Read};
 use crate::pages::PageContext;
 use crate::pages::rows::Look;
 
-/// The details' heading: the back button when it leads somewhere, then the
-/// picture, name and description with the row's button and the facts line
-/// once the package is known.
+/// The details' heading, with the back button when it leads somewhere.
 fn header_of<R>(
     page: &mut PackagesPage,
     ui: &mut Ui,

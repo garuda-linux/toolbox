@@ -97,7 +97,7 @@ fn shadow_locks_answers_flags_and_no_hash() -> TestResult {
         return Ok(());
     }
 
-    let output = crate::person::output(&["read", "shadow-locks"])?;
+    let output = crate::person::output(&["read", "shadow-locks"], false)?;
 
     let answer = String::from_utf8(output.stdout)?;
     let shadow = std::fs::read_to_string("/etc/shadow")?;

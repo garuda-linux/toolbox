@@ -2,9 +2,8 @@
 //! Settings toggles and the Setup Assistant).
 //!
 //! An entry's check names one package, unit, group or edit of a user config
-//! file, so a click queues exactly one change in that domain and the Review
-//! page shows it like any other. A package entry may bring more packages
-//! and units along (`also`) and turn other entries off (`conflicts`).
+//! file, so a click queues exactly one change. A package entry may bring more
+//! packages and units along (`also`) and turn other entries off (`conflicts`).
 
 mod also;
 mod guards;

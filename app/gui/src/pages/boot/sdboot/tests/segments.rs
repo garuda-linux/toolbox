@@ -31,8 +31,7 @@ fn a_switch_takes_on_off_or_systemd_boots_own_default() {
     assert_eq!(sent(&harness), [loader(LoaderSetting::Editor(Some(false)))]);
 }
 
-/// The image's `loader.conf` with `editor yes` added: On is picked. The
-/// firmware entry is unset there, so a click on its Default sends nothing.
+/// The firmware entry is unset in that `loader.conf`, so its Default sends nothing.
 #[test]
 fn a_tri_state_setting_is_a_segment_on_its_current_choice() {
     let conf = format!("{LOADER_CONF}editor yes\n");

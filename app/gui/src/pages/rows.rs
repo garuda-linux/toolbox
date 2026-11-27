@@ -6,9 +6,7 @@ mod tests;
 
 use egui::Ui;
 use fluent_templates::LanguageIdentifier;
-pub use picture::{
-    Initial, package_picture, picture_height, picture_or_initial, picture_slot, picture_top,
-};
+pub use picture::{Initial, package_picture, picture_height, picture_or_initial, picture_slot};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::fonts::{self, BODY, Weight};
 use toolbox_gui_kit::tokens::{self, Tokens};

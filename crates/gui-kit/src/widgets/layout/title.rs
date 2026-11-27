@@ -1,14 +1,7 @@
-//! A row's title line.
-//!
-//! In a card's row the line is as tall as a control, so every row keeps
-//! one middle line with or without one. A tag on the line sits on its
-//! middle, its words on the baseline of a status dot's words.
-//!
-//! At the top of a card's row the line is raised until the title's
-//! capitals start the last line's descent below the row's top, and it
-//! takes room only down to its text. The room above the capitals is then
-//! the room under the last baseline, where the room of the line and the
-//! font's own room above the capitals would add to it.
+//! A row's title line. In a card's row the line is as tall as a control, so
+//! every row keeps one middle line with or without one. At the top of a
+//! card's row the line is raised until its capitals start the last line's
+//! descent below the row's top.
 
 use egui::{Align, Id, Layout, Ui, UiBuilder, vec2};
 

@@ -92,16 +92,6 @@ impl Facts {
 }
 
 impl Progress {
-    pub const fn as_str(self) -> &'static str {
-        match self {
-            Self::None => "",
-            Self::Waiting | Self::Running => "running",
-            Self::Succeeded => "succeeded",
-            Self::Failed => "failed",
-            Self::Busy => "busy",
-        }
-    }
-
     #[must_use = "returns the new value, the old one stays as it was"]
     pub const fn started(self) -> Self {
         match self {

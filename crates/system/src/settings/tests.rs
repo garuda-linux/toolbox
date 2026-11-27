@@ -13,7 +13,7 @@ use toolbox_state::settings::{CurrentDns, CurrentWifiBackend, GarudaUpdateConfig
 
 use super::{EtcSettings, SettingsSource as _, blocks_domains, parse_dns};
 use crate::ProbeError;
-use crate::test_support::{running_as_root, write};
+use crate::test_support::{as_person, write};
 
 /// The Lima VM's `/etc/hosts` before and after `hblock`, the latter cut
 /// to its first 80 lines.
@@ -171,8 +171,8 @@ fn garuda_update_without_its_folder_is_unavailable() {
     );
 }
 
-/// Edit: the shipped config with `NO_CHECK_SPACE=1` appended, the name
-/// older toolbox versions wrote.
+/// The shipped config with `NO_CHECK_SPACE=1` appended, the name older
+/// toolbox versions wrote.
 #[test]
 fn the_old_space_check_name_reads_as_on() {
     let (root, settings) = system();
@@ -192,10 +192,6 @@ fn the_old_space_check_name_reads_as_on() {
 
 #[test]
 fn an_unreadable_garuda_update_config_is_a_failure() {
-    if running_as_root() {
-        return;
-    }
-
     let (root, settings) = system();
     let folder = root.path().join("etc/garuda/garuda-update");
     fs::create_dir_all(&folder).unwrap();
@@ -203,7 +199,7 @@ fn an_unreadable_garuda_update_config_is_a_failure() {
     fs::set_permissions(folder.join("config"), fs::Permissions::from_mode(0o000)).unwrap();
 
     assert!(matches!(
-        settings.garuda_update(),
+        as_person(|| settings.garuda_update()),
         Err(ProbeError::Io { what, error: _ }) if what.contains("garuda-update/config")
     ));
 }

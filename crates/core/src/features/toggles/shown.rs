@@ -31,9 +31,7 @@ pub struct Tally {
     pub total: usize,
 }
 
-/// How a row offers its change. A package installs and removes, so its
-/// row has a button. A service, a group or a config edit is a setting
-/// with a switch.
+/// How a row offers its change.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Control {
     Switch,

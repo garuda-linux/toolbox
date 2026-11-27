@@ -26,7 +26,7 @@ const CONTEXT: usize = 3;
 /// The buttons' row and the note under it.
 const FOOTER: f32 = 96.0;
 
-/// The texts as read, which a queued choice marks.
+/// The texts as read, the base of every choice made from them.
 struct Files<'a> {
     copy: &'a MergeCopy,
     current: Option<&'a str>,

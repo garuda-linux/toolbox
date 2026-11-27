@@ -83,20 +83,20 @@ pub fn group(name: &str, gid: u32, members: &[&str]) -> Group {
     }
 }
 
-/// `nico` (1000, own group) listed in each of `groups`, which get the
+/// `ada` (1000, own group) listed in each of `groups`, which get the
 /// system ids 900 and up.
 pub fn nina_in(groups: &[&str]) -> Accounts {
-    let mut all = vec![group("nico", 1000, &[])];
+    let mut all = vec![group("ada", 1000, &[])];
 
     all.extend(
         (900_u32..)
             .zip(groups)
-            .map(|(gid, name)| group(name, gid, &["nico"])),
+            .map(|(gid, name)| group(name, gid, &["ada"])),
     );
     all.sort_by(|left, right| left.name.cmp(&right.name));
 
     Accounts {
-        users: vec![user("nico", 1000, 1000)],
+        users: vec![user("ada", 1000, 1000)],
         groups: all,
     }
 }

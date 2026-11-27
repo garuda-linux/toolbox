@@ -95,8 +95,6 @@ fn theme_dir(args: &[String]) -> Result<PathBuf, Failure> {
     }
 }
 
-/// `icons-check [theme dir]`: every icon name in the catalogs is in the
-/// Breeze theme.
 pub fn icons_check(args: &[String]) -> Result<String, Failure> {
     let theme = theme_names(&theme_dir(args)?);
     let catalog = root().join(catalogs::SOURCE_DIR);

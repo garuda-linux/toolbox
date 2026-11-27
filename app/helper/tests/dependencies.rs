@@ -5,7 +5,23 @@ use std::error::Error;
 use std::path::Path;
 use std::process::Command;
 
-const BANNED: [&str; 5] = ["parking_lot", "tokio", "egui", "zbus", "ureq"];
+/// Crate families the helper must not link. A family is its name and every
+/// crate named after it with a `-` or `_`, such as `egui-winit`.
+const BANNED: [&str; 13] = [
+    "parking_lot",
+    "tokio",
+    "egui",
+    "eframe",
+    "winit",
+    "wgpu",
+    "zbus",
+    "dbus",
+    "reqwest",
+    "hyper",
+    "ureq",
+    "async-std",
+    "smol",
+];
 
 /// Proof that the listing is the helper's, not an empty or broken one.
 const EXPECTED: [&str; 2] = ["toolbox-exec", "toolbox-plan"];
@@ -34,6 +50,22 @@ fn normal_dependencies() -> Result<Vec<String>, Box<dyn Error>> {
         .collect())
 }
 
+fn is_banned(name: &str) -> bool {
+    BANNED.iter().any(|family| {
+        name.strip_prefix(family)
+            .is_some_and(|rest| rest.is_empty() || rest.starts_with(['-', '_']))
+    })
+}
+
+#[test]
+fn a_crate_of_a_banned_family_is_banned_and_a_name_that_only_starts_alike_is_not() {
+    assert!(is_banned("egui"));
+    assert!(is_banned("egui-winit"));
+    assert!(is_banned("async-std"));
+    assert!(!is_banned("tokiox"));
+    assert!(!is_banned("toolbox-exec"));
+}
+
 #[test]
 fn the_helper_links_no_runtime_gui_dbus_http_or_parking_lot() -> TestResult {
     let names = normal_dependencies()?;
@@ -45,10 +77,7 @@ fn the_helper_links_no_runtime_gui_dbus_http_or_parking_lot() -> TestResult {
         );
     }
 
-    let banned: Vec<&String> = names
-        .iter()
-        .filter(|name| BANNED.contains(&name.as_str()))
-        .collect();
+    let banned: Vec<&String> = names.iter().filter(|name| is_banned(name)).collect();
 
     assert!(banned.is_empty(), "the helper links {banned:?}");
     Ok(())

@@ -41,8 +41,8 @@ fn only_the_presses_of_this_run_count() {
     assert_eq!(stopper.take(), Vec::<u8>::new());
 }
 
-/// SIGTERM and SIGHUP stop a change as Ctrl+C does, and the command ends
-/// with 128 and the number of the first signal that came.
+/// SIGTERM and SIGHUP stop a change as Ctrl+C does, and the exit code is
+/// the one of the first signal that came.
 #[test]
 fn a_signal_counts_as_a_press_and_names_the_exit_code() {
     let presses = Arc::new(Presses::default());

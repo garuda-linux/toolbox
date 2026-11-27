@@ -14,8 +14,7 @@ pub(super) const HOVER_INSET: f32 = 4.0;
 pub(super) const DIVIDER: f32 = 1.0;
 
 /// A card as Darkly draws its group box: the card fill, a 1 px outline and
-/// its soft shadow, with round corners. It is as wide as its column. The
-/// page's margins keep it off the window's edges.
+/// its soft shadow, with round corners.
 pub fn card<R>(ui: &mut Ui, body: impl FnOnce(&mut Ui) -> R) -> InnerResponse<R> {
     let tokens = tokens::current(ui.ctx());
     let outer = ui.available_rect_before_wrap();

@@ -15,7 +15,7 @@ pub enum BootCommand {
         title: String,
         filter: String,
     },
-    /// Opens the page with the menu entry of `0` offered as the default.
+    /// Opens the page with the kernel offered as the default menu entry.
     Propose(PackageName),
     DropProposal,
 }

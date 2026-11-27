@@ -14,12 +14,18 @@ use toolbox_plan::{ConfigFilePath, ConfigText, ConfigWrite, FetchRefusal, Finger
 use super::resolve::{RealPath, resolve};
 use super::{ReadError, open_folder, read_text};
 use crate::apply::EventSink;
-use crate::builtin::FileChange;
 use crate::report::{failure, note};
 use crate::secure::{self, Attributes};
 
 /// A backup may hold what the file kept from other users.
 const PRIVATE_MODE: u32 = 0o600;
+
+/// What a write did. Only the change of a file can be `Written`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Replaced {
+    Written,
+    Unchanged,
+}
 
 #[derive(Debug, thiserror::Error)]
 pub enum WriteError {
@@ -68,7 +74,7 @@ pub fn write_real(
     path: &ConfigFilePath,
     content: &ConfigText,
     original: Fingerprint,
-) -> Result<FileChange, WriteError> {
+) -> Result<Replaced, WriteError> {
     let (folder, name) = path.split();
     let dir = open_folder(root, folder)?;
     let (current, attributes) = read_text(&dir, name)?;
@@ -78,7 +84,7 @@ pub fn write_real(
     }
 
     if current == *content {
-        return Ok(FileChange::Unchanged);
+        return Ok(Replaced::Unchanged);
     }
 
     let backup = path.backup();
@@ -105,7 +111,7 @@ pub fn write_real(
         &attributes.replace(),
     )?
     .synced()?;
-    Ok(FileChange::Written)
+    Ok(Replaced::Written)
 }
 
 /// The message names the real path, as what a link leads to is what gets written.
@@ -132,13 +138,13 @@ pub fn execute(
     };
 
     match result {
-        Ok(FileChange::Written) => note(
+        Ok(Replaced::Written) => note(
             step,
             sink,
             &format!("wrote {file}, the previous version is /{backup}"),
             Outcome::Succeeded,
         ),
-        Ok(FileChange::Unchanged | FileChange::Removed) => note(
+        Ok(Replaced::Unchanged) => note(
             step,
             sink,
             &format!("{file} is already as wanted"),

@@ -218,7 +218,6 @@ pub fn wheel<State>(harness: &Harness<'static, State>, at: Pos2, delta: Vec2) {
     });
 }
 
-/// A row's button, named by what it does and the row.
 pub fn button<'harness, State>(
     harness: &'harness Harness<'static, State>,
     name: &'harness str,

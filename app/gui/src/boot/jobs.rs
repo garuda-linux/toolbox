@@ -126,7 +126,6 @@ impl Jobs {
         self.read.read()
     }
 
-    /// The menu read that landed, if any. A read asked meanwhile starts then.
     pub const fn reading(&self) -> bool {
         self.read.running()
     }

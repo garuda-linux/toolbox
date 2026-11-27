@@ -18,7 +18,7 @@ use toolbox_cli::args::{
 use toolbox_cli::output::{Mark, Row};
 use toolbox_core::features::network::{
     ModuleFacts, RadioKind, RadioTarget, Refusal as DriverRefusal, SwitchRefusal, driver_rows,
-    plan_ping, plan_switch, plan_traceroute, set_blacklisted,
+    flight_mode, plan_ping, plan_switch, plan_traceroute, radio_summary, set_blacklisted,
 };
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::{Bounded, HostName, Plan, Toggle};
@@ -102,6 +102,11 @@ pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) ->
     }
 }
 
+/// The drivers could not be read, so no driver change can be planned.
+fn drivers_unread() -> Refused {
+    Refused::Unavailable(why::driver(DriverRefusal::Unavailable).into_owned())
+}
+
 /// The driver loaded or unloaded at once, as the drivers list's button
 /// does.
 ///
@@ -110,9 +115,7 @@ pub fn command(command: NetworkCommand, runtime: &Runtime, out: &mut Out<'_>) ->
 /// [`Refused`] without the drivers' read, for a module the list lacks,
 /// or one already in that state.
 pub fn switch(args: &ModuleArgs, load: Toggle, snapshot: &Snapshot) -> Result<Plan, Refused> {
-    let facts = snapshot.part::<ModuleFacts>().ok_or_else(|| {
-        Refused::Unavailable(why::driver(DriverRefusal::Unavailable).into_owned())
-    })?;
+    let facts = snapshot.part::<ModuleFacts>().ok_or_else(drivers_unread)?;
 
     plan_switch(&args.module, load, facts).map_err(|refusal| {
         let line = why::driver_switch(refusal).into_owned();
@@ -147,9 +150,7 @@ pub fn blacklist_onto(
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
     let on = wish.is_on();
-    let facts = snapshot
-        .part::<ModuleFacts>()
-        .ok_or_else(|| Refused::Rule("the drivers could not be read".to_owned()))?;
+    let facts = snapshot.part::<ModuleFacts>().ok_or_else(drivers_unread)?;
 
     page_edit(changes, snapshot, why::driver, |changes, snapshot| {
         set_blacklisted(&args.module, Toggle::from_on(on), facts, changes, snapshot)
@@ -194,15 +195,8 @@ pub fn view(source: &dyn NetworkSource) -> StatusView {
         .unwrap_or_default();
 
     let on = |kind: RadioKind| {
-        let mut of_kind = radios
-            .iter()
-            .filter(|radio| radio.kind == Some(kind))
-            .peekable();
-
-        of_kind
-            .peek()
-            .is_some()
-            .then(|| of_kind.all(|radio| !radio.soft && !radio.hard))
+        let summary = radio_summary(&radios, kind);
+        summary.present.then_some(!summary.blocked)
     };
 
     StatusView {
@@ -213,7 +207,7 @@ pub fn view(source: &dyn NetworkSource) -> StatusView {
         interface: route.and_then(|route| route.interface),
         wifi: on(RadioKind::Wifi),
         bluetooth: on(RadioKind::Bluetooth),
-        flight_mode: !radios.is_empty() && radios.iter().all(|radio| radio.soft || radio.hard),
+        flight_mode: flight_mode(&radios),
         unread,
         reasons,
     }

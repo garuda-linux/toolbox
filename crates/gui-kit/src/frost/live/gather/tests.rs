@@ -257,6 +257,7 @@ fn paint_callbacks_are_left_out() {
     );
 
     assert_eq!(shapes.len(), 1);
+    assert_eq!(colours(&shapes), vec![Color32::RED]);
 }
 
 #[test]
@@ -325,6 +326,7 @@ fn text_is_left_out() {
     let shapes = gather(&layers, &scene, place, area);
 
     assert_eq!(shapes.len(), 1, "only the square is kept");
+    assert_eq!(colours(&shapes), vec![Color32::RED]);
 }
 
 #[test]

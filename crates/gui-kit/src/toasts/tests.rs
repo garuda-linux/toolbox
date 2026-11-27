@@ -239,8 +239,14 @@ fn the_notes_above_a_closed_one_move_down_rather_than_jump() {
     let first = top_of(&harness, "First");
 
     harness.get_by_label("First").click();
+    let mut frames: u32 = 0;
     while harness.state().texts().len() > 1 {
+        assert!(
+            frames < 300_u32,
+            "the closed note is still shown after 300 frames"
+        );
         harness.step();
+        frames += 1_u32;
     }
 
     harness.step();

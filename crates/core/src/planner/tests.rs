@@ -107,14 +107,14 @@ fn units_start_after_their_packages_and_groups() {
     let mut changes = ChangeSet::default();
     changes.want::<UserUnits>(unit("psd.service"), Toggle::On, &snapshot);
     changes.want::<SystemUnits>(unit("docker.socket"), Toggle::On, &snapshot);
-    changes.want::<Groups>(membership("nico", "docker"), Toggle::On, &snapshot);
+    changes.want::<Groups>(membership("ada", "docker"), Toggle::On, &snapshot);
     changes.want::<Packages>(package("docker"), Toggle::On, &snapshot);
 
     assert_eq!(
         sided(&changes),
         [
             "root: pacman -S --needed --noconfirm -- docker",
-            "root: gpasswd -a nico -- docker",
+            "root: gpasswd -a ada -- docker",
             "root: systemctl enable --now -- docker.socket",
             "user: systemctl --user enable --now -- psd.service",
         ]
@@ -128,13 +128,13 @@ fn disabling_and_leaving_are_planned_too() {
     snapshot.insert(nina_in(&["lp"]));
     let mut changes = ChangeSet::default();
     changes.want::<SystemUnits>(unit("cups.socket"), Toggle::Off, &snapshot);
-    changes.want::<Groups>(membership("nico", "lp"), Toggle::Off, &snapshot);
+    changes.want::<Groups>(membership("ada", "lp"), Toggle::Off, &snapshot);
 
     assert_eq!(
         sided(&changes),
         [
             "root: systemctl disable --now -- cups.socket",
-            "root: gpasswd -d nico -- lp",
+            "root: gpasswd -d ada -- lp",
         ]
     );
 }

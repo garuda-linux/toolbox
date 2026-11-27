@@ -1,6 +1,3 @@
-//! Every row's Collect keeps the push button height, as Maintenance's rows do,
-//! and the upload's text sits on the middle of its buttons.
-
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_services::diagnostics::page::Page;

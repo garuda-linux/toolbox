@@ -44,8 +44,6 @@ pub struct HomeFacts<'app> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum HomeProblem {
     Restart(CallError),
-    /// The system's reason, in English.
-    Installer(String),
     /// This many saved changes did not come back at start.
     QueueLost(usize),
     /// A run of the page did not start, as another plan runs.
@@ -100,7 +98,7 @@ fn notice(ui: &mut Ui, context: &PageContext<'_>) {
             i18n::text_with(&ctx, "home-queue-lost", &[("count", Arg::from(count))])
         }
         Some(HomeProblem::Busy) => i18n::text(&ctx, "home-busy"),
-        Some(HomeProblem::Restart(_) | HomeProblem::Installer(_)) | None => return,
+        Some(HomeProblem::Restart(_)) | None => return,
     };
 
     let dismiss = i18n::text(&ctx, "home-queue-lost-dismiss");

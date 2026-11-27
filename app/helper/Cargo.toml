@@ -20,6 +20,8 @@ signal-hook.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
+rustix = { workspace = true, features = ["pty"] }
+toolbox-fs = { workspace = true, features = ["testing"] }
 toolbox-plan = { workspace = true, features = ["testing"] }
 toolbox-state = { workspace = true, features = ["testing"] }
 toolbox-system = { workspace = true, features = ["testing"] }

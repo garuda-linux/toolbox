@@ -42,7 +42,7 @@ fn an_unreadable_copy_is_no_copy_and_downloads_at_once() {
 
     cache.index().unwrap();
 
-    // Changed: the stored copy as an older version of the app wrote it.
+    // The stored copy in the format an older version of the app wrote.
     std::fs::write(folder.path().join("index.json"), r#"{"old":true}"#).unwrap();
     clock.set(START + 60);
 

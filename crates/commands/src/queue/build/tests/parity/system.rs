@@ -83,13 +83,13 @@ fn unit(name: &str) -> UnitInfo {
 
 fn accounts() -> Accounts {
     Accounts {
-        users: vec![user("nico", 1000), user("ada", 1001), user("guest", 1002)],
+        users: vec![user("ada", 1000), user("hopper", 1001), user("guest", 1002)],
         groups: vec![
-            group("nico", 1000, &[]),
-            group("ada", 1001, &[]),
+            group("ada", 1000, &[]),
+            group("hopper", 1001, &[]),
             group("guest", 1002, &[]),
             group("media", 1003, &[]),
-            group("wheel", 998, &["nico"]),
+            group("wheel", 998, &["ada"]),
         ],
     }
 }
@@ -135,7 +135,7 @@ fn install() -> Snapshot {
 
     snapshot.insert(Host::default());
     snapshot.insert(accounts());
-    snapshot.insert(CurrentUser(UserName::new("nico").unwrap()));
+    snapshot.insert(CurrentUser(UserName::new("ada").unwrap()));
     snapshot.insert(AvailableShells(vec![
         ShellPath::new("/usr/bin/bash").unwrap(),
         ShellPath::new("/usr/bin/fish").unwrap(),

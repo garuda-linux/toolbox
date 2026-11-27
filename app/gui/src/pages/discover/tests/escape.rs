@@ -1,6 +1,3 @@
-//! What Escape does while the details are open: it focuses the closed app's
-//! row again, and leaves the details to an overlay drawn over them.
-
 use egui::Key;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;

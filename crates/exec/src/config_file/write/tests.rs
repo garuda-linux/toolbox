@@ -9,8 +9,7 @@ use tempfile::TempDir;
 use toolbox_plan::protocol::{Failure, Outcome};
 use toolbox_plan::{ConfigWrite, FetchRefusal, Fingerprint, StepId};
 
-use super::{WriteError, execute, write_real};
-use crate::builtin::FileChange;
+use super::{Replaced, WriteError, execute, write_real};
 use crate::config_file::tests::{BACKUPS, path, text, write_config_file};
 use crate::test_support::printed;
 
@@ -42,7 +41,7 @@ fn a_write_keeps_owner_and_mode_and_backs_the_old_version_up() {
             Fingerprint::of(b"old = 1\n"),
         )
         .unwrap(),
-        FileChange::Written
+        Replaced::Written
     );
 
     let after = fs::metadata(&target).unwrap();
@@ -131,7 +130,7 @@ fn the_same_text_writes_nothing() {
             Fingerprint::of(b"old = 1\n"),
         )
         .unwrap(),
-        FileChange::Unchanged
+        Replaced::Unchanged
     );
     assert!(!root.path().join(BACKUPS).exists());
 }

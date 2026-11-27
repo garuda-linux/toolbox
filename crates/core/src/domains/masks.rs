@@ -1,10 +1,9 @@
 //! Masked systemd units, of the system (through the root helper) and of
 //! the user's session. `On` means masked.
 //!
-//! Each mask domain runs just before its units domain: a masked unit
-//! cannot be enabled, so an unmask has to precede the enable of the same
-//! unit in one apply. Masking is teardown and follows the disable of the
-//! same unit, which systemd skips for a unit that is masked already.
+//! A masked unit cannot be enabled, so an unmask precedes the enable of
+//! the same unit in one apply. Masking follows the disable of the unit,
+//! which systemd skips for a unit that is masked already.
 
 #[cfg(test)]
 mod tests;

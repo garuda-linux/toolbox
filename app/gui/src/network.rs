@@ -267,7 +267,12 @@ fn settled(answer: Result<IpAddr, AddressProblem>) -> Address {
     match answer {
         Ok(address) => Address::Known(address),
         Err(problem) => {
-            tracing::info!("no public address: {problem:?}");
+            let kind = match problem {
+                AddressProblem::NoAnswer(_) => "no answer",
+                AddressProblem::NotUnderstood => "answer not understood",
+            };
+
+            tracing::info!("no public address: {kind}");
             Address::Failed
         }
     }

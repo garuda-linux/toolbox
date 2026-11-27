@@ -96,16 +96,14 @@ fn a_folder_that_cannot_be_synced_still_saves() {
     let path = folder.join("settings.toml");
     fs::set_permissions(&folder, fs::Permissions::from_mode(0o300)).unwrap();
 
-    // Root opens any folder, so the sync would not fail there.
-    let opens = fs::File::open(&folder).is_ok();
+    // Root opens any folder, so the sync does not fail there and the save
+    // counts either way.
     let result = write_atomic(&path, b"new");
 
     fs::set_permissions(&folder, fs::Permissions::from_mode(0o700)).unwrap();
 
-    if !opens {
-        result.unwrap();
-        assert_eq!(fs::read_to_string(&path).unwrap(), "new");
-    }
+    result.unwrap();
+    assert_eq!(fs::read_to_string(&path).unwrap(), "new");
 }
 
 /// The queue names users and packages, so an older file of 0644 is

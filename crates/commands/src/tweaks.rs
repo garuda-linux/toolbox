@@ -26,6 +26,8 @@ const NOT_READ: &str = "not read";
 struct TweakRow {
     id: String,
     value: String,
+    #[serde(skip)]
+    mark: Mark,
 }
 
 impl filter::Named for TweakRow {
@@ -70,12 +72,27 @@ pub fn onto(command: &TweaksCommand, snapshot: &Snapshot, changes: &mut ChangeSe
 fn rows(snapshot: &Snapshot) -> Vec<TweakRow> {
     let choices = Choices::of(snapshot, &ChangeSet::default(), None);
 
-    let row = |id: &str, value: Option<&str>| TweakRow {
-        id: id.to_owned(),
-        value: value.unwrap_or(NOT_READ).to_owned(),
+    let row = |id: &str, shown: Option<(Mark, &str)>| match shown {
+        Some((mark, value)) => TweakRow {
+            id: id.to_owned(),
+            value: value.to_owned(),
+            mark,
+        },
+        None => TweakRow {
+            id: id.to_owned(),
+            value: NOT_READ.to_owned(),
+            mark: Mark::Unknown,
+        },
     };
 
-    let on_off = |flip: Flip| flip.known.then_some(if flip.on { "on" } else { "off" });
+    let on_off = |flip: Flip| {
+        flip.known.then_some(if flip.on {
+            (Mark::On, "on")
+        } else {
+            (Mark::Off, "off")
+        })
+    };
+
     let flag_state = |flag: GarudaUpdateFlag| {
         let flags = choices.flags.as_deref()?;
         let (_, flip) = flags.iter().find(|(listed, _)| *listed == flag)?;
@@ -83,10 +100,13 @@ fn rows(snapshot: &Snapshot) -> Vec<TweakRow> {
     };
 
     [
-        row("dns", shown(&choices.dns).map(|dns| dns.as_str())),
+        row(
+            "dns",
+            shown(&choices.dns).map(|dns| (Mark::Blank, dns.as_str())),
+        ),
         row(
             "wifi-backend",
-            shown(&choices.wifi).map(|backend| backend.as_str()),
+            shown(&choices.wifi).map(|backend| (Mark::Blank, backend.as_str())),
         ),
         row("hblock", on_off(choices.hblock)),
     ]
@@ -110,14 +130,7 @@ fn list(read: &ReadList, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
         head: &[],
         rows: rows
             .iter()
-            .map(|row| {
-                let mark = match row.value.as_str() {
-                    "off" => Mark::Off,
-                    _ => Mark::On,
-                };
-
-                Row::new(mark, vec![row.id.clone(), row.value.clone()])
-            })
+            .map(|row| Row::new(row.mark, vec![row.id.clone(), row.value.clone()]))
             .collect(),
         hint: Some("garuda-toolbox tweaks dns cloudflare".to_owned()),
     })

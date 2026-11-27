@@ -1,8 +1,7 @@
-//! File writes as root that cannot be redirected by a symlink. A folder is
-//! opened with `openat2`, which refuses every symlink on the way and every
-//! step out of the root, and files are created, linked and renamed relative
-//! to that folder's descriptor (`toolbox-fs`), so swapping a folder for a
-//! symlink between check and write leads nowhere.
+//! File writes as root that a symlink cannot redirect. Folders are opened with
+//! `openat2`, which refuses symlinks and any step out of the root, and files
+//! are created, linked and renamed relative to the folder's descriptor
+//! (`toolbox-fs`).
 
 #[cfg(test)]
 mod tests;

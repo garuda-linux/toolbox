@@ -221,7 +221,7 @@ fn page_titles_and_section_titles_are_headings_for_screen_readers() {
 fn f5_reads_the_page_again_like_its_refresh_button() {
     let mut harness = harness(400.0, 200.0).build_ui_state(
         |ui, read: &mut u32| {
-            if super::super::refresh_button(ui, "Read again")
+            if super::super::refresh_button_busy(ui, "Read again", None)
                 .value
                 .is_some()
             {
@@ -243,7 +243,7 @@ fn f5_leaves_a_disabled_refresh_button_alone() {
     let mut harness = harness(400.0, 200.0).build_ui_state(
         |ui, read: &mut u32| {
             ui.enabled_ui(false, |ui| {
-                if super::super::refresh_button(ui, "Read again")
+                if super::super::refresh_button_busy(ui, "Read again", None)
                     .value
                     .is_some()
                 {

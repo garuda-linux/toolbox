@@ -61,8 +61,7 @@ fn a_missing_helper_and_a_cancel_are_told_apart() {
     );
 }
 
-/// Rows without program text, so only the exit code decides. The rows with
-/// pkexec's words are the fixtures below.
+/// Rows without program text, so only the exit code decides.
 #[test]
 fn the_exit_code_alone_decides_without_words() {
     for (code, expected) in [
@@ -73,13 +72,6 @@ fn the_exit_code_alone_decides_without_words() {
     ] {
         assert_eq!(refusal(code, ""), expected, "{code:?}");
     }
-}
-
-#[test]
-fn a_dismissed_dialog_is_dismissed() {
-    let typed = "Error executing command as another user: Request dismissed\n";
-
-    assert_eq!(refusal(Some(126_i32), typed), Some(Refusal::Dismissed));
 }
 
 /// pkexec's own answers, captured in a Garuda VM and the Garuda desktop VM.

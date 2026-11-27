@@ -85,7 +85,6 @@ impl AccountSource for EtcAccounts {
 
 /// Entries with a name our rules reject or an id that is no number are
 /// logged and left out: the app could not change them anyway.
-/// The account files parsed as the probe parses them.
 ///
 /// The GUI tests feed it the captured text.
 pub fn accounts(passwd: &str, group: &str) -> Accounts {

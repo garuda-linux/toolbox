@@ -34,7 +34,6 @@ pub fn assistant() -> Fixture {
     assistant_on(Theme::Dark)
 }
 
-/// The Setup Assistant drawn on `theme`, with that theme's desktop look.
 pub fn assistant_on(theme: Theme) -> Fixture {
     assistant_with_on(ChangeSet::default(), theme)
 }

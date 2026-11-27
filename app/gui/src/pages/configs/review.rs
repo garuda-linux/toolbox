@@ -28,7 +28,6 @@ use crate::pages::PageContext;
 /// do not touch the text.
 const ROW_PADDING: f32 = 2.0;
 
-/// How the diff's rows are measured, the same for every row.
 struct Look {
     font: FontId,
     /// The width of one character of the fixed font.
@@ -317,8 +316,6 @@ fn lines_in_words(ctx: &Context, covered: Covered) -> String {
     .into_owned()
 }
 
-/// One row at the right: Discard, Edit again, Compare again after a failed
-/// save, Save last.
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, session: &Session) -> Option<ConfigsCommand> {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();

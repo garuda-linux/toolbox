@@ -5,8 +5,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 use super::super::{
-    SearchTexts, number_field, number_field_with_unit, search_field, text_box, text_field,
-    text_field_with_unit,
+    SearchTexts, number_field, search_field, text_box, text_field, text_field_with_unit,
 };
 use super::top_light::rects_within;
 use crate::testing::{filled_rect, harness, rim_colours_around};
@@ -16,7 +15,7 @@ use crate::tokens::{self, Tokens};
 const NAME: &str = "The field";
 
 /// Every kind of field, each named [`NAME`].
-const KINDS: [fn(&mut Ui); 6] = [
+const KINDS: [fn(&mut Ui); 5] = [
     |ui| {
         let mut text = "Hello".to_owned();
         let response = text_field(ui, TextEdit::singleline(&mut text));
@@ -28,7 +27,6 @@ const KINDS: [fn(&mut Ui); 6] = [
         named(ui, &response);
     },
     |ui| _ = number_field(ui, &mut 5, 0..=10, 72.0, (NAME, NAME)),
-    |ui| _ = number_field_with_unit(ui, &mut 5, 0..=10, 72.0, (NAME, NAME, "s")),
     |ui| {
         let texts = SearchTexts {
             name: NAME,
@@ -120,14 +118,21 @@ fn a_field_casts_darkly_shadow_at_rest_and_a_wider_one_when_focused() {
 }
 
 /// A focused field keeps its View fill inside a Highlight halo at 60 %,
-/// which shows one pixel out from the fill on each side (darklyhelper.cpp:1066).
+/// which shows one pixel out from the fill at rest on each side
+/// (darklyhelper.cpp:1066, `field_halo`).
 #[test]
 fn a_focused_field_keeps_its_fill_inside_a_highlight_halo() {
     for theme in [Theme::Dark, Theme::Light] {
         for (index, kind) in KINDS.into_iter().enumerate() {
             let harness = shown(kind, theme, true);
             let tokens = tokens::current(&harness.ctx);
-            let fill = filled_rect(&harness, tokens.input).expect("the field is filled");
+
+            // The focused fill is one pixel smaller than the fill at rest,
+            // so the rest fill is the focused one grown by that pixel.
+            let fill = filled_rect(&harness, tokens.input)
+                .expect("the field is filled")
+                .expand(1.0);
+
             let halo = filled_rect(&harness, halo_colour(&tokens)).expect("the halo");
 
             assert!(
@@ -135,9 +140,9 @@ fn a_focused_field_keeps_its_fill_inside_a_highlight_halo() {
                 "{theme:?}: field {index} has a frame"
             );
             assert!(
-                (halo.width() - fill.width() - 4.0).abs() < 0.01
-                    && (halo.height() - fill.height() - 4.0).abs() < 0.01,
-                "{theme:?}: field {index} halo is not one pixel out on each side"
+                (halo.width() - fill.width() - 2.0).abs() < 0.01
+                    && (halo.height() - fill.height() - 2.0).abs() < 0.01,
+                "{theme:?}: field {index} halo is not one pixel out from the fill on each side: halo {halo:?}, fill {fill:?}"
             );
         }
     }

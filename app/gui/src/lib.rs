@@ -13,6 +13,8 @@ pub mod dates;
 #[cfg(debug_assertions)]
 pub mod debug_overlay;
 pub mod desktop;
+#[cfg(test)]
+mod folding;
 pub mod home;
 pub mod i18n;
 pub mod instance;

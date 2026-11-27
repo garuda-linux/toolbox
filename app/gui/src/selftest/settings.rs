@@ -1,9 +1,5 @@
-//! The Settings page: a theme picked and taken back, minutes outside
-//! the limits held to them, the timed checks turned off and on again, and a
-//! color scheme of each mode picked and
-//! System picked after it, and the desktop blur shown as unavailable, since
-//! headless weston offers no blur behind windows.
-//! The changes go to the run's own settings file, never the user's.
+//! The Settings page steps. The changes go to the run's own settings file,
+//! never the user's.
 
 use egui::Key;
 use egui::accesskit::Role;

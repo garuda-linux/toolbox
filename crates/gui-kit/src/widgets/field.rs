@@ -23,9 +23,8 @@ use crate::theme::FIELD_RADIUS;
 use crate::tokens::{self, Tokens};
 use crate::ui_ext::icon_image;
 
-/// Darkly's `LineEdit_FrameWidth`, the 5 px frame and the 2 px inset of
-/// the fill. It is the text's padding on each side (darkly.h:56,
-/// darklystyle.cpp:3500-3509).
+/// The text's padding on each side: Darkly's `LineEdit_FrameWidth` (5 px)
+/// and the 2 px inset of the fill (darkly.h:56, darklystyle.cpp:3500-3509).
 pub(super) const FRAME_WIDTH: i8 = 7;
 /// Darkly's `Frame_FrameWidth`, the room between the widget and the fill
 /// it paints (darkly.h:47, darklyhelper.cpp:1036).

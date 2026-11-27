@@ -1,5 +1,4 @@
-//! What a rule reports, in the problem / why / how-to-fix shape, so an agent
-//! reading the output gets the reason and a next step, not just the violation.
+//! What a rule reports: the problem, why it matters and how to fix it.
 
 use std::fmt;
 use std::path::Path;

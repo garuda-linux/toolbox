@@ -46,7 +46,12 @@ impl FileChooser for NoFile {
 
 /// The Lima GRUB menu's default set to the advanced entry of linux-lts.
 fn lts_default() -> String {
-    toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB.replacen(
+    let grub = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
+    assert!(
+        grub.contains("GRUB_DEFAULT=0"),
+        "the Lima GRUB file has no GRUB_DEFAULT=0 to replace"
+    );
+    grub.replacen(
         "GRUB_DEFAULT=0",
         "GRUB_DEFAULT='gnulinux-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6>gnulinux-linux-lts-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6'",
         1,

@@ -1,4 +1,4 @@
-//! `max-comment-lines`: comments in function bodies, doc descriptions
+//! `max-comment-lines`: comments in blocks, doc descriptions
 //! (sections excluded) and everything else each have a limit.
 //! Module documentation (`//!`) is exempt: it is where background belongs.
 
@@ -30,7 +30,7 @@ pub fn check(source: &Source<'_>, findings: &mut Vec<Finding>) {
             }
             Kind::Line | Kind::Block => {
                 let count = unit.height();
-                let in_body = Source::in_function_body(unit.first().node);
+                let in_body = Source::in_block(unit.first().node);
                 let max = if in_body { BODY } else { OTHER };
                 if count <= max {
                     continue;
@@ -40,8 +40,8 @@ pub fn check(source: &Source<'_>, findings: &mut Vec<Finding>) {
                     Finding::new(
                         unit.start(),
                         RULE,
-                        format!("Comment inside a function body has {count} lines, more than {max}."),
-                        "A long explanation inside a function means the code is not saying enough itself, or the text is padding.",
+                        format!("Comment inside a block has {count} lines, more than {max}."),
+                        "A long explanation inside a block means the code is not saying enough itself, or the text is padding.",
                     )
                     .fix("Cut it to the one non-obvious reason. Extract a well-named function for the rest, and move background to the docs or the commit message.")
                 } else {

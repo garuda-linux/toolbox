@@ -98,7 +98,6 @@ impl Paint {
         }
     }
 
-    /// `title` in bold, then `summary` dimmed in brackets.
     pub fn title(self, title: &str, summary: Option<&str>) -> String {
         let title = self.painted(BOLD, title);
         match summary {

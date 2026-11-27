@@ -80,7 +80,12 @@ fn a_user_file_is_not_the_helpers_to_change() {
         on: true,
     };
 
-    assert_failed(outcome_of(tempfile::tempdir().unwrap().path(), &edit));
+    let root = tempfile::tempdir().unwrap();
+    let (outcome, said) = run_builtin(root.path(), &edit);
+
+    assert_failed(outcome);
+    assert!(said.contains("only the app may change it"), "{said}");
+    assert!(!root.path().join(".config").exists());
 }
 
 #[test]

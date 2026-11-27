@@ -77,7 +77,7 @@ fn settings_changes_survive_a_save_and_restore() {
     let empty = Snapshot::default();
     let mut changes = ChangeSet::default();
     changes.want::<LoginShells>(
-        user_name("nico"),
+        user_name("ada"),
         ShellPath::new("/usr/bin/zsh").unwrap(),
         &empty,
     );

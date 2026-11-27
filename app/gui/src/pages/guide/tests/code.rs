@@ -1,6 +1,3 @@
-//! A code block: its copy button sits at the block's right edge, however
-//! short the code is.
-
 use egui_kittest::kittest::Queryable as _;
 
 use super::page_on;

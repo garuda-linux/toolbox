@@ -2,7 +2,7 @@
 //! right, and the same items on a right click anywhere on the row or the
 //! Menu key on the focused row.
 
-use egui::{Align, Layout, Popup, PopupAnchor, PopupKind, Pos2, Response, Ui, vec2};
+use egui::{Align, Layout, Popup, PopupAnchor, PopupKind, Pos2, Response, Ui};
 
 use super::menu::{menu_for, menu_glass, menu_items, menu_width};
 use super::{RowState, icon_button};
@@ -29,37 +29,20 @@ pub fn row_menu(
 
     menu_for(ui, &button, open, &mut items);
     if enabled {
-        context_menu(ui, row, name, None, &mut items);
+        context_menu(ui, row, name, &mut items);
     }
 
     button
 }
 
-/// `items` on a right click of a row without a ⋯ button, or on the Menu
-/// key, then below the row's start. `name` names the menu.
-pub fn row_context_menu(ui: &Ui, row: &RowState, name: &str, mut items: impl FnMut(&mut Ui)) {
-    let padding = ui.spacing().item_spacing.x;
-    let below = row
-        .menu
-        .then(|| row.response.rect.left_bottom() + vec2(padding, 0.0));
-
-    context_menu(ui, row, name, below, &mut items);
-}
-
-fn context_menu(
-    ui: &Ui,
-    row: &RowState,
-    name: &str,
-    keyboard_at: Option<Pos2>,
-    items: &mut dyn FnMut(&mut Ui),
-) {
+fn context_menu(ui: &Ui, row: &RowState, name: &str, items: &mut dyn FnMut(&mut Ui)) {
     let ctx = ui.ctx();
     let id = row.response.id.with("context-menu");
     let at_id = id.with("at");
     let opened_at = if row.response.secondary_clicked() {
         ctx.pointer_interact_pos()
     } else {
-        keyboard_at
+        None
     };
 
     if let Some(at) = opened_at {

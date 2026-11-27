@@ -16,7 +16,7 @@ use toolbox_cli::args::{Confirm, EntryArgs, KernelArgs, ReadList, TaskArgs, Unit
 use toolbox_cli::output::{Mark, Row};
 use toolbox_core::Toggle;
 use toolbox_core::features::kernels::kernels_of;
-use toolbox_core::features::maintenance::page::{AUR_UPGRADE, OPERATION_KEYS, repairs, upgrader};
+use toolbox_core::features::maintenance::page::{AUR_UPGRADE, operation_keys, repairs, upgrader};
 use toolbox_core::features::services::{asks_first as asks_first_unit, critical};
 use toolbox_plan::{Plan, UnitOperation, UnitScope};
 use toolbox_services::catalogs::Catalogs;
@@ -133,7 +133,7 @@ pub fn kernel(
 ) -> Exit {
     let snapshot = system();
     let Some((kernels, _)) = kernels_of(&snapshot) else {
-        return unavailable("pacman's databases could not be read", out);
+        return unavailable(change::DATABASES_UNREAD, out);
     };
 
     let planned = change::kernel(&kernels, &args.kernel, change, &snapshot);
@@ -155,8 +155,7 @@ pub fn task(args: &TaskArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
 
 pub fn tasks(read: &ReadList, out: &mut Out<'_>) -> Exit {
     let exists = |path: &Path| path.exists();
-    let common = OPERATION_KEYS
-        .into_iter()
+    let common = operation_keys()
         .chain([AUR_UPGRADE, RANK_MIRRORS])
         .map(|id| TaskRow {
             id: id.to_owned(),
@@ -204,13 +203,20 @@ fn task_listing(rows: &[TaskRow]) -> Listing<'_> {
 fn about(id: &str) -> String {
     let key = if id == RANK_MIRRORS {
         "maintenance-tool-chaotic-mirrors-detail".to_owned()
-    } else if id == AUR_UPGRADE || OPERATION_KEYS.contains(&id) {
+    } else if id == AUR_UPGRADE || operation_keys().any(|key| key == id) {
         format!("maintenance-op-{id}-detail")
     } else {
         format!("maintenance-repair-{id}-detail")
     };
 
-    toolbox_services::i18n::text_or_in(&toolbox_services::i18n::FALLBACK, &key, "").into_owned()
+    let text = toolbox_services::i18n::text_or_in(&toolbox_services::i18n::FALLBACK, &key, "")
+        .into_owned();
+
+    if text.is_empty() {
+        tracing::warn!("no detail text for {key}");
+    }
+
+    text
 }
 
 pub fn run(

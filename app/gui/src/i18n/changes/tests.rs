@@ -18,11 +18,8 @@ fn two_values_fill_their_own_names() {
     let ctx = egui::Context::default();
 
     assert_eq!(
-        sentence(
-            &ctx,
-            &Summary::pair(SummaryCode::GroupJoin, "nico", "wheel")
-        ),
-        "Add nico to the group wheel"
+        sentence(&ctx, &Summary::pair(SummaryCode::GroupJoin, "ada", "wheel")),
+        "Add ada to the group wheel"
     );
 }
 
@@ -47,7 +44,7 @@ fn a_language_named_directly_words_the_same_change() {
     let german: fluent_templates::LanguageIdentifier = "de-DE".parse().unwrap();
     i18n::set_language(&ctx, &german);
 
-    let summary = Summary::pair(SummaryCode::GroupJoin, "nico", "wheel");
+    let summary = Summary::pair(SummaryCode::GroupJoin, "ada", "wheel");
 
     assert_eq!(sentence_in(&german, &summary), sentence(&ctx, &summary));
 }

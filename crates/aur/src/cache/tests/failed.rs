@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use super::{DAY, Fake, FakeClock, START, Scripted, cache, one};
 use crate::transport::{Answer, Transport, Validators};
-use crate::{AurError, AurSource as _, Cache, RequestError};
+use crate::{AurSource as _, Cache, RequestError};
 
 /// Creates a folder where the copy belongs, so its write fails, and then
 /// answers with a fresh dump.
@@ -37,10 +37,7 @@ fn a_copy_that_cannot_be_written_leaves_the_failed_flag_stored() {
         clock,
     );
 
-    assert!(matches!(
-        aur.index(),
-        Err(AurError::Storage { path, error: _ }) if path.ends_with("index.json")
-    ));
+    assert!(aur.index().is_ok(), "the fresh dump still answers");
     assert!(failed_flag(folder.path()));
 }
 

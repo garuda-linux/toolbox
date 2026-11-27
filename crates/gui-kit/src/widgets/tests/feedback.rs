@@ -11,8 +11,8 @@ use super::super::{
     skeleton_rows,
 };
 use super::motion::repaint_delay;
-use crate::testing::{Cover, cover, harness, repaints_once_settled};
-use crate::{UiExt as _, icons, theme};
+use crate::testing::{Cover, cover, freeze_shimmer, harness, repaints_once_settled};
+use crate::{UiExt as _, icons, motion, theme};
 
 #[test]
 fn skeleton_rows_are_one_named_node_paced_below_the_display() {
@@ -20,6 +20,7 @@ fn skeleton_rows_are_one_named_node_paced_below_the_display() {
         card(ui, |ui| skeleton_rows(ui, 5, 68.0, "Reading the services…"));
     });
 
+    freeze_shimmer(&harness.ctx, false);
     harness.run();
 
     assert_eq!(
@@ -31,7 +32,11 @@ fn skeleton_rows_are_one_named_node_paced_below_the_display() {
             .query_by_role_and_label(Role::ProgressIndicator, "Reading the services…")
             .is_some()
     );
-    assert!(repaint_delay(&harness) > Duration::ZERO, "no busy loop");
+    assert_eq!(
+        repaint_delay(&harness),
+        motion::SHIMMER_FRAME,
+        "the shimmer asks for a frame every SHIMMER_FRAME"
+    );
 }
 
 #[test]

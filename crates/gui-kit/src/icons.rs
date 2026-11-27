@@ -1,12 +1,5 @@
-//! Icons by freedesktop name, in two kinds.
-//!
-//! A glyph is a monochrome symbol the text colour tints, for buttons,
-//! fields, menus and row marks. A colour icon is Breeze's own colour file,
-//! drawn as it is (`colour`), for pages, status and rows. Both ask the
-//! desktop's icon theme for their file by its theme name (a glyph's
-//! `-symbolic` one), and each stands on a bundled file when the theme has
-//! none. Each constant embeds its bundled file, so a missing one fails the
-//! build, as Rerun's `re_ui` icons do.
+//! Icons by freedesktop name. Each constant embeds its bundled file, so a
+//! missing one fails the build, as Rerun's `re_ui` icons do.
 
 mod all;
 pub mod colour;
@@ -93,11 +86,9 @@ pub const EDIT_DELETE: Icon = bundled!("edit-delete");
 pub const EDIT_FIND: Icon = action!("edit-find");
 pub const ERROR: Icon = bundled!("error");
 pub const FOLDER_DOWNLOAD: Icon = bundled!("folder-download");
-pub const FORMAT_LIST_UNORDERED: Icon = bundled!("format-list-unordered");
 pub const GAMES_CONFIG_BOARD: Icon = bundled!("games-config-board");
 pub const GAMES_HIGHSCORES: Icon = bundled!("games-highscores");
 pub const GAMES_HINT: Icon = bundled!("games-hint");
-pub const GAMES_SOLVE: Icon = bundled!("games-solve");
 pub const GLOBE: Icon = bundled!("globe");
 pub const GO_NEXT: Icon = bundled!("go-next");
 pub const GO_PREVIOUS: Icon = action!("go-previous");
@@ -117,7 +108,6 @@ pub const MEDIA_PLAYLIST_REPEAT: Icon = bundled!("media-playlist-repeat");
 pub const NETWORK_CONNECT: Icon = bundled!("network-connect");
 pub const NETWORK_SERVER: Icon = bundled!("network-server");
 pub const NETWORK_WIRED: Icon = bundled!("network-wired");
-pub const NETWORK_WIRELESS: Icon = bundled!("network-wireless");
 pub const NETWORK_WIRELESS_SIGNAL_GOOD: Icon = bundled!("network-wireless-signal-good");
 pub const OBJECT_LOCKED: Icon = bundled!("object-locked");
 pub const OBJECT_UNLOCKED: Icon = bundled!("object-unlocked");
@@ -125,7 +115,6 @@ pub const OFFICE_REPORT: Icon = bundled!("office-report");
 pub const OVERFLOW_MENU: Icon = bundled!("overflow-menu");
 pub const PACKAGE: Icon = bundled!("package");
 pub const PLUGINS: Icon = bundled!("plugins");
-pub const PREFERENCES_DESKTOP_THEME_GLOBAL: Icon = bundled!("preferences-desktop-theme-global");
 pub const PREFERENCES_SYSTEM_BLUETOOTH: Icon = bundled!("preferences-system-bluetooth");
 pub const PRINTER: Icon = bundled!("printer");
 pub const REPOSITORY: Icon = bundled!("repository");
@@ -142,15 +131,11 @@ pub const SYSTEM_SEARCH: Icon = bundled!("system-search");
 pub const SYSTEM_SOFTWARE_UPDATE: Icon = bundled!("system-software-update");
 pub const TEXT_X_GENERIC: Icon = bundled!("text-x-generic");
 pub const TOOLS: Icon = bundled!("tools");
-pub const TOOLS_WIZARD: Icon = bundled!("tools-wizard");
 pub const USER_OTHERS: Icon = bundled!("user-others");
 pub const UTILITIES_TERMINAL: Icon = bundled!("utilities-terminal");
 pub const VCS_DIFF: Icon = bundled!("vcs-diff");
-pub const VIEW_CERTIFICATE: Icon = bundled!("view-certificate");
 pub const VIEW_HIDDEN: Icon = bundled!("view-hidden");
 pub const VIEW_LIST_DETAILS: Icon = bundled!("view-list-details");
-pub const VIEW_LIST_ICONS: Icon = bundled!("view-list-icons");
-pub const VIEW_MEDIA_EQUALIZER: Icon = bundled!("view-media-equalizer");
 pub const VIEW_PIM_TASKS: Icon = bundled!("view-pim-tasks");
 pub const VIEW_REFRESH: Icon = bundled!("view-refresh");
 pub const VIEW_TASK: Icon = bundled!("view-task");

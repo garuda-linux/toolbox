@@ -1,5 +1,5 @@
-//! It reads at start, after every plan and when the window comes back to
-//! the front, through a [`reader`](crate::reader).
+//! The system's state, read at start, after every plan and when the window
+//! comes back to the front, through a [`reader`](crate::reader).
 
 #[cfg(test)]
 mod tests;

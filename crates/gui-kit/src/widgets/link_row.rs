@@ -4,7 +4,7 @@
 
 use egui::{Rect, Response, Role, Sense, Ui, WidgetInfo, pos2, vec2};
 
-use super::icon_tile::{TileSize, paint_icon};
+use super::icon_tile::{ICON_EDGE, paint_icon};
 use super::list::text_line_height;
 use super::painted_row::painted_row;
 use super::rich;
@@ -20,15 +20,12 @@ const PADDING_X: f32 = 12.0;
 const GAP: f32 = 12.0;
 const CHEVRON: f32 = 14.0;
 
-/// A row across the available width. `role` is [`Role::Link`] for one that
-/// opens a page, with a chevron, and [`Role::Button`] for one that acts here,
-/// without it.
-pub fn link_row(ui: &mut Ui, icon: Icon, title: &str, role: Role) -> Response {
-    link_row_at_least(ui, icon, title, role, 0.0)
-}
-
-/// A [`link_row`] at least `least` tall, for rows that share a card's height
-/// with the rows of a card beside it.
+/// A row across the available width.
+///
+/// `role` is [`Role::Link`] for one that opens a page, with a chevron, and
+/// [`Role::Button`] for one that acts here, without it. It is at least
+/// `least` tall, for rows that share a card's height with the rows of a card
+/// beside it.
 pub fn link_row_at_least(ui: &mut Ui, icon: Icon, title: &str, role: Role, least: f32) -> Response {
     let tokens = tokens::current(ui.ctx());
     let height = ITEM_PADDING_Y
@@ -45,13 +42,13 @@ pub fn link_row_at_least(ui: &mut Ui, icon: Icon, title: &str, role: Role, least
 
     row.paint_fill(ui);
     let mid = rect.center().y;
-    let edge = TileSize::Line.edge();
+    let edge = ICON_EDGE;
     let square = Rect::from_center_size(
         pos2(rect.left() + PADDING_X + edge / 2.0, mid),
         vec2(edge, edge),
     );
 
-    paint_icon(ui, square.center(), TileSize::Line, icon.for_row());
+    paint_icon(ui, square.center(), icon.for_row());
 
     let leads = role == Role::Link;
     let chevron = Rect::from_center_size(

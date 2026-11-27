@@ -2,6 +2,7 @@ use std::fs;
 use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 
+use toolbox_fs::testing::as_person;
 use toolbox_plan::KernelRelease;
 use toolbox_plan::sdboot::{LoaderSettings, LoaderTimeout, MAX_ENTRIES};
 
@@ -164,13 +165,11 @@ fn an_esp_far_down_a_long_mount_table_is_found() {
 /// keeps the main UKI and counts the two it could not read.
 #[test]
 fn entries_that_cannot_be_read_are_counted() {
-    if rustix::process::geteuid().is_root() {
-        return;
-    }
-
     let dir = tempfile::tempdir().unwrap();
     image(dir.path());
     write(dir.path(), "efi/loader/entries/binary.conf", UKI);
+
+    fs::set_permissions(dir.path(), fs::Permissions::from_mode(0o755)).unwrap();
 
     let fallback = dir
         .path()
@@ -178,7 +177,7 @@ fn entries_that_cannot_be_read_are_counted() {
 
     fs::set_permissions(&fallback, fs::Permissions::from_mode(0o000)).unwrap();
 
-    let menu = menu(dir.path()).unwrap();
+    let menu = as_person(|| menu(dir.path())).unwrap();
 
     assert_eq!(menu.entries.len(), 1);
     assert_eq!(menu.skipped, 2);

@@ -1,8 +1,7 @@
 use egui::{Label, Rect, Ui};
 
-use super::super::{
-    ButtonKind, card, card_row, pill_button, rich, split_row, title_line, title_line_height,
-};
+use super::super::layout::title_line_height;
+use super::super::{ButtonKind, card, card_row, pill_button, rich, split_row, title_line};
 use crate::fonts::{BODY, SMALL, Weight};
 use crate::testing::harness;
 use crate::tokens;

@@ -167,8 +167,7 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, item: &LocaleItem, state: &RowSta
     }
 }
 
-/// A line with its words and the control `right` draws at the end. Returns
-/// what `right` returned.
+/// A line with its words and the control `right` draws at the end.
 pub fn line_row(
     ui: &mut Ui,
     row: Id,

@@ -34,5 +34,17 @@ fn several_choices_land_in_one_plan() {
 
     let one = apply(catalog, &ids[..1], &Snapshot::default()).unwrap();
     let both = apply(catalog, &ids, &Snapshot::default()).unwrap();
-    assert!(format!("{both:?}").len() > format!("{one:?}").len());
+    let text = |plan: &toolbox_plan::Plan| -> String {
+        plan.steps()
+            .iter()
+            .flat_map(|step| step.action.command_lines())
+            .collect::<Vec<_>>()
+            .join("\n")
+    };
+
+    assert_eq!(both.steps().len(), 1);
+    assert!(text(&one).contains("strawberry"), "{}", text(&one));
+    assert!(!text(&one).contains("lollypop"), "{}", text(&one));
+    assert!(text(&both).contains("strawberry"), "{}", text(&both));
+    assert!(text(&both).contains("lollypop"), "{}", text(&both));
 }

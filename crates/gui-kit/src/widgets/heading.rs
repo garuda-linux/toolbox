@@ -6,7 +6,7 @@ use egui::{Align, Label, Layout, Rect, Sense, Ui, UiBuilder, pos2, vec2};
 pub use toolbar::{page_toolbar, toolbar_end_inset};
 use toolbar::{toolbar_room_id, trailing_gap};
 
-use super::layout::{MIN_TEXT_WIDTH, Redraw, remember};
+use super::layout::{MIN_TEXT_WIDTH, remember};
 use super::page::stash_purpose;
 use super::rich;
 use crate::fonts::{BODY, PAGE_TITLE, SMALL, Weight};
@@ -386,11 +386,5 @@ fn trailing_slot(
         .rect;
 
     let reason = "the header controls changed their size";
-    remember(
-        ui,
-        measured_id,
-        Some(measured),
-        controls.size(),
-        (Redraw::Discards, reason),
-    );
+    remember(ui, measured_id, Some(measured), controls.size(), reason);
 }

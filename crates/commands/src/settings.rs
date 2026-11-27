@@ -16,13 +16,13 @@ use toolbox_cli::args::{Read, SettingKey, SettingsCommand};
 use toolbox_cli::output::{Row, json};
 use toolbox_config::{
     AUTOSTART_ENTRY, Autostart, InvalidLanguage, Language, LogLevel, MAX_MINUTES, MIN_MINUTES,
-    Paths, RefreshInterval, Settings,
+    Paths, RefreshInterval, Settings, SettingsError,
 };
 use toolbox_plan::SchemeId;
 use toolbox_services::catalogs::catalog_dir_from_env;
 
 use super::out::Listing;
-use crate::out::Out;
+use crate::out::{Out, warn};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct SettingRow {
@@ -54,8 +54,7 @@ pub fn command(command: SettingsCommand, out: &mut Out<'_>) -> Exit {
     let autostart = Autostart::new(paths.autostart_dir(), PathBuf::from(AUTOSTART_ENTRY));
     let loaded = Settings::load(&file);
     if let Some(problem) = &loaded.problem {
-        let text = format!("the settings file is unusable, the defaults are shown: {problem}");
-        writeln!(out, "{}", out.paint().warning(&text)).ok();
+        unusable(problem, out);
     }
 
     let settings = loaded.settings;
@@ -188,8 +187,7 @@ pub fn get_text(read: Read, settings: &Settings, key: SettingKey, autostart: boo
     }
 }
 
-/// The settings, the columns plain enough to need no names. What a setting
-/// takes is its help text from `settings set --help`.
+/// What a setting takes is its help text from `settings set --help`.
 pub fn setting_listing(rows: &[SettingRow]) -> Listing<'_> {
     Listing {
         title: "Settings",
@@ -299,6 +297,13 @@ fn scheme(
 
 fn scheme_name(id: Option<&SchemeId>) -> String {
     id.map_or_else(|| "system".to_owned(), ToString::to_string)
+}
+
+/// The defaults are shown in place of a file that cannot be used. The note
+/// goes where the command's `--json` keeps notes, never to standard output.
+fn unusable(problem: &SettingsError, out: &Out<'_>) {
+    let text = format!("the settings file is unusable, the defaults are shown: {problem}");
+    warn(out.settings(), &text);
 }
 
 fn usage(message: &str, out: &mut Out<'_>) -> Exit {

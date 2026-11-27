@@ -229,8 +229,8 @@ struct Run<'a> {
 
 impl Run<'_> {
     /// What a command means to the running segment. A second plan while
-    /// one runs is refused, never queued: the user starts it again
-    /// knowingly. A resize is also kept for the next segment.
+    /// one runs is refused, never queued. A resize is also kept for the
+    /// next segment.
     fn answer_for(&mut self, command: ApplyCommand) -> Option<Answer> {
         match command {
             ApplyCommand::Input(bytes) => Some(Answer::Input {

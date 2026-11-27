@@ -107,6 +107,36 @@ fn a_chain_of_links_and_a_linked_folder_are_followed_to_the_end() {
     ));
 }
 
+/// Links `etc/l0.conf` to `etc/l{links - 1}.conf`, which leads to
+/// `etc/real.conf`.
+fn chain(root: &TempDir, links: usize) {
+    for number in 0..links {
+        let target = if number + 1 == links {
+            "/etc/real.conf".to_owned()
+        } else {
+            format!("l{}.conf", number + 1)
+        };
+
+        symlink(target, root.path().join(format!("etc/l{number}.conf"))).unwrap();
+    }
+}
+
+#[test]
+fn a_chain_of_forty_links_resolves_and_one_more_is_dangling() {
+    let forty = system();
+    chain(&forty, 40);
+
+    assert_eq!(real(&forty, "/etc/l0.conf").path, path("/etc/real.conf"));
+
+    let forty_one = system();
+    chain(&forty_one, 41);
+
+    assert_eq!(
+        refused(&forty_one, "/etc/l0.conf").0,
+        FetchRefusal::Dangling
+    );
+}
+
 #[test]
 fn a_link_to_nothing_or_in_a_circle_is_dangling() {
     let root = system();

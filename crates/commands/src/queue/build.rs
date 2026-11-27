@@ -94,9 +94,7 @@ pub fn build(
         Queueable::Merge(args) => {
             crate::merges::onto(args, &system.merge_pair(&args.copy), snapshot, changes)
         }
-        Queueable::Driver(args, on) => {
-            network::blacklist_onto(args, Toggle::from_on(on.is_on()), snapshot, changes)
-        }
+        Queueable::Driver(args, on) => network::blacklist_onto(args, on, snapshot, changes),
     }
 }
 
@@ -125,9 +123,7 @@ fn kernel(
     changes: &mut ChangeSet,
 ) -> Result<(), Refused> {
     let Some((kernels, _)) = kernels_of(snapshot) else {
-        return Err(Refused::Unavailable(
-            "not available: pacman's databases could not be read".to_owned(),
-        ));
+        return Err(Refused::databases_unread());
     };
 
     change::kernel_onto(&kernels, &args.kernel, kernel_change, snapshot, changes)

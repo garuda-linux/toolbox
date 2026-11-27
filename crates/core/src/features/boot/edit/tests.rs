@@ -10,7 +10,7 @@ use crate::{ChangeSet, Snapshot};
 fn grub() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(CurrentGrub(GrubState::read(
-        "GRUB_DEFAULT=0\nGRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\n",
+        toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB,
     )));
     snapshot
 }

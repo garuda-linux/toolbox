@@ -83,7 +83,6 @@ impl Toggle {
 }
 
 impl Shortcut {
-    /// The dbusmenu form: one chord of modifier names, then the key.
     pub(crate) fn chords(&self) -> Vec<Vec<String>> {
         let names = self.modifiers.iter().map(|modifier| modifier.name());
         vec![names.chain([self.key]).map(String::from).collect()]

@@ -12,8 +12,7 @@ use super::super::{mark_selected, rich};
 use crate::fonts::{BODY, Weight};
 use crate::tokens;
 
-/// A colour strip before an option's name: three columns, as wide as
-/// tall per column, with the gap to the name.
+/// A colour strip before an option's name, three columns side by side.
 pub(super) const SWATCH_WIDTH: f32 = 18.0;
 const SWATCH_HEIGHT: f32 = 12.0;
 pub(super) const SWATCH_GAP: f32 = 8.0;

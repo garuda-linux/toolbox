@@ -55,7 +55,6 @@ pub fn maintenance() -> Fixture {
     maintenance_on(Theme::Dark)
 }
 
-/// The Maintenance page drawn on `theme`, with that theme's desktop look.
 pub fn maintenance_on(theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();

@@ -99,8 +99,7 @@ pub fn is_flag_parameter(parameter: &str) -> bool {
     Flag::ALL.iter().any(|flag| flag.matches(parameter))
 }
 
-/// The command line without what the switches own, in order. The queue
-/// still holds the whole list, only the display hides the owned words.
+/// The queue still holds the whole list, only the display hides the owned words.
 pub fn free_parameters(list: &KernelParameters) -> Vec<&str> {
     list.iter()
         .map(KernelParameter::as_str)

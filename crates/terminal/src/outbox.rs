@@ -40,9 +40,8 @@ impl EventListener for Outbox {
 
                 replies.extend_from_slice(format(unknown).as_bytes());
             }
-            // Titles and bells go nowhere: the Console shows no title
-            // and sounds no bell. Colour queries stay unanswered and
-            // programs get no clipboard, the rest serves no window.
+            // The Console shows no title, sounds no bell and serves no
+            // clipboard or colour query, so these events go nowhere.
             Event::Title(_)
             | Event::ResetTitle
             | Event::Bell

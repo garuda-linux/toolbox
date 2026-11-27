@@ -16,10 +16,10 @@ use crate::i18n;
 #[derive(Debug, Default)]
 pub struct Closing {
     asking: Option<Question>,
-    /// The user chose to quit: the window closes once the cancelled plan
-    /// ended, and a note says so until then.
+    /// The window closes once the cancelled plan ended, and a note says so
+    /// until then.
     after_run: bool,
-    /// The user chose to drop the edit, so the next close asks no more.
+    /// The next close asks no more.
     edit_dropped: bool,
 }
 

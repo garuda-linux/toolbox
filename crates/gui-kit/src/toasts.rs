@@ -34,7 +34,6 @@ const POPUP_FAR: f32 = 0.24;
 /// Kirigami's default `closeInterval`, for an error as for any note: it
 /// has no timeout of its own.
 const TIME: Duration = Duration::from_secs(7);
-/// A note appears with a drop into place and leaves by fading alone.
 const TIMING: Timing = Timing::new(motion::TOAST_ENTER, motion::TOAST_EXIT);
 /// Kirigami's `gridUnit * 25`, the widest a note grows before its text wraps.
 const MAX_WIDTH: f32 = 450.0;

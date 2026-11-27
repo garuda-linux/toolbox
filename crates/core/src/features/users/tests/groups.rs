@@ -22,7 +22,7 @@ fn groups_are_added_once_and_system_or_primary_groups_stay() {
     for (name, refusal) in [
         ("wheel", Refusal::SystemGroup),
         ("audio", Refusal::SystemGroup),
-        ("nico", Refusal::PrimaryGroup),
+        ("ada", Refusal::PrimaryGroup),
         ("ghosts", Refusal::UnknownGroup),
     ] {
         assert_eq!(
@@ -43,7 +43,7 @@ fn removing_a_group_drops_its_queued_memberships_and_can_be_taken_back() {
 
     add_group(&group_name("crafts"), &mut changes, &snapshot).unwrap();
     set_groups(
-        &user_name("ada"),
+        &user_name("grace"),
         &groups(&["audio", "crafts"]),
         &mut changes,
         &snapshot,
@@ -53,8 +53,8 @@ fn removing_a_group_drops_its_queued_memberships_and_can_be_taken_back() {
         queued(&changes),
         [
             "new-groups crafts",
-            "groups ada crafts",
-            "groups ada makers"
+            "groups grace crafts",
+            "groups grace makers"
         ]
     );
 
@@ -63,13 +63,13 @@ fn removing_a_group_drops_its_queued_memberships_and_can_be_taken_back() {
         queued(&changes),
         [
             "new-groups crafts",
-            "groups ada crafts",
+            "groups grace crafts",
             "removed-groups makers"
         ]
     );
     assert_eq!(
         set_groups(
-            &user_name("ada"),
+            &user_name("grace"),
             &groups(&["makers"]),
             &mut changes,
             &snapshot
@@ -83,6 +83,6 @@ fn removing_a_group_drops_its_queued_memberships_and_can_be_taken_back() {
 
     remove_group(&group_name("crafts"), &mut changes, &snapshot).unwrap();
     assert_eq!(changes.wish::<NewGroups>(&group_name("crafts")), None);
-    assert_eq!(changes.wish::<Groups>(&membership("ada", "crafts")), None);
+    assert_eq!(changes.wish::<Groups>(&membership("grace", "crafts")), None);
     assert!(changes.is_empty(), "{changes:?}");
 }

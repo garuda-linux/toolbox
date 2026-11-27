@@ -1,6 +1,3 @@
-//! Quitting while a plan runs: the question, then a note until the
-//! cancelled run ends.
-
 use egui::{ViewportEvent, ViewportId};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;

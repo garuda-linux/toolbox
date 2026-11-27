@@ -27,8 +27,7 @@ pub trait ShareSink: Send + Sync {
 }
 
 /// The last upload of one text, as its view shows it. Each stage holds
-/// only its own data, so a running upload has no old link and a done one
-/// no reason.
+/// only its own data.
 #[derive(Clone, Default, PartialEq, Eq)]
 pub enum Upload {
     #[default]

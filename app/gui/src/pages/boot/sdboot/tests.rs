@@ -344,7 +344,6 @@ fn a_kernel_without_an_image_is_not_offered() {
     assert!(harness.query_by_label("Queue as Default").is_none());
 }
 
-/// The image's `loader.conf` with the kernel already its default.
 #[test]
 fn the_kernel_that_is_the_default_already_says_so() {
     let conf = format!("default garuda-*-garuda.efi\n{LOADER_CONF}");

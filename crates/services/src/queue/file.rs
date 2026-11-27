@@ -168,8 +168,7 @@ fn stopped(path: &Path) -> NotKept {
 /// be restored.
 ///
 /// Each problem gets a line in the log. A missing file is an empty queue
-/// without a problem. A broken one is an empty queue too: a lost queue is
-/// annoying, an app that cannot start is worse.
+/// without a problem. A broken one is an empty queue too.
 pub fn read(path: &Path, snapshot: &Snapshot) -> (ChangeSet, Vec<RestoreProblem>) {
     let mut changes = ChangeSet::default();
     let saved = match std::fs::read_to_string(path) {

@@ -8,7 +8,7 @@
 use egui::{Align2, Area, Context, CornerRadius, Frame, Id, Order, Panel, Rect, Ui, pos2};
 use toolbox_gui_kit::frost::Glass;
 use toolbox_gui_kit::theme::RADIUS;
-use toolbox_gui_kit::widgets::{TileSize, Tone, icon_button, status_tile};
+use toolbox_gui_kit::widgets::{Tone, icon_button, status_tile};
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 use toolbox_plan::protocol::Mode;
 use toolbox_system::Probe;
@@ -117,7 +117,7 @@ pub fn fill(ui: &mut Ui, rect: Rect, reading: &Reading, mode: Mode, commands: &C
 /// A message the bar holds a while, led by its tile, so it reads as a
 /// state without its colour.
 fn message(ui: &mut Ui, text: &str) {
-    status_tile(ui, TileSize::Line, Tone::Warning);
+    status_tile(ui, Tone::Warning);
     let colour = ui.tokens().text;
     ui.label(egui::RichText::new(text).color(colour));
 }

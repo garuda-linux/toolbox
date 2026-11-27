@@ -8,40 +8,23 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
 
-use super::HomeProblem;
 use super::status::run_row;
 use crate::command::HomeCommand;
 use crate::i18n;
-use crate::i18n::Arg;
 use crate::pages::PageContext;
 
-/// The installer and the repair shell, each where its program exists. With
-/// neither and nothing to tell the heading stays away, as it would head
-/// nothing.
+/// The installer and the repair shell, each where its program exists.
 pub fn live(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let programs = context.home.programs.cloned().unwrap_or_default();
-    let failed_start = match context.home.problem {
-        Some(HomeProblem::Installer(reason)) => Some(reason),
-        Some(HomeProblem::Restart(_) | HomeProblem::QueueLost(_) | HomeProblem::Busy) | None => {
-            None
-        }
-    };
 
     let tools = programs.installer || programs.chroot;
-    if !tools && failed_start.is_none() && !context.home.programs_failed {
+    if !tools && !context.home.programs_failed {
         return;
     }
 
     heading(ui, "home-live");
     ui.add_space(ui.tokens().sizes.card_gap);
-
-    if let Some(reason) = failed_start {
-        let why = [("reason", Arg::from(reason))];
-        let text = i18n::text_with(&ctx, "home-install-failed", &why);
-        banner(ui, Tone::Error, &text, &[]);
-        ui.add_space(ui.tokens().sizes.card_gap);
-    }
 
     if context.home.programs_failed {
         let text = i18n::text(&ctx, "home-programs-failed");

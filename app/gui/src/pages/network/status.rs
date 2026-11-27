@@ -138,8 +138,7 @@ const fn internet_state(connectivity: Option<Connectivity>) -> (&'static str, To
     }
 }
 
-/// Nothing is asked before a click. The value sits at the right as the
-/// other facts' do, with its copy icon and the ⋯ menu behind it.
+/// Nothing is asked before a click.
 fn address(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();

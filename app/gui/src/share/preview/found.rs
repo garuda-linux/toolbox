@@ -8,13 +8,11 @@ use toolbox_gui_kit::widgets::matches;
 use toolbox_pty::{Run, styled_lines};
 use toolbox_services::diagnostics::view::{self, Row};
 
-/// A text is known by where its bytes lie and how many there are, as the
-/// Diagnostics report knows its lines.
-type Identity = (usize, usize);
-
 #[derive(Clone, Debug, Default)]
 pub struct Found {
-    text: Identity,
+    /// Compared by content: a freed text's address can come back for a
+    /// new text of the same length.
+    text: String,
     lines: Vec<Vec<Run>>,
     columns: Option<usize>,
     rows: Vec<Row>,
@@ -26,10 +24,9 @@ pub struct Found {
 impl Found {
     /// Finds again what `text`, `query` or `columns` changed.
     pub fn update(&mut self, text: &str, query: &str, columns: Option<usize>) {
-        let identity = (text.as_ptr().addr(), text.len());
-        let new_text = self.text != identity;
+        let new_text = self.text != text;
         if new_text {
-            self.text = identity;
+            text.clone_into(&mut self.text);
             self.lines = styled_lines(text);
         }
 

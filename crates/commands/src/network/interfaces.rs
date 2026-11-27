@@ -6,8 +6,7 @@ use toolbox_cli::output::Paint;
 use toolbox_core::features::network::{InterfaceCard, Link, Signal, SignalQuality};
 use toolbox_services::i18n::{Arg, FALLBACK, text_in, text_with_in};
 
-/// An interface card as the command shows it. The copy buttons of the
-/// window have no counterpart here, the values are plain text.
+/// An interface card as the command shows it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 pub struct InterfaceView {
     pub connection: String,

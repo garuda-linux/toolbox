@@ -1,5 +1,6 @@
 use super::App;
 use crate::command::Reveal;
+use crate::page::PageId;
 
 impl App {
     /// Starts the reads only their pages start otherwise.
@@ -18,7 +19,7 @@ impl App {
             self.services.packages.show(name);
         }
 
-        let page = self.pages.reveal(reveal);
-        self.navigate(ctx, page);
+        self.pages.reveal(reveal);
+        self.navigate(ctx, PageId::Packages);
     }
 }

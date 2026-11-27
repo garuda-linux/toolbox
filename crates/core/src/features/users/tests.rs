@@ -23,31 +23,31 @@ use crate::domains::{
 use crate::test_support::{NOBODY_ID, group, group_name, membership, user, user_name};
 use crate::{ChangeSet, Snapshot, Toggle};
 
-/// `nico` runs the app and is the only admin. `ada` is a second person,
+/// `ada` runs the app and is the only admin. `grace` is a second person,
 /// `http` a system account, `root` and `toor` have user id 0.
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
 
     snapshot.insert(Accounts {
         users: vec![
-            user("ada", 1001, 1001),
+            user("grace", 1001, 1001),
             user("http", 33, 33),
-            user("nico", 1000, 1000),
+            user("ada", 1000, 1000),
             user("nobody", NOBODY_ID, NOBODY_ID),
             user("root", 0, 0),
             user("toor", 0, 0),
         ],
         groups: vec![
-            group("ada", 1001, &[]),
-            group("audio", 996, &["ada"]),
+            group("grace", 1001, &[]),
+            group("audio", 996, &["grace"]),
             group("http", 33, &[]),
-            group("makers", 1002, &["ada", "nico"]),
-            group("nico", 1000, &[]),
+            group("makers", 1002, &["grace", "ada"]),
+            group("ada", 1000, &[]),
             group("root", 0, &[]),
-            group("wheel", 998, &["nico"]),
+            group("wheel", 998, &["ada"]),
         ],
     });
-    snapshot.insert(CurrentUser(user_name("nico")));
+    snapshot.insert(CurrentUser(user_name("ada")));
     snapshot.insert(AvailableShells(vec![
         ShellPath::new("/usr/bin/bash").unwrap(),
         ShellPath::new("/usr/bin/fish").unwrap(),
@@ -73,24 +73,27 @@ fn the_group_dialog_queues_only_the_differences() {
     let mut changes = ChangeSet::default();
 
     set_groups(
-        &user_name("ada"),
+        &user_name("grace"),
         &groups(&["makers", "wheel"]),
         &mut changes,
         &snapshot,
     )
     .unwrap();
 
-    assert_eq!(queued(&changes), ["groups ada audio", "groups ada wheel"]);
+    assert_eq!(
+        queued(&changes),
+        ["groups grace audio", "groups grace wheel"]
+    );
     assert_eq!(
         queued_memberships(&changes),
         [
-            (membership("ada", "audio"), false),
-            (membership("ada", "wheel"), true)
+            (membership("grace", "audio"), false),
+            (membership("grace", "wheel"), true)
         ]
     );
 
     set_groups(
-        &user_name("ada"),
+        &user_name("grace"),
         &groups(&["audio", "makers"]),
         &mut changes,
         &snapshot,
@@ -105,9 +108,12 @@ fn the_primary_group_is_never_left() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
 
-    set_groups(&user_name("ada"), &groups(&[]), &mut changes, &snapshot).unwrap();
+    set_groups(&user_name("grace"), &groups(&[]), &mut changes, &snapshot).unwrap();
 
-    assert_eq!(queued(&changes), ["groups ada audio", "groups ada makers"]);
+    assert_eq!(
+        queued(&changes),
+        ["groups grace audio", "groups grace makers"]
+    );
 }
 
 #[test]
@@ -117,7 +123,7 @@ fn the_last_admin_stays_in_wheel() {
 
     assert_eq!(
         set_groups(
-            &user_name("nico"),
+            &user_name("ada"),
             &groups(&["makers"]),
             &mut changes,
             &snapshot
@@ -127,25 +133,25 @@ fn the_last_admin_stays_in_wheel() {
     assert!(changes.is_empty(), "a refused dialog queues nothing");
 
     set_groups(
-        &user_name("ada"),
+        &user_name("grace"),
         &groups(&["audio", "makers", "wheel"]),
         &mut changes,
         &snapshot,
     )
     .unwrap();
     set_groups(
-        &user_name("nico"),
+        &user_name("ada"),
         &groups(&["makers"]),
         &mut changes,
         &snapshot,
     )
     .unwrap();
 
-    assert_eq!(queued(&changes), ["groups ada wheel", "groups nico wheel"]);
+    assert_eq!(queued(&changes), ["groups ada wheel", "groups grace wheel"]);
 
     assert_eq!(
         set_groups(
-            &user_name("ada"),
+            &user_name("grace"),
             &groups(&["audio", "makers"]),
             &mut changes,
             &snapshot
@@ -153,7 +159,12 @@ fn the_last_admin_stays_in_wheel() {
         Err(Refusal::LastAdmin)
     );
     assert_eq!(
-        remove_user(&user_name("ada"), HomeFolder::Keep, &mut changes, &snapshot),
+        remove_user(
+            &user_name("grace"),
+            HomeFolder::Keep,
+            &mut changes,
+            &snapshot
+        ),
         Err(Refusal::LastAdmin)
     );
 }
@@ -203,7 +214,7 @@ fn the_current_user_cannot_lock_or_remove_itself() {
 
     assert_eq!(
         set_locked(
-            &user_name("nico"),
+            &user_name("ada"),
             Toggle::On,
             Some(false),
             &mut changes,
@@ -212,53 +223,48 @@ fn the_current_user_cannot_lock_or_remove_itself() {
         Err(Refusal::CurrentUser)
     );
     assert_eq!(
-        remove_user(
-            &user_name("nico"),
-            HomeFolder::Keep,
-            &mut changes,
-            &snapshot
-        ),
+        remove_user(&user_name("ada"), HomeFolder::Keep, &mut changes, &snapshot),
         Err(Refusal::CurrentUser)
     );
 
     set_locked(
-        &user_name("nico"),
+        &user_name("ada"),
         Toggle::Off,
         None,
         &mut changes,
         &snapshot,
     )
     .unwrap();
-    assert_eq!(queued(&changes), ["account-locks nico"]);
+    assert_eq!(queued(&changes), ["account-locks ada"]);
 }
 
 #[test]
 fn a_lock_queues_once_and_a_second_click_takes_it_back() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
-    set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<AccountLocks>(&ada), Some(&Toggle::On));
+    set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot).unwrap();
+    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::On));
 
-    set_locked(&ada, Toggle::On, Some(false), &mut changes, &snapshot).unwrap();
+    set_locked(&grace, Toggle::On, Some(false), &mut changes, &snapshot).unwrap();
     assert!(changes.is_empty());
 
-    set_locked(&ada, Toggle::On, Some(true), &mut changes, &snapshot).unwrap();
-    set_locked(&ada, Toggle::Off, Some(false), &mut changes, &snapshot).unwrap();
+    set_locked(&grace, Toggle::On, Some(true), &mut changes, &snapshot).unwrap();
+    set_locked(&grace, Toggle::Off, Some(false), &mut changes, &snapshot).unwrap();
     assert!(changes.is_empty());
 
-    set_locked(&ada, Toggle::Off, None, &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<AccountLocks>(&ada), Some(&Toggle::Off));
-    set_locked(&ada, Toggle::On, None, &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<AccountLocks>(&ada), Some(&Toggle::On));
+    set_locked(&grace, Toggle::Off, None, &mut changes, &snapshot).unwrap();
+    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::Off));
+    set_locked(&grace, Toggle::On, None, &mut changes, &snapshot).unwrap();
+    assert_eq!(changes.wish::<AccountLocks>(&grace), Some(&Toggle::On));
 }
 
 #[test]
 fn only_people_are_removed_and_their_other_changes_go_too() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
     for (name, refusal) in [
         ("http", Refusal::SystemAccount),
@@ -274,32 +280,41 @@ fn only_people_are_removed_and_their_other_changes_go_too() {
 
     add_group(&group_name("crafts"), &mut changes, &snapshot).unwrap();
     set_groups(
-        &ada,
+        &grace,
         &groups(&["crafts", "makers"]),
         &mut changes,
         &snapshot,
     )
     .unwrap();
-    set_locked(&ada, Toggle::On, None, &mut changes, &snapshot).unwrap();
+    set_locked(&grace, Toggle::On, None, &mut changes, &snapshot).unwrap();
     set_shell(
-        &ada,
+        &grace,
         ShellPath::new("/usr/bin/fish").unwrap(),
         &mut changes,
         &snapshot,
     )
     .unwrap();
-    set_full_name(&ada, FullName::new("Ada").unwrap(), &mut changes, &snapshot).unwrap();
+    set_full_name(
+        &grace,
+        FullName::new("Grace").unwrap(),
+        &mut changes,
+        &snapshot,
+    )
+    .unwrap();
     assert_eq!(changes.len(), 6);
 
-    remove_user(&ada, HomeFolder::Delete, &mut changes, &snapshot).unwrap();
+    remove_user(&grace, HomeFolder::Delete, &mut changes, &snapshot).unwrap();
 
-    assert_eq!(queued(&changes), ["new-groups crafts", "removed-users ada"]);
     assert_eq!(
-        changes.wish::<RemovedUsers>(&ada),
+        queued(&changes),
+        ["new-groups crafts", "removed-users grace"]
+    );
+    assert_eq!(
+        changes.wish::<RemovedUsers>(&grace),
         Some(&HomeFolder::Delete)
     );
 
-    keep_user(&ada, &mut changes);
+    keep_user(&grace, &mut changes);
     assert_eq!(queued(&changes), ["new-groups crafts"]);
 }
 
@@ -307,11 +322,11 @@ fn only_people_are_removed_and_their_other_changes_go_too() {
 fn shells_come_from_the_list_and_names_are_queued_as_a_diff() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
     assert_eq!(
         set_shell(
-            &ada,
+            &grace,
             ShellPath::new("/usr/bin/false").unwrap(),
             &mut changes,
             &snapshot
@@ -329,28 +344,28 @@ fn shells_come_from_the_list_and_names_are_queued_as_a_diff() {
     );
 
     set_shell(
-        &ada,
+        &grace,
         ShellPath::new("/usr/bin/fish").unwrap(),
         &mut changes,
         &snapshot,
     )
     .unwrap();
     set_full_name(
-        &ada,
-        FullName::new("Ada L.").unwrap(),
+        &grace,
+        FullName::new("Grace L.").unwrap(),
         &mut changes,
         &snapshot,
     )
     .unwrap();
 
-    assert!(changes.wish::<LoginShells>(&ada).is_some());
+    assert!(changes.wish::<LoginShells>(&grace).is_some());
     assert_eq!(
-        changes.wish::<FullNames>(&ada).map(FullName::as_str),
-        Some("Ada L.")
+        changes.wish::<FullNames>(&grace).map(FullName::as_str),
+        Some("Grace L.")
     );
 
-    set_full_name(&ada, FullName::default(), &mut changes, &snapshot).unwrap();
-    assert_eq!(changes.wish::<FullNames>(&ada), None);
+    set_full_name(&grace, FullName::default(), &mut changes, &snapshot).unwrap();
+    assert_eq!(changes.wish::<FullNames>(&grace), None);
 }
 
 #[test]
@@ -359,7 +374,7 @@ fn without_the_account_files_nothing_is_taken() {
     let mut changes = ChangeSet::default();
 
     assert_eq!(
-        set_groups(&user_name("ada"), &groups(&[]), &mut changes, &snapshot),
+        set_groups(&user_name("grace"), &groups(&[]), &mut changes, &snapshot),
         Err(Refusal::Unavailable)
     );
     assert_eq!(
@@ -367,18 +382,14 @@ fn without_the_account_files_nothing_is_taken() {
         Err(Refusal::Unavailable)
     );
     assert_eq!(
-        set_locked(&user_name("ada"), Toggle::On, None, &mut changes, &snapshot),
+        set_locked(
+            &user_name("grace"),
+            Toggle::On,
+            None,
+            &mut changes,
+            &snapshot
+        ),
         Err(Refusal::Unavailable)
     );
     assert!(changes.is_empty());
-}
-
-#[test]
-fn the_admin_groups_are_wheel_and_sudo() {
-    assert_eq!(
-        super::ADMIN_GROUPS
-            .each_ref()
-            .map(toolbox_plan::Name::as_str),
-        ["wheel", "sudo"]
-    );
 }

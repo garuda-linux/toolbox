@@ -15,7 +15,6 @@ const ROWS: [Row; 3] = [
     },
 ];
 
-/// A row found by its name or its id.
 struct Row {
     name: &'static str,
     id: &'static str,

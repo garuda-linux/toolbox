@@ -108,7 +108,7 @@ fn a_device_that_is_no_disk_or_partition_name_rejects_the_whole_request() -> Tes
         system("/dev/disk/by-label/root"),
         system("--force"),
         work(r#"{"kind":"install-bios","disk":"/dev/sda1"}"#),
-        work(r#"{"kind":"install-bios","disk":"/home/nico/disk.img"}"#),
+        work(r#"{"kind":"install-bios","disk":"/home/ada/disk.img"}"#),
         work(r#"{"kind":"install-uefi","esp":"/dev/sda","id":"Garuda"}"#),
         work(r#"{"kind":"install-uefi","esp":"/dev/sda1","id":"--removable"}"#),
         work(r#"{"kind":"install-uefi","esp":"/dev/sda1","id":"a/../../b"}"#),

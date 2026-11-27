@@ -1,13 +1,10 @@
 //! The few facts of `pacman.conf` the package probes need: where the
 //! databases live and which sync databases are configured.
 //!
-//! Read with an own small parser instead of the `pacman-conf` program (the
-//! `pacmanconf` crate runs it): the probes need no servers, mirrors or
-//! signature settings, only the repository sections in file order,
-//! `RootDir` and `DBPath`. It reads lines the way libalpm's ini parser
-//! does: a `#` starts a comment anywhere on a line, and an `Include` is
-//! read in place, so a section in an included file counts like one in
-//! `pacman.conf` itself.
+//! Read with an own small parser instead of `pacman-conf`, as the probes
+//! need no servers, mirrors or signature settings. Lines are read the way
+//! libalpm's ini parser reads them: a `#` starts a comment anywhere, and an
+//! `Include` is read in place.
 
 #[cfg(test)]
 mod tests;

@@ -62,7 +62,6 @@ pub fn languages() -> Fixture {
     languages_on(Theme::Dark)
 }
 
-/// The Languages page drawn on `theme`, with that theme's desktop look.
 pub fn languages_on(theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();

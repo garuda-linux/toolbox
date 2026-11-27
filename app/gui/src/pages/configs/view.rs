@@ -107,8 +107,7 @@ fn shown(ui: &mut Ui, viewing: &Viewing, path: &str) {
     );
 }
 
-/// Copy all, once a text was read, and Close. Returns whether Close was
-/// clicked.
+/// Copy all, once a text was read, and Close.
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, viewing: &Viewing) -> bool {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();

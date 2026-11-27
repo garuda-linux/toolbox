@@ -31,6 +31,10 @@ impl Gate {
     pub fn hold(&self, script: &str) -> String {
         let folder = self.folder.path().display();
         let open = self.open_file().display().to_string();
+        assert!(
+            script.contains("read request;"),
+            "the script has no `read request;` to hold at"
+        );
         script.replacen(
             "read request;",
             &format!(

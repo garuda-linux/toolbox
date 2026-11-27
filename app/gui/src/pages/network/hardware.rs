@@ -43,7 +43,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>) {
             Some(_) => "network-hardware-none",
         };
 
-        // One state says all: each reason is a line of its body.
         let body = reasons.join("\n");
         match pciutils_action(hardware, context) {
             Some((action, wish)) => {
@@ -92,7 +91,6 @@ fn intro(ui: &mut Ui, context: &PageContext<'_>, devices: &[&Device]) {
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     let all = text("network-hardware-copy-all");
 
-    // Inset by the card's padding, as the lines are.
     let padding = ui.tokens().sizes.card_padding;
     let inset = Margin {
         top: padding.top,

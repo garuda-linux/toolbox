@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use parking_lot::Mutex;
 use tokio::runtime::Handle;
@@ -36,7 +36,6 @@ impl DiagnosticSource for Fake {
         }
     }
 
-    /// The kernel log names this host.
     fn known(&self) -> Known {
         Known {
             host: Some("dmesg".to_owned()),
@@ -100,7 +99,13 @@ impl Transport for Gate {
     fn post(&self, url: &str, body: &str) -> Result<String, RequestError> {
         self.posts.fetch_add(1, Ordering::SeqCst);
 
+        let deadline = Instant::now() + Duration::from_secs(10);
+
         while !self.open.load(Ordering::SeqCst) {
+            if Instant::now() >= deadline {
+                return Err(RequestError::NoAnswer("the gate never opened".to_owned()));
+            }
+
             std::thread::sleep(Duration::from_millis(5));
         }
 

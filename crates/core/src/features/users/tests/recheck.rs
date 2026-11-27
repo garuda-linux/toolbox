@@ -10,28 +10,28 @@ use crate::Snapshot;
 use crate::domains::CurrentUser;
 use crate::test_support::{lock_flags, restore_saved, user_name};
 
-/// `ada` runs the app, `nico` stays the only admin.
+/// `grace` runs the app, `ada` stays the only admin.
 fn ada_runs_the_app() -> Snapshot {
     let mut snapshot = snapshot();
 
-    snapshot.insert(CurrentUser(user_name("ada")));
+    snapshot.insert(CurrentUser(user_name("grace")));
     snapshot
 }
 
 #[test]
 fn a_restored_removal_of_the_own_account_is_dropped() {
     let mut changes = restore_saved(&[
-        ("removed-users", json!("nico"), json!("keep")),
-        ("removed-users", json!("ada"), json!("delete")),
+        ("removed-users", json!("ada"), json!("keep")),
+        ("removed-users", json!("grace"), json!("delete")),
     ]);
 
     assert_eq!(recheck(&mut changes, &snapshot()), Some(1));
-    assert_eq!(queued(&changes), ["removed-users ada"]);
+    assert_eq!(queued(&changes), ["removed-users grace"]);
 }
 
 #[test]
 fn a_restored_removal_of_the_last_admin_is_dropped() {
-    let mut changes = restore_saved(&[("removed-users", json!("nico"), json!("keep"))]);
+    let mut changes = restore_saved(&[("removed-users", json!("ada"), json!("keep"))]);
 
     assert_eq!(recheck(&mut changes, &ada_runs_the_app()), Some(1));
     assert_eq!(queued(&changes), Vec::<String>::new());
@@ -53,30 +53,30 @@ fn the_last_admin_does_not_leave_wheel_through_a_restored_queue() {
     let mut changes = restore_saved(&[
         (
             "groups",
-            json!({ "user": "nico", "group": "wheel" }),
+            json!({ "user": "ada", "group": "wheel" }),
             json!("off"),
         ),
         (
             "groups",
-            json!({ "user": "nico", "group": "makers" }),
+            json!({ "user": "ada", "group": "makers" }),
             json!("off"),
         ),
     ]);
 
     assert_eq!(recheck(&mut changes, &snapshot()), Some(1));
-    assert_eq!(queued(&changes), ["groups nico makers"]);
+    assert_eq!(queued(&changes), ["groups ada makers"]);
 }
 
 #[test]
 fn the_last_admin_does_not_leave_sudo_through_a_restored_queue() {
     let mut changes = restore_saved(&[(
         "groups",
-        json!({ "user": "nico", "group": "sudo" }),
+        json!({ "user": "ada", "group": "sudo" }),
         json!("off"),
     )]);
 
     assert_eq!(
-        recheck(&mut changes, &with_admins("sudo", &["nico"])),
+        recheck(&mut changes, &with_admins("sudo", &["ada"])),
         Some(1)
     );
     assert_eq!(queued(&changes), Vec::<String>::new());
@@ -85,13 +85,13 @@ fn the_last_admin_does_not_leave_sudo_through_a_restored_queue() {
 #[test]
 fn a_restored_lock_of_the_own_account_is_dropped() {
     let mut changes = restore_saved(&[
-        ("account-locks", json!("nico"), json!("on")),
         ("account-locks", json!("ada"), json!("on")),
+        ("account-locks", json!("grace"), json!("on")),
     ]);
 
     let mut snapshot = snapshot();
 
-    snapshot.insert(lock_flags(&[("nico", false), ("ada", false)]));
+    snapshot.insert(lock_flags(&[("ada", false), ("grace", false)]));
 
     assert_eq!(
         recheck(&mut changes, &snapshot),
@@ -99,12 +99,12 @@ fn a_restored_lock_of_the_own_account_is_dropped() {
         "locks wait for the flags"
     );
     assert_eq!(recheck_locks(&mut changes, &snapshot), Some(1));
-    assert_eq!(queued(&changes), ["account-locks ada"]);
+    assert_eq!(queued(&changes), ["account-locks grace"]);
 }
 
 #[test]
 fn an_allowed_restored_removal_keeps_its_wish() {
-    let mut changes = restore_saved(&[("removed-users", json!("ada"), json!("delete"))]);
+    let mut changes = restore_saved(&[("removed-users", json!("grace"), json!("delete"))]);
 
     assert_eq!(recheck(&mut changes, &snapshot()), Some(0));
     assert_eq!(
@@ -116,7 +116,7 @@ fn an_allowed_restored_removal_keeps_its_wish() {
 
 #[test]
 fn without_the_account_files_the_restored_queue_stays() {
-    let mut changes = restore_saved(&[("removed-users", json!("nico"), json!("keep"))]);
+    let mut changes = restore_saved(&[("removed-users", json!("ada"), json!("keep"))]);
 
     assert_eq!(recheck(&mut changes, &Snapshot::default()), None);
     assert_eq!(changes.len(), 1);
@@ -131,7 +131,7 @@ fn without_the_current_user_the_restored_queue_waits() {
     let mut without_current = Snapshot::default();
 
     without_current.insert(accounts);
-    let mut changes = restore_saved(&[("removed-users", json!("nico"), json!("keep"))]);
+    let mut changes = restore_saved(&[("removed-users", json!("ada"), json!("keep"))]);
 
     assert_eq!(recheck(&mut changes, &without_current), None);
     assert_eq!(changes.len(), 1);
@@ -145,26 +145,26 @@ fn a_restored_home_change_of_the_own_account_is_dropped() {
     let mut changes = restore_saved(&[
         (
             "home-folders",
-            json!("ada"),
-            json!({ "home": "/srv/ada", "move_files": false }),
+            json!("grace"),
+            json!({ "home": "/srv/grace", "move_files": false }),
         ),
         (
             "home-folders",
-            json!("nico"),
-            json!({ "home": "/srv/nico", "move_files": true }),
+            json!("ada"),
+            json!({ "home": "/srv/ada", "move_files": true }),
         ),
     ]);
 
     assert_eq!(recheck(&mut changes, &ada_runs_the_app()), Some(1));
-    assert_eq!(queued(&changes), ["home-folders nico"]);
+    assert_eq!(queued(&changes), ["home-folders ada"]);
 }
 
 #[test]
 fn a_restored_home_folder_another_account_has_is_dropped() {
     let mut changes = restore_saved(&[(
         "home-folders",
-        json!("ada"),
-        json!({ "home": "/home/nico", "move_files": false }),
+        json!("grace"),
+        json!({ "home": "/home/ada", "move_files": false }),
     )]);
 
     assert_eq!(recheck(&mut changes, &snapshot()), Some(1));
@@ -206,10 +206,10 @@ fn a_restored_change_of_an_unknown_account_is_dropped() {
 #[test]
 fn a_restored_shell_that_etc_shells_does_not_list_is_dropped() {
     let mut changes = restore_saved(&[
-        ("login-shells", json!("ada"), json!("/usr/bin/fish")),
-        ("login-shells", json!("nico"), json!("/usr/bin/zsh")),
+        ("login-shells", json!("grace"), json!("/usr/bin/fish")),
+        ("login-shells", json!("ada"), json!("/usr/bin/zsh")),
     ]);
 
     assert_eq!(recheck(&mut changes, &snapshot()), Some(1));
-    assert_eq!(queued(&changes), ["login-shells ada"]);
+    assert_eq!(queued(&changes), ["login-shells grace"]);
 }

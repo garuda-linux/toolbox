@@ -1,4 +1,4 @@
-//! Pictures of every page at the smallest window, in light, and with the keyboard focus on its first control.
+//! Every page at the smallest window and in light, with focus on its first control.
 
 mod german;
 mod idle;
@@ -51,6 +51,8 @@ fn focus_page(harness: &mut Harness<'static, App>) {
             return;
         }
     }
+
+    panic!("no control right of the sidebar took the focus in 60 Tabs");
 }
 
 fn every_page(theme: Theme, size: (f32, f32), name: &str) {

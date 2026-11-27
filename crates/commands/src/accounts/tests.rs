@@ -78,15 +78,15 @@ fn group_of(name: &str, gid: u32, members: &[&str]) -> Group {
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(Accounts {
-        users: vec![user("ada", 1001), user("nico", 1000), user("root", 0)],
+        users: vec![user("hopper", 1001), user("ada", 1000), user("root", 0)],
         groups: vec![
-            group_of("ada", 1001, &[]),
-            group_of("audio", 996, &["ada"]),
-            group_of("nico", 1000, &[]),
-            group_of("wheel", 998, &["nico"]),
+            group_of("hopper", 1001, &[]),
+            group_of("audio", 996, &["hopper"]),
+            group_of("ada", 1000, &[]),
+            group_of("wheel", 998, &["ada"]),
         ],
     });
-    snapshot.insert(CurrentUser(UserName::new("nico").unwrap()));
+    snapshot.insert(CurrentUser(UserName::new("ada").unwrap()));
     snapshot.insert(AvailableShells(vec![
         ShellPath::new("/usr/bin/bash").unwrap(),
         ShellPath::new("/usr/bin/fish").unwrap(),
@@ -196,7 +196,7 @@ fn a_taken_name_is_refused_before_any_password_is_asked() {
         stdin: None,
     };
 
-    let refused = add(&add_args("ada"), &snapshot(), &mut prompt).unwrap_err();
+    let refused = add(&add_args("hopper"), &snapshot(), &mut prompt).unwrap_err();
     assert_eq!(refused.exit(), Exit::PageRule);
     assert_eq!(refused.message(), "a user by this name exists already");
 }
@@ -204,7 +204,7 @@ fn a_taken_name_is_refused_before_any_password_is_asked() {
 #[test]
 fn an_edit_joins_and_leaves_groups_and_changes_the_shell() {
     let args = EditUser {
-        user: "ada".parse().unwrap(),
+        user: "hopper".parse().unwrap(),
         full_name: None,
         shell: Some("/usr/bin/fish".parse().unwrap()),
         add_groups: vec!["wheel".parse().unwrap()],
@@ -224,7 +224,7 @@ fn an_edit_joins_and_leaves_groups_and_changes_the_shell() {
 #[test]
 fn an_unlisted_shell_is_refused() {
     let args = EditUser {
-        user: "ada".parse().unwrap(),
+        user: "hopper".parse().unwrap(),
         full_name: None,
         shell: Some("/usr/bin/zsh".parse().unwrap()),
         add_groups: Vec::new(),
@@ -241,12 +241,12 @@ fn an_unlisted_shell_is_refused() {
 #[test]
 fn a_refused_home_folder_takes_the_new_full_name_along() {
     let args = EditUser {
-        user: "nico".parse().unwrap(),
-        full_name: Some("Nico J.".parse().unwrap()),
+        user: "ada".parse().unwrap(),
+        full_name: Some("Ada L.".parse().unwrap()),
         shell: None,
         add_groups: Vec::new(),
         remove_groups: Vec::new(),
-        home: Some("/srv/nico".parse().unwrap()),
+        home: Some("/srv/ada".parse().unwrap()),
         move_files: true,
         confirm: Confirm::default(),
     };
@@ -258,19 +258,21 @@ fn a_refused_home_folder_takes_the_new_full_name_along() {
 #[test]
 fn the_running_user_cannot_lock_or_remove_itself() {
     let me = UserArgs {
-        user: "nico".parse().unwrap(),
+        user: "ada".parse().unwrap(),
         confirm: Confirm::default(),
     };
 
-    lock(&me, Toggle::On, &snapshot()).unwrap_err();
+    let locked = lock(&me, Toggle::On, &snapshot()).unwrap_err();
+    assert_eq!(locked.exit(), Exit::PageRule);
 
     let removal = RemoveUser {
-        user: "nico".parse().unwrap(),
+        user: "ada".parse().unwrap(),
         delete_home: false,
         confirm: Confirm::default(),
     };
 
-    remove(&removal, &snapshot()).unwrap_err();
+    let removed = remove(&removal, &snapshot()).unwrap_err();
+    assert_eq!(removed.exit(), Exit::PageRule);
 }
 
 #[test]
@@ -288,12 +290,12 @@ fn a_new_group_is_planned() {
 #[test]
 fn an_unknown_account_or_group_hints_at_the_closest_one() {
     let typo = UserArgs {
-        user: "adaa".parse().unwrap(),
+        user: "hoper".parse().unwrap(),
         confirm: Confirm::default(),
     };
 
     let refused = lock(&typo, Toggle::On, &snapshot()).unwrap_err();
-    assert!(refused.message().ends_with("did you mean `ada`?"));
+    assert!(refused.message().ends_with("did you mean `hopper`?"));
 
     let group_typo = GroupArgs {
         group: "audoi".parse().unwrap(),
@@ -323,4 +325,39 @@ fn an_admin_without_a_wheel_group_is_refused() {
     let refused = add(&add_args("grace"), &system, &mut prompt).unwrap_err();
 
     assert!(matches!(refused, Refused::Rule(_)), "{refused:?}");
+}
+
+/// A refused change under `--json` is one JSON Lines error on standard
+/// output, and the exit code is the refusal's.
+#[test]
+fn a_refused_change_under_json_is_one_error_line() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let me = UserArgs {
+        user: "ada".parse().unwrap(),
+        confirm: Confirm::default(),
+    };
+
+    let planned = lock(&me, Toggle::On, &snapshot());
+    let confirm = Confirm {
+        yes: true,
+        json: true,
+        ..Confirm::default()
+    };
+
+    let mut out = Vec::new();
+    let exit = crate::act::run(
+        planned,
+        confirm,
+        None,
+        &runtime,
+        &mut crate::out::Out::new(&mut out, crate::out::Settings::default()),
+    );
+
+    let text = String::from_utf8(out).unwrap();
+    assert_eq!(exit, Exit::PageRule);
+    assert!(
+        text.starts_with(r#"{"schema":1,"event":"error","message":"#),
+        "{text}"
+    );
+    assert_eq!(text.lines().count(), 1, "{text}");
 }

@@ -45,17 +45,6 @@ pub enum Tone {
 }
 
 impl Tone {
-    /// Neutral is the secondary colour, so a fact stays quiet.
-    const fn dot(self, tokens: &Tokens) -> Color32 {
-        match self {
-            Self::Accent => tokens.accent,
-            Self::Neutral => tokens.secondary,
-            Self::Warning => tokens.warning,
-            Self::Success => tokens.success,
-            Self::Error => tokens.error,
-        }
-    }
-
     /// A neutral tag is a plain chip, a toned one a checked chip in its
     /// tone's colour.
     pub(super) fn look(self, tokens: &Tokens, pointer: Pointer) -> ItemLook {
@@ -161,7 +150,7 @@ pub fn queued_tag(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     }
 }
 
-/// Used for a state every row of a list shows, where a coloured pill would repeat down the page.
+/// A state every row of a list shows, where a coloured pill would repeat down the page.
 pub fn status_dot(ui: &mut Ui, label: &str, tone: Tone) -> Response {
     let tokens = tokens::current(ui.ctx());
     let room = (ui.available_width() - DOT - DOT_GAP).max(0.0);
@@ -174,7 +163,7 @@ pub fn status_dot(ui: &mut Ui, label: &str, tone: Tone) -> Response {
         full
     };
 
-    let dot = tone.dot(&tokens);
+    let dot = tone.status_colour(&tokens);
     let response = mark_and_word(
         ui,
         (Vec2::splat(DOT), DOT_GAP),
@@ -207,7 +196,7 @@ pub fn status_dot_then(ui: &mut Ui, label: &str, rest: &str, tone: Tone) -> Resp
 
     let text = ui.fonts_mut(|fonts| fonts.layout_job(job));
     let name = format!("{label} {rest}");
-    let dot = tone.dot(&tokens);
+    let dot = tone.status_colour(&tokens);
     mark_and_word(
         ui,
         (Vec2::splat(DOT), DOT_GAP),
@@ -219,10 +208,7 @@ pub fn status_dot_then(ui: &mut Ui, label: &str, rest: &str, tone: Tone) -> Resp
     )
 }
 
-/// Kirigami's `DefaultChipBackground`, with `tint` where it takes the
-/// highlight: the window's own fill and a frame step at rest, the hover
-/// colour along the frame under the pointer, a fifth of the tint checked
-/// and nearly all of it along the frame.
+/// Kirigami's `DefaultChipBackground`, with `tint` for the highlight.
 pub(super) fn chip_look(
     tokens: &Tokens,
     tint: Color32,
@@ -310,7 +296,7 @@ fn words_top(ui: &Ui, middle: f32) -> f32 {
     middle - beside_height / 2.0 + beside_baseline - own_baseline
 }
 
-/// A tag drawn in `rest_ink` at rest. It only hovers.
+/// A tag drawn in `rest_ink` at rest.
 fn painted_tag(
     ui: &mut Ui,
     text: &str,

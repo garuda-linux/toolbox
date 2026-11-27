@@ -390,9 +390,9 @@ pub fn button_kind<S>(harness: &Harness<'_, S>, label: &str) -> ButtonKind {
 pub fn kind_at<S>(harness: &Harness<'_, S>, at: egui::Pos2) -> ButtonKind {
     let fill = toolbox_gui_kit::testing::fill_under(harness, at);
     let tokens = toolbox_gui_kit::tokens::current(&harness.ctx);
-    if fill == Some(ButtonKind::Primary.rest_fill(&tokens)) {
+    if fill == Some(tokens.default_button) {
         ButtonKind::Primary
-    } else if fill == Some(ButtonKind::Soft.rest_fill(&tokens)) {
+    } else if fill == Some(tokens.input) {
         ButtonKind::Soft
     } else {
         ButtonKind::Ghost

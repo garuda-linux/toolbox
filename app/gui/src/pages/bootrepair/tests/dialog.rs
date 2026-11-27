@@ -26,8 +26,6 @@ fn outside_the_live_iso_the_question_names_the_trust_in_the_disk() {
     assert!(on_the_iso.query_by_label_contains("run as root").is_none());
 }
 
-/// The question lists what it writes where, the layout included, and
-/// below the list its sentences keep one gap between each other.
 #[test]
 fn the_question_lists_its_facts_above_evenly_spaced_sentences() {
     let mut harness = page(live(), BootRepairPage::default());

@@ -30,7 +30,7 @@ pub fn cli_docs(args: &[String]) -> Result<String, Failure> {
 
 /// Writes the files below `dir`, or with `check` only compares them.
 fn write_or_check(dir: &Path, check: bool) -> Result<String, Failure> {
-    let made = files();
+    let made = files()?;
     let extra = extra_files(dir, &made)?;
 
     if check {
@@ -109,9 +109,7 @@ fn extra_files(dir: &Path, made: &[(String, Vec<u8>)]) -> Result<Vec<PathBuf>, F
     Ok(extra)
 }
 
-/// Every file with its name: the completion hooks of bash, fish and zsh,
-/// the man page, and the page of every command below it.
-fn files() -> Vec<(String, Vec<u8>)> {
+fn files() -> Result<Vec<(String, Vec<u8>)>, Failure> {
     let shells = [
         (Shell::Bash, format!("{BIN}.bash")),
         (Shell::Fish, format!("{BIN}.fish")),
@@ -122,10 +120,11 @@ fn files() -> Vec<(String, Vec<u8>)> {
         .into_iter()
         .map(|(shell, name)| {
             let mut text = Vec::new();
-            toolbox_cli::complete::registration(shell, &mut text);
-            (name, text)
+            toolbox_cli::complete::registration(shell, &mut text)
+                .map_err(|error| Failure::Problems(vec![format!("{name}: {error}")]))?;
+            Ok((name, text))
         })
-        .collect();
+        .collect::<Result<_, Failure>>()?;
 
     // The exit codes belong in the man page, the help leaves them out.
     let top = Cli::command().after_long_help(format!(
@@ -135,5 +134,5 @@ fn files() -> Vec<(String, Vec<u8>)> {
     ));
 
     made.extend(man::pages(top));
-    made
+    Ok(made)
 }

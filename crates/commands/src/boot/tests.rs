@@ -51,7 +51,8 @@ fn a_timeout_outside_the_page_s_range_is_refused_with_its_rule() {
 
 #[test]
 fn without_grub_every_setting_is_refused() {
-    set(&setting(BootKey::Timeout, "3"), &Snapshot::default()).unwrap_err();
+    let refused = set(&setting(BootKey::Timeout, "3"), &Snapshot::default()).unwrap_err();
+    assert_eq!(refused.exit(), Exit::PageRule);
 }
 
 #[test]
@@ -72,7 +73,13 @@ fn without_pacman_s_databases_no_build_is_planned() {
         confirm: Confirm::default(),
     };
 
-    build(&args, &[], &Snapshot::default()).unwrap_err();
+    let refused = build(&args, &[], &Snapshot::default()).unwrap_err();
+
+    assert_eq!(refused.exit(), Exit::Unavailable);
+    assert_eq!(
+        refused.message(),
+        "not available: pacman's databases could not be read"
+    );
 }
 
 #[test]
@@ -156,4 +163,34 @@ fn a_boot_entry_as_json_has_its_id() {
 
     assert_eq!(row["id"], "gnulinux-simple-1");
     assert!(row.get("entry").is_none(), "{row}");
+}
+
+/// A refused boot change under `--json` is one JSON Lines error on standard
+/// output, and the exit code is the refusal's.
+#[test]
+fn a_refused_boot_change_under_json_is_one_error_line() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let planned = set(&setting(BootKey::Timeout, "3"), &Snapshot::default());
+    let confirm = Confirm {
+        yes: true,
+        json: true,
+        ..Confirm::default()
+    };
+
+    let mut out = Vec::new();
+    let exit = crate::act::run(
+        planned,
+        confirm,
+        None,
+        &runtime,
+        &mut crate::out::Out::new(&mut out, crate::out::Settings::default()),
+    );
+
+    let text = String::from_utf8(out).unwrap();
+    assert_eq!(exit, Exit::PageRule);
+    assert!(
+        text.starts_with(r#"{"schema":1,"event":"error","message":"#),
+        "{text}"
+    );
+    assert_eq!(text.lines().count(), 1, "{text}");
 }

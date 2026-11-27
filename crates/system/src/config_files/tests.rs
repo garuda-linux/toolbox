@@ -225,12 +225,12 @@ fn a_dismissed_password_or_a_broken_answer_is_no_text() {
         ("", 126_i32, Refusal::Dismissed),
         ("", 127_i32, Refusal::Denied),
         (
-            "Error executing command as another user: No authentication agent found.",
+            include_str!("../pkexec/fixtures/no-agent-found.stderr"),
             127_i32,
             Refusal::NoAgent,
         ),
         (
-            "Cannot run program /usr/lib/garuda-toolbox/garuda-toolbox-helper: No such file or directory",
+            include_str!("../pkexec/fixtures/missing-program.stderr"),
             127_i32,
             Refusal::HelperMissing,
         ),

@@ -73,10 +73,8 @@ pub fn arch_steps() -> Vec<Step> {
     ]
 }
 
-/// The AUR chip on the dry run's sample list, which `scripts/selftest.sh`
-/// turns on in the run's own settings: the list, one package's details
-/// and the question before a build, answered with Cancel, so nothing is
-/// queued. Runs without pacman's databases too.
+/// The AUR chip on the dry run's sample list. Cancel answers the build
+/// question, so nothing is queued.
 #[must_use = "the steps do nothing until a suite runs them"]
 pub fn aur_steps() -> Vec<Step> {
     vec![

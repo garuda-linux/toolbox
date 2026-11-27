@@ -1,7 +1,7 @@
 use egui::{CornerRadius, Rect, Response, Role, Sense, StrokeKind, Ui, WidgetInfo, pos2, vec2};
 
 use super::card::light_rim;
-use super::icon_tile::{TileSize, paint_icon};
+use super::icon_tile::{ICON_EDGE, paint_icon};
 use super::list::text_line_height;
 use super::press::Pointer;
 use super::rich;
@@ -47,13 +47,13 @@ pub fn link_tile(ui: &mut Ui, icon: Icon, title: &str, subtitle: &str, width: f3
     // The same inset as a card's rows, so a tile's icon lines up with
     // theirs in one column.
     let padding = tokens.sizes.row_padding.x;
-    let edge = TileSize::Row.edge();
+    let edge = ICON_EDGE;
     let badge = Rect::from_center_size(
         pos2(rect.left() + padding + edge / 2.0, rect.center().y),
         vec2(edge, edge),
     );
 
-    paint_icon(ui, badge.center(), TileSize::Row, icon.for_row());
+    paint_icon(ui, badge.center(), icon.for_row());
     let text = Rect::from_x_y_ranges(
         badge.right() + GAP..=rect.right() - padding - CHEVRON - GAP,
         rect.y_range(),

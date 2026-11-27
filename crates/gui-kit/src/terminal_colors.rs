@@ -26,12 +26,9 @@ impl Ansi {
         Self(colours)
     }
 
-    /// The palette's own colours where it has them. Else black and white
-    /// are mixed from the view and text colours, red, green and yellow
-    /// are the status colours, blue the accent. Magenta and cyan mix the
-    /// accent with red and green, as the palette has no second link
-    /// colour. The bright half is lighter on a dark palette and darker on
-    /// a light one.
+    /// Derived where the palette names no ANSI colours. Magenta and cyan
+    /// mix the accent with red and green, as the palette has no second
+    /// link colour.
     pub fn of(palette: &Palette, dark: bool) -> Self {
         if let Some(own) = palette.ansi {
             return own;

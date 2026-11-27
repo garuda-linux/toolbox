@@ -14,7 +14,7 @@ use toolbox_core::{
     ChangeSet, Domains, RestoreProblem, SAVED_VERSION, SavedChange, SavedChanges, Snapshot,
 };
 
-/// More than any page queues at once, far below what slows the window.
+/// More than any page queues at once.
 pub const MAX_EDITS: usize = 512;
 
 /// Bumped when the edit's own shape changes. The changes it carries are

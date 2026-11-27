@@ -6,7 +6,6 @@
 mod cards;
 mod code;
 mod darkly;
-mod focus;
 mod frames;
 mod frost;
 mod glass;

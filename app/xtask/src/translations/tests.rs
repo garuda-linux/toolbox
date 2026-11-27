@@ -2,7 +2,7 @@ use std::fs;
 
 use serde_json::json;
 
-use super::task::{SOURCE_CODE, json_path};
+use super::task::{SOURCE_CODE, codes_in, json_path};
 use super::{Files, folder_for, import_locale, locale_json, read_files, source_json, tx_code};
 use crate::{LOCALES_DIR, root};
 
@@ -195,4 +195,12 @@ fn only_language_tags_are_locale_folders() {
     ] {
         assert_eq!(super::is_locale(name), locale, "{name}");
     }
+}
+
+#[test]
+fn a_missing_locale_or_json_folder_is_an_error_not_an_empty_one() {
+    let missing = root().join("no/such/folder");
+
+    read_files(&missing).unwrap_err();
+    codes_in(&missing).unwrap_err();
 }

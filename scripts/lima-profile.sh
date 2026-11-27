@@ -150,7 +150,7 @@ for suite in "${suite_list[@]}"; do
   sleep 1
 
   # Ends when the window closes at the suite's end.
-  nix shell nixpkgs#tracy -c tracy-capture -o "$capture" -f -a 127.0.0.1 >/dev/null || status=1
+  nix shell --inputs-from . nixpkgs#tracy -c tracy-capture -o "$capture" -f -a 127.0.0.1 >/dev/null || status=1
   kill "$tunnel" 2>/dev/null || true
   tunnel=
   wait "$run" 2>/dev/null || true

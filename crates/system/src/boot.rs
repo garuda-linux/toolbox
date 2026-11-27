@@ -232,8 +232,11 @@ impl SystemBootMenu {
 
 impl BootMenuSource for SystemBootMenu {
     fn menu(&self, cancel: &Arc<AtomicBool>) -> MenuRead {
-        if sdboot::loader(&self.root) == Ok(BootLoader::SystemdBoot) {
-            return self.sdboot_menu(cancel);
+        match sdboot::loader(&self.root) {
+            Ok(BootLoader::SystemdBoot) => return self.sdboot_menu(cancel),
+            Ok(BootLoader::Grub | BootLoader::Unknown) => {}
+            Err(ProbeError::Io { what: _, error }) => return MenuRead::Unreadable(error.kind()),
+            Err(_) => return MenuRead::Unreadable(io::ErrorKind::Other),
         }
 
         match files::read_lossy(&self.root.join(GRUB_CONFIG)) {

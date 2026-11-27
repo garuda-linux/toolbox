@@ -11,7 +11,7 @@ use egui::{
 };
 use shine::{band_middle, paint_shine};
 
-use super::TileSize;
+use super::ICON_EDGE;
 use super::card::DIVIDER;
 use crate::motion::{self, Timing};
 use crate::theme::TILE_RADIUS;
@@ -24,6 +24,9 @@ const SHARES: [f32; 5] = [0.62, 0.48, 0.71, 0.55, 0.4];
 const MAX_BAR: f32 = 420.0;
 const TITLE_BAR: f32 = 12.0;
 const DETAIL_BAR: f32 = 9.0;
+/// Half the gap between the title and the detail bar, which meet at the
+/// row's middle.
+const HALF_BAR_GAP: f32 = 3.0;
 const CONTROL: Vec2 = super::switch::SIZE;
 const BAR_RADIUS: f32 = 4.0;
 
@@ -86,7 +89,7 @@ pub fn skeleton_list(ui: &mut Ui, rows: SkeletonRows, name: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
     let padding = tokens.sizes.row_padding;
     let painter = ui.painter_at(rect);
-    let tile = leading.then_some(TileSize::Row.edge());
+    let tile = leading.then_some(ICON_EDGE);
     let indent = tile.map_or(0.0, |edge| edge + tokens.sizes.picture_gap);
     let room = (padding.x.mul_add(-3.0, rect.width()) - CONTROL.x - indent).clamp(0.0, MAX_BAR);
     let look = RowLook {
@@ -134,12 +137,12 @@ fn paint_row(painter: &Painter, row: Rect, index: usize, look: RowLook) {
 
     let left = row.left() + look.padding + look.indent;
     let title = Rect::from_min_size(
-        pos2(left, middle - TITLE_BAR - 3.0),
+        pos2(left, middle - TITLE_BAR - HALF_BAR_GAP),
         vec2(look.room * share(index, 0), TITLE_BAR),
     );
 
     let detail = Rect::from_min_size(
-        pos2(left, middle + 3.0),
+        pos2(left, middle + HALF_BAR_GAP),
         vec2(look.room * share(index, 1), DETAIL_BAR),
     );
 

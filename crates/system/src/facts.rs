@@ -81,12 +81,17 @@ pub fn probe_facts(sources: &FactSources) -> Facts {
 
 fn package_count(sources: &FactSources) -> Result<PackageCount, ProbeError> {
     let installed = sources.installed.installed()?.0;
-    let foreign = sources.offered.offered().ok().map(|offered| {
-        installed
-            .iter()
-            .filter(|package| !offered.0.contains(*package))
-            .count()
-    });
+    let foreign = sources
+        .offered
+        .offered()
+        .inspect_err(|error| tracing::warn!("foreign packages not counted: {error}"))
+        .ok()
+        .map(|offered| {
+            installed
+                .iter()
+                .filter(|package| !offered.0.contains(*package))
+                .count()
+        });
 
     Ok(PackageCount {
         installed: installed.len(),

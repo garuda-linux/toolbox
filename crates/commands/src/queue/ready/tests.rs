@@ -15,7 +15,7 @@ use toolbox_plan::{PackageName, UserName};
 use toolbox_services::unprobed::UnprobedReads;
 
 use super::{after, checked, refused};
-use crate::out::{Out, Settings};
+use crate::out::{Json, Out, Settings};
 
 /// Answers what it was given and counts how often it was asked.
 #[derive(Default)]
@@ -63,7 +63,7 @@ fn user(name: &str) -> UserName {
 fn system() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(Accounts::default());
-    snapshot.insert(CurrentUser(user("nico")));
+    snapshot.insert(CurrentUser(user("ada")));
     snapshot
 }
 
@@ -160,12 +160,16 @@ fn after_a_run_without_a_loader_change_nothing_is_read() {
 #[test]
 fn a_refusal_names_what_is_missing_and_exits_unavailable() {
     let mut out = Vec::new();
+    let settings = Settings {
+        json: Json::Lines,
+        ..Settings::default()
+    };
 
     let exit = refused(
         Refusal::GuardsWaiting {
             guard: Guard::AurPackages,
         },
-        &mut Out::new(&mut out, Settings::default()),
+        &mut Out::new(&mut out, settings),
     );
 
     let said = String::from_utf8(out).unwrap();

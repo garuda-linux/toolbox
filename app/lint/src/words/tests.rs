@@ -22,6 +22,12 @@ fn prose_drops_stopwords_and_folds_verbs() {
 }
 
 #[test]
+fn the_prose_word_no_is_not_the_number_concept() {
+    assert!(!prose_words("No such entry").contains(&"number".to_owned()));
+    assert!(prose_words("Num entries").contains(&"number".to_owned()));
+}
+
+#[test]
 fn coverage_needs_three_quarters() {
     let known: HashSet<String> = ["get", "line", "file"].map(str::to_owned).into();
     assert!(mostly_covered(&prose_words("Read the file lines"), &known));

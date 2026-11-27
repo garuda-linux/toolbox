@@ -42,7 +42,6 @@ fn catalog() -> ToggleCatalog {
     ToggleCatalog::parse(CATALOG, "components.toml").unwrap()
 }
 
-/// pipewire installed, everything but printing offered.
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(packages(&["pipewire-support"])));

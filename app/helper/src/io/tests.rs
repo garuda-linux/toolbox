@@ -102,6 +102,35 @@ fn answers_after_the_request_arrive_in_order_and_garbage_is_skipped() {
     answers.recv_timeout(timeout).unwrap_err();
 }
 
+#[test]
+fn an_overlong_answer_is_skipped_and_its_tail_is_never_an_answer() {
+    let overlong = format!(
+        "{}{}",
+        "x".repeat(MAX_LINE_BYTES),
+        encode(&Answer::Cancel).unwrap()
+    );
+
+    let input = Cursor::new(format!("{overlong}{}", encode(&Answer::Finish).unwrap()));
+
+    let answers = spawn_answer_reader(input);
+    let timeout = Duration::from_secs(5);
+    assert_eq!(answers.recv_timeout(timeout), Ok(Answer::Finish));
+    answers.recv_timeout(timeout).unwrap_err();
+}
+
+#[test]
+fn a_non_utf8_answer_is_skipped() {
+    let mut bytes = b"\xff\xfe\n".to_vec();
+    bytes.extend_from_slice(encode(&Answer::Finish).unwrap().as_bytes());
+
+    let answers = spawn_answer_reader(Cursor::new(bytes));
+
+    assert_eq!(
+        answers.recv_timeout(Duration::from_secs(5)),
+        Ok(Answer::Finish)
+    );
+}
+
 fn password_request(mode: Mode) -> Request {
     Request::new(
         mode,

@@ -15,7 +15,6 @@ use std::time::Duration;
 use toolbox_exec::{CaptureError, Environment, Policy, run_captured};
 use toolbox_plan::Mirrorlist;
 
-/// Where Garuda installs `rate-mirrors`.
 const PROGRAM: &str = "/usr/bin/rate-mirrors";
 
 /// Ranking tests every mirror. It may take a while, never forever.

@@ -40,7 +40,7 @@ fn the_edit_dialog_queues_only_what_changed() {
 /// says why it stays where its field would be.
 #[test]
 fn the_own_accounts_home_folder_says_why_it_stays() {
-    let harness = edit_dialog("nico, Nico", "nico");
+    let harness = edit_dialog("grace, Grace Hopper", "grace");
 
     assert!(
         harness

@@ -98,7 +98,10 @@ impl Cache {
             posts,
             downloaded: now,
         });
-        self.write(stored)?;
+        if let Err(error) = self.write(stored) {
+            tracing::warn!("the news copy was not stored: {error}");
+        }
+
         Ok(None)
     }
 
@@ -112,7 +115,11 @@ impl Cache {
     fn read(&self) -> Result<Stored, NewsError> {
         let file = self.file();
         match std::fs::read(&file) {
-            Ok(bytes) => Ok(serde_json::from_slice(&bytes).unwrap_or_default()),
+            Ok(bytes) => Ok(serde_json::from_slice(&bytes)
+                .inspect_err(|error| {
+                    tracing::warn!("the news copy is broken, it is replaced: {error}");
+                })
+                .unwrap_or_default()),
             Err(error) if error.kind() == ErrorKind::NotFound => Ok(Stored::default()),
             Err(error) => Err(storage(StorageStep::Read)(error)),
         }

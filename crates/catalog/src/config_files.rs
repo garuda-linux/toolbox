@@ -1,20 +1,6 @@
 //! The config file catalog, `config-files.toml`: the files the Config
 //! Files page offers, by section.
 //!
-//! ```toml
-//! [[section]]
-//! id = "bootloader"
-//! title = "Bootloader"
-//! icon = "system-reboot"
-//!
-//! [[section.entry]]
-//! id = "grub-default"
-//! name = "GRUB default"
-//! path = "/etc/default/grub"
-//! description = "GRUB configuration variables"
-//! url = "https://wiki.archlinux.org/title/GRUB"
-//! ```
-//!
 //! A `path` that starts with `~/` is a file of the user, any other must be
 //! a root-owned file below the folders the helper edits. `directory =
 //! true` makes an entry list the files of a folder. `read_only = true`

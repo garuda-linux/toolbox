@@ -15,7 +15,7 @@ use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_plan::Plan;
 
 use super::act::run;
-use super::change::{Refused, fresh, page_edit, why};
+use super::change::{DATABASES_UNREAD, Refused, fresh, page_edit, why};
 use super::out::Listing;
 use super::{locales, system, unavailable};
 use crate::out::Out;
@@ -198,7 +198,7 @@ pub fn pack_rows(snapshot: &Snapshot) -> Option<Vec<PackRow>> {
 fn packs(read: &ReadList, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
     match pack_rows(snapshot) {
         Some(rows) => super::filter::print_all(read, &rows, out, pack_listing),
-        None => unavailable("pacman's databases could not be read", out),
+        None => unavailable(DATABASES_UNREAD, out),
     }
 }
 

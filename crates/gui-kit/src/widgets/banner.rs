@@ -5,7 +5,7 @@ use egui::{
 };
 
 use super::buttons::pill_button;
-use super::icon_tile::TileSize;
+use super::icon_tile::ICON_EDGE;
 use super::status_tile::paint_status_tile;
 use super::{ButtonKind, Choice, Tone, rich, split_row};
 use crate::fonts::{BODY, Weight};
@@ -107,7 +107,7 @@ pub fn banner(ui: &mut Ui, tone: Tone, text: &str, actions: &[&str]) -> Choice<u
 /// response.
 fn icon_and_text(ui: &mut Ui, tone: Tone, text: &str) -> Response {
     let tokens = tokens::current(ui.ctx());
-    let edge = TileSize::Line.edge();
+    let edge = ICON_EDGE;
     let gap = tokens.sizes.tight_gap;
     let wrap = (ui.available_width() - edge - gap).max(0.0);
     let words = rich(ui, text, Weight::Medium, BODY, tokens.text);
@@ -117,12 +117,7 @@ fn icon_and_text(ui: &mut Ui, tone: Tone, text: &str) -> Response {
     let height = galley.size().y.max(edge);
     let (row, _) = ui.allocate_exact_size(vec2(ui.available_width(), height), Sense::hover());
     let centre = row.center().y;
-    paint_status_tile(
-        ui,
-        pos2(row.left() + edge / 2.0, centre),
-        TileSize::Line,
-        tone,
-    );
+    paint_status_tile(ui, pos2(row.left() + edge / 2.0, centre), tone);
 
     let at = pos2(row.left() + edge + gap, centre - galley.size().y / 2.0);
     ui.put(

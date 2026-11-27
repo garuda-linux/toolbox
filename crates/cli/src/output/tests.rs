@@ -176,9 +176,9 @@ fn a_coloured_list_marks_each_row_and_dims_the_later_columns() {
 
 #[test]
 fn a_list_without_marks_keeps_its_rows_flush() {
-    let text = COLOR.list("U", None, &[], &[Row::cells(Mark::Blank, &["nico"])]);
+    let text = COLOR.list("U", None, &[], &[Row::cells(Mark::Blank, &["ada"])]);
 
-    assert_eq!(text, "\u{1b}[1mU\u{1b}[0m\n\n  nico\n");
+    assert_eq!(text, "\u{1b}[1mU\u{1b}[0m\n\n  ada\n");
 }
 
 #[test]
@@ -187,20 +187,20 @@ fn a_header_row_lines_up_over_marked_rows() {
         "U",
         None,
         &["USER", "SHELL"],
-        &[Row::cells(Mark::On, &["nico", "bash"])],
+        &[Row::cells(Mark::On, &["ada", "bash"])],
     );
 
     let color = COLOR.list(
         "U",
         None,
         &["USER", "SHELL"],
-        &[Row::cells(Mark::On, &["nico", "bash"])],
+        &[Row::cells(Mark::On, &["ada", "bash"])],
     );
 
-    assert_eq!(plain, "U\n\n  USER  SHELL\n  nico  bash\n");
+    assert_eq!(plain, "U\n\n  USER  SHELL\n  ada   bash\n");
     assert_eq!(
         color,
-        "\u{1b}[1mU\u{1b}[0m\n\n    \u{1b}[2mUSER  SHELL\u{1b}[0m\n  \u{1b}[32m●\u{1b}[0m nico  \u{1b}[2mbash\u{1b}[0m\n"
+        "\u{1b}[1mU\u{1b}[0m\n\n    \u{1b}[2mUSER  SHELL\u{1b}[0m\n  \u{1b}[32m●\u{1b}[0m ada   \u{1b}[2mbash\u{1b}[0m\n"
     );
 }
 

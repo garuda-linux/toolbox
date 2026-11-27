@@ -1,6 +1,3 @@
-//! A guide table: stripes that reach the frame, a rule under its header
-//! row and code without a second fill on a stripe.
-
 use egui_kittest::Harness;
 use toolbox_gui_kit::testing::{filled_rects, lines_in, painted_text_within, rims_in};
 

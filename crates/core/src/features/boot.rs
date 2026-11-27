@@ -12,7 +12,7 @@ pub mod view;
 
 use std::sync::LazyLock;
 
-pub use flags::{Flag, free_parameters, is_flag_parameter};
+pub use flags::{Flag, free_parameters};
 pub use picture::PictureSource;
 pub use recheck::{recheck, recheck_grub};
 pub use sdboot::{is_protected, kernel, kernel_default, set_loader};

@@ -41,8 +41,8 @@ fn a_kernel_beside_the_running_one_may_go() {
     assert_eq!(allowed, Ok(()));
 }
 
-/// `linux-zen` runs from a package removed since, so the running guard
-/// keeps nothing and only the last-kernel rule is left.
+/// `linux-zen` runs from a package that is not installed, so the running
+/// guard keeps nothing and only the last-kernel rule is left.
 #[test]
 fn the_last_kernel_left_may_not_be_removed() {
     let mut snapshot = two_kernels();

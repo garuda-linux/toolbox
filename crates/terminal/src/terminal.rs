@@ -22,8 +22,7 @@ use crate::outbox::Outbox;
 use crate::screen::{self, Cursor, Row};
 use crate::{KeyMode, MouseEncoding, MouseMode, MouseReporting};
 
-/// Lines kept above the screen. Enough for a long `pacman -Syu`
-/// transcript at a modest memory cost.
+/// Lines kept above the screen.
 pub const SCROLLBACK_LINES: usize = 5000;
 
 /// A cell position counted over scrollback and screen together: line 0 is
@@ -93,9 +92,7 @@ impl Timeout for Unsynchronized {
     }
 }
 
-/// A VT terminal emulator without a window. Feed it what the program
-/// writes, draw [`Self::view`] each frame, send
-/// [`Self::take_replies`] and encoded keys back to the program.
+/// A VT terminal emulator without a window.
 pub struct Terminal {
     term: Term<Outbox>,
     parser: Processor<Unsynchronized>,

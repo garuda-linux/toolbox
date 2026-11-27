@@ -1,9 +1,7 @@
-//! What the helper does itself for a boot repair: it looks at the devices
-//! before anything runs, makes the folder the installed system is mounted
-//! at, and checks that what was mounted is a system its boot loader can be
-//! repaired in. Mounting, unlocking and the boot loader's programs are
-//! commands of the procedure in `toolbox-plan`, picked here once the system
-//! is mounted.
+//! The helper's own steps of a boot repair: it checks the devices before
+//! anything runs, makes the folder the installed system is mounted at, and
+//! checks that the mounted system can be repaired. Mounting and the boot
+//! loader's programs are commands of the procedure in `toolbox-plan`.
 
 mod disks;
 mod loader;

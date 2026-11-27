@@ -1,6 +1,6 @@
 use egui::Context;
 use toolbox_core::features::users::input::{self, InputProblem};
-use toolbox_core::features::users::{Refusal, view};
+use toolbox_core::features::users::{Refusal, add_group};
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::GroupName;
 
@@ -51,11 +51,12 @@ impl AddGroup {
 
 fn check(text: &str, context: &PageContext<'_>) -> Result<GroupName, InputProblem> {
     let group: GroupName = input::name(text)?;
-    let taken = view::groups(context.snapshot, context.changes, &view::Shown::default())
-        .iter()
-        .any(|row| row.name == group && row.gid.is_some());
 
-    if taken {
+    // Core's rule, asked on a copy of the queue: it also refuses a group
+    // queued as new, and takes back one queued for removal.
+    let refused = add_group(&group, &mut context.changes.clone(), context.snapshot);
+
+    if refused == Err(Refusal::GroupExists) {
         return Err(InputProblem::Refused(Refusal::GroupExists));
     }
 

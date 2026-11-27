@@ -1,13 +1,10 @@
-//! `org.freedesktop.Application` on the session bus.
+//! `org.freedesktop.Application` on the session bus, as the Desktop Entry
+//! specification's D-Bus activation section describes it.
 //!
-//! The interface follows the Desktop Entry specification's D-Bus
-//! activation section. The app is not D-Bus activatable: the interface
-//! only lets a later start reach the first one.
-//!
-//! The first start claims the name before the window opens. A later
-//! start finds it taken, calls `Activate` or `ActivateAction` with its
-//! tokens and exits. Anything that fails or hangs runs the app alone, so
-//! a broken bus never keeps the window from opening.
+//! The first start claims the name before the window opens. A later start
+//! finds it taken, calls `Activate` or `ActivateAction` with its tokens and
+//! exits. Anything that fails or hangs runs the app alone, so a broken bus
+//! never keeps the window from opening.
 
 pub mod queue;
 #[cfg(test)]

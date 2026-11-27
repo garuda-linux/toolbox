@@ -137,7 +137,6 @@ impl Form {
                 text("network-host-problem")
             };
 
-            // A host that cannot be used is a problem, not a quiet hint.
             let name = text("network-host");
             let words = Words {
                 current: None,

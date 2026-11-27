@@ -10,7 +10,6 @@ use toolbox_system::pkexec::Refusal;
 
 use super::{Clock, Show};
 
-/// The id the plan of a test runs under.
 const PLAN: PlanId = PlanId::new(1);
 
 fn ticking(tick: Duration) -> Clock {
@@ -240,8 +239,7 @@ fn a_step_that_never_started_ends_without_a_time() {
     );
 }
 
-/// Ctrl+C mid-line: the note starts a line of its own, the step shows as
-/// cancelled and the run closes with how long it ran.
+/// Ctrl+C mid-line: the note starts a line of its own.
 #[test]
 fn a_cancelled_run_says_so_and_how_long_it_ran() {
     let step = StepId::new(0);

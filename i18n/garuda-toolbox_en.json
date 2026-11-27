@@ -5712,10 +5712,6 @@
     "home-install-button": {
       "string": "Start Installer"
     },
-    "home-install-failed": {
-      "string": "The installer could not start: {reason}",
-      "developer_comment": "$reason is the system's own words, in English."
-    },
     "home-programs-failed": {
       "string": "The live system's tools could not be looked for."
     },

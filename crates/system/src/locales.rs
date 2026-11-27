@@ -94,9 +94,20 @@ impl EtcLocales {
         })
     }
 
-    fn read_names(&self) -> LocaleNames {
+    /// `None` when glibc's list exists but cannot be read, so the failure
+    /// is not kept as "no names".
+    fn read_names(&self) -> Option<LocaleNames> {
         let sources = self.root.join(SOURCES);
-        let supported = self.supported().unwrap_or_default();
+        let supported = match self.supported() {
+            Ok(supported) => supported,
+            Err(ProbeError::Unavailable) => return Some(LocaleNames::default()),
+            Err(error) => {
+                tracing::warn!("locale names skipped, glibc's list cannot be read: {error}");
+
+                return None;
+            }
+        };
+
         let names = supported
             .0
             .iter()
@@ -110,7 +121,7 @@ impl EtcLocales {
             })
             .collect();
 
-        LocaleNames(names)
+        Some(LocaleNames(names))
     }
 }
 
@@ -143,12 +154,12 @@ impl LocaleSource for EtcLocales {
 
         match kept.as_ref() {
             Some((read, names)) if *read == changed => names.clone(),
-            Some(_) | None => {
-                let names = self.read_names();
-
-                *kept = Some((changed, names.clone()));
-                names
-            }
+            Some(_) | None => self
+                .read_names()
+                .map_or_else(LocaleNames::default, |names| {
+                    *kept = Some((changed, names.clone()));
+                    names
+                }),
         }
     }
 }

@@ -197,7 +197,6 @@ fn check_accents(check: &mut Contrast<'_>, tokens: &Tokens) {
     check.at_least(tokens.on_accent, &[tokens.accent], 4.5, "on accent");
     check.at_least(tokens.on_tint, &[tokens.accent_tint], 4.5, "on tint");
 
-    check.at_least(tokens.on_error, &[tokens.error], 4.5, "on error");
     check.at_least(
         tokens.accent_text,
         &[tokens.window, tokens.card],

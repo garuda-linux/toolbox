@@ -3,7 +3,7 @@
 
 use egui::{Color32, Rect, pos2};
 
-use super::super::icon_tile::TileSize;
+use super::super::icon_tile::ICON_EDGE;
 use super::super::{
     ActionRow, NavLook, SectionHeading, Tone, empty_state, link_tile, nav_row, paint_status_tile,
 };
@@ -78,8 +78,7 @@ fn a_row_glyph_takes_its_colour_icon_and_a_colourless_one_keeps_its_glyph() {
 
 #[test]
 fn icon_sizes_follow_kirigami() {
-    assert_eq!(TileSize::Row.edge(), 22.0);
-    assert_eq!(TileSize::Line.edge(), 22.0);
+    assert_eq!(ICON_EDGE, 22.0);
 }
 
 #[test]
@@ -112,8 +111,8 @@ fn the_statuses_take_dialog_icons_and_neutral_takes_information() {
 #[test]
 fn status_marks_draw_their_icons_without_a_tile() {
     let mut harness = harness(300.0, 200.0).build_ui(|ui| {
-        paint_status_tile(ui, pos2(40.0, 40.0), TileSize::Line, Tone::Warning);
-        paint_status_tile(ui, pos2(80.0, 40.0), TileSize::Line, Tone::Error);
+        paint_status_tile(ui, pos2(40.0, 40.0), Tone::Warning);
+        paint_status_tile(ui, pos2(80.0, 40.0), Tone::Error);
     });
 
     harness.run();

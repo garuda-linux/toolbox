@@ -29,6 +29,7 @@ use super::{PageContext, plan_running};
 use crate::artwork::Artwork;
 use crate::catalogs::CatalogId;
 use crate::command::AppCommand;
+use crate::desktop::icon_files::AppIcons;
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::refused::Shown as _;
@@ -49,7 +50,7 @@ pub struct TogglePage {
 
 /// What the catalog's rows come from besides the search: the system, the
 /// queue, whether it was read, the icon theme's pictures and the look.
-type ListedKey = (Same<Snapshot>, u64, bool, Option<usize>, Look);
+type ListedKey = (Same<Snapshot>, u64, bool, Option<Same<AppIcons>>, Look);
 
 /// What the lead chips come from besides the search: the lead data, read
 /// from the system and the queue alone, and the look.
@@ -175,10 +176,7 @@ impl TogglePage {
             }
         };
 
-        let icons = context
-            .service::<Artwork>()
-            .app_icons()
-            .map(|icons| std::ptr::from_ref(icons).addr());
+        let icons = context.service::<Artwork>().app_icons_identity();
 
         let rest = (
             Same::of(context.snapshot),
@@ -346,7 +344,7 @@ fn problem_text(ctx: &egui::Context, problem: &LoadProblem) -> String {
 }
 
 /// "on/total", the count of a chip and of a section's heading.
-pub fn tally_text(ctx: &egui::Context, tally: Tally) -> String {
+fn tally_text(ctx: &egui::Context, tally: Tally) -> String {
     i18n::text_with(
         ctx,
         "toggles-section-count",

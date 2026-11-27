@@ -66,7 +66,6 @@ pub fn app() -> Fixture {
     app_on(Theme::Dark)
 }
 
-/// The Boot Options page drawn on `theme`, with that theme's desktop look.
 pub fn app_on(theme: Theme) -> Fixture {
     app_restoring_on(system(), Arc::new(Source), ChangeSet::default(), theme)
 }
@@ -84,7 +83,6 @@ pub fn app_restoring(
     app_restoring_on(probed, menu, changes, Theme::Dark)
 }
 
-/// As [`app_restoring`], drawn on `theme`.
 pub fn app_restoring_on(
     probed: Snapshot,
     menu: Arc<dyn BootMenuSource>,
@@ -140,7 +138,12 @@ fn the_kernels_page_proposes_a_kernel_as_the_default() {
     // which the system does not have, so linux-lts keeps its link.
     let garuda = "gnulinux-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6>gnulinux-linux-garuda-advanced-cd2fff21-4bb7-40f3-a158-406f545e11e6";
     let mut probed = system();
-    probed.insert(CurrentGrub(GrubState::read(&defaults().replacen(
+    let grub = defaults();
+    assert!(
+        grub.contains("GRUB_DEFAULT=0"),
+        "the GRUB defaults have no GRUB_DEFAULT=0 to replace"
+    );
+    probed.insert(CurrentGrub(GrubState::read(&grub.replacen(
         "GRUB_DEFAULT=0",
         &format!("GRUB_DEFAULT='{garuda}'"),
         1,

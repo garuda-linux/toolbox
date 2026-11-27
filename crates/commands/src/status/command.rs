@@ -76,8 +76,7 @@ fn read(quiet: bool) -> StatusView {
     view(&found, &restart, now).with_facts(&facts, now)
 }
 
-/// Waits `interval`, and tells whether it passed without a Ctrl+C. A
-/// Ctrl+C during the read before counts too.
+/// Waits `interval`. A Ctrl+C during the read before counts too.
 fn waited(stopper: &mut Stopper, interval: Duration) -> bool {
     let until = Instant::now() + interval;
 

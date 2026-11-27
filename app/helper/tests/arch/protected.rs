@@ -7,7 +7,7 @@ use std::process::Command;
 use toolbox_plan::RootAction;
 use toolbox_plan::protocol::Outcome;
 
-use super::{apply, in_test_image, installed, packages, reset};
+use super::{apply, apply_printed, in_test_image, installed, packages, reset};
 use crate::common::TestResult;
 
 #[test]
@@ -22,7 +22,7 @@ fn a_removal_that_takes_a_protected_dependency_along_is_refused() -> TestResult 
         .status()?;
     assert!(installed("chaotic-mirrorlist"));
 
-    let removed = apply(vec![RootAction::RemovePackages {
+    let (removed, said) = apply_printed(vec![RootAction::RemovePackages {
         packages: packages(&["toolbox-test-on-protected"])?,
     }])?;
 
@@ -35,6 +35,10 @@ fn a_removal_that_takes_a_protected_dependency_along_is_refused() -> TestResult 
             }]
         ),
         "{removed:?}"
+    );
+    assert!(
+        said.contains("would also remove the protected chaotic-mirrorlist"),
+        "{said}"
     );
     assert!(installed("toolbox-test-on-protected"));
     assert!(installed("chaotic-mirrorlist"));

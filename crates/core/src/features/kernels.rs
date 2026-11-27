@@ -1,12 +1,12 @@
 //! The Kernels page: the kernels to list, the one that runs and what a
 //! click queues.
 //!
-//! A kernel is a package whose name starts with `linux` and that has a
-//! `-headers` package of the same version in the same repository. That
-//! rule leaves out `linux-firmware`, `linux-api-headers`, the docs and the
-//! tools without naming them.
+//! A kernel is a `linux*` package with a `-headers` package of the same
+//! version in the same repository. That leaves out `linux-firmware`,
+//! `linux-api-headers`, the docs and the tools.
 
 mod edits;
+mod names;
 #[cfg(test)]
 mod tests;
 pub mod view;
@@ -20,18 +20,11 @@ pub use toolbox_state::kernels::{
 };
 
 pub use self::edits::{build_release, builds_for, set_builds, set_headers};
+use self::names::{PREFIX, flavour_match, headers_of, is_base, priority};
 use crate::domains::Packages;
 use crate::features::packages::queue;
 use crate::features::{RefusalText as _, Refused};
 use crate::{ChangeSet, Snapshot, Toggle};
-
-const PREFIX: &str = "linux";
-const HEADERS: &str = "-headers";
-
-/// The repository pacman takes a kernel from when several offer it, on a
-/// default Garuda installation. Repositories not listed come last, in the
-/// order of `pacman.conf`.
-const REPO_PRIORITY: [&str; 4] = ["garuda", "core", "extra", "chaotic-aur"];
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Kernel {
@@ -44,6 +37,26 @@ pub struct Kernel {
     pub description: String,
     pub installed: Option<String>,
     pub headers_installed: bool,
+}
+
+impl Kernel {
+    const fn new(
+        name: PackageName,
+        headers: PackageName,
+        repo: String,
+        version: String,
+        description: String,
+    ) -> Self {
+        Self {
+            name,
+            headers,
+            repo,
+            version,
+            description,
+            installed: None,
+            headers_installed: false,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -104,15 +117,13 @@ pub fn kernels(packages: &LinuxPackages, releases: &KernelReleases) -> Vec<Kerne
         };
 
         if releases.0.contains_key(&package.name) || installed.contains_key(&headers) {
-            kernels.push(Kernel {
-                name: package.name.clone(),
+            kernels.push(Kernel::new(
+                package.name.clone(),
                 headers,
-                repo: String::new(),
-                version: package.version.clone(),
-                description: package.description.clone().into_string(),
-                installed: None,
-                headers_installed: false,
-            });
+                String::new(),
+                package.version.clone(),
+                package.description.clone().into_string(),
+            ));
         }
     }
 
@@ -264,7 +275,12 @@ pub fn may_remove(
 ) -> Result<(), Refusal> {
     let Some((kernels, _)) = kernels_of(snapshot) else {
         let name = package.as_str();
-        return if name == "linux" || name.starts_with("linux-") {
+        let is_kernel = name == PREFIX
+            || name
+                .strip_prefix(PREFIX)
+                .is_some_and(|rest| rest.starts_with('-'));
+
+        return if is_kernel {
             Err(Refusal::RunningUnknown)
         } else {
             Ok(())
@@ -355,46 +371,15 @@ fn offered(sync: &[RepoPackage]) -> Vec<Kernel> {
             let headers = headers_of(&package.name)?;
             let pair = index.get(&(package.repo.as_str(), headers.as_str()))?;
 
-            (pair.version == package.version).then(|| Kernel {
-                name: package.name.clone(),
-                headers,
-                repo: package.repo.clone(),
-                version: package.version.clone(),
-                description: package.description.clone().into_string(),
-                installed: None,
-                headers_installed: false,
+            (pair.version == package.version).then(|| {
+                Kernel::new(
+                    package.name.clone(),
+                    headers,
+                    package.repo.clone(),
+                    package.version.clone(),
+                    package.description.clone().into_string(),
+                )
             })
         })
         .collect()
-}
-
-fn is_base(name: &PackageName) -> bool {
-    name.as_str().starts_with(PREFIX) && !name.as_str().ends_with(HEADERS)
-}
-
-fn headers_of(name: &PackageName) -> Option<PackageName> {
-    PackageName::new(format!("{name}{HEADERS}")).ok()
-}
-
-fn priority(repo: &str) -> usize {
-    REPO_PRIORITY
-        .iter()
-        .position(|known| *known == repo)
-        .unwrap_or(REPO_PRIORITY.len())
-}
-
-fn flavour_match(release: &str, name: &PackageName) -> Option<usize> {
-    let flavour = name
-        .as_str()
-        .strip_prefix(PREFIX)
-        .and_then(|rest| rest.strip_prefix('-'));
-
-    flavour.map_or_else(
-        || (name.as_str() == PREFIX && release.contains("-arch")).then_some(0),
-        |flavour| {
-            release
-                .ends_with(&format!("-{flavour}"))
-                .then_some(flavour.len())
-        },
-    )
 }

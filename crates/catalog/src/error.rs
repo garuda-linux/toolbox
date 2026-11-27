@@ -18,7 +18,6 @@ pub enum CatalogError {
     #[error("{source_name}: {error}")]
     Syntax {
         source_name: String,
-        /// The parser's error, its message with line and column.
         #[source]
         error: toml::de::Error,
     },
@@ -147,7 +146,6 @@ pub enum Problem {
         .0.first().map_or("", String::as_str)
     )]
     RequirementCycle(Vec<String>),
-    /// The `files` list is empty, so a reset would copy nothing.
     #[error("no files")]
     NoFiles,
     #[error("{0:?} is not below /etc/skel/")]

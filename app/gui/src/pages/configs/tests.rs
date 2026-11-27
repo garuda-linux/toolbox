@@ -269,7 +269,7 @@ fn before_the_first_look_placeholder_rows_wait() {
     );
 }
 
-/// Also true when a dialog's or a row's name repeats the label.
+/// Any node with the label counts, a dialog's or a row's name included.
 pub fn shows(harness: &Shown, label: &str) -> bool {
     harness.query_all_by_label(label).next().is_some()
 }

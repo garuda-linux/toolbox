@@ -24,8 +24,7 @@ use crate::pages::PageContext;
 /// Wide enough for `/etc/mkinitcpio.conf`, a longer path is cut.
 const LIST_WIDTH: f32 = 240.0;
 
-/// Room for a change or two with their context, without filling a tall
-/// window with nothing.
+/// Room for a change or two with their context.
 const BODY_HEIGHT: f32 = 480.0;
 
 #[derive(Debug, Default)]
@@ -172,7 +171,6 @@ fn list(ui: &mut Ui, dialog: &mut MergeDialog, context: &PageContext<'_>, pairs:
     );
 }
 
-/// The file in use names the entry, the heading at the right names the copy.
 fn entry_label(ctx: &Context, copy: &MergeCopy, queued: bool) -> String {
     let name = copy.original().as_str();
 

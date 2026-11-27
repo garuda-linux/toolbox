@@ -75,9 +75,8 @@ fn reveal_whole(ui: &Ui, tops: &[f32], middle: f32) {
     ui.scroll_to_rect(row, Some(Align::Min));
 }
 
-/// One page of the list, a link that shows whether it is open. A title
-/// wider than the entry wraps to a second line, and one longer still ends
-/// in "…" and shows whole in a tooltip.
+/// One page of the list. A title wider than the entry wraps to a second
+/// line, and one longer still ends in "…" and shows whole in a tooltip.
 pub(super) fn entry(ui: &mut Ui, title: &str, selected: bool) -> Response {
     let tokens = ui.tokens();
     let width = ui.available_width();

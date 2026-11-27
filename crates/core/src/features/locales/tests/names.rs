@@ -185,6 +185,7 @@ fn ordered(order: PackOrder) -> Vec<String> {
         ),
         pack("thunderbird-i18n-sr", "thunderbird", "sr_RS@latin", None),
         pack("aspell-de", "aspell", "de_DE.UTF-8", Some("German")),
+        pack("aaa-i18n-fr", "zathura", "fr_FR.UTF-8", Some("French")),
     ];
 
     if let Some(row) = rows.get_mut(1) {
@@ -211,6 +212,7 @@ fn packs_sort_by_package_program_language_or_selection() {
     assert_eq!(
         ordered(PackOrder::Package),
         [
+            "aaa-i18n-fr",
             "aspell-de",
             "firefox-i18n-de",
             "hunspell-en_us",
@@ -223,13 +225,15 @@ fn packs_sort_by_package_program_language_or_selection() {
             "aspell-de",
             "firefox-i18n-de",
             "hunspell-en_us",
-            "thunderbird-i18n-sr"
+            "thunderbird-i18n-sr",
+            "aaa-i18n-fr"
         ]
     );
     assert_eq!(
         ordered(PackOrder::Language),
         [
             "hunspell-en_us",
+            "aaa-i18n-fr",
             "aspell-de",
             "firefox-i18n-de",
             "thunderbird-i18n-sr"
@@ -240,6 +244,7 @@ fn packs_sort_by_package_program_language_or_selection() {
         [
             "hunspell-en_us",
             "thunderbird-i18n-sr",
+            "aaa-i18n-fr",
             "aspell-de",
             "firefox-i18n-de"
         ]

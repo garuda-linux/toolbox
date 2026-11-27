@@ -102,7 +102,7 @@ fn a_new_user_is_added_with_the_groups_ticked() {
 
     harness.get_by_label("Add User…").click();
     harness.run();
-    type_into(&mut harness, Role::TextInput, "User name", "grace");
+    type_into(&mut harness, Role::TextInput, "User name", "alan");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     type_into(
         &mut harness,
@@ -127,7 +127,7 @@ fn a_new_user_is_added_with_the_groups_ticked() {
     harness.run();
 
     let form = NewAccount {
-        name: "grace",
+        name: "alan",
         full_name: "",
         shell: "",
         groups: Some([group_name("video")].into()),
@@ -180,7 +180,7 @@ fn the_add_dialog_asks_the_required_fields_first_and_says_what_holds_it() {
     );
 
     assert!(harness.query_by_label("Enter a user name.").is_some());
-    type_into(&mut harness, Role::TextInput, "User name", "grace");
+    type_into(&mut harness, Role::TextInput, "User name", "alan");
     assert!(harness.query_by_label("Enter a password.").is_some());
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     assert!(harness.query_by_label("Repeat the password.").is_some());

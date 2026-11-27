@@ -87,7 +87,7 @@ fn the_set_hands_out_each_catalog_and_its_edits() {
 
     assert!(components.entry("pipewire-support").is_some());
 
-    // System Tweaks edits the user's config files, the others none.
+    // The System Tweaks catalog is the one that edits the user's config files.
     assert_ne!(catalogs.config_edits(), []);
     assert!(
         catalogs

@@ -16,7 +16,6 @@ use crate::i18n::Arg;
 use crate::maintenance::Maintenance;
 use crate::pages::PageContext;
 
-/// `asking` holds the task whose question is open.
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, asking: &mut Option<Asked>) {
     heading(ui, "maintenance-operations");
     let rows = operations(context.changes);

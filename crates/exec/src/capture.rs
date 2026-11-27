@@ -79,7 +79,6 @@ pub enum CaptureError {
     TooLarge,
 }
 
-/// Input the program would be fed past what a pipe holds.
 #[derive(Debug, thiserror::Error)]
 enum InputError {
     #[error("the input is longer than a pipe surely holds")]

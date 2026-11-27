@@ -10,6 +10,7 @@ use toolbox_services::queue::edit::QueueEdit;
 use super::store::{Problem, Store};
 use super::{Failed, add_change, clear_all, remove_change, restored, settle};
 use crate::change::Refused;
+use crate::out::{Json, Out, Settings};
 
 /// A queue kept in memory, in the window or not, that may refuse edits.
 struct Kept {
@@ -206,8 +207,8 @@ fn after_a_failed_apply_the_queue_keeps_what_the_system_shows() {
     assert_eq!(kept.keys(), ["vlc"]);
 }
 
-/// No probe reads loader.conf. Without the helper's read a loader change
-/// that applied stayed queued and ran again at the next `queue apply`.
+/// No probe reads loader.conf, so only the read after a run can show a
+/// loader change as met.
 #[test]
 fn after_an_apply_a_met_loader_setting_leaves_the_queue() {
     use toolbox_core::features::boot::set_loader;
@@ -249,4 +250,28 @@ fn after_an_apply_a_met_loader_setting_leaves_the_queue() {
     settle(&kept, &after, &owners, |_| true, &[]).unwrap();
 
     assert_eq!(kept.keys(), Vec::<String>::new());
+}
+
+/// `queue apply --json` keeps its errors as JSON Lines on standard output.
+#[test]
+fn a_window_refusal_under_apply_json_is_one_error_line() {
+    let mut out = Vec::new();
+    let settings = Settings {
+        json: Json::Lines,
+        ..Settings::default()
+    };
+
+    super::said::say(
+        &mut Out::new(&mut out, settings),
+        "the window holds the queue, so only the window applies it",
+        "apply it in the window, or close the window",
+    );
+
+    assert_eq!(
+        String::from_utf8(out).unwrap(),
+        concat!(
+            r#"{"schema":1,"event":"error","message":"the window holds the queue, so only the window applies it","hint":"apply it in the window, or close the window"}"#,
+            "\n"
+        )
+    );
 }

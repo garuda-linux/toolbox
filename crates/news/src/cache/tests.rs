@@ -1,3 +1,6 @@
+use std::fs::Permissions;
+use std::os::unix::fs::PermissionsExt as _;
+use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicI64, AtomicUsize, Ordering};
 
@@ -27,6 +30,20 @@ impl Transport for FakeTransport {
     fn get(&self, _url: &str) -> Result<Vec<u8>, RequestError> {
         self.asked.fetch_add(1, Ordering::SeqCst);
         self.answers.lock().remove(0)
+    }
+}
+
+/// Makes the folder read-only once the download has been asked for, so the
+/// copy cannot be stored after the feed arrived.
+struct LockedAfterAsking {
+    folder: PathBuf,
+}
+
+impl Transport for LockedAfterAsking {
+    fn get(&self, _url: &str) -> Result<Vec<u8>, RequestError> {
+        std::fs::set_permissions(&self.folder, Permissions::from_mode(0o500)).unwrap();
+
+        feed()
     }
 }
 
@@ -143,4 +160,22 @@ fn a_clock_set_back_waits_from_the_present() {
     clock.0.fetch_add(hours(7), Ordering::SeqCst);
     cache.news().unwrap();
     assert_eq!(transport.asked.load(Ordering::SeqCst), 2);
+}
+
+#[test]
+fn a_downloaded_feed_that_cannot_be_stored_is_still_shown() {
+    let folder = tempfile::tempdir().unwrap();
+    let store = folder.path().join("news");
+    let clock = Arc::new(FakeClock(AtomicI64::new(1_000_000)));
+    let transport = Arc::new(LockedAfterAsking {
+        folder: store.clone(),
+    });
+
+    let cache = Cache::new(store.clone(), Source::Garuda, transport, clock);
+
+    let news = cache.news();
+
+    std::fs::set_permissions(&store, Permissions::from_mode(0o700)).unwrap();
+
+    assert_eq!(news.unwrap().posts[0].title, NEWEST);
 }

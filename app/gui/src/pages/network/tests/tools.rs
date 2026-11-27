@@ -8,7 +8,6 @@ use crate::command::{Command, NetworkCommand, UiCommand};
 
 const FINISHED: &str = "Ping finished. Its output is in the Console.";
 
-/// Clicks Run ping, then ends the next plan as `succeeded` says.
 fn pinged(succeeded: bool, console_open: bool) -> Shown {
     let mut harness = page();
     tab(&mut harness, "Tools");

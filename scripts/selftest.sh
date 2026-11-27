@@ -66,7 +66,7 @@ export GARUDA_TOOLBOX_SELFTEST_CONFIGS="$configs"
 mkdir -p "$XDG_CONFIG_HOME/garuda-toolbox"
 printf '[packages]\nshow_aur = true\n' >"$XDG_CONFIG_HOME/garuda-toolbox/settings.toml"
 
-# Larger than the window's default size (app/gui/src/main.rs).
+# Larger than the window's default size (app/gui/src/start.rs).
 screen_width=1632
 screen_height=1104
 # The runners render on the CPU, where a full run takes about an hour.

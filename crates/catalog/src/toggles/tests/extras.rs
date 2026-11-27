@@ -281,3 +281,11 @@ fn conflicts_names_no_entry_the_entry_needs() {
         )
     );
 }
+
+/// The length cap refuses zero padding past five digits, which `u16` would
+/// read as a port that is valid.
+#[test]
+fn a_port_is_at_most_five_digits_so_padding_is_refused() {
+    assert!(is_web_url("https://example.org:00080/"));
+    assert!(!is_web_url("https://example.org:000080/"));
+}

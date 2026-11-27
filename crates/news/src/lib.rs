@@ -113,7 +113,7 @@ impl PartialEq for NewsError {
 
 impl Eq for NewsError {}
 
-/// `2026-11-17 08:00`, in UTC, the way the CLI shows the wait.
+/// In UTC, as the CLI shows the wait.
 fn moment(seconds: i64) -> String {
     jiff::Timestamp::from_second(seconds).map_or_else(
         |_out_of_range| seconds.to_string(),

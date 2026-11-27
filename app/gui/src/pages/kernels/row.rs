@@ -1,7 +1,7 @@
 use egui::{Context, Label, Response, Ui};
 use toolbox_core::Toggle;
-use toolbox_core::features::kernels::ModuleState;
 use toolbox_core::features::kernels::view::{Module, Row};
+use toolbox_core::features::kernels::{ModuleState, Refusal, may_remove};
 use toolbox_core::features::toggles::shown::Control;
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
 use toolbox_gui_kit::icons::Icon;
@@ -77,14 +77,20 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &Row, glyph: Icon, stat
                 default_slot(ui, state.row);
             }
 
-            // The running kernel stays, so its button rests unless it
-            // takes back what a restored queue may hold.
+            // Core refuses the running kernel and the last one left, so
+            // their Remove rests instead of refusing on click.
             let offered = row.control();
+            let removable = offered != Control::Remove
+                || !matches!(
+                    may_remove(&row.kernel.name, context.changes, context.snapshot),
+                    Err(Refusal::Running | Refusal::LastKernel)
+                );
+
             let shown = control::Shown {
                 control: offered,
                 on: row.wanted,
                 title: name,
-                enabled: (!row.running || offered != Control::Remove) && !context.busy,
+                enabled: removable && !context.busy,
                 unknown: false,
                 setting: Setting::Button,
             };
@@ -310,9 +316,7 @@ const fn module_text(module: &Module) -> (&'static str, Tone) {
     }
 }
 
-/// A wrapped line of tags, as tall as a push button when `with_button`,
-/// so the tags centre on it. A line starts at the style's own height and
-/// grows only once the taller pill comes, which leaves the tags higher up.
+/// A wrapped line of tags, centred on a push button when `with_button`.
 fn tags_line(ui: &mut Ui, with_button: bool, add: impl FnOnce(&mut Ui)) {
     ui.scope(|ui| {
         if with_button {

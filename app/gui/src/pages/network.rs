@@ -1,10 +1,9 @@
 //! The Network page: the connection and the radios, the drivers, the
 //! network hardware and two connection tests, one tab each.
 //!
-//! The page reads the machine itself once it shows. Radio switches and
-//! the address request act at once, driver loads, service starts and the
-//! tests run in the Console, the blacklist and the hotspot tool wait in
-//! the queue.
+//! Radio switches and the address act at once, driver loads, service starts
+//! and the tests run in the Console, the blacklist and the hotspot tool
+//! wait in the queue.
 
 mod drivers;
 mod hardware;

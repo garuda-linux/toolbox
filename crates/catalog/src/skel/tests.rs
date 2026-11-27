@@ -133,7 +133,7 @@ fn rejects_paths_outside_skel() {
         "/etc/skel",
         "/etc/skel/",
         "/etc/skeleton/x",
-        "/home/nico/.bashrc",
+        "/home/ada/.bashrc",
         "etc/skel/x",
         "/etc/skel//etc/passwd",
     ] {

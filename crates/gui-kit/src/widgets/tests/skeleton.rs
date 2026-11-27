@@ -182,19 +182,3 @@ fn a_skeleton_in_a_shown_window_without_the_focus_still_sweeps() {
 
     assert!(!repaints.is_empty());
 }
-
-/// Snapshots would catch the band wherever the frames a test ran left it.
-#[test]
-fn a_test_harness_stands_the_shimmer_still() {
-    let mut harness = harness(600.0, 400.0).build_ui(|ui| {
-        card(ui, |ui| {
-            skeleton_list(ui, rows(true), "Reading the services…")
-        });
-    });
-
-    let repaints = repaints_once_settled(&mut harness);
-
-    assert!(repaints.is_empty(), "{repaints:?}");
-    assert_eq!(bands(&harness).len(), 0);
-    assert!(!theme::reduced_motion(&harness.ctx), "other motion stays");
-}

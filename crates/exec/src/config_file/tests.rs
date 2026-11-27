@@ -6,12 +6,12 @@ use std::os::unix::fs::{PermissionsExt as _, symlink};
 use std::path::Path;
 
 use tempfile::TempDir;
+use toolbox_fs::testing::as_person;
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchRefusal, Fingerprint, MAX_CONFIG_BYTES};
 
 use super::resolve::resolve;
-use super::write::{WriteError, write_real};
+use super::write::{Replaced, WriteError, write_real};
 use super::{ConfigRead, Found, ReadError, inspect, look, read_config_file};
-use crate::builtin::FileChange;
 use crate::secure::Unreadable;
 pub(super) use crate::test_support::{BACKUPS, path, text};
 
@@ -31,7 +31,7 @@ pub(super) fn write_config_file(
     path: &ConfigFilePath,
     content: &ConfigText,
     original: Fingerprint,
-) -> Result<FileChange, WriteError> {
+) -> Result<Replaced, WriteError> {
     let real = resolve(root, path).map_err(ReadError::from)?;
 
     write_real(root, &real.path, content, original)
@@ -254,15 +254,15 @@ fn a_linked_folder_reads_as_missing() {
 
 #[test]
 fn unreadable_folders_hide_their_files() {
-    if rustix::process::geteuid().is_root() {
-        return;
-    }
-
     let root = system();
 
+    fs::set_permissions(root.path(), fs::Permissions::from_mode(0o755)).unwrap();
     fs::set_permissions(root.path().join("etc"), fs::Permissions::from_mode(0o000)).unwrap();
 
-    assert_eq!(look(root.path(), &path("/etc/fstab")), Found::Hidden);
+    assert_eq!(
+        as_person(|| look(root.path(), &path("/etc/fstab"))),
+        Found::Hidden
+    );
 
     fs::set_permissions(root.path().join("etc"), fs::Permissions::from_mode(0o755)).unwrap();
 }

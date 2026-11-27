@@ -7,9 +7,12 @@ mod tests;
 use std::ffi::OsStr;
 use std::panic::{self, catch_unwind};
 
+use clap::ValueEnum as _;
 use clap_complete::CompleteEnv;
 use clap_complete::engine::{ArgValueCompleter, CompletionCandidate};
 use clap_complete::env::Shells;
+
+use crate::args::{BootKey, SettingKey};
 
 const BIN: &str = "garuda-toolbox";
 
@@ -162,17 +165,26 @@ pub fn run(source: Source) {
 }
 
 /// The script calls the binary on the path for each Tab, so the names stay current.
-pub fn registration(shell: clap_complete::Shell, out: &mut dyn std::io::Write) {
+///
+/// # Errors
+///
+/// The writer's error, when the script cannot be written in full.
+pub fn registration(
+    shell: clap_complete::Shell,
+    out: &mut dyn std::io::Write,
+) -> std::io::Result<()> {
     let name = shell.to_string();
     let shells = Shells::builtins();
     let Some(completer) = shells.completer(&name) else {
-        return;
+        return Ok(());
     };
 
-    completer.write_registration(VAR, BIN, BIN, BIN, out).ok();
+    completer.write_registration(VAR, BIN, BIN, BIN, out)?;
     if completer.name() == "zsh" {
-        out.write_all(ZSH_AUTOLOAD.as_bytes()).ok();
+        out.write_all(ZSH_AUTOLOAD.as_bytes())?;
     }
+
+    Ok(())
 }
 
 pub fn command(source: Source) -> clap::Command {
@@ -238,24 +250,9 @@ fn wanted(names: Names, words: &[String]) -> Option<Names> {
         Names::Services { user: _ } => Some(Names::Services {
             user: words.iter().any(|word| word == "--user"),
         }),
-        Names::BootValues => match after_set(words) {
-            Some("default") => Some(Names::BootEntries),
-            Some(
-                "remember" | "submenus" | "os-prober" | "quiet" | "splash" | "mitigations-off"
-                | "sysrq",
-            ) => Some(Names::OnOff),
-            Some(_) | None => None,
-        },
-        Names::SettingValues => match after_set(words) {
-            Some("start-at-login" | "user-services" | "copy-reports" | "blur-desktop") => {
-                Some(Names::OnOff)
-            }
-            Some("log-level") => Some(Names::LogLevels),
-            Some("dark-scheme") => Some(Names::ColourSchemes { dark: true }),
-            Some("light-scheme") => Some(Names::ColourSchemes { dark: false }),
-            Some(_) | None => None,
-        },
-        Names::BootEntries => (after_set(words) == Some("default")).then_some(names),
+        Names::BootValues => boot_values(words),
+        Names::SettingValues => setting_values(words),
+        Names::BootEntries => (boot_key(words) == Some(BootKey::Default)).then_some(names),
         Names::OfferedPackages | Names::InstalledPackages => {
             if words.iter().any(|word| word == "--aur") {
                 Some(Names::AurPackages)
@@ -286,6 +283,49 @@ fn wanted(names: Names, words: &[String]) -> Option<Names> {
         | Names::SetupChoices
         | Names::KernelParameters
         | Names::ResetEntries => Some(names),
+    }
+}
+
+/// The key of `boot set`, read as the enum the command takes.
+fn boot_key(words: &[String]) -> Option<BootKey> {
+    BootKey::from_str(after_set(words)?, false).ok()
+}
+
+/// The key of `settings set`, read as the enum the command takes.
+fn setting_key(words: &[String]) -> Option<SettingKey> {
+    SettingKey::from_str(after_set(words)?, false).ok()
+}
+
+fn boot_values(words: &[String]) -> Option<Names> {
+    match boot_key(words)? {
+        BootKey::Default => Some(Names::BootEntries),
+        BootKey::Remember
+        | BootKey::Submenus
+        | BootKey::OsProber
+        | BootKey::Quiet
+        | BootKey::Splash
+        | BootKey::MitigationsOff
+        | BootKey::Sysrq => Some(Names::OnOff),
+        BootKey::Timeout
+        | BootKey::Background
+        | BootKey::Theme
+        | BootKey::Plymouth
+        | BootKey::Editor
+        | BootKey::AutoEntries
+        | BootKey::AutoFirmware => None,
+    }
+}
+
+fn setting_values(words: &[String]) -> Option<Names> {
+    match setting_key(words)? {
+        SettingKey::StartAtLogin
+        | SettingKey::UserServices
+        | SettingKey::CopyReports
+        | SettingKey::BlurDesktop => Some(Names::OnOff),
+        SettingKey::LogLevel => Some(Names::LogLevels),
+        SettingKey::DarkScheme => Some(Names::ColourSchemes { dark: true }),
+        SettingKey::LightScheme => Some(Names::ColourSchemes { dark: false }),
+        SettingKey::Language | SettingKey::UpdateCheck | SettingKey::Aur => None,
     }
 }
 

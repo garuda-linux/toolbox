@@ -1,11 +1,9 @@
 //! The user guide of `docs/src`, the same pages mdBook builds, inside the
-//! app. `SUMMARY.md` gives the order and the parts, each page turns into
-//! blocks the window draws with its own widgets and the command line
-//! prints.
+//! app. `SUMMARY.md` gives the order and the parts, and each page turns into
+//! blocks the window draws with its own widgets and the command line prints.
 //!
 //! `build.rs` builds every page and picture into the binary, so the guide
-//! matches the app's version. Editing a page rebuilds
-//! this crate.
+//! matches the app's version.
 
 #[cfg(test)]
 mod tests;

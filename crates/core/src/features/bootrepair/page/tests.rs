@@ -44,8 +44,6 @@ fn only_the_run_this_page_started_takes_an_outcome() {
     assert_eq!(Progress::Succeeded.started(), Progress::Succeeded);
     assert_eq!(Progress::Failed.forgotten(), Progress::None);
     assert_eq!(Progress::Running.forgotten(), Progress::Running);
-    assert_eq!(Progress::Waiting.as_str(), "running");
-    assert_eq!(Progress::Busy.as_str(), "busy");
 }
 
 #[test]

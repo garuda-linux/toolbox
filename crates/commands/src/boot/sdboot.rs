@@ -20,13 +20,11 @@ use toolbox_system::{BootMenuSource as _, MenuRead, SystemBootMenu};
 
 use super::{entry_listing, unknown_kernel};
 use crate::act::run;
+use crate::boot::MAX_TIMEOUT;
 use crate::change::{Refused, fresh};
 use crate::out::{Out, Settings};
 use crate::settings::on_off_text;
 use crate::{json, print, unavailable};
-
-/// The same limit as GRUB's timeout on the page.
-const MAX_TIMEOUT: u32 = 300;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct SdBootView {

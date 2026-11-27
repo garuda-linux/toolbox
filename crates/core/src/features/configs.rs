@@ -1,11 +1,9 @@
-//! The Config Files page: which rows the catalog and the system give,
-//! what a row opens, which editor runs, and what an edit changed.
+//! The Config Files page: the rows, what a row opens and which editor runs.
 //!
-//! Every edit is of a private copy in the user's editor in the Console.
-//! The review shows the changes before the write: a root-owned file is
-//! written by garuda-toolbox-helper and never opened as root, a file in
-//! the home by the app as the user. What the catalog marks read-only hands out
-//! root or the accounts: its text is only shown.
+//! An edit works on a private copy in the Console editor and the review
+//! shows the changes before the write. A root-owned file is written by
+//! garuda-toolbox-helper and never opened as root. A read-only entry shows
+//! its text only.
 
 mod diff;
 pub mod session;

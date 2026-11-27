@@ -6,9 +6,7 @@ use egui::{Align, CursorIcon, Frame, Layout, Response, Sense, Ui, UiBuilder, Wid
 use toolbox_cli::output::size;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::theme::CARD_RADIUS;
-use toolbox_gui_kit::widgets::{
-    TileSize, Tone, focus_from_keyboard, light_rim, meter, rich, status_tile,
-};
+use toolbox_gui_kit::widgets::{Tone, focus_from_keyboard, light_rim, meter, rich, status_tile};
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
 use toolbox_services::home::Overview;
 use toolbox_services::home::stats::{Figure, Standing, Stat, Tile, tiles};
@@ -98,7 +96,7 @@ fn stat_tile(ui: &mut Ui, tile: &Tile, width: f32) -> Response {
                         ui.set_width(ui.available_width());
                         ui.spacing_mut().item_spacing.y = tokens.sizes.tight_gap;
                         ui.horizontal(|ui| {
-                            status_tile(ui, TileSize::Line, tone);
+                            status_tile(ui, tone);
                             ui.label(rich(ui, &name, Weight::Medium, SMALL, tokens.secondary));
                         });
 

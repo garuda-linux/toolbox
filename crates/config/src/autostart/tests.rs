@@ -35,12 +35,16 @@ fn enabling_links_the_installed_desktop_file() {
 
 #[test]
 fn enabling_twice_replaces_the_old_link() {
-    let (_dir, autostart) = setup();
+    let (dir, autostart) = setup();
 
     autostart.enable().unwrap();
     autostart.enable().unwrap();
 
-    assert!(autostart.is_enabled());
+    let link = dir.path().join("config/autostart/garuda-toolbox.desktop");
+    assert_eq!(
+        fs::read_link(link).unwrap(),
+        dir.path().join("share/autostart.desktop")
+    );
 }
 
 #[test]

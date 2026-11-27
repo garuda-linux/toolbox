@@ -9,7 +9,7 @@ use egui::{
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::theme::SMALL_TILE_RADIUS;
 use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::{TileSize, line, paint_icon, paint_letter_tile};
+use toolbox_gui_kit::widgets::{ICON_EDGE, line, paint_icon, paint_letter_tile};
 
 use super::found::{Look, Row};
 
@@ -47,18 +47,13 @@ pub fn show(ui: &mut Ui, row: &Row, marked: bool, width: f32) -> Response {
 }
 
 fn tile<'row>(row: &Row) -> Atom<'row> {
-    let edge = TileSize::Line.edge();
+    let edge = ICON_EDGE;
     let size = vec2(edge, edge);
     match &row.look {
         Look::Glyph(icon) => {
             let glyph = *icon;
             Atom::paint(size, move |painting, args| {
-                paint_icon(
-                    painting,
-                    args.rect.center(),
-                    TileSize::Line,
-                    glyph.for_row(),
-                );
+                paint_icon(painting, args.rect.center(), glyph.for_row());
             })
         }
         Look::Letter { package } => {

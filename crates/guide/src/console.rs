@@ -42,8 +42,7 @@ pub fn console_lines(text: &str) -> impl Iterator<Item = ConsoleLine<'_>> {
 }
 
 /// The words and the room between them add up to `command`. Quotes,
-/// pipes and comments are not read: the guide's commands have no word
-/// they would change the colour of.
+/// pipes and comments are not read, as the guide's commands have none.
 pub fn command_words(command: &str) -> Vec<(Word, &str)> {
     let mut parts = Vec::new();
     let mut program_seen = false;

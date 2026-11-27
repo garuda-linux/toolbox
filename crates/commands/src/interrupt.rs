@@ -1,10 +1,8 @@
 //! Ctrl+C on the command line, counted instead of ending the process. In
-//! a change the first lets the running step end and skips the rest, the
-//! second stops the running step now. The command line waits for the
-//! helper either way, so it can say how the change ended and the cleanup
-//! of a step is never cut off. `status --watch` ends on the first.
-//! SIGTERM and SIGHUP count as Ctrl+C does, so a closed terminal or a
-//! `kill` stops a change as cleanly.
+//! a change the first press lets the running step end and skips the rest,
+//! the second stops it now. The command line waits for the helper either
+//! way, so a step's cleanup is never cut off. SIGTERM and SIGHUP count as
+//! Ctrl+C does, so a closed terminal or a `kill` stops a change as cleanly.
 
 #[cfg(test)]
 mod tests;

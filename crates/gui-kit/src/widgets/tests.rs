@@ -37,7 +37,6 @@ mod list;
 mod live_header;
 mod menu;
 mod meter;
-mod metric;
 mod modal;
 mod motion;
 mod page_cover;

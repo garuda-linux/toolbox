@@ -1,10 +1,6 @@
-//! What the pointer does to a control this frame, so every painted
-//! control answers a press alike: a fill one step deeper while the button
-//! is down on it, and no scale.
-//!
-//! One look for a disabled control: egui's fade of a disabled Ui
-//! (`disabled_alpha`) over the control's own colours. Nothing swaps a
-//! colour or fades a second time, so a Ghost button stays transparent.
+//! What the pointer does to a control this frame, so every painted control
+//! answers a press alike. A disabled control fades once, egui's
+//! `disabled_alpha` over its own colours, so a Ghost button stays transparent.
 
 use egui::{Color32, CornerRadius, Rect, Response, Ui};
 

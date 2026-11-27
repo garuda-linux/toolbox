@@ -14,20 +14,19 @@ fn shell(path: &str) -> ShellPath {
     ShellPath::new(path).unwrap()
 }
 
-/// `ada` and `nico` as people, `http` as a service, `wheel` with `nico`.
 fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(Accounts {
         users: vec![
-            user("ada", 1001, 1001),
+            user("grace", 1001, 1001),
             user("http", 33, 33),
-            user("nico", 1000, 1000),
+            user("ada", 1000, 1000),
         ],
         groups: vec![
-            group("ada", 1001, &[]),
+            group("grace", 1001, &[]),
             group("http", 33, &[]),
-            group("nico", 1000, &[]),
-            group("wheel", 998, &["nico"]),
+            group("ada", 1000, &[]),
+            group("wheel", 998, &["ada"]),
         ],
     });
     snapshot.insert(AvailableShells(vec![
@@ -51,34 +50,28 @@ fn the_page_opens_on_people_by_id_and_can_show_every_account() {
 
     assert_eq!(
         names(&snapshot, &changes, &Shown::people()),
-        ["nico", "ada"]
+        ["ada", "grace"]
     );
 
     let every = Shown::default();
 
-    assert_eq!(names(&snapshot, &changes, &every), ["http", "nico", "ada"]);
+    assert_eq!(names(&snapshot, &changes, &every), ["http", "ada", "grace"]);
 }
 
 #[test]
 fn a_row_shows_and_counts_what_is_queued_for_it() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
-    let nico = user_name("nico");
-    set_shell(&nico, shell("/usr/bin/fish"), &mut changes, &snapshot).unwrap();
-    set_full_name(
-        &nico,
-        FullName::new("Nico").unwrap(),
-        &mut changes,
-        &snapshot,
-    )
-    .unwrap();
+    let ada = user_name("ada");
+    set_shell(&ada, shell("/usr/bin/fish"), &mut changes, &snapshot).unwrap();
+    set_full_name(&ada, FullName::new("Ada").unwrap(), &mut changes, &snapshot).unwrap();
 
     let rows = users(&snapshot, &changes, &Shown::people());
-    let row = rows.iter().find(|row| row.user.name == nico).unwrap();
+    let row = rows.iter().find(|row| row.user.name == ada).unwrap();
 
     assert_eq!(row.shown_shell(), "/usr/bin/fish");
-    assert_eq!(row.shown_full_name(), "Nico");
-    assert_eq!(row.shown_home(), "/home/nico");
+    assert_eq!(row.shown_full_name(), "Ada");
+    assert_eq!(row.shown_home(), "/home/ada");
     assert_eq!(row.queued.count(), 2);
 }
 
@@ -86,7 +79,7 @@ fn a_row_shows_and_counts_what_is_queued_for_it() {
 fn the_membership_search_keeps_the_groups_holding_it() {
     let snapshot = snapshot();
     let changes = ChangeSet::default();
-    let every = choices(&user_name("ada"), &snapshot, &changes);
+    let every = choices(&user_name("grace"), &snapshot, &changes);
 
     let found: Vec<&str> = choices_holding(&every, "WHE")
         .iter()
@@ -116,7 +109,7 @@ fn groups_follow_the_search_and_a_queued_group_is_offered() {
 
     assert_eq!(listed, ["wheel"]);
     assert!(
-        choices(&user_name("ada"), &snapshot, &changes)
+        choices(&user_name("grace"), &snapshot, &changes)
             .iter()
             .any(|choice| choice.group == group_name("video") && choice.gid.is_none())
     );

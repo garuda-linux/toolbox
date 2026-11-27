@@ -111,8 +111,7 @@ fn tooltips_stay_up_while_the_pointer_moves_along_the_sidebar() {
 
 #[test]
 fn radii_are_darkly_corner_radius_9_and_its_derived_shapes() {
-    // Each shape takes Darkly's CornerRadius of 9 (darkly.kcfg:57) less its
-    // frame, the line of each derivation sits beside its constant.
+    // Darkly's CornerRadius of 9 (darkly.kcfg:57), less each shape's frame.
     use super::{
         CARD_RADIUS, CHECK_RADIUS, CONTROL_RADIUS, FIELD_RADIUS, POPOVER_RADIUS, RADIUS,
         TAB_RADIUS, TOOL_BUTTON_RADIUS,

@@ -90,8 +90,9 @@ impl<'t> Source<'t> {
         Vec::new()
     }
 
-    /// Inside a function or closure body, where the code should speak for itself.
-    pub fn in_function_body(node: Node<'_>) -> bool {
+    /// Inside a braced block, such as a function, closure, `if` or loop body,
+    /// where the code should speak for itself.
+    pub fn in_block(node: Node<'_>) -> bool {
         ancestors(node).any(|ancestor| ancestor.kind() == "block")
     }
 

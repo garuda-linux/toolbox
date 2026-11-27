@@ -80,17 +80,22 @@ fn table(entries: &[(&str, &str, &str)]) -> Table {
     }
 }
 
-/// Asks until the answer is in, as frames would.
+/// Asks until the answer is in, as frames would. A lookup that never
+/// answers fails the test rather than passing on its empty value.
 fn settle(pictures: &Pictures, name: &str) -> Option<PathBuf> {
     let deadline = Instant::now() + PATIENCE;
     let package = package(name);
 
     loop {
         pictures.file(&package);
-        if !pictures.waiting(&package) || Instant::now() > deadline {
+        if !pictures.waiting(&package) {
             return pictures.file(&package).map(|file| file.to_path_buf());
         }
 
+        assert!(
+            Instant::now() < deadline,
+            "{name}: no answer within {PATIENCE:?}"
+        );
         std::thread::sleep(Duration::from_millis(5));
     }
 }

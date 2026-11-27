@@ -55,7 +55,6 @@ pub fn tweaks(system: Snapshot) -> (Harness<'static, App>, Runtime) {
     tweaks_on(system, Theme::Dark)
 }
 
-/// The System Tweaks page drawn on `theme`, with that theme's desktop look.
 pub fn tweaks_on(system: Snapshot, theme: Theme) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();

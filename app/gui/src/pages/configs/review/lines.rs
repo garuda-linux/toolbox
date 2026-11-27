@@ -46,12 +46,10 @@ pub struct Row {
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Rows {
-    /// The plain diff these rows come from.
     pub source: String,
     pub lines: Vec<Row>,
     /// The most columns a line's text takes, a tab as [`TAB_COLUMNS`].
     pub columns: u16,
-    /// The most digits a line number has.
     pub digits: u16,
 }
 
@@ -147,7 +145,6 @@ fn starts(line: &str) -> Option<(u32, u32)> {
     Some((start(old)?, start(new)?))
 }
 
-/// The number for this line, counting on for the next one.
 const fn next(number: &mut u32) -> u32 {
     let this = *number;
     *number = this.saturating_add(1);

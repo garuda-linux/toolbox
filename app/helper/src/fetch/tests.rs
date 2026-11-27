@@ -1,6 +1,7 @@
 use std::fs;
-use std::os::unix::fs::symlink;
+use std::os::unix::fs::{PermissionsExt as _, symlink};
 
+use toolbox_fs::testing::as_person;
 use toolbox_plan::testing::account::SHADOW;
 use toolbox_plan::{ConfigFilePath, ConfigText, FetchAnswer, FetchRefusal, MAX_CONFIG_BYTES};
 
@@ -217,12 +218,9 @@ fn the_largest_file_still_fits_the_answer() {
 
 #[test]
 fn an_unreadable_file_is_an_error_not_an_answer() {
-    if rustix::process::geteuid().is_root() {
-        return;
-    }
-
     let root = tempfile::tempdir().unwrap();
 
+    fs::set_permissions(root.path(), fs::Permissions::from_mode(0o755)).unwrap();
     fs::create_dir_all(root.path().join("etc")).unwrap();
     fs::write(root.path().join("etc/locked"), "x\n").unwrap();
     fs::set_permissions(
@@ -232,7 +230,7 @@ fn an_unreadable_file_is_an_error_not_an_answer() {
     .unwrap();
 
     assert_eq!(
-        answer(root.path(), &path("/etc/locked"))
+        as_person(|| answer(root.path(), &path("/etc/locked")))
             .unwrap_err()
             .kind(),
         std::io::ErrorKind::PermissionDenied

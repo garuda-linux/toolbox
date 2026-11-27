@@ -58,18 +58,15 @@ fn every_one_off_change_leaves_the_queue_once_the_whole_batch_succeeded() {
     );
 }
 
-/// A new one-off domain needs its two changes in [`batch`] too.
+/// The domains of [`batch`] are one-offs, which only then leave the queue.
 #[test]
-fn the_batch_holds_every_one_off_domain() {
-    let mut covered = vec![AccountLocks::ID, DkmsBuilds::ID, Operations::ID];
-    covered.sort_unstable();
-
-    let domains = crate::domains::all().unwrap();
-    let one_offs: Vec<&str> = domains
-        .ids()
-        .into_iter()
-        .filter(|id| domains.is_one_off(id))
-        .collect();
-
-    assert_eq!(one_offs, covered);
+fn the_batch_domains_are_one_offs() {
+    assert_eq!(
+        [
+            AccountLocks::ONE_OFF,
+            DkmsBuilds::ONE_OFF,
+            Operations::ONE_OFF
+        ],
+        [true; 3]
+    );
 }

@@ -12,7 +12,6 @@ use toolbox_system::pkexec::Refusal;
 
 use super::{Clock, Events, error, needs_typing, planned};
 
-/// The id the plan of a test runs under.
 const PLAN: PlanId = PlanId::new(1);
 
 fn ticking(tick: Duration) -> Clock {
@@ -69,7 +68,7 @@ fn the_plan_is_one_line_with_every_step() {
 #[test]
 fn each_part_of_a_step_is_its_own_string() {
     let plan = Plan::new([PlannedAction::Root(RootAction::SetShell {
-        user: UserName::new("nico").unwrap(),
+        user: UserName::new("ada").unwrap(),
         shell: ShellPath::new("/usr/bin/fish").unwrap(),
     })]);
 
@@ -78,7 +77,7 @@ fn each_part_of_a_step_is_its_own_string() {
         concat!(
             r#"{"schema":1,"event":"plan","steps":[{"step":1,"command":["#,
             r#""check that /usr/bin/fish is listed in /etc/shells","#,
-            r#""chsh -s /usr/bin/fish -- nico"]}]}"#,
+            r#""chsh -s /usr/bin/fish -- ada"]}]}"#,
             "\n"
         )
     );

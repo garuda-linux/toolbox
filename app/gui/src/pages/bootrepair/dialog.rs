@@ -34,8 +34,7 @@ pub struct Dialog {
     field: Option<Id>,
 }
 
-/// The question's list of what is written where, and the one sentence of
-/// what follows below it.
+/// The list of what is written where, and the sentence below it.
 struct Said {
     writes: String,
     disk: String,

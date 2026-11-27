@@ -2,10 +2,9 @@
 //!
 //! Programs run in a pseudo-terminal, as the user through `toolbox-pty` or
 //! as root inside the helper. Their raw output goes into
-//! [`Terminal::feed`]. The UI draws [`Terminal::view`] (rows of styled runs
-//! plus the cursor) with theme colours each frame, and sends what
-//! [`encode_key`], [`encode_paste`] and [`Terminal::take_replies`] return
-//! back to the program. The engine is `alacritty_terminal`.
+//! [`Terminal::feed`]. The UI draws [`Terminal::view`] each frame and sends
+//! what [`encode_key`], [`encode_paste`] and [`Terminal::take_replies`]
+//! return back to the program. The engine is `alacritty_terminal`.
 
 mod color;
 mod keys;

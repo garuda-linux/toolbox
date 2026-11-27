@@ -271,9 +271,8 @@ fn the_list_is_sorted_ignoring_case() {
 fn by_state_failed_units_lead_and_stopped_ones_trail() {
     let mut units = units();
 
-    if let Some(journal) = units.last_mut() {
-        "exited".clone_into(&mut journal.sub_state);
-    }
+    let journal = units.last_mut().unwrap();
+    "exited".clone_into(&mut journal.sub_state);
 
     units.push(info(
         "upower.service",

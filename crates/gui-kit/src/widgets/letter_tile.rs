@@ -1,11 +1,7 @@
-//! The tile that stands in for an app's missing picture: the initial of
-//! the name the row shows on a rounded square in one of the
-//! [`crate::tokens::LetterTiles`].
-//!
-//! The initial follows the shown name, so it matches what the user reads.
-//! The hue follows the package name, so an app keeps its colour on every
-//! page and in every language. The tile is decorative, the row's own
-//! label names the app to a screen reader.
+//! The tile that stands in for an app's missing picture: the initial of the
+//! shown name on a rounded square. The hue follows the package name, so an
+//! app keeps its colour on every page and in every language. The tile is
+//! decorative, the row's own label names the app to a screen reader.
 
 use egui::{CornerRadius, FontId, Rect, Ui};
 

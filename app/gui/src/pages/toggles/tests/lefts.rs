@@ -21,8 +21,6 @@ const ICON: f32 = 22.0;
 
 type Page = Harness<'static, PageState<Plain>>;
 
-/// One row to measure: what the search finds it by, its title, its
-/// description.
 struct Row {
     search: &'static str,
     title: &'static str,

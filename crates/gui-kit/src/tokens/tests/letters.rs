@@ -156,8 +156,6 @@ fn every_letter_reads_at_four_and_a_half_to_one_on_its_tile() {
 
 #[test]
 fn the_letter_is_the_text_or_window_that_reads_better_on_its_tile() {
-    // Each tile takes whichever of the theme text and window reads better on
-    // its own fill.
     for (name, theme, tokens) in cases() {
         for index in 0..LETTER_HUES {
             let tile = tokens.tiles.letters().of(index);

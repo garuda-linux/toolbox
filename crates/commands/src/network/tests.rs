@@ -4,8 +4,8 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::{Confirm, ModuleArgs, Read};
 use toolbox_core::Snapshot;
 use toolbox_core::features::network::{
-    DefaultRoute, Device, InterfaceCard, Link, ModuleFacts, Radio, RadioAccess, RadioTarget,
-    Signal, Subnet, loaded_modules, network_modules,
+    DefaultRoute, Device, InterfaceCard, Link, ModuleFacts, Radio, RadioAccess, RadioKind,
+    RadioTarget, Signal, Subnet, loaded_modules, network_modules,
 };
 use toolbox_plan::{HostName, Toggle};
 use toolbox_system::{NetworkSource, ProbeError};
@@ -76,6 +76,34 @@ impl NetworkSource for NoRoute {
     }
 }
 
+struct Radios(Vec<Radio>);
+
+impl NetworkSource for Radios {
+    fn default_route(&self) -> Result<DefaultRoute, ProbeError> {
+        Err(ProbeError::fake("no route table"))
+    }
+
+    fn radios(&self) -> Result<Vec<Radio>, ProbeError> {
+        Ok(self.0.clone())
+    }
+
+    fn radio_access(&self) -> RadioAccess {
+        RadioAccess::Missing
+    }
+
+    fn set_radio(&self, _target: RadioTarget, _blocked: bool) -> Result<(), ProbeError> {
+        Err(ProbeError::Unavailable)
+    }
+
+    fn pci_devices(&self) -> Result<Vec<Device>, ProbeError> {
+        Err(ProbeError::Unavailable)
+    }
+
+    fn usb_devices(&self) -> Result<Vec<Device>, ProbeError> {
+        Err(ProbeError::Unavailable)
+    }
+}
+
 fn host() -> HostName {
     HostName::new("garudalinux.org").unwrap()
 }
@@ -83,8 +111,17 @@ fn host() -> HostName {
 #[test]
 fn a_ping_takes_the_page_s_bounds() {
     ping(&host(), 4, 5).unwrap();
-    ping(&host(), 0, 5).unwrap_err();
-    ping(&host(), 4, 600).unwrap_err();
+    let count = ping(&host(), 0, 5).unwrap_err();
+    assert_eq!(count.exit(), Exit::PageRule);
+    assert!(count.message().contains("count"), "{}", count.message());
+
+    let timeout = ping(&host(), 4, 600).unwrap_err();
+    assert_eq!(timeout.exit(), Exit::PageRule);
+    assert!(
+        timeout.message().contains("timeout"),
+        "{}",
+        timeout.message()
+    );
 }
 
 #[test]
@@ -101,7 +138,11 @@ fn without_the_drivers_read_nothing_is_blacklisted() {
     };
 
     let refused = blacklist(&args, Toggle::On, &Snapshot::default()).unwrap_err();
-    assert!(refused.message().contains("drivers could not be read"));
+    assert_eq!(
+        refused.message(),
+        "the drivers of this system could not be read"
+    );
+    assert_eq!(refused.exit(), Exit::Unavailable);
 }
 
 #[test]
@@ -281,8 +322,10 @@ fn laptop() -> Snapshot {
 
 #[test]
 fn a_driver_loads_and_unloads_as_the_list_offers() {
-    switch(&module_args("mt76_usb"), Toggle::On, &laptop()).unwrap();
-    switch(&module_args("r8169"), Toggle::Off, &laptop()).unwrap();
+    let loads = switch(&module_args("mt76_usb"), Toggle::On, &laptop()).unwrap();
+    let unloads = switch(&module_args("r8169"), Toggle::Off, &laptop()).unwrap();
+    assert_eq!(loads.steps().len(), 1);
+    assert_eq!(unloads.steps().len(), 1);
 }
 
 #[test]
@@ -305,4 +348,42 @@ fn without_the_drivers_read_nothing_loads() {
     let refused = switch(&module_args("r8169"), Toggle::On, &Snapshot::default()).unwrap_err();
 
     assert!(matches!(refused, Refused::Unavailable(_)), "{refused:?}");
+}
+
+/// Flight mode and the switch states follow the core, which counts only
+/// the Wi-Fi and Bluetooth radios the page shows.
+#[test]
+fn flight_mode_ignores_a_radio_of_no_shown_kind() {
+    let source = Radios(vec![
+        Radio {
+            kind: Some(RadioKind::Wifi),
+            soft: true,
+            hard: false,
+        },
+        Radio {
+            kind: None,
+            soft: false,
+            hard: false,
+        },
+    ]);
+
+    assert!(view(&source).flight_mode);
+}
+
+#[test]
+fn wifi_is_on_unless_every_wifi_radio_is_blocked() {
+    let source = Radios(vec![
+        Radio {
+            kind: Some(RadioKind::Wifi),
+            soft: true,
+            hard: false,
+        },
+        Radio {
+            kind: Some(RadioKind::Wifi),
+            soft: false,
+            hard: false,
+        },
+    ]);
+
+    assert_eq!(view(&source).wifi, Some(true));
 }

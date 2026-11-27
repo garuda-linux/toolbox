@@ -1,18 +1,5 @@
 //! The colour scheme catalog, `colour-schemes.toml`: the app's own
 //! palettes, which the Settings page offers in place of the desktop's.
-//!
-//! ```toml
-//! [[scheme]]
-//! id = "catppuccin-mocha"
-//! name = "Catppuccin Mocha"
-//! mode = "dark"
-//! source = "https://github.com/catppuccin/palette"
-//! licence = "MIT"
-//! window = "#1e1e2e"
-//! # view, text, accent, on_accent, error, warning, success, link, visited
-//! tiles = { blue = "#89b4fa", green = "#a6e3a1", orange = "#fab387" }
-//! ansi = ["#45475a", "…"]   # optional, all 16
-//! ```
 
 #[cfg(test)]
 mod tests;

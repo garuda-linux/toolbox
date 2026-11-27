@@ -1,5 +1,6 @@
 use std::fs;
 use std::net::IpAddr;
+use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
 
 use tempfile::TempDir;
@@ -11,7 +12,7 @@ use zbus::OwnedVariant;
 use super::network_manager::connectivity_from_value;
 use super::{NetworkPrograms, NetworkSource as _, SystemNetwork, parse_default_route};
 use crate::ProbeError;
-use crate::test_support::fake_program;
+use crate::test_support::{as_person, fake_program, write};
 
 /// The Lima VM with a `wg0` link added after its DHCP route.
 const ROUTES: &str = include_str!("fixtures/ip-route-default-two.json");
@@ -377,11 +378,20 @@ fn the_connectivity_property_is_read_as_a_number_only() {
     );
 }
 
+/// A device that exists but may not be opened (EACCES) is denied, not
+/// missing. Root would open it, so the open runs as a person.
 #[test]
-fn an_unreadable_device_denies_radio_access() {
-    let dir = tempfile::tempdir().unwrap();
-    fs::write(dir.path().join("dev"), "").unwrap();
-    let network = SystemNetwork::new(dir.path(), missing());
+fn a_device_the_person_may_not_open_is_denied_not_missing() {
+    let tree = TempDir::new().unwrap();
 
-    assert_eq!(network.radio_access(), RadioAccess::Denied);
+    write(tree.path(), "dev/rfkill", "");
+    fs::set_permissions(
+        tree.path().join("dev/rfkill"),
+        fs::Permissions::from_mode(0o000),
+    )
+    .unwrap();
+
+    let network = SystemNetwork::new(tree.path(), missing());
+
+    assert_eq!(as_person(|| network.radio_access()), RadioAccess::Denied);
 }

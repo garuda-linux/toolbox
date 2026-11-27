@@ -3,7 +3,7 @@ use toolbox_gui::testing::paints_icon;
 use toolbox_gui_kit::icons::colour;
 use toolbox_gui_kit::testing::{lines_in, text_colour};
 use toolbox_gui_kit::tokens;
-use toolbox_gui_kit::widgets::TileSize;
+use toolbox_gui_kit::widgets::ICON_EDGE;
 
 use crate::system::failed_units_bar;
 
@@ -64,7 +64,7 @@ fn a_bar_message_leads_with_its_tile_in_plain_text() {
         panic!("not one icon before {text:?}: {before:?}");
     };
 
-    let edge = TileSize::Line.edge();
+    let edge = ICON_EDGE;
     assert!(
         (mark.width() - edge).abs() < 0.5 && (mark.height() - edge).abs() < 0.5,
         "{mark:?} is not the status icon's {edge}"

@@ -242,8 +242,6 @@ fn an_osc_string_of_c1_lookalike_bytes_is_cut_off_too() {
     assert!(terminal.to_plain_text().contains("after"));
 }
 
-/// The count goes on across calls, and a bell just under the limit still
-/// ends the string without a cut.
 #[test]
 fn an_osc_string_just_under_the_limit_ends_at_its_bell_across_feeds() {
     let mut terminal = Terminal::new(size(40, 3));

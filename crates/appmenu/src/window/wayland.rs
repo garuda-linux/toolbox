@@ -13,7 +13,7 @@ use wayland_protocols_plasma::appmenu::client::org_kde_kwin_appmenu_manager::Org
 use crate::Error;
 use crate::server::PATH;
 
-/// Neither appmenu object sends events, and the globals are read once.
+/// Neither appmenu object sends events.
 struct Events;
 
 delegate_noop!(Events: ignore OrgKdeKwinAppmenuManager);

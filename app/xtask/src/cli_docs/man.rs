@@ -1,15 +1,12 @@
-//! The man pages: one per command down to the last level, each with the
-//! version in its title, the value each option takes in its synopsis and
-//! the pages it belongs to under SEE ALSO, and its other names under
-//! ALIASES. The main page also lists the environment the program reads.
+//! The man pages of the command tree, one per command down to the last
+//! level. The main page also lists the environment the program reads.
 
 use std::fmt::Write as _;
 
 use super::BIN;
 
-/// The variables the program reads, each with what it does. The texts
-/// are roff already. The developer switches `GARUDA_TOOLBOX_HELPER` and
-/// `GARUDA_TOOLBOX_CATALOG_DIR` are left out, since a user never sets them.
+/// The texts are roff already. The developer switches `GARUDA_TOOLBOX_HELPER`
+/// and `GARUDA_TOOLBOX_CATALOG_DIR` are left out, since a user never sets them.
 const ENVIRONMENT: &[(&[&str], &str)] = &[
     (
         &["GARUDA_TOOLBOX_PAGER"],

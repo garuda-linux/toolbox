@@ -196,7 +196,6 @@ fn an_expanded_folder_lists_its_files() {
         )
     );
 
-    // Each file of a folder repeats the folder's description and link.
     assert_eq!(
         (child.description.as_str(), child.url.as_str()),
         (

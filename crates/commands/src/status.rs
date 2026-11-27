@@ -112,8 +112,6 @@ pub fn view(status: &Status, restart: &Result<bool, ProbeError>, now: SystemTime
     }
 }
 
-/// The view as a `Status` section.
-///
 /// The readable facts come first, then the ones not available, a line per
 /// health finding and a short `error:` line per part that failed. The
 /// programs' own words follow only with `verbose`.

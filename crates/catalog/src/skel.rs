@@ -1,12 +1,5 @@
 //! The skel catalog, `skel.toml`: application configs the Maintenance page
 //! resets by copying Garuda's defaults from `/etc/skel` into the home.
-//!
-//! ```toml
-//! [[config]]
-//! id = "bash"
-//! name = "Bash"
-//! files = ["/etc/skel/.bashrc_garuda", "/etc/skel/.config/autostart/bashrc-setup.desktop"]
-//! ```
 
 #[cfg(test)]
 mod tests;

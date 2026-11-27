@@ -39,7 +39,7 @@ fn pages_follow_the_summary_and_know_their_part() {
 fn a_summary_entry_without_its_file_is_reported_and_left_out() {
     let guide = Guide::new(SUMMARY, &sources());
 
-    assert_eq!(guide.missing(), ["gone.md"]);
+    assert_eq!(Guide::missing(SUMMARY, &sources()), ["gone.md"]);
     assert!(guide.page("gone.md").is_none());
 }
 

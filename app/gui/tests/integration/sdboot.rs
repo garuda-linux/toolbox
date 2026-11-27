@@ -88,12 +88,14 @@ pub fn open_boot(harness: &mut Harness<'static, App>) {
 
 #[test]
 fn the_menu_is_read_once_the_page_opens() {
-    let mut fixture = app();
+    let source = Arc::new(Counted::default());
+    let mut fixture = crate::boot::app_with(system(), Arc::<Counted>::clone(&source));
     let harness = fixture.harness();
 
     open_boot(harness);
 
     assert!(harness.query_by_label("console=ttyS0,115200").is_some());
+    assert_eq!(source.0.load(Ordering::SeqCst), 1, "the menu is read once");
 }
 
 /// No probe reads loader.conf. A restored loader change makes the window

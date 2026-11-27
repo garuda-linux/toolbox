@@ -112,7 +112,7 @@ pub fn parse(gzipped: impl Read, max_bytes: u64) -> Result<Vec<AurPackage>, Dump
     parse_capped(gzipped, max_bytes, MAX_ENTRIES)
 }
 
-pub fn parse_capped(
+fn parse_capped(
     gzipped: impl Read,
     max_bytes: u64,
     max_entries: usize,

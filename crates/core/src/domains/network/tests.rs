@@ -1,4 +1,4 @@
-use toolbox_plan::{DnsProvider, PlannedAction, WifiBackend};
+use toolbox_plan::{DnsProvider, PackageName, PlannedAction, RootAction, TargetList, WifiBackend};
 
 use super::{CurrentDns, CurrentWifiBackend, Dns, WifiBackends};
 use crate::domain::Summary;
@@ -12,15 +12,16 @@ fn snapshot() -> Snapshot {
     snapshot
 }
 
-fn shown(changes: &ChangeSet) -> Vec<String> {
+fn shown(changes: &ChangeSet) -> Vec<PlannedAction> {
     plan(changes)
         .steps()
         .iter()
-        .map(|step| match &step.action {
-            PlannedAction::Root(action) => format!("{action:?}"),
-            PlannedAction::User(action) => format!("user {action:?}"),
-        })
+        .map(|step| step.action.clone())
         .collect()
+}
+
+fn root(action: RootAction) -> PlannedAction {
+    PlannedAction::Root(action)
 }
 
 #[test]
@@ -37,7 +38,12 @@ fn a_dns_provider_is_one_root_action() {
     let mut changes = ChangeSet::default();
     changes.want::<Dns>(Single, DnsProvider::Quad9, &snapshot());
 
-    assert_eq!(shown(&changes), ["SetDns { provider: Quad9 }"]);
+    assert_eq!(
+        shown(&changes),
+        [root(RootAction::SetDns {
+            provider: DnsProvider::Quad9
+        })]
+    );
     assert_eq!(
         changes.views().first().map(|view| view.summary.clone()),
         Some(Summary::of(SummaryCode::Dns, "quad9"))
@@ -52,8 +58,12 @@ fn switching_to_iwd_installs_it_first() {
     assert_eq!(
         shown(&changes),
         [
-            "InstallPackages { packages: TargetList { targets: [\"iwd\"] } }",
-            "SetWifiBackend { backend: Iwd }"
+            root(RootAction::InstallPackages {
+                packages: TargetList::new([PackageName::new("iwd").unwrap()]).unwrap(),
+            }),
+            root(RootAction::SetWifiBackend {
+                backend: WifiBackend::Iwd,
+            }),
         ]
     );
 }
@@ -67,7 +77,9 @@ fn switching_back_needs_no_package() {
 
     assert_eq!(
         shown(&changes),
-        ["SetWifiBackend { backend: WpaSupplicant }"]
+        [root(RootAction::SetWifiBackend {
+            backend: WifiBackend::WpaSupplicant
+        })]
     );
     assert_eq!(
         changes.views().first().map(|view| view.key.clone()),
@@ -84,12 +96,16 @@ fn the_wifi_switch_runs_after_dns_and_the_services() {
     let shown = shown(&changes);
 
     assert_eq!(
-        shown.first().map(String::as_str),
-        Some("SetDns { provider: Google }")
+        shown.first(),
+        Some(&root(RootAction::SetDns {
+            provider: DnsProvider::Google
+        }))
     );
     assert_eq!(
-        shown.last().map(String::as_str),
-        Some("SetWifiBackend { backend: Iwd }")
+        shown.last(),
+        Some(&root(RootAction::SetWifiBackend {
+            backend: WifiBackend::Iwd
+        }))
     );
 }
 

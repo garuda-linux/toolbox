@@ -3,7 +3,7 @@ use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::{text_box, text_box_filling};
+use super::super::text_box;
 use crate::testing::harness;
 
 const NAME: &str = "The report";
@@ -45,20 +45,4 @@ fn a_text_box_is_as_wide_as_the_room_whatever_its_text() {
         width > 300.0,
         "the box is {width} px wide in a 400 px window"
     );
-}
-
-#[test]
-fn a_filling_text_box_takes_the_room_below_a_short_text() {
-    let mut harness = harness(400.0, 300.0).build_ui(|ui| {
-        let mut text = "one line";
-        text_box_filling(ui, (NAME, NAME), TextEdit::multiline(&mut text));
-    });
-
-    harness.run();
-
-    let text = harness
-        .get_by_role_and_label(Role::MultilineTextInput, NAME)
-        .rect();
-
-    assert!(text.bottom() > 250.0, "the text ends at {}", text.bottom());
 }

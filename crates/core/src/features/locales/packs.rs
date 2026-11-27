@@ -1,10 +1,7 @@
 //! Language packs: packages named after a program plus a language, such
-//! as `firefox-i18n-de`, `libreoffice-fresh-pt-br` or `hunspell-en_us`.
-//! A pack shows when a locale of its language is enabled and its program
-//! is installed. The language ending is cut from the end of the name, as
-//! `firefox-developer-edition-i18n-de` holds `-de` in its middle too, and
-//! a program named without `-i18n`, `-l10n`, `-help`, `-spell` or `-lang`
-//! still counts, such as `firefox`.
+//! as `firefox-i18n-de`. The language ending is cut from the end of the
+//! name, since `firefox-developer-edition-i18n-de` has `-de` in its middle
+//! too. A program without one of the `INFIXES` still counts.
 
 use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};

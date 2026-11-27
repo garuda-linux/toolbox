@@ -52,7 +52,10 @@ fn every_button_has_its_plan() {
         RunNow::HealthFix.plan(&snapshot, Program::Missing),
         Plan::root(RootAction::GarudaHealthFix)
     );
-    assert!(!RunNow::Chroot.plan(&snapshot, Program::Missing).is_empty());
+    assert_eq!(
+        RunNow::Chroot.plan(&snapshot, Program::Missing),
+        Plan::root(RootAction::ChrootInstallation)
+    );
 }
 
 #[test]

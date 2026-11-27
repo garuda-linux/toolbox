@@ -1,13 +1,9 @@
-//! The viewer's header line names the report it holds, when it came in and
-//! how many lines it has.
-
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 use toolbox_services::diagnostics::page::Page;
 
 use super::{page, report};
 
-/// The narrowest window the header is checked at.
 const NARROW: u16 = 640;
 
 #[test]

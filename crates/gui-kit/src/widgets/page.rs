@@ -11,7 +11,7 @@ use egui::{Color32, Rect, ScrollArea, Shape, Ui, UiBuilder, pos2, vec2};
 pub(super) use purpose::stash_purpose;
 use purpose::{take_purpose, with_purpose};
 
-use super::layout::{Redraw, remember};
+use super::layout::remember;
 use crate::{frost, motion, theme, tokens};
 
 /// How far the shadow over a footer reaches, in points.
@@ -43,13 +43,7 @@ impl Remembered {
     /// Redraws this frame when the height changed, so no frame shows the old
     /// height.
     fn update(self, ui: &Ui, height: f32, reason: &'static str) {
-        remember(
-            ui,
-            self.id,
-            Some(self.height),
-            height,
-            (Redraw::Discards, reason),
-        );
+        remember(ui, self.id, Some(self.height), height, reason);
     }
 }
 
@@ -95,7 +89,7 @@ pub fn page_layout_shaped<P, H, B, F>(
 
     // The band's background spans the window, its controls keep the body's
     // sides (`header_band`).
-    let header_layer = blurred_header(ui, band, head, f32::INFINITY, |ui| header(page, ui));
+    let header_layer = blurred_header(ui, band, head, |ui| header(page, ui));
 
     let foot = Remembered::of(ui, "page footer");
     let footer_top = outer.bottom() - foot.height;
@@ -167,7 +161,6 @@ fn blurred_header(
     ui: &Ui,
     band: Rect,
     head: Remembered,
-    width: f32,
     header: impl FnOnce(&mut Ui) -> bool,
 ) -> egui::LayerId {
     let clip = ui.clip_rect();
@@ -201,7 +194,7 @@ fn blurred_header(
                     .rect_filled(band, egui::CornerRadius::ZERO, cover);
             }
 
-            let drawn = header_band(area, band, 0.0, width, header);
+            let drawn = header_band(area, band, header);
             let height = drawn.map_or(0.0, |bottom| bottom - band.top());
             head.update(area, height, "the page header changed its height");
             area.allocate_rect(
@@ -258,15 +251,9 @@ fn start_id() -> egui::Id {
     egui::Id::unique("toolbox_gui_kit::page::start_entry")
 }
 
-/// The header in the page column of `outer`, `top` below its edge. Where
-/// it ends, or nothing when `header` drew nothing.
-fn header_band(
-    ui: &mut Ui,
-    outer: Rect,
-    top: f32,
-    width: f32,
-    header: impl FnOnce(&mut Ui) -> bool,
-) -> Option<f32> {
+/// The header in the page column of `outer`, at its top. Where it ends, or
+/// nothing when `header` drew nothing.
+fn header_band(ui: &mut Ui, outer: Rect, header: impl FnOnce(&mut Ui) -> bool) -> Option<f32> {
     // A scrolling body keeps its strip at the right, so the header's controls
     // end where the cards end. The body's scroll last frame says whether it
     // keeps one.
@@ -277,7 +264,7 @@ fn header_band(
     };
 
     let beside = Rect::from_min_max(outer.min, pos2(outer.right() - strip, outer.bottom()));
-    let rect = column_rect(ui, beside, top, width);
+    let rect = column_rect(ui, beside, 0.0, f32::INFINITY);
     let mut band = ui.new_child(UiBuilder::new().max_rect(rect));
     band.set_width(rect.width());
 

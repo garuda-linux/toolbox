@@ -202,7 +202,6 @@ pub(super) fn restart(page: &mut HomePage, ui: &mut Ui, context: &PageContext<'_
         });
 }
 
-/// Maintenance holds what frees space, with its review step.
 pub(super) fn disk(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
     let title = i18n::text(&ctx, "home-disk");

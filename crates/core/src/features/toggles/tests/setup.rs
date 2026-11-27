@@ -138,7 +138,7 @@ fn a_unit_another_installed_entry_needs_stays_enabled() {
 
     assert_eq!(unit_wish("libvirtd.service", &changes), Some(Toggle::Off));
 
-    // Back on: nobody else needs the unit, so its queued "off" goes too.
+    // Nobody else needs the unit, so its queued "off" goes too.
     click("boxes", true, &system, &mut changes);
 
     assert_eq!(wish("gnome-boxes", &changes), None);

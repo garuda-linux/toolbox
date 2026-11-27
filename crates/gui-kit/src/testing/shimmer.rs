@@ -15,3 +15,6 @@ pub fn shimmer_frozen(ctx: &Context) -> bool {
 fn id() -> Id {
     Id::unique("toolbox_gui_kit::testing::shimmer_frozen")
 }
+
+#[cfg(test)]
+mod tests;

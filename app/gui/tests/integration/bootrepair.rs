@@ -19,7 +19,6 @@ pub fn app(forced: bool) -> Fixture {
     app_on(forced, Theme::Dark)
 }
 
-/// The Boot Repair page drawn on `theme`, with that theme's desktop look.
 pub fn app_on(forced: bool, theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let look = look_for(&runtime, theme);

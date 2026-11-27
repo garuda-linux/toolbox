@@ -56,7 +56,6 @@ impl Screen {
     }
 }
 
-/// The engine's shape, `None` for its hidden shape.
 pub const fn cursor_shape(shape: EngineShape) -> Option<CursorShape> {
     match shape {
         EngineShape::Block => Some(CursorShape::Block),

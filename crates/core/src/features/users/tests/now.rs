@@ -25,16 +25,16 @@ fn a_new_user_needs_a_free_name_a_listed_shell_and_known_groups() {
     let name = FullName::new("Grace Hopper").unwrap();
 
     for (user, shell, in_groups, refusal) in [
-        ("ada", Some(fish()), groups(&[]), Refusal::UserExists),
+        ("grace", Some(fish()), groups(&[]), Refusal::UserExists),
         ("wheel", Some(fish()), groups(&[]), Refusal::GroupExists),
         (
-            "grace",
+            "hopper",
             Some(ShellPath::new("/usr/bin/false").unwrap()),
             groups(&[]),
             Refusal::ShellNotListed,
         ),
         (
-            "grace",
+            "hopper",
             Some(fish()),
             groups(&["ghosts"]),
             Refusal::UnknownGroup,
@@ -47,8 +47,8 @@ fn a_new_user_needs_a_free_name_a_listed_shell_and_known_groups() {
         );
     }
 
-    let grace = new_user(
-        user_name("grace"),
+    let hopper = new_user(
+        user_name("hopper"),
         name,
         None,
         groups(&["audio", "wheel"]),
@@ -56,11 +56,11 @@ fn a_new_user_needs_a_free_name_a_listed_shell_and_known_groups() {
     )
     .unwrap();
 
-    assert_eq!(grace.parts().name, user_name("grace"));
-    assert_eq!(grace.parts().groups, groups(&["audio", "wheel"]));
-    assert_eq!(check_new_name(&user_name("grace"), &snapshot), Ok(()));
+    assert_eq!(hopper.parts().name, user_name("hopper"));
+    assert_eq!(hopper.parts().groups, groups(&["audio", "wheel"]));
+    assert_eq!(check_new_name(&user_name("hopper"), &snapshot), Ok(()));
     assert_eq!(
-        check_new_name(&user_name("grace"), &Snapshot::default()),
+        check_new_name(&user_name("hopper"), &Snapshot::default()),
         Err(Refusal::Unavailable)
     );
 }
@@ -68,8 +68,8 @@ fn a_new_user_needs_a_free_name_a_listed_shell_and_known_groups() {
 #[test]
 fn adding_a_user_is_one_root_segment_of_useradd_then_chpasswd() {
     let snapshot = snapshot();
-    let grace = new_user(
-        user_name("grace"),
+    let hopper = new_user(
+        user_name("hopper"),
         FullName::default(),
         Some(fish()),
         BTreeSet::new(),
@@ -77,7 +77,7 @@ fn adding_a_user_is_one_root_segment_of_useradd_then_chpasswd() {
     )
     .unwrap();
 
-    let plan = plan_add_user(grace, password());
+    let plan = plan_add_user(hopper, password());
     let segments = plan.into_segments();
     let [Segment::Root(steps)] = segments.as_slice() else {
         panic!("one root segment expected");
@@ -93,7 +93,7 @@ fn adding_a_user_is_one_root_segment_of_useradd_then_chpasswd() {
         shown,
         [
             "check that /usr/bin/fish is listed in /etc/shells",
-            "useradd -m -s /usr/bin/fish -- grace",
+            "useradd -m -s /usr/bin/fish -- hopper",
             "chpasswd  # the secret arrives on its standard input",
         ]
     );
@@ -109,7 +109,7 @@ fn adding_a_user_is_one_root_segment_of_useradd_then_chpasswd() {
 #[test]
 fn a_password_plan_never_shows_its_password() {
     let snapshot = snapshot();
-    let plan = plan_set_password(&user_name("ada"), password(), &snapshot).unwrap();
+    let plan = plan_set_password(&user_name("grace"), password(), &snapshot).unwrap();
     let procedure: Vec<_> = plan
         .steps()
         .iter()
@@ -163,7 +163,7 @@ fn root_and_unknown_users_get_no_password_here() {
         Err(Refusal::UnknownUser)
     );
     assert_eq!(
-        plan_set_password(&user_name("ada"), password(), &Snapshot::default()),
+        plan_set_password(&user_name("grace"), password(), &Snapshot::default()),
         Err(Refusal::Unavailable)
     );
 }

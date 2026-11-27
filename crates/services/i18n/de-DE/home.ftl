@@ -105,8 +105,6 @@ home-live = Live-System
 home-install = Garuda Linux installieren
 home-install-detail = Das Installationsprogramm wird gestartet. Es fragt nach dem Passwort.
 home-install-button = Installation starten
-# $reason is the system's own words, in English.
-home-install-failed = Das Installationsprogramm ließ sich nicht starten: { $reason }
 home-programs-failed = Die Suche nach den Werkzeugen des Live-Systems ist fehlgeschlagen.
 home-chroot = Ein installiertes System reparieren
 home-chroot-detail = In der Konsole wird eine Root-Shell im installierten Garuda Linux auf diesem Computer geöffnet. Mit exit wird sie wieder verlassen.

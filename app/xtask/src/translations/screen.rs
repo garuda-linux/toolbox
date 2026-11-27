@@ -5,29 +5,17 @@
 #[cfg(test)]
 mod tests;
 
-use std::collections::BTreeSet;
-
-use super::{parsed, variables};
+use super::parsed;
 
 /// The first character of `text` that hides itself or reorders what is
 /// shown: controls but line breaks and tabs, bidi controls and
 /// zero-width characters.
 pub(super) fn hidden(text: &str) -> Option<char> {
-    text.chars().find(|letter| {
-        (letter.is_control() && !matches!(letter, '\n' | '\t'))
-            || matches!(
-                letter,
-                '\u{200B}'..='\u{200F}'
-                    | '\u{202A}'..='\u{202E}'
-                    | '\u{2060}'..='\u{2064}'
-                    | '\u{2066}'..='\u{2069}'
-                    | '\u{FEFF}'
-            )
-    })
+    text.chars()
+        .find(|letter| toolbox_text::is_hidden(*letter) && !matches!(letter, '\n' | '\t'))
 }
 
-/// `written` holds only English's ids, each with no placeable English
-/// lacks.
+/// `written` holds only English's ids.
 ///
 /// # Errors
 ///
@@ -36,23 +24,8 @@ pub(super) fn matches_english(stem: &str, english: &str, written: &str) -> Resul
     let english = parsed(stem, english)?;
 
     for message in parsed(stem, written)? {
-        let Some(source) = english.iter().find(|source| source.id == message.id) else {
+        if !english.iter().any(|source| source.id == message.id) {
             return Err(format!("{stem}.ftl: {} is no English message", message.id));
-        };
-
-        let (Ok(source), Ok(value)) = (&source.value, &message.value) else {
-            continue;
-        };
-
-        let allowed: BTreeSet<String> = variables(source).into_iter().collect();
-        if let Some(name) = variables(value)
-            .into_iter()
-            .find(|name| !allowed.contains(name))
-        {
-            return Err(format!(
-                "{stem}.ftl: {} uses `{name}`, which the English text does not have",
-                message.id
-            ));
         }
     }
 

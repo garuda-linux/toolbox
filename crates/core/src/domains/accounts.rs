@@ -6,7 +6,7 @@ pub use toolbox_state::accounts::{AccountLockFlags, Accounts, CurrentUser, Group
 use crate::Stage;
 
 /// Where the account domains run around [`Stage::ACCOUNTS`], the login
-/// shells, in this order. Each domain says why it sits where it does.
+/// shells, in this order.
 pub const NEW_GROUPS: Stage = Stage::new(Stage::ACCOUNTS.rank() - 20);
 pub const MEMBERSHIPS: Stage = Stage::new(Stage::ACCOUNTS.rank() - 10);
 pub const FULL_NAMES: Stage = Stage::new(Stage::ACCOUNTS.rank() + 10);

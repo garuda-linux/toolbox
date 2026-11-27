@@ -1,6 +1,6 @@
 use egui::{Align, Id, Label, Layout, Sense, Ui, Vec2, pos2, vec2};
 
-use super::icon_tile::{TileSize, paint_icon};
+use super::icon_tile::{ICON_EDGE, paint_icon};
 use super::layout::{self, raised_column, remember_width};
 use super::list::memory::{self, RowMemory};
 use super::{Tone, queued_tag, rich, status_dot};
@@ -112,7 +112,7 @@ impl<'text> ActionRow<'text> {
         let actions_width = known.unwrap_or_default();
         let sizes = tokens::current(ui.ctx()).sizes;
         let (tile_gap, actions_gap) = (sizes.picture_gap, sizes.text_to_control);
-        let edge = TileSize::Row.edge();
+        let edge = ICON_EDGE;
         let full = ui.available_width() - edge - tile_gap;
         let fits = layout::beside(full, actions_width, actions_gap);
         let words_room = fits.filter(|_| actions.is_some());
@@ -225,10 +225,9 @@ impl<'text> ActionRow<'text> {
         });
     }
 
-    /// The row's icon, plain: its colour icon, or a glyph in the text colour.
     /// A status row passes its status icon itself.
     fn badge(self, ui: &Ui, centre: egui::Pos2) {
-        paint_icon(ui, centre, TileSize::Row, self.icon.for_row());
+        paint_icon(ui, centre, self.icon.for_row());
     }
 
     fn words(self, ui: &mut Ui, body: Option<impl FnOnce(&mut Ui)>) {
@@ -298,9 +297,8 @@ fn actions_beside(
         None => 0.0,
     };
 
-    // Laid out from the raised top, then only the width and the height
-    // below the cursor are allocated, so the controls after the words keep
-    // the rest of the row, as `raised` allocates them.
+    // Only the width and the height below the cursor are allocated, so the
+    // controls after the words keep the rest of the row.
     let (mut column, room_rect) = raised_column(ui, (rise, room), row.with("actions"));
 
     // Centred on the tallest control of the last frame, so a note before a
@@ -363,7 +361,6 @@ fn stacked_id(row: Id) -> Id {
     row.with("actions stacked")
 }
 
-/// A capital of the title's font, laid out once for both measures below.
 fn title_capital(ui: &Ui) -> std::sync::Arc<egui::Galley> {
     ui.painter().layout_no_wrap(
         "H".to_owned(),

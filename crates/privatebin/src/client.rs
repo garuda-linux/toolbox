@@ -41,7 +41,6 @@ pub struct Paste {
 
 impl fmt::Debug for Paste {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // The fragment holds the key, so only the address before it is printed.
         let address = self.link.split('#').next().unwrap_or_default();
         f.debug_struct("Paste")
             .field("address", &address)

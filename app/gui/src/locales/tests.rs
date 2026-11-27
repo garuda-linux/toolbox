@@ -68,6 +68,16 @@ fn an_enabled_locale_is_an_edit_and_dismiss_clears_the_refusal() {
     assert!(handled.edit.is_some_and(|edit| edit.len() == 1));
     assert!(locales.refusal().is_none());
 
+    locales.handle(
+        &toggle("en_US.UTF-8 UTF-8", false),
+        &ChangeSet::default(),
+        &system(),
+    );
+    assert!(
+        locales.refusal().is_some(),
+        "the system language is refused, so there is a refusal to dismiss"
+    );
+
     locales.receive(
         &AppCommand::DismissRefusal(PageId::Locales),
         &ChangeSet::default(),

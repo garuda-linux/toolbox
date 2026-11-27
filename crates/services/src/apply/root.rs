@@ -88,7 +88,7 @@ pub async fn run(steps: &[Step<RootAction>], run: &mut Run<'_>, launcher: &dyn L
     loop {
         tokio::select! {
             line = lines.next_line() => {
-                let Ok(Some(line)) = line else { break };
+                let Some(line) = readable(line) else { break };
 
                 let event = report_line(&line, run.reporter).await;
                 step = step_span(step, event.as_ref(), steps);
@@ -120,6 +120,14 @@ pub async fn run(steps: &[Step<RootAction>], run: &mut Run<'_>, launcher: &dyn L
 /// The span of the step the helper runs now. Its steps run in another
 /// process, so the span opens and closes on its events, which times each
 /// step in the app's log.
+/// The next line of the helper's output, `None` at its end or when it
+/// cannot be read.
+fn readable(line: std::io::Result<Option<String>>) -> Option<String> {
+    line.inspect_err(|error| tracing::warn!("helper output cannot be read: {error}"))
+        .ok()
+        .flatten()
+}
+
 fn step_span(
     open: Option<Span>,
     event: Option<&Event>,
@@ -259,7 +267,11 @@ async fn refusal(status: ExitStatus, complaints: Complaints<'_>) -> Option<(Refu
     }
 
     let words = match words {
-        Some(reading) => reading.await.unwrap_or_default(),
+        Some(reading) => reading.await.unwrap_or_else(|error| {
+            tracing::warn!("helper's error text lost: {error}");
+
+            String::new()
+        }),
         None => String::new(),
     };
 
@@ -294,7 +306,9 @@ async fn send<T>(stdin: &mut UnixStream, message: &T)
 where
     T: serde::Serialize + Sync,
 {
-    let Ok(line) = encode(message) else {
+    let Ok(line) = encode(message).inspect_err(|error| {
+        tracing::warn!("answer to the helper not sent: {error}");
+    }) else {
         return;
     };
 

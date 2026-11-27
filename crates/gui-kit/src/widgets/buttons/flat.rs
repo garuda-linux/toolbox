@@ -98,16 +98,13 @@ fn flat_tint(tokens: &Tokens, pointer: Pointer, focused: bool, idle: Color32) ->
     }
 }
 
-/// F5 presses it too, so a page is read again from the keyboard alone.
-/// F5 is left to a dialog over the page and to the program in a focused
-/// terminal.
-pub fn refresh_button(ui: &mut Ui, name: &str) -> Choice<()> {
-    refresh_button_busy(ui, name, None)
-}
-
-/// [`refresh_button`] that, while `busy` names the read in progress, spins,
-/// is named `busy` and takes neither a click nor F5, so no second read
-/// starts. It stays enabled, so it keeps the focus.
+/// The refresh button.
+///
+/// F5 presses it too, so a page is read again from the keyboard alone. F5
+/// is left to a dialog over the page and to the program in a focused
+/// terminal. While `busy` names the read in progress it spins, is named
+/// `busy` and takes neither a click nor F5, so no second read starts. It
+/// stays enabled, so it keeps the focus.
 pub fn refresh_button_busy(ui: &mut Ui, name: &str, busy: Option<&str>) -> Choice<()> {
     let spinning = busy.is_some();
     let name = busy.unwrap_or(name);

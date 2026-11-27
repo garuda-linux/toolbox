@@ -2,7 +2,7 @@ use egui::Shape;
 use egui::accesskit::Role;
 use egui_kittest::kittest::Queryable as _;
 
-use super::super::link_row;
+use super::super::link_row_at_least;
 use crate::testing::{harness, tab_into};
 use crate::{icons, tokens};
 
@@ -10,7 +10,7 @@ use crate::{icons, tokens};
 fn a_link_row_is_a_link_named_by_its_title_and_reports_the_click() {
     let mut harness = harness(300.0, 120.0).build_ui_state(
         |ui, clicked: &mut bool| {
-            if link_row(ui, icons::GLOBE, "Forum", Role::Link).clicked() {
+            if link_row_at_least(ui, icons::GLOBE, "Forum", Role::Link, 0.0).clicked() {
                 *clicked = true;
             }
         },
@@ -27,7 +27,7 @@ fn a_link_row_is_a_link_named_by_its_title_and_reports_the_click() {
 #[test]
 fn a_row_that_acts_here_is_a_button() {
     let harness = harness(300.0, 120.0).build_ui(|ui| {
-        link_row(ui, icons::GLOBE, "Call the exorcist", Role::Button);
+        link_row_at_least(ui, icons::GLOBE, "Call the exorcist", Role::Button, 0.0);
     });
 
     assert!(
@@ -42,7 +42,7 @@ fn a_row_that_acts_here_is_a_button() {
 #[test]
 fn a_focused_link_row_shows_a_line_under_it_and_no_ring() {
     let mut harness = harness(300.0, 120.0).build_ui(|ui| {
-        link_row(ui, icons::GLOBE, "Forum", Role::Link);
+        link_row_at_least(ui, icons::GLOBE, "Forum", Role::Link, 0.0);
     });
 
     harness.run();

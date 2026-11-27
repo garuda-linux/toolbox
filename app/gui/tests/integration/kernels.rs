@@ -100,7 +100,6 @@ pub fn kernels(system: Snapshot) -> (Harness<'static, App>, Runtime) {
     kernels_on(system, Theme::Dark)
 }
 
-/// The Kernels page drawn on `theme`, with that theme's desktop look.
 pub fn kernels_on(system: Snapshot, theme: Theme) -> (Harness<'static, App>, Runtime) {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();

@@ -20,6 +20,7 @@ clap_mangen.workspace = true
 toolbox-plan.workspace = true
 toolbox-system.workspace = true
 toolbox-state.workspace = true
+toolbox-text.workspace = true
 regex.workspace = true
 fluent-syntax.workspace = true
 serde_json.workspace = true

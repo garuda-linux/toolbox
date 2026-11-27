@@ -9,12 +9,11 @@ use egui::accesskit::Role;
 use egui::{Align2, AsIdSalt, EventFilter, Key, Modifiers, Response, TextEdit, Ui};
 
 pub use self::digits::Digits;
-use super::field::{Parts, field, inset_field_with_unit, text_field_with_unit};
+use super::field::{Parts, field, inset_field_with_unit};
 
 #[derive(Clone, Copy)]
 enum Look<'a> {
     Plain,
-    Unit(&'a str),
     Inset(&'a str),
 }
 
@@ -34,21 +33,10 @@ pub fn number_field(
     number(ui, (value, range), width, (salt, name), Look::Plain)
 }
 
-/// A [`number_field`] with `unit`, such as "s", after the number inside
-/// the field, named by `name`. The name says the unit for screen readers,
-/// which do not hear the painted one.
-pub fn number_field_with_unit(
-    ui: &mut Ui,
-    value: &mut u32,
-    range: RangeInclusive<u32>,
-    width: f32,
-    (salt, name, unit): (impl AsIdSalt, &str, &str),
-) -> Response {
-    number(ui, (value, range), width, (salt, name), Look::Unit(unit))
-}
-
-/// A [`number_field_with_unit`] without its own fill, for a control
-/// that paints the pill around it.
+/// A number field with `unit`, such as "s", after the number inside the
+/// field, without its own fill, for a control that paints the pill around
+/// it. The name says the unit for screen readers, which do not hear the
+/// painted one.
 pub(super) fn inset_number_with_unit(
     ui: &mut Ui,
     value: &mut u32,
@@ -87,7 +75,6 @@ fn number(
 
     let response = match look {
         Look::Plain => field(ui, edit, Parts::default()).0,
-        Look::Unit(unit) => text_field_with_unit(ui, edit, unit),
         Look::Inset(unit) => inset_field_with_unit(ui, edit, unit),
     };
 

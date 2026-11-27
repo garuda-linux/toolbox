@@ -15,8 +15,7 @@ use toolbox_calendar::{SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, da
 /// format. RFC 3339 offsets (`+02:00`, `Z`) are read too.
 ///
 /// The old format has no zone. It is read as UTC: without a time zone
-/// database the local offset is unknown, and a few hours do not matter
-/// for "updated in the last two weeks".
+/// database the local offset is unknown.
 pub fn parse_timestamp(text: &str) -> Option<SystemTime> {
     let (date, clock, offset) = if let Some((date, rest)) = text.split_once('T') {
         let zone_at = rest.find(['+', '-', 'Z'])?;
@@ -111,7 +110,6 @@ fn offset_seconds(zone: &str) -> Option<i64> {
     (hours < 24 && minutes < 60).then_some(sign * hours_and_minutes(hours, minutes))
 }
 
-/// Seconds of `hours` and `minutes`.
 fn hours_and_minutes(hours: i64, minutes: i64) -> i64 {
     hours * i64::from(SECONDS_PER_HOUR) + minutes * i64::from(SECONDS_PER_MINUTE)
 }

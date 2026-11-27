@@ -95,7 +95,7 @@ impl Tokens {
         let sidebar = surfaces.window.blend(header_scrim);
 
         let soft = mix(card, accent, 0.16);
-        let (error, on_error) = error_inks(palette.error, &surfaces, ends);
+        let error = error_colour(palette.error, &surfaces, ends);
 
         let (tint_pressed, terminal, shadow) = shades(theme, accent, &surfaces, ends);
 
@@ -195,7 +195,6 @@ impl Tokens {
             ),
             roles: roles::derive(palette, &surfaces, accent, ink, ends),
             error,
-            on_error,
             top_light: top_light(theme, card, ends.light()),
             button_top_light: darkly::top_highlight(base, ends.light()),
             shimmer: shimmer(theme, button_hover, ends),
@@ -261,8 +260,6 @@ impl Surfaces {
         ]
     }
 
-    /// The same mapping in both themes, as the desktop's colours decide the
-    /// light and the dark alike.
     fn of(palette: &Palette) -> Self {
         let (base, view, ink) = (palette.window, palette.view, palette.text);
         let field = palette.button.unwrap_or_else(|| mix(view, ink, 0.03));
@@ -371,12 +368,9 @@ const fn secondary_contrast(theme: Theme) -> f32 {
     }
 }
 
-/// The error colour fitted to every surface text sits on, and the text on
-/// an error fill.
-fn error_inks(error: Color32, surfaces: &Surfaces, ends: Ends) -> (Color32, Color32) {
-    let error = fitted(error, &surfaces.under_text(), SECONDARY_CONTRAST, ends);
-    let on_error = readable(surfaces.card, error, SECONDARY_CONTRAST, ends);
-    (error, on_error)
+/// The error colour fitted to every surface text sits on.
+fn error_colour(error: Color32, surfaces: &Surfaces, ends: Ends) -> Color32 {
+    fitted(error, &surfaces.under_text(), SECONDARY_CONTRAST, ends)
 }
 
 fn tokens_id() -> Id {

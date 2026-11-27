@@ -1,6 +1,7 @@
 use toolbox_plan::KernelParameters;
 
-use super::super::{Flag, add_parameter, free_parameters, is_flag_parameter, parameters, set_flag};
+use super::super::flags::is_flag_parameter;
+use super::super::{Flag, add_parameter, free_parameters, parameters, set_flag};
 use super::{parameter, queued_line, system};
 use crate::{ChangeSet, Toggle};
 

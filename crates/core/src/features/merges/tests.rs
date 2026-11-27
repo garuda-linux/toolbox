@@ -1,3 +1,4 @@
+use proptest::prelude::*;
 use toolbox_plan::{ConfigText, MergeCopy, Resolution};
 
 use super::{
@@ -308,4 +309,50 @@ fn the_cached_resolution_follows_the_picks() {
         &compare(CURRENT, COPY).resolution(&[Pick::Take, Pick::Keep])
     );
     assert_eq!(cached.comparison(), &compare(CURRENT, COPY));
+}
+
+/// Texts of short lines, with multi-byte characters, CRLF breaks and a line
+/// without its break at the end.
+fn text() -> impl Strategy<Value = String> {
+    prop::collection::vec(
+        prop::sample::select(vec!["a\n", "b\n", "\u{fc}\n", "\n", "\u{e9}\r\n", "x"]),
+        0..12,
+    )
+    .prop_map(|lines| lines.concat())
+}
+
+proptest! {
+    #[test]
+    fn the_parts_rebuild_both_texts_exactly(current in text(), copy in text()) {
+        let comparison = Comparison::new(current.clone(), copy.clone());
+        let (mut from_current, mut from_copy) = (String::new(), String::new());
+
+        for part in comparison.parts() {
+            match part {
+                Part::Same(lines) => {
+                    from_current.push_str(lines);
+                    from_copy.push_str(lines);
+                }
+                Part::Change {
+                    current: now,
+                    copy: taken,
+                } => {
+                    from_current.push_str(now);
+                    from_copy.push_str(taken);
+                }
+            }
+        }
+
+        prop_assert_eq!(from_current, current);
+        prop_assert_eq!(from_copy, copy);
+    }
+
+    #[test]
+    fn every_change_picked_one_way_merges_to_one_side(current in text(), copy in text()) {
+        let comparison = Comparison::new(current.clone(), copy.clone());
+        let changes = comparison.changes();
+
+        prop_assert_eq!(comparison.merged(&vec![Pick::Keep; changes]), current);
+        prop_assert_eq!(comparison.merged(&vec![Pick::Take; changes]), copy);
+    }
 }

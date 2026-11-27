@@ -9,8 +9,8 @@ use toolbox_core::features::toggles::shown::{Control, Entry};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
-    RowState, TileSize, Tone, dim_picture, paint_icon, paint_letter_tile, queued_tag, row_height,
-    row_menu, split_row_in, status_dot, text_block_height,
+    RowState, Tone, dim_picture, paint_icon, paint_letter_tile, queued_tag, row_height, row_menu,
+    split_row_in, status_dot, text_block_height,
 };
 
 use super::catalog_text;
@@ -115,7 +115,7 @@ pub fn show(
 /// The row's icon, plain and centred in the picture slot, so the row
 /// lines up with the rows that have pictures.
 pub fn paint_glyph(ui: &Ui, at: Rect, glyph: Icon) {
-    paint_icon(ui, at.center(), TileSize::Row, glyph.for_row());
+    paint_icon(ui, at.center(), glyph.for_row());
 }
 
 fn text(ui: &mut Ui, row: &EntryRow) {

@@ -97,6 +97,7 @@ where
 {
     let (sender, receiver) = mpsc::channel();
     let cancel = Arc::clone(cancel);
+    let spare = sender.clone();
 
     let reader = thread::Builder::new()
         .name("capture-pipe".to_owned())
@@ -131,15 +132,24 @@ where
             sender.send(tail).ok();
         });
 
-    // Without a thread the sender is gone with the closure, and the
-    // caller sees the closed channel as a cancel.
-    drop(reader);
+    // Without a thread the sender is gone with the closure, and the closed
+    // channel would read as a cancel. The spare sender reports the error.
+    match reader {
+        Ok(_) => drop(spare),
+        Err(error) => {
+            let mut tail = Tail::new(limit);
+            tail.failed = Some(error);
+            spare.send(tail).ok();
+        }
+    }
+
     receiver
 }
 
 /// Left behind like a reader: a stop kills the program, which breaks the write.
 fn write_apart(mut stdin: ChildStdin, input: &[u8]) -> Receiver<io::Result<()>> {
     let (sender, receiver) = mpsc::channel();
+    let spare = sender.clone();
     let input = input.to_vec();
 
     let writer = thread::Builder::new()
@@ -153,8 +163,15 @@ fn write_apart(mut stdin: ChildStdin, input: &[u8]) -> Receiver<io::Result<()>> 
             sender.send(written).ok();
         });
 
-    // A failed spawn drops the sender, which the caller reads as a cancel.
-    drop(writer);
+    // Without a thread the closed channel would read as a cancel. The spare
+    // sender reports the error instead.
+    match writer {
+        Ok(_) => drop(spare),
+        Err(error) => {
+            spare.send(Err(error)).ok();
+        }
+    }
+
     receiver
 }
 
@@ -276,7 +293,7 @@ fn signal(group: Pid, signal: Signal) {
     match kill_process_group(group, signal) {
         // The whole group is gone already.
         Ok(()) | Err(Errno::SRCH) => {}
-        Err(error) => tracing::debug!("the program's group got no {signal:?}: {error}"),
+        Err(error) => tracing::warn!("the program's group got no {signal:?}: {error}"),
     }
 }
 

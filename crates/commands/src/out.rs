@@ -58,18 +58,6 @@ pub struct Out<'w> {
     kept: Vec<Said>,
 }
 
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            color: ColorMode::Auto,
-            width: None,
-            quiet: false,
-            verbose: false,
-            json: Json::Off,
-        }
-    }
-}
-
 impl<'w> Out<'w> {
     pub fn new(writer: &'w mut dyn Write, settings: Settings) -> Self {
         Self {
@@ -91,12 +79,8 @@ impl<'w> Out<'w> {
         self.settings.quiet
     }
 
-    /// Colour as `--color` and the environment ask.
-    ///
-    /// Never with `NO_COLOR`, `CLICOLOR=0` or `TERM=dumb` unless
-    /// `--color=always` or a force variable. Long cells are cut to
-    /// `--width`, `COLUMNS` or the terminal's width, a pipe gets them
-    /// whole.
+    /// Colour as `--color` and the environment ask, never with `NO_COLOR`,
+    /// `CLICOLOR=0` or `TERM=dumb` unless `--color=always` or a force variable.
     pub fn paint(&self) -> Paint {
         paint(self.settings)
     }

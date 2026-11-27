@@ -9,8 +9,6 @@ mod anchor;
 mod blocks;
 mod inline;
 
-pub use anchor::slug;
-
 /// One block of a page, in reading order.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Block {

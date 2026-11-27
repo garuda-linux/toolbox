@@ -63,10 +63,9 @@ fn clap_said(rendered: &str) -> Said {
     Said::new(&clap_text(rendered), None)
 }
 
-/// clap's error as the app words its own: the first line the message, the
-/// arguments listed under it joined to it, `tip:` lines and the bracketed
-/// values the hint. The usage block is left out. Without another hint the
-/// `--help` of the command the usage line names is the hint.
+/// clap's error in the app's words, the listed arguments joined to the
+/// message. Without a `tip:` or a bracketed value the hint is the command's
+/// `--help`.
 fn clap_text(rendered: &str) -> String {
     let mut lines = rendered.lines();
     let first = lines.next().unwrap_or_default();

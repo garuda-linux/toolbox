@@ -41,7 +41,6 @@ pub(super) fn show(ui: &mut Ui, hits: &[Hit], query: &str) -> Option<Jump> {
     jump
 }
 
-/// Returns whether it was clicked.
 fn place(ui: &mut Ui, hit: &Hit, query: &str) -> bool {
     let tokens = ui.tokens();
     let title = hit.heading.as_ref().map_or_else(

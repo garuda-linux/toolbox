@@ -9,9 +9,7 @@ use crate::tokens::{Tokens, darkly};
 /// The side of the box the mark's points are in, Darkly's frame of 16 px.
 const BOX_SIDE: f32 = 16.0;
 
-/// Darkly's `renderCheckBox` path in its 16 px box: the short stroke from
-/// (5, 8.5) to (7, 11) and the long one up to (12, 5). The mark's shadow is
-/// the same path one pixel lower.
+/// Darkly's `renderCheckBox` mark in its 16 px box.
 const MARK: [(f32, f32); 3] = [(5.0, 8.5), (7.0, 11.0), (12.0, 5.0)];
 
 /// Darkly's shadow under the mark, black at 100 of 255.
@@ -46,9 +44,8 @@ pub(super) fn partial(rect: Rect, drawn: f32) -> Vec<Pos2> {
     points
 }
 
-/// The fill of a check box as Darkly's `renderCheckBox` paints it: the
-/// Button colour, or the highlight when checked, lighter by a tenth under
-/// the pointer. Darkly draws no frame.
+/// The fill of a check box as Darkly's `renderCheckBox` paints it. Darkly
+/// draws no frame.
 pub(super) fn box_fill(tokens: &Tokens, on: bool, pointer: Pointer) -> Color32 {
     let base = if on { tokens.accent_tint } else { tokens.input };
     if pointer.is_under() {

@@ -49,7 +49,7 @@ fn with_accounts(accounts: Accounts) -> PageFixture {
     snapshot.insert(InstalledPackages(BTreeSet::new()));
     snapshot.insert(EnabledUnits(BTreeSet::new()));
     snapshot.insert(accounts);
-    snapshot.insert(CurrentUser(UserName::new("nico").expect("a user name")));
+    snapshot.insert(CurrentUser(UserName::new("ada").expect("a user name")));
 
     PageFixture {
         catalogs: catalogs(),
@@ -125,7 +125,7 @@ fn a_switch_entry_that_is_on_reads_enabled_beside_its_title() {
         groups: vec![Group {
             name: GroupName::new("realtime").expect("a group name"),
             gid: 977,
-            members: BTreeSet::from([UserName::new("nico").expect("a user name")]),
+            members: BTreeSet::from([UserName::new("ada").expect("a user name")]),
         }],
     });
 

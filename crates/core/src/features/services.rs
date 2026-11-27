@@ -44,8 +44,7 @@ pub struct Filter {
     pub shown: Shown,
 }
 
-/// Which units the list shows. One is picked at a time, so every choice
-/// says what it lets through.
+/// Which units the list shows, one choice at a time.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, strum::IntoStaticStr)]
 #[strum(serialize_all = "kebab-case")]
 pub enum Shown {

@@ -342,7 +342,7 @@ fn builtins_and_feeds_go_through_the_runner() {
     let (mut stopped, _stopped_app) = runner_with(vec![Answer::Cancel]);
     let input = Password::new("correct horse battery staple".to_owned())
         .unwrap()
-        .chpasswd_input(&UserName::new("nico").unwrap());
+        .chpasswd_input(&UserName::new("ada").unwrap());
 
     assert_eq!(
         stopped.feed(

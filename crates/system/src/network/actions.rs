@@ -1,7 +1,6 @@
 //! What the Network page does to the machine outside a plan: switch a
-//! radio and make NetworkManager check the way to the internet. The
-//! hotspot tool starts through the `Launcher` port like every other tool.
-//! A dry run (the self-test) does none of it.
+//! radio and make NetworkManager check the way to the internet. A dry run
+//! (the self-test) does none of it.
 
 #[cfg(test)]
 mod tests;

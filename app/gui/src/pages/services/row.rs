@@ -106,7 +106,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, row: &UnitRow, state: &RowSt
                 &[("unit", Arg::from(row.unit.as_str()))],
             );
 
-            // The list waits in a disabled Ui while a plan runs.
             if row_switch(ui, state, row.enabled, &name, row.switchable) {
                 context.commands.send(ServiceCommand::Enable {
                     scope: row.scope,

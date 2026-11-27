@@ -1,4 +1,6 @@
-use toolbox_plan::{DefaultEntry, GrubKey, GrubSetting, GrubState, GrubTimeout, KernelParameters};
+use toolbox_plan::{
+    DefaultEntry, GrubKey, GrubSetting, GrubState, GrubThemeFile, GrubTimeout, KernelParameters,
+};
 
 use super::{CurrentGrub, GrubDefaults, PlymouthState, PlymouthThemes};
 use crate::domain::{Domain as _, Summary, Toggle};
@@ -8,7 +10,7 @@ use crate::test_support::{
 };
 use crate::{ChangeSet, Single, Snapshot, SummaryCode, domains, plan};
 
-const DEFAULTS: &str = "GRUB_DEFAULT=0\nGRUB_TIMEOUT=5\nGRUB_CMDLINE_LINUX_DEFAULT=\"quiet\"\n";
+const DEFAULTS: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
 const REBUILD: &str = "dracut-rebuild, or mkinitcpio -P where dracut-rebuild is not installed";
 
 fn snapshot(defaults: &str, current: &str) -> Snapshot {
@@ -36,10 +38,16 @@ fn a_wish_the_file_already_fulfils_drops_out() {
     let mut changes = ChangeSet::default();
 
     GrubDefaults::want(&mut changes, timeout(5), &state);
-    GrubDefaults::want(&mut changes, parameters("quiet"), &state);
+    GrubDefaults::want(&mut changes, parameters("loglevel=3 quiet"), &state);
     GrubDefaults::want(&mut changes, GrubSetting::Submenus(true), &state);
-    GrubDefaults::want(&mut changes, GrubSetting::OsProber(false), &state);
-    GrubDefaults::want(&mut changes, GrubSetting::Theme(None), &state);
+    GrubDefaults::want(&mut changes, GrubSetting::OsProber(true), &state);
+    GrubDefaults::want(
+        &mut changes,
+        GrubSetting::Theme(Some(
+            GrubThemeFile::new("/usr/share/grub/themes/garuda/theme.txt").unwrap(),
+        )),
+        &state,
+    );
     changes.want::<PlymouthThemes>(Single, plymouth_theme("bgrt"), &state);
 
     assert!(changes.is_empty());
@@ -125,7 +133,7 @@ fn the_review_page_gets_the_sentence_and_the_new_value() {
     let mut changes = ChangeSet::default();
 
     GrubDefaults::want(&mut changes, timeout(3), &state);
-    GrubDefaults::want(&mut changes, GrubSetting::OsProber(true), &state);
+    GrubDefaults::want(&mut changes, GrubSetting::OsProber(false), &state);
     GrubDefaults::want(&mut changes, GrubSetting::Submenus(false), &state);
     changes.want::<PlymouthThemes>(Single, plymouth_theme("spinner"), &state);
 
@@ -145,7 +153,7 @@ fn the_review_page_gets_the_sentence_and_the_new_value() {
             (
                 "grub-settings",
                 "os-prober".to_owned(),
-                Summary::plain(SummaryCode::GrubOsProberOn)
+                Summary::plain(SummaryCode::GrubOsProberOff)
             ),
             (
                 "plymouth-theme",

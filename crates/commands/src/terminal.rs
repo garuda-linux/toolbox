@@ -212,7 +212,11 @@ pub fn read_secret(input: &mut dyn Read) -> Typed {
     let ended = loop {
         match input.read(&mut byte) {
             Ok(1) => {}
-            Ok(_) | Err(_) => break Typed::Closed,
+            Ok(_) => break Typed::Closed,
+            Err(error) => {
+                tracing::warn!("the terminal could not be read: {error}");
+                break Typed::Closed;
+            }
         }
 
         match byte {
@@ -220,7 +224,7 @@ pub fn read_secret(input: &mut dyn Read) -> Typed {
                 break match String::from_utf8(std::mem::take(&mut typed)) {
                     Ok(line) => Typed::Line(line),
                     Err(error) => {
-                        wipe_bytes(error.into_bytes());
+                        wipe(error.into_bytes());
                         Typed::Closed
                     }
                 };
@@ -240,7 +244,7 @@ pub fn read_secret(input: &mut dyn Read) -> Typed {
         }
     };
 
-    wipe_bytes(typed);
+    wipe(typed);
     ended
 }
 
@@ -253,10 +257,7 @@ pub fn without_line_end(mut line: String) -> String {
 }
 
 pub fn wipe(text: impl Into<Vec<u8>>) {
-    wipe_bytes(text.into());
-}
-
-fn wipe_bytes(mut bytes: Vec<u8>) {
+    let mut bytes: Vec<u8> = text.into();
     wipe_slice(&mut bytes);
 }
 

@@ -70,7 +70,7 @@ impl EtcSettings {
 
     /// Reads `etc/…` below `root`.
     #[must_use = "the adapter does nothing until asked"]
-    pub fn new(root: impl Into<PathBuf>) -> Self {
+    fn new(root: impl Into<PathBuf>) -> Self {
         Self { root: root.into() }
     }
 

@@ -155,7 +155,8 @@ where
     }
 }
 
-/// Symlinks are followed: dotfile managers link the files in `~/.config`, and the user's own rights are the only limit.
+/// Symlinks are followed: dotfile managers link the files in `~/.config`,
+/// and the user's own rights are the only limit.
 fn home_entry(path: &Path, relative: &HomePath, directory: bool) -> Option<Found> {
     let metadata = fs::metadata(path).ok()?;
 

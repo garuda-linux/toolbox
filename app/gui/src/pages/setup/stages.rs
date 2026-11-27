@@ -4,7 +4,7 @@ use toolbox_core::features::console::ending::Ending;
 use toolbox_core::features::toggles::summary::summary as queued;
 use toolbox_gui_kit::fonts::{SECTION, Weight};
 use toolbox_gui_kit::widgets::{
-    self as widgets, ActionRow, ButtonKind, DialogWidth, Question, TileSize, Tone, card, card_row,
+    self as widgets, ActionRow, ButtonKind, DialogWidth, Question, Tone, card, card_row,
     pill_button, rich, status_tile, text_link,
 };
 use toolbox_gui_kit::{UiExt as _, icons};
@@ -141,7 +141,7 @@ pub fn success(ui: &mut Ui, context: &PageContext<'_>, page: &mut SetupPage) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id).into_owned();
     ui.horizontal(|ui| {
-        _ = status_tile(ui, TileSize::Row, Tone::Success);
+        _ = status_tile(ui, Tone::Success);
         label(ui, &text("setup-success"));
     });
     ui.add_space(ui.tokens().sizes.heading_gap);

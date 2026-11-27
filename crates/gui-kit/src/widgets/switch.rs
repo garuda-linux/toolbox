@@ -28,8 +28,7 @@ const TRACK_RADIUS: u8 = 6;
 /// the text.
 const FRAME_CONTRAST: f32 = 0.2;
 
-/// A click reports `clicked`, the caller flips its state. A disabled
-/// switch sits inside `add_enabled_ui`, which fades it.
+/// The caller flips `on` on a click.
 pub fn switch(ui: &mut Ui, on: bool, name: &str) -> Response {
     tristate_switch(ui, Some(on), name)
 }
@@ -61,19 +60,12 @@ pub fn tristate_switch(ui: &mut Ui, on: Option<bool>, name: &str) -> Response {
 }
 
 /// The track's fill and frame when `on`, and with `lit` the frame in the
-/// highlight. The highlight laid over a checked track is
-/// [`highlight_colour`].
+/// highlight. The highlight laid over a checked track is `accent_tint`.
 pub(super) const fn track_colours(tokens: &Tokens, on: bool, lit: bool) -> (Color32, Color32) {
     let track = tokens.input;
     let rim = if on || lit { tokens.accent } else { tokens.rim };
 
     (track, rim)
-}
-
-/// The highlight over the track as far as the knob has passed, solid when
-/// on and fading in with the knob.
-pub(super) const fn highlight_colour(tokens: &Tokens) -> Color32 {
-    tokens.accent_tint
 }
 
 /// The knob's fill and frame. It takes the highlight when lit.
@@ -122,7 +114,7 @@ fn paint(ui: &Ui, response: &Response, on: Option<bool>, enabled: bool) {
     );
 
     if on.is_some() {
-        let colour = highlight_colour(&tokens).gamma_multiply(place);
+        let colour = tokens.accent_tint.gamma_multiply(place);
         painter.rect_filled(highlight, TRACK_RADIUS, fade(colour));
     }
 

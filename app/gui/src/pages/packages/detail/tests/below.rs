@@ -15,7 +15,6 @@ fn with_history(days: &[u8]) -> Details {
     }
 }
 
-/// gimp with three files, its list unfolded.
 fn unfolded_files() -> Harness<'static, PageState<PackagesPage>> {
     let mut harness = showing(gimp_with(|info| {
         if let Some(installed) = &mut info.installed {

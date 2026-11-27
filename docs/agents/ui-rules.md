@@ -192,7 +192,7 @@ Rules for pages, gui-kit widgets and the command line's output.
   layers: 5 px down with blur 10 at 44 %, and 3 px up with blur 5 at 24 %
   (`toasts::popup_shadows`, egui's 20 and 10).
   Menu items fill with the hover colour under the pointer and with
-  `decoration_focus` when pressed. A separator is 1 px, inset 10 px.
+  `decoration_focus` when pressed.
 - Scrollbars are painted by the app, as Darkly's are. The strip is 21 px,
   the handle 4 px wide and 8 px on hover, centred, with 6 px end insets
   and at least 20 px long. The handle is WindowText at 35 % at rest and
@@ -216,7 +216,7 @@ Rules for pages, gui-kit widgets and the command line's output.
   small spacing on both axes, a card header by large plus small above and
   small below, and a page keeps one grid unit around its content. They
   draw no light along their top (`widgets::light_rim`).
-  Metric and stat tiles and link tiles keep their rim. The raised menus,
+  Stat tiles and link tiles keep their rim. The raised menus,
   popovers, notes and dialogs keep the 1 px `top_light` line along their
   top edge in dark themes (`widgets::paint_top_light`).
 - The glass follows Zed's Catppuccin Blur theme. The window's background

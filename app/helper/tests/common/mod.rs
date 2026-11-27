@@ -33,10 +33,21 @@ pub fn helper(args: &[&str], stdin: &str) -> Result<Run, Box<dyn Error>> {
 pub fn helper_answering(
     args: &[&str],
     stdin: &str,
+    reply: Option<Reply<'_>>,
+) -> Result<Run, Box<dyn Error>> {
+    let mut command = Command::new(env!("CARGO_BIN_EXE_garuda-toolbox-helper"));
+
+    command.args(args);
+    run_helper(command, stdin, reply)
+}
+
+/// Runs `command` with `stdin` kept open until the helper says `done`.
+pub fn run_helper(
+    mut command: Command,
+    stdin: &str,
     mut reply: Option<Reply<'_>>,
 ) -> Result<Run, Box<dyn Error>> {
-    let mut child = Command::new(env!("CARGO_BIN_EXE_garuda-toolbox-helper"))
-        .args(args)
+    let mut child = command
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())

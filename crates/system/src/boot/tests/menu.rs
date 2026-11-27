@@ -146,9 +146,9 @@ fn no_grub_config_is_an_answer_of_its_own() {
     );
 }
 
-/// As a user that may not read `grub.cfg` (root reads everything, so the
-/// test then has nothing to show). The helper's answer is the Lima menu
-/// in the helper's own encoding.
+/// As a user that may not read `grub.cfg`. Root reads every file, so the
+/// test returns early there. The helper answers with the Lima menu in its
+/// own encoding.
 #[test]
 fn an_unreadable_menu_is_asked_of_the_helper() {
     let root = tempfile::tempdir().unwrap();
@@ -252,4 +252,17 @@ fn a_set_flag_ends_the_wait_for_the_helper_as_cancelled() {
         MenuRead::Cancelled
     );
     assert!(started.elapsed() < std::time::Duration::from_secs(20));
+}
+
+/// With a readable `grub.cfg` beside it, a guess would show GRUB's menu
+/// on a system whose loader is not known.
+#[test]
+fn a_loader_that_cannot_be_told_shows_no_menu() {
+    let root = tempfile::tempdir().unwrap();
+    write(root.path(), "boot/grub/grub.cfg", GRUB_CFG);
+    fs::create_dir_all(root.path().join("etc/kernel/install.conf")).unwrap();
+
+    let read = SystemBootMenu::new(root.path(), no_helper()).menu(&Arc::default());
+
+    assert!(matches!(read, MenuRead::Unreadable(_)), "{read:?}");
 }

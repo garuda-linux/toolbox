@@ -16,7 +16,7 @@ const NAME: &str = "The field";
 const FILL_INSET: f32 = 2.0;
 
 /// Every single-line control kind, each named [`NAME`].
-const KINDS: [(&str, Kind); 8] = [
+const KINDS: [(&str, Kind); 7] = [
     ("text field", |ui| {
         let mut text = "Hello".to_owned();
         text_field(ui, TextEdit::singleline(&mut text)).accessible_name(NAME);
@@ -27,9 +27,6 @@ const KINDS: [(&str, Kind); 8] = [
     }),
     ("number field", |ui| {
         _ = number_field(ui, &mut 5, 0..=10, 72.0, (NAME, NAME));
-    }),
-    ("number field with unit", |ui| {
-        _ = number_field_with_unit(ui, &mut 5, 0..=10, 72.0, (NAME, NAME, "s"));
     }),
     ("search field", |ui| {
         let texts = SearchTexts {
@@ -85,17 +82,8 @@ fn heights(kind: fn(&mut Ui), theme: Theme) -> (f32, f32) {
     harness.run();
 
     let tokens = tokens::current(&harness.ctx);
-    let height = filled_rect(&harness, tokens.input).map_or_else(
-        || {
-            harness
-                .query_all_by_label(NAME)
-                .next()
-                .expect("the dropdown")
-                .rect()
-                .height()
-        },
-        |fill| 2.0_f32.mul_add(FILL_INSET, fill.height()),
-    );
+    let fill = filled_rect(&harness, tokens.input).expect("the control's input fill is painted");
+    let height = 2.0_f32.mul_add(FILL_INSET, fill.height());
 
     (height, pushed.get())
 }

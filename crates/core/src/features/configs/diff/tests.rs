@@ -1,5 +1,9 @@
 use super::{Change, Diff, hunk_lines};
 
+fn is_empty(diff: &Diff<'_>) -> bool {
+    diff.lines().iter().all(|line| line.change == Change::Same)
+}
+
 /// One line per number: `<word> <number>`.
 fn numbered(word: &str, numbers: std::ops::Range<u32>) -> String {
     numbers
@@ -19,11 +23,10 @@ fn changes(diff: &Diff<'_>) -> Vec<(Change, String)> {
 fn equal_texts_have_no_changes() {
     let diff = Diff::new("a\nb\n", "a\nb\n");
 
-    assert!(diff.is_empty());
+    assert!(is_empty(&diff));
     assert_eq!((diff.added(), diff.removed()), (0, 0));
     assert_eq!(diff.plain(), "");
-    assert_eq!(diff.plain(), "");
-    assert!(Diff::new("", "").is_empty());
+    assert!(is_empty(&Diff::new("", "")));
 }
 
 #[test]

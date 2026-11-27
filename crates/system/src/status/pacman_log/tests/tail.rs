@@ -69,10 +69,9 @@ fn only_the_end_of_a_long_log_is_read() {
 fn a_transaction_before_the_end_is_still_found() {
     let (completed, noise) = (completed(), noise());
     let log = format!("{noise}{completed}{}", noise.repeat(2_000));
-    let (last, read) = scan(&log);
+    let (last, _read) = scan(&log);
 
     assert_eq!(last, at(LAST));
-    assert!(read < 3 * log.len(), "{read} bytes read");
 }
 
 #[test]

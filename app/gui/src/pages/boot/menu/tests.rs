@@ -14,7 +14,6 @@ use crate::command::{BootCommand, Command};
 /// The `grub.cfg` of the Lima VM, another menu than the one of `menu()`.
 const OTHER_CFG: &str = toolbox_plan::testing::grub::LIMA_GRUB_CFG;
 
-/// One spin field: the steppers touch the number, with no gap of a row.
 #[test]
 fn the_timeout_steppers_sit_inside_the_number_field() {
     let harness = page(grub_system(), Boot::showing(menu(), None, None));

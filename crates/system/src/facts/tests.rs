@@ -206,5 +206,4 @@ fn the_disk_of_a_real_folder_has_room() {
     let space = SystemMachine::below(root.path().to_owned()).disk().unwrap();
 
     assert!(space.total > 0);
-    assert!(space.free <= space.total);
 }

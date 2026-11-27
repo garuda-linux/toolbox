@@ -109,7 +109,6 @@ pub fn users() -> Fixture {
     users_on(Theme::Dark)
 }
 
-/// The Users and Groups page drawn on `theme`, with that theme's desktop look.
 pub fn users_on(theme: Theme) -> Fixture {
     let mut fixture = restored_on(ChangeSet::default(), system(), Vec::new(), theme);
     let harness = fixture.harness();
@@ -130,7 +129,6 @@ fn restored_with(changes: ChangeSet, probed: Snapshot, issues: Vec<ProbeIssue>) 
     restored_on(changes, probed, issues, Theme::Dark)
 }
 
-/// As [`restored_with`], drawn on `theme`.
 fn restored_on(
     changes: ChangeSet,
     probed: Snapshot,

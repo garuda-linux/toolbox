@@ -1,6 +1,3 @@
-//! The toolbar waits for the apps, and on a narrow row the search leaves
-//! the sort its room.
-
 use egui::accesskit::Role;
 use egui::vec2;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};

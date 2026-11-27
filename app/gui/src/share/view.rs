@@ -59,7 +59,7 @@ impl ShareView<'_> {
 /// The link in one row: Copy link, Hide, then the other link actions
 /// (open, the delete link) in a ⋯ menu at the end, as a row's menu is.
 ///
-/// Else the failure or the running upload, nothing before the first upload.
+/// Without a paste, the running upload or its failure is shown instead.
 pub fn row(ui: &mut Ui, view: &ShareView<'_>, asking: &mut Option<Question>) -> bool {
     let Some(paste) = view.upload.paste() else {
         return running_or_failed(ui, view);

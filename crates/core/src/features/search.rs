@@ -75,8 +75,7 @@ impl Needle {
 }
 
 /// A row of a list with a search field: the texts the search looks in.
-/// A row keeps every text it is found by, numbers too, so a search
-/// formats nothing per row and keystroke.
+/// Numbers count as texts too, so a search formats nothing per keystroke.
 pub trait Searchable {
     fn texts(&self) -> impl Iterator<Item = &str>;
 }

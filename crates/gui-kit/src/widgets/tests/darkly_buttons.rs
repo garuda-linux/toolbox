@@ -8,26 +8,15 @@ use super::super::buttons::ButtonKind;
 use super::super::buttons::look::{press_overlay, push_blur, push_fill, push_width, tool_fill};
 use super::super::press::Pointer;
 use super::super::{pill_button, sidebar_button};
+use crate::desktop::kde::parse;
 use crate::icons;
 use crate::palette::Palette;
+use crate::testing::desktop::kde::{BREEZEDARK_COLORS, INSTALLED_KDEGLOBALS};
 use crate::testing::{fill_under, harness};
-use crate::tokens::{Tokens, darkly};
+use crate::tokens::{Tokens, contrast, darkly};
 
 pub(super) fn tokens(theme: Theme) -> Tokens {
     Tokens::derive(&Palette::fallback(theme), theme)
-}
-
-#[test]
-fn a_push_button_rests_on_the_button_colour_and_the_default_on_its_grey() {
-    for theme in [Theme::Dark, Theme::Light] {
-        let tokens = tokens(theme);
-        assert_eq!(ButtonKind::Soft.rest_fill(&tokens), tokens.input);
-        assert_eq!(ButtonKind::Danger.rest_fill(&tokens), tokens.input);
-        assert_eq!(
-            ButtonKind::Primary.rest_fill(&tokens),
-            tokens.default_button
-        );
-    }
 }
 
 #[test]
@@ -76,12 +65,31 @@ fn a_focused_push_button_is_filled_with_the_focus_colour() {
 }
 
 #[test]
-fn a_focused_and_hovered_push_button_is_the_focus_colour_lightened_by_115_then_102() {
-    let tokens = tokens(Theme::Dark);
-    assert_eq!(
-        push_fill(&tokens, tokens.field, Pointer::Hovered, true),
-        darkly::lighter(darkly::lighter(tokens.focus_fill, 1.15), 1.02)
-    );
+fn the_text_on_a_focus_fill_reads_at_4_5_at_rest_and_under_the_pointer() {
+    let captures = [INSTALLED_KDEGLOBALS, BREEZEDARK_COLORS]
+        .map(|capture| parse(capture).colors.over(Palette::fallback(Theme::Dark)));
+
+    let palettes = [
+        (Theme::Dark, Palette::fallback(Theme::Dark)),
+        (Theme::Light, Palette::fallback(Theme::Light)),
+        (Theme::Dark, captures[0]),
+        (Theme::Dark, captures[1]),
+    ];
+
+    for (theme, palette) in palettes {
+        let tokens = Tokens::derive(&palette, theme);
+        for pointer in [Pointer::Rest, Pointer::Hovered] {
+            let fill = push_fill(&tokens, tokens.field, pointer, true);
+            let ratio = contrast(tokens.on_focus, fill);
+            assert!(
+                ratio >= 4.5,
+                "{theme:?}: text {:?} on {fill:?} under {pointer:?} is {ratio:.2}:1, shadow {:?}, window {:?}",
+                tokens.on_focus,
+                tokens.shadow_shade,
+                tokens.window
+            );
+        }
+    }
 }
 
 #[test]

@@ -12,7 +12,6 @@ pub fn gaming() -> (Harness<'static, App>, Runtime) {
     gaming_on(Theme::Dark)
 }
 
-/// The Gaming page drawn on `theme`, with that theme's desktop look.
 pub fn gaming_on(theme: Theme) -> (Harness<'static, App>, Runtime) {
     let (mut harness, runtime) = components_on(with_pipewire(), theme);
     harness.key_press_modifiers(Modifiers::COMMAND, Key::Num4);

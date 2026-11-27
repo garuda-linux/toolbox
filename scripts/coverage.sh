@@ -6,8 +6,8 @@ repo=$(cd "$(dirname "$0")/.." && pwd)
 out=$(realpath -m "${1:-$repo/target/coverage/report}")
 suites=${COVERAGE_SELFTESTS-all}
 floor=${COVERAGE_FAIL_UNDER:-}
-# Tests and code no runner can reach: dev CLIs, the real PrivateBin transport, the Wayland raise.
-ignore=(--ignore-filename-regex '(^|/)tests(\.rs$|/)|app/(xtask|lint)/src/main\.rs$|crates/privatebin/src/https\.rs$|crates/instance/src/raise(\.rs$|/)')
+# Tests and code no runner can reach: dev CLIs and the real PrivateBin transport.
+ignore=(--ignore-filename-regex '(^|/)tests(\.rs$|/)|app/(xtask|lint)/src/main\.rs$|crates/privatebin/src/https\.rs$')
 
 cd "$repo"
 export CARGO_TARGET_DIR="$repo/target/coverage"

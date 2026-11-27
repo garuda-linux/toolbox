@@ -1,13 +1,13 @@
 //! One selection language: the accent tint of the sidebar, and in light
 //! themes rims where a white surface sat on pale grey.
 
-use egui::{Rect, Theme};
+use egui::{Pos2, Rect, Theme};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::{chip, segmented, switch};
 use crate::testing::{
-    fill_under, filled_rect, harness, painted_text, rims_around, rims_in, text_colour,
+    fill_under, filled_rect, harness, painted, painted_text, rims_around, rims_in, text_colour,
 };
 use crate::tokens;
 
@@ -16,6 +16,28 @@ fn shown(theme: Theme, draw: impl FnMut(&mut egui::Ui) + 'static) -> Harness<'st
     harness.ctx.set_theme(theme);
     harness.run();
     harness
+}
+
+/// The horizontal segments of the last frame that run across `row`, in any
+/// colour.
+fn lines_across(harness: &Harness<'_>, row: Rect) -> Vec<[Pos2; 2]> {
+    let band = row.top() - 1.0..=row.bottom() + 1.0;
+    painted(harness)
+        .into_iter()
+        .filter_map(|shape| {
+            if let egui::Shape::LineSegment { points, stroke: _ } = shape {
+                Some(*points)
+            } else {
+                None
+            }
+        })
+        .filter(|[from, to]| {
+            (from.y - to.y).abs() < 0.5
+                && band.contains(&from.y)
+                && from.x.min(to.x) <= row.left() + 1.0
+                && from.x.max(to.x) >= row.right() - 1.0
+        })
+        .collect()
 }
 
 fn chosen_pill(harness: &Harness<'_>) -> Rect {
@@ -62,10 +84,16 @@ fn the_chosen_tab_is_an_inset_pill_with_the_card_outline() {
     });
 
     let tokens = tokens::current(&harness.ctx);
+    let row = harness
+        .get_by_label("System")
+        .rect()
+        .union(harness.get_by_label("User").rect());
+
     assert!(
-        crate::testing::lines_in(&harness, tokens::mix(tokens.window, tokens.text, 0.2)).is_empty(),
-        "no base line under the tabs"
+        lines_across(&harness, row).is_empty(),
+        "no line runs across the tab row in any colour"
     );
+
     assert!(
         filled_rect(&harness, tokens.accent_tint).is_none(),
         "no accent strip along its top"
@@ -78,6 +106,7 @@ fn the_chosen_tab_is_an_inset_pill_with_the_card_outline() {
         (pill.left() - tab.left() - segmented::PILL_INSET).abs() < 0.5,
         "tab {tab:?}, pill {pill:?}"
     );
+
     assert!(
         rims.iter()
             .any(|(rim, width)| rim.contains(pill.center()) && (*width - 1.0).abs() < 0.01),
@@ -107,6 +136,7 @@ fn the_chosen_pill_keeps_the_text_margin_around_its_label() {
         "the label starts {} px inside the pill",
         label.start() - pill.left()
     );
+
     assert!(
         pill.right() - label.end() >= 8.0 - 0.5,
         "the label ends {} px short of the pill's edge",
@@ -134,6 +164,7 @@ fn a_tab_under_the_pointer_fills_a_pill_as_large_as_the_chosen_one() {
         (hover.left() - tab.left() - segmented::PILL_INSET).abs() < 0.5,
         "tab {tab:?}, hover {hover:?}"
     );
+
     assert!(
         (hover.height() - chosen.height()).abs() < 0.5,
         "hover {hover:?}, chosen {chosen:?}"

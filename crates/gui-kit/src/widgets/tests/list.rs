@@ -8,9 +8,7 @@ use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
 
 use super::super::list::span::Offsets;
-use super::super::{
-    ListItem, RowHeights, RowList, menu_item, row_context_menu, row_menu, switch, text_block_height,
-};
+use super::super::{ListItem, RowHeights, RowList, menu_item, row_menu, switch, text_block_height};
 use crate::testing::{harness, press_until, tab_into};
 
 struct Item(String);
@@ -64,7 +62,7 @@ fn lists(ui: &mut Ui, state: &mut Lists) {
         let heights = RowHeights::Measured { estimate: 30.0 };
         RowList::new("second", "Second", heights).show(ui, second, |ui, item, row| {
             ui.label(format!("About {}", item.0));
-            row_context_menu(ui, row, &item.0, |ui| {
+            row_menu(ui, row, &item.0, |ui| {
                 if menu_item(ui, "Act").clicked() {
                     acted.push(item.0.clone());
                 }
@@ -85,7 +83,6 @@ fn shown(first: &[&str], second: &[&str], height: f32) -> Harness<'static, Lists
     harness
 }
 
-/// Reaches a row by the keys: Tab into the list, then Down to the row.
 fn focus_row(harness: &mut Harness<'static, Lists>, name: &str) {
     assert!(tab_into(harness, Role::ListItem));
     assert!(press_until(harness, Key::ArrowDown, Role::ListItem, name));
@@ -209,19 +206,6 @@ fn the_menu_key_opens_the_row_menu_and_escape_closes_it() {
             .query_by_role_and_label(Role::MenuItem, "Act")
             .is_none()
     );
-}
-
-#[test]
-fn shift_f10_opens_the_menu_of_a_row_without_a_button() {
-    let mut harness = shown(&[], &["c"], 400.0);
-    focus_row(&mut harness, "c");
-
-    harness.key_press_modifiers(Modifiers::SHIFT, Key::F10);
-    harness.run();
-    harness.get_by_role_and_label(Role::MenuItem, "Act").click();
-    harness.run();
-
-    assert_eq!(harness.state().acted, ["c"]);
 }
 
 #[test]

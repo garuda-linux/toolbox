@@ -11,10 +11,9 @@ use crate::tokens;
 /// A page's search (`left`) and sort (`right`) in the toolbar row of the
 /// [`page_header`] just drawn.
 ///
-/// They sit at the row's right end with the sort last, as Discover and
-/// Dolphin place them. Where the title leaves too little room
-/// beside them, they take a row of their own under it, search at the left
-/// and sort at the right. Both draw from `page`, which they take in turn.
+/// The sort sits last at the row's right end, as in Discover and Dolphin.
+/// Where the title leaves too little room, they take a row of their own
+/// under it.
 pub fn page_toolbar<P>(
     ui: &mut Ui,
     page: &mut P,
@@ -48,9 +47,8 @@ pub fn page_toolbar<P>(
 
     ui.add_space(tokens::current(ui.ctx()).sizes.card_gap);
 
-    // The sort is drawn first from the right, as on the room path, so the search
-    // fills what it leaves. The stored width is what the title must leave, not
-    // the drawn row, which is full width and would keep the toolbar on its own row.
+    // The stored width is what the title must leave, not the drawn row, which
+    // is full width and would keep the toolbar on its own row.
     let sort = ui
         .horizontal(|ui| {
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| {

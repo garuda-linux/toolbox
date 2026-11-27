@@ -298,15 +298,6 @@ fn tools_are_fixed_programs_from_known_packages() {
     );
 }
 
-#[test]
-fn tools_are_found_by_id() {
-    for tool in Tool::ALL {
-        assert_eq!(Tool::from_id(tool.id()), Some(tool));
-    }
-
-    assert_eq!(Tool::from_id("bash"), None);
-}
-
 /// Saved queues and self-tests name tools by these ids.
 #[test]
 fn tool_ids_stay_the_same() {

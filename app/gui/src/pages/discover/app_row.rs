@@ -20,12 +20,10 @@ use crate::i18n::Arg;
 use crate::pages::rows::actions::{CopyName, Named, OpenWebsite, RowKind, Section, Website};
 use crate::pages::toggles::control as row_control;
 
-/// A category's heading and its rows.
 #[derive(Debug)]
 pub struct AppGroup {
     pub id: String,
     pub title: String,
-    /// How many apps it lists.
     pub count: String,
     pub rows: Vec<AppRow>,
 }

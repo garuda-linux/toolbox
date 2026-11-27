@@ -7,11 +7,33 @@ use std::process::Command;
 use std::time::Duration;
 use std::{fs, thread};
 
+use rustix::process::Uid;
+use rustix::thread::set_thread_res_uid;
 use tempfile::TempDir;
+
+/// A person's uid, as the app runs under.
+const PERSON: u32 = 1000;
 
 /// Whether the tests run as root, who opens every file whatever its mode.
 pub fn running_as_root() -> bool {
     rustix::process::geteuid().is_root()
+}
+
+/// Runs `op` with the thread's effective uid set to a person when the tests
+/// run as root, so file modes and the folders above a file deny it as they
+/// deny a user. Without root `op` runs as it is.
+pub fn as_person<T>(op: impl FnOnce() -> T) -> T {
+    if !running_as_root() {
+        return op();
+    }
+
+    set_thread_res_uid(None, Some(Uid::from_raw(PERSON)), None).unwrap();
+
+    let result = op();
+
+    set_thread_res_uid(None, Some(Uid::ROOT), None).unwrap();
+
+    result
 }
 
 /// Writes `contents` to `file` below `root`, with the folders above it.

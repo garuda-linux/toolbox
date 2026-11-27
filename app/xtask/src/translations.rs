@@ -31,9 +31,7 @@ fn parsed(stem: &str, text: &str) -> Result<Vec<Message>, String> {
 
 fn read_files(dir: &Path) -> Result<Files, String> {
     let mut files = Files::new();
-    let Ok(entries) = fs::read_dir(dir) else {
-        return Ok(files);
-    };
+    let entries = fs::read_dir(dir).map_err(|error| format!("{}: {error}", dir.display()))?;
 
     for entry in entries.flatten() {
         let path = entry.path();

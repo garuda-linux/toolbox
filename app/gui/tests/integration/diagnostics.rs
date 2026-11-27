@@ -37,7 +37,6 @@ pub fn diagnostics_page(copy_reports: bool) -> Fixture {
     diagnostics_page_on(copy_reports, Theme::Dark)
 }
 
-/// The Diagnostics page drawn on `theme`, with that theme's desktop look.
 pub fn diagnostics_page_on(copy_reports: bool, theme: Theme) -> Fixture {
     let runtime = Runtime::new().unwrap();
     let handle = runtime.handle().clone();

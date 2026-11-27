@@ -46,7 +46,7 @@ struct Reload {
 
 impl Reload {
     /// Our crates at `level` from now on. Does nothing while
-    /// `GARUDA_TOOLBOX_LOG` decides, and says so.
+    /// `GARUDA_TOOLBOX_LOG` decides.
     fn set(&self, level: LevelFilter) -> bool {
         *self.level.lock() = level;
 

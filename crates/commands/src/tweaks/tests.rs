@@ -110,3 +110,35 @@ fn a_part_not_read_yet_says_so() {
 
     assert!(shown.iter().all(|row| row.value == "not read"));
 }
+
+/// A row's mark comes from its value's kind: a switch is on or off, a
+/// provider has no state of its own, a value not read is unknown.
+#[test]
+fn each_tweak_is_marked_by_what_it_holds() {
+    use toolbox_cli::output::Mark;
+
+    let marks: Vec<(String, Mark)> = rows(&system())
+        .into_iter()
+        .map(|row| (row.id, row.mark))
+        .collect();
+
+    assert_eq!(
+        marks,
+        [
+            ("dns", Mark::Blank),
+            ("wifi-backend", Mark::Blank),
+            ("hblock", Mark::Off),
+            ("update-flag skip-mirrorlist", Mark::Off),
+            ("update-flag update-aur", Mark::On),
+            ("update-flag pacman-noconfirm", Mark::Off),
+            ("update-flag no-check-space", Mark::Off),
+        ]
+        .map(|(id, mark)| (id.to_owned(), mark))
+    );
+
+    assert!(
+        rows(&Snapshot::default())
+            .iter()
+            .all(|row| row.mark == Mark::Unknown)
+    );
+}

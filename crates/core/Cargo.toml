@@ -28,6 +28,7 @@ workspace = true
 toolbox-plan = { workspace = true, features = ["testing"] }
 toolbox-system = { workspace = true, features = ["testing"] }
 criterion.workspace = true
+proptest.workspace = true
 toolbox-state = { workspace = true, features = ["selftest", "testing"] }
 
 [[bench]]

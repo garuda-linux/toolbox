@@ -31,7 +31,7 @@ fn change(path: &str, move_files: bool) -> HomeChange {
 
 fn placed_grace(placement: Placement, snapshot: &Snapshot) -> Result<Vec<String>, Refusal> {
     let user = new_user(
-        user_name("grace"),
+        user_name("hopper"),
         FullName::default(),
         None,
         BTreeSet::new(),
@@ -54,12 +54,12 @@ fn a_new_user_takes_the_defaults_unless_the_dialog_says_otherwise() {
 
     assert_eq!(
         placed_grace(Placement::default(), &snapshot).unwrap(),
-        ["useradd -m -- grace"]
+        ["useradd -m -- hopper"]
     );
     assert_eq!(
         placed_grace(
             Placement {
-                home: NewHome::At(home("/srv/grace")),
+                home: NewHome::At(home("/srv/hopper")),
                 uid: Some(uid(1500)),
                 system: false,
             },
@@ -67,8 +67,8 @@ fn a_new_user_takes_the_defaults_unless_the_dialog_says_otherwise() {
         )
         .unwrap(),
         [
-            "check the folders above /srv/grace",
-            "useradd -m -d /srv/grace -u 1500 -- grace"
+            "check the folders above /srv/hopper",
+            "useradd -m -d /srv/hopper -u 1500 -- hopper"
         ]
     );
     assert_eq!(
@@ -81,7 +81,7 @@ fn a_new_user_takes_the_defaults_unless_the_dialog_says_otherwise() {
             &snapshot
         )
         .unwrap(),
-        ["useradd -r -M -u 450 -- grace"]
+        ["useradd -r -M -u 450 -- hopper"]
     );
 }
 
@@ -130,7 +130,7 @@ fn nobody_gets_the_home_of_another_account() {
     assert_eq!(
         placed_grace(
             Placement {
-                home: NewHome::At(home("/home/ada")),
+                home: NewHome::At(home("/home/grace")),
                 ..Placement::default()
             },
             &snapshot
@@ -139,8 +139,8 @@ fn nobody_gets_the_home_of_another_account() {
     );
     assert_eq!(
         set_home(
-            &user_name("ada"),
-            change("/home/nico", true),
+            &user_name("grace"),
+            change("/home/ada", true),
             &mut changes,
             &snapshot
         ),
@@ -154,21 +154,21 @@ fn a_new_home_queues_with_its_choice_and_the_old_path_takes_it_back() {
     let snapshot = snapshot();
     let accounts = snapshot.part::<Accounts>().unwrap();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
-    set_home(&ada, change("/srv/ada", true), &mut changes, &snapshot).unwrap();
+    set_home(&grace, change("/srv/grace", true), &mut changes, &snapshot).unwrap();
 
-    assert_eq!(queued(&changes), ["home-folders ada"]);
+    assert_eq!(queued(&changes), ["home-folders grace"]);
     assert_eq!(
-        changes.wish::<HomeFolders>(&ada),
-        Some(&change("/srv/ada", true))
+        changes.wish::<HomeFolders>(&grace),
+        Some(&change("/srv/grace", true))
     );
 
     let rows = user_rows(accounts, &snapshot, &changes, true);
 
     assert_eq!(
         rows.first().unwrap().queued.home,
-        Some(change("/srv/ada", true))
+        Some(change("/srv/grace", true))
     );
     assert!(!rows.first().unwrap().queued.is_empty());
 
@@ -183,15 +183,15 @@ fn a_new_home_queues_with_its_choice_and_the_old_path_takes_it_back() {
         .map(|invocation| invocation.to_string())
         .collect();
 
-    assert_eq!(shown, ["usermod -d /srv/ada -m -- ada"]);
+    assert_eq!(shown, ["usermod -d /srv/grace -m -- grace"]);
 
-    set_home(&ada, change("/srv/ada", false), &mut changes, &snapshot).unwrap();
+    set_home(&grace, change("/srv/grace", false), &mut changes, &snapshot).unwrap();
     assert_eq!(
-        changes.wish::<HomeFolders>(&ada),
-        Some(&change("/srv/ada", false))
+        changes.wish::<HomeFolders>(&grace),
+        Some(&change("/srv/grace", false))
     );
 
-    set_home(&ada, change("/home/ada", true), &mut changes, &snapshot).unwrap();
+    set_home(&grace, change("/home/grace", true), &mut changes, &snapshot).unwrap();
     assert!(changes.is_empty());
 }
 
@@ -203,7 +203,7 @@ fn the_home_of_root_of_the_own_account_and_of_a_stranger_stays() {
     for (user, refusal) in [
         ("root", Refusal::Root),
         ("toor", Refusal::Root),
-        ("nico", Refusal::CurrentUser),
+        ("ada", Refusal::CurrentUser),
         ("ghost", Refusal::UnknownUser),
         ("http", Refusal::OutsideUserRange),
         ("nobody", Refusal::OutsideUserRange),
@@ -222,8 +222,8 @@ fn the_home_of_root_of_the_own_account_and_of_a_stranger_stays() {
 
     assert_eq!(
         set_home(
-            &user_name("ada"),
-            change("/srv/ada", true),
+            &user_name("grace"),
+            change("/srv/grace", true),
             &mut changes,
             &Snapshot::default()
         ),
@@ -236,10 +236,10 @@ fn the_home_of_root_of_the_own_account_and_of_a_stranger_stays() {
 fn a_removed_user_takes_its_queued_home_change_along() {
     let snapshot = snapshot();
     let mut changes = ChangeSet::default();
-    let ada = user_name("ada");
+    let grace = user_name("grace");
 
-    set_home(&ada, change("/srv/ada", true), &mut changes, &snapshot).unwrap();
-    remove_user(&ada, HomeFolder::Keep, &mut changes, &snapshot).unwrap();
+    set_home(&grace, change("/srv/grace", true), &mut changes, &snapshot).unwrap();
+    remove_user(&grace, HomeFolder::Keep, &mut changes, &snapshot).unwrap();
 
-    assert_eq!(queued(&changes), ["removed-users ada"]);
+    assert_eq!(queued(&changes), ["removed-users grace"]);
 }

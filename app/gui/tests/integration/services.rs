@@ -85,7 +85,6 @@ pub fn services() -> (Harness<'static, App>, Runtime) {
     services_on(Theme::Dark)
 }
 
-/// The Services page drawn on `theme`, with that theme's desktop look.
 pub fn services_on(theme: Theme) -> (Harness<'static, App>, Runtime) {
     services_with_on(Arc::new(Fake), "sshd.service", theme)
 }
@@ -98,7 +97,6 @@ pub fn services_with(
     services_with_on(lister, unit, Theme::Dark)
 }
 
-/// As [`services_with`], drawn on `theme`.
 pub fn services_with_on(
     lister: Arc<dyn UnitLister>,
     unit: &'static str,
@@ -206,7 +204,7 @@ fn the_menu_restarts_at_once_and_queues_a_mask() {
 fn the_user_scope_says_why_it_has_no_units() {
     let (mut harness, _runtime) = services();
 
-    // The user units failed while Home was open. Only their page tells.
+    // Home does not show failed user units, only the Services page does.
     assert!(no_note(&harness));
 
     harness

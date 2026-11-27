@@ -1,9 +1,5 @@
 //! The rules for `conflicts` across a whole toggle catalog file.
 //!
-//! ```toml
-//! conflicts = ["libreoffice-still"]
-//! ```
-//!
 //! Turning the entry on turns the named entries off. One direction is
 //! enough for the catalog to load, an exclusive pair names each other.
 

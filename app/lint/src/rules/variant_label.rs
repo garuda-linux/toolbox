@@ -26,7 +26,7 @@ pub fn check(source: &Source<'_>, findings: &mut Vec<Finding>) {
             continue;
         }
 
-        if !Source::in_function_body(unit.first().node) {
+        if !Source::in_block(unit.first().node) {
             continue;
         }
 

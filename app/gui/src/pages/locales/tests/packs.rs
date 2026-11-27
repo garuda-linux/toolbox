@@ -53,8 +53,6 @@ fn a_packs_search_without_a_match_offers_to_clear_it() {
     );
 }
 
-/// The banner's count and the system language's choices come from the
-/// cache while the system and the queue stay.
 #[test]
 fn a_frame_with_the_same_system_builds_nothing_again() {
     let mut harness = page(system());
@@ -70,7 +68,6 @@ fn a_frame_with_the_same_system_builds_nothing_again() {
     assert_eq!(packs.state().page.packs.builds(), packs_built);
 }
 
-/// `en_US.UTF-8` names its character set, `de_DE` does not.
 #[test]
 fn a_locale_names_its_character_set_once() {
     let mut harness = page(system());

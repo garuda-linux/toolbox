@@ -1,6 +1,3 @@
-//! The viewer's search keeps the lines that hold it, a long line wraps
-//! at the edge, and the rows fold while a report shows.
-
 use egui_kittest::kittest::Queryable as _;
 
 use super::{page, plain_report, report};

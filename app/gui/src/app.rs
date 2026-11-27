@@ -92,7 +92,7 @@ pub struct App {
     state: State,
     look: Option<watch::Receiver<DesktopLook>>,
     /// The fonts in use, so a look that names the same ones does not
-    /// rebuild egui's font atlas. The last: the emoji font is in.
+    /// rebuild egui's font atlas. The last says whether the emoji font is in.
     fonts: (Option<FontSpec>, Option<FontSpec>, bool),
     /// The icon theme's glyphs in use. Rasterizing them takes a while, and
     /// most look changes keep the theme.

@@ -12,7 +12,7 @@ use egui::{
 use toolbox_gui_kit::code::{CodeJob, Ink};
 use toolbox_gui_kit::fonts::{self, BODY, SECTION, Weight};
 use toolbox_gui_kit::theme::{CARD_RADIUS, RADIUS, show_scroll};
-use toolbox_gui_kit::widgets::{TileSize, Tone, corner_button, paint_status_tile, rich};
+use toolbox_gui_kit::widgets::{ICON_EDGE, Tone, corner_button, paint_status_tile, rich};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_guide::{
     Block, Callout, CalloutKind, Code, ConsoleLine, Heading, List, Word, command_words,
@@ -232,11 +232,10 @@ fn note(ui: &mut Ui, callout: &Callout, reader: &mut Reader<'_>) {
         });
 }
 
-/// The status mark of `tone` beside a callout's label. It starts at the
-/// top of the label's capitals, as a row's picture starts at its
-/// title's, rather than at the line box above them.
+/// The status mark beside a callout's label. It starts at the top of the
+/// label's capitals, not at the line box above them.
 fn mark_tile(ui: &mut Ui, tone: Tone) {
-    let edge = TileSize::Row.edge();
+    let edge = ICON_EDGE;
     let capital = ui.painter().layout_no_wrap(
         "H".to_owned(),
         fonts::font(ui.style(), Weight::SemiBold, BODY),
@@ -246,5 +245,5 @@ fn mark_tile(ui: &mut Ui, tone: Tone) {
     let top = capital.mesh_bounds.top().max(0.0);
     let (room, _) = ui.allocate_exact_size(vec2(edge, top + edge), Sense::hover());
     let centre = egui::pos2(room.center().x, room.top() + top + edge / 2.0);
-    paint_status_tile(ui, centre, TileSize::Row, tone);
+    paint_status_tile(ui, centre, tone);
 }

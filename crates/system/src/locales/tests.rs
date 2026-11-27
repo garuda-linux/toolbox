@@ -292,3 +292,34 @@ fn the_names_are_read_again_only_after_the_sources_or_the_list_changed() {
     stamp(&list, 3000);
     assert_eq!(language(&locales, "ja_JP").as_deref(), Some("Japanese"));
 }
+
+/// A list that cannot be read (a folder stands in its place) must not be
+/// kept as "no names" until its time changes. The file under the same time
+/// brings the names back.
+#[test]
+fn a_list_that_cannot_be_read_is_not_kept_as_no_names() {
+    let root = system(None, None, None);
+    let i18n = root.path().join("usr/share/i18n");
+    let list = i18n.join("SUPPORTED");
+    let folder = i18n.join("locales");
+    let stamp = |path: &Path| {
+        File::open(path)
+            .unwrap()
+            .set_modified(SystemTime::UNIX_EPOCH + Duration::from_secs(1000))
+            .unwrap();
+    };
+
+    source(&root, "de_DE", captured("de_DE"));
+    fs::create_dir_all(&list).unwrap();
+    stamp(&folder);
+    stamp(&list);
+
+    let locales = EtcLocales::new(root.path());
+    assert!(locales.names().0.is_empty());
+
+    fs::remove_dir(&list).unwrap();
+    fs::write(&list, supported_without("ja_JP")).unwrap();
+    stamp(&list);
+
+    assert_eq!(language(&locales, "de_DE").as_deref(), Some("German"));
+}

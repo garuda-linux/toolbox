@@ -91,7 +91,7 @@ const COMMUNITY: [(&str, &str); 5] = [
 
 const SIDE_BY_SIDE: f32 = 640.0;
 const TILE_WIDTH: f32 = 280.0;
-/// The taller top card's height of the last pass. One About page shows at a time.
+/// The taller top card's height of the last pass.
 const TOP_CARDS: &str = "toolbox_gui::about::top_cards";
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -164,8 +164,7 @@ impl PageView for AboutPage {
     }
 }
 
-/// The credits and the legal facts. The addresses can be copied, the
-/// version stands in the hero.
+/// The credits and the legal facts.
 fn facts(ui: &mut Ui) {
     let ctx = ui.ctx().clone();
     let text = |id: &str| i18n::text(&ctx, id);
@@ -210,11 +209,8 @@ fn address(ui: &mut Ui, text: &str, url: &str) {
 
 /// The help rows. Beside the facts they share `tallest`, the card's height,
 /// so they space out as the facts do instead of leaving a band below.
-///
-/// A fact row is its line plus half the gap between facts on either side.
-/// The help rows take that pitch, start half a gap above the first fact and
-/// rise as far as a fact's text sits above its row middle, so each lines up
-/// with the fact beside it.
+/// A fact row is its line plus half the gap between facts, so the help rows
+/// take that pitch to line up with the facts beside them.
 fn help(ui: &mut Ui, called: &mut bool, tallest: f32) {
     let ctx = ui.ctx().clone();
     let sizes = ui.tokens().sizes;

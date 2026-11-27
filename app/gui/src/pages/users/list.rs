@@ -27,7 +27,7 @@ const ORDERS: [(UserOrder, &str); 5] = [
 ];
 
 /// A row as the list shows it, named for screen readers by its user and
-/// full name. The row is built once per cache key, not per frame.
+/// full name.
 #[derive(Debug)]
 pub struct Item {
     row: UserRow,

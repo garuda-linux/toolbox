@@ -2,11 +2,14 @@
 //! picture found. A broken link fails here before a reader finds it.
 
 use super::links::{all_blocks, broken_links};
-use super::{Block, built_in, embedded, image, image_size};
+use super::{Block, Guide, built_in, embedded, image, image_size};
 
 #[test]
 fn every_page_the_summary_names_is_built_in() {
-    assert_eq!(embedded().missing(), Vec::<String>::new());
+    assert_eq!(
+        Guide::missing(built_in::SUMMARY, built_in::PAGES),
+        Vec::<String>::new()
+    );
     assert!(embedded().page(super::FIRST_PAGE).is_some());
 }
 

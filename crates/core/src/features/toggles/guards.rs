@@ -8,9 +8,8 @@ use crate::features::packages::queue::{self, Refusal as PackageRefusal};
 use crate::features::{Refused, kernels, users};
 use crate::{ChangeSet, Snapshot, Toggle};
 
-/// The rules every removal meets, for the package the switch takes away,
-/// which is the `-git` build when only that one is installed, and the
-/// entry's `also` packages. Those count as removed even when another
+/// The rules every removal meets, for the package the switch takes away
+/// and the entry's `also` packages. Those count as removed even when another
 /// entry keeps one, which can refuse more than pacman would, never less.
 pub(super) fn removal_allowed(
     entry: &ToggleEntry,

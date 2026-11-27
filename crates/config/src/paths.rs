@@ -30,8 +30,7 @@ impl Paths {
     }
 
     /// `lookup` answers environment variables. Without an absolute `HOME`
-    /// the folders fall back to `/root`, the only user without one in
-    /// practice.
+    /// the folders fall back to `/root`.
     #[must_use = "the paths are only computed, nothing is created"]
     pub fn from_env<F>(lookup: F) -> Self
     where

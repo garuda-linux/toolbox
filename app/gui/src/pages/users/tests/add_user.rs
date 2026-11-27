@@ -18,12 +18,12 @@ fn the_full_name_proposes_the_login_until_it_is_typed() {
     harness.get_by_label("Add User…").click();
     harness.run();
 
-    type_into(&mut harness, Role::TextInput, "Full name", "Grace Hopper");
-    assert_eq!(login(&harness), "grace");
+    type_into(&mut harness, Role::TextInput, "Full name", "Alan Turing");
+    assert_eq!(login(&harness), "alan");
 
     type_into(&mut harness, Role::TextInput, "User name", "h");
     type_into(&mut harness, Role::TextInput, "Full name", " Jr");
-    assert_eq!(login(&harness), "graceh");
+    assert_eq!(login(&harness), "alanh");
 }
 
 /// The dialog closed when it sent the account. When the run fails it opens
@@ -33,7 +33,7 @@ fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
     let mut harness = page(unlocked());
     harness.get_by_label("Add User…").click();
     harness.run();
-    type_into(&mut harness, Role::TextInput, "Full name", "Grace Hopper");
+    type_into(&mut harness, Role::TextInput, "Full name", "Alan Turing");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     type_into(
         &mut harness,
@@ -47,7 +47,7 @@ fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
     assert!(harness.query_by_label("Add User Now").is_none());
 
     let users = &mut harness.state_mut().fixture.services.users;
-    users.started(RunKind::NewAccount, name("grace"));
+    users.started(RunKind::NewAccount, name("alan"));
     harness.run();
     harness.state_mut().fixture.services.users.plan_started();
     harness.run();
@@ -60,7 +60,7 @@ fn a_failed_new_account_opens_the_dialog_again_without_its_passwords() {
     harness.run();
 
     assert!(harness.query_by_label("Add User Now").is_some());
-    assert_eq!(login(&harness), "grace");
+    assert_eq!(login(&harness), "alan");
     assert!(harness.query_by_label("Enter a password.").is_some());
 }
 
@@ -69,7 +69,7 @@ fn a_new_account_that_was_added_leaves_the_dialog_closed() {
     let mut harness = page(unlocked());
     harness.get_by_label("Add User…").click();
     harness.run();
-    type_into(&mut harness, Role::TextInput, "User name", "grace");
+    type_into(&mut harness, Role::TextInput, "User name", "alan");
     type_into(&mut harness, Role::PasswordInput, "Password", "s3cret");
     type_into(
         &mut harness,
@@ -81,7 +81,7 @@ fn a_new_account_that_was_added_leaves_the_dialog_closed() {
     harness.run();
 
     let users = &mut harness.state_mut().fixture.services.users;
-    users.started(RunKind::NewAccount, name("grace"));
+    users.started(RunKind::NewAccount, name("alan"));
     users.plan_started();
     harness.run();
     harness

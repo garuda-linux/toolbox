@@ -51,9 +51,7 @@ pub fn edge_ring(ui: &Ui, response: &Response, rect: Rect, radius: u8) {
     );
 }
 
-/// Darkly's halo of a focused field (darklyhelper.cpp:1064-1066): a blur
-/// of 7 under the fill's inner edge, then a Highlight ring at 60 % one
-/// pixel out from `fill`, which the field's fill covers inside.
+/// Darkly's halo of a focused field (darklyhelper.cpp:1064-1066).
 pub(super) fn field_halo(tokens: &Tokens, fill: Rect, radius: u8) -> [Shape; 2] {
     let shadow = Shadow {
         offset: [0, 1],
@@ -74,10 +72,8 @@ pub(super) fn field_halo(tokens: &Tokens, fill: Rect, radius: u8) -> [Shape; 2] 
     ]
 }
 
-/// Darkly's focus of a list item that is not selected: a 1 px Highlight
-/// line along its bottom edge, drawn with no ring while it holds the
-/// focus from the keyboard (darklystyle.cpp:4183-4222). Darkly skips rows
-/// under 10 px wide.
+/// Darkly's focus line of an unselected list item (darklystyle.cpp:4183-4222),
+/// which Darkly skips under 10 px wide.
 pub fn item_focus_line(ui: &Ui, response: &Response, rect: Rect, selected: bool) {
     if selected || rect.width() < 10.0 || !focus_from_keyboard(ui, response) {
         return;

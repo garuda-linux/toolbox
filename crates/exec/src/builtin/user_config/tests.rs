@@ -2,6 +2,7 @@ use std::fs;
 use std::os::unix::fs::{PermissionsExt as _, symlink};
 use std::path::Path;
 
+use toolbox_fs::testing::as_person;
 use toolbox_plan::procedure::Builtin;
 use toolbox_plan::protocol::{Event, Outcome};
 use toolbox_plan::{ConfigWord, HomePath, StepId, Toggle, UserConfigEdit};
@@ -250,12 +251,9 @@ fn a_folder_is_no_ini_file() {
 
 #[test]
 fn a_write_failure_keeps_no_temporary_file() {
-    if rustix::process::geteuid().is_root() {
-        return;
-    }
-
     let home = tempfile::tempdir().unwrap();
 
+    fs::set_permissions(home.path(), fs::Permissions::from_mode(0o755)).unwrap();
     fs::create_dir_all(home.path().join(".config")).unwrap();
     fs::write(home.path().join(".config/kwinrc"), session_kwinrc_off()).unwrap();
     fs::set_permissions(
@@ -264,7 +262,7 @@ fn a_write_failure_keeps_no_temporary_file() {
     )
     .unwrap();
 
-    edit_user_config(home.path(), &kwin(), Toggle::On).unwrap_err();
+    as_person(|| edit_user_config(home.path(), &kwin(), Toggle::On)).unwrap_err();
 
     let left: Vec<_> = fs::read_dir(home.path().join(".config"))
         .unwrap()

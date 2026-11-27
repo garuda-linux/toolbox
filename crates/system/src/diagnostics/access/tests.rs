@@ -14,7 +14,7 @@ fn since_last_run() -> &'static str {
     LOG.get(LOG.find(LAST_RUN).unwrap()..).unwrap()
 }
 
-/// The Lima setting, and the same file with its 1 changed to 2 and to 0.
+/// The Lima setting, and its values 2 and 0.
 #[test]
 fn access_follows_the_kernel_setting_and_defaults_to_the_users_rights() {
     let machine = Machine::new();

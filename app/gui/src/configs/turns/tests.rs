@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
+use std::time::Duration;
 
 use parking_lot::Mutex;
 
@@ -43,9 +44,21 @@ fn a_turn_that_ends_without_its_work_still_lets_the_next_one_go() {
     let turns = Turns::default();
     let first = turns.take();
     let mut second = turns.take();
-
     drop(first);
-    second.wait();
+
+    let (done, waited) = std::sync::mpsc::channel();
+    thread::Builder::new()
+        .name("turns-test".to_owned())
+        .spawn(move || {
+            second.wait();
+            let _sent = done.send(());
+        })
+        .unwrap();
+
+    assert!(
+        waited.recv_timeout(Duration::from_secs(5)).is_ok(),
+        "the next turn still waits behind a turn that ended without its work"
+    );
 }
 
 #[test]
