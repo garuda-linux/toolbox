@@ -189,3 +189,46 @@ fn a_copy_parses_from_str_and_borrows_as_str() {
     assert_eq!(format!("{parsed:?}"), format!("{COPY:?}"));
     format!("{COPY}\0").parse::<EditCopy>().unwrap_err();
 }
+
+#[test]
+fn a_copy_refuses_its_path_with_the_reason() {
+    let folder = "/run/user/1000/garuda-toolbox/edit";
+    let climbing = format!("{folder}/../fstab");
+    let folder_only = format!("{folder}/");
+    let long = format!("/{}", "a".repeat(4096));
+
+    for (path, error) in [
+        (String::new(), InvalidEditCopy::Relative(String::new())),
+        (
+            "fstab".to_owned(),
+            InvalidEditCopy::Relative("fstab".to_owned()),
+        ),
+        (
+            format!("{folder}/fs\0"),
+            InvalidEditCopy::InvalidCharacter('\0'),
+        ),
+        (
+            format!("{folder}/fs\n"),
+            InvalidEditCopy::InvalidCharacter('\n'),
+        ),
+        (
+            climbing.clone(),
+            InvalidEditCopy::InvalidComponent(climbing),
+        ),
+        (
+            folder_only.clone(),
+            InvalidEditCopy::InvalidComponent(folder_only),
+        ),
+        (
+            "/etc/fstab".to_owned(),
+            InvalidEditCopy::OutsideEditFolder("/etc/fstab".to_owned()),
+        ),
+        (
+            format!("{folder}/sub/fstab"),
+            InvalidEditCopy::OutsideEditFolder(format!("{folder}/sub/fstab")),
+        ),
+        (long, InvalidEditCopy::TooLong { max: 4096 }),
+    ] {
+        assert_eq!(EditCopy::new(&path).unwrap_err(), error, "{path:?}");
+    }
+}

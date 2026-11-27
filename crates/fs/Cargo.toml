@@ -7,7 +7,11 @@ rust-version.workspace = true
 publish.workspace = true
 
 [dependencies]
-rustix = { workspace = true, features = ["fs"] }
+rustix = { workspace = true, features = ["fs", "thread"] }
+
+[features]
+# The helpers of the tests of the crates that replace files with this one.
+testing = []
 
 [dev-dependencies]
 tempfile.workspace = true

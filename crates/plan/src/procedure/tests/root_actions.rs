@@ -167,7 +167,7 @@ fn password() -> Password {
     reason = "one sample per variant, so a new variant adds its sample here"
 )]
 pub(super) fn every_root_action() -> Vec<RootAction> {
-    let user = || UserName::new("nico").unwrap();
+    let user = || UserName::new("ada").unwrap();
     let group = || GroupName::new("docker").unwrap();
     let units = || TargetList::new([UnitName::new("cups.socket").unwrap()]).unwrap();
     let packages = || TargetList::new([PackageName::new("mpv").unwrap()]).unwrap();
@@ -294,12 +294,12 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         },
         RootAction::SetFullName {
             user: user(),
-            full_name: FullName::new("Nico").unwrap(),
+            full_name: FullName::new("Ada").unwrap(),
         },
         RootAction::SetHomeFolder {
             user: user(),
             change: HomeChange {
-                home: HomeDirectory::new("/home/nico/moved").unwrap(),
+                home: HomeDirectory::new("/home/ada/moved").unwrap(),
                 move_files: true,
             },
         },
@@ -378,4 +378,15 @@ fn every_root_action_variant_has_a_sample() {
     expected.sort_unstable();
 
     assert_eq!(seen, expected);
+}
+
+/// The hand-written name of each sample is the `kind` serde writes for it,
+/// the one the helper reads back.
+#[test]
+fn every_sample_is_written_under_its_kind_name() {
+    for action in every_root_action() {
+        let json = serde_json::to_value(&action).unwrap();
+
+        assert_eq!(json["kind"], kind(&action), "{action:?}");
+    }
 }

@@ -51,7 +51,12 @@ fn pump(mut master: File, sender: &SyncSender<Chunk>) {
                 continue;
             }
             Err(error) => {
-                tracing::trace!("terminal closed: {error}");
+                if Errno::from_io_error(&error) == Some(Errno::IO) {
+                    tracing::trace!("terminal closed: {error}");
+                } else {
+                    tracing::warn!("terminal output stopped: {error}");
+                }
+
                 break;
             }
         };

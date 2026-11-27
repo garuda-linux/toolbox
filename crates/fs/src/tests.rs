@@ -6,6 +6,7 @@ use std::path::Path;
 use rustix::fs::{Mode, OFlags};
 
 use super::{Owner, Permissions, Replace, replace, replace_at};
+use crate::testing::as_person;
 
 fn names(dir: &Path) -> Vec<String> {
     let mut names: Vec<String> = fs::read_dir(dir)
@@ -214,26 +215,29 @@ fn a_folder_that_cannot_be_read_takes_the_file_but_not_the_sync() {
     let root = tempfile::tempdir().unwrap();
     let folder = root.path().join("locked");
 
+    fs::set_permissions(root.path(), fs::Permissions::from_mode(0o755)).unwrap();
     fs::create_dir_all(&folder).unwrap();
     fs::set_permissions(&folder, fs::Permissions::from_mode(0o300)).unwrap();
 
-    // Root opens any folder, so nothing fails there.
-    let opens = fs::File::open(&folder).is_ok();
-    let replaced = replace(
-        &folder.join("settings.toml"),
-        b"new",
-        &Replace::new(Permissions::Exactly(0o644)),
-    );
+    let (opens, replaced) = as_person(|| {
+        (
+            fs::File::open(&folder).is_ok(),
+            replace(
+                &folder.join("settings.toml"),
+                b"new",
+                &Replace::new(Permissions::Exactly(0o644)),
+            ),
+        )
+    });
 
     fs::set_permissions(&folder, fs::Permissions::from_mode(0o700)).unwrap();
 
-    if !opens {
-        replaced.unwrap().synced().unwrap_err();
-        assert_eq!(
-            fs::read_to_string(folder.join("settings.toml")).unwrap(),
-            "new"
-        );
-    }
+    assert!(!opens);
+    replaced.unwrap().synced().unwrap_err();
+    assert_eq!(
+        fs::read_to_string(folder.join("settings.toml")).unwrap(),
+        "new"
+    );
 }
 
 #[test]

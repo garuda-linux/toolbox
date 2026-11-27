@@ -1,10 +1,7 @@
 //! Text from outside (a server's answer, a package description, a file a
-//! user wrote) shown or written as it is, without what could change how
-//! the text around it reads.
-//!
-//! [`OutsideText`] is the only type that marks such text. [`plain`] and
-//! [`OutsideText::keep_lines`] make it, so a field typed `OutsideText`
-//! cannot hold a raw string by accident.
+//! user wrote). [`OutsideText`] is the only type that marks it, and only
+//! [`plain`] and [`OutsideText::keep_lines`] make one, so a field typed
+//! `OutsideText` cannot hold a raw string by accident.
 
 #[cfg(test)]
 mod tests;
@@ -13,12 +10,8 @@ mod outside;
 
 pub use self::outside::OutsideText;
 
-/// Whether `character` must not reach the display.
-///
-/// Controls (ESC among them), bidi overrides, isolates and marks,
-/// zero-width characters, the byte order mark and the line and paragraph
-/// separators each change how the text around them reads instead of
-/// showing themselves.
+/// Whether `character` must not reach the display, as it would change how
+/// the text around it reads.
 pub fn is_hidden(character: char) -> bool {
     character.is_control()
         || matches!(

@@ -108,7 +108,6 @@ impl Request {
         let malformed = |error: DecodeError| RequestError::Malformed(error.to_string());
 
         // The version first: another version's actions may be unknown here.
-        // Decoding twice costs milliseconds, so a `RawValue` pass is not worth it.
         let Head { version } = decode(line).map_err(malformed)?;
 
         if version != PROTOCOL_VERSION {

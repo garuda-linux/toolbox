@@ -10,7 +10,7 @@ fn password() -> Password {
 #[test]
 fn a_password_never_prints_itself() {
     let password = password();
-    let user = UserName::new("nico").unwrap();
+    let user = UserName::new("ada").unwrap();
 
     assert_eq!(format!("{password:?}"), "Password(<redacted>)");
     assert_eq!(
@@ -66,11 +66,11 @@ fn spaces_colons_and_other_scripts_are_fine() {
 
 #[test]
 fn chpasswd_reads_one_line_of_user_and_password() {
-    let user = UserName::new("nico").unwrap();
+    let user = UserName::new("ada").unwrap();
 
     assert_eq!(
         password().chpasswd_input(&user).expose(),
-        format!("nico:{SECRET}\n").as_bytes()
+        format!("ada:{SECRET}\n").as_bytes()
     );
 }
 
@@ -121,12 +121,12 @@ fn a_secret_line_error_does_not_quote_the_line() {
 
 #[test]
 fn scrubbing_removes_the_secret_from_program_output() {
-    let user = UserName::new("nico").unwrap();
+    let user = UserName::new("ada").unwrap();
     let input = password().chpasswd_input(&user);
 
     assert_eq!(
-        input.scrub(&format!("chpasswd: bad line nico:{SECRET}\r\n")),
-        "chpasswd: bad line nico:<redacted>\r\n"
+        input.scrub(&format!("chpasswd: bad line ada:{SECRET}\r\n")),
+        "chpasswd: bad line ada:<redacted>\r\n"
     );
     assert_eq!(input.scrub("nothing to hide"), "nothing to hide");
 }

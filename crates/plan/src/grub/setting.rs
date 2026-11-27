@@ -28,7 +28,6 @@ const SUBMENUS_OFF: [&str; 3] = ["y", "yes", "true"];
 /// picture there.
 const MENU_PICTURE: &str = "GRUB_MENU_PICTURE";
 
-/// No other line of the file is touched.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum GrubKey {

@@ -203,17 +203,17 @@ fn units_are_enabled_and_started_together() {
 
 #[test]
 fn group_membership_uses_gpasswd() {
-    let user = UserName::new("nico").unwrap();
+    let user = UserName::new("ada").unwrap();
     let group = GroupName::new("docker").unwrap();
     let add = RootAction::AddToGroup {
         user: user.clone(),
         group: group.clone(),
     };
 
-    assert_eq!(shown(&add), ["gpasswd -a nico -- docker"]);
+    assert_eq!(shown(&add), ["gpasswd -a ada -- docker"]);
     assert_eq!(
         shown(&RootAction::RemoveFromGroup { user, group }),
-        ["gpasswd -d nico -- docker"]
+        ["gpasswd -d ada -- docker"]
     );
 }
 

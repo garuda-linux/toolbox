@@ -1,5 +1,4 @@
-//! This is all the root helper hands out of `grub.cfg`, which may hold a password
-//! hash: titles and ids, never its text.
+//! The part of `grub.cfg` the root helper hands out: titles and ids.
 
 mod branch;
 #[cfg(test)]

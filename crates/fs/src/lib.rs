@@ -1,12 +1,11 @@
 //! Replacing a file in one step: a temporary file beside the target,
-//! written and synced, then renamed over it. A crash leaves the old file
-//! or the whole new one, never half of one.
-//!
-//! [`replace_at`] works below an open folder, so a folder swapped for a
-//! symlink after it was opened cannot redirect the write. The root helper
-//! uses it with folders opened without following links. [`replace`] is
-//! the form for the user's own files, which follows links on the way.
+//! written, synced and renamed over it, so a crash leaves the old file or the
+//! whole new one. [`replace_at`] works below an open folder, so a symlink
+//! swapped in for the folder cannot redirect the write. [`replace`] follows
+//! links on the way.
 
+#[cfg(any(test, feature = "testing"))]
+pub mod testing;
 #[cfg(test)]
 mod tests;
 

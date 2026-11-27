@@ -2,8 +2,6 @@
 //! garuda-update sources. A switch is on when its last uncommented
 //! assignment is `KEY=1`. Writing one touches only the lines of its key,
 //! so comments and other settings stay byte for byte.
-//! The probe and the helper both use this module, so what one writes the
-//! other reads back the same way.
 
 #[cfg(test)]
 mod tests;

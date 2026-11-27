@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::mpsc::RecvTimeoutError;
 use std::time::{Duration, Instant};
 use std::{io, thread};
@@ -139,6 +139,28 @@ fn a_cancelled_program_dies_by_its_signal() {
     assert_eq!(exit, Some(Exit::Signal(2)), "SIGINT ended it");
 }
 
+/// The `/proc` entry of the background child whose id the program prints first.
+fn printed_child(session: &Session, deadline: Instant) -> PathBuf {
+    let mut out = String::new();
+
+    read_while(session, &mut out, deadline, |out| {
+        plain_lines(out).is_empty()
+    });
+
+    plain_lines(&out)
+        .first()
+        .map(|id| Path::new("/proc").join(id.trim()))
+        .unwrap_or_default()
+}
+
+fn stops_by(proc_entry: &Path, deadline: Instant) -> bool {
+    while is_alive(proc_entry) && Instant::now() < deadline {
+        thread::sleep(Duration::from_millis(20));
+    }
+
+    !is_alive(proc_entry)
+}
+
 #[test]
 fn a_cancel_reaches_the_programs_children() {
     // The child ignores SIGINT and the SIGHUP its dying session leader
@@ -146,27 +168,33 @@ fn a_cancel_reaches_the_programs_children() {
     let mut session =
         Session::spawn(&shell("(trap '' INT HUP; exec sleep 30) & echo $!; wait")).unwrap();
 
-    let mut out = String::new();
     let deadline = Instant::now() + PATIENCE;
-
-    read_while(&session, &mut out, deadline, |out| {
-        plain_lines(out).is_empty()
-    });
-
-    let child = plain_lines(&out)[0].trim().to_owned();
-    let proc_entry = Path::new("/proc").join(&child);
-    assert!(proc_entry.exists(), "sleep {child} runs");
+    let child = printed_child(&session, deadline);
+    assert!(child.exists(), "the background sleep runs");
 
     session.cancel(Instant::now()).unwrap();
     assert!(wait_exit(&mut session, deadline).unwrap().is_some());
 
-    while is_alive(&proc_entry) && Instant::now() < deadline {
-        thread::sleep(Duration::from_millis(20));
-    }
+    assert!(
+        stops_by(&child, deadline),
+        "the background sleep was stopped"
+    );
+}
+
+#[test]
+fn what_a_finished_program_left_behind_is_stopped() {
+    let mut session = Session::spawn(&shell("(trap '' INT HUP; exec sleep 30) & echo $!")).unwrap();
+    let deadline = Instant::now() + PATIENCE;
+    let child = printed_child(&session, deadline);
+
+    assert_eq!(
+        wait_exit(&mut session, deadline).unwrap(),
+        Some(Exit::Code(0))
+    );
 
     assert!(
-        !is_alive(&proc_entry),
-        "the background sleep {child} was stopped"
+        stops_by(&child, deadline),
+        "the background sleep was stopped"
     );
 }
 

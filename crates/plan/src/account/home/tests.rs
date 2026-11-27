@@ -1,36 +1,66 @@
 use super::{
-    HOME_ROOTS, HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID,
-    MAX_HOME_BYTES, NewHome, UserId,
+    HomeChange, HomeDirectory, InvalidHomeDirectory, InvalidUserId, LAST_USER_ID, MAX_HOME_BYTES,
+    NewHome, UserId,
 };
 use crate::account::tests::PASSWD;
 
-/// The `nobody` (65534) of the passwd is above [`LAST_USER_ID`]. Root's
-/// `/root` and mail's `/var/spool/mail` lie outside the [`HOME_ROOTS`].
+/// Every line of the captured passwd: its user id, its home and the
+/// outcome of each, in the order of the file.
+const CAPTURED: [(u32, &str, Result<&str, InvalidHomeDirectory>, bool); 27] = [
+    (0, "/root", Err(InvalidHomeDirectory::OutsideRoots), false),
+    (1, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (2, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (
+        8,
+        "/var/spool/mail",
+        Err(InvalidHomeDirectory::OutsideRoots),
+        true,
+    ),
+    (14, "/srv/ftp", Ok("/srv/ftp"), true),
+    (33, "/srv/http", Ok("/srv/http"), true),
+    (
+        0xFFFE,
+        "/",
+        Err(InvalidHomeDirectory::InvalidComponent),
+        false,
+    ),
+    (81, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (979, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (978, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (977, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (976, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (975, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (974, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (973, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (972, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (971, "/var/lib/libuuid", Ok("/var/lib/libuuid"), true),
+    (970, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (969, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (40, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (968, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (32, "/var/lib/rpcbind", Ok("/var/lib/rpcbind"), true),
+    (34, "/var/lib/nfs", Ok("/var/lib/nfs"), true),
+    (1000, "/home/user.guest", Ok("/home/user.guest"), true),
+    (967, "/", Err(InvalidHomeDirectory::InvalidComponent), true),
+    (1001, "/home/guest", Ok("/home/guest"), true),
+    (1002, "/home/nopass", Ok("/home/nopass"), true),
+];
+
 #[test]
-fn real_home_folders_below_the_roots_pass_and_user_ids_stop_at_the_last_one() {
-    for line in PASSWD.lines() {
+fn captured_passwd_homes_and_user_ids_have_their_outcome() {
+    assert_eq!(PASSWD.lines().count(), CAPTURED.len());
+
+    for (line, (uid, home, outcome, uid_ok)) in PASSWD.lines().zip(CAPTURED) {
         let fields: Vec<&str> = line.split(':').collect();
-        let home = fields[5];
 
-        match home {
-            "/" => {}
-            _ if HOME_ROOTS.iter().any(|root| home.starts_with(root)) => {
-                assert_eq!(HomeDirectory::new(home).unwrap().as_str(), home);
-            }
-            _ => assert_eq!(
-                HomeDirectory::new(home),
-                Err(InvalidHomeDirectory::OutsideRoots),
-                "{line}"
-            ),
-        }
-
-        let id: u32 = fields[2].parse().unwrap();
-
+        assert_eq!(fields[2], uid.to_string(), "{line}");
+        assert_eq!(fields[5], home, "{line}");
         assert_eq!(
-            UserId::new(id).is_ok(),
-            id != 0 && id <= LAST_USER_ID,
+            HomeDirectory::new(home).map(|home| home.as_str().to_owned()),
+            outcome.map(str::to_owned),
             "{line}"
         );
+        assert_eq!(UserId::new(uid).is_ok(), uid_ok, "{line}");
     }
 }
 

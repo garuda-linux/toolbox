@@ -64,4 +64,8 @@ impl Name<LoaderDefaultRule> {
             rule: std::marker::PhantomData,
         }
     }
+
+    pub fn is_saved(&self) -> bool {
+        self.value == "@saved"
+    }
 }

@@ -22,7 +22,7 @@ fn group(name: &str) -> GroupName {
 
 fn set_password() -> RootAction {
     RootAction::SetPassword {
-        user: user("nico"),
+        user: user("ada"),
         password: Some(Password::new(SECRET.to_owned()).unwrap()),
     }
 }
@@ -95,7 +95,7 @@ fn the_password_is_fed_to_chpasswd_and_never_an_argument() {
     assert_eq!(command.arguments(), Vec::<String>::new());
     assert_eq!(
         input.as_ref().unwrap().expose(),
-        format!("nico:{SECRET}\n").as_bytes()
+        format!("ada:{SECRET}\n").as_bytes()
     );
 }
 
@@ -127,7 +127,7 @@ fn the_password_shows_in_no_text_form_of_the_action() {
 
     assert_eq!(
         serde_json::to_string(&action).unwrap(),
-        "{\"kind\":\"set-password\",\"user\":\"nico\"}"
+        "{\"kind\":\"set-password\",\"user\":\"ada\"}"
     );
 }
 
@@ -302,7 +302,7 @@ fn account_actions_refuse_bad_names_when_decoded() {
 /// A secret travels on its own line, never inside the request.
 #[test]
 fn a_password_field_in_a_request_is_refused() {
-    let line = r#"{"kind":"set-password","user":"nico","password":"x"}"#;
+    let line = r#"{"kind":"set-password","user":"ada","password":"x"}"#;
 
     serde_json::from_str::<RootAction>(line).unwrap_err();
 }

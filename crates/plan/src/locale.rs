@@ -1,6 +1,5 @@
 //! Pure text functions without I/O. Enabling or disabling one entry touches only its line,
-//! so comments and every other entry stay byte for byte. The probe and the helper
-//! both use this module, so what one writes the other reads back the same way.
+//! so comments and every other entry stay byte for byte.
 
 #[cfg(test)]
 mod tests;

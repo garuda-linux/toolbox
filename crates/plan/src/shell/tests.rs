@@ -59,6 +59,22 @@ fn a_shell_path_has_no_separator_space_or_control_character() {
 }
 
 #[test]
+fn a_shell_path_refuses_each_hidden_character_by_name() {
+    for (path, character) in [
+        ("/bin/sh\0", '\0'),
+        ("/bin/\tsh", '\t'),
+        ("/bin/sh\u{7f}", '\u{7f}'),
+        ("/bin/\u{a0}sh", '\u{a0}'),
+    ] {
+        assert_eq!(
+            ShellPath::new(path).unwrap_err(),
+            InvalidShellPath::InvalidCharacter(character),
+            "{path:?}"
+        );
+    }
+}
+
+#[test]
 fn a_shell_path_has_a_length_limit() {
     let long = format!("/{}", "a".repeat(MAX_SHELL_PATH_BYTES));
 

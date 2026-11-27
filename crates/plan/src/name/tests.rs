@@ -1,4 +1,5 @@
 mod build_run;
+mod refusals;
 
 use proptest::prelude::*;
 
@@ -89,13 +90,13 @@ fn wheel_and_sudo_are_the_admin_groups() {
 
 #[test]
 fn user_and_group_names_follow_shadow_rules() {
-    UserName::new("nico").unwrap();
+    UserName::new("ada").unwrap();
     UserName::new("_apt").unwrap();
     GroupName::new("wheel").unwrap();
     GroupName::new("docker-users").unwrap();
     assert_eq!(
-        UserName::new("Nico").unwrap_err().reason(),
-        Reason::InvalidStart('N')
+        UserName::new("Ada").unwrap_err().reason(),
+        Reason::InvalidStart('A')
     );
     assert_eq!(
         UserName::new("1abc").unwrap_err().reason(),

@@ -1,7 +1,10 @@
 mod cleanup;
+mod runs;
 mod sdboot;
 mod secrets;
 mod trust;
+
+use runs::every_run;
 
 use super::LoaderRefusal;
 use crate::procedure::{Builtin, Command, InitramfsRoot, Invocation, Program};
@@ -226,27 +229,6 @@ fn fed(invocation: &Invocation) -> Option<&SecretInput> {
     } else {
         None
     }
-}
-
-/// Every repair as the helper runs it on each boot loader, where it fits.
-fn every_run() -> Vec<(RootAction, Vec<Invocation>)> {
-    let loaders = [
-        InstalledLoader::Grub,
-        InstalledLoader::SystemdBoot {
-            esp: Some(crate::EspPlace::Efi),
-        },
-    ];
-
-    every_repair()
-        .into_iter()
-        .flat_map(|action| {
-            loaders
-                .into_iter()
-                .filter_map(|loader| as_run(&action, loader).ok())
-                .map(|steps| (action.clone(), steps))
-                .collect::<Vec<_>>()
-        })
-        .collect()
 }
 
 /// The root and the binds are undone in reverse order. The boot loader's

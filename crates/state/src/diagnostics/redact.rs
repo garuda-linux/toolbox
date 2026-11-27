@@ -84,8 +84,11 @@ impl Redacted {
     /// stays.
     fn word(&mut self, value: &str, placeholder: &str, kind: Kind) {
         let source = format!(r"\b{}\b", regex::escape(value));
+
+        // A plain match also redacts inside longer words, which is safer
+        // than leaving the value in the report.
         let Ok(word) = Regex::new(&source) else {
-            return;
+            return self.literal(value, placeholder, kind);
         };
 
         let found = word.find_iter(&self.text).count();

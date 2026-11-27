@@ -172,10 +172,10 @@ impl Session {
     /// Call it in a loop with [`Self::poll_cancel`], a blocking wait could not cancel.
     ///
     /// The leader is reaped only after the group got its kill. A reaped
-    /// leader frees its group id, which another program may take, so a
-    /// cancel kills the group while the leader still waits as a zombie.
-    /// Children that outlive the program (a hook ignoring SIGINT and SIGHUP)
-    /// are killed here.
+    /// leader frees its group id, which another program may take, so the
+    /// group is killed while the leader still waits as a zombie. Children
+    /// that outlive the program (a hook ignoring SIGINT and SIGHUP) are
+    /// killed here.
     ///
     /// # Errors
     ///
@@ -189,9 +189,7 @@ impl Session {
             return Ok(None);
         }
 
-        if self.is_cancelled()
-            && let Err(error) = self.signal_group(Signal::Kill)
-        {
+        if let Err(error) = self.signal_group(Signal::Kill) {
             tracing::warn!("cannot kill what is left of {}: {error}", self.id());
         }
 
@@ -212,7 +210,6 @@ impl Drop for Session {
             tracing::warn!("cannot kill the abandoned program {}: {error}", self.id());
         }
 
-        // Reaping keeps no zombie behind.
         self.child.wait().ok();
     }
 }

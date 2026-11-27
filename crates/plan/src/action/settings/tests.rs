@@ -5,7 +5,7 @@ use crate::{DnsProvider, GarudaUpdateFlag, RootAction, ShellPath, UserName, Wifi
 #[test]
 fn set_shell_checks_the_list_then_runs_chsh_with_a_separator() {
     let action = RootAction::SetShell {
-        user: UserName::new("nico").unwrap(),
+        user: UserName::new("ada").unwrap(),
         shell: ShellPath::new("/usr/bin/fish").unwrap(),
     };
 
@@ -15,19 +15,14 @@ fn set_shell_checks_the_list_then_runs_chsh_with_a_separator() {
             Invocation::Builtin(Builtin::RequireListedShell(
                 ShellPath::new("/usr/bin/fish").unwrap()
             )),
-            Invocation::Run(Command::new(Program::Chsh).args([
-                "-s",
-                "/usr/bin/fish",
-                "--",
-                "nico"
-            ])),
+            Invocation::Run(Command::new(Program::Chsh).args(["-s", "/usr/bin/fish", "--", "ada"])),
         ]
     );
     assert_eq!(
         shown(&action),
         [
             "check that /usr/bin/fish is listed in /etc/shells",
-            "chsh -s /usr/bin/fish -- nico"
+            "chsh -s /usr/bin/fish -- ada"
         ]
     );
 }
@@ -155,7 +150,7 @@ fn a_garuda_update_switch_is_one_builtin_edit() {
 fn settings_actions_round_trip_through_json() {
     let actions = [
         RootAction::SetShell {
-            user: UserName::new("nico").unwrap(),
+            user: UserName::new("ada").unwrap(),
             shell: ShellPath::new("/usr/bin/zsh").unwrap(),
         },
         RootAction::SetDns {
@@ -179,9 +174,9 @@ fn settings_actions_round_trip_through_json() {
 
 #[test]
 fn a_shell_outside_the_rules_is_refused_while_decoding() {
-    let json = r#"{"kind":"set-shell","user":"nico","shell":"/tmp/../bin/evil"}"#;
+    let json = r#"{"kind":"set-shell","user":"ada","shell":"/tmp/../bin/evil"}"#;
     serde_json::from_str::<RootAction>(json).unwrap_err();
 
-    let invalid_user = r#"{"kind":"set-shell","user":"-nico","shell":"/usr/bin/zsh"}"#;
+    let invalid_user = r#"{"kind":"set-shell","user":"-ada","shell":"/usr/bin/zsh"}"#;
     serde_json::from_str::<RootAction>(invalid_user).unwrap_err();
 }

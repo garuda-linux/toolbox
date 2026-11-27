@@ -91,12 +91,27 @@ fn inserted_values_get_stable_numbered_placeholders() {
 #[test]
 fn a_name_inside_a_word_stays() {
     let known = Known {
-        user: Some("nico".to_owned()),
+        user: Some("ada".to_owned()),
         ..Known::default()
     };
 
-    let redacted = redact("unicode for nico", &known);
+    let redacted = redact("unicode for ada", &known);
 
     assert_eq!(redacted.text(), "unicode for <user>");
     assert_eq!(redacted.total(), 1);
+}
+
+/// A value too large for a pattern is still redacted, as a plain match.
+#[test]
+fn a_name_too_large_for_a_pattern_is_still_redacted() {
+    let user = "a".repeat(1 << 22);
+    let known = Known {
+        user: Some(user.clone()),
+        ..Known::default()
+    };
+
+    let redacted = redact(&format!("login {user} done"), &known);
+
+    assert_eq!(redacted.text(), "login <user> done");
+    assert_eq!(redacted.count(Kind::User), 1);
 }

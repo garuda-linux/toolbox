@@ -12,7 +12,7 @@ const NEVER_A_DEVICE: [&str; 34] = [
     "/dev",
     "/dev/",
     "/etc/passwd",
-    "/home/nico/disk.img",
+    "/home/ada/disk.img",
     "/dev/../etc/shadow",
     "/dev/sda/../sdb",
     "/dev/./sda",

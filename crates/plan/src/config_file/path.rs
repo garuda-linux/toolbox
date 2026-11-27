@@ -116,12 +116,8 @@ impl ConfigFilePath {
             return Err(InvalidConfigFilePath::Relative(value));
         };
 
-        // Components become shell words and file names, so only printable
-        // ASCII survives: no DEL and no wider Unicode.
-        if let Some(character) = value
-            .chars()
-            .find(|character| *character == '\u{7f}' || !character.is_ascii())
-        {
+        // Components become shell words and file names, so only ASCII survives.
+        if let Some(character) = value.chars().find(|character| !character.is_ascii()) {
             return Err(InvalidConfigFilePath::InvalidCharacter(character));
         }
 

@@ -34,7 +34,7 @@ fn every_full_name_of_a_real_passwd_passes() {
 fn full_names_take_ordinary_names_and_the_empty_one() {
     for name in [
         "",
-        "Nico Jensch",
+        "Ada Lovelace",
         "José Ñandú",
         "王小明",
         "O'Brien (work)",
@@ -66,8 +66,8 @@ fn full_names_refuse_what_would_break_passwd_or_gecos() {
     }
 
     assert_eq!(FullName::new("-c"), Err(InvalidFullName::LeadingDash));
-    assert_eq!(FullName::new(" Nico"), Err(InvalidFullName::OuterBlank));
-    assert_eq!(FullName::new("Nico "), Err(InvalidFullName::OuterBlank));
+    assert_eq!(FullName::new(" Ada"), Err(InvalidFullName::OuterBlank));
+    assert_eq!(FullName::new("Ada "), Err(InvalidFullName::OuterBlank));
     assert_eq!(
         FullName::new("x".repeat(MAX_FULL_NAME_BYTES + 1)),
         Err(InvalidFullName::TooLong {
@@ -101,13 +101,13 @@ fn a_full_name_hides_no_character() {
 #[test]
 fn full_names_are_checked_when_decoded() {
     assert_eq!(
-        serde_json::from_str::<FullName>("\"Nico Jensch\"").unwrap(),
-        FullName::new("Nico Jensch").unwrap()
+        serde_json::from_str::<FullName>("\"Ada Lovelace\"").unwrap(),
+        FullName::new("Ada Lovelace").unwrap()
     );
     serde_json::from_str::<FullName>("\"a:b\"").unwrap_err();
     assert_eq!(
-        serde_json::to_string(&FullName::new("Nico").unwrap()).unwrap(),
-        "\"Nico\""
+        serde_json::to_string(&FullName::new("Ada").unwrap()).unwrap(),
+        "\"Ada\""
     );
 }
 

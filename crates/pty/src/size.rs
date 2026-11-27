@@ -18,8 +18,7 @@ const MIN_ROWS: u16 = 10;
 const MAX_ROWS: u16 = 200;
 
 /// Columns and rows in cells. A local type, so `toolbox-pty` links no
-/// `toolbox-plan`: the protocol's own size stays where the helper reads
-/// it. Convert with [`From`], which the orphan rule allows for tuples.
+/// `toolbox-plan`: the protocol's own size stays where the helper reads it.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct TerminalSize {
     pub columns: u16,
