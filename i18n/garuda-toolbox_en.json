@@ -4194,6 +4194,10 @@
     "changes-wait-aur": {
       "string": "Apply waits for the package list of the AUR. The Packages page says when it cannot be read."
     },
+    "changes-wait-orders": {
+      "string": "Apply waits for the build orders of the queued AUR packages. Take those packages out of the queue to apply the rest.",
+      "developer_comment": "Why Apply is disabled while a queued AUR build has no build order yet."
+    },
     "changes-wait-running": {
       "string": "Apply waits until the changes being applied are done."
     },

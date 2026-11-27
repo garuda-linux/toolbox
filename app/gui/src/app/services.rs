@@ -186,7 +186,8 @@ impl App {
 
     /// Why Apply waits, as the id of its text. A guard that has not
     /// checked a restored change fails closed. A read that failed says
-    /// so, as the Changes popover then offers to read it again.
+    /// so, as the Changes popover then offers to read it again. A queued
+    /// AUR build without its build order holds Apply until it is taken out.
     pub(super) fn apply_held(&self) -> Option<&'static str> {
         if self.console.running() {
             return Some("changes-wait-running");
@@ -196,28 +197,32 @@ impl App {
             return Some("changes-wait-read");
         }
 
-        self.queue.holding().next().map(|guard| match guard {
-            Guard::UserLocks => match self.services.users.locks() {
-                Locks::Refused(_) | Locks::Unknown => "changes-unread-locks",
-                Locks::NotAsked | Locks::Loading | Locks::Known(_) => "changes-wait-locks",
-            },
-            Guard::AurPackages => match self.services.packages.aur() {
-                Read::Failed => "changes-unread-aur",
-                Read::Loading | Read::Unavailable | Read::Known(_) => "changes-wait-aur",
-            },
-            Guard::Users
-            | Guard::Memberships
-            | Guard::Kernels
-            | Guard::Locales
-            | Guard::LanguagePacks
-            | Guard::PackageRemovals
-            | Guard::Plymouth
-            | Guard::Grub
-            | Guard::ModuleBlacklist
-            | Guard::NewGroups
-            | Guard::Hblock
-            | Guard::WifiBackend => "changes-wait-read",
-        })
+        self.queue
+            .holding()
+            .next()
+            .map(|guard| match guard {
+                Guard::UserLocks => match self.services.users.locks() {
+                    Locks::Refused(_) | Locks::Unknown => "changes-unread-locks",
+                    Locks::NotAsked | Locks::Loading | Locks::Known(_) => "changes-wait-locks",
+                },
+                Guard::AurPackages => match self.services.packages.aur() {
+                    Read::Failed => "changes-unread-aur",
+                    Read::Loading | Read::Unavailable | Read::Known(_) => "changes-wait-aur",
+                },
+                Guard::Users
+                | Guard::Memberships
+                | Guard::Kernels
+                | Guard::Locales
+                | Guard::LanguagePacks
+                | Guard::PackageRemovals
+                | Guard::Plymouth
+                | Guard::Grub
+                | Guard::ModuleBlacklist
+                | Guard::NewGroups
+                | Guard::Hblock
+                | Guard::WifiBackend => "changes-wait-read",
+            })
+            .or_else(|| self.queue.ready().is_err().then_some("changes-wait-orders"))
     }
 
     /// No probe reads the lock flags, the AUR's names or the loader's

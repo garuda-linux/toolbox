@@ -1,3 +1,4 @@
+mod build_order;
 mod footer;
 mod popover;
 

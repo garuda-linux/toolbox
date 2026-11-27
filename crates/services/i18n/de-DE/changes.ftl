@@ -37,6 +37,7 @@ change-unfinished = Nicht abgeschlossen
 changes-wait-read = Übernehmen wartet, bis das System gelesen ist.
 changes-wait-locks = Übernehmen wartet auf den Sperrstatus der Konten. Die Seite Benutzer und Gruppen meldet, wenn er nicht gelesen werden kann.
 changes-wait-aur = Übernehmen wartet auf die Paketliste des AUR. Die Seite Pakete meldet, wenn sie nicht gelesen werden kann.
+changes-wait-orders = Übernehmen wartet auf die Build-Reihenfolgen der vorgemerkten AUR-Pakete. Nimm diese Pakete aus den vorgemerkten Änderungen, um den Rest zu übernehmen.
 changes-wait-running = Übernehmen wartet, bis die laufenden Änderungen abgeschlossen sind.
 changes-unread-locks = Übernehmen wartet: Der Sperrstatus der Konten konnte nicht gelesen werden.
 changes-unread-aur = Übernehmen wartet: Die Paketliste des AUR konnte nicht gelesen werden.

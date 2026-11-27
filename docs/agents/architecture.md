@@ -48,6 +48,15 @@
   `paru` and `waiting` are saved or sent. A `built` form from a file or
   the bus comes back as `Waiting`, so the app's own order read is the only
   way an order becomes a `Built` wish.
+- Until the review step exists, a `Waiting` wish holds Apply. `may_plan`
+  (`crates/core/src/features.rs`) refuses with `Refusal::OrderWaits` while
+  `waiting_orders` names one, and `Queue::ready` and `queue apply`
+  (`crates/commands/src/queue/ready.rs`) both call it. One such wish holds
+  the whole queue, Paru wishes included. Nothing turns a `Waiting` wish into
+  a `Built` one in the app or the CLI. `toolbox_services::aur_orders`
+  (`read_orders`) reads the orders of one run from an `AurOrderSource` and
+  the route check's answer. It blocks on paru, so a caller runs it in
+  `spawn_blocking`, and nothing calls it yet.
 
 ## Names
 
@@ -304,7 +313,10 @@ only `/usr/share/garuda-toolbox/catalog` and never the source tree.
 - A guard that waits fails closed: `Queue::plan` refuses with
   `Refusal::GuardsWaiting` while `Unchecked::holding` names a guard with
   a queued change of one of its `Guard::domains`. Apply stays disabled
-  and says why (`changes-wait-*`).
+  and says why (`changes-wait-*`). `Queue::plan` also refuses with
+  `Refusal::OrderWaits` while an AUR build waits for its order (the
+  `changes-wait-orders` hold). Both come from `features::may_plan`, so
+  `Queue::ready` and the CLI's `ready::checked` share one rule.
 - No probe reads `AccountLockFlags`, the AUR names or `CurrentLoader`.
   `toolbox_services::unprobed` joins them: `Needs::of` names what a queue
   waits for (a held guard's part, the loader while a loader change is

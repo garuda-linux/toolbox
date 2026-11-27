@@ -12,7 +12,7 @@ mod tests;
 use std::path::PathBuf;
 
 use tokio::runtime::Handle;
-use toolbox_core::features::{Guard, Refusal, Unchecked};
+use toolbox_core::features::{Guard, Refusal, Unchecked, may_plan};
 use toolbox_core::{ChangeSet, ChangeView, Domains, Owners, SavedChanges, Snapshot};
 use toolbox_plan::{Plan, PlannedAction, StepId};
 
@@ -170,9 +170,10 @@ impl Queue {
 
     /// # Errors
     ///
-    /// While a page's guard has not checked a restored change yet.
+    /// While a page's guard has not checked a restored change yet, or while
+    /// a queued AUR build has no build order yet.
     pub fn ready(&self) -> Result<(), Refusal> {
-        self.unchecked.ready(&self.changes)
+        may_plan(&self.unchecked, &self.changes)
     }
 
     /// The guards that hold a restored change back until the snapshot

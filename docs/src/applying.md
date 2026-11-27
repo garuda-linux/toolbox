@@ -43,6 +43,10 @@ the package list of the AUR. The app reads both by itself. While it
 waits, **Apply** is greyed out and its tooltip says what it waits for. If
 that part cannot be read, remove the change from the list.
 
+A queued AUR build whose build order is not read yet holds **Apply** as
+well, with the same tooltip. Take that build out of the list to apply the
+rest.
+
 ## Apply
 
 1. Click **Apply** in the footer, or **Apply 3 changes** at the end of the

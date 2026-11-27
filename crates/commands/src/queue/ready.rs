@@ -12,8 +12,9 @@ use toolbox_aur::AurSource;
 use toolbox_cli::Exit;
 use toolbox_core::domains::{AccountLockFlags, CurrentLoader};
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
-use toolbox_core::features::{Guard, Refusal, Unchecked};
+use toolbox_core::features::{Guard, Refusal, Unchecked, may_plan};
 use toolbox_core::{ChangeSet, SavedChanges, Snapshot};
+use toolbox_plan::PackageName;
 use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::{HelperLocks, LockSource as _};
 
@@ -58,7 +59,8 @@ impl UnprobedReads for HelperReads<'_> {
 /// # Errors
 ///
 /// [`Refusal::GuardsWaiting`] when a guard still waits for its part. Its
-/// changes are unchecked then, so none of the queue runs.
+/// changes are unchecked then, so none of the queue runs. A queued AUR build
+/// without its build order is [`Refusal::OrderWaits`].
 pub fn checked(
     saved: &SavedChanges,
     system: &Snapshot,
@@ -78,7 +80,7 @@ pub fn checked(
         unchecked.recheck(&mut changes, &snapshot);
     }
 
-    unchecked.ready(&changes)?;
+    may_plan(&unchecked, &changes)?;
     Ok(changes)
 }
 
@@ -89,8 +91,37 @@ pub fn after(probed: Snapshot, changes: &ChangeSet, reads: &dyn UnprobedReads) -
 }
 
 pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {
-    let Refusal::GuardsWaiting { guard } = refusal;
-    let (error, hint) = match guard {
+    match refusal {
+        Refusal::GuardsWaiting { guard } => {
+            let (error, hint) = guard_words(guard);
+            say(out, error, hint);
+        }
+        Refusal::OrderWaits { names } => say(
+            out,
+            &order_words(&names),
+            "take the AUR builds out of the queue with garuda-toolbox queue remove, then apply the rest",
+        ),
+    }
+
+    Exit::Unavailable
+}
+
+fn order_words(names: &[PackageName]) -> String {
+    let list = names
+        .iter()
+        .map(PackageName::as_str)
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    if names.len() == 1 {
+        format!("{list} waits for its build order")
+    } else {
+        format!("{list} wait for their build orders")
+    }
+}
+
+const fn guard_words(guard: Guard) -> (&'static str, &'static str) {
+    match guard {
         Guard::UserLocks => (
             "a queued account change waits for the lock state of the accounts",
             "the helper did not answer: try again, or take the change back with garuda-toolbox queue remove",
@@ -114,8 +145,5 @@ pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {
             "a queued change waits for a part of the system that could not be read",
             "try again, or take the change back with garuda-toolbox queue remove",
         ),
-    };
-
-    say(out, error, hint);
-    Exit::Unavailable
+    }
 }

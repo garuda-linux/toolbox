@@ -27,10 +27,11 @@ pub mod users;
 use std::collections::BTreeSet;
 
 use strum::IntoEnumIterator as _;
-use toolbox_plan::Reason;
+use toolbox_plan::{PackageName, Reason};
 
 pub use self::guard::Guard;
 pub use self::refusal_text::{RefusalText, Refused, protection_text_id};
+use crate::domains::waiting_orders;
 use crate::{ChangeSet, Domain, Snapshot};
 
 /// One page's check of a queue restored from disk: how many changes it
@@ -38,10 +39,12 @@ use crate::{ChangeSet, Domain, Snapshot};
 /// against.
 pub type Recheck = fn(&mut ChangeSet, &Snapshot) -> Option<usize>;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Refusal {
     /// A guard has not checked a restored change of its domains yet.
     GuardsWaiting { guard: Guard },
+    /// A queued AUR build has no build order yet, so the plan cannot be made.
+    OrderWaits { names: Vec<PackageName> },
 }
 
 /// The rule a typed value breaks, without the parts no text shows.
@@ -136,6 +139,23 @@ impl ReasonCode {
 
     pub fn code(self) -> &'static str {
         self.into()
+    }
+}
+
+/// Whether a plan of `changes` may be made now.
+///
+/// # Errors
+///
+/// [`Refusal`] while a guard waits, or while a queued AUR build has no
+/// build order yet. A plan that left such a change out would lie.
+pub fn may_plan(unchecked: &Unchecked, changes: &ChangeSet) -> Result<(), Refusal> {
+    unchecked.ready(changes)?;
+
+    let names = waiting_orders(changes);
+    if names.is_empty() {
+        Ok(())
+    } else {
+        Err(Refusal::OrderWaits { names })
     }
 }
 

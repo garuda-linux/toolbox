@@ -12,9 +12,9 @@ use toolbox_plan::{BuildRun, PackageName, PlannedAction, UserAction};
 use toolbox_state::aur::order::AurOrder;
 
 use super::{InstalledPackages, batch, staged};
-use crate::SummaryCode;
 use crate::domain::{Domain, Stage, Staged, Summary};
 use crate::features::packages::aur::build;
+use crate::{ChangeSet, SummaryCode};
 
 pub struct AurPackages;
 
@@ -129,6 +129,17 @@ impl Domain for AurPackages {
     fn summary(item: &PackageName, _wish: &AurWish) -> Summary {
         Summary::of(SummaryCode::AurInstall, item.as_str())
     }
+}
+
+/// The queued packages whose build order is not read yet. A plan holds
+/// back until they are read or taken out of the queue.
+pub fn waiting_orders(changes: &ChangeSet) -> Vec<PackageName> {
+    changes
+        .queued::<AurPackages>()
+        .into_iter()
+        .filter(|(_, wish)| matches!(wish, AurWish::Waiting))
+        .map(|(item, _)| item)
+        .collect()
 }
 
 /// The split path. One `Waiting` wish holds all of it back, so a queue never

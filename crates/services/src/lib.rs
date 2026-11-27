@@ -5,6 +5,7 @@
 
 pub mod address;
 pub mod apply;
+pub mod aur_orders;
 pub mod boot_menu;
 pub mod catalogs;
 pub mod configs;

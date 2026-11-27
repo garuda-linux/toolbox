@@ -43,6 +43,8 @@ change-unfinished = Did not finish
 changes-wait-read = Apply waits until the system has been read.
 changes-wait-locks = Apply waits for the lock state of the accounts. The Users and groups page says when it cannot be read.
 changes-wait-aur = Apply waits for the package list of the AUR. The Packages page says when it cannot be read.
+# Why Apply is disabled while a queued AUR build has no build order yet.
+changes-wait-orders = Apply waits for the build orders of the queued AUR packages. Take those packages out of the queue to apply the rest.
 changes-wait-running = Apply waits until the changes being applied are done.
 # Why Apply is disabled after a read failed, for example when the password
 # prompt was closed. The popover shows it with a Read again button.

@@ -1,3 +1,6 @@
+mod build_order;
+
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 use std::sync::Arc;
@@ -5,8 +8,11 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 use tempfile::TempDir;
-use toolbox_core::domains::{DkmsBuilds, InstalledPackages, Packages, SyncPackages};
+use toolbox_core::domains::{
+    AurPackages, AurWish, DkmsBuilds, InstalledPackages, Packages, SyncPackages,
+};
 use toolbox_core::features::kernels::LinuxPackages;
+use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::features::{Guard, Refusal};
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Domain as _, Queued, RestoreProblem, Snapshot, Toggle};

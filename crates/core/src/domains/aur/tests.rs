@@ -7,7 +7,7 @@ use toolbox_state::aur::order::{AurOrder, parse_order};
 use toolbox_state::testing::aur::order::OCTOPI_GIT_STDOUT;
 use toolbox_text::plain;
 
-use super::{AurPackages, AurWish, BuildOrder};
+use super::{AurPackages, AurWish, BuildOrder, waiting_orders};
 use crate::domain::{Domain as _, Stage, Staged};
 use crate::domains::InstalledPackages;
 use crate::features::packages::aur::build;
@@ -259,4 +259,25 @@ fn an_installed_name_of_the_order_is_kept_with_its_reason() {
             .map(|action| Staged::at(AurPackages::STAGE, action))
             .collect::<Vec<_>>()
     );
+}
+
+#[test]
+fn a_waiting_wish_is_named_and_the_others_are_not() {
+    let snapshot = Snapshot::default();
+    let mut changes = ChangeSet::default();
+    changes.want::<AurPackages>(package("yay-bin"), AurWish::Waiting, &snapshot);
+    changes.want::<AurPackages>(package("paru-bin"), AurWish::Paru, &snapshot);
+    changes.want::<AurPackages>(package("octopi-git"), built(&octopi(), "1a2b"), &snapshot);
+
+    assert_eq!(waiting_orders(&changes), [package("yay-bin")]);
+}
+
+#[test]
+fn no_wish_waits_when_there_are_only_paru_and_built_wishes() {
+    let snapshot = Snapshot::default();
+    let mut changes = ChangeSet::default();
+    changes.want::<AurPackages>(package("paru-bin"), AurWish::Paru, &snapshot);
+    changes.want::<AurPackages>(package("octopi-git"), built(&octopi(), "1a2b"), &snapshot);
+
+    assert_eq!(waiting_orders(&changes), []);
 }

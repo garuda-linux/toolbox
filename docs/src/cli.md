@@ -246,7 +246,8 @@ Under `--json` the note is a `warning` line.
 queued lock, account removal or group change it reads the lock state of
 the accounts through the helper, for a queued AUR build the package list
 of the AUR. When one of them cannot be read, nothing runs and the exit
-code is 5.
+code is 5. A queued AUR build whose build order is not read yet stops it
+the same way, and the message names the packages.
 
 `SIGTERM` (as `kill` sends it) and `SIGHUP` (a closed terminal) count as
 `Ctrl+c` does: the first lets the running step end, a second stops it.

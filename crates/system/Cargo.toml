@@ -11,7 +11,7 @@ publish.workspace = true
 selftest = ["toolbox-state/selftest"]
 # Constructors the GUI tests need to read captured system files, and the
 # captures in `testing` for the tests of other crates.
-testing = []
+testing = ["toolbox-state/testing"]
 
 [dependencies]
 alpm.workspace = true

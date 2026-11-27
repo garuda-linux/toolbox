@@ -177,3 +177,78 @@ fn a_refusal_names_what_is_missing_and_exits_unavailable() {
     assert!(said.contains("package list of the AUR"), "{said}");
     assert!(said.contains("queue remove"), "{said}");
 }
+
+fn waiting_build(names: &[&str]) -> SavedChanges {
+    let mut changes = ChangeSet::default();
+    for name in names {
+        let package = PackageName::new(*name).unwrap();
+        changes.want::<AurPackages>(package, AurWish::Waiting, &Snapshot::default());
+    }
+
+    changes.to_saved()
+}
+
+#[test]
+fn a_build_waiting_for_its_order_is_refused_with_its_name() {
+    let reads = Reads {
+        names: Some(AurNames(BTreeSet::from([
+            PackageName::new("yay-bin").unwrap()
+        ]))),
+        ..Reads::default()
+    };
+
+    assert_eq!(
+        checked(&waiting_build(&["yay-bin"]), &system(), &reads).err(),
+        Some(Refusal::OrderWaits {
+            names: vec![PackageName::new("yay-bin").unwrap()],
+        })
+    );
+}
+
+#[test]
+fn a_refusal_names_the_waiting_packages_and_exits_unavailable() {
+    let mut out = Vec::new();
+    let settings = Settings {
+        json: Json::Lines,
+        ..Settings::default()
+    };
+
+    let names = vec![
+        PackageName::new("yay-bin").unwrap(),
+        PackageName::new("octopi-git").unwrap(),
+    ];
+
+    let exit = refused(
+        Refusal::OrderWaits { names },
+        &mut Out::new(&mut out, settings),
+    );
+
+    let said = String::from_utf8(out).unwrap();
+    assert_eq!(exit, Exit::Unavailable);
+    assert!(said.contains("yay-bin, octopi-git"), "{said}");
+    assert!(said.contains("build order"), "{said}");
+    assert!(said.contains("queue remove"), "{said}");
+}
+
+#[test]
+fn a_refusal_under_json_is_one_error_line() {
+    let mut out = Vec::new();
+    let settings = Settings {
+        json: Json::Lines,
+        ..Settings::default()
+    };
+
+    let names = vec![PackageName::new("yay-bin").unwrap()];
+
+    refused(
+        Refusal::OrderWaits { names },
+        &mut Out::new(&mut out, settings),
+    );
+
+    let said = String::from_utf8(out).unwrap();
+    assert!(
+        said.starts_with(r#"{"schema":1,"event":"error","message":"#),
+        "{said}"
+    );
+    assert_eq!(said.lines().count(), 1, "{said}");
+}

@@ -223,6 +223,11 @@ The build is the `BuildAur` builtin, run by the app only
   package. Each package needs exactly one file.
 - The helper does not look inside a package. Whoever passed the password
   installs what that user built.
+- A `Waiting` wish holds Apply in the window and in `queue apply`
+  (`Refusal::OrderWaits`), so no plan of it runs. Nothing promotes a wish
+  to `Built` yet, and `aur_orders::read_orders` has no caller. Promotion
+  waits for the review step: the user reads the PKGBUILD and confirms before
+  any build, the only defence against a hostile package.
 - An order is read by the app itself (`paru -Po`), never taken from a saved
   file or a queue edit. `AurWish` writes a `Built` wish as `waiting` and
   reads a `built` form as `Waiting`, so an order from outside plans no root
