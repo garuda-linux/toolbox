@@ -9,16 +9,16 @@ use toolbox_state::packages::PackageGraph;
 use toolbox_state::probes::FailedProbes;
 
 use crate::domains::{
-    AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentGrub, CurrentSystemLocale,
-    CurrentUser, EnabledLocales, InstalledPackages, Packages, PlymouthState, RemovedUsers,
-    SyncPackages,
+    AccountLockFlags, AccountLocks, Accounts, AurPackages, AurWish, CurrentGrub,
+    CurrentSystemLocale, CurrentUser, EnabledLocales, InstalledPackages, Packages, PlymouthState,
+    RemovedUsers, SyncPackages,
 };
 use crate::features::kernels::LinuxPackages;
 use crate::features::network::ModuleFacts;
 use crate::features::packages::aur::AurNames;
 use crate::features::{Guard, Refusal, Unchecked};
 use crate::test_support::{package, user_name};
-use crate::{ChangeSet, Queued, Snapshot, Toggle};
+use crate::{ChangeSet, Snapshot, Toggle};
 
 /// A removal no guard lets through: nobody of that name exists.
 fn removal(changes: &mut ChangeSet) {
@@ -148,8 +148,8 @@ fn queued_aur_builds_wait_for_the_aur_copy_and_unknown_names_go() {
     let mut unchecked = Unchecked::all();
     let mut changes = ChangeSet::default();
     let empty = Snapshot::default();
-    changes.want::<AurPackages>(package("yay-bin"), Queued, &empty);
-    changes.want::<AurPackages>(package("not-in-aur"), Queued, &empty);
+    changes.want::<AurPackages>(package("yay-bin"), AurWish::Paru, &empty);
+    changes.want::<AurPackages>(package("not-in-aur"), AurWish::Paru, &empty);
 
     assert_eq!(unchecked.recheck(&mut changes, &without_aur()), 0);
     assert_eq!(changes.len(), 2, "the builds wait for the copy");
@@ -159,7 +159,7 @@ fn queued_aur_builds_wait_for_the_aur_copy_and_unknown_names_go() {
     assert_eq!(unchecked.recheck(&mut changes, &with_copy), 1);
     assert_eq!(
         changes.queued::<AurPackages>(),
-        [(package("yay-bin"), Queued)]
+        [(package("yay-bin"), AurWish::Paru)]
     );
 }
 
@@ -231,7 +231,7 @@ fn every_guard_that_holds_a_change_back_is_named() {
     let mut snapshot = without_page_reads();
     snapshot.insert(LinuxPackages::default());
     changes.want::<AccountLocks>(user_name("ada"), Toggle::On, &Snapshot::default());
-    changes.want::<AurPackages>(package("yay-bin"), Queued, &Snapshot::default());
+    changes.want::<AurPackages>(package("yay-bin"), AurWish::Paru, &Snapshot::default());
 
     unchecked.recheck(&mut changes, &snapshot);
 

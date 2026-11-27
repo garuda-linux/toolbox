@@ -1,8 +1,10 @@
 use serde_json::json;
-use toolbox_core::domains::{InstalledPackages, Packages, all};
+use toolbox_core::domains::{AurPackages, AurWish, InstalledPackages, Packages, all};
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, SAVED_VERSION, Snapshot, Toggle};
 use toolbox_plan::PackageName;
+use toolbox_state::aur::order::parse_order;
+use toolbox_state::testing::aur::order::OCTOPI_GIT_STDOUT;
 
 use super::{Invalid, MAX_EDITS, QUEUE_EDIT_VERSION, QueueEdit, Removal};
 
@@ -138,4 +140,36 @@ fn an_edit_with_too_many_changes_is_refused() {
     let text = edit_text(&json!({"remove": removals, "add": []}));
 
     assert_eq!(parse(&text), Err(Invalid::TooMany));
+}
+
+#[test]
+fn a_built_aur_wish_in_an_edit_comes_back_waiting_and_plans_no_root_step() {
+    let mut order = serde_json::to_value(parse_order(OCTOPI_GIT_STDOUT).unwrap()).unwrap();
+    if let Some(repo) = order
+        .get_mut("repo")
+        .and_then(serde_json::Value::as_array_mut)
+    {
+        repo.push(json!({"role": "Target", "name": "evil-package"}));
+    }
+
+    let text = edit_text(&json!({
+        "remove": [],
+        "add": [{
+            "domain": "aur-packages",
+            "item": "octopi-git",
+            "wish": {"built": {"order": order, "run": "1a2b", "installed": []}},
+        }],
+    }));
+
+    let mut window = ChangeSet::default();
+    let problems = parse(&text)
+        .unwrap()
+        .apply(&mut window, &all().unwrap(), &Snapshot::default());
+
+    assert_eq!(problems, []);
+    assert_eq!(
+        window.wish::<AurPackages>(&package("octopi-git")),
+        Some(&AurWish::Waiting)
+    );
+    assert_eq!(toolbox_core::planned(&window).0.steps(), []);
 }

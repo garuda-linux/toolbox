@@ -1,3 +1,4 @@
+mod aur;
 mod fixtures;
 
 use std::collections::BTreeSet;

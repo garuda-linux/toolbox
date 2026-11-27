@@ -17,7 +17,7 @@ use crate::{ChangeSet, Outcome, Snapshot, SummaryCode};
 
 /// Bumped when the file's shape changes. Older files are then dropped
 /// instead of misread.
-pub const SAVED_VERSION: u32 = 5;
+pub const SAVED_VERSION: u32 = 6;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct SavedChanges {

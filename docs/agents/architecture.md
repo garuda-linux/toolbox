@@ -40,7 +40,14 @@
 - AUR: read from a trimmed copy of the daily metadata dump (see
   [security.md](security.md#aur-metadata)). A build is the `aur-packages`
   domain (paru as the user), a removal the `packages` domain's
-  `pacman -Rns`.
+  `pacman -Rns`. Its wish is `AurWish`: `Paru` plans paru's install as
+  before, `Waiting` (order not read yet) plans nothing, and `Built` holds
+  the parsed `paru -Po` order, its `BuildRun` and the names of the order
+  installed when it was read. Any `Waiting` wish holds back the `Built`
+  wishes, and `Built` wishes of two runs plan no split actions. Only
+  `paru` and `waiting` are saved or sent. A `built` form from a file or
+  the bus comes back as `Waiting`, so the app's own order read is the only
+  way an order becomes a `Built` wish.
 
 ## Names
 

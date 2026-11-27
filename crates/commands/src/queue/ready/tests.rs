@@ -3,13 +3,13 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use toolbox_cli::Exit;
 use toolbox_core::domains::{
-    AccountLockFlags, AccountLocks, Accounts, AurPackages, CurrentLoader, CurrentUser,
+    AccountLockFlags, AccountLocks, Accounts, AurPackages, AurWish, CurrentLoader, CurrentUser,
 };
 use toolbox_core::features::boot::set_loader;
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::features::{Guard, Refusal};
 use toolbox_core::testing::Queue as _;
-use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
+use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Toggle};
 use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings};
 use toolbox_plan::{PackageName, UserName};
 use toolbox_services::unprobed::UnprobedReads;
@@ -78,7 +78,7 @@ fn lock() -> SavedChanges {
 fn build() -> SavedChanges {
     let mut changes = ChangeSet::default();
     let package = PackageName::new("yay-bin").unwrap();
-    changes.want::<AurPackages>(package, Queued, &Snapshot::default());
+    changes.want::<AurPackages>(package, AurWish::Paru, &Snapshot::default());
     changes.to_saved()
 }
 

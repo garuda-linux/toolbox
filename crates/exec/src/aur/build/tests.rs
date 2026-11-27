@@ -1,5 +1,5 @@
 use std::fs;
-use std::os::unix::fs::{MetadataExt as _, symlink};
+use std::os::unix::fs::{MetadataExt as _, PermissionsExt as _, symlink};
 use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
@@ -8,6 +8,7 @@ use toolbox_plan::{AUR_BUILT, BuildRun, PARU_CLONE, PackageName};
 
 use super::{BuildError, prepare};
 use crate::aur::built_folder;
+use crate::aur::route::RouteProblem;
 use crate::test_support::{ada_home, mode};
 
 const OCTOPI: &str = "octopi-git";
@@ -57,6 +58,21 @@ fn a_linked_clone_is_refused_and_not_followed() {
     symlink(&target, clone_of(&home)).unwrap();
 
     refused_naming_the_clone(&home);
+}
+
+#[test]
+fn a_group_writable_cache_is_refused_before_anything_is_made() {
+    let (_root, home) = ada_home();
+    fs::create_dir_all(clone_of(&home)).unwrap();
+    fs::set_permissions(home.join(".cache"), fs::Permissions::from_mode(0o775)).unwrap();
+
+    let error = prepare_now(&home).unwrap_err();
+
+    assert!(
+        matches!(&error, BuildError::Route(RouteProblem::Shared(name)) if name == ".cache"),
+        "{error}"
+    );
+    assert!(!home.join(".cache/garuda-toolbox").exists());
 }
 
 #[test]

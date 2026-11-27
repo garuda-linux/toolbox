@@ -189,7 +189,7 @@ fn check(queued: &[PackageName], orders: &[AurOrder]) -> Result<(), Missing> {
     }
 }
 
-fn mentions(order: &AurOrder, name: &PackageName) -> bool {
+pub(crate) fn mentions(order: &AurOrder, name: &PackageName) -> bool {
     order.repo.iter().any(|line| line.name == *name)
         || order.builds.iter().any(|build| build.name == *name)
 }

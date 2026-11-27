@@ -4,24 +4,23 @@
 //! store so nothing is swapped after the check.
 
 pub mod build;
+pub mod route;
 #[cfg(test)]
 mod tests;
 
 use std::ffi::{CStr, CString};
-use std::fs::{self, File};
+use std::fs::File;
 use std::io;
 use std::os::fd::OwnedFd;
 use std::path::{Path, PathBuf};
 
 use rustix::fs::{AtFlags, FileType, FlockOperation, Mode, OFlags};
 use rustix::io::Errno;
-use toolbox_plan::lines::lossy;
-use toolbox_plan::procedure::{Command, PASSWD, Program};
+use toolbox_plan::procedure::{Command, Program};
 use toolbox_plan::protocol::Outcome;
-use toolbox_plan::{
-    AUR_BUILT, AUR_STORE, BuildRun, Caller, InstallReason, PackageName, TargetList, passwd_entries,
-};
+use toolbox_plan::{AUR_STORE, BuildRun, Caller, InstallReason, PackageName, TargetList};
 
+use self::route::owned_and_closed;
 use crate::secure::{self, DIR_FLAGS, READ_FLAGS};
 
 /// Without `NONBLOCK` a fifo in the place of a package would hold the
@@ -33,8 +32,6 @@ const CREATE_FLAGS: OFlags = OFlags::WRONLY
     .union(OFlags::EXCL)
     .union(OFlags::NOFOLLOW)
     .union(OFlags::CLOEXEC);
-
-const GROUP_OR_OTHERS_WRITE: u32 = 0o022;
 
 const PACKAGE_MODE: Mode = Mode::from_raw_mode(0o644);
 
@@ -150,12 +147,7 @@ fn hold_store(root: &Path) -> Result<OwnedFd, StageError> {
 ///
 /// [`StageError::NoAccount`] when no entry has `uid`.
 pub fn home_of(root: &Path, uid: u32) -> Result<PathBuf, StageError> {
-    let passwd = lossy(fs::read(root.join(PASSWD))?);
-
-    passwd_entries(&passwd)
-        .find(|entry| entry.uid == uid)
-        .map(|entry| PathBuf::from(entry.home.trim_start_matches('/')))
-        .ok_or(StageError::NoAccount(uid))
+    route::home_entry(root, uid).map_err(StageError::from)
 }
 
 /// Copies the one file `run` built per package from the run's folder below
@@ -283,15 +275,21 @@ pub fn built_folder(
     home: &Path,
     run: &BuildRun,
 ) -> Result<OwnedFd, StageError> {
-    let mut folder = secure::open_dir(root, home)?;
-    owned_and_closed(&folder, uid, &home.display().to_string())?;
+    let route = route::walk(root, home, home, uid)?;
+    let mut folder = route.folder;
 
-    for part in AUR_BUILT.split('/').chain([run.as_str()]) {
-        folder = rustix::fs::openat(&folder, part, DIR_FLAGS, Mode::empty())?;
-        owned_and_closed(&folder, uid, part)?;
+    for part in route.missing {
+        folder = open_part(&folder, part, uid)?;
     }
 
-    Ok(folder)
+    open_part(&folder, run.as_str(), uid)
+}
+
+fn open_part(folder: &OwnedFd, part: &str, uid: u32) -> Result<OwnedFd, StageError> {
+    let next = rustix::fs::openat(folder, part, DIR_FLAGS, Mode::empty())?;
+    owned_and_closed(&next, uid, part)?;
+
+    Ok(next)
 }
 
 fn only_file<'files>(
@@ -323,19 +321,5 @@ fn copy(built: &OwnedFd, store: &OwnedFd, name: &str, uid: u32) -> Result<(), St
     let mut target = File::from(target);
     io::copy(&mut File::from(source), &mut target)?;
     target.sync_all()?;
-    Ok(())
-}
-
-fn owned_and_closed(fd: &OwnedFd, uid: u32, what: &str) -> Result<(), StageError> {
-    let stat = rustix::fs::fstat(fd)?;
-
-    if stat.st_uid != uid {
-        return Err(StageError::Foreign(what.to_owned()));
-    }
-
-    if stat.st_mode & GROUP_OR_OTHERS_WRITE != 0 {
-        return Err(StageError::Shared(what.to_owned()));
-    }
-
     Ok(())
 }

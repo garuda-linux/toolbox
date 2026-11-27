@@ -1,10 +1,10 @@
 {
-  "version": 5,
+  "version": 6,
   "changes": [
     {
       "domain": "aur-packages",
       "item": "yay-bin",
-      "wish": null
+      "wish": "paru"
     }
   ]
 }

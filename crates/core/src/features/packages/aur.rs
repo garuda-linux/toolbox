@@ -16,8 +16,7 @@ use toolbox_text::OutsideText;
 
 use super::list::RowState;
 use super::queue::Refusal;
-use crate::domain::Queued;
-use crate::domains::{AurPackages, InstalledPackages, Packages};
+use crate::domains::{AurPackages, AurWish, InstalledPackages, Packages};
 use crate::features::search::ranked::Rank as SearchRank;
 use crate::features::search::{Needle, folded};
 use crate::features::{Refused, drop_refused};
@@ -230,7 +229,9 @@ pub fn toggle(
 
     match (wish, installed) {
         (Toggle::On, true) => changes.remove::<Packages>(package),
-        (Toggle::On, false) => changes.want::<AurPackages>(package.clone(), Queued, snapshot),
+        (Toggle::On, false) => {
+            changes.want::<AurPackages>(package.clone(), AurWish::Paru, snapshot);
+        }
         (Toggle::Off, true) => {
             super::queue::may_remove(package, changes, snapshot)?;
             changes.want::<Packages>(package.clone(), Toggle::Off, snapshot);

@@ -19,7 +19,7 @@ mod user_configs;
 mod users;
 
 pub use accounts::{AccountLockFlags, Accounts, CurrentUser, Group, User};
-pub use aur::AurPackages;
+pub use aur::{AurPackages, AurWish, BuildOrder};
 pub use boot::{
     BootLoader, CurrentGrub, CurrentLoader, GrubDefaults, KernelCmdline, KernelKey, KernelSetting,
     LoaderSettingsDomain, PlymouthState, PlymouthThemes, SdBootKernel, SdBootKernelDomain,

@@ -14,6 +14,7 @@ use rustix::io::Errno;
 use toolbox_plan::{AUR_BUILT, BuildRun, MAKEPKG_ARGS, PARU_CLONE, PackageName};
 use toolbox_pty::PtyCommand;
 
+use super::route::{RouteProblem, route_from_home};
 use super::{entries, remove_run_folder};
 use crate::secure::{self, DIR_FLAGS};
 
@@ -30,6 +31,8 @@ pub enum BuildError {
     NoClone(String),
     #[error("{0} is a link or no folder, and links are not followed")]
     NotAFolder(String),
+    #[error(transparent)]
+    Route(#[from] RouteProblem),
     #[error("cannot prepare the build run: {0}")]
     Io(#[from] io::Error),
 }
@@ -60,6 +63,8 @@ pub fn prepare(
         }
         Err(_) => return Err(BuildError::NotAFolder(shown)),
     }
+
+    route_from_home(home, rustix::process::geteuid().as_raw())?;
 
     let built = secure::create_dirs(home, Path::new(AUR_BUILT))?;
     remove_old_runs(&built, now)?;

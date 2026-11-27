@@ -2,8 +2,7 @@ use toolbox_state::aur::{AurIndex, AurPackage};
 use toolbox_state::packages::PackageGraph;
 
 use super::{AurCatalog, row_state, toggle};
-use crate::domain::Queued;
-use crate::domains::{AurPackages, InstalledPackages, Packages};
+use crate::domains::{AurPackages, AurWish, InstalledPackages, Packages};
 use crate::features::packages::list::RowState;
 use crate::features::packages::queue::Refusal;
 use crate::features::search::ranked::Rank;
@@ -113,7 +112,7 @@ fn install_queues_an_aur_build_and_a_second_click_takes_it_back() {
     let yay = package("yay-bin");
 
     toggle(&yay, Toggle::On, &snapshot, &mut changes).unwrap();
-    assert_eq!(changes.wish::<AurPackages>(&yay), Some(&Queued));
+    assert_eq!(changes.wish::<AurPackages>(&yay), Some(&AurWish::Paru));
     assert_eq!(
         row_state(&yay, &snapshot, &changes),
         RowState {

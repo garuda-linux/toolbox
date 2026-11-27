@@ -41,6 +41,7 @@ tracing.workspace = true
 toolbox-core = { workspace = true, features = ["testing"] }
 toolbox-plan = { workspace = true, features = ["testing"] }
 toolbox-system = { workspace = true, features = ["testing"] }
+toolbox-state = { workspace = true, features = ["testing"] }
 tokio = { workspace = true, features = ["rt-multi-thread"] }
 tempfile.workspace = true
 

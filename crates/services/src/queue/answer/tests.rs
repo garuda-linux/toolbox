@@ -1,7 +1,7 @@
-use toolbox_core::domains::{AurPackages, InstalledPackages, Packages};
+use toolbox_core::domains::{AurPackages, AurWish, InstalledPackages, Packages};
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_core::testing::Queue as _;
-use toolbox_core::{ChangeSet, Queued, SavedChanges, Snapshot, Toggle};
+use toolbox_core::{ChangeSet, SavedChanges, Snapshot, Toggle};
 use toolbox_instance::bus::queue::{Question, Refusal};
 
 use super::super::Queue;
@@ -77,7 +77,7 @@ fn an_aur_build_the_copy_lacks_goes_once_the_copy_is_known() {
     let mut queue = Queue::in_memory(ChangeSet::default());
     let mut wanted = ChangeSet::default();
     for name in ["yay-bin", "not-in-aur"] {
-        wanted.want::<AurPackages>(name.parse().unwrap(), Queued, &Snapshot::default());
+        wanted.want::<AurPackages>(name.parse().unwrap(), AurWish::Paru, &Snapshot::default());
     }
 
     let mut system = Snapshot::default();
@@ -95,6 +95,6 @@ fn an_aur_build_the_copy_lacks_goes_once_the_copy_is_known() {
 
     assert_eq!(
         queue.changes().queued::<AurPackages>(),
-        [("yay-bin".parse().unwrap(), Queued)]
+        [("yay-bin".parse().unwrap(), AurWish::Paru)]
     );
 }

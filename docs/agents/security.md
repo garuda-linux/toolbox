@@ -203,6 +203,17 @@ The build is the `BuildAur` builtin, run by the app only
 
 - The caller is the peer of stdin ([The helper](#the-helper)). The home
   is the one `/etc/passwd` names for it.
+- The route from the home to the run folder's parent is one check,
+  `route` in `crates/exec/src/aur/route.rs`. The helper's stage and the
+  user-side build both run it, so both refuse the same setups with the
+  same reason. It refuses an account without a `/etc/passwd` entry, a
+  home or `~/.cache` that is missing, a link or no folder, a folder on
+  the way that is not the caller's own, and a folder on the way that
+  group or others may write. `garuda-toolbox` and `aur-built` that are
+  missing are fine, as the user-side build creates them. A link or no
+  folder there is refused.
+- The user-side build runs the same check before it creates anything,
+  so a group-writable `~/.cache` fails the build step with its reason.
 - The run folder `~/.cache/garuda-toolbox/aur-built/<run>` is reached
   from the home without following a link. Every folder on the way and
   every file must be the caller's own and not writable by group or
@@ -212,6 +223,10 @@ The build is the `BuildAur` builtin, run by the app only
   package. Each package needs exactly one file.
 - The helper does not look inside a package. Whoever passed the password
   installs what that user built.
+- An order is read by the app itself (`paru -Po`), never taken from a saved
+  file or a queue edit. `AurWish` writes a `Built` wish as `waiting` and
+  reads a `built` form as `Waiting`, so an order from outside plans no root
+  step (`crates/core/src/domains/aur.rs`).
 - The helper holds an exclusive `flock` on the store
   `/var/cache/garuda-toolbox/aur` from before the stage until pacman
   ended. A second helper fails its step (`StageError::Busy`) and touches
@@ -521,6 +536,8 @@ user's, and an apply still asks for the password.
   and decodes it as a `QueueEdit` (`crates/services/src/queue/edit.rs`).
   Anything that does not decode into its domain's value objects refuses
   the whole edit. Each wish then meets every page guard, as a click.
+  An AUR order never comes in through an edit: a `built` wish decodes as
+  `waiting`.
   A wish may carry the outcome of a run, since `queue apply` records a
   failed change this way while the window is open. A forged outcome
   changes only how the list marks the change.
