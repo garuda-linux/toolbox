@@ -39,7 +39,7 @@ builds a test package of the checkout.
 
 ## How to deploy a new version?
 
-Run `scripts/release.sh` on `main`. It sets the version, writes the changelog with git-cliff and tags the release.
+Run `scripts/release.sh` on `main`. It sets the version, writes the changelog with git-cliff and tags the release. `--version 7.0.0` names the version instead of taking it from the commits.
 Pushing the new tag is sufficient. The deployment will happen automatically via the
 [PKGBUILDs repo's pipelines](https://gitlab.com/garuda-linux/pkgbuilds/-/pipelines), which check half-hourly for the
 existence of a more recent tag.

@@ -3,7 +3,7 @@
 commitizen:
   name: cz_conventional_commits
   tag_format: $version
-  version: 6.3.0
+  version: 7.0.0
   version_provider: commitizen
   version_scheme: semver
   version_files:

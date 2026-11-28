@@ -4,6 +4,27 @@ cd "$(dirname "$0")/.."
 
 command -v git-cliff >/dev/null || exec nix develop --command "$0" "$@"
 
+asked=
+case ${1-} in
+"") ;;
+--version)
+  asked=${2-}
+  if ! [[ $asked =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "--version takes a version such as 7.0.0" >&2
+    exit 2
+  fi
+  ;;
+*)
+  echo "usage: $0 [--version X.Y.Z]" >&2
+  exit 2
+  ;;
+esac
+
+if [ -n "$asked" ] && git rev-parse --quiet --verify "refs/tags/$asked" >/dev/null; then
+  echo "the tag $asked exists" >&2
+  exit 1
+fi
+
 if [ -n "$(git status --porcelain)" ]; then
   echo "the working tree has changes, commit or stash them first" >&2
   exit 1
@@ -19,9 +40,17 @@ y | Y) ;;
   ;;
 esac
 
-version=$(cz bump --get-next)
 today=$(date +%F)
-cz bump --files-only --yes
+if [ -z "$asked" ]; then
+  version=$(cz bump --get-next)
+  cz bump --files-only --yes
+elif [ "$asked" = "$(cz version --project)" ]; then
+  # cz refuses a bump to the version the files already carry.
+  version=$asked
+else
+  version=$asked
+  cz bump --files-only --yes "$asked"
+fi
 
 # Software centres list the versions from the metainfo.
 metainfo=data/org.garudalinux.toolbox.metainfo.xml

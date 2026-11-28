@@ -58,7 +58,7 @@ workflow:
     - install -d -o selftest "$SELFTEST_ROOT"
 
 .arch-job:
-  image: archlinux:latest@sha256:b1c2fe6e717bfd5673af8fc217e1e1c3ce0dcbb1d53c3414c8425e7ce79fc6d9
+  image: archlinux:latest@sha256:375a401bb3c6376b37f40b6dfa25067db37ec78d0b7af67ae6315f43a0184a9d
   interruptible: true
   variables:
     CARGO_HOME: ${CI_PROJECT_DIR}/.cargo-home

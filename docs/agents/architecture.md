@@ -423,7 +423,7 @@ only `/usr/share/garuda-toolbox/catalog` and never the source tree.
    out.
 2. Apply builds the `Plan`. User steps run in the app. The root steps of
    the whole plan run in one `pkexec garuda-toolbox-helper apply`
-   (`auth_admin_keep`), so one password per apply. The app starts it at the
+   (`auth_admin`), so one password per apply. The app starts it at the
    plan's first root step, keeps it across the user steps, passes each later
    root segment's gate and ends it when the plan stops
    ([security.md](security.md#the-helper)). A protocol change bumps

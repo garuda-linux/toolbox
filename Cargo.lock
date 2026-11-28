@@ -5579,7 +5579,7 @@ checksum = "009dbb7700f11c55ef83aebbe4c0e9cf1f1ac0844bd8d6f00dc38f302026e13a"
 
 [[package]]
 name = "toolbox-appmenu"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "futures-lite",
  "parking_lot",
@@ -5597,7 +5597,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-aur"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "flate2",
  "parking_lot",
@@ -5615,7 +5615,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-catalog"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "serde",
  "tempfile",
@@ -5627,7 +5627,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-cli"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "anstyle",
  "clap",
@@ -5643,7 +5643,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-commands"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "clap",
  "crossbeam-channel",
@@ -5675,7 +5675,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-config"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "serde",
  "tempfile",
@@ -5688,7 +5688,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-core"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "criterion",
  "jiff",
@@ -5707,7 +5707,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-exec"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "rustix 1.1.6",
  "serde_json",
@@ -5723,7 +5723,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-fs"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "rustix 1.1.6",
  "tempfile",
@@ -5731,7 +5731,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-gui"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "crossbeam-channel",
  "dify",
@@ -5788,7 +5788,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-gui-kit"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "egui",
  "egui-wgpu",
@@ -5810,14 +5810,14 @@ dependencies = [
 
 [[package]]
 name = "toolbox-guide"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "pulldown-cmark",
 ]
 
 [[package]]
 name = "toolbox-helper"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "close_fds",
  "log",
@@ -5835,7 +5835,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-https"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "rustls",
  "thiserror 2.0.21",
@@ -5844,7 +5844,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-instance"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "parking_lot",
  "tokio",
@@ -5855,7 +5855,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-lint"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "regex",
  "tree-sitter",
@@ -5864,7 +5864,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-log"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "jiff",
  "log",
@@ -5879,7 +5879,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-news"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "jiff",
  "parking_lot",
@@ -5896,7 +5896,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-plan"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "proptest",
  "serde",
@@ -5908,7 +5908,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-privatebin"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "aes-gcm",
  "base64 0.23.1",
@@ -5927,7 +5927,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-pty"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "libc",
  "rustix 1.1.6",
@@ -5937,7 +5937,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-services"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "crossbeam-channel",
  "fluent-templates",
@@ -5968,7 +5968,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-state"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "regex",
  "serde",
@@ -5981,7 +5981,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-system"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "alpm",
  "ashpd",
@@ -6007,7 +6007,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-terminal"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "alacritty_terminal",
  "parking_lot",
@@ -6017,7 +6017,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-text"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -6025,7 +6025,7 @@ dependencies = [
 
 [[package]]
 name = "toolbox-xtask"
-version = "6.3.0"
+version = "7.0.0"
 dependencies = [
  "clap",
  "clap_complete",

@@ -2,7 +2,7 @@
   description = "Garuda Toolbox: dev shell and checks for the Garuda Linux maintenance and settings app (Rust, egui)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     git-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";

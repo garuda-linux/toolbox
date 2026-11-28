@@ -32,14 +32,18 @@ fn annotation(key: &str, value: &str) -> String {
     format!("<annotate key=\"org.freedesktop.policykit.exec.{key}\">{value}</annotate>")
 }
 
+/// A kept answer would let a later start of the helper change the system
+/// with no password, inside the minutes polkit keeps it. A plan is one
+/// helper start, so one password per Apply is all a kept answer saved.
 #[test]
-fn apply_asks_for_an_admin_and_keeps_the_answer_for_a_while() -> TestResult {
+fn apply_asks_for_an_admin_every_time() -> TestResult {
     let apply = action(&policy()?, "org.garudalinux.toolbox.apply")?;
 
     assert!(apply.contains(&annotation("path", HELPER)));
     assert!(apply.contains(&annotation("argv1", "apply")));
-    assert!(apply.contains("<allow_active>auth_admin_keep</allow_active>"));
+    assert!(apply.contains("<allow_active>auth_admin</allow_active>"));
     assert!(apply.contains("<allow_inactive>auth_admin</allow_inactive>"));
+    assert!(!apply.contains("auth_admin_keep"));
     Ok(())
 }
 

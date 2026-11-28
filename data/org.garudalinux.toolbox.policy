@@ -17,7 +17,7 @@
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
-      <allow_active>auth_admin_keep</allow_active>
+      <allow_active>auth_admin</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/garuda-toolbox/garuda-toolbox-helper</annotate>
     <annotate key="org.freedesktop.policykit.exec.argv1">apply</annotate>

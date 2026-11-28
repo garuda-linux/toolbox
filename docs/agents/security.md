@@ -663,7 +663,7 @@ and cannot check it. What keeps the rest of the disk out:
 
 | Action                          | Active session    | For                   |
 | ------------------------------- | ----------------- | --------------------- |
-| `org.garudalinux.toolbox.apply` | `auth_admin_keep` | `helper apply`        |
+| `org.garudalinux.toolbox.apply` | `auth_admin`      | `helper apply`        |
 | `org.garudalinux.toolbox.read`  | `yes`             | `helper read <kind>`  |
 | `org.garudalinux.toolbox.logs`  | `auth_admin_keep` | `helper logs <kind>`  |
 | `org.garudalinux.toolbox.fetch` | `auth_admin_keep` | `helper fetch <path>` |
@@ -671,6 +671,11 @@ and cannot check it. What keeps the rest of the disk out:
 - Policy: `data/org.garudalinux.toolbox.policy`, tested by
   `app/helper/tests/policy.rs`. Each action matches the helper path and
   `exec.argv1`. Inactive and remote sessions get `auth_admin`.
+- `apply` asks every time. A kept answer would let a later start of the
+  helper change the system with no password, inside the minutes polkit
+  keeps it. A plan is one helper start, so the keep saved one password
+  between two Applies and nothing else. The read-only `logs` and `fetch`
+  keep theirs.
 - A new root action never gets a password-less rule.
 - A development build runs the helper from `target/`, which no action
   names, so pkexec asks every time.

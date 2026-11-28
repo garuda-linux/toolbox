@@ -11,7 +11,7 @@
 }:
 
 let
-  version = "6.3.0";
+  version = "7.0.0";
 
   # The tests take the same list, since a plain `cargo test` builds every member.
   appCrates = [
