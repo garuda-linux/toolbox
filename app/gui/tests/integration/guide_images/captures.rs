@@ -2,6 +2,8 @@
 //! draws the fixture of its page, dialog or control in the theme asked for,
 //! then keeps the part of the frame the guide talks about.
 
+mod aur;
+
 use egui::accesskit::Role;
 use egui::{Key, Modifiers, Rect, Theme};
 use egui_kittest::Harness;
@@ -14,7 +16,7 @@ use toolbox_gui::{App, Setup};
 use crate::common::{HEIGHT, TALL, installing, launch_in, open_tab, pane, shared_runtime, window};
 use crate::look::look_for;
 
-pub const ALL: [Capture; 24] = [
+pub const ALL: [Capture; 26] = [
     Capture {
         name: "about",
         render: about,
@@ -86,6 +88,14 @@ pub const ALL: [Capture; 24] = [
     Capture {
         name: "network",
         render: network,
+    },
+    Capture {
+        name: "packages-aur-build",
+        render: aur::build,
+    },
+    Capture {
+        name: "packages-aur-review",
+        render: aur::review,
     },
     Capture {
         name: "palette-open",

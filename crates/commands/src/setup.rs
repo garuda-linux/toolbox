@@ -34,7 +34,7 @@ pub fn command(command: SetupCommand, runtime: &Runtime, out: &mut Out<'_>) -> E
                 Ok(catalog) => apply(catalog, &args.ids, &snapshot(&catalogs)),
                 Err(error) => Err(Refused::Rule(format!(
                     "the Setup Assistant's catalog is unusable: {}",
-                    error.detail
+                    error.detail()
                 ))),
             };
 

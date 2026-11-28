@@ -12,11 +12,9 @@ pub fn check(catalog: &ToggleCatalog) -> Result<(), EntryProblem> {
 
     for entry in catalog.entries() {
         if !seen.insert(entry.check()) {
-            let watched = entry.check().to_string();
-
             return Err(EntryProblem::new(
                 entry.id(),
-                Problem::DuplicateCheck(watched),
+                Problem::DuplicateCheck(Box::new(entry.check().clone())),
             ));
         }
     }

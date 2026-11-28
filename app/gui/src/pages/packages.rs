@@ -14,8 +14,6 @@ pub use row::repository;
 #[cfg(test)]
 mod tests;
 
-use std::collections::BTreeSet;
-
 use egui::{Key, Modifiers, Ui};
 use toolbox_core::features::packages::aur::AurCatalog;
 use toolbox_core::features::packages::list::{Filter, View};
@@ -24,7 +22,6 @@ use toolbox_gui_kit::fonts::{BODY, Weight, font};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
 use toolbox_gui_kit::widgets::columns::{self, Columns};
 use toolbox_plan::PackageName;
-use toolbox_system::ProbeError;
 
 use super::{PageContext, PageView, place_of, plan_running};
 use crate::command::PackagesCommand;
@@ -82,17 +79,6 @@ type ViewKey = (
     Same<toolbox_core::features::packages::list::Catalog>,
     u64,
 );
-
-/// Where the pending updates stand. Only a read status gives a count, so
-/// the Updates chip never says 0 for updates nobody checked.
-#[derive(Clone, Debug, PartialEq, Eq)]
-enum Updates {
-    Unread,
-    Failed,
-    /// The installed packages with a pending repository or AUR update, as
-    /// Home counts them.
-    Known(BTreeSet<PackageName>),
-}
 
 impl PageView for PackagesPage {
     /// The list and the details each scroll on their own, so the page
@@ -213,48 +199,6 @@ impl PackagesPage {
         context
             .commands
             .send(PackagesCommand::Show(package.clone()));
-    }
-}
-
-impl Updates {
-    fn of(context: &PageContext<'_>) -> Self {
-        let Some(read) = context.home.status else {
-            return Self::Unread;
-        };
-
-        if read.error().is_some() {
-            return Self::Failed;
-        }
-
-        let Some(status) = read.get() else {
-            return Self::Unread;
-        };
-
-        // Without paru there are no AUR updates to check, which is no
-        // failure. Without checkupdates nothing can be known.
-        let aur_failed = status
-            .aur_updates
-            .as_ref()
-            .err()
-            .and_then(ProbeError::reason)
-            .is_some();
-
-        if status.updates.is_err() || aur_failed {
-            return Self::Failed;
-        }
-
-        Self::Known(
-            [&status.updates, &status.aur_updates]
-                .into_iter()
-                .filter_map(|updates| updates.as_ref().ok())
-                .flatten()
-                .map(|update| update.name.clone())
-                .collect(),
-        )
-    }
-
-    const fn is_known(&self) -> bool {
-        matches!(self, Self::Known(_))
     }
 }
 

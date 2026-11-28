@@ -127,7 +127,6 @@ fn every_page_refusal_has_its_text() {
         R::iter().filter_map(RefusalText::text_id).collect()
     }
 
-    let root = Path::new(toolbox_services::i18n::DIR);
     let all = [
         ids::<users::Refusal>(),
         ids::<kernels::Refusal>(),
@@ -138,17 +137,7 @@ fn every_page_refusal_has_its_text() {
         ids::<configs::session::ProblemCode>(),
     ];
 
-    for locale in ["en-US", "de-DE"] {
-        let shown = ids_of(&root.join(locale));
-        let missing: Vec<&str> = all
-            .iter()
-            .flatten()
-            .copied()
-            .filter(|id| !shown.contains(*id))
-            .collect();
-
-        assert!(missing.is_empty(), "no {locale} text for {missing:?}");
-    }
+    assert_texts_in_each_language(&all.concat());
 }
 
 /// The Maintenance page names each task and its detail by `text_id`.
@@ -277,6 +266,33 @@ fn every_failed_collection_reason_has_its_text_in_each_language() {
         "diagnostics-failed-no-agent",
         "diagnostics-failed-helper-not-installed",
     ]);
+}
+
+/// Apply's hold names one of these texts, the guards' ones per state of
+/// their read and the rest from the app.
+#[test]
+fn every_apply_hold_has_its_text_in_each_language() {
+    use toolbox_core::features::{Guard, ReadState};
+
+    let states = [ReadState::Failed, ReadState::Waiting];
+    let mut ids = vec![
+        "changes-wait-running",
+        "changes-wait-reading",
+        "changes-wait-orders",
+    ];
+
+    for guard in Guard::iter() {
+        for locks in states {
+            for aur in states {
+                ids.push(guard.hold_text(locks, aur));
+            }
+        }
+    }
+
+    ids.sort_unstable();
+    ids.dedup();
+
+    assert_texts_in_each_language(&ids);
 }
 
 fn assert_texts_in_each_language(ids: &[&str]) {

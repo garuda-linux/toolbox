@@ -245,11 +245,11 @@ fn catalogs() -> CatalogFacts {
     let mut problems: Vec<String> = toggles
         .iter()
         .filter_map(|toggles| toggles.catalog.as_ref().err())
-        .map(|problem| problem.detail.clone())
+        .map(toolbox_catalog::LoadProblem::detail)
         .collect();
 
     let good = toggles.len() - problems.len() + usize::from(loaded.apps.problem.is_none());
-    problems.extend(loaded.apps.problem.map(|problem| problem.detail));
+    problems.extend(loaded.apps.problem.map(|problem| problem.detail()));
 
     CatalogFacts {
         present: dir.is_dir(),

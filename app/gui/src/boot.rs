@@ -167,6 +167,7 @@ impl Boot {
         }
     }
 
+    #[cfg(test)]
     #[must_use = "returns the new value, the old one stays as it was"]
     pub const fn with_failed_chooser(mut self) -> Self {
         self.chooser_failed = true;

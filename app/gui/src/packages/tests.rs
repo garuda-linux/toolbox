@@ -1,5 +1,7 @@
 #[cfg(test)]
 mod orders;
+#[cfg(test)]
+mod upgrade;
 
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};

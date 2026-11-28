@@ -94,10 +94,7 @@ fn installed() -> BTreeSet<PackageName> {
 }
 
 fn snapshot() -> Snapshot {
-    let mut snapshot = Snapshot::default();
-    snapshot.insert(InstalledPackages(installed()));
-    snapshot.insert(refused_route());
-    snapshot
+    snapshot_with(refused_route())
 }
 
 /// The helper refuses this user's build folder, so builds take paru's way.

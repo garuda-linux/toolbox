@@ -211,8 +211,7 @@ impl TogglePage {
         }
 
         if context.probed && unknown > 0 {
-            let count = unknown;
-            let text = i18n::text_with(&ctx, "toggles-unknown", &[("count", Arg::from(count))]);
+            let text = i18n::text_with(&ctx, "toggles-unknown", &[("count", Arg::from(unknown))]);
             let again = i18n::text(&ctx, "common-read-again");
             if banner(ui, Tone::Warning, &text, &[&again]).value.is_some() {
                 context.commands.send(AppCommand::ReadSystem);
@@ -372,11 +371,10 @@ pub fn count_text(ctx: &egui::Context, tally: Tally, read: bool) -> String {
         return tally_text(ctx, tally);
     }
 
-    let total = tally.total;
     i18n::text_with(
         ctx,
         "toggles-section-count-unread",
-        &[("total", Arg::from(total))],
+        &[("total", Arg::from(tally.total))],
     )
     .into_owned()
 }

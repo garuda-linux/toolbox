@@ -205,7 +205,7 @@ impl ConfigEntry {
                 .map_err(Problem::BadHomePath)?,
             None => ConfigFilePath::new(raw.path)
                 .map(ConfigEntryLocation::Root)
-                .map_err(|error| Problem::BadConfigPath(error.to_string()))?,
+                .map_err(Problem::BadConfigPath)?,
         };
 
         match &location {

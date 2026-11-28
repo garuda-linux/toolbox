@@ -15,6 +15,7 @@ use crate::pages::home::HomeProblem;
 impl App {
     pub(super) fn run_home(&mut self, command: &HomeCommand) {
         match command {
+            HomeCommand::RunNow(RunNow::AurUpgrade) => self.start_aur_upgrade(),
             HomeCommand::RunNow(run) => self.run_now(*run),
             // The page disables Restart while a plan runs. A command from
             // elsewhere waits for the plan the same way.

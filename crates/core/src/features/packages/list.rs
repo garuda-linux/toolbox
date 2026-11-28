@@ -124,6 +124,7 @@ impl Catalog {
         self.providers.get(name)
     }
 
+    #[cfg(test)]
     pub fn is_orphan(&self, name: &PackageName) -> bool {
         self.orphans.contains(name)
     }
@@ -193,6 +194,7 @@ impl Filter {
 }
 
 impl RowState {
+    #[cfg(test)]
     pub fn shown_installed(self) -> bool {
         self.queued.map_or(self.installed, Toggle::is_on)
     }

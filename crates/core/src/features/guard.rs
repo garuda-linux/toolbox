@@ -1,6 +1,9 @@
 //! Each page's check of a queue restored from disk. The variants run in
 //! their written order, and a new page that queues changes adds its own.
 
+#[cfg(test)]
+mod tests;
+
 use super::{Recheck, boot, kernels, locales, missing, network, packages, users};
 use crate::Domain as _;
 use crate::domains::{
@@ -30,6 +33,14 @@ pub enum Guard {
     WifiBackend,
     /// Waits for the AUR's copy, which the window reads only on demand.
     AurPackages,
+}
+
+/// How a read a guard waits for came out. Apply's text tells a failed read
+/// from one still due, and every other state of a read counts as due.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ReadState {
+    Failed,
+    Waiting,
 }
 
 impl Guard {
@@ -74,6 +85,34 @@ impl Guard {
             Self::Hblock => missing::recheck_hblock,
             Self::WifiBackend => missing::recheck_wifi_backend,
             Self::AurPackages => packages::aur::recheck,
+        }
+    }
+
+    /// The id of the text that says why Apply waits for this guard. Only
+    /// the locks and the AUR read name their own text, the other guards
+    /// wait for the system as a whole.
+    pub const fn hold_text(self, locks: ReadState, aur: ReadState) -> &'static str {
+        match self {
+            Self::UserLocks => match locks {
+                ReadState::Failed => "changes-unread-locks",
+                ReadState::Waiting => "changes-wait-locks",
+            },
+            Self::AurPackages => match aur {
+                ReadState::Failed => "changes-unread-aur",
+                ReadState::Waiting => "changes-wait-aur",
+            },
+            Self::Users
+            | Self::Memberships
+            | Self::Kernels
+            | Self::Locales
+            | Self::LanguagePacks
+            | Self::PackageRemovals
+            | Self::Plymouth
+            | Self::Grub
+            | Self::ModuleBlacklist
+            | Self::NewGroups
+            | Self::Hblock
+            | Self::WifiBackend => "changes-wait-read",
         }
     }
 }

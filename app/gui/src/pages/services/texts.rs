@@ -78,10 +78,6 @@ const fn sub_detail_id(sub: SubCode) -> Option<&'static str> {
 /// The file state worth a tag, with what it means. Enabled and disabled
 /// show in the switch instead.
 pub fn file(ctx: &Context, file: FileState) -> Option<(Cow<'static, str>, Cow<'static, str>)> {
-    if matches!(file, FileState::Enabled | FileState::Disabled) {
-        return None;
-    }
-
     let (name, hint) = match file {
         FileState::Enabled | FileState::Disabled => return None,
         FileState::Static => ("services-file-static", "services-file-static-hint"),

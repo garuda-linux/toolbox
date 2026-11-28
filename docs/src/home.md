@@ -101,9 +101,13 @@ The list is as fresh as the last check. Click **Read Again** beside
 Packages of the AUR (Arch User Repository) are built from scripts its
 users share, not taken from Garuda Linux's repositories.
 
-**Update in Console** runs `paru -Sua` in the Console's terminal. paru
-shows the build files and asks its questions there, so you can review the
-changes and answer, also in an editor paru opens.
+**Update in Console** builds the outdated AUR packages as your user when the
+build folder is accepted. The button says **Reading** while their build
+orders are read, then the Console shows their build files and waits for
+**Continue**, as in [Packages from the AUR](packages.md#packages-from-the-aur).
+On a setup that cannot use that path, it runs `paru -Sua` in the Console's
+terminal instead. paru shows the build files and asks its questions there,
+so you can review the changes and answer, also in an editor paru opens.
 
 ## When a check fails
 

@@ -13,7 +13,7 @@ use std::time::Instant;
 use serde::Serialize;
 use toolbox_cli::output::json_line;
 use toolbox_plan::protocol::{Event, Outcome};
-use toolbox_plan::{Plan, PlannedAction, StepId, UserAction};
+use toolbox_plan::{Plan, PlannedAction, RemoteAction, RootAction, StepId, UserAction};
 use toolbox_services::apply::{Problem, Report};
 
 use super::show::{Clock, failed, refused};
@@ -244,7 +244,9 @@ pub fn nothing() -> String {
 }
 
 /// A step that wants answers typed while it runs: paru's questions, the AUR
-/// review or an editor. JSON Lines leave nobody to type them.
+/// review, an editor, or a repair script of garuda-update, which asks "Are
+/// you sure?" itself. Only the keyring one runs without a question. JSON
+/// Lines leave nobody to type them.
 pub(super) const fn needs_typing(action: &PlannedAction) -> bool {
     matches!(
         action,
@@ -253,7 +255,13 @@ pub(super) const fn needs_typing(action: &PlannedAction) -> bool {
                 | UserAction::InstallAur { packages: _ }
                 | UserAction::ReviewAur { bases: _ }
                 | UserAction::EditFile { editor: _, copy: _ }
-        )
+        ) | PlannedAction::Root(RootAction::GarudaUpdateRemote {
+            action: RemoteAction::Fix
+                | RemoteAction::FullFix
+                | RemoteAction::ResetAudio
+                | RemoteAction::ResetSnapper
+                | RemoteAction::Reinstall
+        })
     )
 }
 

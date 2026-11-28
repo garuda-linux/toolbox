@@ -91,6 +91,24 @@ pub fn read_orders(
         .collect())
 }
 
+/// The build orders of every package of `packages`, `None` unless each one
+/// came back. A split upgrade plans from these, and paru's upgrade takes
+/// over otherwise.
+pub fn read_every(
+    packages: &[PackageName],
+    source: &dyn AurOrderSource,
+    installed: &BTreeSet<PackageName>,
+    route: Result<(), RouteProblem>,
+    counter: u64,
+) -> Option<Vec<BuildOrder>> {
+    let outcomes = read_orders(packages, source, installed, route, counter).ok()?;
+
+    outcomes
+        .into_iter()
+        .map(|(_, outcome)| outcome.ok())
+        .collect()
+}
+
 /// Gives each queued build of `orders` its order, in memory. A build whose
 /// order did not come back waits again. Returns the reason of each package
 /// that has no order. A paru build keeps its wish.

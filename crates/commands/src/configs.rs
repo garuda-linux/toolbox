@@ -16,7 +16,7 @@ use serde::Serialize;
 use tokio::runtime::Runtime;
 use toolbox_catalog::{ConfigFileCatalog, ConfigSection};
 use toolbox_cli::Exit;
-use toolbox_cli::args::{ConfigEdit, ConfigsCommand, ReadList};
+use toolbox_cli::args::{ConfigEdit, ConfigsCommand};
 use toolbox_cli::output::Row;
 use toolbox_cli::suggest::did_you_mean;
 use toolbox_core::features::configs::session::EditedFile;
@@ -71,7 +71,9 @@ pub fn command(command: ConfigsCommand, runtime: &Runtime, out: &mut Out<'_>) ->
     let listing = source.listing(&specs(&catalog));
 
     match command {
-        ConfigsCommand::List(read) => list(&read, &catalog, &listing, out),
+        ConfigsCommand::List(read) => {
+            super::filter::print_all(&read, &files(&catalog, &listing), out, file_listing)
+        }
         ConfigsCommand::Show(args) => show(&args.key, &catalog, &listing, &source, out),
         ConfigsCommand::Edit(args) => edit(&args, &catalog, &listing, &source, runtime, out),
     }
@@ -108,15 +110,6 @@ pub(crate) fn write_back(
     edited: ConfigText,
 ) -> Option<toolbox_plan::Plan> {
     (original != &edited).then(|| write_plan(file.write(edited, original.fingerprint())))
-}
-
-fn list(
-    list: &ReadList,
-    catalog: &ConfigFileCatalog,
-    listing: &Listing,
-    out: &mut Out<'_>,
-) -> Exit {
-    super::filter::print_all(list, &files(catalog, listing), out, file_listing)
 }
 
 /// The files as a list with a header, since a key and a path look alike.

@@ -9,7 +9,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_cli::confirm::Prompt;
 use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, encode};
-use toolbox_plan::{Plan, RootAction, StepId, Upgrader, UserAction};
+use toolbox_plan::{Plan, RemoteAction, RootAction, StepId, Upgrader, UserAction};
 use toolbox_services::apply::Launcher;
 
 use super::carry_out;
@@ -335,4 +335,28 @@ fn a_step_that_asks_is_refused_without_a_terminal() {
 
     let (answered, _) = run(aur(), true, &mut terminal(&[]), Outcome::Succeeded);
     assert_eq!(answered, Exit::Success);
+}
+
+/// The repair scripts garuda-update fetches ask "Are you sure?" themselves,
+/// all but the keyring one.
+#[test]
+fn a_remote_repair_that_asks_is_refused_without_a_terminal() {
+    let repair = |action| Plan::root(RootAction::GarudaUpdateRemote { action });
+
+    for action in RemoteAction::ALL {
+        let (exit, out) = run(
+            repair(action),
+            true,
+            &mut without_terminal(),
+            Outcome::Succeeded,
+        );
+
+        let expected = if action == RemoteAction::Keyring {
+            Exit::Success
+        } else {
+            Exit::NeedsYes
+        };
+
+        assert_eq!(exit, expected, "{action:?}: {out}");
+    }
 }

@@ -13,11 +13,12 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::PackageName;
+use toolbox_services::home::Updates;
 pub use unread::unreadable;
 use unread::{placeholder, unreadable_index, unreadable_page};
 
 use super::row::{self, PackageRow, Row};
-use super::{PackagesPage, Updates, aur, shows_aur};
+use super::{PackagesPage, aur, shows_aur};
 use crate::command::{AppCommand, PackagesCommand};
 use crate::i18n;
 use crate::packages::{Packages, Read};
@@ -145,7 +146,7 @@ fn known_top(
     unread: bool,
 ) {
     let aur_on = shows_aur(context);
-    let updates = Updates::of(context);
+    let updates = Updates::of(context.home.status_read());
     let view = view_of(page, catalog, &updates, context);
     let aur_rows = aur_on.then(|| aur::rows_of(page, context)).flatten();
     let counts = ChipCounts {
@@ -180,7 +181,7 @@ fn known_column(
         return;
     }
 
-    let updates = Updates::of(context);
+    let updates = Updates::of(context.home.status_read());
     if page.filter == Filter::Updates && !updates_read(ui, context, &updates, page.open.is_some()) {
         return;
     }

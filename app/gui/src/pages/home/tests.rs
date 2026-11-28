@@ -1,8 +1,10 @@
+mod aur_row;
 mod disk_meter;
 mod live;
 mod lost;
 mod merges;
 mod merges_many;
+mod status_read;
 mod steps;
 
 use std::sync::Arc;

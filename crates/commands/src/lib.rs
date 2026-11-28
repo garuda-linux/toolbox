@@ -5,6 +5,7 @@
 pub mod accounts;
 mod act;
 pub mod apply;
+mod aur_upgrade;
 pub mod boot;
 pub mod bootrepair;
 pub mod change;
@@ -55,8 +56,8 @@ use toolbox_cli::args::{
 use toolbox_cli::output::{ColorMode, Row, json};
 use toolbox_core::features::maintenance::{Program, RunNow};
 use toolbox_core::{Snapshot, Toggle};
-use toolbox_plan::Plan;
 use toolbox_plan::protocol::Mode;
+use toolbox_plan::{Plan, PlannedAction};
 use toolbox_privatebin::{PrivateBinTransport, Transport};
 use toolbox_services::apply::Launcher as _;
 use toolbox_services::catalogs::Catalogs;
@@ -320,19 +321,24 @@ fn diagnose(args: &Diagnostics, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
 }
 
 fn update(args: &Update, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
-    let snapshot = system();
+    let mut snapshot = system();
+    root::sudo_route(out.settings(), &mut snapshot);
     let garuda_update = Programs::check().garuda_update;
 
-    let mut plans = vec![RunNow::UpgradeSystem.plan(&snapshot, Program::of_found(garuda_update))];
-    if args.aur {
-        plans.push(RunNow::AurUpgrade.plan(&snapshot, Program::of_found(garuda_update)));
-    }
+    let system: Vec<PlannedAction> = RunNow::UpgradeSystem
+        .plan(&snapshot, Program::of_found(garuda_update))
+        .steps()
+        .iter()
+        .map(|step| step.action.clone())
+        .collect();
 
-    let plan = Plan::new(
-        plans
-            .iter()
-            .flat_map(|plan| plan.steps().iter().map(|step| step.action.clone())),
-    );
+    let actions = if args.aur {
+        aur_upgrade::of_system(out.settings(), &snapshot).after(system)
+    } else {
+        system
+    };
+
+    let plan = Plan::new(actions);
 
     apply::carry_out(
         plan,

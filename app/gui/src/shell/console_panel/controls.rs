@@ -1,5 +1,7 @@
 use egui::Ui;
-use toolbox_gui_kit::widgets::{ButtonKind, icon_button, pill_button, trailing};
+use toolbox_gui_kit::widgets::{
+    ButtonKind, icon_button, pill_button, pill_width, split_row, trailing,
+};
 use toolbox_gui_kit::{icons, tokens};
 
 use super::{focus, output};
@@ -15,26 +17,30 @@ pub(super) fn review_hint(ui: &mut Ui, console: &Console, commands: &CommandSend
     }
 
     let ctx = ui.ctx().clone();
-    ui.horizontal_wrapped(|ui| {
-        let hint = i18n::text(&ctx, "console-review-hint");
-        ui.add(egui::Label::new(hint.as_ref()).wrap());
+    let label = i18n::text(&ctx, "console-continue");
 
+    // The button keeps its width and the hint wraps in the rest, so the
+    // sheet never grows wider than the window.
+    let ((), proceed) = split_row(
+        ui,
+        pill_width(ui, &label),
+        |ui| {
+            let hint = i18n::text(&ctx, "console-review-hint");
+            ui.add(egui::Label::new(hint.as_ref()).wrap());
+        },
         // Never the default: Enter reaches the review as the terminal's key,
         // and only a click on this button sends `y`.
-        let proceed = ui
-            .push_id("console-continue", |ui| {
-                pill_button(
-                    ui,
-                    &i18n::text(&ctx, "console-continue"),
-                    ButtonKind::Primary,
-                )
+        |ui| {
+            ui.push_id("console-continue", |ui| {
+                pill_button(ui, &label, ButtonKind::Primary)
             })
-            .inner;
+            .inner
+        },
+    );
 
-        if proceed.clicked() {
-            commands.send(AppCommand::ConsoleInput(b"y\r".to_vec()));
-        }
-    });
+    if proceed.clicked() {
+        commands.send(AppCommand::ConsoleInput(b"y\r".to_vec()));
+    }
 }
 
 /// The status left of them draws more or fewer widgets as the run goes,

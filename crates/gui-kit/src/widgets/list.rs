@@ -294,9 +294,11 @@ struct Measuring {
     seen: u64,
 }
 
-/// Drops what every list remembers of its rows. A list's length counts
-/// the measured height of each row it ever drew, so a picture taken after
-/// reads landed in a varying number of frames needs this first.
+/// Drops what every list remembers of its rows.
+///
+/// A list's length depends on which rows it ever drew. Reads land over a
+/// varying number of frames, so a picture test calls this once they landed
+/// and only the rows of the settled page count.
 #[cfg(any(test, feature = "testing"))]
 pub fn forget_rows(ctx: &egui::Context) {
     ctx.data_mut(|data| {

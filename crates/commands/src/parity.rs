@@ -3,6 +3,7 @@
 
 mod tests;
 
+#[cfg(test)]
 pub const COMMANDS: &[(&str, &[&str])] = &[
     ("account-locks", &["users", "lock", "guest"]),
     ("aur-packages", &["packages", "install", "--aur", "yay-bin"]),
@@ -62,6 +63,7 @@ pub const COMMANDS: &[(&str, &[&str])] = &[
     ("wifi-backend", &["tweaks", "wifi-backend", "iwd"]),
 ];
 
+#[cfg(test)]
 pub const AT_ONCE: &[(&str, &[&str])] = &[
     ("add user", &["users", "add", "grace", "--password-stdin"]),
     ("set password", &["users", "password", "hopper"]),

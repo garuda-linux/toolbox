@@ -50,7 +50,6 @@ impl PacmanLog {
         Self::new(Path::new("/").join(PACMAN_LOG))
     }
 
-    /// Another log file, for tests.
     #[must_use = "the adapter does nothing until asked"]
     pub(crate) fn new(path: impl Into<PathBuf>) -> Self {
         Self { path: path.into() }

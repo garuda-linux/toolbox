@@ -4,8 +4,8 @@ use std::path::Path;
 use toolbox_plan::{PackageName, PlannedAction, RemoteAction, RootAction, Upgrader};
 
 use super::{
-    OperationRow, PageTool, Repair, ToolRow, UPGRADE_SYSTEM, asks_first, install, installed,
-    missing, operations, repairs, rescue_install, run_now_plan, task, tools, upgrader,
+    OperationRow, PageTool, Repair, ToolRow, asks_first, install, installed, missing, operations,
+    repairs, rescue_install, run_now_plan, task, tools, upgrader,
 };
 use crate::domains::InstalledPackages;
 use crate::features::maintenance::{Operation, Operations, Tool};
@@ -269,7 +269,7 @@ fn repairs_that_reinstall_or_wipe_ask_first() {
 fn removing_orphans_and_cleaning_the_cache_ask_first() {
     assert!(asks_first("remove-orphans"));
     assert!(asks_first("clean-package-cache"));
-    assert!(!asks_first(UPGRADE_SYSTEM));
+    assert!(!asks_first(Operation::UpgradeSystem.key()));
     assert!(!asks_first("refresh-keyring"));
 }
 

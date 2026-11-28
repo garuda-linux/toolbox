@@ -7,6 +7,7 @@ mod tests;
 
 use std::collections::BTreeMap;
 
+use toolbox_core::features::ReadState;
 use toolbox_plan::{Toggle, UserName};
 use toolbox_state::accounts::AccountLockFlags;
 use toolbox_system::LockProblem;
@@ -36,6 +37,14 @@ impl Locks {
         match self {
             Self::Known(flags) => flags.get(user).copied().map(Toggle::from_on),
             Self::NotAsked | Self::Loading | Self::Refused(_) | Self::Unknown => None,
+        }
+    }
+
+    /// How the guards that wait for the flags see this read.
+    pub const fn read_state(&self) -> ReadState {
+        match self {
+            Self::Refused(_) | Self::Unknown => ReadState::Failed,
+            Self::NotAsked | Self::Loading | Self::Known(_) => ReadState::Waiting,
         }
     }
 

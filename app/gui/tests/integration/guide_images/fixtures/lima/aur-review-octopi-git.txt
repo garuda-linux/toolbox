@@ -1,0 +1,22 @@
+octopi-git: all files, the first review
+diff --git a/.SRCINFO b/.SRCINFO
+new file mode 100644
+index 0000000..1590954
+--- /dev/null
++++ b/.SRCINFO
+@@ -0,0 +1,38 @@
++pkgbase = octopi-git
++	pkgdesc = This is Octopi, a powerful Pacman frontend using Qt libs
++	pkgver = 0.16.2.r31.d98b3541
++	pkgrel = 1
++	url = https://github.com/aarnt/octopi
++	arch = x86_64
++	license = GPL2
++	makedepends = git
++	makedepends = qt6-base
++	makedepends = qt6-tools
++	depends = sudo
++	depends = pkgfile
++	depends = qtermwidget
++	depends = qt-sudo
++	depends = alpm_octopi_utils-git

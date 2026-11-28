@@ -18,6 +18,7 @@ use std::net::IpAddr;
 
 pub use jobs::{DryRunActions, DryRunAddress, NetworkSetup};
 use jobs::{Jobs, Landed};
+use toolbox_core::features::ReadState;
 use toolbox_core::features::network::{
     Connectivity, DefaultRoute, Device, InterfaceCard, Radio, RadioAccess, RadioTarget,
 };
@@ -104,6 +105,14 @@ impl<T> Read<T> {
         match self {
             Self::Known(value) => Some(value),
             Self::Loading | Self::Unavailable | Self::Failed => None,
+        }
+    }
+
+    /// How the guards that wait for this read see it.
+    pub const fn read_state(&self) -> ReadState {
+        match self {
+            Self::Failed => ReadState::Failed,
+            Self::Loading | Self::Unavailable | Self::Known(_) => ReadState::Waiting,
         }
     }
 }

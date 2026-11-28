@@ -82,7 +82,7 @@ fn without_pacman_s_databases_no_build_is_planned() {
     );
 }
 
-/// The module is a plain name in JSON, as before.
+/// The module is a plain name in JSON.
 #[test]
 fn a_module_row_as_json_keeps_its_module_as_a_string() {
     use super::ModuleRow;
@@ -213,8 +213,8 @@ fn a_refused_boot_change_under_json_is_one_error_line() {
     assert_eq!(text.lines().count(), 1, "{text}");
 }
 
-/// Default, background and theme are one string each, as before the check,
-/// and an unset picture is the empty string.
+/// Default, background and theme are one string each, and an unset picture
+/// is the empty string.
 #[test]
 fn a_boot_view_as_json_keeps_its_strings() {
     let view = BootView {

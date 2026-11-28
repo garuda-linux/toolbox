@@ -152,6 +152,8 @@ arch-selftest:
     # The suites that need pacman's databases, which `all` leaves out.
     - runuser -u selftest -- env HOME=/home/selftest CARGO_HOME="$CARGO_HOME"
       SELFTEST_ROOT="$SELFTEST_ROOT" scripts/selftest.sh packages-arch
+    - runuser -u selftest -- env HOME=/home/selftest CARGO_HOME="$CARGO_HOME"
+      SELFTEST_ROOT="$SELFTEST_ROOT" scripts/selftest.sh packages-aur-orders
   after_script:
     - !reference [.selftest-artifacts, after_script]
     - scripts/selftest-junit.sh "$SELFTEST_ROOT" selftest/junit.xml

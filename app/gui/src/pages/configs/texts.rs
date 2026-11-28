@@ -6,8 +6,8 @@ use toolbox_core::features::configs::session::{
     EditedFile, Phase, Problem, ProblemCode, Session, Stage,
 };
 
-use crate::i18n;
 use crate::i18n::Arg;
+use crate::{catalog_texts, i18n};
 
 pub fn problem(ctx: &Context, code: ProblemCode, path: &str) -> String {
     code.text_id().map_or_else(String::new, |id| {
@@ -197,10 +197,14 @@ pub fn link(ctx: &Context, row: &Row) -> String {
 }
 
 pub fn unreadable(ctx: &Context, problem: &LoadProblem) -> (String, String) {
-    (
-        i18n::text(ctx, "configs-unreadable").into_owned(),
-        problem.detail.clone(),
-    )
+    let detail = problem
+        .problems
+        .iter()
+        .map(|failed| catalog_texts::file(ctx, failed))
+        .collect::<Vec<_>>()
+        .join("\n");
+
+    (i18n::text(ctx, "configs-unreadable").into_owned(), detail)
 }
 
 pub fn path(path: Option<&EditedFile>) -> String {

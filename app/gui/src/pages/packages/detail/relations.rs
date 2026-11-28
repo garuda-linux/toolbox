@@ -217,23 +217,22 @@ fn more(ui: &mut Ui, hidden: usize, all: &mut bool) {
         return;
     }
 
-    let ctx = ui.ctx().clone();
-    let text = i18n::text_with(&ctx, "packages-more", &[("count", Arg::from(hidden))]);
-    let name = i18n::text_with(&ctx, "packages-more-name", &[("count", Arg::from(hidden))]);
-    if text_button(ui, &text, &name).clicked() {
-        *all = true;
-    }
+    show_all(ui, ("packages-more", "packages-more-name"), hidden, all);
 }
 
 fn libraries(ui: &mut Ui, count: usize, all: &mut bool) {
-    let ctx = ui.ctx().clone();
-    let text = i18n::text_with(&ctx, "packages-libraries", &[("count", Arg::from(count))]);
-    let name = i18n::text_with(
-        &ctx,
-        "packages-libraries-name",
-        &[("count", Arg::from(count))],
+    show_all(
+        ui,
+        ("packages-libraries", "packages-libraries-name"),
+        count,
+        all,
     );
+}
 
+fn show_all(ui: &mut Ui, (text_id, name_id): (&str, &str), count: usize, all: &mut bool) {
+    let ctx = ui.ctx().clone();
+    let text = i18n::text_with(&ctx, text_id, &[("count", Arg::from(count))]);
+    let name = i18n::text_with(&ctx, name_id, &[("count", Arg::from(count))]);
     if text_button(ui, &text, &name).clicked() {
         *all = true;
     }

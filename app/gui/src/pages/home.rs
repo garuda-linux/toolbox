@@ -15,6 +15,7 @@ use egui::Ui;
 use toolbox_gui_kit::widgets::{Tone, banner};
 use toolbox_gui_kit::{Loadable, UiExt as _};
 use toolbox_news::News;
+use toolbox_services::home::StatusRead;
 use toolbox_system::{CallError, Facts, Host, Status};
 
 use super::{PageContext, PageView};
@@ -56,6 +57,18 @@ pub struct HomePage {
     updates_open: bool,
     asking_to_restart: bool,
     merges: Option<merges::MergeDialog>,
+}
+
+impl HomeFacts<'_> {
+    /// The status read as the Packages page takes it. A failed read stays
+    /// failed while an older status is readable beside it.
+    pub fn status_read(&self) -> StatusRead<'_> {
+        match self.status {
+            None => StatusRead::Unread,
+            Some(read) if read.error().is_some() => StatusRead::Failed,
+            Some(read) => read.get().map_or(StatusRead::Unread, StatusRead::Read),
+        }
+    }
 }
 
 impl PageView for HomePage {

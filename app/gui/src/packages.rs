@@ -12,6 +12,7 @@ mod orders;
 mod sample;
 #[cfg(test)]
 mod tests;
+mod upgrade;
 
 use std::fmt;
 use std::sync::Arc;
@@ -19,6 +20,7 @@ use std::sync::Arc;
 use tokio::runtime::Handle;
 use toolbox_aur::{AurError, AurSource};
 use toolbox_core::features::packages::PackageDetails;
+use toolbox_core::features::packages::aur::upgrade::AurUpgrade;
 use toolbox_core::features::packages::aur::{AurCatalog, AurNames};
 use toolbox_core::features::packages::history::{HistoryEntry, history};
 use toolbox_core::features::packages::list::Catalog;
@@ -29,6 +31,7 @@ use toolbox_system::{AurOrderSource, PackageIndexSource, RecentLogSource, RouteS
 pub use self::orders::Landing;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub use self::sample::SampleAur;
+use self::upgrade::UpgradeRead;
 use crate::lane::Lane;
 pub use crate::network::Read;
 use crate::refused::Refused;
@@ -85,6 +88,8 @@ pub struct Packages {
     /// The queue's revision when an Apply waits for a fresh read of the
     /// orders, see [`Packages::start_apply`].
     apply: Option<u64>,
+    /// Home's AUR upgrade, from the read of its build orders to its plan.
+    upgrade: UpgradeRead,
 }
 
 pub type PackagesRefusal = Refused<toolbox_core::features::packages::queue::Refusal, PackageName>;
@@ -95,6 +100,7 @@ enum Landed {
     Info(PackageName, Box<Read<Option<PackageDetails>>>),
     History(PackageName, Read<Vec<HistoryEntry>>),
     Orders(Landing),
+    Upgrade(AurUpgrade),
 }
 
 struct Jobs {
@@ -225,6 +231,7 @@ impl Packages {
                     self.change_shown(&package, |shown| shown.history = lines);
                 }
                 Landed::Orders(landing) => self.landing = Some(landing),
+                Landed::Upgrade(plan) => self.upgrade = UpgradeRead::Planned(plan),
             }
         }
     }
@@ -343,12 +350,23 @@ impl Packages {
             orders: OrderReads::default(),
             landing: None,
             apply: None,
+            upgrade: UpgradeRead::Idle,
         }
     }
 
+    #[cfg(test)]
     #[must_use = "returns the new value, the old one stays as it was"]
     pub fn with_aur(self, aur: Read<Arc<AurCatalog>>) -> Self {
         Self { aur, ..self }
+    }
+
+    /// As if an AUR upgrade of Home read its build orders.
+    #[must_use = "returns the new value, the old one stays as it was"]
+    pub fn with_upgrade_reading(self) -> Self {
+        Self {
+            upgrade: UpgradeRead::Reading,
+            ..self
+        }
     }
 }
 

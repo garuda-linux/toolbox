@@ -8836,6 +8836,220 @@
     },
     "toggles-problem-reason": {
       "string": "The list could not be loaded. {reason}"
+    },
+    "catalog-error-read": {
+      "string": "{path}: {error}",
+      "developer_comment": "A catalog file that failed to load, then the entry in it and its problem.\n$value is the value the file holds, such as a name, a path or a number."
+    },
+    "catalog-error-syntax": {
+      "string": "{source}: {error}"
+    },
+    "catalog-error-entry": {
+      "string": "{source}: entry \"{id}\": {problem}"
+    },
+    "catalog-check-package": {
+      "string": "the package {name}"
+    },
+    "catalog-check-service": {
+      "string": "the service {name}"
+    },
+    "catalog-check-user-service": {
+      "string": "the user service {name}"
+    },
+    "catalog-check-group": {
+      "string": "the group {name}"
+    },
+    "catalog-check-user-config": {
+      "string": "the user config {edit}"
+    },
+    "catalog-problem-duplicate-check": {
+      "string": "another entry watches {value}"
+    },
+    "catalog-problem-bad-name": {
+      "string": "invalid {kind} `{value}`: {reason}"
+    },
+    "catalog-problem-bad-id": {
+      "string": "the id must be lowercase words joined by dashes"
+    },
+    "catalog-problem-duplicate-id": {
+      "string": "the id is used twice"
+    },
+    "catalog-problem-duplicate-path": {
+      "string": "another entry points at \"{value}\""
+    },
+    "catalog-problem-admin-group": {
+      "string": "the group \"{value}\" grants root, it is changed on the Users page only"
+    },
+    "catalog-problem-empty-name": {
+      "string": "empty name"
+    },
+    "catalog-problem-empty-title": {
+      "string": "empty title"
+    },
+    "catalog-problem-empty-description": {
+      "string": "empty description"
+    },
+    "catalog-problem-hidden-character": {
+      "string": "\"{value}\" holds a hidden character"
+    },
+    "catalog-problem-empty-icon": {
+      "string": "empty icon"
+    },
+    "catalog-problem-no-entries": {
+      "string": "no entries"
+    },
+    "catalog-problem-empty-requirement": {
+      "string": "the requires list is empty"
+    },
+    "catalog-problem-unknown-requirement": {
+      "string": "requires \"{value}\", which is no entry of this catalog"
+    },
+    "catalog-problem-requirement-repeats": {
+      "string": "requires \"{value}\" twice"
+    },
+    "catalog-problem-requires-itself": {
+      "string": "the entry requires itself"
+    },
+    "catalog-problem-requirement-cycle": {
+      "string": "the requirements form a cycle: {value}"
+    },
+    "catalog-problem-no-files": {
+      "string": "no files"
+    },
+    "catalog-problem-outside-skel": {
+      "string": "\"{value}\" is not below /etc/skel/"
+    },
+    "catalog-problem-parent-component": {
+      "string": "\"{value}\" contains \"..\""
+    },
+    "catalog-problem-not-writable": {
+      "string": "\"{value}\" must be both a root-owned entry without read_only and a line of toolbox_plan::WRITABLE_CONFIG_FILES or WRITABLE_CONFIG_FOLDERS"
+    },
+    "catalog-problem-read-only-writable": {
+      "string": "\"{value}\" is read_only, so it must be neither a line of toolbox_plan::WRITABLE_CONFIG_FILES or WRITABLE_CONFIG_FOLDERS nor a file in one of those folders"
+    },
+    "catalog-problem-read-only-home": {
+      "string": "read_only needs a root-owned path"
+    },
+    "catalog-problem-empty-content": {
+      "string": "empty content"
+    },
+    "catalog-problem-reload-without-user-config": {
+      "string": "reload needs a user-file, user-ini or user-json check"
+    },
+    "catalog-problem-unknown-reload": {
+      "string": "unknown reload \"{value}\", known: kwin"
+    },
+    "catalog-problem-restart-without-user-config": {
+      "string": "restart-user-units needs a user-file, user-ini or user-json check"
+    },
+    "catalog-problem-restart-repeats": {
+      "string": "restart-user-units names \"{value}\" twice"
+    },
+    "catalog-problem-empty-desktop": {
+      "string": "the desktop list is empty or has an empty name"
+    },
+    "catalog-problem-also-without-package": {
+      "string": "also needs a package check"
+    },
+    "catalog-problem-empty-also": {
+      "string": "the also list is empty"
+    },
+    "catalog-problem-also-repeats": {
+      "string": "also names \"{value}\" twice"
+    },
+    "catalog-problem-empty-conflicts": {
+      "string": "the conflicts list is empty"
+    },
+    "catalog-problem-conflict-repeats": {
+      "string": "conflicts names \"{value}\" twice"
+    },
+    "catalog-problem-unknown-conflict": {
+      "string": "conflicts with \"{value}\", which is no entry of this catalog"
+    },
+    "catalog-problem-conflicts-itself": {
+      "string": "the entry conflicts with itself"
+    },
+    "catalog-problem-conflicts-requirement": {
+      "string": "conflicts with \"{value}\", which it also requires"
+    },
+    "catalog-problem-bad-icon": {
+      "string": "the icon \"{value}\" is no plain file name"
+    },
+    "catalog-problem-missing-icon": {
+      "string": "the icon \"{value}\" is missing from the icon folder"
+    },
+    "catalog-problem-bad-glyph": {
+      "string": "the glyph \"{value}\" is no freedesktop icon name"
+    },
+    "catalog-problem-protected-also": {
+      "string": "the `also` package \"{value}\" is protected, so the entry could never go off"
+    },
+    "catalog-problem-bad-url": {
+      "string": "the url \"{value}\" is no plain https link"
+    },
+    "catalog-problem-bad-colour": {
+      "string": "\"{value}\" is no colour of the form #rrggbb"
+    },
+    "catalog-problem-ansi-count": {
+      "string": "ansi has {value} colours, it needs 16"
+    },
+    "catalog-problem-empty-licence": {
+      "string": "empty licence"
+    },
+    "catalog-problem-home-path-empty": {
+      "string": "the home path is empty"
+    },
+    "catalog-problem-home-path-too-long": {
+      "string": "the home path is longer than {value} bytes"
+    },
+    "catalog-problem-home-path-absolute": {
+      "string": "the home path `{value}` is absolute, it must be relative to the home"
+    },
+    "catalog-problem-home-path-invalid-character": {
+      "string": "the home path contains `{value}`"
+    },
+    "catalog-problem-home-path-invalid-component": {
+      "string": "the home path `{value}` has an empty, `.` or `..` component"
+    },
+    "catalog-problem-config-word-empty": {
+      "string": "the config word is empty"
+    },
+    "catalog-problem-config-word-too-long": {
+      "string": "the config word is longer than {value} bytes"
+    },
+    "catalog-problem-config-word-invalid-character": {
+      "string": "the config word contains `{value}`"
+    },
+    "catalog-problem-config-word-padded": {
+      "string": "the config word `{value}` starts or ends with a blank"
+    },
+    "catalog-problem-config-text-too-large": {
+      "string": "the file is larger than {value} bytes"
+    },
+    "catalog-problem-config-text-not-text": {
+      "string": "the file is no text"
+    },
+    "catalog-problem-config-path-empty": {
+      "string": "the config file path is empty"
+    },
+    "catalog-problem-config-path-too-long": {
+      "string": "the config file path is longer than {value} bytes"
+    },
+    "catalog-problem-config-path-relative": {
+      "string": "the config file path `{value}` is not absolute"
+    },
+    "catalog-problem-config-path-invalid-character": {
+      "string": "the config file path contains `{value}`"
+    },
+    "catalog-problem-config-path-invalid-component": {
+      "string": "the config file path `{value}` has an empty, overlong, `.` or `..` component"
+    },
+    "catalog-problem-config-path-outside-roots": {
+      "string": "the config file path `{value}` is outside the folders the toolbox edits"
+    },
+    "catalog-problem-config-path-withheld": {
+      "string": "`{value}` is never read or written as a config file"
     }
   },
   "tweaks": {

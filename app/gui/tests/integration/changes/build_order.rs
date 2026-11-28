@@ -5,10 +5,12 @@ use egui::accesskit::Role;
 use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use egui_kittest::{Harness, HarnessBuilder};
 use tokio::runtime::Runtime;
+use tokio::sync::watch;
 use toolbox_core::domains::{AurPackages, AurWish, InstalledPackages};
 use toolbox_core::features::packages::aur::{AurNames, toggle};
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
+use toolbox_gui::desktop::DesktopLook;
 use toolbox_gui::packages::{PackagesSetup, SampleAur};
 use toolbox_gui::{App, Setup};
 use toolbox_plan::PackageName;
@@ -42,17 +44,20 @@ pub(super) fn queued_build(text: &str, route: AurRoute) -> ChangeSet {
     changes
 }
 
-/// The app with `changes` queued and their orders answered by `orders`.
+/// The app with `changes` queued and their orders answered by `orders`, in
+/// the desktop look `look` when a guide picture asks for it.
 pub(super) fn with_orders_in(
     builder: HarnessBuilder<App>,
     runtime: &Runtime,
     changes: ChangeSet,
     orders: Arc<dyn AurOrderSource>,
+    look: Option<watch::Receiver<DesktopLook>>,
 ) -> Harness<'static, App> {
     let handle = runtime.handle().clone();
     launch_in(
         builder,
         Setup {
+            look,
             queue: toolbox_gui::queue::Queue::in_memory(changes),
             packages: Some(PackagesSetup {
                 runtime: handle,
@@ -72,7 +77,7 @@ fn with_orders(
     changes: ChangeSet,
     orders: Arc<dyn AurOrderSource>,
 ) -> Harness<'static, App> {
-    with_orders_in(window(HEIGHT), runtime, changes, orders)
+    with_orders_in(window(HEIGHT), runtime, changes, orders, None)
 }
 
 /// A queued AUR build has no build order yet, so Apply holds and says why.

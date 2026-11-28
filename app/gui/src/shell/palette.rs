@@ -184,10 +184,10 @@ impl Palette {
     /// the ends. Returns whether it moved.
     fn move_mark(&mut self, ui: &egui::Ui, count: usize) -> bool {
         let (up, down) = ui.input_mut(|input| {
-            let up = input.count_and_consume_key(Modifiers::NONE, Key::ArrowUp);
-            let down = input.count_and_consume_key(Modifiers::NONE, Key::ArrowDown);
-
-            (up, down)
+            (
+                input.count_and_consume_key(Modifiers::NONE, Key::ArrowUp),
+                input.count_and_consume_key(Modifiers::NONE, Key::ArrowDown),
+            )
         });
 
         if count == 0 || up == down {

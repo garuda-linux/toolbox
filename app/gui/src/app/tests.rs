@@ -1,3 +1,4 @@
+mod aur_upgrade;
 mod dismiss;
 mod looked_at;
 mod orders;

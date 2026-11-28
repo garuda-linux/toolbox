@@ -6,7 +6,7 @@ their `docs/src/SUMMARY.md` entries stay in sync.
 
 ## Screenshots
 
-- `docs/src/images/` holds the guide's 24 pictures, rendered by the kittest
+- `docs/src/images/` holds the guide's 26 pictures, rendered by the kittest
   test `guide_images::every_guide_picture_matches_its_render`
   (`app/gui/tests/integration/guide_images.rs`) from the page fixtures, each
   in the dark and the light theme. `<name>.png` is the dark capture,

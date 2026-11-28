@@ -18,11 +18,11 @@ use toolbox_system::{AurOrderSource, SampleRoute};
 use super::{Aur, Log, Machine};
 use crate::packages::{Packages, PackagesSetup};
 
-fn name(text: &str) -> PackageName {
+pub(super) fn name(text: &str) -> PackageName {
     PackageName::new(text).unwrap()
 }
 
-fn snapshot() -> Snapshot {
+pub(super) fn snapshot() -> Snapshot {
     let mut snapshot = Snapshot::default();
     snapshot.insert(InstalledPackages(std::collections::BTreeSet::from([name(
         "paru",
@@ -37,7 +37,7 @@ fn queue(changes: &mut ChangeSet, text: &str) {
     toggle(&name(text), Toggle::On, &snapshot(), changes).unwrap();
 }
 
-fn packages(runtime: &Runtime, orders: Arc<dyn AurOrderSource>) -> Packages {
+pub(super) fn packages(runtime: &Runtime, orders: Arc<dyn AurOrderSource>) -> Packages {
     Packages::new(
         Some(PackagesSetup {
             runtime: runtime.handle().clone(),

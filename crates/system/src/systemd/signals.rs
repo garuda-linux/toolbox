@@ -55,7 +55,6 @@ impl UnitSignals for SystemUnitSignals {
 async fn follow(scope: UnitScope, mut on_signal: OnSignal) -> Result<(), CallError> {
     let connection = shared(scope).await?;
 
-    // systemd only sends its manager signals to subscribed clients.
     call::<_, ()>(&connection, &SUBSCRIBE, &()).await?;
 
     let [

@@ -2,7 +2,7 @@ use toolbox_plan::{GroupName, HomeDirectory, LocaleName, ShellPath, UnitName, Us
 
 use crate::lists::{GroupRow, LocaleRow, ServiceRow, UserRow};
 
-/// The unit, group and locale ids are plain strings in JSON, as before.
+/// The unit, group and locale ids are plain strings in JSON.
 #[test]
 fn service_group_and_locale_rows_as_json_keep_their_ids_as_strings() {
     let service = ServiceRow {
@@ -43,7 +43,7 @@ fn service_group_and_locale_rows_as_json_keep_their_ids_as_strings() {
     );
 }
 
-/// Home and shell are one string each, checked or not, as before the check.
+/// Home and shell are one string each, checked or not.
 #[test]
 fn a_user_row_as_json_keeps_home_and_shell_as_strings() {
     let checked = UserRow {

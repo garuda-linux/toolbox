@@ -169,8 +169,6 @@ fn chips(ui: &mut Ui, context: &PageContext<'_>, page: &Page) {
     }
 }
 
-/// A parameter that stays. Screen readers hear why as its description,
-/// the pointer sees it in a tooltip.
 /// The title and the description of a kernel flag. The ids are literals, so
 /// grep and the catalog checks see each one.
 const fn flag_ids(flag: Flag) -> (&'static str, &'static str) {
@@ -185,6 +183,8 @@ const fn flag_ids(flag: Flag) -> (&'static str, &'static str) {
     }
 }
 
+/// A parameter that stays. Screen readers hear why as its description,
+/// the pointer sees it in a tooltip.
 fn kept_tag(ui: &mut Ui, item: &str, why: &str) {
     let shown = locked_tag(ui, item);
     let described = why.to_owned();

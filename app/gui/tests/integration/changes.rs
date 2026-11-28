@@ -1,5 +1,5 @@
 mod build_order;
-mod build_pictures;
+pub mod build_pictures;
 mod footer;
 mod popover;
 

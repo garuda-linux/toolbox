@@ -3,8 +3,8 @@
 //! packages it installs with their repositories and its website.
 
 use egui::{Label, Ui};
+use toolbox_core::features::discover::package;
 use toolbox_core::features::discover::view::Shown;
-use toolbox_core::features::discover::{Apps, Hit, package};
 use toolbox_core::features::packages::Origin;
 use toolbox_core::features::packages::list::Catalog;
 use toolbox_core::features::toggles;
@@ -37,7 +37,13 @@ pub(super) struct Detail {
 
 /// The details of the app `id`, built when the app or the queue changes.
 pub fn build(ui: &Ui, context: &PageContext<'_>, id: &str) -> Option<Detail> {
-    let hit = find(&context.catalogs.apps.apps, id)?;
+    let hit = context
+        .catalogs
+        .apps
+        .apps
+        .all()
+        .find(|hit| hit.entry.id() == id)?;
+
     let state = toggles::state(hit.catalog, hit.entry, context.snapshot, context.changes);
     let packages = package(hit.entry)
         .into_iter()
@@ -50,10 +56,6 @@ pub fn build(ui: &Ui, context: &PageContext<'_>, id: &str) -> Option<Detail> {
         text: hit.entry.description().to_owned(),
         packages,
     })
-}
-
-fn find<'apps>(apps: &'apps Apps, id: &str) -> Option<Hit<'apps>> {
-    apps.all().find(|hit| hit.entry.id() == id)
 }
 
 /// Draws the details of the open app, or Back, which closes them.

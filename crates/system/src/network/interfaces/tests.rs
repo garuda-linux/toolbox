@@ -70,8 +70,6 @@ impl PropertyReads for Replies {
     }
 }
 
-/// busctl's JSON without its types: the one dict of the reply, with each
-/// typed value replaced by its data.
 #[test]
 fn a_hardware_address_that_is_no_mac_is_left_out() {
     assert_eq!(super::hardware("not a mac"), None);
@@ -82,6 +80,8 @@ fn a_hardware_address_that_is_no_mac_is_left_out() {
     );
 }
 
+/// busctl's JSON without its types: the one dict of the reply, with each
+/// typed value replaced by its data.
 fn reply(json: &str) -> Value {
     let reply: Value = serde_json::from_str(json).unwrap();
     plain(&reply["data"][0])

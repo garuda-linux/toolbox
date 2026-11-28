@@ -10,7 +10,7 @@ use toolbox_text::OutsideText;
 /// The longest kept version, `epoch:pkgver-pkgrel`.
 pub const VERSION_CHARS: usize = 128;
 pub const DESCRIPTION_CHARS: usize = 512;
-/// AUR account names are at most 16 characters.
+/// Far above the length of any AUR account name.
 pub const MAINTAINER_CHARS: usize = 64;
 pub const URL_CHARS: usize = 2048;
 /// One entry of a list (a dependency, a licence, a keyword).

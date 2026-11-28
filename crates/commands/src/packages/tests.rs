@@ -188,7 +188,7 @@ fn without_the_databases_the_change_is_unavailable() {
     ));
 }
 
-/// The package name is a plain string in JSON, as before.
+/// The package name is a plain string in JSON.
 #[test]
 fn a_package_row_as_json_keeps_its_name_as_a_string() {
     use super::PackageRow;

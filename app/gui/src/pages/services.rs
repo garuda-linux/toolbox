@@ -139,7 +139,7 @@ impl PageView for ServicesPage {
 }
 
 impl ServicesPage {
-    /// Lists the units of `scope`, as the Settings page asks.
+    /// Lists the units of `scope`.
     pub const fn show_scope(&mut self, scope: UnitScope) {
         self.scope = scope;
     }

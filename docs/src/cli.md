@@ -171,7 +171,10 @@ $ garuda-toolbox update --aur --yes
 ```
 
 `update` updates the system now, through garuda-update where it is
-installed. `--aur` also updates the AUR packages with paru, as you.
+installed. `--aur` also updates the outdated AUR packages after it. Their
+build files are shown first, as for `install --aur`, and the review asks
+before the system update starts. The packages keep their install reason. When the helper cannot use the build folder, or
+paru gives no build order, paru updates them instead, as you.
 
 Before anything changes, the command lists the steps under **Planned** and
 asks `Continue? [y/N]`. Only `y` or `yes` goes on. Then the password dialog
@@ -235,9 +238,10 @@ pipe.
   `--yes` covers that too.
 - With `--yes`, `update` runs garuda-update with its `--noconfirm`, so a
   script is not asked before the packages are installed.
-- A step that asks while it runs, such as paru for `update --aur` or the
-  review of an AUR build, needs a terminal. Without one nothing changes
-  and the exit code is 4.
+- A step that asks while it runs needs a terminal: the review of an AUR
+  build, paru for `update --aur` when paru updates the AUR packages, and the
+  repairs of garuda-update that ask "Are you sure?" themselves (all but
+  `keyring`). Without a terminal nothing changes and the exit code is 4.
 
 `Ctrl+c` while a change runs lets the running step end and skips the
 rest: `warning: stopping after this step, press Ctrl+C again to stop it

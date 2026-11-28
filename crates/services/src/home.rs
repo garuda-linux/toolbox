@@ -7,13 +7,14 @@ pub mod stats;
 mod tests;
 
 use std::borrow::Cow;
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 use jiff::Timestamp;
 use toolbox_core::features::status::{
     STALE_AFTER_DAYS, cleanup_due, days_since, disk_low, is_stale,
 };
-use toolbox_plan::UnitName;
+use toolbox_plan::{PackageName, UnitName};
 use toolbox_system::{Facts, HealthLevel, PendingUpdate, ProbeError, Status};
 
 /// One of the status checks, for the words of its failure and of the all
@@ -86,6 +87,26 @@ pub enum Row {
     Cleanup,
     Health(HealthLevel),
     Restart,
+}
+
+/// The status read as the Packages page takes it: `Unread` while no read
+/// has an answer, `Failed` when the last read failed, else the status.
+#[derive(Clone, Copy, Debug)]
+pub enum StatusRead<'status> {
+    Unread,
+    Failed,
+    Read(&'status Status),
+}
+
+/// Where the pending updates stand for the Packages page. Only a read
+/// status gives a count, so the Updates chip never says 0 for updates
+/// nobody checked.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Updates {
+    Unread,
+    Failed,
+    /// The installed packages with a pending repository or AUR update.
+    Known(BTreeSet<PackageName>),
 }
 
 impl<'status> Overview<'status> {
@@ -209,6 +230,43 @@ impl<'status> Overview<'status> {
     /// Whether Home has a row to show, so it can say that all is well.
     pub fn attention(&self, reboot_pending: bool) -> bool {
         !self.rows(reboot_pending).is_empty()
+    }
+}
+
+impl Updates {
+    /// A failed check of the repositories' or the AUR's updates fails the
+    /// read. Without paru there is no AUR check to fail, which is no
+    /// failure, and the repositories' updates still count.
+    #[must_use = "the chip and the rows show what this decides"]
+    pub fn of(read: StatusRead<'_>) -> Self {
+        let status = match read {
+            StatusRead::Unread => return Self::Unread,
+            StatusRead::Failed => return Self::Failed,
+            StatusRead::Read(status) => status,
+        };
+
+        let aur_failed = status
+            .aur_updates
+            .as_ref()
+            .err()
+            .is_some_and(|error| error.reason().is_some());
+
+        if status.updates.is_err() || aur_failed {
+            return Self::Failed;
+        }
+
+        Self::Known(
+            [&status.updates, &status.aur_updates]
+                .into_iter()
+                .filter_map(|updates| updates.as_ref().ok())
+                .flatten()
+                .map(|update| update.name.clone())
+                .collect(),
+        )
+    }
+
+    pub const fn is_known(&self) -> bool {
+        matches!(self, Self::Known(_))
     }
 }
 

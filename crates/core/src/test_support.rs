@@ -192,12 +192,7 @@ pub fn restore_saved(saved: &[(&str, Value, Value)]) -> ChangeSet {
 
 /// The queue after an apply in which every step succeeded.
 pub fn all_steps_succeeded(changes: &mut ChangeSet) {
-    let done: Vec<PlannedAction> = plan(changes)
-        .steps()
-        .iter()
-        .map(|step| step.action.clone())
-        .collect();
-
+    let done = actions(changes);
     changes.drop_done_one_offs(&done);
 }
 

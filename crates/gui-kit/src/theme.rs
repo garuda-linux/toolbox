@@ -45,7 +45,6 @@ pub(crate) const TOOL_BUTTON_RADIUS: u8 = 9;
 pub(crate) const TILE_RADIUS: u8 = 6;
 /// The tile behind a section's icon.
 pub const SMALL_TILE_RADIUS: u8 = 5;
-pub const LARGE_TILE_RADIUS: u8 = 8;
 /// The least height of a card row's line and of a banner's action row.
 pub const PILL_HEIGHT: f32 = 32.0;
 /// The round ends of the search field and segmented controls, half of

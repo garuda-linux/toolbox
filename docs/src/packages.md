@@ -115,12 +115,16 @@ To install a package from the AUR:
    computer. Click **Install** to queue it, or **Cancel**.
 3. The row says **Builds with Apply**. Apply the queue.
 
+![The queued AUR build in the list of changes, with its build note and the Packages row](images/packages-aur-build.png)
+
 Garuda Toolbox builds the package as your own user, never as root. Before
 anything is built, the Console shows the build files of the package, its
 PKGBUILD and the other files that are not downloads, and waits. Read them.
 Type `y` and press Enter, or click **Continue** in the Console, to go on.
 Any other answer, or **Cancel**, stops the run and nothing is built. The
 packages are installed with your password, asked once for the whole run.
+
+![The Console waiting for the review of an AUR build, with Continue beside its hint](images/packages-aur-review.png)
 
 > **Note:** Only the build files that are kept in git are shown. Sources
 > that the build downloads later are not shown.
@@ -159,6 +163,15 @@ review above does not happen.
 The command line uses the old paru path when it asks for the password through
 `sudo`, because `sudo` does not tell the helper who asked. Use the window or a
 terminal where the password dialog of pkexec works for AUR packages.
+
+### Update AUR packages on the command line
+
+`garuda-toolbox update --aur` updates the system, then the AUR packages that
+are outdated. Their build files are shown as in the install above, and the
+review asks once for all of them, before the system update starts. Declined,
+nothing changes. An updated package keeps the install reason it has. A setup that cannot use the build folder makes paru update the
+AUR packages the old way instead. So does one outdated package without a build
+order, for all of them.
 
 ## See a package's details
 

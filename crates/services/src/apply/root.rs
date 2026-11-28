@@ -43,8 +43,7 @@ pub async fn run(
 
     let gated = session.is_some();
     if !gated {
-        let started = Session::start(request, run, launcher).await;
-        *session = started;
+        *session = Session::start(request, run, launcher).await;
     }
 
     let Some(open) = session.as_mut() else {

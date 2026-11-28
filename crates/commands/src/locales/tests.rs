@@ -32,7 +32,7 @@ fn a_package_that_is_no_pack_is_not_installed() {
     );
 }
 
-/// The package, program and locale are plain names in JSON, as before.
+/// The package, program and locale are plain names in JSON.
 #[test]
 fn a_pack_row_as_json_keeps_its_names_as_strings() {
     use toolbox_plan::{LocaleName, PackageName};

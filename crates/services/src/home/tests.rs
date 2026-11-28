@@ -1,3 +1,4 @@
+use std::collections::BTreeSet;
 use std::path::PathBuf;
 
 use jiff::{SignedDuration, Timestamp};
@@ -6,7 +7,7 @@ use toolbox_system::{
     DiskSpace, Facts, HealthIssue, HealthLevel, PackageCount, PendingUpdate, ProbeError, Status,
 };
 
-use super::{Check, Overview, Pending, Row};
+use super::{Check, Overview, Pending, Row, StatusRead, Updates};
 
 pub(super) const DAY: SignedDuration = SignedDuration::from_hours(24);
 pub(super) const GB: u64 = 1_000_000_000;
@@ -251,4 +252,80 @@ fn the_rows_follow_the_order_of_the_status_page() {
         overview.rows(true),
         [Row::Merges, Row::Health(HealthLevel::High), Row::Restart]
     );
+}
+
+fn packages(names: &[&str]) -> BTreeSet<PackageName> {
+    names
+        .iter()
+        .copied()
+        .map(|name| PackageName::new(name).unwrap())
+        .collect()
+}
+
+#[test]
+fn no_status_read_leaves_the_updates_unread() {
+    assert_eq!(Updates::of(StatusRead::Unread), Updates::Unread);
+}
+
+#[test]
+fn a_failed_status_read_fails_the_updates_whatever_it_kept() {
+    assert_eq!(Updates::of(StatusRead::Failed), Updates::Failed);
+}
+
+#[test]
+fn an_updates_check_without_a_reason_fails_the_updates() {
+    let mut status = quiet();
+    status.updates = Err(ProbeError::Unavailable);
+
+    assert_eq!(Updates::of(StatusRead::Read(&status)), Updates::Failed);
+}
+
+#[test]
+fn an_updates_check_with_a_reason_fails_the_updates() {
+    let mut status = quiet();
+    status.updates = Err(ProbeError::fake("no database"));
+
+    assert_eq!(Updates::of(StatusRead::Read(&status)), Updates::Failed);
+}
+
+#[test]
+fn an_aur_check_with_a_reason_fails_the_updates() {
+    let mut status = quiet();
+    status.updates = Ok(vec![update("linux", "6.1-1", "6.2-1")]);
+    status.aur_updates = Err(ProbeError::fake("paru stopped"));
+
+    assert_eq!(Updates::of(StatusRead::Read(&status)), Updates::Failed);
+}
+
+#[test]
+fn an_aur_check_without_paru_is_no_failure() {
+    let mut status = quiet();
+    status.updates = Ok(vec![update("linux", "6.1-1", "6.2-1")]);
+
+    status.aur_updates.as_ref().unwrap_err();
+    assert_eq!(
+        Updates::of(StatusRead::Read(&status)),
+        Updates::Known(packages(&["linux"]))
+    );
+}
+
+#[test]
+fn both_checks_that_answered_name_their_updates() {
+    let mut status = quiet();
+    status.updates = Ok(vec![update("linux", "6.1-1", "6.2-1")]);
+    status.aur_updates = Ok(vec![update("paru-bin", "2.0-1", "2.1-1")]);
+
+    assert_eq!(
+        Updates::of(StatusRead::Read(&status)),
+        Updates::Known(packages(&["linux", "paru-bin"]))
+    );
+}
+
+#[test]
+fn a_quiet_system_knows_it_has_no_updates() {
+    let known = Updates::of(StatusRead::Read(&quiet()));
+
+    assert_eq!(known, Updates::Known(BTreeSet::new()));
+    assert!(known.is_known());
+    assert!(!Updates::Failed.is_known());
 }

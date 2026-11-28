@@ -5,7 +5,7 @@ use super::{FakeLauncher, finished, root_plan, run, started};
 use crate::apply::Report;
 
 /// A plan with one root segment is one request of its steps, without
-/// gates, and its events reach the reports as before.
+/// gates, and its events reach the reports.
 #[tokio::test]
 async fn one_root_segment_is_one_request_without_gates() {
     let dir = tempfile::tempdir().unwrap();

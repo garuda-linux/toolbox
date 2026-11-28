@@ -145,6 +145,14 @@ pub fn task(args: &TaskArgs, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
         return super::mirrors::rank(args.confirm, runtime, out);
     }
 
+    if args.task == AUR_UPGRADE {
+        let mut snapshot = system();
+        super::root::sudo_route(out.settings(), &mut snapshot);
+        let steps = super::aur_upgrade::of_system(out.settings(), &snapshot).after(Vec::new());
+
+        return run(Ok(Plan::new(steps)), args.confirm, None, runtime, out);
+    }
+
     let snapshot = system();
     let found = Programs::check().garuda_update;
     match change::task(&args.task, upgrader(&snapshot, found)) {

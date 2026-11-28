@@ -1,9 +1,13 @@
+use std::fmt::{self, Display, Formatter};
 use std::io;
 use std::path::PathBuf;
 
 use toolbox_plan::{
-    InvalidConfigText, InvalidConfigWord, InvalidHomePath, InvalidName, InvalidRgb,
+    InvalidConfigFilePath, InvalidConfigText, InvalidConfigWord, InvalidHomePath, InvalidName,
+    InvalidRgb,
 };
+
+use crate::toggles::Check;
 
 #[cfg(test)]
 mod tests;
@@ -57,33 +61,98 @@ pub enum LoadCode {
     Invalid,
 }
 
-/// The detail is shown apart as plain text.
+/// The files that failed to load, each with the parts of its message.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct LoadProblem {
     pub code: LoadCode,
-    pub detail: String,
+    /// Every file that failed, in the order the catalogs were loaded.
+    pub problems: Vec<FileProblem>,
+}
+
+/// A file that failed to load. Its text is the [`CatalogError`] message,
+/// the parts are kept apart so the pages can word each one.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum FileProblem {
+    /// `error` holds the system's words for why the file cannot be read.
+    Read { path: PathBuf, error: String },
+    /// `error` holds the parser's words for the damage.
+    Syntax { source_name: String, error: String },
+    Invalid {
+        source_name: String,
+        id: String,
+        problem: Problem,
+    },
+}
+
+impl From<&CatalogError> for FileProblem {
+    fn from(error: &CatalogError) -> Self {
+        match error {
+            CatalogError::Read { path, error: cause } => Self::Read {
+                path: path.clone(),
+                error: cause.to_string(),
+            },
+            CatalogError::Syntax {
+                source_name,
+                error: cause,
+            } => Self::Syntax {
+                source_name: source_name.clone(),
+                error: cause.to_string(),
+            },
+            CatalogError::Invalid {
+                source_name,
+                id,
+                problem,
+            } => Self::Invalid {
+                source_name: source_name.clone(),
+                id: id.clone(),
+                problem: problem.clone(),
+            },
+        }
+    }
+}
+
+/// The words of the [`CatalogError`] it came from, for the command line and
+/// the log.
+impl Display for FileProblem {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        #[expect(
+            clippy::use_debug,
+            reason = "the id is quoted as in the text of CatalogError"
+        )]
+        match self {
+            Self::Read { path, error } => write!(f, "{}: {error}", path.display()),
+            Self::Syntax { source_name, error } => write!(f, "{source_name}: {error}"),
+            Self::Invalid {
+                source_name,
+                id,
+                problem,
+            } => write!(f, "{source_name}: entry {id:?}: {problem}"),
+        }
+    }
 }
 
 impl From<&CatalogError> for LoadProblem {
     fn from(error: &CatalogError) -> Self {
         Self {
             code: error.code(),
-            detail: error.to_string(),
+            problems: vec![FileProblem::from(error)],
         }
     }
 }
 
 impl LoadProblem {
-    /// The first one's code, every message on its own line, `None` when all loaded.
-    pub fn joined(problems: Vec<Self>) -> Option<Self> {
-        let code = problems.first()?.code;
-        let detail = problems
-            .into_iter()
-            .map(|problem| problem.detail)
-            .collect::<Vec<_>>()
-            .join("\n");
+    /// Every message on its own line, in English.
+    pub fn detail(&self) -> String {
+        let lines: Vec<String> = self.problems.iter().map(ToString::to_string).collect();
+        lines.join("\n")
+    }
 
-        Some(Self { code, detail })
+    /// The first one's code, every failed file kept, `None` when all loaded.
+    pub fn joined(loads: Vec<Self>) -> Option<Self> {
+        let code = loads.first()?.code;
+        let problems = loads.into_iter().flat_map(|load| load.problems).collect();
+
+        Some(Self { code, problems })
     }
 }
 
@@ -113,7 +182,7 @@ pub enum Problem {
     /// Another entry of the same catalog watches the same state, so one
     /// switch would flip the other.
     #[error("another entry watches {0}")]
-    DuplicateCheck(String),
+    DuplicateCheck(Box<Check>),
     /// Another config file entry points at the same path, so an edit in
     /// one would show in the other.
     #[error("another entry points at {0:?}")]
@@ -168,7 +237,7 @@ pub enum Problem {
     /// A root-owned config file is relative, climbs, or lies outside the
     /// folders the helper edits.
     #[error("{0}")]
-    BadConfigPath(String),
+    BadConfigPath(InvalidConfigFilePath),
     /// A writable root-owned entry is not in `toolbox_plan`'s write table as the
     /// kind it is (file or folder), or a line of the table has no entry.
     #[error(

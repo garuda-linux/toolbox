@@ -87,7 +87,7 @@ fn a_running_program_writes_its_stderr_into_a_file_that_goes_at_its_end() {
     until("the program's stderr file is made", || {
         stderr_files(dir.path()) == 1
     });
-    until("the file stays after the end", || {
+    until("the empty file is removed after the end", || {
         stderr_files(dir.path()) == 0
     });
 }
@@ -145,5 +145,5 @@ fn the_files_an_earlier_start_left_are_removed() {
 
     let (_launcher, _bus) = launcher(&runtime, dir.path());
 
-    until("the old file stays", || stderr_files(dir.path()) == 0);
+    until("the old file is removed", || stderr_files(dir.path()) == 0);
 }

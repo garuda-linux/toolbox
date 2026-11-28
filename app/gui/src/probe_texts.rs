@@ -167,7 +167,7 @@ fn invalid(ctx: &Context, cause: &InvalidCause) -> String {
     }
 }
 
-fn reason_words(ctx: &Context, reason: Reason) -> String {
+pub(super) fn reason_words(ctx: &Context, reason: Reason) -> String {
     match reason {
         Reason::Empty => i18n::text(ctx, "name-reason-empty").into_owned(),
         Reason::TooLong { max } => fill(ctx, "name-reason-too-long", &[("max", Arg::from(max))]),
@@ -195,7 +195,7 @@ fn reason_words(ctx: &Context, reason: Reason) -> String {
 }
 
 /// The ids are literals, so grep and the catalog checks see each one.
-const fn kind_id(kind: NameKind) -> &'static str {
+pub(super) const fn kind_id(kind: NameKind) -> &'static str {
     match kind {
         NameKind::Package => "name-kind-package",
         NameKind::Unit => "name-kind-unit",

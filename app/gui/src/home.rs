@@ -15,7 +15,7 @@ use toolbox_core::features::merges;
 use toolbox_core::{ChangeSet, Snapshot, Toggle};
 use toolbox_gui_kit::Loadable;
 use toolbox_news::News;
-use toolbox_plan::MergeCopy;
+use toolbox_plan::{MergeCopy, PackageName};
 use toolbox_system::{CallError, Facts, Status};
 
 pub use self::merge_reads::{MergeReads, Merges};
@@ -113,8 +113,27 @@ impl Home {
         self.programs = Watched::loaded(Loadable::Loaded(Arc::new(programs)));
     }
 
+    /// The status a test hands Home, without a reader.
+    #[cfg(any(test, feature = "testing"))]
+    pub fn set_status(&mut self, status: Status) {
+        self.status = Watched::loaded(Loadable::Loaded(Arc::from(status)));
+    }
+
     pub fn set_problem(&mut self, problem: Option<HomeProblem>) {
         self.problem = problem;
+    }
+
+    /// The AUR packages the last status check found outdated. `None` while no
+    /// check answered or the last one failed, which takes paru's own path, as
+    /// the Packages page reads the same status.
+    pub fn outdated_aur(&self) -> Option<Vec<PackageName>> {
+        let read = self.status.reading();
+        if read.error().is_some() {
+            return None;
+        }
+
+        let updates = read.get()?.aur_updates.as_ref().ok()?;
+        Some(updates.iter().map(|update| update.name.clone()).collect())
     }
 
     /// Whether the last check found garuda-update's program, for a system

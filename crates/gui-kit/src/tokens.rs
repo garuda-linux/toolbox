@@ -348,7 +348,7 @@ fn selection_text(on_accent: Color32, accent: Color32, ends: Ends) -> Color32 {
     readable(better, accent, SECONDARY_CONTRAST, ends)
 }
 
-/// The shadow shade in both themes, so the window steps back behind the dialog.
+/// The shadow shade at each theme's share, so the window steps back behind the dialog.
 fn dialog_scrim(theme: Theme, shadow: Color32) -> Color32 {
     let share = match theme {
         Theme::Dark => DARK_DIALOG_SCRIM,

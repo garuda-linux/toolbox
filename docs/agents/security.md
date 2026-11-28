@@ -203,6 +203,10 @@ The build is the `BuildAur` builtin, run by the app only
   helper's answer for the calling user's build folder. `Refused { kind }`
   queues paru's own path (`InstallAur`, `paru --sudo pkexec`). A missing
   part refuses the click as unread, so nothing is queued on a guess.
+- `update --aur` takes the split path for outdated packages
+  (`upgrade::upgrade_path`), else `UpgradeAur`. The window's Home button does the
+  same (`upgrade::start`, the orders read by `Packages::read_upgrade`), and
+  Maintenance's `aur-upgrade` on the command line still plans `UpgradeAur`.
 - A conflict with an installed package refuses the split path before the
   queue changes, and names the installed package. It reads the copy's
   `conflicts` by name, so `yay<2` is judged as `yay`, which can refuse a

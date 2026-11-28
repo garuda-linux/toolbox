@@ -75,8 +75,7 @@ pub fn flight_mode(radios: &[Radio]) -> bool {
     shown.peek().is_some() && shown.all(|radio| radio.soft || radio.hard)
 }
 
-/// The installed ones of [`SERVICES`] and [`GEOCLUE`] as systemd lists
-/// them. A unit systemd does not list, or lists without a unit file, is
+/// The installed ones of [`NetworkUnit::ALL`] as systemd lists them. A unit systemd does not list, or lists without a unit file, is
 /// not installed and left out.
 pub fn service_rows(units: &[UnitInfo]) -> Vec<ServiceRow> {
     NetworkUnit::ALL

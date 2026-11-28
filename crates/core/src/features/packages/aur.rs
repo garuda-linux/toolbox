@@ -7,6 +7,7 @@
 pub mod build;
 #[cfg(test)]
 mod tests;
+pub mod upgrade;
 
 use std::collections::{BTreeMap, BTreeSet};
 

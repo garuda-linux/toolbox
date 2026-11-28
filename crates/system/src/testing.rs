@@ -2,6 +2,7 @@
 //! and the fakes of the ports, which answer without touching the system.
 
 pub mod aur_orders;
+pub mod aur_updates;
 pub mod file_chooser;
 pub mod host;
 pub mod launch;

@@ -3,7 +3,7 @@ use toolbox_plan::{KernelModule, Toggle};
 use super::super::StatusView;
 use crate::network::DriverLine;
 
-/// The module is a plain name in JSON, as before.
+/// The module is a plain name in JSON.
 #[test]
 fn a_driver_line_as_json_keeps_its_module_as_a_string() {
     let line = DriverLine {
@@ -19,8 +19,7 @@ fn a_driver_line_as_json_keeps_its_module_as_a_string() {
     );
 }
 
-/// `--json` printed the radios as `true`, `false` or `null` before they were
-/// a `Toggle`, and scripts read that form.
+/// Scripts read the radios as `true`, `false` or `null` under `--json`.
 #[test]
 fn the_radios_keep_their_boolean_or_null_json() {
     let view = StatusView {

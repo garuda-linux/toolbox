@@ -22,6 +22,10 @@ const PARU_QUA_IGNORED: &str = include_str!("fixtures/paru-qua-ignored.stdout");
 const PARU_QUA_IGNORED_CODE: &str = include_str!("fixtures/paru-qua-ignored.code");
 /// `paru -Qua` on an installed Garuda with nothing pending printed nothing.
 const INSTALLED_PARU_QUA_CODE: &str = include_str!("fixtures/installed-paru-qua.code");
+/// `paru -Qua` in the Lima VM with every AUR package current: nothing on
+/// either stream, exit 1.
+const PARU_QUA_CURRENT: &str = include_str!("fixtures/lima/paru-qua-current.stdout");
+const PARU_QUA_CURRENT_CODE: &str = include_str!("fixtures/lima/paru-qua-current.code");
 
 fn code(captured: &str) -> u8 {
     captured.trim().parse().unwrap()
@@ -133,6 +137,14 @@ fn a_missing_checkupdates_is_unavailable() {
 #[test]
 fn paru_exit_1_without_output_is_no_updates() {
     let (_folder, fake) = fake_program("", "", code(INSTALLED_PARU_QUA_CODE));
+
+    assert_eq!(Paru::with_program(fake).pending_aur(), Ok(Vec::new()));
+}
+
+/// The Lima capture of `paru -Qua` with every AUR package current.
+#[test]
+fn paru_capture_with_nothing_outdated_is_no_updates() {
+    let (_folder, fake) = fake_program(PARU_QUA_CURRENT, "", code(PARU_QUA_CURRENT_CODE));
 
     assert_eq!(Paru::with_program(fake).pending_aur(), Ok(Vec::new()));
 }

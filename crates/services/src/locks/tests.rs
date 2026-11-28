@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use toolbox_core::features::ReadState;
 use toolbox_plan::{Toggle, UserName};
 use toolbox_system::LockProblem;
 use toolbox_system::pkexec::{HelperError, Refusal};
@@ -25,6 +26,18 @@ fn an_answer_names_each_accounts_flag() {
     assert_eq!(locks.of(&user("ada")), Some(Toggle::Off));
     assert_eq!(locks.of(&user("grace")), None, "not in the answer");
     assert!(locks.flags().is_some());
+}
+
+#[test]
+fn a_refused_or_unknown_read_is_a_failed_guard_read() {
+    let refused = Locks::of_answer(Err(LockProblem::Refused(Refusal::Denied)));
+    let unknown = Locks::of_answer(Err(LockProblem::Failed(HelperError::TimedOut)));
+
+    assert_eq!(refused.read_state(), ReadState::Failed);
+    assert_eq!(unknown.read_state(), ReadState::Failed);
+    for locks in [&Locks::NotAsked, &Locks::Loading, &known()] {
+        assert_eq!(locks.read_state(), ReadState::Waiting, "{locks:?}");
+    }
 }
 
 /// The guards wait for the flags, so a failed read gives them none.

@@ -218,8 +218,7 @@ fn a_kernel_without_an_image_is_refused() {
     );
 }
 
-/// `--json` printed the switches as `true`, `false` or `null` before they
-/// were a `Toggle`, and scripts read that form.
+/// Scripts read the switches as `true`, `false` or `null` in JSON.
 #[test]
 fn the_loader_switches_keep_their_boolean_or_null_json() {
     let view = super::SdBootView {

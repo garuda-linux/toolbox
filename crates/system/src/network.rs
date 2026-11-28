@@ -93,9 +93,7 @@ pub struct SystemNetwork {
 
 #[derive(Deserialize)]
 struct Route {
-    #[serde(default)]
     gateway: Option<String>,
-    #[serde(default)]
     dev: Option<String>,
 }
 

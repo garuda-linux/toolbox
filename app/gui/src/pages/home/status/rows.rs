@@ -17,6 +17,7 @@ use crate::command::{HomeCommand, MaintenanceCommand, UiCommand};
 use crate::home::Home;
 use crate::i18n;
 use crate::i18n::Arg;
+use crate::packages::Packages;
 use crate::page::PageId;
 use crate::pages::PageContext;
 use crate::pages::rows::more::{item, more};
@@ -80,16 +81,33 @@ pub(super) fn aur(
         .show_with_body(
             ui,
             |ui| show_packages(page, ui),
-            |ui| {
-                run_button(
-                    ui,
-                    context,
-                    "home-aur-update",
-                    RunNow::AurUpgrade,
-                    ButtonKind::Soft,
-                );
-            },
+            |ui| aur_button(ui, context),
         );
+}
+
+/// While the build orders of the upgrade are read, the button says so and
+/// cannot be pressed again.
+fn aur_button(ui: &mut Ui, context: &PageContext<'_>) {
+    let ctx = ui.ctx().clone();
+    let reading = context.service::<Packages>().reading_upgrade();
+    let id = if reading {
+        "common-reading"
+    } else {
+        "home-aur-update"
+    };
+
+    let text = i18n::text(&ctx, id);
+    let pressed = ui
+        .enabled_ui(!context.busy && !reading, |ui| {
+            pill_button(ui, &text, ButtonKind::Soft)
+        })
+        .inner;
+
+    if pressed.clicked() {
+        context
+            .commands
+            .send(HomeCommand::RunNow(RunNow::AurUpgrade));
+    }
 }
 
 fn show_packages(page: &mut HomePage, ui: &mut Ui) {

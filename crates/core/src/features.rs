@@ -29,7 +29,7 @@ use std::collections::BTreeSet;
 use strum::IntoEnumIterator as _;
 use toolbox_plan::{PackageName, Reason};
 
-pub use self::guard::Guard;
+pub use self::guard::{Guard, ReadState};
 pub use self::refusal_text::{RefusalText, Refused, protection_text_id};
 use crate::domains::waiting_orders;
 use crate::{ChangeSet, Domain, Snapshot};

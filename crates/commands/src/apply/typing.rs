@@ -20,11 +20,9 @@ pub(super) fn forward_input(run: &Arc<Running>) -> Option<JoinHandle<()>> {
 
     let run = Arc::clone(run);
 
-    let started = std::thread::Builder::new()
+    std::thread::Builder::new()
         .name("cli-input".to_owned())
-        .spawn(move || type_into(&run));
-
-    started
+        .spawn(move || type_into(&run))
         .inspect_err(|error| tracing::warn!("typed answers cannot reach the program: {error}"))
         .ok()
 }

@@ -1,19 +1,20 @@
 //! What the app takes in from its services each frame: the apply
 //! service's reports, the snapshot and what the page services took in.
 
+mod aur_upgrade;
 mod orders;
 
 use std::sync::Arc;
 
 use toolbox_core::Snapshot;
 use toolbox_core::domains::{AccountLockFlags, BootLoader, CurrentLoader};
-use toolbox_core::features::Guard;
 use toolbox_core::features::packages::aur::AurNames;
 use toolbox_gui_kit::toasts::ToastKind;
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::Mode;
 #[cfg(feature = "testing")]
 use toolbox_services::boot_menu::Menu;
+#[cfg(feature = "testing")]
 use toolbox_services::locks::Locks;
 use toolbox_services::unprobed::{Needs, UnprobedReads, joined};
 use toolbox_system::Notification;
@@ -22,7 +23,6 @@ use super::App;
 use crate::apply::{ApplyCommand, Report};
 use crate::console::StepState;
 use crate::i18n;
-use crate::network::Read;
 use crate::page_service::Services;
 
 /// The program output one frame feeds to the Console's terminal. A
@@ -206,27 +206,11 @@ impl App {
         self.queue
             .holding()
             .next()
-            .map(|guard| match guard {
-                Guard::UserLocks => match self.services.users.locks() {
-                    Locks::Refused(_) | Locks::Unknown => "changes-unread-locks",
-                    Locks::NotAsked | Locks::Loading | Locks::Known(_) => "changes-wait-locks",
-                },
-                Guard::AurPackages => match self.services.packages.aur() {
-                    Read::Failed => "changes-unread-aur",
-                    Read::Loading | Read::Unavailable | Read::Known(_) => "changes-wait-aur",
-                },
-                Guard::Users
-                | Guard::Memberships
-                | Guard::Kernels
-                | Guard::Locales
-                | Guard::LanguagePacks
-                | Guard::PackageRemovals
-                | Guard::Plymouth
-                | Guard::Grub
-                | Guard::ModuleBlacklist
-                | Guard::NewGroups
-                | Guard::Hblock
-                | Guard::WifiBackend => "changes-wait-read",
+            .map(|guard| {
+                guard.hold_text(
+                    self.services.users.locks().read_state(),
+                    self.services.packages.aur().read_state(),
+                )
             })
             .or_else(|| self.queue.ready().is_err().then_some("changes-wait-orders"))
     }
@@ -278,6 +262,7 @@ impl App {
     pub(super) fn take_services(&mut self, ctx: &egui::Context) {
         self.take_page_services(ctx);
         self.take_orders();
+        self.take_aur_upgrade();
         self.take_output_share(ctx);
         self.read_held_parts();
         self.ask_orders();

@@ -5,6 +5,7 @@ pub mod appmenu;
 pub mod artwork;
 pub mod boot;
 pub mod bootrepair;
+pub mod catalog_texts;
 pub mod catalogs;
 pub mod command;
 pub mod configs;

@@ -79,8 +79,8 @@ pub(super) struct PasswordPair {
     fields: Vec<Id>,
 }
 
-/// What is wrong with each field, `None` where nothing is wrong or nothing
-/// was typed yet.
+/// What is wrong with each field. Nothing is set where nothing is wrong or
+/// nothing was typed yet.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 struct Check {
     agreed: bool,

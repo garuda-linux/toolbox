@@ -22,8 +22,6 @@ const GARUDA_HEALTH: &str = "/usr/bin/garuda-health";
 /// mirrors.
 pub const RATE_MIRRORS_PROGRAM: &str = "/usr/bin/rate-mirrors";
 pub const CHAOTIC_MIRRORS: &str = "chaotic-mirrors";
-/// The operation the Home page offers too.
-pub const UPGRADE_SYSTEM: &str = Operation::UpgradeSystem.key();
 
 /// The AUR update, run now only, as paru asks its own questions.
 pub const AUR_UPGRADE: &str = "aur-upgrade";
