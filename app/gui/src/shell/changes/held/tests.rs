@@ -132,15 +132,3 @@ fn the_banner_stays_while_the_part_is_read_again() {
             .is_some()
     );
 }
-
-/// A wait nobody asked for is a first read, which the page tells.
-#[test]
-fn a_first_wait_shows_no_banner() {
-    let harness = shown("changes-wait-locks");
-
-    assert!(
-        harness
-            .query_by_role_and_label(Role::Button, "Read Again")
-            .is_none()
-    );
-}

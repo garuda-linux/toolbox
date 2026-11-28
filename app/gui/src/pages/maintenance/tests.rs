@@ -1,4 +1,5 @@
 mod common;
+mod mirrors;
 mod repairs;
 mod reset;
 
@@ -12,12 +13,11 @@ use toolbox_core::features::maintenance::{Operation, Tool};
 use toolbox_gui_kit::icons;
 use toolbox_gui_kit::widgets::ButtonKind;
 use toolbox_plan::Toggle;
-use toolbox_system::mirrors::RankProblem;
 use toolbox_system::skel::shelf::{Outcome, SkelRow};
 
 use super::MaintenancePage;
 use crate::command::{Command, MaintenanceCommand};
-use crate::maintenance::{Maintenance, MaintenanceProblem};
+use crate::maintenance::Maintenance;
 use crate::page_service::Services;
 use crate::programs::Programs;
 use crate::testing::{PLAN_RUNNING, PageFixture, PageState, button_kind, paints_icon, rect_of};
@@ -156,20 +156,6 @@ fn a_running_plan_rests_every_button_that_starts_one() {
     );
     assert!(run_now.iter().all(|rests| *rests));
     assert!(open.iter().all(|rests| *rests));
-}
-
-#[test]
-fn a_failed_ranking_names_the_system_reason() {
-    let problem = MaintenanceProblem::Mirrors(RankProblem::NotStarted("denied".to_owned()));
-    let maintenance = Maintenance::showing(Some(problem), false, Vec::new(), None);
-    let harness = page(with(programs(), maintenance));
-
-    assert!(
-        harness
-            .query_by_label_contains("rate-mirrors could not be started")
-            .is_some()
-    );
-    assert!(harness.query_by_label_contains(": denied").is_some());
 }
 
 #[test]

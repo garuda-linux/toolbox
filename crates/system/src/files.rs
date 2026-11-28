@@ -5,8 +5,9 @@
 mod tests;
 
 use std::path::Path;
-use std::time::SystemTime;
 use std::{fs, io};
+
+use jiff::Timestamp;
 
 use crate::error::{ProbeError, from_io};
 
@@ -24,9 +25,12 @@ pub fn read_optional(path: &Path) -> Result<Option<String>, ProbeError> {
     }
 }
 
-pub fn modified_optional(path: &Path) -> Result<Option<SystemTime>, ProbeError> {
+pub fn modified_optional(path: &Path) -> Result<Option<Timestamp>, ProbeError> {
     match fs::metadata(path).and_then(|metadata| metadata.modified()) {
-        Ok(time) => Ok(Some(time)),
+        Ok(time) => Timestamp::try_from(time)
+            .ok()
+            .map(Some)
+            .ok_or(ProbeError::Unavailable),
         Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(None),
         Err(error) => Err(from_io(path.display(), error)),
     }

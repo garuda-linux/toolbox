@@ -7,7 +7,7 @@ use toolbox_plan::PackageName;
 use toolbox_state::aur::order::{AurOrder, parse_order};
 
 use super::Paru;
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 pub trait AurOrderSource: Send + Sync {
     /// The repo packages and AUR builds `package` needs, in order.
@@ -29,7 +29,9 @@ impl AurOrderSource for Paru {
 
         let order = |text: &str| {
             parse_order(text).map_err(|error| ProbeError::Invalid {
-                what: format!("the build order of {package}"),
+                what: Subject::BuildOrder {
+                    package: package.to_string(),
+                },
                 error: error.into(),
             })
         };
@@ -67,7 +69,9 @@ impl AurOrderSource for SampleAurOrders {
         };
 
         parse_order(text).map_err(|error| ProbeError::Invalid {
-            what: format!("the sample build order of {package}"),
+            what: Subject::SampleBuildOrder {
+                package: package.to_string(),
+            },
             error: error.into(),
         })
     }

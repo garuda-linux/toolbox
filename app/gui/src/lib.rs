@@ -28,7 +28,6 @@ pub mod missing;
 pub mod network;
 #[cfg(any(test, feature = "selftest", feature = "testing"))]
 pub mod news;
-pub mod notifications;
 pub mod packages;
 pub mod page_service;
 pub mod page_ui;
@@ -36,6 +35,7 @@ pub mod pages;
 pub mod panics;
 pub mod pictures;
 pub mod power;
+pub mod probe_texts;
 pub mod profiling;
 pub mod reader;
 pub mod refused;

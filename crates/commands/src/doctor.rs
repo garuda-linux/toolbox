@@ -60,7 +60,7 @@ pub struct Check {
     pub hint: Option<String>,
 }
 
-pub fn needs_fixing(checks: &[Check]) -> bool {
+pub(crate) fn needs_fixing(checks: &[Check]) -> bool {
     checks.iter().any(|check| check.state == State::Problem)
 }
 

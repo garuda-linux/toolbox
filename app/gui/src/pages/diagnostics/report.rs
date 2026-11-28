@@ -3,7 +3,7 @@
 //! view are laid out. Long lines wrap at the edge.
 
 use egui::{Label, ScrollArea, TextStyle, Ui};
-use toolbox_calendar::Utc;
+use jiff::tz::TimeZone;
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::terminal_colors::Ansi;
 use toolbox_gui_kit::theme::show_scroll_rows;
@@ -146,14 +146,14 @@ impl DiagnosticsPage {
 }
 
 /// "· 14:05 UTC · 312 lines", the time left out while unknown.
-fn meta(ctx: &egui::Context, collected: Option<u64>, line_count: usize) -> String {
+fn meta(ctx: &egui::Context, collected: Option<jiff::Timestamp>, line_count: usize) -> String {
     let lines = i18n::text_with(
         ctx,
         "diagnostics-lines",
         &[("count", Arg::from(line_count))],
     );
 
-    let Some(seconds) = collected else {
+    let Some(when) = collected else {
         return i18n::text_with(
             ctx,
             "diagnostics-collected-unknown",
@@ -162,8 +162,8 @@ fn meta(ctx: &egui::Context, collected: Option<u64>, line_count: usize) -> Strin
         .into_owned();
     };
 
-    let time = Utc::from_unix(seconds);
-    let clock = format!("{:02}:{:02}", time.hour, time.minute);
+    let time = when.to_zoned_datetime(TimeZone::UTC);
+    let clock = format!("{:02}:{:02}", time.hour(), time.minute());
     i18n::text_with(
         ctx,
         "diagnostics-collected",

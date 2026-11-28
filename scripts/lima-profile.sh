@@ -43,10 +43,8 @@ done
 
 out=target/lima-profile
 binary=$out/garuda-toolbox
-merge_fixtures=(
-  crates/system/src/packages/pacman_conf/fixtures/pacman.conf
-  crates/plan/src/testing/locales/fixtures/locale.gen
-)
+# shellcheck source=scripts/selftest-fixtures.sh
+source scripts/selftest-fixtures.sh
 captures=.claude/tracy
 mkdir -p "$out" "$captures"
 
@@ -98,7 +96,7 @@ vm sudo pacman -Syu --noconfirm --needed weston vulkan-swrast mesa >/dev/null
 echo "Copying the build, the catalog and the self-test"
 vm mkdir -p /tmp/toolbox/scripts /tmp/toolbox/tests/selftest /tmp/toolbox/data
 limactl copy "$binary" "$name:/tmp/toolbox/garuda-toolbox"
-limactl copy scripts/selftest.sh "$name:/tmp/toolbox/scripts/"
+limactl copy scripts/selftest.sh scripts/selftest-fixtures.sh "$name:/tmp/toolbox/scripts/"
 limactl copy -r tests/selftest/configs "$name:/tmp/toolbox/tests/selftest/"
 
 for fixture in "${merge_fixtures[@]}"; do

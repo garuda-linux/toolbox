@@ -213,10 +213,10 @@ The build is the `BuildAur` builtin, run by the app only
   the peer of its stdin, and whether sudo keeps that socket is not verified
   yet. Until it is, under sudo:
   - a new AUR install queues the old path (the route part is marked
-    `RouteKind::ThroughSudo`, `root::sudo_route`);
+    `RouteKind::ThroughSudo`, `root::sudo_route`).
   - a queue with a `Waiting` build stops before any order is read
     (`ready::sudo_waits`), since its build needs the window or a polkit
-    agent;
+    agent.
   - a split plan never falls back to sudo at run time
     (`apply::split_build`): when pkexec refuses it, the plan ends.
 - The review always asks. `--yes` does not skip it, and `--json` refuses a
@@ -307,8 +307,8 @@ Limits, stated plainly:
   not reviewed.
 - The clone folder must be a folder reached without a link below the
   home. Otherwise the step fails and names the folder, and nothing starts.
-- Folders of `~/.cache/garuda-toolbox` and `aur-built` that are missing
-  are made with mode 0755, so the helper's check of each folder passes
+- `~/.cache`, `garuda-toolbox` and `aur-built` that are missing are made
+  by the user-side build with mode 0755, so the helper's check of each folder passes
   under the usual umasks (022, 002, 077). The run folder is made, then set
   to 0700 whatever the umask.
 - Before each build the app removes the run folders of `aur-built` that
@@ -330,10 +330,11 @@ Limits, stated plainly:
   `route` in `crates/exec/src/aur/route.rs`. The helper's stage and the
   user-side build both run it, so both refuse the same setups with the
   same reason. It refuses an account without a `/etc/passwd` entry, a
-  home or `~/.cache` that is missing, a link or no folder, a folder on
-  the way that is not the caller's own, and a folder on the way that
-  group or others may write. `garuda-toolbox` and `aur-built` that are
-  missing are fine, as the user-side build creates them. A link or no
+  home that is missing, a home or `~/.cache` that is a link or no
+  folder, a folder on the way that is not the caller's own, and a folder
+  on the way that group or others may write. `~/.cache`,
+  `garuda-toolbox` and `aur-built` that are missing are fine, as the
+  user-side build creates them. Root never creates one. A link or no
   folder there is refused.
 - The user-side build runs the same check before it creates anything,
   so a group-writable `~/.cache` fails the build step with its reason.

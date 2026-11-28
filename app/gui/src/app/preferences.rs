@@ -15,7 +15,7 @@ use crate::{i18n, schemes};
 #[derive(Debug, Default)]
 pub struct PreferencesSetup {
     pub settings: Settings,
-    /// The compositor blurs behind the window, see `toolbox_backdrop`. The
+    /// The compositor blurs behind the window, see `toolbox_appmenu::backdrop`. The
     /// setting then decides whether the background is translucent.
     pub desktop_blur: bool,
     pub autostart: bool,

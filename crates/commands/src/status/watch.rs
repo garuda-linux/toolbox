@@ -50,7 +50,7 @@ impl Watch {
     }
 }
 
-/// Reads with `read` and prints each change, until `wait` says a Ctrl+C
+/// Reads with `read` and prints each change, until `stopped` says a Ctrl+C
 /// or a signal came. It ends with 0, not with the signal's code.
 pub fn watch(
     mut watching: Watch,

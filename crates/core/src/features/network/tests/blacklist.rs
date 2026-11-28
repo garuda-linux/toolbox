@@ -3,8 +3,75 @@
 
 use super::drivers::{BROADCOM_FILE, OWN_FILE, entry, facts, module};
 use crate::domains::ModuleBlacklist;
-use crate::features::network::{ModuleFacts, recheck_blacklist};
+use crate::features::network::{
+    DriverDetail, DriverRow, ModuleFacts, driver_rows, recheck_blacklist, set_blacklisted,
+};
 use crate::{ChangeSet, Snapshot, Toggle};
+
+fn driver<'rows>(rows: &'rows [DriverRow], name: &str) -> &'rows DriverRow {
+    rows.iter().find(|row| row.name.as_str() == name).unwrap()
+}
+
+#[test]
+fn the_blacklist_item_asks_for_the_change_the_row_does_not_show() {
+    let facts = facts(vec![entry("r8169", OWN_FILE), entry("b43", BROADCOM_FILE)]);
+    let mut changes = ChangeSet::default();
+
+    set_blacklisted(
+        &module("mt76-usb"),
+        Toggle::On,
+        &facts,
+        &mut changes,
+        &Snapshot::default(),
+    )
+    .unwrap();
+
+    let rows = driver_rows(&facts, &changes);
+    let action = |name: &str| {
+        driver(&rows, name)
+            .blacklist_action()
+            .map(|action| (action.text_id, action.wish))
+    };
+
+    assert_eq!(
+        action("8139too"),
+        Some(("network-driver-blacklist", Toggle::On))
+    );
+    assert_eq!(action("r8169"), Some(("network-driver-allow", Toggle::Off)));
+    assert_eq!(
+        action("mt76_usb"),
+        Some(("network-driver-unqueue", Toggle::Off))
+    );
+    assert_eq!(action("b43"), None, "only another file lists it");
+}
+
+#[test]
+fn the_queued_change_is_the_detail_before_the_other_files() {
+    let facts = facts(vec![entry("b43", BROADCOM_FILE)]);
+    let mut changes = ChangeSet::default();
+
+    set_blacklisted(
+        &module("mt76-usb"),
+        Toggle::On,
+        &facts,
+        &mut changes,
+        &Snapshot::default(),
+    )
+    .unwrap();
+
+    let rows = driver_rows(&facts, &changes);
+    let files = [toolbox_text::plain(BROADCOM_FILE)];
+
+    assert_eq!(
+        driver(&rows, "mt76_usb").detail(),
+        Some(DriverDetail::Queued(Toggle::On))
+    );
+    assert_eq!(
+        driver(&rows, "b43").detail(),
+        Some(DriverDetail::OtherFiles(&files))
+    );
+    assert_eq!(driver(&rows, "8139too").detail(), None);
+}
 
 fn with_facts(facts: ModuleFacts) -> Snapshot {
     let mut snapshot = Snapshot::default();

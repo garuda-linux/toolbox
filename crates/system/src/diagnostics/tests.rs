@@ -5,7 +5,7 @@ use std::os::unix::fs::PermissionsExt as _;
 use std::time::{Duration, Instant};
 
 use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ReadKind};
-use toolbox_state::diagnostics::{Access, Collector, Outcome};
+use toolbox_state::diagnostics::{Access, Collector, Failure, Outcome};
 
 use super::testing::{Machine, cancel_after, report};
 use super::{DiagnosticSource as _, access};
@@ -74,7 +74,7 @@ fn a_program_that_fails_without_output_shows_its_error_text() {
 
     assert_eq!(
         machine.collect(Collector::Inxi),
-        Outcome::Failed("inxi is not installed".to_owned())
+        Outcome::Failed(Failure::Stderr("inxi is not installed".to_owned()))
     );
 }
 
@@ -144,7 +144,9 @@ fn a_kernel_log_the_kernel_refuses_fails_with_dmesgs_words() {
 
     assert_eq!(
         machine.collect(Collector::Dmesg),
-        Outcome::Failed("dmesg: read kernel buffer failed: Operation not permitted".to_owned())
+        Outcome::Failed(Failure::Stderr(
+            "dmesg: read kernel buffer failed: Operation not permitted".to_owned()
+        ))
     );
     assert_eq!(machine.asked(), Vec::new());
 }
@@ -243,7 +245,7 @@ fn colour_codes_alone_on_stdout_leave_the_error_text_of_stderr() {
 
     assert_eq!(
         machine.collect(Collector::Inxi),
-        Outcome::Failed("no display".to_owned())
+        Outcome::Failed(Failure::Stderr("no display".to_owned()))
     );
 }
 
@@ -255,9 +257,10 @@ fn a_timed_out_program_names_itself_and_the_limit() {
             arguments: &[],
             environment: &[],
         }),
-        toolbox_state::diagnostics::Attempt::Failed(
-            "garuda-inxi took longer than 120 seconds".to_owned()
-        )
+        toolbox_state::diagnostics::Attempt::Failed(Failure::TimedOut {
+            program: "garuda-inxi".to_owned(),
+            seconds: 120,
+        })
     );
 }
 
@@ -271,7 +274,9 @@ fn an_unstartable_program_fails_with_its_name() {
     match &outcome {
         Outcome::Failed(reason) => {
             assert!(
-                reason.contains("garuda-inxi could not be started"),
+                reason
+                    .to_string()
+                    .contains("garuda-inxi could not be started"),
                 "{outcome:?}"
             );
         }

@@ -29,10 +29,32 @@ pub enum RankProblem {
     TimedOut,
     /// The user stopped the ranking, so nothing is wrong.
     Cancelled,
-    NotStarted(String),
+    NotStarted(StartProblem),
     Failed(String),
     Unreadable(String),
     Invalid(String),
+}
+
+/// Why rate-mirrors did not start. The window words each case, and only
+/// [`StartProblem::Failed`] carries the system's own words.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum StartProblem {
+    /// The program is not installed.
+    Missing,
+    /// The system's words, for the program or the folder that did not start.
+    Failed(String),
+    /// The task that waited for the ranking panicked.
+    Panicked,
+}
+
+impl fmt::Display for StartProblem {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Missing => f.write_str("the program is not installed"),
+            Self::Failed(words) => f.write_str(words),
+            Self::Panicked => f.write_str("the ranking task panicked"),
+        }
+    }
 }
 
 impl fmt::Display for RankProblem {
@@ -40,23 +62,10 @@ impl fmt::Display for RankProblem {
         match self {
             Self::TimedOut => f.write_str("rate-mirrors took too long"),
             Self::Cancelled => f.write_str("rate-mirrors was stopped"),
-            Self::NotStarted(reason) => write!(f, "cannot start rate-mirrors: {reason}"),
+            Self::NotStarted(start) => write!(f, "cannot start rate-mirrors: {start}"),
             Self::Failed(status) => write!(f, "rate-mirrors ended with {status}"),
             Self::Unreadable(reason) => write!(f, "cannot read the ranked mirrors: {reason}"),
             Self::Invalid(reason) => write!(f, "the ranked mirrors are unusable: {reason}"),
-        }
-    }
-}
-
-impl RankProblem {
-    /// What the system said, empty for a ranking that took too long.
-    pub fn reason(&self) -> &str {
-        match self {
-            Self::TimedOut | Self::Cancelled => "",
-            Self::NotStarted(reason)
-            | Self::Failed(reason)
-            | Self::Unreadable(reason)
-            | Self::Invalid(reason) => reason,
         }
     }
 }
@@ -98,8 +107,11 @@ fn rank_within(
     deadline: Duration,
     cancel: &Arc<AtomicBool>,
 ) -> Result<Mirrorlist, RankProblem> {
-    let folder = tempfile::tempdir().map_err(|error| RankProblem::NotStarted(error.to_string()))?;
+    let folder = tempfile::tempdir()
+        .map_err(|error| RankProblem::NotStarted(StartProblem::Failed(error.to_string())))?;
+
     let file = folder.path().join("chaotic-mirrorlist");
+
     let mut command = Command::new(program);
 
     command.arg("--save").arg(&file).arg("chaotic-aur");
@@ -114,10 +126,11 @@ fn rank_within(
     .map_err(|error| match error {
         CaptureError::TimedOut => RankProblem::TimedOut,
         CaptureError::Cancelled => RankProblem::Cancelled,
-        CaptureError::Missing | CaptureError::Failed(_) => {
-            RankProblem::NotStarted(error.to_string())
+        CaptureError::Missing => RankProblem::NotStarted(StartProblem::Missing),
+        CaptureError::Failed(start) => {
+            RankProblem::NotStarted(StartProblem::Failed(start.to_string()))
         }
-        CaptureError::TooLarge => RankProblem::Failed(error.to_string()),
+        CaptureError::TooLarge => RankProblem::Failed(CaptureError::TooLarge.to_string()),
     })?;
 
     if !exited.status.success() {

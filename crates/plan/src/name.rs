@@ -139,6 +139,16 @@ impl InvalidName {
         }
     }
 
+    pub const fn kind(&self) -> NameKind {
+        self.kind
+    }
+
+    /// Control characters are spelled out, so a window shows the value as
+    /// the message does.
+    pub fn shown_value(&self) -> String {
+        Shown::new(&self.value).to_string()
+    }
+
     pub const fn reason(&self) -> Reason {
         self.reason
     }

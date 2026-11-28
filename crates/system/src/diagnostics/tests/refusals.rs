@@ -4,7 +4,7 @@
 use std::fs;
 
 use toolbox_plan::protocol::ReadKind;
-use toolbox_state::diagnostics::{Collector, Outcome, Refusal};
+use toolbox_state::diagnostics::{Collector, Failure, HelperFault, Outcome, Refusal};
 
 use super::super::testing::{Machine, report};
 use super::{DMESG_AS_USER, DMESG_AS_USER_CODE, DMESG_RESTRICT};
@@ -66,16 +66,16 @@ fn the_helpers_answers_and_failures_are_told_apart() {
     machine.helper("echo 'garuda-toolbox-helper: cannot answer dmesg: boom' >&2; exit 1");
     assert_eq!(
         machine.collect(Collector::Dmesg),
-        Outcome::Failed(
-            "the helper ended with exit code 1: garuda-toolbox-helper: cannot answer dmesg: boom"
-                .to_owned()
-        )
+        Outcome::Failed(Failure::Helper(HelperFault::Ended {
+            code: Some(1_i32),
+            words: "garuda-toolbox-helper: cannot answer dmesg: boom".to_owned(),
+        }))
     );
 
     machine.helper("echo 'not json'");
     assert!(matches!(
         machine.collect(Collector::Dmesg),
-        Outcome::Failed(reason) if reason.contains("was not understood")
+        Outcome::Failed(reason) if reason.to_string().contains("was not understood")
     ));
 
     let answer = serde_json::json!({
@@ -93,7 +93,9 @@ fn the_helpers_answers_and_failures_are_told_apart() {
     ));
     assert_eq!(
         machine.collect(Collector::Dmesg),
-        Outcome::Failed("dmesg: read kernel buffer failed: Operation not permitted".to_owned())
+        Outcome::Failed(Failure::Stderr(
+            "dmesg: read kernel buffer failed: Operation not permitted".to_owned()
+        ))
     );
 }
 
@@ -158,7 +160,7 @@ fn a_broken_pkexec_fails_with_its_words() {
 
     assert!(matches!(
         machine.collect(Collector::Dmesg),
-        Outcome::Failed(reason) if reason.contains("pkexec must be setuid root")
+        Outcome::Failed(reason) if reason.to_string().contains("pkexec must be setuid root")
     ));
 }
 
@@ -168,7 +170,7 @@ fn a_helper_that_cannot_start_fails_with_a_reason() {
 
     assert!(matches!(
         machine.collect(Collector::Dmesg),
-        Outcome::Failed(reason) if reason.contains("not installed")
+        Outcome::Failed(reason) if reason.to_string().contains("not installed")
     ));
 }
 
@@ -182,7 +184,10 @@ fn an_unstartable_helper_fails_with_its_name() {
 
     match &outcome {
         Outcome::Failed(reason) => {
-            assert!(reason.contains("cannot start the helper"), "{outcome:?}");
+            assert!(
+                reason.to_string().contains("cannot start the helper"),
+                "{outcome:?}"
+            );
         }
         shown @ (Outcome::Report(_) | Outcome::Unavailable | Outcome::Refused(_)) => {
             panic!("an unstartable helper is no report: {shown:?}")

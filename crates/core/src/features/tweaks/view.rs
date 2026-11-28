@@ -12,6 +12,7 @@ use crate::domains::{
     AvailableShells, CurrentDns, CurrentShells, CurrentWifiBackend, Dns, GarudaUpdateConfig,
     GarudaUpdateFlags, Hblock, HblockState, LoginShells, WifiBackends,
 };
+use crate::features::toggles::shown::Tally;
 use crate::{ChangeSet, Single, Snapshot, Toggle};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -104,6 +105,51 @@ impl Choices {
             }),
         }
     }
+}
+
+impl Choices {
+    /// The Shell and network switches `shown` lets through, how many of
+    /// them are on and whether their state was read. Ad blocking is the
+    /// section's one switch, a picker is never on.
+    pub fn shell_network_tally(&self, shown: impl Fn(&str) -> bool) -> (Tally, bool) {
+        let shown = shown("tweaks-hblock");
+        let tally = Tally {
+            on: usize::from(shown && self.hblock.on),
+            total: usize::from(shown),
+        };
+
+        (tally, self.hblock.known)
+    }
+}
+
+/// The garuda-update option's title id, a literal so the catalog checks see
+/// each one.
+pub const fn flag_id(flag: GarudaUpdateFlag) -> &'static str {
+    match flag {
+        GarudaUpdateFlag::SkipMirrorlist => "tweaks-flag-skip-mirrorlist",
+        GarudaUpdateFlag::UpdateAur => "tweaks-flag-update-aur",
+        GarudaUpdateFlag::PacmanNoconfirm => "tweaks-flag-pacman-noconfirm",
+        GarudaUpdateFlag::NoCheckSpace => "tweaks-flag-no-check-space",
+    }
+}
+
+/// The garuda-update options `shown` lets through, how many of them are on
+/// and whether their state was read.
+pub fn garuda_update_tally(
+    flags: &[(GarudaUpdateFlag, Flip)],
+    shown: impl Fn(&str) -> bool,
+) -> (Tally, bool) {
+    let matching = flags.iter().filter(|(flag, _)| shown(flag_id(*flag)));
+
+    let tally = matching
+        .clone()
+        .map(|(_, flip)| Tally {
+            on: usize::from(flip.on),
+            total: 1,
+        })
+        .sum();
+
+    (tally, matching.into_iter().all(|(_, flip)| flip.known))
 }
 
 fn pick<T>(options: Vec<T>, (current, read): (Option<&T>, Read), queued: Option<&T>) -> Pick<T>

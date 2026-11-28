@@ -7,7 +7,7 @@ mod tests;
 
 use egui::{Context, Ui};
 use toolbox_core::features::search::Needle;
-use toolbox_core::features::tweaks::view::Choices;
+use toolbox_core::features::tweaks::view::{Choices, garuda_update_tally};
 use toolbox_system::Host;
 
 use super::PageContext;
@@ -58,7 +58,7 @@ impl LeadSections for SystemChoices {
             ctx,
             SHELL_NETWORK,
             i18n::text(ctx, "tweaks-shell-network"),
-            rows::shell_network_tally(ctx, data, query),
+            data.shell_network_tally(|id| rows::matches(ctx, id, query)),
         );
 
         let garuda_update = data.flags.as_ref().map(|flags| {
@@ -66,7 +66,7 @@ impl LeadSections for SystemChoices {
                 ctx,
                 GARUDA_UPDATE,
                 i18n::text(ctx, "tweaks-garuda-update"),
-                rows::garuda_update_tally(ctx, flags, query),
+                garuda_update_tally(flags, |id| rows::matches(ctx, id, query)),
             )
         });
 

@@ -211,8 +211,7 @@ fn kernels_title_line() {
 /// The Home page with two updates, an AUR update, a last update 16 days
 /// ago and a low health note, as the Home snapshots show it.
 pub fn behind_home() -> toolbox_system::Status {
-    use std::time::{Duration, SystemTime};
-
+    use jiff::{SignedDuration, Timestamp};
     use toolbox_system::{HealthIssue, HealthLevel};
 
     let mut status = crate::home::quiet();
@@ -221,7 +220,7 @@ pub fn behind_home() -> toolbox_system::Status {
         crate::home::update("mesa"),
     ]);
     status.aur_updates = Ok(vec![crate::home::update("paru-bin")]);
-    status.last_update = Ok(Some(SystemTime::now() - Duration::from_hours(24 * 16)));
+    status.last_update = Ok(Some(Timestamp::now() - SignedDuration::from_hours(24 * 16)));
     status.health = Ok(vec![HealthIssue {
         level: HealthLevel::Low,
         message: toolbox_text::plain("The keyring is older than three months."),

@@ -38,7 +38,7 @@ impl Asked {
 
     const fn question_id(self) -> Option<&'static str> {
         match self {
-            Self::Operation(operation) => Some(operation.question_id()),
+            Self::Operation(operation) => operation.question_id(),
             Self::Repair(repair) => repair.question_id(),
         }
     }

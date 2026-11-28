@@ -82,6 +82,18 @@ fn upgrade_with_garuda_update_tells_it_who_is_asking() {
 }
 
 #[test]
+fn an_unattended_upgrade_tells_garuda_update_not_to_ask() {
+    let action = RootAction::UpgradeSystem {
+        upgrader: Upgrader::GarudaUpdateUnattended,
+    };
+
+    assert_eq!(
+        shown(&action),
+        ["GARUDA_UPDATE_TOOLBOX=1 garuda-update --skip-mirrorlist --noconfirm"]
+    );
+}
+
+#[test]
 fn maintenance_actions_have_fixed_commands() {
     assert_eq!(shown(&RootAction::CleanPackageCache), ["paccache -ruk0"]);
     assert_eq!(

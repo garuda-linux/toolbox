@@ -10,7 +10,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::runtime::Handle;
 use toolbox_catalog::SkelEntry;
 use toolbox_plan::Mirrorlist;
-use toolbox_system::mirrors::{MirrorRanking, RankProblem};
+use toolbox_system::mirrors::{MirrorRanking, RankProblem, StartProblem};
 use toolbox_system::skel::shelf::{self, Outcome, SkelRow};
 
 use crate::catalogs::Catalogs;
@@ -76,7 +76,7 @@ impl Jobs {
         self.ranked.blocking(
             "rank",
             move || ranking.rank(&cancel),
-            |ranked| ranked.unwrap_or_else(|error| Err(RankProblem::NotStarted(error.to_string()))),
+            |ranked| ranked.unwrap_or(Err(RankProblem::NotStarted(StartProblem::Panicked))),
         );
     }
 

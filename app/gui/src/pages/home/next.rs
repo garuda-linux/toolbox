@@ -2,6 +2,7 @@
 //! so the steps are the few that fit the system's state.
 
 use egui::Ui;
+use toolbox_core::features::status::{NextStep, next_steps};
 use toolbox_gui_kit::fonts::{SMALL, Weight};
 use toolbox_gui_kit::widgets::{chip, link_tile, rich};
 use toolbox_gui_kit::{UiExt as _, icons, tokens};
@@ -28,7 +29,6 @@ const STEP_WIDTH: f32 = 220.0;
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
     let ctx = ui.ctx().clone();
     let live = host.is_some_and(|host| host.live_iso);
-    let queued = context.changes.len();
     let page = |page: PageId, subtitle: &str| {
         (
             page.icon(),
@@ -38,20 +38,7 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
         )
     };
 
-    let steps = [
-        (queued > 0).then(|| {
-            let count = queued;
-            (
-                icons::VIEW_PIM_TASKS,
-                i18n::text(&ctx, "command-review-changes"),
-                i18n::text_with(&ctx, "home-next-review", &[("count", Arg::from(count))]),
-                UiCommand::ReviewChanges,
-            )
-        }),
-        (!live && !context.home.setup_finished).then(|| page(PageId::Setup, "home-next-setup")),
-        Some(page(PageId::Maintenance, "home-next-maintenance")),
-        Some(page(PageId::Diagnostics, "home-next-diagnostics")),
-    ];
+    let steps = next_steps(context.changes.len(), live, context.home.setup_finished);
 
     heading(ui, "home-next");
     ui.add_space(ui.tokens().sizes.card_gap);
@@ -60,8 +47,18 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, host: Option<&Host>) {
     // tile beside free room.
     let shown: Vec<_> = steps
         .into_iter()
-        .flatten()
         .take(usize::from(STEPS))
+        .map(|step| match step {
+            NextStep::Review { queued } => (
+                icons::VIEW_PIM_TASKS,
+                i18n::text(&ctx, "command-review-changes"),
+                i18n::text_with(&ctx, "home-next-review", &[("count", Arg::from(queued))]),
+                UiCommand::ReviewChanges,
+            ),
+            NextStep::Setup => page(PageId::Setup, "home-next-setup"),
+            NextStep::Maintenance => page(PageId::Maintenance, "home-next-maintenance"),
+            NextStep::Diagnostics => page(PageId::Diagnostics, "home-next-diagnostics"),
+        })
         .collect();
 
     let columns = u8::try_from(shown.len()).unwrap_or(STEPS).max(1);

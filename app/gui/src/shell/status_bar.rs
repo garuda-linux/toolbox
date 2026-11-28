@@ -14,9 +14,9 @@ use toolbox_plan::protocol::Mode;
 use toolbox_system::Probe;
 
 use crate::command::{AppCommand, CommandSender};
-use crate::i18n;
 use crate::i18n::Arg;
 use crate::snapshot::{FailedRead, Reading};
+use crate::{i18n, probe_texts};
 
 /// Keeps the bar's room at the window's bottom while there is a dry run
 /// or a failed part. Returns where [`fill`] draws it.
@@ -244,7 +244,10 @@ fn reasons_button(ui: &mut Ui, failed: &[FailedRead]) {
     let ctx = ui.ctx().clone();
     let reasons = failed
         .iter()
-        .map(|read| format!("{}: {}", part_name(&ctx, read.probe), read.reason))
+        .map(|read| {
+            let reason = probe_texts::failure(&ctx, &read.error).unwrap_or_default();
+            format!("{}: {reason}", part_name(&ctx, read.probe))
+        })
         .collect::<Vec<_>>()
         .join("\n");
 

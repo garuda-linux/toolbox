@@ -1,8 +1,8 @@
 use toolbox_plan::protocol::ReadKind;
 
 use super::{
-    Access, Attempt, Collector, Outcome, Ran, Refusal, Selection, Source, full_report, outcome,
-    since_last_pacman_run,
+    Access, Attempt, Collector, Failure, Outcome, Ran, Refusal, Selection, Source, full_report,
+    outcome, since_last_pacman_run,
 };
 
 const OPEN: Access = Access {
@@ -181,15 +181,17 @@ fn a_failing_program_without_output_fails_with_its_own_words() {
             "dmesg: read kernel buffer failed: Operation not permitted\n",
             1
         )]),
-        Outcome::Failed("dmesg: read kernel buffer failed: Operation not permitted".to_owned())
+        Outcome::Failed(Failure::Stderr(
+            "dmesg: read kernel buffer failed: Operation not permitted".to_owned()
+        ))
     );
     assert_eq!(
         outcome(&[ran("", "", 4)]),
-        Outcome::Failed("Exit code: 4".to_owned())
+        Outcome::Failed(Failure::ExitCode(4))
     );
     assert_eq!(
         outcome(&[Attempt::Ran(Ran::default())]),
-        Outcome::Failed("Ended by a signal.".to_owned())
+        Outcome::Failed(Failure::Signal)
     );
 }
 
@@ -201,10 +203,10 @@ fn missing_refused_and_broken_programs_are_told_apart() {
         Outcome::Refused(Refusal::Dismissed)
     );
     assert_eq!(
-        outcome(&[Attempt::Failed("cannot start".to_owned())]),
-        Outcome::Failed("cannot start".to_owned())
+        outcome(&[Attempt::Failed(Failure::Stderr("cannot start".to_owned()))]),
+        Outcome::Failed(Failure::Stderr("cannot start".to_owned()))
     );
-    assert_eq!(outcome(&[]), Outcome::Failed("No program ran.".to_owned()));
+    assert_eq!(outcome(&[]), Outcome::Failed(Failure::NoProgramRan));
 }
 
 #[test]
@@ -253,7 +255,10 @@ fn the_full_report_has_every_part_under_its_heading_in_order() {
         ),
         (Collector::Journal, Outcome::Refused(Refusal::Denied)),
         (Collector::PacmanLog, Outcome::Report("log\n".to_owned())),
-        (Collector::Dmesg, Outcome::Failed("no rights".to_owned())),
+        (
+            Collector::Dmesg,
+            Outcome::Failed(Failure::Stderr("no rights".to_owned())),
+        ),
         (Collector::Health, Outcome::Report(String::new())),
     ]);
 

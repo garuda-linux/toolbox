@@ -33,6 +33,11 @@ pub static RATE_MIRRORS_PACKAGE: LazyLock<PackageName> =
 /// start.
 const CLEANUP: Stage = Stage::new(Stage::USER_SESSION.rank() - 50);
 
+/// What Home's clean-up row queues together: the orphans and the package
+/// cache.
+pub const CLEANUP_OPERATIONS: [Operation; 2] =
+    [Operation::RemoveOrphans, Operation::CleanPackageCache];
+
 /// The variant order is the run order: keys and the lock first, so the upgrade can work, then cleaning up.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -336,6 +341,13 @@ pub fn upgrade_queued(changes: &ChangeSet) -> bool {
         .queued::<Operations>()
         .iter()
         .any(|(operation, _)| *operation == Operation::UpgradeSystem)
+}
+
+pub fn cleanup_queued(changes: &ChangeSet) -> bool {
+    changes
+        .queued::<Operations>()
+        .iter()
+        .any(|(operation, _)| CLEANUP_OPERATIONS.contains(operation))
 }
 
 pub fn queue_upgrade(wish: Toggle, changes: &mut ChangeSet, snapshot: &Snapshot, program: Program) {

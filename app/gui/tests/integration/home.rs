@@ -75,7 +75,7 @@ pub fn quiet_facts() -> Facts {
             foreign: Some(12),
         }),
         kernel: Ok("6.17.7-zen1-1-zen".to_owned()),
-        booted: Ok(std::time::SystemTime::now() - std::time::Duration::from_hours(100)),
+        booted: Ok(jiff::Timestamp::now() - jiff::SignedDuration::from_hours(100)),
         disk: Ok(DiskSpace {
             total: 500 * GB,
             free: 200 * GB,

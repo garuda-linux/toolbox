@@ -5,8 +5,9 @@ use std::borrow::Cow;
 
 use egui::{Context, Ui};
 use toolbox_core::features::search::Needle;
-use toolbox_core::features::toggles::shown::Tally;
-use toolbox_core::features::tweaks::view::{Choices, Flip, Pick, Read};
+use toolbox_core::features::tweaks::view::{
+    Choices, Flip, Pick, Read, flag_id, garuda_update_tally,
+};
 use toolbox_gui_kit::fonts::{BODY, Weight};
 use toolbox_gui_kit::icons::Icon;
 use toolbox_gui_kit::widgets::{
@@ -18,7 +19,7 @@ use toolbox_plan::{GarudaUpdateFlag, ShellPath};
 
 use self::glyphs::flag_glyph;
 pub(super) use self::text::matches;
-use self::text::{dns_id, flag_id, lead, wifi_id};
+use self::text::{dns_id, lead, wifi_id};
 use crate::command::TweakCommand;
 use crate::i18n;
 use crate::pages::PageContext;
@@ -89,45 +90,6 @@ fn heights(ui: &Ui) -> RowHeights {
     }
 }
 
-/// What is on of the "Shell and network" switches `query` matches, and
-/// whether their state was read. Only ad blocking is one, a picker is
-/// never on and so counts for nothing.
-pub(super) fn shell_network_tally(
-    ctx: &Context,
-    choices: &Choices,
-    query: &Needle,
-) -> (Tally, bool) {
-    let shown = matches(ctx, Choice::Hblock.text_id(), query);
-    let tally = Tally {
-        on: usize::from(shown && choices.hblock.on),
-        total: usize::from(shown),
-    };
-
-    (tally, choices.hblock.known)
-}
-
-/// What is on of the Garuda Update flags `query` matches, and whether
-/// their state was read.
-pub(super) fn garuda_update_tally(
-    ctx: &Context,
-    flags: &[(GarudaUpdateFlag, Flip)],
-    query: &Needle,
-) -> (Tally, bool) {
-    let matching = flags
-        .iter()
-        .filter(|(flag, _)| matches(ctx, flag_id(*flag), query));
-
-    let tally = matching
-        .clone()
-        .map(|(_, flip)| Tally {
-            on: usize::from(flip.on),
-            total: 1,
-        })
-        .sum();
-
-    (tally, matching.into_iter().all(|(_, flip)| flip.known))
-}
-
 /// The pickers whose probe failed, for the banner of what could not be
 /// read. A queued wish shows what will be, as a catalog row's does.
 pub fn unread(choices: &Choices) -> usize {
@@ -163,7 +125,7 @@ pub(super) fn shell_network(
         .collect();
 
     let title = i18n::text(&ctx, "tweaks-shell-network");
-    let (tally, read) = shell_network_tally(&ctx, choices, query);
+    let (tally, read) = choices.shell_network_tally(|id| matches(&ctx, id, query));
     let count = shown_count(&ctx, tally, read).unwrap_or_default();
     section_heading(ui, &title, &count);
     ui.add_space(ui.tokens().sizes.heading_gap);
@@ -234,7 +196,7 @@ pub fn garuda_update(
         return false;
     }
 
-    let (tally, read) = garuda_update_tally(&ctx, flags, query);
+    let (tally, read) = garuda_update_tally(flags, |id| matches(&ctx, id, query));
     let count = shown_count(&ctx, tally, read).unwrap_or_default();
 
     let title = i18n::text(&ctx, "tweaks-garuda-update");

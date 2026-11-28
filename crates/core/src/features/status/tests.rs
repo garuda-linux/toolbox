@@ -1,11 +1,14 @@
-use std::time::{Duration, SystemTime};
+use jiff::Timestamp;
 
-use super::{SECONDS_PER_DAY as DAY, cleanup_due, days_since, disk_low, is_stale};
+use super::{
+    NextStep, SECONDS_PER_DAY as DAY, cleanup_detail_id, cleanup_due, days_since, disk_low,
+    is_stale, next_steps,
+};
 
 const GB: u64 = 1_000_000_000;
 
-fn at(seconds: u64) -> SystemTime {
-    SystemTime::UNIX_EPOCH + Duration::from_secs(seconds)
+fn at(seconds: u64) -> Timestamp {
+    Timestamp::from_second(i64::try_from(seconds).unwrap()).unwrap()
 }
 
 #[test]
@@ -66,4 +69,35 @@ fn a_cleanup_is_due_for_any_orphan_or_a_big_cache() {
     assert!(cleanup_due(1, 0));
     assert!(cleanup_due(0, 5 * GB + 1));
     assert!(!cleanup_due(0, 5 * GB));
+}
+
+#[test]
+fn the_next_steps_review_the_queue_and_set_up_only_until_setup_ran() {
+    assert_eq!(
+        next_steps(0, false, false),
+        [
+            NextStep::Setup,
+            NextStep::Maintenance,
+            NextStep::Diagnostics
+        ]
+    );
+    assert_eq!(
+        next_steps(2, false, true),
+        [
+            NextStep::Review { queued: 2 },
+            NextStep::Maintenance,
+            NextStep::Diagnostics
+        ]
+    );
+    assert_eq!(
+        next_steps(0, true, false),
+        [NextStep::Maintenance, NextStep::Diagnostics],
+        "the live system offers no setup"
+    );
+}
+
+#[test]
+fn the_clean_up_row_names_the_orphans_only_when_there_are_some() {
+    assert_eq!(cleanup_detail_id(0), "home-cleanup-detail-cache");
+    assert_eq!(cleanup_detail_id(3), "home-cleanup-detail");
 }

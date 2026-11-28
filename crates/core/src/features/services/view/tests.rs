@@ -132,3 +132,23 @@ fn the_scope_picks_whose_wishes_count() {
     assert!(system.iter().all(|row| row.enable.is_none()));
     assert!(user.iter().any(|row| row.enable == Some(Toggle::On)));
 }
+
+#[test]
+fn a_static_or_masked_unit_has_no_boot_state_to_switch() {
+    let units = [
+        unit("dbus.service", ActiveState::Active, FileState::Static),
+        unit("cups.service", ActiveState::Inactive, FileState::Masked),
+        unit("sshd.service", ActiveState::Active, FileState::Enabled),
+    ];
+
+    let shown = rows(
+        &units,
+        &everything(),
+        UnitOrder::Name,
+        UnitScope::System,
+        &ChangeSet::default(),
+    );
+
+    let switchable: Vec<bool> = shown.iter().map(super::Row::switchable).collect();
+    assert_eq!(switchable, [false, false, true]);
+}

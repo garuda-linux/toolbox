@@ -1,6 +1,7 @@
 use std::cell::Cell;
 use std::io::{self, Cursor, Read, Seek, SeekFrom};
-use std::time::SystemTime;
+
+use jiff::Timestamp;
 
 use super::super::last_in_tail;
 use super::{LAST, LOG, at};
@@ -42,7 +43,7 @@ fn noise() -> String {
     format!("{}\n", LOG.lines().next().unwrap())
 }
 
-fn scan(log: &str) -> (Option<SystemTime>, usize) {
+fn scan(log: &str) -> (Option<Timestamp>, usize) {
     let read = Cell::new(0);
     let mut log = Counted {
         log: Cursor::new(log.as_bytes().to_vec()),

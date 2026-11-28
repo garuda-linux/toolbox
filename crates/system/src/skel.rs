@@ -13,9 +13,9 @@ mod tests;
 use std::ffi::OsString;
 use std::os::unix::fs::symlink;
 use std::path::{Path, PathBuf};
-use std::time::SystemTime;
 use std::{fs, io};
 
+use jiff::Timestamp;
 use toolbox_catalog::SkelEntry;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -74,7 +74,7 @@ pub(crate) fn reset(
     entry: &SkelEntry,
     skel_root: &Path,
     home: &Path,
-    now: SystemTime,
+    now: Timestamp,
 ) -> Result<ResetReport, SkelError> {
     let real_home = fs::canonicalize(home).map_err(|error| io_error(home, error))?;
     let mut report = ResetReport::default();

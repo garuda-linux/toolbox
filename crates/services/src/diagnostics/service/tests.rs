@@ -364,7 +364,7 @@ async fn a_failed_upload_reports_the_reason() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
-async fn a_panicking_collector_ends_as_a_failed_collection() {
+async fn a_panicking_collector_ends_as_a_stopped_collection() {
     let (handle, mut heard) = start(Panics, Arc::new(DryRunTransport));
 
     handle.send(one(Collector::Dmesg));
@@ -373,13 +373,12 @@ async fn a_panicking_collector_ends_as_a_failed_collection() {
         Some(DiagnosticsNote::Started(Selection::One(Collector::Dmesg)))
     );
 
-    let Some(DiagnosticsNote::Finished(_, Outcome::Failed(reason))) =
-        tokio::time::timeout(Duration::from_secs(20), heard.recv())
-            .await
-            .unwrap()
-    else {
-        panic!("a panic left the collection running forever");
-    };
+    let note = tokio::time::timeout(Duration::from_secs(20), heard.recv())
+        .await
+        .expect("a panic left the collection running forever");
 
-    assert_ne!(reason, "");
+    assert_eq!(
+        note,
+        Some(DiagnosticsNote::Stopped(Selection::One(Collector::Dmesg)))
+    );
 }

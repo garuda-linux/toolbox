@@ -6,6 +6,8 @@
 use std::cell::RefCell;
 use std::ffi::OsString;
 use std::fs;
+use std::path::Path;
+use std::sync::Arc;
 use std::time::Duration;
 
 use egui::{Color32, Theme};
@@ -14,6 +16,8 @@ use tokio::sync::watch;
 use toolbox_gui_kit::desktop::FontSpec;
 use toolbox_gui_kit::desktop::family::Family;
 use toolbox_gui_kit::fonts::FontFile;
+use toolbox_system::PortalSettings;
+use toolbox_system::testing::look_portal::FixedLook;
 
 use super::{spawn, ui_faces};
 use crate::desktop::DesktopLook;
@@ -36,6 +40,15 @@ fn light() -> String {
     light
 }
 
+fn files_in(home: &Path) -> DesktopFiles {
+    let path = home.to_owned();
+    DesktopFiles::from_env(move |key| match key {
+        "HOME" => Some(OsString::from(&path)),
+        "XDG_CONFIG_DIRS" => Some(path.join("etc-xdg").into_os_string()),
+        _ => None,
+    })
+}
+
 async fn next_look(receiver: &mut watch::Receiver<DesktopLook>) -> DesktopLook {
     tokio::time::timeout(WAIT, receiver.changed())
         .await
@@ -51,18 +64,11 @@ async fn the_look_follows_an_edited_kdeglobals() {
     fs::create_dir_all(&config).unwrap();
     fs::write(config.join("kdeglobals"), light()).unwrap();
 
-    let path = home.path().to_owned();
-    let files = DesktopFiles::from_env(move |key| match key {
-        "HOME" => Some(OsString::from(&path)),
-        "XDG_CONFIG_DIRS" => Some(path.join("etc-xdg").into_os_string()),
-        _ => None,
-    });
-
     let mut receiver = spawn(
         &tokio::runtime::Handle::current(),
         egui::Context::default(),
         Family::Kde,
-        files,
+        (files_in(home.path()), Arc::new(FixedLook::default())),
         super::CatalogApps {
             names: Vec::new().into(),
             pictures: crate::desktop::icon_files::app_index(Vec::new()),
@@ -80,6 +86,30 @@ async fn the_look_follows_an_edited_kdeglobals() {
     let second = next_look(&mut receiver).await;
     assert_eq!(second.look.theme, Theme::Dark);
     assert_eq!(second.look.dark.window, Color32::from_rgb(32, 35, 38));
+}
+
+/// Without a desktop file naming a theme, the portal's preference decides it.
+#[tokio::test(flavor = "multi_thread")]
+async fn the_portal_preference_sets_the_theme_without_desktop_files() {
+    let home = TempDir::new().unwrap();
+    let portal = FixedLook(PortalSettings {
+        dark: Some(false),
+        ..PortalSettings::default()
+    });
+
+    let mut receiver = spawn(
+        &tokio::runtime::Handle::current(),
+        egui::Context::default(),
+        Family::Kde,
+        (files_in(home.path()), Arc::new(portal)),
+        super::CatalogApps {
+            names: Vec::new().into(),
+            pictures: crate::desktop::icon_files::app_index(Vec::new()),
+        },
+    );
+
+    let look = next_look(&mut receiver).await;
+    assert_eq!(look.look.theme, Theme::Light);
 }
 
 #[test]

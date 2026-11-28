@@ -5,9 +5,12 @@
 #[cfg(test)]
 mod tests;
 
+use std::fmt::Debug;
+
+use futures_lite::future::Boxed;
 use toolbox_plan::UnitScope;
 
-use crate::bus::{CallError, Method, call, connect};
+use crate::bus::{CallError, INTERACTIVE_TIMEOUT, Method, call, call_with_timeout, connect};
 
 pub const REBOOT: Method = Method {
     destination: "org.freedesktop.login1",
@@ -32,6 +35,26 @@ pub type ShutdownLock = zbus::OwnedFd;
 /// `Inhibit(what, who, why, mode)`.
 pub type InhibitBody = (&'static str, &'static str, String, &'static str);
 
+/// Restarts the computer. Tests answer from a fake.
+pub trait Restart: Debug + Send + Sync {
+    /// Asks for the restart. A restart that works ends the session, so only
+    /// a refusal comes back.
+    ///
+    /// # Errors
+    ///
+    /// The failure to reach logind or its refusal.
+    fn restart(&self) -> Boxed<Result<(), CallError>>;
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct SystemRestart;
+
+impl Restart for SystemRestart {
+    fn restart(&self) -> Boxed<Result<(), CallError>> {
+        Box::pin(reboot())
+    }
+}
+
 /// Interactive, so polkit may show a password prompt when other users are
 /// logged in or the policy wants one.
 pub const fn reboot_body() -> RebootBody {
@@ -52,4 +75,10 @@ pub fn inhibit_body(why: &str) -> InhibitBody {
 pub async fn inhibit_shutdown(why: &str) -> Result<ShutdownLock, CallError> {
     let connection = connect(UnitScope::System).await?;
     call(&connection, &INHIBIT, &inhibit_body(why)).await
+}
+
+async fn reboot() -> Result<(), CallError> {
+    let connection = connect(UnitScope::System).await?;
+
+    call_with_timeout(&connection, &REBOOT, &reboot_body(), INTERACTIVE_TIMEOUT).await
 }

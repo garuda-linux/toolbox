@@ -3,7 +3,8 @@ mod tail;
 use std::fs;
 use std::os::unix::fs::PermissionsExt as _;
 use std::path::Path;
-use std::time::{Duration, SystemTime};
+
+use jiff::Timestamp;
 
 use super::{PacmanLog, UpdateLogSource as _, last_completed};
 use crate::ProbeError;
@@ -18,11 +19,11 @@ const INSTALLED: &str = toolbox_state::testing::status::pacman_log::INSTALLED_PA
 /// `2026-11-08T17:36:00+0100`, the last `transaction completed` in [`LOG`].
 pub(super) const LAST: u64 = 1_794_155_760;
 
-fn at(seconds: u64) -> Option<SystemTime> {
-    SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(seconds))
+fn at(seconds: u64) -> Option<Timestamp> {
+    Timestamp::from_second(i64::try_from(seconds).ok()?).ok()
 }
 
-fn parse(log: &[u8]) -> Option<SystemTime> {
+fn parse(log: &[u8]) -> Option<Timestamp> {
     last_completed(log).unwrap()
 }
 

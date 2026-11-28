@@ -16,17 +16,17 @@ use crate::{PackageName, Password, RootAction, Step, StepId};
 
 /// Bumped whenever a message changes shape. App and helper ship together,
 /// so a mismatch means a broken install or a stale helper.
-pub const PROTOCOL_VERSION: u32 = 24;
+pub const PROTOCOL_VERSION: u32 = 25;
 
 /// The most text one [`Answer::Input`] carries. The sender splits a longer paste.
-pub const MAX_INPUT_BYTES: usize = 64 << 10;
+pub(crate) const MAX_INPUT_BYTES: usize = 64 << 10;
 
 /// Longest line either side reads. Program output is sent in chunks well
 /// below it. A config file of `MAX_CONFIG_BYTES` fits whatever it holds:
 /// a control character grows sixfold as a JSON escape.
 pub const MAX_LINE_BYTES: usize = 8 << 20;
 
-pub const MAX_STEPS: usize = 256;
+pub(crate) const MAX_STEPS: usize = 256;
 
 /// Room for a decoder's message about one field, not for the request.
 const MALFORMED_CHARACTERS: usize = 160;

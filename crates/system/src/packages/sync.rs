@@ -7,9 +7,9 @@ use std::borrow::Borrow;
 use std::collections::BTreeSet;
 use std::path::Path;
 use std::sync::Arc;
-use std::time::SystemTime;
 
 use alpm::{Alpm, SigLevel};
+use jiff::Timestamp;
 use parking_lot::Mutex;
 use toolbox_plan::PackageName;
 use toolbox_state::kernels::RepoPackage;
@@ -18,7 +18,7 @@ use toolbox_state::parts::SyncPackages;
 
 use super::pacman_conf::PacmanConf;
 use super::{LINUX, description, failed, size};
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub(super) struct SyncRead {
@@ -37,7 +37,7 @@ pub(super) struct SyncRead {
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct Database {
     repo: String,
-    modified: Option<SystemTime>,
+    modified: Option<Timestamp>,
     size: u64,
 }
 
@@ -89,7 +89,10 @@ fn database(sync: &Path, repo: &str) -> Option<Database> {
 
     metadata.is_file().then(|| Database {
         repo: repo.to_owned(),
-        modified: metadata.modified().ok(),
+        modified: metadata
+            .modified()
+            .ok()
+            .and_then(|time| Timestamp::try_from(time).ok()),
         size: metadata.len(),
     })
 }
@@ -106,9 +109,10 @@ fn read(handle: &Alpm, synced: &[Database]) -> Result<SyncRead, ProbeError> {
         // read it, one whose key is not trusted here will do.
         let db = handle
             .register_syncdb(repo, SigLevel::NONE)
-            .map_err(failed(repo))?;
+            .map_err(failed(Subject::Data(repo.to_owned())))?;
 
-        db.is_valid().map_err(failed(repo))?;
+        db.is_valid()
+            .map_err(failed(Subject::Data(repo.to_owned())))?;
 
         let mut kernels = Vec::new();
 

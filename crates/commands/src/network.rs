@@ -145,7 +145,7 @@ pub fn blacklist(args: &ModuleArgs, wish: Toggle, snapshot: &Snapshot) -> Result
 /// # Errors
 ///
 /// As [`blacklist`].
-pub fn blacklist_onto(
+pub(crate) fn blacklist_onto(
     args: &ModuleArgs,
     wish: Toggle,
     snapshot: &Snapshot,
@@ -253,7 +253,7 @@ fn drivers(read: &ReadList, out: &mut Out<'_>) -> Exit {
     super::filter::print_all(read, &rows, out, driver_listing)
 }
 
-pub fn driver_listing(rows: &[DriverLine]) -> Listing<'_> {
+pub(crate) fn driver_listing(rows: &[DriverLine]) -> Listing<'_> {
     let loaded = rows.iter().filter(|row| row.loaded).count();
     let blacklisted = rows.iter().filter(|row| row.blacklisted).count();
 
@@ -282,7 +282,7 @@ pub fn driver_listing(rows: &[DriverLine]) -> Listing<'_> {
     }
 }
 
-pub fn radio_listing(view: &StatusView) -> Listing<'static> {
+pub(crate) fn radio_listing(view: &StatusView) -> Listing<'static> {
     let read = !view.unread.contains(&"radios");
     let row = |name: &str, on: Option<Toggle>| {
         let (mark, state) = match (read, on) {

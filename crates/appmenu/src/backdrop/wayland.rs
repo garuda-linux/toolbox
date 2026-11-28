@@ -17,8 +17,8 @@ use wayland_protocols::ext::background_effect::v1::client::ext_background_effect
 use wayland_protocols_plasma::blur::client::org_kde_kwin_blur::OrgKdeKwinBlur;
 use wayland_protocols_plasma::blur::client::org_kde_kwin_blur_manager::OrgKdeKwinBlurManager;
 
-use crate::Error;
-use crate::choice::{Path, decide, wayland_offers};
+use super::Error;
+use super::choice::{Path, decide, wayland_offers};
 
 const EXTENSION: &str = "ext_background_effect_manager_v1";
 

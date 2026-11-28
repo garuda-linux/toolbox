@@ -8,8 +8,8 @@ mod tests;
 
 use std::borrow::Cow;
 use std::path::PathBuf;
-use std::time::SystemTime;
 
+use jiff::Timestamp;
 use toolbox_core::features::status::{
     STALE_AFTER_DAYS, cleanup_due, days_since, disk_low, is_stale,
 };
@@ -74,6 +74,20 @@ pub struct Pending<'status> {
     pub aur: bool,
 }
 
+/// One thing to act on, from [`Overview::rows`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Row {
+    Updates,
+    Aur,
+    Stale,
+    Merges,
+    Disk,
+    Services,
+    Cleanup,
+    Health(HealthLevel),
+    Restart,
+}
+
 impl<'status> Overview<'status> {
     /// Whether `check` could not be read.
     #[cfg(test)]
@@ -81,7 +95,7 @@ impl<'status> Overview<'status> {
         self.failed.iter().any(|(failed, _)| *failed == check)
     }
 
-    pub fn of(status: &'status Status, now: SystemTime) -> Self {
+    pub fn of(status: &'status Status, now: Timestamp) -> Self {
         let updates = found(&status.updates);
         let aur_updates = found(&status.aur_updates);
         let issues = found(&status.health);
@@ -174,17 +188,27 @@ impl<'status> Overview<'status> {
         self
     }
 
+    /// The rows of what needs action, in the order they show.
+    pub fn rows(&self, reboot_pending: bool) -> Vec<Row> {
+        [
+            (self.updates > 0).then_some(Row::Updates),
+            (self.aur_updates > 0).then_some(Row::Aur),
+            (self.stale && self.updates == 0).then_some(Row::Stale),
+            (!self.merges.is_empty()).then_some(Row::Merges),
+            self.machine.disk_low.then_some(Row::Disk),
+            (!self.machine.failed_units.is_empty()).then_some(Row::Services),
+            self.machine.cleanup.then_some(Row::Cleanup),
+            self.health.map(Row::Health),
+            reboot_pending.then_some(Row::Restart),
+        ]
+        .into_iter()
+        .flatten()
+        .collect()
+    }
+
     /// Whether Home has a row to show, so it can say that all is well.
-    pub const fn attention(&self, reboot_pending: bool) -> bool {
-        self.updates > 0
-            || self.aur_updates > 0
-            || !self.merges.is_empty()
-            || self.stale
-            || self.health.is_some()
-            || self.machine.disk_low
-            || !self.machine.failed_units.is_empty()
-            || self.machine.cleanup
-            || reboot_pending
+    pub fn attention(&self, reboot_pending: bool) -> bool {
+        !self.rows(reboot_pending).is_empty()
     }
 }
 

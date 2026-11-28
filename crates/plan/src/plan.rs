@@ -9,7 +9,7 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::procedure::Invocation;
-use crate::{RootAction, UserAction};
+use crate::{RootAction, Upgrader, UserAction};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]
@@ -101,6 +101,21 @@ impl Plan {
     #[must_use = "a plan does nothing until it is run"]
     pub fn user(action: UserAction) -> Self {
         Self::new([PlannedAction::User(action)])
+    }
+
+    /// The plan for a caller nobody answers: garuda-update gets its own
+    /// `--noconfirm`, as it asks before it installs.
+    #[must_use = "a plan does nothing until it is run"]
+    pub fn unattended(mut self) -> Self {
+        for step in &mut self.steps {
+            if let PlannedAction::Root(RootAction::UpgradeSystem { upgrader }) = &mut step.action
+                && *upgrader == Upgrader::GarudaUpdate
+            {
+                *upgrader = Upgrader::GarudaUpdateUnattended;
+            }
+        }
+
+        self
     }
 
     pub fn steps(&self) -> &[Step<PlannedAction>] {

@@ -39,6 +39,32 @@ diagnostics-no-agent = { $name } wurde nicht erstellt: Die Passwortabfrage konnt
 diagnostics-helper-missing = { $name } wurde nicht erstellt: Das Hilfsprogramm von Garuda Toolbox fehlt. Garuda Toolbox neu installieren.
 # $reason is the program's own words.
 diagnostics-failed = { $name } ist fehlgeschlagen: { $reason }
+# Die Gründe einer fehlgeschlagenen Sammlung. Die Worte eines Programms bleiben, wie es sie ausgegeben hat.
+diagnostics-failed-no-program = Es wurde kein Programm ausgeführt.
+diagnostics-failed-exit-code = Exitcode: { $code }
+diagnostics-failed-signal = Ein Signal hat das Programm beendet.
+diagnostics-failed-start = { $program } konnte nicht gestartet werden: { $error }
+diagnostics-failed-timed-out = { $program } hat länger als { $seconds } Sekunden gedauert
+diagnostics-failed-too-large = { $program } hat zu viel ausgegeben
+diagnostics-failed-read = { $path }: { $error }
+diagnostics-failed-helper-missing = das Hilfsprogramm von Garuda Toolbox oder pkexec ist nicht installiert
+diagnostics-failed-helper-start = das Hilfsprogramm kann nicht gestartet werden: { $error }
+diagnostics-failed-helper-timed-out = das Hilfsprogramm hat nicht rechtzeitig geantwortet
+diagnostics-failed-helper-too-long = die Antwort des Hilfsprogramms ist zu lang
+diagnostics-failed-helper-pkexec = pkexec kann nicht ausgeführt werden: { $words }
+diagnostics-failed-helper-ended = das Hilfsprogramm endete mit { $ending }: { $words }
+diagnostics-failed-ending-code = Exitcode { $code }
+diagnostics-failed-ending-signal = einem Signal
+diagnostics-failed-helper-unreadable = die Antwort des Hilfsprogramms ist unlesbar
+diagnostics-failed-helper-stopped = das Lesen wurde beendet, bevor das Hilfsprogramm antwortete
+diagnostics-failed-answer = Die Antwort des Hilfsprogramms von Garuda Toolbox wurde nicht verstanden: { $fault }
+diagnostics-failed-answer-too-long = die Zeile hat { $length } Bytes und überschreitet das Limit von { $limit }
+diagnostics-failed-not-installed = Das nächste Programm ist nicht installiert.
+diagnostics-failed-dismissed = Nicht erstellt: Der Passwortdialog wurde geschlossen.
+diagnostics-failed-denied = Nicht erstellt: Root-Rechte wurden nicht erteilt.
+diagnostics-failed-no-agent = Nicht erstellt: Es konnte kein Passwortdialog erscheinen.
+diagnostics-failed-helper-not-installed = Nicht erstellt: Das Hilfsprogramm ist nicht installiert.
+diagnostics-stopped = { $name } wurde vor der Antwort beendet.
 diagnostics-report-label = Diagnosebericht
 
 # The report's header line. $time is when it came in, as 14:05.

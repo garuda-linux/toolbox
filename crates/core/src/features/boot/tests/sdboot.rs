@@ -1,9 +1,10 @@
+use toolbox_plan::sdboot::{LoaderSetting, LoaderSettings, LoaderTimeout};
 use toolbox_plan::{KernelParameter, KernelParameters};
 use toolbox_state::boot::KernelCmdline;
 
 use super::super::{
     Flag, Refusal, add_parameter, is_protected, parameters, plymouth_queued, remove_parameter,
-    set_flag, set_plymouth_theme,
+    set_flag, set_loader, set_plymouth_theme, wanted_loader,
 };
 use crate::domains::{
     BootLoader, GrubDefaults, InstalledPackages, PlymouthState, PlymouthThemes, SdBootKernel,
@@ -183,4 +184,26 @@ fn a_restored_command_line_is_dropped_where_the_line_is_left_alone() {
 
     assert_eq!(super::super::recheck_grub(&mut changes, &snapshot), Some(1));
     assert!(changes.is_empty());
+}
+
+#[test]
+fn the_loader_page_shows_each_queued_setting_over_the_file() {
+    let file = LoaderSettings {
+        timeout: Some(LoaderTimeout::Seconds(5)),
+        editor: Some(Toggle::On),
+        ..LoaderSettings::default()
+    };
+
+    let mut changes = ChangeSet::default();
+
+    set_loader(
+        LoaderSetting::Timeout(Some(LoaderTimeout::Seconds(2))),
+        &mut changes,
+        &Snapshot::default(),
+    );
+
+    let shown = wanted_loader(&file, &changes);
+
+    assert_eq!(shown.timeout, Some(LoaderTimeout::Seconds(2)));
+    assert_eq!(shown.editor, Some(Toggle::On));
 }

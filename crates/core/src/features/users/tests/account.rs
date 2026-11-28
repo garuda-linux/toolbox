@@ -1,7 +1,7 @@
 use toolbox_plan::{FullName, HomeChange, HomeDirectory, ShellPath};
 
 use super::super::Refusal;
-use super::super::account::{AccountEdit, check_account, set_account};
+use super::super::account::{AccountEdit, Changes, Fields, check_account, set_account};
 use super::super::home::home_movable;
 use super::{queued, snapshot};
 use crate::ChangeSet;
@@ -16,6 +16,42 @@ fn everything(home: &str) -> AccountEdit {
             move_files: true,
         }),
     }
+}
+
+fn fields(home: &str, move_files: bool) -> Fields {
+    Fields {
+        full_name: "Grace King".to_owned(),
+        shell: "/usr/bin/fish".to_owned(),
+        home: home.to_owned(),
+        move_files,
+    }
+}
+
+#[test]
+fn the_move_flag_alone_changes_no_home_folder() {
+    let start = fields("/home/grace", false);
+    let now = fields("/home/grace", true);
+
+    let changes = Changes::between(&start, &now, "/home/grace");
+
+    assert!(!changes.any());
+    assert!(changes.home.is_none());
+}
+
+#[test]
+fn a_moved_folder_takes_the_move_flag_along() {
+    let start = fields("/home/grace", false);
+    let now = fields("/srv/grace", true);
+
+    let changes = Changes::between(&start, &now, "/home/grace");
+
+    assert_eq!(
+        changes.edit(true).and_then(|edit| edit.home),
+        Some(HomeChange {
+            home: HomeDirectory::new("/srv/grace").unwrap(),
+            move_files: true,
+        })
+    );
 }
 
 #[test]

@@ -75,7 +75,7 @@ impl Palette {
     /// GTK desktops whose theme names no colours of its own. Light window
     /// text is libadwaita's 80 % black over the window, made opaque.
     #[must_use = "a palette does nothing until it is applied"]
-    pub const fn adwaita(theme: Theme) -> Self {
+    pub(crate) const fn adwaita(theme: Theme) -> Self {
         match theme {
             Theme::Dark => Self::of_roles([
                 0x22_22_26, 0x1d_1d_20, 0xff_ff_ff, 0x35_84_e4, 0xff_ff_ff, 0xff_93_8c, 0xff_c2_52,
@@ -176,7 +176,7 @@ pub const fn colour([red, green, blue]: [u8; 3]) -> Color32 {
     clippy::disallowed_methods,
     reason = "the palette is where colours are made"
 )]
-pub const fn letter_hues(theme: Theme) -> [Color32; 8] {
+pub(crate) const fn letter_hues(theme: Theme) -> [Color32; 8] {
     match theme {
         Theme::Dark => [
             Color32::from_rgb(0x8d, 0x4f, 0x4a),

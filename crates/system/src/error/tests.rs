@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::Duration;
 
-use super::{MissingFact, ProbeError, Stop, from_io};
+use super::{MissingFact, ProbeError, Stop, Subject, from_io};
 
 fn json() -> Arc<serde_json::Error> {
     Arc::new(serde_json::from_str::<u8>("x").unwrap_err())
@@ -62,7 +62,7 @@ fn a_stop_names_why() {
 #[test]
 fn a_wrapped_error_stays_the_source() {
     let error = ProbeError::Json {
-        what: "ip printed no route list".to_owned(),
+        what: Subject::RouteList,
         error: json(),
     };
 
@@ -73,7 +73,7 @@ fn a_wrapped_error_stays_the_source() {
 #[test]
 fn failures_are_equal_when_of_one_kind_and_text() {
     let parse = |what: &str| ProbeError::Json {
-        what: what.to_owned(),
+        what: Subject::Data(what.to_owned()),
         error: json(),
     };
 
@@ -81,7 +81,7 @@ fn failures_are_equal_when_of_one_kind_and_text() {
     assert_ne!(parse("ip"), parse("health"));
     assert_ne!(
         ProbeError::Io {
-            what: "ip".to_owned(),
+            what: Subject::Data("ip".to_owned()),
             error: Arc::new(io::Error::other(json().to_string())),
         },
         parse("ip"),

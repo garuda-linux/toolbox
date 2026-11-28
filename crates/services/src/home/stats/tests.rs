@@ -66,7 +66,7 @@ fn updates_a_low_disk_health_findings_and_a_stale_system_need_attention() {
         to: toolbox_text::plain("145.0-1"),
     }]);
     status.aur_updates = Ok(Vec::new());
-    status.last_update = Ok(Some(now() - DAY * 30));
+    status.last_update = Ok(Some(now() - DAY * 30_i32));
     status.health = Ok(vec![HealthIssue {
         level: HealthLevel::High,
         message: toolbox_text::plain("old keyring"),

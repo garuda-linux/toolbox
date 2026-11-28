@@ -1,8 +1,8 @@
 use std::fs;
 use std::os::unix::fs::symlink;
 use std::path::{Path, PathBuf};
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
+use jiff::Timestamp;
 use tempfile::TempDir;
 use toolbox_catalog::{SkelCatalog, SkelEntry};
 
@@ -49,8 +49,8 @@ impl Roots {
 }
 
 /// 2026-10-09 13:05:07 UTC.
-fn now() -> SystemTime {
-    UNIX_EPOCH + Duration::from_secs(1_791_551_107)
+fn now() -> Timestamp {
+    Timestamp::from_second(1_791_551_107).unwrap()
 }
 
 fn write(path: &Path, text: &str) {

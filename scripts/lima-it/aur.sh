@@ -2,11 +2,12 @@
 # The aur suite, sourced by scripts/lima-it.sh. The CLI installs AUR packages
 # on a terminal through the split path: the review asks, paru fetches,
 # makepkg builds as the user, the helper installs. Needs the network and the
-# AUR, and takes long, since octopi-git builds for most of it. paru comes
-# from chaotic-aur, and a package that a repository offers is never built.
+# AUR. paru comes from chaotic-aur, and a package that a repository offers
+# is never built.
 
 aur_pkg=
-aur_pair=octopi-git
+# Builds in seconds and has a make dependency no Garuda image installs.
+aur_make=cbonsai
 
 # Runs the CLI on a terminal and types the answer once the question shows,
 # since a key typed before the question is dropped by the review. Arguments:
@@ -50,11 +51,11 @@ review_question="press Enter to build"
 # script tested it. The suite stops when none qualifies.
 # shellcheck disable=SC2329 # used by the setup
 pick_aur_package() {
-  local name
-  for name in pipes.sh cbonsai bash-pipes tty-clock-git nyancat-git; do
-    if ! vm pacman -Si "$name" >/dev/null 2>&1 && vm paru -Si --aur "$name" >/dev/null 2>&1; then
-      aur_pkg=$name
-      echo "picked $name"
+  local candidate
+  for candidate in pipes.sh cbonsai bash-pipes tty-clock-git nyancat-git; do
+    if ! vm pacman -Si "$candidate" >/dev/null 2>&1 && vm paru -Si --aur "$candidate" >/dev/null 2>&1; then
+      aur_pkg=$candidate
+      echo "picked $candidate"
       return 0
     fi
   done
@@ -96,21 +97,23 @@ t_json_refused() {
 }
 
 t_reinstall() {
-  local code=0
-  answer_tb "y" "$review_question" packages install --aur "$aur_pkg" --yes >/dev/null || code=$?
-  [ "$code" = 0 ] && vm pacman -Qeq | grep -qx "$aur_pkg"
+  local out code=0
+  out=$(tb packages install --aur "$aur_pkg" --yes) || code=$?
+  echo "$out"
+  echo "exit: $code"
+  [ "$code" = 0 ] && ! grep -qF "makepkg" <<<"$out" && vm pacman -Qeq | grep -qx "$aur_pkg"
 }
 
-t_aur_dependency() {
+t_make_dependency() {
   local before makes out code=0 dep
   before=$(vm pacman -Qq) || return 1
-  out=$(answer_tb "y" "$review_question" packages install --aur "$aur_pair" --yes) || code=$?
+  out=$(answer_tb "y" "$review_question" packages install --aur "$aur_make" --yes) || code=$?
   echo "$out"
   echo "exit: $code"
   [ "$code" = 0 ] || return 1
-  vm pacman -Q "$aur_pair" >/dev/null || return 1
+  vm pacman -Q "$aur_make" >/dev/null || return 1
 
-  makes=$(tj packages show --aur "$aur_pair" | jq -r '(.make_depends // []) - (.depends // []) | .[]' | sed 's/[<>=].*//') || return 1
+  makes=$(tj packages show --aur "$aur_make" | jq -r '(.make_depends // []) - (.depends // []) | .[]' | sed 's/[<>=].*//') || return 1
   for dep in $makes; do
     grep -qx "$dep" <<<"$before" && continue
     if vm pacman -Q "$dep" >/dev/null 2>&1; then
@@ -136,13 +139,13 @@ t_symlinked_cache() {
 # A `-git` package of the candidates that conflicts with a repository
 # package, as "name conflict". Nothing of that kind fails the check.
 conflict_pair() {
-  local name c conflicts
-  for name in tty-clock-git nyancat-git; do
-    conflicts=$(tj packages show --aur "$name" 2>/dev/null | jq -r '.conflicts[]?' | sed 's/[<>=].*//') || true
+  local candidate c conflicts
+  for candidate in tty-clock-git nyancat-git; do
+    conflicts=$(tj packages show --aur "$candidate" 2>/dev/null | jq -r '.conflicts[]?' | sed 's/[<>=].*//') || true
     while read -r c; do
       [ -n "$c" ] || continue
       if vm pacman -Si "$c" >/dev/null 2>&1; then
-        echo "$name $c"
+        echo "$candidate $c"
         return 0
       fi
     done <<<"$conflicts"
@@ -152,20 +155,20 @@ conflict_pair() {
 }
 
 t_conflict() {
-  local pair name c out code=0
+  local pair candidate c out code=0
   pair=$(conflict_pair) || {
     echo "no candidate conflicts with a repository package"
     return 1
   }
-  read -r name c <<<"$pair"
-  echo "conflict: $name with $c"
+  read -r candidate c <<<"$pair"
+  echo "conflict: $candidate with $c"
 
   tb packages install "$c" --yes >/dev/null || return 1
-  out=$(tb packages install --aur "$name" --yes) || code=$?
+  out=$(tb packages install --aur "$candidate" --yes) || code=$?
   tb packages remove "$c" --yes >/dev/null 2>&1 || true
   echo "$out"
   echo "exit: $code"
-  [ "$code" != 0 ] && grep -qF "$c" <<<"$out" && ! vm pacman -Q "$name" >/dev/null 2>&1
+  [ "$code" != 0 ] && grep -qF "$c" <<<"$out" && ! vm pacman -Q "$candidate" >/dev/null 2>&1
 }
 
 # The helper run by hand under sudo, with a socket on its stdin made by
@@ -199,10 +202,10 @@ suite_aur() {
   setup "paru, git, base-devel and python" as_root "pacman -Sy --noconfirm --needed paru git base-devel python"
   setup "an AUR package no repository offers" pick_aur_package
   check "the review asks with --yes, and Enter declines: nothing built, exit 3" t_review_enter
-  check "y builds and installs it: foreign, no password asked, root store empty" t_install
   check "--json refuses the review up front with exit 4" t_json_refused
-  check "a second install keeps the install reason" t_reinstall
-  check "an AUR dependency installs and the make dependencies are removed" t_aur_dependency
+  check "y builds and installs it: foreign, no password asked, root store empty" t_install
+  check "a second install builds nothing and keeps the install reason" t_reinstall
+  check "a make dependency is installed for the build and removed after it" t_make_dependency
   check "a symlinked ~/.cache takes the old paru path, and says so" t_symlinked_cache
   check "a package that conflicts with an installed one is refused, naming it" t_conflict
   check "K8: whether sudo keeps the helper's stdin socket" t_sudo_socket

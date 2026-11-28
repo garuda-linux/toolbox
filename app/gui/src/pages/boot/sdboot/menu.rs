@@ -1,5 +1,6 @@
 use egui::Ui;
 use toolbox_core::domains::LoaderSettingsDomain;
+use toolbox_core::features::boot::wanted_loader;
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{Select, segmented, segmented_width};
 use toolbox_plan::sdboot::{LoaderKey, LoaderSetting, LoaderSettings, LoaderTimeout, SdBootMenu};
@@ -13,7 +14,7 @@ use crate::pages::PageContext;
 use crate::pages::setting_row::{Words, row, switch_row, wide_control};
 
 pub fn show(ui: &mut Ui, context: &PageContext<'_>, menu: &SdBootMenu) {
-    let settings = wanted(&menu.settings, context);
+    let settings = wanted_loader(&menu.settings, context.changes);
 
     default_entry(ui, context, menu, &settings);
     remember(ui, context, &settings);
@@ -21,30 +22,6 @@ pub fn show(ui: &mut Ui, context: &PageContext<'_>, menu: &SdBootMenu) {
     switch(ui, context, LoaderKey::Editor, settings.editor);
     switch(ui, context, LoaderKey::AutoEntries, settings.auto_entries);
     switch(ui, context, LoaderKey::AutoFirmware, settings.auto_firmware);
-}
-
-pub(super) fn wanted(file: &LoaderSettings, context: &PageContext<'_>) -> LoaderSettings {
-    let mut settings = file.clone();
-    let queued = |key| LoaderSettingsDomain::queued(context.changes, key);
-
-    for key in [
-        LoaderKey::Timeout,
-        LoaderKey::Default,
-        LoaderKey::Editor,
-        LoaderKey::AutoEntries,
-        LoaderKey::AutoFirmware,
-    ] {
-        match queued(key) {
-            Some(LoaderSetting::Timeout(timeout)) => settings.timeout = timeout,
-            Some(LoaderSetting::Default(default)) => settings.default = default,
-            Some(LoaderSetting::Editor(on)) => settings.editor = on,
-            Some(LoaderSetting::AutoEntries(on)) => settings.auto_entries = on,
-            Some(LoaderSetting::AutoFirmware(on)) => settings.auto_firmware = on,
-            None => {}
-        }
-    }
-
-    settings
 }
 
 fn tag(context: &PageContext<'_>, ctx: &egui::Context, key: LoaderKey) -> Option<String> {

@@ -95,7 +95,7 @@ pub fn tiles(overview: Option<&Overview<'_>>, facts: Option<&Facts>) -> [Tile; 4
 
 /// `None` for a disk of no size. A file system that reports more free
 /// than its whole counts as empty.
-pub fn used_share(free: u64, total: u64) -> Option<f32> {
+pub(crate) fn used_share(free: u64, total: u64) -> Option<f32> {
     const STEPS: u16 = 10_000;
     if total == 0 {
         return None;

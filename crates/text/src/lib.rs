@@ -73,7 +73,7 @@ where
     serializer.serialize_str(checked_text(value))
 }
 
-/// [`serialize_text`] of a value that may be unset, which was `""` before.
+/// [`serialize_text`] of a value that may be unset, which is written as `""`.
 ///
 /// # Errors
 ///

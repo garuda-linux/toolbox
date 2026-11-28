@@ -32,7 +32,7 @@ pub fn native_options(app_id: &str) -> eframe::NativeOptions {
 /// whether the background is translucent with it, so the setting can change
 /// later without asking again.
 pub fn desktop_blur(cc: &eframe::CreationContext<'_>, prefs: &mut PreferencesSetup) {
-    let available = toolbox_backdrop::install(cc).translucent();
+    let available = toolbox_appmenu::backdrop::install(cc).translucent();
     prefs.desktop_blur = available;
     toolbox_gui_kit::theme::set_translucent(
         &cc.egui_ctx,

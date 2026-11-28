@@ -35,13 +35,12 @@ impl Operation {
         }
     }
 
-    pub const fn question_id(self) -> &'static str {
+    /// `None` for an operation that does not [ask first](Self::asks_first).
+    pub const fn question_id(self) -> Option<&'static str> {
         match self {
-            Self::RefreshKeyring => "maintenance-op-refresh-keyring-question",
-            Self::RemoveDatabaseLock => "maintenance-op-remove-database-lock-question",
-            Self::UpgradeSystem => "maintenance-op-upgrade-system-question",
-            Self::RemoveOrphans => "maintenance-op-remove-orphans-question",
-            Self::CleanPackageCache => "maintenance-op-clean-package-cache-question",
+            Self::RemoveOrphans => Some("maintenance-op-remove-orphans-question"),
+            Self::CleanPackageCache => Some("maintenance-op-clean-package-cache-question"),
+            Self::RefreshKeyring | Self::RemoveDatabaseLock | Self::UpgradeSystem => None,
         }
     }
 }

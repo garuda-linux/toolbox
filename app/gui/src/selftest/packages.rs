@@ -145,6 +145,7 @@ pub fn aur_orders_steps() -> Vec<Step> {
         Step::wait("Build octopi-git from the AUR?"),
         Step::button("Build and Install"),
         Step::WaitGone("Build octopi-git from the AUR?"),
+        Step::click("Review"),
         Step::WaitContaining("Builds alpm_octopi_utils-git, octopi-git."),
         Step::Shot("packages-aur-orders-ready"),
         Step::Click {

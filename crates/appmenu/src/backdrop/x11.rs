@@ -6,8 +6,8 @@ use x11rb::protocol::xproto::{AtomEnum, ConnectionExt as _, PropMode};
 use x11rb::rust_connection::RustConnection;
 use x11rb::wrapper::ConnectionExt as _;
 
-use crate::Error;
-use crate::choice::{Offers, Path, decide};
+use super::Error;
+use super::choice::{Offers, Path, decide};
 
 /// Blurs `window` when the window manager is KWin.
 pub fn apply(window: u32) -> Result<Path, Error> {

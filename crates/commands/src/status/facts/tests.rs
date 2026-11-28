@@ -1,5 +1,4 @@
-use std::time::{Duration, SystemTime};
-
+use jiff::{SignedDuration, Timestamp};
 use toolbox_cli::output::{Paint, Style};
 use toolbox_plan::{PackageName, UnitName};
 use toolbox_services::home::Overview;
@@ -7,7 +6,7 @@ use toolbox_system::{DiskSpace, Facts, PackageCount, ProbeError, Status};
 
 use super::super::{brief, needs_attention, text, view};
 
-const DAY: Duration = Duration::from_hours(24);
+const DAY: SignedDuration = SignedDuration::from_hours(24);
 const GB: u64 = 1_000_000_000;
 
 fn quiet() -> Status {
@@ -20,7 +19,7 @@ fn quiet() -> Status {
     }
 }
 
-fn facts(now: SystemTime) -> Facts {
+fn facts(now: Timestamp) -> Facts {
     Facts {
         packages: Ok(PackageCount {
             installed: 1_462,
@@ -40,7 +39,7 @@ fn facts(now: SystemTime) -> Facts {
 
 #[test]
 fn quiet_facts_are_all_good() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = view(&quiet(), &Ok(false), now).with_facts(&facts(now), now);
 
     assert_eq!(brief(&shown), "all good");
@@ -49,7 +48,7 @@ fn quiet_facts_are_all_good() {
 
 #[test]
 fn a_low_disk_a_failed_service_and_orphans_need_attention() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = facts(now);
     found.disk = Ok(DiskSpace {
         total: 500 * GB,
@@ -68,7 +67,7 @@ fn a_low_disk_a_failed_service_and_orphans_need_attention() {
 
 #[test]
 fn the_window_and_the_command_line_agree_on_the_facts() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut low = facts(now);
     low.disk = Ok(DiskSpace {
         total: 500 * GB,
@@ -91,7 +90,7 @@ fn the_window_and_the_command_line_agree_on_the_facts() {
 
 #[test]
 fn the_text_lists_the_facts_after_the_update_check() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = view(&quiet(), &Ok(false), now).with_facts(&facts(now), now);
     let printed = text(&shown, Paint::new(Style::Plain), false);
 
@@ -104,7 +103,7 @@ fn the_text_lists_the_facts_after_the_update_check() {
 
 #[test]
 fn the_json_names_each_fact_with_its_state() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = facts(now);
     found.orphans = Err(ProbeError::fake("no database"));
     let shown = view(&quiet(), &Ok(false), now).with_facts(&found, now);
@@ -118,7 +117,7 @@ fn the_json_names_each_fact_with_its_state() {
 
 #[test]
 fn a_view_without_facts_keeps_them_out_of_the_json() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let json = toolbox_cli::output::json(&view(&quiet(), &Ok(false), now));
 
     assert!(!json.contains("\"kernel\""), "{json}");

@@ -2,7 +2,11 @@
 //! panel. The app hands over a [`Menu`] whenever its state changes, this
 //! crate serves it as `com.canonical.dbusmenu` on the session bus, and a
 //! click comes back as the item's action. Egui free.
+//!
+//! [`backdrop`] is the other part the window asks of the compositor: the
+//! blur behind its translucent background. Both belong to the one window.
 
+pub mod backdrop;
 #[cfg(any(test, feature = "client"))]
 pub mod client;
 mod layout;

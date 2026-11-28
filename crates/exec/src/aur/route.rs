@@ -18,7 +18,8 @@ use crate::secure::{self, DIR_FLAGS};
 const GROUP_OR_OTHERS_WRITE: u32 = 0o022;
 
 /// The folders of the route that exist. `missing` names the ones below
-/// `folder` that do not exist yet, which the user-side build creates.
+/// `folder` that do not exist yet, `.cache` of a new account included,
+/// which the user-side build creates.
 #[derive(Debug)]
 pub struct Route {
     pub home: PathBuf,
@@ -35,7 +36,7 @@ pub enum RouteProblem {
     /// The home is missing, a link or no folder.
     #[error(transparent)]
     Home(io::Error),
-    /// `.cache` is missing, a link or no folder.
+    /// `.cache` is a link or no folder.
     #[error(transparent)]
     Cache(io::Error),
     /// `garuda-toolbox` or `aur-built` is a link or no folder, or a folder
@@ -118,7 +119,7 @@ pub(super) fn walk(root: &Path, rel: &Path, shown: &Path, uid: u32) -> Result<Ro
                 owned_and_closed(&next, uid, part)?;
                 folder = next;
             }
-            Err(Errno::NOENT) if index > 0 => missing.push(part),
+            Err(Errno::NOENT) => missing.push(part),
             Err(error) if index == 0 => return Err(RouteProblem::Cache(error.into())),
             Err(error) => {
                 return Err(RouteProblem::Folder {

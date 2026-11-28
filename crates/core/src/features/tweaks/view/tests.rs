@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use toolbox_plan::{DnsProvider, GarudaUpdateFlag, ShellPath, UserName, WifiBackend};
 use toolbox_state::probes::{FailedProbes, Probe};
 
-use super::{Choices, Flip, Pick, Read};
+use super::{Choices, Flip, Pick, Read, flag_id, garuda_update_tally};
 use crate::domains::{
     AvailableShells, CurrentDns, CurrentShells, CurrentWifiBackend, Dns, GarudaUpdateConfig,
     GarudaUpdateFlags, Hblock, HblockState, LoginShells,
@@ -151,4 +151,44 @@ fn a_part_that_was_read_is_known_whatever_failed_besides() {
     let choices = Choices::of(&snapshot, &ChangeSet::default(), None);
 
     assert_eq!(choices.wifi.read, Read::Known);
+}
+
+#[test]
+fn the_shell_and_network_tally_counts_ad_blocking_only() {
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(HblockState(true));
+    let choices = Choices::of(&snapshot, &ChangeSet::default(), None);
+
+    let (tally, read) = choices.shell_network_tally(|id| id == "tweaks-hblock");
+    assert_eq!((tally.on, tally.total, read), (1, 1, true));
+
+    let (other, _) = choices.shell_network_tally(|id| id == "tweaks-dns");
+    assert_eq!((other.on, other.total), (0, 0));
+}
+
+#[test]
+fn the_garuda_update_tally_counts_the_flags_the_search_keeps() {
+    let flags = [
+        (
+            GarudaUpdateFlag::UpdateAur,
+            Flip {
+                known: true,
+                on: true,
+                queued: false,
+            },
+        ),
+        (
+            GarudaUpdateFlag::NoCheckSpace,
+            Flip {
+                known: true,
+                on: false,
+                queued: false,
+            },
+        ),
+    ];
+
+    let (tally, read) =
+        garuda_update_tally(&flags, |id| id == flag_id(GarudaUpdateFlag::UpdateAur));
+
+    assert_eq!((tally.on, tally.total, read), (1, 1, true));
 }

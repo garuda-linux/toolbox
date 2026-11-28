@@ -17,7 +17,6 @@ use toolbox_config::Paths;
 use toolbox_core::ChangeSet;
 use toolbox_gui::apply::{self, ApplyHandle, HelperLauncher, Launcher as _};
 use toolbox_gui::boot::BootSetup;
-use toolbox_gui::boot::portal::PortalChooser;
 use toolbox_gui::bootrepair::BootRepairSetup;
 use toolbox_gui::catalogs::{DEVELOPMENT, catalog_dir_from_env};
 use toolbox_gui::command::CommandSender;
@@ -43,9 +42,10 @@ use toolbox_services::address::{AddressSource, KdeGeoIp};
 use toolbox_system::mirrors::{MirrorRanking, RateMirrors};
 use toolbox_system::{
     AurOrderSource, ConfigFileSource, DiagnosticSource as _, DryRunEditor, EditFolder, Editing,
-    HelperLocks, Libalpm, MergeSource, NetworkActions, NetworkSource, PacmanLog, Paru, RouteSource,
-    Sources, StatusSources, SystemActions, SystemBootMenu, SystemConfigFiles, SystemDiagnostics,
-    SystemEditor, SystemNetwork, SystemRepair, SystemRoute,
+    HelperLocks, Libalpm, MergeSource, NetworkActions, NetworkSource, PacmanLog, Paru,
+    PortalChooser, RouteSource, Sources, StatusSources, SystemActions, SystemBootMenu,
+    SystemConfigFiles, SystemDiagnostics, SystemEditor, SystemNetwork, SystemRepair, SystemRestart,
+    SystemRoute,
 };
 
 const SELF_TEST_CONFIGS: &str = "GARUDA_TOOLBOX_SELFTEST_CONFIGS";
@@ -75,7 +75,7 @@ pub fn machine(
     }
 
     (
-        Arc::new(Logind::new(handle.clone())),
+        Arc::new(Logind::new(handle.clone(), Arc::new(SystemRestart))),
         Arc::new(SystemLauncher::new(handle.clone(), commands, ctx.clone())),
     )
 }

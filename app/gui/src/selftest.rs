@@ -48,7 +48,7 @@ const SUITE_VARIABLE: &str = "GARUDA_TOOLBOX_SELFTEST_SUITE";
 /// How long one step may wait. A cold first read of the system is slow.
 const PATIENCE: Duration = Duration::from_secs(60);
 
-const SUITES: [(&str, Suite); 23] = [
+const SUITES: [(&str, Suite); 22] = [
     // First, as its Review and Apply… refuses only while nothing is queued.
     ("appmenu", appmenu::steps),
     ("home", home::steps),
@@ -58,7 +58,6 @@ const SUITES: [(&str, Suite); 23] = [
     ("discover", discover::steps),
     ("packages", packages::steps),
     ("packages-aur", packages::aur_steps),
-    ("packages-aur-orders", packages::aur_orders_steps),
     ("services", services::steps),
     ("tweaks", tweaks::steps),
     ("kernels", kernels::steps),
@@ -77,7 +76,10 @@ const SUITES: [(&str, Suite); 23] = [
 
 /// Suites that need what only the Arch runner has, such as pacman's
 /// databases. `all` leaves them out, CI runs each by name.
-const ARCH_SUITES: [(&str, Suite); 1] = [("packages-arch", packages::arch_steps)];
+const ARCH_SUITES: [(&str, Suite); 2] = [
+    ("packages-arch", packages::arch_steps),
+    ("packages-aur-orders", packages::aur_orders_steps),
+];
 
 /// Suites that need systemd on a system bus, which the Arch runner lacks.
 /// `all` leaves them out, `scripts/garuda-selftest.sh` runs each by name.

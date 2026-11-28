@@ -33,6 +33,7 @@ use toolbox_gui_kit::icons::ThemeIcons;
 use toolbox_gui_kit::row_cache::RowCache;
 use toolbox_gui_kit::toasts::Toasts;
 use toolbox_gui_kit::{fonts, icons};
+use toolbox_system::Notifier;
 
 use self::preferences::Preferences;
 pub use self::preferences::PreferencesSetup;
@@ -53,7 +54,6 @@ use crate::kernels::Kernels;
 use crate::launch::Launcher;
 use crate::maintenance::Maintenance;
 use crate::network::Network;
-use crate::notifications::Notifier;
 use crate::packages::Packages;
 use crate::page::PageId;
 use crate::page_service::Services;

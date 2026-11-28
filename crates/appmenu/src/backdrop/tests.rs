@@ -1,4 +1,4 @@
-use crate::choice::{BLUR_CAPABILITY, Offers, Path, decide, wayland_offers};
+use super::choice::{BLUR_CAPABILITY, Offers, Path, decide, wayland_offers};
 
 const EXTENSION: &str = "ext_background_effect_manager_v1";
 const KDE: &str = "org_kde_kwin_blur_manager";

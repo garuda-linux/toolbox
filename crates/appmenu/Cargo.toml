@@ -1,6 +1,6 @@
 [package]
 name = "toolbox-appmenu"
-description = "Garuda Toolbox's global menu: com.canonical.dbusmenu on the session bus, tied to the window"
+description = "Garuda Toolbox's global menu (com.canonical.dbusmenu on the session bus) and the window's compositor blur, both tied to the window"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -16,8 +16,11 @@ parking_lot.workspace = true
 raw-window-handle.workspace = true
 serde.workspace = true
 thiserror.workspace = true
+tracing.workspace = true
 wayland-client.workspace = true
+wayland-protocols.workspace = true
 wayland-protocols-plasma.workspace = true
+x11rb.workspace = true
 zbus = { workspace = true, features = ["proxy", "service"] }
 
 [dev-dependencies]

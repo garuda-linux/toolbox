@@ -117,7 +117,7 @@ impl Activation {
 
     /// A value that is no string arrives as `None` and is ignored like an unknown key.
     #[must_use = "returns the new value, the old one stays as it was"]
-    pub fn with_platform_data<'a>(
+    pub(crate) fn with_platform_data<'a>(
         mut self,
         data: impl IntoIterator<Item = (&'a str, Option<&'a str>)>,
     ) -> Self {
@@ -133,7 +133,7 @@ impl Activation {
         self
     }
 
-    pub fn platform_data(&self) -> Vec<(&'static str, &str)> {
+    pub(crate) fn platform_data(&self) -> Vec<(&'static str, &str)> {
         [
             (ACTIVATION_TOKEN, self.token.as_ref()),
             (DESKTOP_STARTUP_ID, self.startup_id.as_ref()),

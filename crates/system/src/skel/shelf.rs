@@ -2,8 +2,8 @@
 //! that copies them. `toolbox_services::shelf::Shelf` holds the choice.
 
 use std::path::Path;
-use std::time::SystemTime;
 
+use jiff::Timestamp;
 use toolbox_catalog::{SkelCatalog, SkelEntry};
 
 /// `files` are full skel paths, for the confirmation that lists what gets replaced.
@@ -49,7 +49,7 @@ pub fn reset(entries: &[SkelEntry], skel_root: &Path, home: &Path) -> Outcome {
     };
 
     for entry in entries {
-        match super::reset(entry, skel_root, home, SystemTime::now()) {
+        match super::reset(entry, skel_root, home, Timestamp::now()) {
             Ok(report) => {
                 outcome.copied = outcome.copied.saturating_add(report.copied.len());
             }

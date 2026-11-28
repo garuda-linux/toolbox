@@ -1,25 +1,23 @@
 #[cfg(test)]
 mod tests;
 
-use std::time::{SystemTime, UNIX_EPOCH};
-
-use toolbox_calendar::Utc;
+use jiff::Timestamp;
+use jiff::tz::TimeZone;
 
 /// `now` in UTC as `YYYYMMDD-HHMMSS`. A time before 1970 counts as the
 /// epoch.
-pub(super) fn backup_stamp(now: SystemTime) -> String {
-    let seconds = now
-        .duration_since(UNIX_EPOCH)
-        .map_or(0, |since| since.as_secs());
+pub(super) fn backup_stamp(now: Timestamp) -> String {
+    let utc = now
+        .max(Timestamp::UNIX_EPOCH)
+        .to_zoned_datetime(TimeZone::UTC);
 
-    let Utc {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-    } = Utc::from_unix(seconds);
-
-    format!("{year:04}{month:02}{day:02}-{hour:02}{minute:02}{second:02}")
+    format!(
+        "{:04}{:02}{:02}-{:02}{:02}{:02}",
+        utc.year(),
+        utc.month(),
+        utc.day(),
+        utc.hour(),
+        utc.minute(),
+        utc.second()
+    )
 }

@@ -11,12 +11,12 @@ use tokio::runtime::Runtime;
 use toolbox_core::ChangeSet;
 use toolbox_core::domains::CurrentGrub;
 use toolbox_core::features::kernels::{RunningKernel, parse_status};
-use toolbox_gui::boot::{BootSetup, Chosen, FileChooser, FileKind};
+use toolbox_gui::boot::BootSetup;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::{App, Setup, reader, snapshot};
 use toolbox_plan::{GrubMenu, GrubPlatform, GrubState, KernelRelease};
 use toolbox_services::dkms::Dkms;
-use toolbox_system::{BootMenuSource, MenuRead};
+use toolbox_system::{BootMenuSource, Chosen, FileChooser, MenuRead};
 
 use crate::common::{SMALLEST, TALL, window};
 use crate::kernels::{DKMS_STATUS, package, system};
@@ -39,7 +39,7 @@ impl BootMenuSource for LimaMenu {
 struct NoFile;
 
 impl FileChooser for NoFile {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+    fn choose(&self, _title: &str, _filter: &str, _globs: &[&str]) -> Chosen {
         Chosen::Cancelled
     }
 }

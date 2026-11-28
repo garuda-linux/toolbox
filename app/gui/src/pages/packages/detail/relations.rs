@@ -52,7 +52,6 @@ pub fn show(
     targets: &Targets,
     info: &PackageDetails,
 ) -> Option<PackageName> {
-    let mut opened = None;
     let gap = gap(ui);
     let lookup = |value: &str| targets.get(value).cloned();
 
@@ -71,13 +70,7 @@ pub fn show(
     ui.add_space(gap);
     let optional = optional(ui, &info.optional, &lookup, &mut unfolded.optional);
 
-    for clicked in [depends, required, optional] {
-        if opened.is_none() {
-            opened = clicked;
-        }
-    }
-
-    opened
+    depends.or(required).or(optional)
 }
 
 pub fn gap(ui: &Ui) -> f32 {
@@ -225,9 +218,8 @@ fn more(ui: &mut Ui, hidden: usize, all: &mut bool) {
     }
 
     let ctx = ui.ctx().clone();
-    let count = hidden;
-    let text = i18n::text_with(&ctx, "packages-more", &[("count", Arg::from(count))]);
-    let name = i18n::text_with(&ctx, "packages-more-name", &[("count", Arg::from(count))]);
+    let text = i18n::text_with(&ctx, "packages-more", &[("count", Arg::from(hidden))]);
+    let name = i18n::text_with(&ctx, "packages-more-name", &[("count", Arg::from(hidden))]);
     if text_button(ui, &text, &name).clicked() {
         *all = true;
     }

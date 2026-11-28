@@ -9,7 +9,7 @@ const NARROW: u16 = 640;
 #[test]
 fn the_header_names_its_report_time_and_line_count_above_the_lines() {
     let harness = page(Page {
-        collected: Some(1_792_327_265),
+        collected: Some(jiff::Timestamp::from_second(1_792_327_265).unwrap()),
         ..report()
     });
 
@@ -43,7 +43,7 @@ fn a_report_of_unknown_time_names_only_its_lines() {
 #[test]
 fn the_header_controls_stay_inside_the_card_at_any_width() {
     let mut harness = page(Page {
-        collected: Some(1_792_327_265),
+        collected: Some(jiff::Timestamp::from_second(1_792_327_265).unwrap()),
         ..report()
     });
 

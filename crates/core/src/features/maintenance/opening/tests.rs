@@ -1,5 +1,15 @@
 use super::super::Tool;
+use super::super::page::RATE_MIRRORS_PROGRAM;
 use super::{Next, Opening};
+
+#[test]
+fn each_next_step_checks_for_its_own_program() {
+    assert_eq!(
+        Next::Tool(Tool::BtrfsAssistant).program(),
+        Tool::BtrfsAssistant.found_by()
+    );
+    assert_eq!(Next::RankMirrors.program(), RATE_MIRRORS_PROGRAM);
+}
 
 #[test]
 fn a_tool_opens_once_its_install_ends_well() {

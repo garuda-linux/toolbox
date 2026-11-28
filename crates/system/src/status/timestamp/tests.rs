@@ -1,4 +1,4 @@
-use std::time::{Duration, SystemTime};
+use jiff::Timestamp;
 
 use super::parse_timestamp;
 
@@ -6,8 +6,8 @@ use super::parse_timestamp;
 const LIMA: &str = "2026-11-08T17:30:04+0100";
 const LIMA_AT: u64 = 1_794_155_404;
 
-fn at(seconds: u64) -> Option<SystemTime> {
-    SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(seconds))
+fn at(seconds: u64) -> Option<Timestamp> {
+    Timestamp::from_second(i64::try_from(seconds).ok()?).ok()
 }
 
 #[test]

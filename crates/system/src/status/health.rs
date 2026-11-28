@@ -19,7 +19,7 @@ use toolbox_plan::procedure::Program;
 use toolbox_text::OutsideText;
 
 use crate::command;
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 /// The report's keys, most severe first: the order of the issues.
 const LEVELS: [(&str, HealthLevel); 4] = [
@@ -137,7 +137,7 @@ fn parse_health(report: &str) -> Result<Vec<HealthIssue>, ProbeError> {
 
 fn invalid(error: serde_json::Error) -> ProbeError {
     ProbeError::Json {
-        what: "garuda-health --json".to_owned(),
+        what: Subject::Data("garuda-health --json".to_owned()),
         error: std::sync::Arc::new(error),
     }
 }

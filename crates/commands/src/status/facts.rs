@@ -1,5 +1,4 @@
-use std::time::SystemTime;
-
+use jiff::Timestamp;
 use serde::Serialize;
 use toolbox_core::features::status::{cleanup_due, disk_low};
 use toolbox_system::Facts;
@@ -10,7 +9,7 @@ use super::{Part, Shown, counted, counted_part, joined_or_none, part, row};
 #[cfg(test)]
 mod tests;
 
-const SECONDS_PER_HOUR: u64 = 3_600;
+const SECONDS_PER_HOUR: i64 = 3_600;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub struct Packages {
@@ -37,19 +36,22 @@ pub struct FactsView {
     pub package_cache_bytes: Part<u64>,
 }
 
-pub fn facts_view(facts: &Facts, now: SystemTime) -> FactsView {
+pub fn facts_view(facts: &Facts, now: Timestamp) -> FactsView {
     FactsView {
         packages: part(&facts.packages, |count| Packages {
             installed: count.installed,
             foreign: count.foreign,
         }),
         kernel: part(&facts.kernel, Clone::clone),
-        uptime_hours: part(&facts.booted, |booted| match now.duration_since(*booted) {
-            Ok(up) => up.as_secs() / SECONDS_PER_HOUR,
-            Err(error) => {
-                tracing::warn!("the boot time is after the clock: {error}");
-                0
+        uptime_hours: part(&facts.booted, |booted| {
+            let up = now.duration_since(*booted);
+
+            if up.is_negative() {
+                tracing::warn!("the boot time is after the clock");
+                return 0;
             }
+
+            u64::try_from(up.as_secs() / SECONDS_PER_HOUR).unwrap_or(0)
         }),
         disk: part(&facts.disk, |disk| Disk {
             total_bytes: disk.total,

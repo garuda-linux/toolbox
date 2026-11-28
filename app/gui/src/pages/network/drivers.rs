@@ -5,7 +5,7 @@ use std::sync::Arc;
 use egui::{Align, Galley, Label, Layout, Ui, vec2};
 use toolbox_core::Toggle;
 use toolbox_core::features::network::{
-    Category, DriverFilter, DriverRow, DriverState, ModuleFacts, driver_rows, visible,
+    Category, DriverDetail, DriverFilter, DriverRow, DriverState, ModuleFacts, driver_rows, visible,
 };
 use toolbox_gui_kit::fonts::{BODY, SMALL, Weight};
 use toolbox_gui_kit::row_cache::{RowCache, Same};
@@ -303,17 +303,20 @@ fn row(ui: &mut Ui, context: &PageContext<'_>, driver: &DriverRow) {
 
 /// The queued change, else the other files that blacklist the driver.
 fn detail(ctx: &egui::Context, driver: &DriverRow) -> String {
-    match driver.queued {
-        Some(Toggle::On) => i18n::text(ctx, "network-driver-queued-on").into_owned(),
-        Some(Toggle::Off) => i18n::text(ctx, "network-driver-queued-off").into_owned(),
-        None if !driver.other_files.is_empty() => i18n::text_with(
+    match driver.detail() {
+        Some(DriverDetail::Queued(Toggle::On)) => {
+            i18n::text(ctx, "network-driver-queued-on").into_owned()
+        }
+        Some(DriverDetail::Queued(Toggle::Off)) => {
+            i18n::text(ctx, "network-driver-queued-off").into_owned()
+        }
+        Some(DriverDetail::OtherFiles(files)) => i18n::text_with(
             ctx,
             "network-driver-other-files",
             &[(
                 "files",
                 Arg::from(
-                    &driver
-                        .other_files
+                    &files
                         .iter()
                         .map(toolbox_text::OutsideText::as_str)
                         .collect::<Vec<_>>()
@@ -331,23 +334,15 @@ fn detail(ctx: &egui::Context, driver: &DriverRow) -> String {
 fn buttons(ui: &mut Ui, context: &PageContext<'_>, driver: &DriverRow) {
     load_button(ui, context, driver);
 
-    // A driver only another file blacklists is not the app's to change.
-    if !driver.own && !driver.other_files.is_empty() {
+    let Some(action) = driver.blacklist_action() else {
         return;
-    }
-
-    let id = match driver.queued {
-        Some(_) => "network-driver-unqueue",
-        None if driver.own => "network-driver-allow",
-        None => "network-driver-blacklist",
     };
 
     more(ui, driver.name.as_str(), |ui| {
-        if item(ui, id, true) {
-            let wanted = driver.queued.map_or(driver.own, Toggle::is_on);
+        if item(ui, action.text_id, true) {
             context.commands.send(NetworkCommand::Blacklist {
                 module: driver.name.clone(),
-                on: Toggle::from_on(!wanted),
+                on: action.wish,
             });
         }
     });

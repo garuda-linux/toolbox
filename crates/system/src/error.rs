@@ -12,7 +12,7 @@ use std::process::ExitStatus;
 use std::sync::Arc;
 use std::time::Duration;
 
-use toolbox_plan::InvalidName;
+use toolbox_plan::{InvalidName, NameKind, Reason};
 use toolbox_state::aur::order::InvalidOrder;
 use toolbox_state::bootrepair::InvalidListing;
 
@@ -42,23 +42,23 @@ pub enum ProbeError {
     },
     /// Shared so the error stays `Clone`.
     Json {
-        what: String,
+        what: Subject,
         error: Arc<serde_json::Error>,
     },
     Invalid {
-        what: String,
+        what: Subject,
         error: InvalidValue,
     },
     Alpm {
-        what: String,
+        what: Subject,
         error: alpm::Error,
     },
     Syscall {
-        what: String,
+        what: Subject,
         error: rustix::io::Errno,
     },
     NotUtf8 {
-        what: String,
+        what: Subject,
         raw: OsString,
     },
     /// A source that exists names nothing where it should.
@@ -74,9 +74,32 @@ pub enum ProbeError {
     Panicked,
     /// Reading `what` failed. Shared so the error stays `Clone`.
     Io {
-        what: String,
+        what: Subject,
         error: Arc<io::Error>,
     },
+}
+
+/// What a failed read was of.
+///
+/// Paths, commands and keys are [`Subject::Data`] as the system printed
+/// them. The other variants are phrases of this workspace, so the window
+/// can word them in each language.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Subject {
+    /// A path, a command line, a key or a package name as it came in.
+    Data(String),
+    /// The local package database of pacman.
+    LocalDatabase,
+    /// The disks of the system, as the bootloader repair lists them.
+    Disks,
+    /// The kernel the system runs, named by its release file.
+    RunningKernel,
+    /// The output of `ip route` that no route list could be read from.
+    RouteList,
+    /// The build order of an AUR package as paru gave it.
+    BuildOrder { package: String },
+    /// The build order of an AUR package from the sample listing.
+    SampleBuildOrder { package: String },
 }
 
 /// Why a program was stopped before its end.
@@ -122,6 +145,35 @@ pub enum InvalidValue {
     Order(#[from] InvalidOrder),
 }
 
+/// The parts of an [`InvalidValue`]'s sentence, for the window to word.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum InvalidCause {
+    /// A name the workspace's rules refuse.
+    Name {
+        kind: NameKind,
+        value: String,
+        reason: Reason,
+    },
+    /// What the device list decoder said.
+    Listing { words: String },
+    /// An order line that is cut short or not a line of `paru -Po`.
+    OrderLine { line: String },
+}
+
+impl InvalidValue {
+    pub fn cause(&self) -> InvalidCause {
+        match self {
+            Self::Name(name) | Self::Order(InvalidOrder::Name(name)) => name_cause(name),
+            Self::Listing(listing) => InvalidCause::Listing {
+                words: listing.words().to_owned(),
+            },
+            Self::Order(InvalidOrder::Line(line)) => InvalidCause::OrderLine {
+                line: line.as_str().to_owned(),
+            },
+        }
+    }
+}
+
 impl ProbeError {
     /// What went wrong in words, `None` when the source is not there.
     pub fn reason(&self) -> Option<String> {
@@ -163,7 +215,7 @@ impl ProbeError {
     #[cfg(any(test, feature = "testing"))]
     pub fn fake(what: impl Into<String>) -> Self {
         Self::Io {
-            what: what.into(),
+            what: Subject::Data(what.into()),
             error: Arc::new(io::Error::other("fake source")),
         }
     }
@@ -209,6 +261,22 @@ impl std::error::Error for ProbeError {
     }
 }
 
+impl Display for Subject {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Data(text) => f.write_str(text),
+            Self::LocalDatabase => f.write_str("the local database"),
+            Self::Disks => f.write_str("the disks"),
+            Self::RunningKernel => f.write_str("the running kernel"),
+            Self::RouteList => f.write_str("ip printed no route list"),
+            Self::BuildOrder { package } => write!(f, "the build order of {package}"),
+            Self::SampleBuildOrder { package } => {
+                write!(f, "the sample build order of {package}")
+            }
+        }
+    }
+}
+
 impl Display for Stop {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(match self {
@@ -248,8 +316,16 @@ where
         ProbeError::Unavailable
     } else {
         ProbeError::Io {
-            what: what.to_string(),
+            what: Subject::Data(what.to_string()),
             error: Arc::new(error),
         }
+    }
+}
+
+fn name_cause(name: &InvalidName) -> InvalidCause {
+    InvalidCause::Name {
+        kind: name.kind(),
+        value: name.shown_value(),
+        reason: name.reason(),
     }
 }

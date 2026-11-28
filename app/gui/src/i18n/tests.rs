@@ -189,3 +189,107 @@ fn a_text_without_arguments_is_looked_up_once_per_language() {
         text(&ctx, "page-home").as_ptr()
     ));
 }
+
+/// The toggle pages word a refusal by its `text_id`, so an account refusal
+/// and a protection without its text would show the bare id.
+#[test]
+fn every_toggle_refusal_has_its_text_in_each_language() {
+    use toolbox_core::features::toggles::Refusal;
+    use toolbox_core::features::users;
+
+    let mut ids: Vec<&str> = users::Refusal::iter()
+        .filter_map(|refusal| Refusal::Account(refusal).text_id())
+        .collect();
+
+    ids.extend(["protected-refused", "protected-along"]);
+
+    assert_texts_in_each_language(&ids);
+}
+
+/// The boot page words each rule a value breaks by its `text_id`.
+#[test]
+fn every_boot_rule_has_its_text_in_each_language() {
+    use toolbox_core::features::ReasonCode;
+    use toolbox_core::features::boot::edit::EditCode;
+
+    let ids: Vec<&str> = ReasonCode::iter()
+        .filter_map(|reason| EditCode::Rule(reason).text_id())
+        .collect();
+
+    assert_texts_in_each_language(&ids);
+}
+
+/// The Maintenance page asks each task and each repair its question by id.
+#[test]
+fn every_maintenance_question_has_its_text_in_each_language() {
+    use toolbox_core::ChangeSet;
+    use toolbox_core::features::maintenance::page::{Repair, operations};
+
+    let ids: Vec<&str> = operations(&ChangeSet::default())
+        .into_iter()
+        .filter_map(|row| row.operation.question_id())
+        .chain(Repair::ALL.into_iter().filter_map(Repair::question_id))
+        .collect();
+
+    assert_texts_in_each_language(&ids);
+}
+
+/// The probe failures name a phrase of the workspace by its `probe-subject`
+/// id, so each one needs its text in both bundles.
+#[test]
+fn every_probe_subject_phrase_has_its_text_in_each_language() {
+    assert_texts_in_each_language(&[
+        "probe-subject-local-database",
+        "probe-subject-disks",
+        "probe-subject-running-kernel",
+        "probe-subject-route-list",
+        "probe-subject-build-order",
+        "probe-subject-sample-build-order",
+    ]);
+}
+
+/// The Diagnostics page words each reason of a failed collection by its id.
+#[test]
+fn every_failed_collection_reason_has_its_text_in_each_language() {
+    assert_texts_in_each_language(&[
+        "diagnostics-failed-no-program",
+        "diagnostics-failed-exit-code",
+        "diagnostics-failed-signal",
+        "diagnostics-failed-start",
+        "diagnostics-failed-timed-out",
+        "diagnostics-failed-too-large",
+        "diagnostics-failed-read",
+        "diagnostics-failed-helper-missing",
+        "diagnostics-failed-helper-start",
+        "diagnostics-failed-helper-timed-out",
+        "diagnostics-failed-helper-too-long",
+        "diagnostics-failed-helper-pkexec",
+        "diagnostics-failed-helper-ended",
+        "diagnostics-failed-ending-code",
+        "diagnostics-failed-ending-signal",
+        "diagnostics-failed-helper-unreadable",
+        "diagnostics-failed-helper-stopped",
+        "diagnostics-failed-answer",
+        "diagnostics-failed-answer-too-long",
+        "diagnostics-failed-not-installed",
+        "diagnostics-failed-dismissed",
+        "diagnostics-failed-denied",
+        "diagnostics-failed-no-agent",
+        "diagnostics-failed-helper-not-installed",
+    ]);
+}
+
+fn assert_texts_in_each_language(ids: &[&str]) {
+    let root = Path::new(toolbox_services::i18n::DIR);
+
+    for locale in ["en-US", "de-DE"] {
+        let shown = ids_of(&root.join(locale));
+        let missing: Vec<&str> = ids
+            .iter()
+            .copied()
+            .filter(|id| !shown.contains(*id))
+            .collect();
+
+        assert!(missing.is_empty(), "no {locale} text for {missing:?}");
+    }
+}

@@ -118,7 +118,7 @@ impl HelperLauncher {
 
     /// `GARUDA_TOOLBOX_HELPER=dry-run` selects the dry run. Development
     /// builds use the helper built next to the app.
-    pub fn from_lookup(
+    pub(crate) fn from_lookup(
         lookup: impl Fn(&str) -> Option<OsString>,
         language: LanguageIdentifier,
     ) -> Self {

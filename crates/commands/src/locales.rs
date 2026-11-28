@@ -88,7 +88,7 @@ pub fn switch(args: &LocaleArgs, want: Toggle, snapshot: &Snapshot) -> Result<Pl
 /// # Errors
 ///
 /// As [`switch`].
-pub fn switch_onto(
+pub(crate) fn switch_onto(
     args: &LocaleArgs,
     want: Toggle,
     snapshot: &Snapshot,
@@ -128,7 +128,7 @@ pub fn system_locale(args: &LocaleArgs, snapshot: &Snapshot) -> Result<Plan, Ref
 /// # Errors
 ///
 /// As [`system_locale`].
-pub fn system_locale_onto(
+pub(crate) fn system_locale_onto(
     args: &LocaleArgs,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
@@ -206,7 +206,7 @@ fn packs(read: &ReadList, snapshot: &Snapshot, out: &mut Out<'_>) -> Exit {
 
 /// The packs, on when installed, with the command that installs the
 /// rest.
-pub fn pack_listing(rows: &[PackRow]) -> Listing<'_> {
+pub(crate) fn pack_listing(rows: &[PackRow]) -> Listing<'_> {
     let installed = rows.iter().filter(|row| row.installed).count();
     let hint = if installed < rows.len() {
         Some("garuda-toolbox locales packs install <package>")

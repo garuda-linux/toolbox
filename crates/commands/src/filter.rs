@@ -111,7 +111,7 @@ where
 }
 
 /// [`print`] of a list with no flags of its own, only `--search`.
-pub fn print_all<T>(
+pub(crate) fn print_all<T>(
     list: &ReadList,
     rows: &[T],
     out: &mut Out<'_>,

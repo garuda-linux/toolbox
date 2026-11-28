@@ -7,7 +7,7 @@ use toolbox_plan::PackageName;
 use toolbox_state::aur::order::{AurOrder, parse_order};
 
 use crate::AurOrderSource;
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 /// Each package's answer: the stdout paru printed for it, or the reason
 /// it failed. Packages without an answer fail.
@@ -43,7 +43,9 @@ impl AurOrderSource for FakeAurOrders {
 
         match answer {
             Some(Ok(text)) => parse_order(text).map_err(|error| ProbeError::Invalid {
-                what: format!("the build order of {package}"),
+                what: Subject::BuildOrder {
+                    package: package.to_string(),
+                },
                 error: error.into(),
             }),
             Some(Err(reason)) => Err(ProbeError::fake(reason)),

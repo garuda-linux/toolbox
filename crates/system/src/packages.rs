@@ -26,7 +26,7 @@ use toolbox_state::packages::PackageGraph;
 use toolbox_state::parts::{InstalledPackages, SyncPackages};
 use toolbox_text::OutsideText;
 
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 const SYSTEM_CONFIG: &str = "/etc/pacman.conf";
 
@@ -193,13 +193,14 @@ where
         .borrow()
         .localdb()
         .is_valid()
-        .map_err(failed("the local database"))?;
+        .map_err(failed(Subject::LocalDatabase))?;
 
     Ok(handle)
 }
 
 fn open(conf: &PacmanConf) -> Result<Alpm, ProbeError> {
-    Alpm::new(c_path(&conf.root)?, c_path(&conf.db_path)?).map_err(failed("libalpm"))
+    Alpm::new(c_path(&conf.root)?, c_path(&conf.db_path)?)
+        .map_err(failed(Subject::Data("libalpm".to_owned())))
 }
 
 /// libalpm takes C strings, and the `alpm` crate panics on an inner NUL.
@@ -215,9 +216,9 @@ fn c_path(path: &Path) -> Result<Vec<u8>, ProbeError> {
     Ok(bytes.to_vec())
 }
 
-fn failed(what: &str) -> impl Fn(alpm::Error) -> ProbeError + '_ {
+fn failed(what: Subject) -> impl Fn(alpm::Error) -> ProbeError {
     move |error| ProbeError::Alpm {
-        what: what.to_owned(),
+        what: what.clone(),
         error,
     }
 }

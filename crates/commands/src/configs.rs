@@ -102,7 +102,7 @@ pub fn files(catalog: &ConfigFileCatalog, listing: &Listing) -> Vec<FileRow> {
 
 /// The write-back plan of an edit that changed something, `None` when
 /// the copy is as the file was.
-pub fn write_back(
+pub(crate) fn write_back(
     file: &EditedFile,
     original: &ConfigText,
     edited: ConfigText,

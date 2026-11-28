@@ -4,9 +4,8 @@
 mod checks;
 mod rows;
 
-use std::time::SystemTime;
-
 use egui::{Label, Ui};
+use jiff::Timestamp;
 use toolbox_core::features::maintenance::RunNow;
 use toolbox_gui_kit::fonts::{SECTION, SMALL, Weight};
 use toolbox_gui_kit::icons::Icon;
@@ -15,28 +14,14 @@ use toolbox_gui_kit::widgets::{
     pill_button, refresh_button_busy, rich, split_row,
 };
 use toolbox_gui_kit::{Loadable, UiExt as _, tokens};
-use toolbox_services::home::{Check, Overview};
-use toolbox_system::{CallError, HealthLevel, Host, Status};
+use toolbox_services::home::{Check, Overview, Row};
+use toolbox_system::{CallError, Host, Status};
 
 use super::{HomePage, HomeProblem};
 use crate::command::HomeCommand;
 use crate::i18n;
 use crate::i18n::Arg;
 use crate::pages::PageContext;
-
-/// One thing to act on, in the order the rows show.
-#[derive(Clone, Copy, Debug)]
-enum Row {
-    Updates,
-    Aur,
-    Stale,
-    Merges,
-    Disk,
-    Services,
-    Cleanup,
-    Health(HealthLevel),
-    Restart,
-}
 
 pub fn show(
     page: &mut HomePage,
@@ -81,7 +66,7 @@ pub fn show(
 
     card(ui, |ui| {
         let _rows = tracing::trace_span!("rows").entered();
-        for (index, row) in rows(overview, reboot).into_iter().flatten().enumerate() {
+        for (index, row) in overview.rows(reboot).into_iter().enumerate() {
             card_row(ui, index == 0, |ui| match row {
                 Row::Updates => rows::updates(page, ui, context, overview),
                 Row::Aur => rows::aur(page, ui, context, overview),
@@ -102,7 +87,7 @@ pub(super) fn overview<'read>(
     status: &'read Status,
     context: &PageContext<'read>,
 ) -> Overview<'read> {
-    let overview = Overview::of(status, SystemTime::now());
+    let overview = Overview::of(status, Timestamp::now());
 
     match context.home.facts.and_then(Loadable::get) {
         Some(facts) => overview.with_facts(facts),
@@ -112,21 +97,7 @@ pub(super) fn overview<'read>(
 
 /// How many rows the status shows, for the greeting's summary.
 pub(super) fn attention_rows(overview: &Overview<'_>, reboot: bool) -> usize {
-    rows(overview, reboot).into_iter().flatten().count()
-}
-
-fn rows(overview: &Overview<'_>, reboot: bool) -> [Option<Row>; 9] {
-    [
-        (overview.updates > 0).then_some(Row::Updates),
-        (overview.aur_updates > 0).then_some(Row::Aur),
-        (overview.stale && overview.updates == 0).then_some(Row::Stale),
-        (!overview.merges.is_empty()).then_some(Row::Merges),
-        overview.machine.disk_low.then_some(Row::Disk),
-        (!overview.machine.failed_units.is_empty()).then_some(Row::Services),
-        overview.machine.cleanup.then_some(Row::Cleanup),
-        overview.health.map(Row::Health),
-        reboot.then_some(Row::Restart),
-    ]
+    overview.rows(reboot).len()
 }
 
 fn heading(ui: &mut Ui, context: &PageContext<'_>, reading: &Loadable<Status>) {

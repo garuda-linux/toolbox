@@ -15,8 +15,8 @@ use std::error::Error;
 use std::fs;
 use std::io::Write as _;
 use std::process::Command;
-use std::time::{Duration, SystemTime};
 
+use jiff::{SignedDuration, Timestamp};
 use toolbox_plan::PackageName;
 use toolbox_system::{
     AppIconSource as _, AppStreamIcons, AurUpdateSource as _, Checkupdates, Dkms, EtcLocales,
@@ -99,18 +99,17 @@ fn pacman_log_has_a_completed_transaction() -> TestResult {
         return Ok(());
     }
 
-    let now = SystemTime::now();
+    let now = Timestamp::now();
     let result = PacmanLog::system().last_update();
-    let written = fs::metadata(PACMAN_LOG)?.modified()?;
+    let written = Timestamp::try_from(fs::metadata(PACMAN_LOG)?.modified()?)?;
 
     let Ok(Some(last)) = result else {
         show_log_tail()?;
         return Err(format!("no completed transaction in {PACMAN_LOG}").into());
     };
 
-    let close_to_last_write = written
-        .duration_since(last)
-        .is_ok_and(|gap| gap < Duration::from_secs(3_600));
+    let gap = written.duration_since(last);
+    let close_to_last_write = gap >= SignedDuration::ZERO && gap < SignedDuration::from_hours(1);
 
     if !close_to_last_write || last > now {
         show_log_tail()?;
@@ -125,10 +124,7 @@ fn pacman_log_has_a_completed_transaction() -> TestResult {
     // The row building for the Kernels page lives in toolbox-core (which
     // this crate must not link). The age note only tells whose image is
     // old, so it counts fourteen days here itself.
-    if now
-        .duration_since(last)
-        .is_ok_and(|age| age > Duration::from_hours(14 * 24))
-    {
+    if now.duration_since(last) > SignedDuration::from_hours(14 * 24) {
         writeln!(
             std::io::stderr(),
             "note: the image is older than two weeks, rebuild it for fresh logs"

@@ -5,7 +5,8 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 use super::{
-    MirrorRanking as _, RANKING_DEADLINE, RankProblem, RateMirrors, rank_within, stderr_tail,
+    MirrorRanking as _, RANKING_DEADLINE, RankProblem, RateMirrors, StartProblem, rank_within,
+    stderr_tail,
 };
 use crate::test_support::runnable_script;
 
@@ -78,7 +79,11 @@ fn a_failing_ranking_names_its_status_and_the_end_of_its_complaint() {
 fn a_missing_program_did_not_start() {
     let problem = rank(Path::new("/nonexistent/rate-mirrors")).unwrap_err();
 
-    assert!(matches!(problem, RankProblem::NotStarted(_)), "{problem:?}");
+    assert_eq!(
+        problem,
+        RankProblem::NotStarted(StartProblem::Missing),
+        "{problem:?}"
+    );
 }
 
 /// The Lima result with `Include = /etc/passwd` appended.

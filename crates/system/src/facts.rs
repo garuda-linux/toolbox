@@ -8,8 +8,8 @@ mod machine;
 mod tests;
 
 use std::sync::Arc;
-use std::time::SystemTime;
 
+use jiff::Timestamp;
 pub use machine::{DiskSpace, MachineSource, SystemMachine};
 use toolbox_plan::{PackageName, UnitName};
 
@@ -32,7 +32,7 @@ pub struct Facts {
     pub packages: Result<PackageCount, ProbeError>,
     /// What `uname -r` prints.
     pub kernel: Result<String, ProbeError>,
-    pub booted: Result<SystemTime, ProbeError>,
+    pub booted: Result<Timestamp, ProbeError>,
     pub disk: Result<DiskSpace, ProbeError>,
     /// Bytes in pacman's package cache.
     pub package_cache: Result<u64, ProbeError>,

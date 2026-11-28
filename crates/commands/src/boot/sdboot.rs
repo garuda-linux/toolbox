@@ -196,7 +196,7 @@ pub fn default_kernel(
 ///
 /// As [`set`] refuses, or [`Refused::Unavailable`] when the menu could
 /// not be read.
-pub fn set_onto(
+pub(crate) fn set_onto(
     args: &BootSet,
     menu: impl FnOnce() -> Option<SdBootMenu>,
     snapshot: &Snapshot,
@@ -242,7 +242,7 @@ fn want_onto(
 ///
 /// [`Refused::Rule`] for a value the setting does not take, an entry the
 /// menu lacks, or a setting systemd-boot does not have.
-pub fn loader_setting(
+pub(crate) fn loader_setting(
     key: BootKey,
     value: &str,
     menu: &SdBootMenu,
@@ -281,7 +281,7 @@ pub fn loader_setting(
 }
 
 /// Built into the UKIs, not read from loader.conf.
-pub const fn is_kernel_key(key: BootKey) -> bool {
+pub(crate) const fn is_kernel_key(key: BootKey) -> bool {
     matches!(
         key,
         BootKey::Quiet

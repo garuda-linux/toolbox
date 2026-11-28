@@ -175,7 +175,12 @@ pub fn rows(settings: &Settings, autostart: bool) -> Vec<SettingRow> {
         .collect()
 }
 
-pub fn get_text(read: Read, settings: &Settings, key: SettingKey, autostart: bool) -> String {
+pub(crate) fn get_text(
+    read: Read,
+    settings: &Settings,
+    key: SettingKey,
+    autostart: bool,
+) -> String {
     let value = value(settings, key, autostart);
     if read.json {
         json(&SettingRow {
@@ -188,7 +193,7 @@ pub fn get_text(read: Read, settings: &Settings, key: SettingKey, autostart: boo
 }
 
 /// What a setting takes is its help text from `settings set --help`.
-pub fn setting_listing(rows: &[SettingRow]) -> Listing<'_> {
+pub(crate) fn setting_listing(rows: &[SettingRow]) -> Listing<'_> {
     Listing {
         title: "Settings",
         summary: Some(rows.len().to_string()),

@@ -104,7 +104,7 @@ impl Ended {
     clippy::too_many_arguments,
     reason = "the ports and the terminal, each a seam the tests use"
 )]
-pub fn carry_out(
+pub(crate) fn carry_out(
     plan: Plan,
     confirm: Confirm,
     typed: Option<&str>,
@@ -122,7 +122,7 @@ pub fn carry_out(
     clippy::too_many_arguments,
     reason = "the ports and the terminal, each a seam the tests use"
 )]
-pub fn carry_out_steps(
+pub(crate) fn carry_out_steps(
     plan: Plan,
     confirm: Confirm,
     typed: Option<&str>,
@@ -135,8 +135,9 @@ pub fn carry_out_steps(
         return Ended::early(cannot_ask(out.settings()));
     }
 
+    let plan = if confirm.yes { plan.unattended() } else { plan };
     let paint = out.paint();
-    if let Some(exit) = planned_out(paint, &plan, confirm, out) {
+    if let Some(exit) = planned_out(paint, &plan, confirm, prompt.is_terminal(), out) {
         return Ended::early(exit);
     }
 
@@ -212,7 +213,7 @@ pub fn cannot_ask(settings: Settings) -> Exit {
 
 /// A blank line between printed text and the question after it. A
 /// question with nothing printed above goes without, it would look stray.
-pub fn set_apart(prompt: &dyn Prompt, yes: bool, out: &mut Out<'_>) {
+pub(crate) fn set_apart(prompt: &dyn Prompt, yes: bool, out: &mut Out<'_>) {
     if !yes && prompt.is_terminal() {
         writeln!(out).ok();
     }

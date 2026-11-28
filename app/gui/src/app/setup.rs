@@ -5,7 +5,7 @@ use tokio::sync::watch;
 use toolbox_core::ChangeSet;
 use toolbox_news::News;
 use toolbox_services::dkms::Dkms;
-use toolbox_system::{Facts, Status};
+use toolbox_system::{Facts, Notifier, Status};
 
 use super::PreferencesSetup;
 use crate::apply::ApplyHandle;
@@ -22,7 +22,6 @@ use crate::instance::Arrivals;
 use crate::launch::Launcher;
 use crate::maintenance::MaintenanceSetup;
 use crate::network::NetworkSetup;
-use crate::notifications::Notifier;
 use crate::packages::PackagesSetup;
 use crate::page::PageId;
 use crate::pictures::Pictures;

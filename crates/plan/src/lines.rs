@@ -38,7 +38,7 @@ pub fn push_line(text: &mut String, line: &str) {
 
 /// `config` with every line `replace` takes swapped for `wanted`, each
 /// keeping its own break. The flag tells whether any line was taken.
-pub fn replace_lines(
+pub(crate) fn replace_lines(
     config: &str,
     wanted: &str,
     mut replace: impl FnMut(&str) -> bool,

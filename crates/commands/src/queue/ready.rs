@@ -176,14 +176,10 @@ pub fn refused(refusal: Refusal, out: &mut Out<'_>) -> Exit {
     Exit::Unavailable
 }
 
-fn order_words(names: &[PackageName]) -> String {
-    let list = names
-        .iter()
-        .map(PackageName::as_str)
-        .collect::<Vec<_>>()
-        .join(", ");
+fn order_words(packages: &[PackageName]) -> String {
+    let list = names(packages);
 
-    if names.len() == 1 {
+    if packages.len() == 1 {
         format!("{list} waits for its build order")
     } else {
         format!("{list} wait for their build orders")

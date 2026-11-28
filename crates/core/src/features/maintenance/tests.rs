@@ -3,8 +3,8 @@ mod run_now;
 use toolbox_plan::{PlannedAction, RemoteAction, RootAction, TargetList, Upgrader, UserAction};
 
 use super::{
-    Operation, Operations, Task, Tool, plan_aur_upgrade, plan_health_check, plan_health_fix,
-    plan_now, plan_remote, upgrader_for,
+    CLEANUP_OPERATIONS, Operation, Operations, Task, Tool, cleanup_queued, plan_aur_upgrade,
+    plan_health_check, plan_health_fix, plan_now, plan_remote, upgrader_for,
 };
 use crate::domain::Summary;
 use crate::domains::InstalledPackages;
@@ -164,6 +164,17 @@ fn cleaning_up_runs_after_every_package_change() {
             RootAction::CleanPackageCache,
         ]
     );
+}
+
+#[test]
+fn home_cleanup_is_queued_while_either_of_its_operations_waits() {
+    assert_eq!(
+        CLEANUP_OPERATIONS,
+        [Operation::RemoveOrphans, Operation::CleanPackageCache]
+    );
+    assert!(!cleanup_queued(&queue(&[UPGRADE])));
+    assert!(cleanup_queued(&queue(&[Task::RemoveOrphans])));
+    assert!(cleanup_queued(&queue(&[Task::CleanPackageCache])));
 }
 
 #[test]

@@ -9,7 +9,6 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use egui::Context;
-use futures_lite::StreamExt as _;
 use notify::{RecommendedWatcher, RecursiveMode, Watcher as _};
 use tokio::runtime::Handle;
 use tokio::sync::{mpsc, watch};
@@ -18,6 +17,7 @@ use toolbox_gui_kit::desktop::family::Family;
 use toolbox_gui_kit::desktop::look::{Look, Sources};
 use toolbox_gui_kit::fonts::{FontFile, UiFaces, Weight};
 use toolbox_gui_kit::icons::ThemeIcons;
+use toolbox_system::LookPortal;
 
 use super::files::{DesktopFiles, Read, is_look_file};
 use super::font_files::FontFinder;
@@ -65,14 +65,14 @@ pub fn spawn(
     runtime: &Handle,
     ctx: Context,
     family: Family,
-    files: DesktopFiles,
+    sources: (DesktopFiles, Arc<dyn LookPortal>),
     apps: CatalogApps,
 ) -> watch::Receiver<DesktopLook> {
     let (sender, receiver) = watch::channel(DesktopLook::default());
     spawn_logged(
         runtime,
         "desktop look",
-        follow(sender, ctx, family, files, apps),
+        follow(sender, ctx, family, sources, apps),
     );
     receiver
 }
@@ -81,11 +81,10 @@ async fn follow(
     sender: watch::Sender<DesktopLook>,
     ctx: Context,
     family: Family,
-    files: DesktopFiles,
+    (files, look_portal): (DesktopFiles, Arc<dyn LookPortal>),
     apps: CatalogApps,
 ) {
-    let settings = portal::connect().await;
-    let mut portal_changes = portal::changes(settings.as_ref()).await;
+    let mut portal_changes = look_portal.changes().await;
     let (changed, mut file_changes) = mpsc::channel::<()>(1);
 
     // Kept alive for as long as the task runs.
@@ -104,7 +103,7 @@ async fn follow(
 
         kept = read.kept;
         let sources = Sources {
-            portal: portal::read(settings.as_ref()).await,
+            portal: portal::look(look_portal.read().await),
             desktop: read.files.desktop,
             prefer_dark: read.files.prefer_dark,
             gtk: family == Family::Gtk,
@@ -142,7 +141,7 @@ async fn follow(
         }
 
         tokio::select! {
-            Some(()) = portal_changes.next() => {}
+            Some(()) = portal_changes.recv() => {}
             Some(()) = file_changes.recv() => {}
             else => return,
         }

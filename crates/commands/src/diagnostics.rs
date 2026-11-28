@@ -62,7 +62,7 @@ pub fn collect(
     while let Ok(note) = notes.recv() {
         let finished = match &note {
             DiagnosticsNote::Finished(_, outcome) => !matches!(outcome, Outcome::Report(_)),
-            DiagnosticsNote::Shareable(_) => true,
+            DiagnosticsNote::Shareable(_) | DiagnosticsNote::Stopped(_) => true,
             DiagnosticsNote::Started(_)
             | DiagnosticsNote::Collecting(_)
             | DiagnosticsNote::Cancelled
@@ -80,8 +80,12 @@ pub fn collect(
         State::Report => Exit::Success,
         State::Unavailable => Exit::Unavailable,
         State::Refused(_) => Exit::Refused,
-        State::Idle | State::Running | State::Failed => Exit::Failure,
+        State::Idle | State::Running | State::Failed | State::Stopped => Exit::Failure,
     };
+
+    if page.state == State::Stopped {
+        write!(out, "the diagnostics collection stopped before it answered").ok();
+    }
 
     write!(out, "{}", page.report).ok();
     if !page.report.ends_with('\n') {

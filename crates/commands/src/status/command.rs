@@ -3,8 +3,9 @@
 
 use std::io::Write as _;
 use std::thread;
-use std::time::{Duration, Instant, SystemTime};
+use std::time::{Duration, Instant};
 
+use jiff::Timestamp;
 use tokio::runtime::Handle;
 use toolbox_cli::Exit;
 use toolbox_cli::args::StatusArgs;
@@ -72,7 +73,7 @@ fn read(quiet: bool) -> StatusView {
         (found, facts, SystemHost::from_process().is_reboot_pending())
     });
 
-    let now = SystemTime::now();
+    let now = Timestamp::now();
     view(&found, &restart, now).with_facts(&facts, now)
 }
 

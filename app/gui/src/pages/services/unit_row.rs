@@ -7,9 +7,7 @@ use std::sync::Arc;
 use egui::Ui;
 use egui::text::LayoutJob;
 use toolbox_core::features::services::view::Row;
-use toolbox_core::features::services::{
-    ActiveState, FileState, asks_first, critical, does_nothing,
-};
+use toolbox_core::features::services::{ActiveState, asks_first, critical, does_nothing};
 use toolbox_gui_kit::fonts::{self, BODY, SMALL, Weight};
 use toolbox_gui_kit::icons::{self, Icon};
 use toolbox_gui_kit::tokens;
@@ -68,7 +66,7 @@ impl UnitRow {
             enabled: row.enabled,
             masked: row.masked,
             active: unit.active,
-            switchable: !row.masked && unit.file_state != FileState::Static,
+            switchable: row.switchable(),
             menu: i18n::text_with(
                 ctx,
                 "services-actions",

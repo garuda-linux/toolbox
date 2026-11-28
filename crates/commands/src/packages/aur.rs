@@ -288,7 +288,7 @@ pub fn aur_info_text(paint: Paint, info: &AurInfo) -> String {
     facts_text(paint, &info.name, &facts)
 }
 
-/// Why there is no copy yet, with the day of the next allowed download.
+/// Why there is no copy yet, with the time of the next allowed download.
 pub(super) fn waiting_text(next: i64) -> String {
     format!(
         "the AUR's package list could not be downloaded, the next try is on {} (UTC)",

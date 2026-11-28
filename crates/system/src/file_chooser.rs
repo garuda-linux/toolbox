@@ -1,13 +1,31 @@
-//! The desktop's own file dialog through the XDG file chooser portal, so
-//! it looks native on every desktop that has a portal.
+//! The desktop's own file dialog through the XDG file chooser portal, so it
+//! looks native on every desktop that has a portal.
 
 use ashpd::Error;
 use ashpd::desktop::ResponseError;
 use ashpd::desktop::file_chooser::{FileFilter, SelectedFiles};
 use tokio::runtime::Handle;
-use toolbox_system::file_path;
 
-use super::{Chosen, FileChooser, FileKind};
+use crate::file_path;
+
+/// What the desktop's file dialog gave back.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Chosen {
+    /// The chosen file's path.
+    File(String),
+    /// The user closed the dialog.
+    Cancelled,
+    /// No dialog could open, as on a desktop without a file chooser
+    /// portal, or it gave back no local file.
+    Failed,
+}
+
+/// Asks the desktop for one file. Blocks until the user answers.
+pub trait FileChooser: Send + Sync {
+    /// `title` names the dialog, `filter` the kind of file it lists and
+    /// `globs` the patterns of the files it offers.
+    fn choose(&self, title: &str, filter: &str, globs: &[&str]) -> Chosen;
+}
 
 /// The portal's chooser. Without a portal nothing opens and the answer is
 /// a failure, which the page tells from a cancel.
@@ -23,12 +41,7 @@ impl PortalChooser {
 }
 
 impl FileChooser for PortalChooser {
-    fn choose(&self, kind: FileKind, title: &str, filter: &str) -> Chosen {
-        let globs: &[&str] = match kind {
-            FileKind::Background => &["*.png", "*.jpg", "*.jpeg", "*.tga"],
-            FileKind::Theme => &["*.txt"],
-        };
-
+    fn choose(&self, title: &str, filter: &str, globs: &[&str]) -> Chosen {
         let filter = globs
             .iter()
             .fold(FileFilter::new(filter), |filter, glob| filter.glob(glob));

@@ -25,7 +25,7 @@ use toolbox_state::aur::AurIndex;
 pub use transport::{Answer, Transport, Validators};
 
 /// The app asks the AUR for nothing else.
-pub const DUMP_URL: &str = "https://aur.archlinux.org/packages-meta-ext-v1.json.gz";
+pub(crate) const DUMP_URL: &str = "https://aur.archlinux.org/packages-meta-ext-v1.json.gz";
 
 /// The AUR builds the dump once a day, and a failing client must not retry in a loop.
 pub const REFRESH_EVERY: Duration = Duration::from_hours(24);

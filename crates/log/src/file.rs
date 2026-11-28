@@ -9,8 +9,9 @@ use std::fs::{self, File, OpenOptions};
 use std::io::{self, Write as _};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::time::{Duration, Instant, SystemTime};
+use std::time::{Duration, Instant};
 
+use jiff::Timestamp;
 use parking_lot::Mutex;
 
 use crate::format::{Style, format_record};
@@ -103,7 +104,7 @@ impl FileLogger {
     }
 
     pub fn emit(&self, level: log::Level, target: &str, message: &str) {
-        let time = SystemTime::now();
+        let time = Timestamp::now();
 
         self.write_line(&format_record(time, level, target, message, Style::Plain));
         if self.echoes() {

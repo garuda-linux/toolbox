@@ -8,8 +8,8 @@ use toolbox_text::OutsideText;
 
 /// `UID_MIN` and `UID_MAX` of `/etc/login.defs`: the ids useradd gives to
 /// people. Below are system accounts, above `nobody` and container ranges.
-pub const FIRST_REGULAR_ID: u32 = 1000;
-pub const LAST_REGULAR_ID: u32 = 60_000;
+pub(crate) const FIRST_REGULAR_ID: u32 = 1000;
+pub(crate) const LAST_REGULAR_ID: u32 = 60_000;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct User {

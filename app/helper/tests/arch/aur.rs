@@ -218,7 +218,6 @@ pub fn install(
     )
 }
 
-/// Installs `name` with pacman, as `installing` in the removal tests does.
 fn pacman_install(name: &str) -> TestResult {
     Command::new("pacman")
         .args(["-S", "--noconfirm", "--", name])

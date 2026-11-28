@@ -28,7 +28,7 @@ without cargo.
   - its own `settings.toml` with `show_aur = true`, so `packages-aur`
     runs offline against `SampleAur`
   - `--boot-repair` for the `bootrepair` and `all` suites
-- `ARCH_SUITES` (`packages-arch`) need pacman's databases. `all` leaves
+- `ARCH_SUITES` (`packages-arch`, `packages-aur-orders`) need pacman's databases. `all` leaves
   them out, `arch-selftest` runs each by name after `all`.
 - `SYSTEMD_SUITES` (`services-systemd`) need systemd on a system bus,
   which the `arch-selftest` container lacks. `all` leaves them out,

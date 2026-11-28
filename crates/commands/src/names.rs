@@ -130,21 +130,21 @@ fn read(names: Names) -> Vec<String> {
     }
 }
 
-pub fn package_names(packages: &BTreeSet<PackageName>) -> Vec<String> {
+pub(crate) fn package_names(packages: &BTreeSet<PackageName>) -> Vec<String> {
     packages
         .iter()
         .map(|package| package.as_str().to_owned())
         .collect()
 }
 
-pub fn pack_names(rows: &[PackRow], installed: bool) -> Vec<String> {
+pub(crate) fn pack_names(rows: &[PackRow], installed: bool) -> Vec<String> {
     rows.iter()
         .filter(|row| row.installed == installed)
         .map(|row| row.package.as_str().to_owned())
         .collect()
 }
 
-pub fn guide_pages() -> Vec<String> {
+pub(crate) fn guide_pages() -> Vec<String> {
     toolbox_guide::embedded()
         .pages()
         .iter()
@@ -152,7 +152,7 @@ pub fn guide_pages() -> Vec<String> {
         .collect()
 }
 
-pub fn parameter_names(snapshot: &Snapshot) -> Vec<String> {
+pub(crate) fn parameter_names(snapshot: &Snapshot) -> Vec<String> {
     shown(snapshot, &ChangeSet::default())
         .and_then(|now| now.parameters)
         .map(|parameters| parameters.iter().map(ToString::to_string).collect())
@@ -185,7 +185,7 @@ fn packs() -> Snapshot {
     snapshot
 }
 
-pub fn switch_ids(catalogs: &[&ToggleCatalog]) -> Vec<String> {
+pub(crate) fn switch_ids(catalogs: &[&ToggleCatalog]) -> Vec<String> {
     catalogs
         .iter()
         .flat_map(|catalog| catalog.entries().map(|entry| entry.id().to_owned()))
@@ -197,7 +197,7 @@ fn app_ids(apps: &Apps) -> Vec<String> {
 }
 
 /// The App Catalog's categories, the file name of each catalog.
-pub fn app_categories() -> Vec<String> {
+pub(crate) fn app_categories() -> Vec<String> {
     toolbox_catalog::APPS
         .iter()
         .filter_map(|path| path.rsplit('/').next()?.strip_suffix(".toml"))
@@ -206,7 +206,7 @@ pub fn app_categories() -> Vec<String> {
 }
 
 /// The shells `/etc/shells` allows, as a full path.
-pub fn shell_names(shells: &AvailableShells) -> Vec<String> {
+pub(crate) fn shell_names(shells: &AvailableShells) -> Vec<String> {
     shells
         .0
         .iter()
@@ -225,7 +225,7 @@ where
         .collect()
 }
 
-pub fn kernel_names(snapshot: &Snapshot) -> Vec<String> {
+pub(crate) fn kernel_names(snapshot: &Snapshot) -> Vec<String> {
     lists::kernels(snapshot, BootMenus::default())
         .unwrap_or_default()
         .into_iter()
@@ -241,7 +241,7 @@ pub fn locale_names(snapshot: &Snapshot) -> Vec<String> {
         .collect()
 }
 
-pub fn user_names(snapshot: &Snapshot) -> Vec<String> {
+pub(crate) fn user_names(snapshot: &Snapshot) -> Vec<String> {
     let rows = lists::users(snapshot).unwrap_or_default();
 
     lists::people(rows, false)
@@ -261,7 +261,7 @@ pub fn group_names(snapshot: &Snapshot) -> Vec<String> {
 
 /// Every task and repair `maintenance run` takes, whether or not its
 /// program is installed.
-pub fn task_ids() -> Vec<String> {
+pub(crate) fn task_ids() -> Vec<String> {
     operation_keys()
         .chain([AUR_UPGRADE, crate::mirrors::RANK_MIRRORS])
         .map(str::to_owned)
@@ -273,7 +273,7 @@ pub fn task_ids() -> Vec<String> {
         .collect()
 }
 
-pub fn entry_ids(config: &str, platform: GrubPlatform) -> Vec<String> {
+pub(crate) fn entry_ids(config: &str, platform: GrubPlatform) -> Vec<String> {
     entries(Some(&GrubMenu::for_platform(config, platform)))
         .into_iter()
         .map(|row| row.entry)
@@ -290,7 +290,7 @@ fn driver_names(snapshot: &Snapshot) -> Vec<String> {
         .collect()
 }
 
-pub fn page_names() -> Vec<String> {
+pub(crate) fn page_names() -> Vec<String> {
     PageId::ALL
         .iter()
         .map(|page| page.slug().to_owned())
@@ -330,7 +330,7 @@ fn services(scope: UnitScope) -> Vec<String> {
     }
 }
 
-pub fn config_keys() -> Vec<String> {
+pub(crate) fn config_keys() -> Vec<String> {
     let Ok(catalog) = ConfigFileCatalog::load(&catalog_dir_from_env()) else {
         return Vec::new();
     };
@@ -344,7 +344,7 @@ pub fn config_keys() -> Vec<String> {
 
 /// `system` and the colour schemes of dark or light mode, as
 /// `settings set` takes them.
-pub fn scheme_names(catalog: &ColourSchemeCatalog, dark: bool) -> Vec<String> {
+pub(crate) fn scheme_names(catalog: &ColourSchemeCatalog, dark: bool) -> Vec<String> {
     let mode = if dark {
         SchemeMode::Dark
     } else {

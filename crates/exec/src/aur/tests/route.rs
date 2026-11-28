@@ -98,11 +98,6 @@ fn early_cases() -> Vec<Case> {
         Case {
             kind: "Cache",
             other_user: false,
-            setup: |root| fs::remove_dir_all(cache(root)).unwrap(),
-        },
-        Case {
-            kind: "Cache",
-            other_user: false,
             setup: |root| {
                 fs::remove_dir_all(cache(root)).unwrap();
                 symlink(elsewhere(root), cache(root)).unwrap();
@@ -186,6 +181,19 @@ fn a_home_without_the_garuda_folders_passes() {
     let found = route(root.path(), uid()).unwrap();
 
     assert_eq!(found.missing, ["garuda-toolbox", "aur-built"]);
+}
+
+/// A new account has no `.cache` yet. The build makes it, as it makes the
+/// folders below.
+#[test]
+fn a_home_without_a_cache_passes() {
+    let (root, _folder) = system();
+    passwd_with_caller(root.path());
+    fs::remove_dir_all(cache(root.path())).unwrap();
+
+    let found = route(root.path(), uid()).unwrap();
+
+    assert_eq!(found.missing, [".cache", "garuda-toolbox", "aur-built"]);
 }
 
 #[test]

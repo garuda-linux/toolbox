@@ -19,7 +19,7 @@ use toolbox_gui_kit::widgets::{
     ActionRow, ButtonKind, SkeletonRows, Tone, card, pill_button_at_least, push_height, row_height,
     section_intro, skeleton_list, text_block_height_with,
 };
-use toolbox_system::mirrors::RankProblem;
+use toolbox_system::mirrors::{RankProblem, StartProblem};
 
 use super::header::{TabText, TabbedIds, tabbed_header_reading};
 use super::rows::refusal_banner;
@@ -158,13 +158,36 @@ fn problem(ui: &mut Ui, context: &PageContext<'_>) {
                 }
             };
 
-            i18n::text_with(&ctx, id, &[("reason", Arg::from(problem.reason()))])
+            let reason = match problem {
+                RankProblem::NotStarted(start) => start_words(&ctx, start),
+                RankProblem::TimedOut
+                | RankProblem::Cancelled
+                | RankProblem::Failed(_)
+                | RankProblem::Unreadable(_)
+                | RankProblem::Invalid(_) => String::new(),
+            };
+
+            i18n::text_with(&ctx, id, &[("reason", Arg::from(&reason))])
         }
         MaintenanceProblem::Busy => i18n::text(&ctx, "maintenance-problem-busy"),
     };
 
     if refusal_banner(ui, Tone::Error, &text, "maintenance-problem-dismiss") {
         context.commands.send(MaintenanceCommand::DismissProblem);
+    }
+}
+
+/// The reason a ranking did not start, in words. Only the system's own
+/// words are not translated.
+fn start_words(ctx: &egui::Context, start: &StartProblem) -> String {
+    match start {
+        StartProblem::Missing => {
+            i18n::text(ctx, "maintenance-problem-mirrors-missing").into_owned()
+        }
+        StartProblem::Failed(words) => words.clone(),
+        StartProblem::Panicked => {
+            i18n::text(ctx, "maintenance-problem-mirrors-panicked").into_owned()
+        }
     }
 }
 

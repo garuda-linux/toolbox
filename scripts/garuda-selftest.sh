@@ -7,8 +7,8 @@
 # under a headless weston as a user of its own, since the app refuses root.
 #   --keep      keep the container (podman exec -it garuda-toolbox-selftest bash)
 #   --no-build  take the binary of the last build in target/garuda-selftest
-#   suite...    default `all` and `packages-arch` as the arch-selftest CI job,
-#               then `services-systemd`
+#   suite...    default `all`, `packages-arch` and `packages-aur-orders` as the
+#               arch-selftest CI job, then `services-systemd`
 # Shots and logs land in target/garuda-selftest/runs/<suite>/, the JUnit
 # report in target/garuda-selftest/junit.xml.
 # shellcheck source-path=SCRIPTDIR
@@ -30,14 +30,12 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
-[ ${#suites[@]} -gt 0 ] || suites=(all packages-arch services-systemd)
+[ ${#suites[@]} -gt 0 ] || suites=(all packages-arch packages-aur-orders services-systemd)
 
 out=target/garuda-selftest
 binary=$out/garuda-toolbox
-merge_fixtures=(
-  crates/system/src/packages/pacman_conf/fixtures/pacman.conf
-  crates/plan/src/testing/locales/fixtures/locale.gen
-)
+# shellcheck source=scripts/selftest-fixtures.sh
+source scripts/selftest-fixtures.sh
 mkdir -p "$out"
 
 # shellcheck source=scripts/arch-image.sh
@@ -128,6 +126,7 @@ in_box mkdir -p /tmp/toolbox/scripts /tmp/toolbox/tests/selftest /tmp/toolbox/da
 "$engine" cp "$binary" "$name:/tmp/toolbox/garuda-toolbox"
 "$engine" cp "$out/garuda-toolbox-helper" "$name:/usr/lib/garuda-toolbox/garuda-toolbox-helper"
 "$engine" cp scripts/selftest.sh "$name:/tmp/toolbox/scripts/"
+"$engine" cp scripts/selftest-fixtures.sh "$name:/tmp/toolbox/scripts/"
 "$engine" cp tests/selftest/configs "$name:/tmp/toolbox/tests/selftest/"
 "$engine" cp data/catalog "$name:/tmp/toolbox/data/"
 

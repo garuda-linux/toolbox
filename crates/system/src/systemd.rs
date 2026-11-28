@@ -2,12 +2,14 @@
 //! Services page. The app makes the calls with async zbus and hands the
 //! rows to [`unit_infos`], so this crate stays free of a runtime.
 
+mod signals;
 #[cfg(test)]
 mod tests;
 
 use std::collections::BTreeMap;
 use std::collections::btree_map::Entry;
 
+pub use signals::{OnSignal, RELISTING, SystemUnitSignals, UnitSignals};
 use toolbox_plan::UnitName;
 use toolbox_state::services::{ActiveState, FileState, UnitInfo};
 use zbus::OwnedObjectPath;

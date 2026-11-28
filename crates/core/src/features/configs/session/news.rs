@@ -107,6 +107,20 @@ pub enum ProblemCode {
     Cancelled,
     /// The worker thread of a step stopped without an answer.
     Failed,
+    /// The helper could not be started, its system words follow.
+    HelperStart,
+    /// The helper gave no answer in time.
+    HelperTimedOut,
+    /// The helper's answer is longer than the window reads.
+    HelperTooLong,
+    /// pkexec cannot run here, its own words follow.
+    HelperPkexec,
+    /// The helper failed, the start of what it printed follows.
+    HelperEnded,
+    /// The helper's answer is not what the read asked for.
+    HelperUnreadable,
+    /// The read stopped before the helper answered.
+    HelperStopped,
 }
 
 impl From<FetchRefusal> for ProblemCode {

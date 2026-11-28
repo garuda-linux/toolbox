@@ -14,7 +14,7 @@ use toolbox_state::bootrepair::{
 };
 
 use crate::command;
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 pub trait RepairSource: Send + Sync {
     /// # Errors
@@ -97,7 +97,7 @@ impl RepairSource for DryRunRepair {
 
 fn parsed(listing: &str) -> Result<Inventory, ProbeError> {
     parse_lsblk(listing).map_err(|error| ProbeError::Invalid {
-        what: "the disks".to_owned(),
+        what: Subject::Disks,
         error: error.into(),
     })
 }

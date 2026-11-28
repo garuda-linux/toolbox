@@ -15,19 +15,21 @@ use super::events;
 use crate::out::Out;
 
 /// Shows the plan. `Some` when the command ends here: a dry run, nothing
-/// to do, or a step that would ask under `--json`.
+/// to do, or a step that would ask with nobody to answer, under `--json`
+/// or without a `terminal`.
 pub(super) fn planned_out(
     paint: Paint,
     plan: &Plan,
     confirm: Confirm,
+    terminal: bool,
     out: &mut Out<'_>,
 ) -> Option<Exit> {
-    if confirm.json {
-        let typing = plan
-            .steps()
-            .iter()
-            .any(|step| events::needs_typing(&step.action));
+    let typing = plan
+        .steps()
+        .iter()
+        .any(|step| events::needs_typing(&step.action));
 
+    if confirm.json {
         if typing && !confirm.dry_run {
             let line = events::error_with(
                 "a step asks questions while it runs",
@@ -62,6 +64,13 @@ pub(super) fn planned_out(
         let hint = paint.hint("run it without --dry-run to carry it out");
         writeln!(out, "\n{hint}").ok();
         return Some(Exit::Success);
+    }
+
+    if typing && !terminal {
+        let error = paint.error("a step asks questions while it runs");
+        let hint = paint.hint("run it in a terminal and answer them there");
+        writeln!(out, "\n{error}\n{hint}").ok();
+        return Some(Exit::NeedsYes);
     }
 
     None

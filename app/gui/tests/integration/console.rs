@@ -9,7 +9,6 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::Instant;
 
-use crossbeam_channel::{Receiver, Sender};
 use egui::{Key, Modifiers};
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
@@ -18,14 +17,14 @@ use tokio::runtime::{Handle, Runtime};
 use toolbox_core::Snapshot;
 use toolbox_core::domains::InstalledPackages;
 use toolbox_gui::apply::{self, Launcher};
-use toolbox_gui::notifications::Notifier;
 use toolbox_gui::queue::Queue;
 use toolbox_gui::snapshot::{self, SnapshotHandle};
 use toolbox_gui::testing::PATIENCE;
 use toolbox_gui::{App, Setup};
 use toolbox_plan::StepId;
 use toolbox_plan::protocol::{Event, Mode, Outcome, encode};
-use toolbox_system::Notification;
+use toolbox_system::Notifier;
+use toolbox_system::testing::notify::Recorder;
 
 use self::settle::{Gate, SETTLE};
 pub use self::settle::{unfocus, wait_for};
@@ -42,22 +41,6 @@ pub const JAVA: &[&str] = &["java-runtime"];
 const FIREFOX: &[&str] = &["firefox"];
 
 pub struct FakeLauncher(pub String);
-
-#[derive(Debug)]
-struct Recorder(Sender<Notification>);
-
-impl Recorder {
-    fn pair() -> (Arc<dyn Notifier>, Receiver<Notification>) {
-        let (sender, receiver) = crossbeam_channel::unbounded();
-        (Arc::new(Self(sender)), receiver)
-    }
-}
-
-impl Notifier for Recorder {
-    fn show(&self, notification: Notification) {
-        self.0.send(notification).unwrap();
-    }
-}
 
 impl Launcher for FakeLauncher {
     fn command(&self) -> Process {

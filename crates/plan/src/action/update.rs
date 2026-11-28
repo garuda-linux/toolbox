@@ -9,6 +9,9 @@ pub enum Upgrader {
     /// Garuda's wrapper: snapshots, keyrings and hooks included. Mirrors
     /// are refreshed on their own, so it skips them.
     GarudaUpdate,
+    /// The same for a caller nobody answers, such as a script: with
+    /// garuda-update's own `--noconfirm`.
+    GarudaUpdateUnattended,
     /// Plain pacman on systems without garuda-update.
     Pacman,
 }

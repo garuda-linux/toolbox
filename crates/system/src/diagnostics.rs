@@ -18,10 +18,11 @@ use std::time::Instant;
 pub(crate) use access::{access, pacman_log};
 use known::KnownRoots;
 use toolbox_exec::{CaptureError, Captured, Environment, Policy, capture, locate_program};
-use toolbox_plan::protocol::{MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind};
+use toolbox_plan::protocol::{DecodeError, MAX_READ_OUTPUT_BYTES, ProgramAnswer, ReadKind};
 use toolbox_pty::strip_ansi;
 use toolbox_state::diagnostics::{
-    Attempt, Collector, Known, Outcome, Program, Ran, Refusal as PlanRefusal, Source, outcome,
+    AnswerFault, Attempt, Collector, Failure, HelperFault, Known, Outcome, Program, Ran,
+    Refusal as PlanRefusal, Source, outcome,
 };
 
 use crate::command::DEADLINE;
@@ -134,16 +135,15 @@ impl SystemDiagnostics {
         match result {
             Ok(captured) => Some(Attempt::Ran(ran(captured))),
             Err(CaptureError::Missing) => Some(Attempt::Missing),
-            Err(CaptureError::Failed(error)) => Some(Attempt::Failed(format!(
-                "{} could not be started: {error}",
-                program.tool.name()
-            ))),
+            Err(CaptureError::Failed(error)) => Some(Attempt::Failed(Failure::Start {
+                program: program.tool.name().to_owned(),
+                error: error.to_string(),
+            })),
             Err(CaptureError::TimedOut) => Some(timed_out(program)),
             Err(CaptureError::Cancelled) => None,
-            Err(CaptureError::TooLarge) => Some(Attempt::Failed(format!(
-                "{} printed too much",
-                program.tool.name()
-            ))),
+            Err(CaptureError::TooLarge) => Some(Attempt::Failed(Failure::TooLarge {
+                program: program.tool.name().to_owned(),
+            })),
         }
     }
 
@@ -171,7 +171,9 @@ impl SystemDiagnostics {
         match pkexec::sorted(result) {
             HelperRun::Answered(answer) => Some(answered(&answer)),
             HelperRun::Refused(refusal) => Some(refused(refusal)),
-            HelperRun::Failed(error) => Some(Attempt::Failed(with_source(&error))),
+            HelperRun::Failed(error) => {
+                Some(Attempt::Failed(Failure::Helper(helper_fault(&error))))
+            }
             HelperRun::Cancelled => None,
         }
     }
@@ -187,7 +189,7 @@ impl DiagnosticSource for SystemDiagnostics {
 
         // A failure's reason is shown as plain text, never as a report.
         Some(match outcome(&attempts) {
-            Outcome::Failed(reason) => Outcome::Failed(strip_ansi(&reason)),
+            Outcome::Failed(reason) => Outcome::Failed(reason.map_text(strip_ansi)),
             shown @ (Outcome::Report(_) | Outcome::Unavailable | Outcome::Refused(_)) => shown,
         })
     }
@@ -215,9 +217,7 @@ fn answered(answer: &str) -> Attempt {
             truncated,
         })),
         Ok(ProgramAnswer::Missing) => Attempt::Missing,
-        Err(error) => Attempt::Failed(format!(
-            "The answer of the helper of Garuda Toolbox was not understood: {error}"
-        )),
+        Err(error) => Attempt::Failed(Failure::Answer(answer_fault(&error))),
     }
 }
 
@@ -264,16 +264,40 @@ fn describe(result: &Result<Captured, CaptureError>) -> String {
 /// A collector's program ran past [`DEADLINE`]: it fails its collector
 /// instead of the whole report.
 fn timed_out(program: &Program) -> Attempt {
-    Attempt::Failed(format!(
-        "{} took longer than {} seconds",
-        program.tool.name(),
-        DEADLINE.as_secs()
-    ))
+    Attempt::Failed(Failure::TimedOut {
+        program: program.tool.name().to_owned(),
+        seconds: DEADLINE.as_secs(),
+    })
 }
 
 /// The report names why the helper did not start too, such as the
 /// system's own words for a missing file.
-fn with_source(error: &HelperError) -> String {
-    std::error::Error::source(error)
-        .map_or_else(|| error.to_string(), |source| format!("{error}: {source}"))
+fn helper_fault(error: &HelperError) -> HelperFault {
+    match error {
+        HelperError::Missing => HelperFault::Missing,
+        HelperError::Start(source) => HelperFault::Start {
+            error: source.to_string(),
+        },
+        HelperError::TimedOut => HelperFault::TimedOut,
+        HelperError::TooLong => HelperFault::TooLong,
+        HelperError::Pkexec { words } => HelperFault::Pkexec {
+            words: words.clone(),
+        },
+        HelperError::Ended { code, words } => HelperFault::Ended {
+            code: *code,
+            words: words.clone(),
+        },
+        HelperError::Unreadable => HelperFault::Unreadable,
+        HelperError::Stopped => HelperFault::Stopped,
+    }
+}
+
+fn answer_fault(error: &DecodeError) -> AnswerFault {
+    match error {
+        DecodeError::TooLong { length, limit } => AnswerFault::TooLong {
+            length: *length,
+            limit: *limit,
+        },
+        DecodeError::Json(error) => AnswerFault::Json(error.to_string()),
+    }
 }

@@ -1,5 +1,5 @@
 use super::{Plan, PlannedAction, Segment, StepId};
-use crate::{RootAction, UserAction};
+use crate::{RootAction, Upgrader, UserAction};
 
 fn user_step() -> PlannedAction {
     PlannedAction::User(UserAction::UpgradeAur)
@@ -106,4 +106,30 @@ fn a_plan_without_the_steps_that_ended_well_keeps_the_ids() {
 
     let ids: Vec<StepId> = rest.steps().iter().map(|step| step.id).collect();
     assert_eq!(ids, [StepId::new(2), StepId::new(4)]);
+}
+
+/// Nobody answers an upgrade a script started.
+#[test]
+fn an_unattended_plan_upgrades_without_questions_and_keeps_the_rest() {
+    let plan = Plan::new([
+        PlannedAction::Root(RootAction::RefreshKeyring),
+        PlannedAction::Root(RootAction::UpgradeSystem {
+            upgrader: Upgrader::GarudaUpdate,
+        }),
+    ])
+    .unattended();
+
+    let lines: Vec<String> = plan
+        .steps()
+        .iter()
+        .flat_map(|step| step.action.command_lines())
+        .collect();
+
+    assert_eq!(
+        lines,
+        [
+            "pacman-key --refresh-keys",
+            "GARUDA_UPDATE_TOOLBOX=1 garuda-update --skip-mirrorlist --noconfirm",
+        ]
+    );
 }

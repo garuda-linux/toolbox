@@ -22,7 +22,6 @@ use toolbox_gui::desktop::follow::CatalogApps;
 use toolbox_gui::desktop::icon_files::{Indexed, SystemIcons, app_index};
 use toolbox_gui::desktop::{self, follow};
 use toolbox_gui::instance::{Single, claim};
-use toolbox_gui::notifications::DesktopNotifier;
 use toolbox_gui::page::PageId;
 use toolbox_gui::programs::Programs;
 use toolbox_gui::queue::Restored;
@@ -34,7 +33,11 @@ use toolbox_log::subscriber;
 use toolbox_plan::Toggle;
 use toolbox_plan::protocol::Mode;
 use toolbox_services::dkms::{Dkms as DkmsAnswer, dkms_answer};
-use toolbox_system::{Dkms, FactSources, Facts, Status, probe_facts, probe_snapshot, probe_status};
+use toolbox_system::systemd::{SystemUnitSignals, UnitSignals};
+use toolbox_system::{
+    DesktopNotifier, Dkms, FactSources, Facts, Status, SystemLookPortal, probe_facts,
+    probe_snapshot, probe_status,
+};
 use tracing::level_filters::LevelFilter;
 
 use self::ports::{
@@ -340,7 +343,8 @@ fn readers(handle: &Handle, ctx: &egui::Context, settings: &Settings) -> Readers
 
     let units = units::spawn(handle, repaint(), Arc::new(Systemd), units::SETTLE);
 
-    units::watch::spawn(handle, &units.requests());
+    let signals: Arc<dyn UnitSignals> = Arc::new(SystemUnitSignals);
+    units::watch::spawn(handle, &units.requests(), &signals);
 
     Readers {
         dkms: reader::spawn_fallible(handle, repaint(), "dkms", move || {
@@ -383,7 +387,7 @@ fn look(
         handle,
         ctx.clone(),
         family,
-        files,
+        (files, Arc::new(SystemLookPortal::default())),
         CatalogApps {
             names: catalogs.app_icon_names().into(),
             pictures: Arc::clone(&pictures),

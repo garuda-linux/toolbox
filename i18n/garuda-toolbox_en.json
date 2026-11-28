@@ -4960,6 +4960,27 @@
     "configs-problem-failed": {
       "string": "The work on {path} stopped unexpectedly. Try again."
     },
+    "configs-problem-helper-start": {
+      "string": "{path} was not read, because the helper of Garuda Toolbox could not be started."
+    },
+    "configs-problem-helper-timed-out": {
+      "string": "{path} was not read, because the helper of Garuda Toolbox gave no answer in time. Try again."
+    },
+    "configs-problem-helper-too-long": {
+      "string": "{path} was not read, because the answer of the helper of Garuda Toolbox is too long."
+    },
+    "configs-problem-helper-pkexec": {
+      "string": "{path} was not read, because pkexec cannot run here."
+    },
+    "configs-problem-helper-ended": {
+      "string": "{path} was not read, because the helper of Garuda Toolbox failed."
+    },
+    "configs-problem-helper-unreadable": {
+      "string": "{path} was not read, because the answer of the helper of Garuda Toolbox is unreadable."
+    },
+    "configs-problem-helper-stopped": {
+      "string": "{path} was not read, because the read stopped before the helper answered."
+    },
     "configs-problem-read-only": {
       "string": "This file decides who may administer the system or what runs as root, so it is only shown here. Change it in a terminal with sudo."
     },
@@ -5357,6 +5378,82 @@
     "diagnostics-failed": {
       "string": "{name} failed: {reason}",
       "developer_comment": "$reason is the program's own words."
+    },
+    "diagnostics-failed-no-program": {
+      "string": "No program ran.",
+      "developer_comment": "The reasons of a failed collection. The words of a program stay as it printed them."
+    },
+    "diagnostics-failed-exit-code": {
+      "string": "Exit code: {code}"
+    },
+    "diagnostics-failed-signal": {
+      "string": "Ended by a signal."
+    },
+    "diagnostics-failed-start": {
+      "string": "{program} could not be started: {error}"
+    },
+    "diagnostics-failed-timed-out": {
+      "string": "{program} took longer than {seconds} seconds"
+    },
+    "diagnostics-failed-too-large": {
+      "string": "{program} printed too much"
+    },
+    "diagnostics-failed-read": {
+      "string": "{path}: {error}"
+    },
+    "diagnostics-failed-helper-missing": {
+      "string": "the helper of Garuda Toolbox or pkexec is not installed"
+    },
+    "diagnostics-failed-helper-start": {
+      "string": "cannot start the helper: {error}"
+    },
+    "diagnostics-failed-helper-timed-out": {
+      "string": "the helper gave no answer in time"
+    },
+    "diagnostics-failed-helper-too-long": {
+      "string": "the helper's answer is too long"
+    },
+    "diagnostics-failed-helper-pkexec": {
+      "string": "pkexec cannot run: {words}"
+    },
+    "diagnostics-failed-helper-ended": {
+      "string": "the helper ended with {ending}: {words}"
+    },
+    "diagnostics-failed-ending-code": {
+      "string": "exit code {code}"
+    },
+    "diagnostics-failed-ending-signal": {
+      "string": "a signal"
+    },
+    "diagnostics-failed-helper-unreadable": {
+      "string": "the helper's answer is unreadable"
+    },
+    "diagnostics-failed-helper-stopped": {
+      "string": "the read stopped before the helper answered"
+    },
+    "diagnostics-failed-answer": {
+      "string": "The answer of the helper of Garuda Toolbox was not understood: {fault}"
+    },
+    "diagnostics-failed-answer-too-long": {
+      "string": "line of {length} bytes exceeds the limit of {limit}"
+    },
+    "diagnostics-failed-not-installed": {
+      "string": "The next program is not installed."
+    },
+    "diagnostics-failed-dismissed": {
+      "string": "Not collected: the password dialog was dismissed."
+    },
+    "diagnostics-failed-denied": {
+      "string": "Not collected: root rights were not given."
+    },
+    "diagnostics-failed-no-agent": {
+      "string": "Not collected: no password dialog could appear."
+    },
+    "diagnostics-failed-helper-not-installed": {
+      "string": "Not collected: the helper is not installed."
+    },
+    "diagnostics-stopped": {
+      "string": "{name} stopped before it answered."
     },
     "diagnostics-report-label": {
       "string": "Diagnostics report"
@@ -6410,6 +6507,12 @@
     },
     "maintenance-problem-mirrors-start": {
       "string": "The ranking program rate-mirrors could not be started, so the Chaotic-AUR mirrors were not ranked: {reason}"
+    },
+    "maintenance-problem-mirrors-missing": {
+      "string": "the program is not installed"
+    },
+    "maintenance-problem-mirrors-panicked": {
+      "string": "the ranking stopped unexpectedly"
     },
     "maintenance-problem-mirrors-exit": {
       "string": "Ranking the Chaotic-AUR mirrors failed, so their list is unchanged. Check your internet connection and try again."
@@ -8479,6 +8582,177 @@
     },
     "probe-reboot-pending": {
       "string": "pending restart"
+    },
+    "probe-cause-command": {
+      "string": "{command} ended with {status}: {stderr}",
+      "developer_comment": "Why a probe failed. The parts that the system printed stay as they are."
+    },
+    "probe-cause-exit-code": {
+      "string": "exit code {code}"
+    },
+    "probe-cause-signal": {
+      "string": "a signal"
+    },
+    "probe-cause-timed-out": {
+      "string": "{command}: no answer within {seconds} s, stopped"
+    },
+    "probe-cause-cancelled": {
+      "string": "{command}: cancelled"
+    },
+    "probe-cause-too-large": {
+      "string": "{command}: the program printed too much"
+    },
+    "probe-cause-what": {
+      "string": "{what}: {error}"
+    },
+    "probe-cause-not-utf8": {
+      "string": "{what} is not UTF-8: {raw}"
+    },
+    "probe-cause-user-id": {
+      "string": "{path} names no user id"
+    },
+    "probe-cause-root": {
+      "string": "{path} lists no root"
+    },
+    "probe-cause-boot-time": {
+      "string": "no boot time in /proc/stat"
+    },
+    "probe-cause-kernel-release": {
+      "string": "the kernel names no release"
+    },
+    "probe-cause-not-a-file": {
+      "string": "{path} is no file"
+    },
+    "probe-cause-nul-in-path": {
+      "string": "{path}: NUL in the path"
+    },
+    "probe-cause-panicked": {
+      "string": "the probe panicked"
+    },
+    "probe-cause-name": {
+      "string": "{kind} `{value}` is invalid: {reason}",
+      "developer_comment": "$kind is a kind of name, $reason says why the value breaks its rule."
+    },
+    "probe-cause-listing": {
+      "string": "lsblk printed no device list: {words}"
+    },
+    "probe-cause-order-line": {
+      "string": "paru printed an incomplete order line: {line}"
+    },
+    "probe-subject-local-database": {
+      "string": "the local database",
+      "developer_comment": "The phrase a failed read names, when the source is not a path or a command."
+    },
+    "probe-subject-disks": {
+      "string": "the disks"
+    },
+    "probe-subject-running-kernel": {
+      "string": "the running kernel"
+    },
+    "probe-subject-route-list": {
+      "string": "ip printed no route list"
+    },
+    "probe-subject-build-order": {
+      "string": "the build order of {package}"
+    },
+    "probe-subject-sample-build-order": {
+      "string": "the sample build order of {package}"
+    },
+    "name-reason-empty": {
+      "string": "it is empty"
+    },
+    "name-reason-too-long": {
+      "string": "it is longer than {max} characters"
+    },
+    "name-reason-invalid-start": {
+      "string": "it must not start with `{character}`"
+    },
+    "name-reason-invalid-character": {
+      "string": "it contains `{character}`"
+    },
+    "name-reason-unknown-unit-type": {
+      "string": "it needs a unit type suffix such as `.service`"
+    },
+    "name-reason-invalid-component": {
+      "string": "it is no absolute path without `.` and `..` parts"
+    },
+    "name-reason-wrong-file-type": {
+      "string": "its file type does not fit"
+    },
+    "name-reason-unknown-device": {
+      "string": "it is no disk, partition or mapped device as the kernel names them"
+    },
+    "name-kind-package": {
+      "string": "package name"
+    },
+    "name-kind-unit": {
+      "string": "unit name"
+    },
+    "name-kind-user": {
+      "string": "user name"
+    },
+    "name-kind-group": {
+      "string": "group name"
+    },
+    "name-kind-locale": {
+      "string": "locale name"
+    },
+    "name-kind-kernel-module": {
+      "string": "kernel module name"
+    },
+    "name-kind-charset": {
+      "string": "character set name"
+    },
+    "name-kind-dkms-module": {
+      "string": "DKMS module name"
+    },
+    "name-kind-dkms-version": {
+      "string": "DKMS module version"
+    },
+    "name-kind-kernel-release": {
+      "string": "kernel release"
+    },
+    "name-kind-host": {
+      "string": "host name or address"
+    },
+    "name-kind-kernel-parameter": {
+      "string": "kernel parameter"
+    },
+    "name-kind-plymouth-theme": {
+      "string": "Plymouth theme name"
+    },
+    "name-kind-menu-entry": {
+      "string": "boot menu entry"
+    },
+    "name-kind-grub-picture": {
+      "string": "GRUB background picture"
+    },
+    "name-kind-grub-theme": {
+      "string": "GRUB theme file"
+    },
+    "name-kind-disk": {
+      "string": "disk"
+    },
+    "name-kind-partition": {
+      "string": "partition"
+    },
+    "name-kind-volume": {
+      "string": "partition or mapped device"
+    },
+    "name-kind-mapper": {
+      "string": "device-mapper name"
+    },
+    "name-kind-bootloader-id": {
+      "string": "boot loader name"
+    },
+    "name-kind-loader-entry": {
+      "string": "systemd-boot entry"
+    },
+    "name-kind-loader-default": {
+      "string": "systemd-boot default entry"
+    },
+    "name-kind-build-run": {
+      "string": "AUR build run"
     }
   },
   "toggles": {

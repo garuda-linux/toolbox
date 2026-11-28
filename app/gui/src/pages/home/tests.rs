@@ -6,11 +6,11 @@ mod merges_many;
 mod steps;
 
 use std::sync::Arc;
-use std::time::{Duration, SystemTime};
 
 use egui::accesskit::Role;
 use egui_kittest::Harness;
 use egui_kittest::kittest::Queryable as _;
+use jiff::{SignedDuration, Timestamp};
 use toolbox_core::domains::Packages;
 use toolbox_core::testing::Queue as _;
 use toolbox_core::{ChangeSet, Toggle};
@@ -212,7 +212,7 @@ fn facts() -> Facts {
             foreign: Some(12),
         }),
         kernel: Ok("6.17.7-zen1-1-zen".to_owned()),
-        booted: Ok(SystemTime::now() - Duration::from_hours(100)),
+        booted: Ok(Timestamp::now() - SignedDuration::from_hours(100)),
         disk: Ok(DiskSpace {
             total: 500 * GB,
             free: 200 * GB,
@@ -229,7 +229,9 @@ fn status() -> Status {
         updates: Ok(Vec::new()),
         aur_updates: Ok(Vec::new()),
         merges: Ok(Vec::new()),
-        last_update: Ok(Some(SystemTime::now() - Duration::from_hours(16 * 24 + 1))),
+        last_update: Ok(Some(
+            Timestamp::now() - SignedDuration::from_hours(16 * 24 + 1),
+        )),
         health: Ok(Vec::new()),
     }
 }

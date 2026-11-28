@@ -139,7 +139,7 @@ impl Diagnostics {
             .map(|note| {
                 let changed = self.page.apply(note);
                 if changed == (Changed::Report { ready: true }) {
-                    self.page.collected = u64::try_from(link.clock.now()).ok();
+                    self.page.collected = jiff::Timestamp::from_second(link.clock.now()).ok();
                 }
 
                 if matches!(changed, Changed::Report { ready: _ }) {

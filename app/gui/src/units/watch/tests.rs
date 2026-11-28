@@ -1,6 +1,25 @@
+use std::sync::Arc;
 use std::time::Duration;
 
-use super::{Backoff, HEALTHY, MAX_RETRY, RELISTING};
+use futures_lite::future::Boxed;
+use tokio::runtime::Handle;
+use toolbox_plan::UnitScope;
+use toolbox_system::CallError;
+use toolbox_system::testing::unit_signals::ScriptedSignals;
+
+use super::{Backoff, HEALTHY, MAX_RETRY, live};
+use crate::units::{self, UnitList, UnitLister};
+use crate::waking::Wake;
+
+/// Answers no list, as a desktop without systemd does.
+struct Silent;
+
+impl UnitLister for Silent {
+    fn list(&self, _scope: UnitScope) -> Boxed<UnitList> {
+        let answer: UnitList = Err(CallError::Unavailable);
+        Box::pin(async move { answer })
+    }
+}
 
 const fn secs(count: u64) -> Duration {
     Duration::from_secs(count)
@@ -38,16 +57,25 @@ fn only_the_first_failure_of_an_outage_is_reported() {
     assert!(backoff.after(Duration::ZERO).1);
 }
 
-/// A job's start comes with its end, and property changes come from
-/// every running timer, so neither lists again.
-#[test]
-fn only_changes_of_the_units_and_their_files_list_again() {
-    for quiet in ["PropertiesChanged", "JobNew", "StartupFinished"] {
-        assert!(!RELISTING.contains(&quiet), "{quiet}");
-    }
+/// The stream of the signals port ends with the result the port gives, and
+/// the watcher reads that result.
+#[tokio::test]
+async fn the_live_stream_ends_with_the_result_of_the_signals_port() {
+    let handle = units::spawn(
+        &Handle::current(),
+        Wake::none(),
+        Arc::new(Silent),
+        Duration::ZERO,
+    );
 
-    assert!(RELISTING.contains(&"JobRemoved"));
-    assert!(RELISTING.contains(&"UnitFilesChanged"));
+    let signals = ScriptedSignals {
+        signals: 2,
+        ended: Err(CallError::Unavailable),
+    };
+
+    let ended = live(UnitScope::System, handle.requests(), Arc::new(signals)).await;
+
+    assert_eq!(ended, Err(CallError::Unavailable));
 }
 
 #[test]

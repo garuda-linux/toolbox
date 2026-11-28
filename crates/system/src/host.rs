@@ -5,11 +5,11 @@ mod tests;
 
 use std::ffi::OsString;
 use std::path::PathBuf;
-use std::time::{Duration, SystemTime};
 
+use jiff::Timestamp;
 use toolbox_plan::UserName;
 
-use crate::error::{MissingFact, ProbeError};
+use crate::error::{MissingFact, ProbeError, Subject};
 use crate::{accounts, files};
 
 /// Filesystems an ISO mounts as its root, the writable layer over the
@@ -155,7 +155,7 @@ where
         (self.lookup)(key)
             .map(|value| {
                 value.into_string().map_err(|raw| ProbeError::NotUtf8 {
-                    what: key.to_owned(),
+                    what: Subject::Data(key.to_owned()),
                     raw,
                 })
             })
@@ -262,9 +262,9 @@ fn parse_boot_time(stat: &str) -> Option<u64> {
         .find_map(|line| line.strip_prefix("btime ")?.trim().parse().ok())
 }
 
-pub fn boot_time(stat: &str) -> Result<SystemTime, ProbeError> {
+pub fn boot_time(stat: &str) -> Result<Timestamp, ProbeError> {
     parse_boot_time(stat)
-        .and_then(|seconds| SystemTime::UNIX_EPOCH.checked_add(Duration::from_secs(seconds)))
+        .and_then(|seconds| Timestamp::from_second(i64::try_from(seconds).ok()?).ok())
         .ok_or(ProbeError::Missing(MissingFact::BootTime))
 }
 

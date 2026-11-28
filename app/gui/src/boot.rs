@@ -7,7 +7,6 @@
 
 mod edits;
 mod jobs;
-pub mod portal;
 #[cfg(test)]
 mod tests;
 

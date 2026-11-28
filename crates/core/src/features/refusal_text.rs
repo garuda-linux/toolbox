@@ -246,6 +246,13 @@ impl RefusalText for super::configs::session::ProblemCode {
             Self::NoHome => "configs-problem-no-home",
             Self::Cancelled => "configs-problem-cancelled",
             Self::Failed => "configs-problem-failed",
+            Self::HelperStart => "configs-problem-helper-start",
+            Self::HelperTimedOut => "configs-problem-helper-timed-out",
+            Self::HelperTooLong => "configs-problem-helper-too-long",
+            Self::HelperPkexec => "configs-problem-helper-pkexec",
+            Self::HelperEnded => "configs-problem-helper-ended",
+            Self::HelperUnreadable => "configs-problem-helper-unreadable",
+            Self::HelperStopped => "configs-problem-helper-stopped",
         })
     }
 }

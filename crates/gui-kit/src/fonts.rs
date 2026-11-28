@@ -16,15 +16,15 @@ use egui::epaint::text::{FontTweak, VariationCoords};
 use egui::{Context, FontData, FontDefinitions, FontFamily, FontId, Style, TextStyle};
 use skrifa::{FontRef, MetadataProvider as _, Tag};
 
-pub const INTER: &str = "Inter";
-pub const JETBRAINS_MONO: &str = "JetBrains Mono";
+pub(crate) const INTER: &str = "Inter";
+pub(crate) const JETBRAINS_MONO: &str = "JetBrains Mono";
 
 /// A name or a figure set large, such as About's name, larger than an even step.
 pub const TITLE: f32 = 2.3;
 /// Kirigami's level 1 heading (`Heading.qml`), the page title in the toolbar.
 pub const PAGE_TITLE: f32 = 1.35;
 /// Kirigami's level 2 heading (`Heading.qml`), the section headings.
-pub const SECTION_TITLE: f32 = 1.2;
+pub(crate) const SECTION_TITLE: f32 = 1.2;
 /// egui's Heading style.
 pub const SECTION: f32 = 1.4;
 /// Labels of rows and buttons, pane titles, the body size.

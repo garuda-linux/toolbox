@@ -32,6 +32,8 @@ pub enum DiagnosticsNote {
     Started(Selection),
     Collecting(Collector),
     Finished(Selection, Outcome),
+    /// The collection panicked before it had an outcome.
+    Stopped(Selection),
     /// The finished report as it may leave the machine. Comes right
     /// after its `Finished`.
     Shareable(Redacted),
@@ -60,6 +62,7 @@ struct Done {
     /// `None` after a cancel.
     outcome: Option<Outcome>,
     shareable: Option<Redacted>,
+    stopped: bool,
 }
 
 struct Service {
@@ -133,15 +136,14 @@ impl Service {
             (outcome, shareable)
         });
 
-        // A panic in the blocking work ends as a failed collection.
+        // A panic in the blocking work ends as a stopped collection.
         let results = self.results.clone();
 
         self.runtime.spawn(async move {
-            let (outcome, shareable) = work.await.unwrap_or_else(|_| {
-                let failed = "the diagnostics collection stopped before it answered";
-
-                (Some(Outcome::Failed(failed.to_owned())), None)
-            });
+            let (outcome, shareable, stopped) = match work.await {
+                Ok((outcome, shareable)) => (outcome, shareable, false),
+                Err(_) => (None, None, true),
+            };
 
             // The service ends with the app. Nobody waits then.
             results
@@ -150,6 +152,7 @@ impl Service {
                     selection,
                     outcome,
                     shareable,
+                    stopped,
                 })
                 .ok();
         });
@@ -170,6 +173,11 @@ impl Service {
         }
 
         self.run = None;
+
+        if done.stopped {
+            self.sink.note(DiagnosticsNote::Stopped(done.selection));
+            return;
+        }
 
         match done.outcome {
             Some(outcome) => {

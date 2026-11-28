@@ -1,18 +1,18 @@
 use std::path::PathBuf;
-use std::time::{Duration, SystemTime};
 
+use jiff::{SignedDuration, Timestamp};
 use toolbox_plan::{PackageName, UnitName};
 use toolbox_system::{
     DiskSpace, Facts, HealthIssue, HealthLevel, PackageCount, PendingUpdate, ProbeError, Status,
 };
 
-use super::{Check, Overview, Pending};
+use super::{Check, Overview, Pending, Row};
 
-pub(super) const DAY: Duration = Duration::from_hours(24);
+pub(super) const DAY: SignedDuration = SignedDuration::from_hours(24);
 pub(super) const GB: u64 = 1_000_000_000;
 
-pub(super) fn now() -> SystemTime {
-    SystemTime::UNIX_EPOCH + DAY * 20_000
+pub(super) fn now() -> Timestamp {
+    Timestamp::UNIX_EPOCH + DAY * 20_000
 }
 
 pub(super) fn quiet() -> Status {
@@ -110,7 +110,7 @@ fn merges_are_listed_as_paths() {
 #[test]
 fn the_system_is_stale_after_two_weeks() {
     let mut status = quiet();
-    status.last_update = Ok(Some(now() - DAY * 15));
+    status.last_update = Ok(Some(now() - DAY * 15_i32));
 
     let overview = Overview::of(&status, now());
 
@@ -236,5 +236,19 @@ fn every_check_that_gave_an_answer_ran() {
             Check::Cleanup,
             Check::Health,
         ]
+    );
+}
+
+#[test]
+fn the_rows_follow_the_order_of_the_status_page() {
+    let mut status = quiet();
+    status.merges = Ok(vec![PathBuf::from("/etc/pacman.conf.pacnew")]);
+    status.health = Ok(vec![issue(HealthLevel::High, "a failing unit", true)]);
+
+    let overview = Overview::of(&status, now());
+
+    assert_eq!(
+        overview.rows(true),
+        [Row::Merges, Row::Health(HealthLevel::High), Row::Restart]
     );
 }

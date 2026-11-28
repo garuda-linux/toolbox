@@ -244,8 +244,7 @@ pub fn nothing() -> String {
 }
 
 /// A step that wants answers typed while it runs: paru's questions, the AUR
-/// review or an
-/// editor. JSON Lines leave nobody to type them.
+/// review or an editor. JSON Lines leave nobody to type them.
 pub(super) const fn needs_typing(action: &PlannedAction) -> bool {
     matches!(
         action,

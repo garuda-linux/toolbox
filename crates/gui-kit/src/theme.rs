@@ -33,16 +33,16 @@ pub const CARD_RADIUS: u8 = 8;
 pub const POPOVER_RADIUS: u8 = 9;
 /// Text fields and spin boxes: Darkly's line edit, `CornerRadius` less one
 /// (darklyhelper.cpp:1045).
-pub const FIELD_RADIUS: u8 = 8;
+pub(crate) const FIELD_RADIUS: u8 = 8;
 /// Tabs: the corners of an unchosen tab. The chosen tab is a pill of `RADIUS`.
-pub const TAB_RADIUS: u8 = 8;
+pub(crate) const TAB_RADIUS: u8 = 8;
 /// Check boxes: half of 9, rounded (darklyhelper.cpp:1275).
-pub const CHECK_RADIUS: u8 = 5;
+pub(crate) const CHECK_RADIUS: u8 = 5;
 /// Tool buttons at rest: 9 less half a frame pen, 8.5 rounded up to 9
 /// (darklyhelper.cpp:908). Sunken ones take 9.
-pub const TOOL_BUTTON_RADIUS: u8 = 9;
+pub(crate) const TOOL_BUTTON_RADIUS: u8 = 9;
 /// The tile behind a row's icon.
-pub const TILE_RADIUS: u8 = 6;
+pub(crate) const TILE_RADIUS: u8 = 6;
 /// The tile behind a section's icon.
 pub const SMALL_TILE_RADIUS: u8 = 5;
 pub const LARGE_TILE_RADIUS: u8 = 8;
@@ -56,9 +56,9 @@ pub const SIDEBAR_WIDTH: f32 = 248.0;
 /// height, rounded up to even.
 pub const GRID_UNIT: f32 = 18.0;
 /// Kirigami's `Units.smallSpacing`.
-pub const SMALL_SPACING: f32 = 4.0;
+pub(crate) const SMALL_SPACING: f32 = 4.0;
 /// Kirigami's `Units.largeSpacing`.
-pub const LARGE_SPACING: f32 = 8.0;
+pub(crate) const LARGE_SPACING: f32 = 8.0;
 /// How long hovers and switches take to settle, in seconds.
 pub const ANIMATION_TIME: f32 = 0.12;
 

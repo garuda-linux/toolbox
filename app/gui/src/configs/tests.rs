@@ -11,6 +11,7 @@ use toolbox_exec::ConfigRead;
 use toolbox_plan::{
     ConfigFilePath, ConfigText, Editor, HomePath, PlannedAction, RootAction, UserAction,
 };
+use toolbox_system::pkexec::HelperError;
 use toolbox_system::{ConfigFileSource, DryRunEditor, EditFolder, ReadProblem};
 
 use super::{Act, Configs, ConfigsSetup, Taken};
@@ -315,6 +316,29 @@ fn a_file_of_the_user_without_a_home_folder_fails_with_a_code_of_its_own() {
     assert_eq!(
         (problem.code, problem.detail.as_str()),
         (ProblemCode::NoHome, "")
+    );
+}
+
+/// The helper's sentence is a code the window words, and only the words the
+/// helper printed stay as the detail.
+#[test]
+fn a_helper_failure_names_its_cause_and_keeps_the_helpers_words() {
+    let ended = super::jobs::problem_of(ReadProblem::Failed(HelperError::Ended {
+        code: Some(3_i32),
+        words: "no key".to_owned(),
+    }));
+
+    let timed_out = super::jobs::problem_of(ReadProblem::Failed(HelperError::TimedOut));
+
+    assert_eq!(
+        [
+            (ended.code, ended.detail.as_str()),
+            (timed_out.code, timed_out.detail.as_str())
+        ],
+        [
+            (ProblemCode::HelperEnded, "no key"),
+            (ProblemCode::HelperTimedOut, "")
+        ]
     );
 }
 

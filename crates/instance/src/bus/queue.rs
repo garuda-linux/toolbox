@@ -15,10 +15,10 @@ use super::{BUS_NAME, OBJECT_PATH};
 const INTERFACE: &str = "org.garudalinux.toolbox.Queue";
 
 /// A whole queue fits many times over. Larger texts are refused unread.
-pub const MAX_QUEUE_TEXT: usize = 256 * 1024;
+pub(crate) const MAX_QUEUE_TEXT: usize = 256 * 1024;
 
 /// The window answers on its next logic pass, which also runs while it is hidden.
-pub const ANSWER_LIMIT: Duration = Duration::from_secs(5);
+pub(crate) const ANSWER_LIMIT: Duration = Duration::from_secs(5);
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Question {

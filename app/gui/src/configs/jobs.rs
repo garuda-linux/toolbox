@@ -335,9 +335,31 @@ pub(super) fn problem_of(problem: ReadProblem) -> Problem {
     match problem {
         ReadProblem::Refused(reason) => refused(reason),
         ReadProblem::NotRun(refusal) => Problem::new(not_run(refusal), ""),
-        ReadProblem::Failed(error) => Problem::new(ProblemCode::ReadFailed, error.to_string()),
+        ReadProblem::Failed(error) => {
+            tracing::warn!("the helper failed a config read: {error}");
+            helper_problem(&error)
+        }
         ReadProblem::Unreadable(kind) => Problem::new(ProblemCode::ReadFailed, kind.to_string()),
         ReadProblem::Cancelled => Problem::new(ProblemCode::Cancelled, ""),
+    }
+}
+
+/// The sentence names what the helper failed at, and the helper's own words
+/// follow it.
+fn helper_problem(error: &pkexec::HelperError) -> Problem {
+    match error {
+        pkexec::HelperError::Missing => Problem::new(ProblemCode::HelperMissing, ""),
+        pkexec::HelperError::Start(start) => {
+            Problem::new(ProblemCode::HelperStart, start.to_string())
+        }
+        pkexec::HelperError::TimedOut => Problem::new(ProblemCode::HelperTimedOut, ""),
+        pkexec::HelperError::TooLong => Problem::new(ProblemCode::HelperTooLong, ""),
+        pkexec::HelperError::Pkexec { words } => Problem::new(ProblemCode::HelperPkexec, words),
+        pkexec::HelperError::Ended { code: _, words } => {
+            Problem::new(ProblemCode::HelperEnded, words)
+        }
+        pkexec::HelperError::Unreadable => Problem::new(ProblemCode::HelperUnreadable, ""),
+        pkexec::HelperError::Stopped => Problem::new(ProblemCode::HelperStopped, ""),
     }
 }
 

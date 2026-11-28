@@ -17,6 +17,13 @@ pub struct Row<'units> {
     pub masked: bool,
 }
 
+impl Row<'_> {
+    /// A static or masked unit has no boot state to switch.
+    pub fn switchable(&self) -> bool {
+        !self.masked && self.unit.file_state != FileState::Static
+    }
+}
+
 pub fn rows<'units>(
     units: &'units [UnitInfo],
     filter: &Filter,

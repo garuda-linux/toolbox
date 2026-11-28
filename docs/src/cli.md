@@ -233,6 +233,11 @@ pipe.
   `--yes`. Without it nothing changes and the exit code is 4.
 - A change that cannot be undone wants its name typed instead of `y`.
   `--yes` covers that too.
+- With `--yes`, `update` runs garuda-update with its `--noconfirm`, so a
+  script is not asked before the packages are installed.
+- A step that asks while it runs, such as paru for `update --aur` or the
+  review of an AUR build, needs a terminal. Without one nothing changes
+  and the exit code is 4.
 
 `Ctrl+c` while a change runs lets the running step end and skips the
 rest: `warning: stopping after this step, press Ctrl+C again to stop it
@@ -846,7 +851,7 @@ reason is the `reason` of a read's JSON error.
 | 1    | `failure`     | A change or a read failed.                                                                                                                                                                                             |
 | 2    | `usage`       | The arguments were wrong, such as a name that is not well formed.                                                                                                                                                      |
 | 3    | `declined`    | You answered no.                                                                                                                                                                                                       |
-| 4    | `needs-yes`   | No terminal to ask on: pass `--yes`.                                                                                                                                                                                   |
+| 4    | `needs-yes`   | No terminal to ask on: pass `--yes`. Or a step asks while it runs and there is no terminal.                                                                                                                            |
 | 5    | `unavailable` | Not available on this system, such as a service, kernel or locale this system does not have.                                                                                                                           |
 | 6    | `denied`      | The password dialog or the helper turned it down.                                                                                                                                                                      |
 | 8    | `page-rule`   | Refused by the page's rules, such as removing root or a password that does not match. The page refuses the same click.                                                                                                 |

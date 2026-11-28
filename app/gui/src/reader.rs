@@ -168,7 +168,7 @@ where
 }
 
 /// [`spawn`] for a read that can fail. The reading then keeps the last
-/// value beside the error's text, which the page shows.
+/// value beside the error's text.
 #[must_use = "the handle is the only way to the reader"]
 pub fn spawn_fallible<T, E, R>(
     runtime: &Handle,

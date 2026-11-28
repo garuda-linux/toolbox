@@ -1,9 +1,9 @@
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use jiff::Timestamp;
 
 use super::backup_stamp;
 
-fn at(seconds: u64) -> SystemTime {
-    UNIX_EPOCH + Duration::from_secs(seconds)
+fn at(seconds: i64) -> Timestamp {
+    Timestamp::from_second(seconds).unwrap()
 }
 
 #[test]
@@ -35,15 +35,12 @@ fn an_ordinary_moment() {
 #[test]
 fn ignores_fractions_of_a_second() {
     assert_eq!(
-        backup_stamp(at(1_791_551_107) + Duration::from_millis(999)),
+        backup_stamp(Timestamp::from_millisecond(1_791_551_107_999).unwrap()),
         "20261009-130507"
     );
 }
 
 #[test]
 fn a_time_before_the_epoch_counts_as_the_epoch() {
-    assert_eq!(
-        backup_stamp(UNIX_EPOCH - Duration::from_secs(5)),
-        "19700101-000000"
-    );
+    assert_eq!(backup_stamp(at(-5)), "19700101-000000");
 }

@@ -310,7 +310,7 @@ pub fn change(args: &PackageArgs, want: Toggle, snapshot: &Snapshot) -> Result<P
 /// # Errors
 ///
 /// As [`change`].
-pub fn change_onto(
+pub(crate) fn change_onto(
     args: &PackageArgs,
     want: Toggle,
     snapshot: &Snapshot,

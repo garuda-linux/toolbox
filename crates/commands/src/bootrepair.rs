@@ -134,7 +134,7 @@ pub fn repair(
 /// # Errors
 ///
 /// [`Refused::Unknown`] when neither is a target the page lists.
-pub fn pick_target(
+pub(crate) fn pick_target(
     facts: &RepairFacts,
     system: &str,
     asked: Option<&str>,
@@ -263,7 +263,7 @@ fn status(read: Read, live: bool, facts: &RepairFacts, out: &mut Out<'_>) -> Exi
 
 /// The installed systems. The columns need their names, as a state is
 /// either in use or the kind of encryption.
-pub fn system_listing(rows: &[SystemRow]) -> Listing<'_> {
+pub(crate) fn system_listing(rows: &[SystemRow]) -> Listing<'_> {
     let in_use = rows.iter().filter(|row| row.in_use).count();
 
     Listing {

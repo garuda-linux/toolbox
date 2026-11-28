@@ -100,7 +100,7 @@ impl AddUser {
 
                 // Kept by egui, so the dialog opens again as it was left.
                 let id = egui::Id::unique("toolbox_gui::users::add_more");
-                let mut open = ui.data(|data| data.get_temp::<bool>(id).unwrap_or(false));
+                let mut open = ui.data(|data| data.get_temp::<bool>(id).unwrap_or_default());
                 let more = i18n::text(ctx, "users-add-more");
                 if disclosure(ui, &more, open).clicked() {
                     open = !open;

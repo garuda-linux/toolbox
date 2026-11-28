@@ -16,7 +16,7 @@ use toolbox_core::domains::{
 };
 use toolbox_core::features::kernels::parse_status;
 use toolbox_core::features::locales::{SupportedLocales, parse_supported};
-use toolbox_gui::boot::{BootSetup, Chosen, FileChooser, FileKind};
+use toolbox_gui::boot::BootSetup;
 use toolbox_gui::news::SampleNews;
 use toolbox_gui::units::{self, UnitList, UnitLister};
 use toolbox_gui::users::UsersSetup;
@@ -31,8 +31,8 @@ use toolbox_services::dkms::Dkms;
 use toolbox_state::parts::{MaskedUnits, MaskedUserUnits};
 use toolbox_system::systemd::{ListUnitsRow, UnitFileRow, unit_infos};
 use toolbox_system::{
-    BootMenuSource, CallError, Host, LockProblem, LockSource, MenuRead, parse_accounts,
-    parse_available_shells, parse_login_shells,
+    BootMenuSource, CallError, Chosen, FileChooser, Host, LockProblem, LockSource, MenuRead,
+    parse_accounts, parse_available_shells, parse_login_shells,
 };
 
 use crate::common::{launch_with, packages, shared_runtime};
@@ -86,7 +86,7 @@ impl BootMenuSource for LimaMenu {
 struct NoChooser;
 
 impl FileChooser for NoChooser {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+    fn choose(&self, _title: &str, _filter: &str, _globs: &[&str]) -> Chosen {
         Chosen::Cancelled
     }
 }

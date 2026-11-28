@@ -1,6 +1,9 @@
 use egui::Ui;
-use toolbox_core::features::maintenance::page::{PageTool, installed, operations};
-use toolbox_core::features::maintenance::{Operation, RunNow, Tool, upgrade_queued};
+use toolbox_core::features::maintenance::page::{PageTool, installed};
+use toolbox_core::features::maintenance::{
+    CLEANUP_OPERATIONS, RunNow, Tool, cleanup_queued, upgrade_queued,
+};
+use toolbox_core::features::status::cleanup_detail_id;
 use toolbox_gui_kit::widgets::{ActionRow, ButtonKind, pill_button, text_button, text_link};
 use toolbox_gui_kit::{UiExt as _, icons};
 use toolbox_plan::UnitName;
@@ -249,21 +252,14 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
     let cache = size(overview.machine.package_cache);
     let detail = i18n::text_with(
         &ctx,
-        if overview.machine.orphans == 0 {
-            "home-cleanup-detail-cache"
-        } else {
-            "home-cleanup-detail"
-        },
+        cleanup_detail_id(orphans),
         &[
             ("orphans", Arg::from(orphans)),
             ("cache", Arg::from(&cache)),
         ],
     );
 
-    let cleanup = [Operation::RemoveOrphans, Operation::CleanPackageCache];
-    let queued = operations(context.changes)
-        .iter()
-        .any(|row| row.queued && cleanup.contains(&row.operation));
+    let queued = cleanup_queued(context.changes);
 
     ActionRow::new(icons::EDIT_CLEAR_ALL, &title)
         .detail(&detail)
@@ -275,7 +271,7 @@ pub(super) fn cleanup(ui: &mut Ui, context: &PageContext<'_>, overview: &Overvie
             };
 
             if pill_button(ui, &i18n::text(&ctx, id), ButtonKind::Soft).clicked() {
-                for operation in cleanup {
+                for operation in CLEANUP_OPERATIONS {
                     context.commands.send(MaintenanceCommand::Queue {
                         operation,
                         on: toolbox_core::Toggle::from_on(!queued),

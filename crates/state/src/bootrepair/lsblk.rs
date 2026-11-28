@@ -44,6 +44,14 @@ const SWAP_MARK: &str = "[SWAP]";
 #[error("lsblk printed no device list: {0}")]
 pub struct InvalidListing(String);
 
+impl InvalidListing {
+    /// What the decoder said, a message of its own that the window words
+    /// around.
+    pub fn words(&self) -> &str {
+        &self.0
+    }
+}
+
 #[derive(Deserialize)]
 struct Listing {
     blockdevices: Vec<Node>,

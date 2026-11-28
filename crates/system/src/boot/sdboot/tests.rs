@@ -149,7 +149,7 @@ fn an_unreadable_install_conf_fails_the_loader_read() {
 
     assert!(matches!(
         loader(dir.path()),
-        Err(ProbeError::Io { what, error: _ }) if what.contains("install.conf")
+        Err(ProbeError::Io { what, error: _ }) if what.to_string().contains("install.conf")
     ));
 }
 

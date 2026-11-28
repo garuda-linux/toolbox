@@ -27,7 +27,7 @@ use super::terminal::{Terminal, wipe, without_line_end};
 use super::{groups, system, users};
 use crate::out::Out;
 
-pub fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
+pub(crate) fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     match command {
         UsersCommand::List(list) => users(&list.read, list.all, &snapshot, out),
@@ -77,7 +77,7 @@ pub fn users_command(command: UsersCommand, runtime: &Runtime, out: &mut Out<'_>
     }
 }
 
-pub fn groups_command(command: GroupsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
+pub(crate) fn groups_command(command: GroupsCommand, runtime: &Runtime, out: &mut Out<'_>) -> Exit {
     let snapshot = system();
     match command {
         GroupsCommand::List(list) => groups(&list, &snapshot, out),
@@ -192,7 +192,7 @@ pub fn lock(args: &UserArgs, locked: Toggle, snapshot: &Snapshot) -> Result<Plan
 /// # Errors
 ///
 /// As [`lock`].
-pub fn lock_onto(
+pub(crate) fn lock_onto(
     args: &UserArgs,
     locked: Toggle,
     snapshot: &Snapshot,
@@ -212,7 +212,7 @@ pub fn remove(args: &RemoveUser, snapshot: &Snapshot) -> Result<Plan, Refused> {
 /// # Errors
 ///
 /// As [`remove`].
-pub fn remove_onto(
+pub(crate) fn remove_onto(
     args: &RemoveUser,
     snapshot: &Snapshot,
     changes: &mut ChangeSet,
@@ -237,7 +237,7 @@ pub fn group(args: &GroupArgs, wanted: Toggle, snapshot: &Snapshot) -> Result<Pl
 /// # Errors
 ///
 /// As [`group`].
-pub fn group_onto(
+pub(crate) fn group_onto(
     args: &GroupArgs,
     wanted: Toggle,
     snapshot: &Snapshot,

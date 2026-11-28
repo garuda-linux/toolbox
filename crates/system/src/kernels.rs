@@ -16,7 +16,7 @@ use std::path::PathBuf;
 use toolbox_plan::{KernelRelease, PackageName};
 use toolbox_state::kernels::{DkmsEntry, KernelReleases, RunningKernel, parse_status};
 
-use crate::error::{ProbeError, from_io};
+use crate::error::{ProbeError, Subject, from_io};
 use crate::{command, files};
 
 pub const OS_RELEASE: &str = "proc/sys/kernel/osrelease";
@@ -90,7 +90,7 @@ impl KernelSource for SystemKernels {
         // A release that is no single path component names no folder, and
         // no kernel prints one.
         let release = KernelRelease::new(text.trim()).map_err(|error| ProbeError::Invalid {
-            what: "the running kernel".to_owned(),
+            what: Subject::RunningKernel,
             error: error.into(),
         })?;
 

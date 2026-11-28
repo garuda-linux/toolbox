@@ -19,7 +19,7 @@ pub const MAX_EDITS: usize = 512;
 
 /// Bumped when the edit's own shape changes. The changes it carries are
 /// saved changes, which [`SAVED_VERSION`] counts.
-pub const QUEUE_EDIT_VERSION: u32 = 1;
+pub(crate) const QUEUE_EDIT_VERSION: u32 = 1;
 
 /// Keys are names and paths, never longer than this.
 const MAX_KEY_BYTES: usize = 512;

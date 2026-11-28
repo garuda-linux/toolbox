@@ -9,7 +9,7 @@ use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_cli::confirm::Prompt;
 use toolbox_plan::protocol::{Event, Failure, Mode, Outcome, encode};
-use toolbox_plan::{Plan, RootAction, StepId};
+use toolbox_plan::{Plan, RootAction, StepId, Upgrader, UserAction};
 use toolbox_services::apply::Launcher;
 
 use super::carry_out;
@@ -301,4 +301,38 @@ fn a_split_plan_is_never_retried_through_sudo() {
 
     assert_ne!(exit, Exit::Success, "{out}");
     assert!(!out.contains(crate::root::SUDO_NOTE), "{out}");
+}
+
+/// `--yes` is for a script, which cannot answer garuda-update either.
+#[test]
+fn yes_plans_the_upgrade_without_garuda_updates_question() {
+    let upgrade = || {
+        Plan::root(RootAction::UpgradeSystem {
+            upgrader: Upgrader::GarudaUpdate,
+        })
+    };
+
+    let (_, unattended) = run(upgrade(), true, &mut without_terminal(), Outcome::Succeeded);
+    let (_, asked) = run(upgrade(), false, &mut terminal(&["y"]), Outcome::Succeeded);
+
+    assert!(
+        unattended.contains("garuda-update --skip-mirrorlist --noconfirm"),
+        "{unattended}"
+    );
+    assert!(!asked.contains("--noconfirm"), "{asked}");
+}
+
+/// paru's questions would wait for an answer that never comes.
+#[test]
+fn a_step_that_asks_is_refused_without_a_terminal() {
+    let aur = || Plan::user(UserAction::UpgradeAur);
+
+    let (exit, out) = run(aur(), true, &mut without_terminal(), Outcome::Succeeded);
+
+    assert_eq!(exit, Exit::NeedsYes);
+    assert!(out.contains("a step asks questions while it runs"), "{out}");
+    assert!(!out.contains("Done"), "{out}");
+
+    let (answered, _) = run(aur(), true, &mut terminal(&[]), Outcome::Succeeded);
+    assert_eq!(answered, Exit::Success);
 }

@@ -43,7 +43,7 @@ use crate::out::{Out, Settings};
 
 /// The longest timeout in seconds the page takes, for GRUB and systemd-boot
 /// alike.
-pub const MAX_TIMEOUT: u32 = 300;
+pub(crate) const MAX_TIMEOUT: u32 = 300;
 
 #[derive(Debug, PartialEq, Eq, Serialize)]
 pub struct BootView {
@@ -247,7 +247,7 @@ pub fn build(
 /// # Errors
 ///
 /// As [`build`].
-pub fn build_onto(
+pub(crate) fn build_onto(
     args: &DkmsBuild,
     entries: &[DkmsEntry],
     snapshot: &Snapshot,
@@ -343,7 +343,7 @@ fn path_or_none(value: &str) -> String {
     }
 }
 
-pub fn default_menus(settings: Settings) -> DefaultMenus {
+pub(crate) fn default_menus(settings: Settings) -> DefaultMenus {
     let source = SystemBootMenu::system(Arc::new(super::root::helper(settings)));
     match source.menu(&Arc::new(AtomicBool::new(false))) {
         MenuRead::Known(grub) => DefaultMenus {

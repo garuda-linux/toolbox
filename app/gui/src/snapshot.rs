@@ -10,7 +10,7 @@ use parking_lot::Mutex;
 use tokio::runtime::Handle;
 use toolbox_core::Snapshot;
 use toolbox_gui_kit::Loadable;
-use toolbox_system::{Probe, ProbeIssue};
+use toolbox_system::{Probe, ProbeError, ProbeIssue};
 
 use crate::reader::{self, ReaderHandle};
 use crate::waking::Wake;
@@ -29,7 +29,7 @@ pub struct Probed {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FailedRead {
     pub probe: Probe,
-    pub reason: String,
+    pub error: ProbeError,
 }
 
 #[must_use = "the handle is the only way to the service"]
@@ -57,11 +57,10 @@ fn probed(snapshot: Snapshot, issues: &[ProbeIssue]) -> Probed {
         snapshot: Arc::new(snapshot),
         failed: issues
             .iter()
-            .filter_map(|issue| {
-                issue.error.reason().map(|reason| FailedRead {
-                    probe: issue.probe,
-                    reason,
-                })
+            .filter(|issue| issue.error.is_failure())
+            .map(|issue| FailedRead {
+                probe: issue.probe,
+                error: issue.error.clone(),
             })
             .collect(),
     }
@@ -77,7 +76,8 @@ fn warn_on_change(logged: &Mutex<Vec<FailedRead>>, failed: &[FailedRead]) -> boo
     }
 
     for read in failed {
-        tracing::warn!("could not read {}: {}", read.probe.as_str(), read.reason);
+        let reason = read.error.reason().unwrap_or_default();
+        tracing::warn!("could not read {}: {reason}", read.probe.as_str());
     }
 
     *last = failed.to_vec();

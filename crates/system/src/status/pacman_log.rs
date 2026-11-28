@@ -7,8 +7,8 @@ mod tests;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Read, Seek, SeekFrom};
 use std::path::{Path, PathBuf};
-use std::time::SystemTime;
 
+use jiff::Timestamp;
 pub use recent::RecentLogSource;
 
 use super::timestamp::parse_timestamp;
@@ -36,7 +36,7 @@ pub trait UpdateLogSource: Send + Sync {
     ///
     /// [`ProbeError::Unavailable`] when the log is missing or not readable
     /// for the user, a failed [`ProbeError`] when reading it breaks off.
-    fn last_update(&self) -> Result<Option<SystemTime>, ProbeError>;
+    fn last_update(&self) -> Result<Option<Timestamp>, ProbeError>;
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -60,7 +60,7 @@ impl PacmanLog {
 impl UpdateLogSource for PacmanLog {
     /// The log is world readable on a stock system, so no password is
     /// asked. A closed `/var/log` reads as not available.
-    fn last_update(&self) -> Result<Option<SystemTime>, ProbeError> {
+    fn last_update(&self) -> Result<Option<Timestamp>, ProbeError> {
         let mut file = open_log(&self.path)?;
 
         last_in_tail(&mut file, TAIL_BYTES).map_err(|error| unreadable(&self.path, error))
@@ -106,7 +106,7 @@ where
     Ok(tail)
 }
 
-fn last_in_tail<L>(log: &mut L, window: u64) -> io::Result<Option<SystemTime>>
+fn last_in_tail<L>(log: &mut L, window: u64) -> io::Result<Option<Timestamp>>
 where
     L: Read + Seek,
 {
@@ -132,7 +132,7 @@ where
 /// # Errors
 ///
 /// When reading `log` fails.
-fn last_completed<R>(log: R) -> io::Result<Option<SystemTime>>
+fn last_completed<R>(log: R) -> io::Result<Option<Timestamp>>
 where
     R: BufRead,
 {
@@ -151,7 +151,7 @@ where
 }
 
 /// `[timestamp] [ALPM] transaction completed`.
-fn completed_at(line: &str) -> Option<SystemTime> {
+fn completed_at(line: &str) -> Option<Timestamp> {
     let (stamp, message) = line.strip_prefix('[')?.split_once(']')?;
 
     (message.trim() == COMPLETED)

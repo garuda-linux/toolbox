@@ -53,7 +53,7 @@ fn with_route(names: &[&str], route: Option<AurRoute>, copy: AurNames) -> Snapsh
     snapshot
 }
 
-/// The old path's snapshot: the helper refuses the route.
+/// The paru path's snapshot: the helper refuses the route.
 fn installed(names: &[&str]) -> Snapshot {
     with_route(names, Some(refused()), AurNames::default())
 }
@@ -170,7 +170,7 @@ fn an_accepted_route_queues_the_split_path_waiting_for_its_order() {
 }
 
 #[test]
-fn a_refused_route_queues_the_old_paru_path() {
+fn a_refused_route_queues_the_paru_path() {
     let snapshot = installed(&["paru"]);
     let mut changes = ChangeSet::default();
     let yay = package("yay-bin");
@@ -273,7 +273,7 @@ fn a_conflict_with_a_package_that_is_not_installed_refuses_nothing() {
 }
 
 #[test]
-fn the_old_path_does_not_check_conflicts() {
+fn the_paru_path_does_not_check_conflicts() {
     let snapshot = with_route(
         &["yay"],
         Some(refused()),

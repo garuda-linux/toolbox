@@ -28,7 +28,7 @@ use toolbox_state::network::{
     rfkill_arguments, usb_devices,
 };
 
-use crate::error::{ProbeError, from_io};
+use crate::error::{ProbeError, Subject, from_io};
 use crate::{command, files};
 
 const IP: &str = "/usr/bin/ip";
@@ -195,7 +195,7 @@ impl NetworkSource for SystemNetwork {
 fn parse_default_route(json: &str) -> Result<DefaultRoute, ProbeError> {
     let routes: Vec<Route> =
         serde_json::from_str(json.trim()).map_err(|error| ProbeError::Json {
-            what: "ip printed no route list".to_owned(),
+            what: Subject::RouteList,
             error: std::sync::Arc::new(error),
         })?;
 

@@ -143,7 +143,7 @@ impl Block {
     }
 
     /// The block's words without styles, for the search.
-    pub fn plain_text(&self) -> String {
+    pub(crate) fn plain_text(&self) -> String {
         let mut words = Vec::new();
         self.collect_text(&mut words);
         words.join(" ")

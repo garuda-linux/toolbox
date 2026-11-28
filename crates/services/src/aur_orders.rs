@@ -101,7 +101,7 @@ pub fn fill(queue: &mut Queue, snapshot: &Snapshot, orders: Orders) -> Vec<(Pack
 }
 
 /// [`fill`] on a change set, for the command line's plan.
-pub fn fill_changes(
+pub(crate) fn fill_changes(
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
     orders: Orders,

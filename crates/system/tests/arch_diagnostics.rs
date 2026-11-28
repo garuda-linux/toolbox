@@ -51,7 +51,7 @@ fn systemd_analyze_without_systemd_fails_with_its_own_words() -> TestResult {
     }
 
     match collect(Collector::SystemdAnalyze)? {
-        Outcome::Failed(reason) => assert_ne!(reason.trim(), ""),
+        Outcome::Failed(reason) => assert_ne!(reason.to_string().trim(), ""),
         // Some versions print a partial answer before they give up.
         Outcome::Report(text) => assert!(text.contains("Exit code: "), "{text}"),
         Outcome::Unavailable => panic!("systemd is part of the image"),
@@ -71,6 +71,7 @@ fn the_journal_without_journald_gives_a_clean_answer() -> TestResult {
         // The report may hold colours. What is copied and uploaded may not.
         Outcome::Report(text) => assert!(!toolbox_pty::strip_ansi(&text).contains('\u{1b}')),
         Outcome::Failed(reason) => {
+            let reason = reason.to_string();
             assert_ne!(reason.trim(), "");
             assert!(!reason.contains('\u{1b}'), "a reason with colour codes");
             assert!(!reason.contains("helper"), "root asked for root: {reason}");

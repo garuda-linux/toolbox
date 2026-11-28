@@ -1,6 +1,5 @@
-use std::time::{SystemTime, UNIX_EPOCH};
-
-use toolbox_calendar::Utc;
+use jiff::Timestamp;
+use jiff::tz::TimeZone;
 
 #[cfg(test)]
 mod tests;
@@ -35,7 +34,7 @@ const fn level_color(level: log::Level) -> &'static str {
 /// could otherwise drive the terminal of whoever reads the log. A carriage
 /// return goes too, or the text after it could hide the start of its line.
 pub fn format_record(
-    time: SystemTime,
+    time: Timestamp,
     level: log::Level,
     target: &str,
     message: &str,
@@ -62,19 +61,18 @@ pub fn format_record(
 }
 
 /// UTC ISO 8601 with milliseconds.
-fn timestamp(time: SystemTime) -> String {
-    let since = time.duration_since(UNIX_EPOCH).unwrap_or_default();
-    let Utc {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        second,
-    } = Utc::from_unix(since.as_secs());
+fn timestamp(time: Timestamp) -> String {
+    let since = time.max(Timestamp::UNIX_EPOCH);
+    let utc = since.to_zoned_datetime(TimeZone::UTC);
 
     format!(
-        "{year:04}-{month:02}-{day:02}T{hour:02}:{minute:02}:{second:02}.{:03}Z",
-        since.subsec_millis()
+        "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}.{:03}Z",
+        utc.year(),
+        utc.month(),
+        utc.day(),
+        utc.hour(),
+        utc.minute(),
+        utc.second(),
+        since.subsec_nanosecond() / 1_000_000
     )
 }

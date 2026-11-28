@@ -11,7 +11,7 @@ use crate::tokens;
 const DEFAULT_GRID_UNITS: f32 = 20.0;
 
 /// The narrowest a column gets, in points.
-pub const MIN_COLUMN: f32 = 300.0;
+pub(crate) const MIN_COLUMN: f32 = 300.0;
 
 /// The line between the two columns.
 const LINE: f32 = 1.0;

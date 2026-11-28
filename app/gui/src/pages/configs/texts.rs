@@ -39,6 +39,13 @@ pub(super) fn view_problem(ctx: &Context, code: ProblemCode, path: &str) -> Stri
         | ProblemCode::ReadFailed
         | ProblemCode::NoHome
         | ProblemCode::Cancelled
+        | ProblemCode::HelperStart
+        | ProblemCode::HelperTimedOut
+        | ProblemCode::HelperTooLong
+        | ProblemCode::HelperPkexec
+        | ProblemCode::HelperEnded
+        | ProblemCode::HelperUnreadable
+        | ProblemCode::HelperStopped
         | ProblemCode::Failed => return problem(ctx, code, path),
     };
 
@@ -73,6 +80,13 @@ pub(super) fn review_problem(ctx: &Context, code: ProblemCode, path: &str) -> St
         | ProblemCode::ReadFailed
         | ProblemCode::NoHome
         | ProblemCode::Cancelled
+        | ProblemCode::HelperStart
+        | ProblemCode::HelperTimedOut
+        | ProblemCode::HelperTooLong
+        | ProblemCode::HelperPkexec
+        | ProblemCode::HelperEnded
+        | ProblemCode::HelperUnreadable
+        | ProblemCode::HelperStopped
         | ProblemCode::Failed => problem(ctx, code, path),
     }
 }
@@ -108,6 +122,13 @@ const fn restated(code: ProblemCode) -> bool {
         | ProblemCode::ReadFailed
         | ProblemCode::NoHome
         | ProblemCode::Cancelled
+        | ProblemCode::HelperStart
+        | ProblemCode::HelperTimedOut
+        | ProblemCode::HelperTooLong
+        | ProblemCode::HelperPkexec
+        | ProblemCode::HelperEnded
+        | ProblemCode::HelperUnreadable
+        | ProblemCode::HelperStopped
         | ProblemCode::Failed => false,
     }
 }

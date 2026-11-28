@@ -1,7 +1,10 @@
 use toolbox_plan::ConfigText;
 
-use super::{Change, Diff, hunk_lines};
+use super::{Change, Covered, Diff, Kind, Row, hunk_lines, parse_rows};
 use crate::features::configs::session::Compared;
+
+/// `/etc/default/grub` of the Garuda Lima image.
+const GRUB: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
 
 fn is_empty(diff: &Diff<'_>) -> bool {
     diff.lines().iter().all(|line| line.change == Change::Same)
@@ -125,4 +128,75 @@ fn a_hidden_character_of_an_edit_stays_out_of_the_changes() {
 
     assert_eq!(changes.plain, "@@ -1,1 +1,1 @@\n-a = 1\n+a = 2\n");
     assert_eq!(changes.edited.as_str(), "a = \u{202e}2\u{200b}\n");
+}
+
+/// The capture with its timeout of 5 seconds set to 2.
+fn shorter_timeout() -> String {
+    GRUB.replace("GRUB_TIMEOUT=5\n", "GRUB_TIMEOUT=2\n")
+}
+
+fn rows_of(edited: &str) -> Vec<Row> {
+    parse_rows(&Diff::new(GRUB, edited).plain())
+}
+
+fn find(rows: &[Row], kind: Kind) -> &Row {
+    rows.iter().find(|row| row.kind == kind).unwrap()
+}
+
+fn line_after_added(rows: &[Row]) -> &Row {
+    rows.iter()
+        .skip_while(|row| row.kind != Kind::Added)
+        .nth(1)
+        .unwrap()
+}
+
+#[test]
+fn a_changed_line_has_its_number_in_both_files() {
+    let rows = rows_of(&shorter_timeout());
+
+    assert_eq!(
+        rows.first().map(|row| row.kind),
+        Some(Kind::Hunk(Covered { first: 1, last: 7 }))
+    );
+
+    let removed = find(&rows, Kind::Removed);
+    assert_eq!((removed.old, removed.new), (Some(4), None));
+    assert_eq!(removed.text(), "GRUB_TIMEOUT=5");
+    assert_eq!(removed.line, "-GRUB_TIMEOUT=5");
+
+    let added = find(&rows, Kind::Added);
+    assert_eq!((added.old, added.new), (None, Some(4)));
+    assert_eq!(added.text(), "GRUB_TIMEOUT=2");
+
+    let after = line_after_added(&rows);
+
+    assert_eq!(
+        (after.kind, after.old, after.new),
+        (Kind::Same, Some(5), Some(5))
+    );
+}
+
+#[test]
+fn an_added_line_moves_the_numbers_of_the_edited_file_on() {
+    let edited = GRUB.replace(
+        "GRUB_TIMEOUT=5\n",
+        "GRUB_TIMEOUT=5\nGRUB_RECORDFAIL_TIMEOUT=5\n",
+    );
+
+    let rows = rows_of(&edited);
+    let after = line_after_added(&rows);
+
+    assert_eq!(
+        (after.kind, after.old, after.new),
+        (Kind::Same, Some(5), Some(6))
+    );
+}
+
+#[test]
+fn the_missing_line_break_is_a_note_without_numbers() {
+    let edited = GRUB.strip_suffix('\n').unwrap();
+    let rows = rows_of(edited);
+
+    let note = rows.last().unwrap();
+    assert_eq!((note.kind, note.old, note.new), (Kind::Note, None, None));
 }

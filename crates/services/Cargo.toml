@@ -27,6 +27,7 @@ toolbox-system.workspace = true
 toolbox-text.workspace = true
 crossbeam-channel.workspace = true
 fluent-templates.workspace = true
+jiff.workspace = true
 futures-lite = { workspace = true, features = ["alloc"] }
 parking_lot.workspace = true
 rustix = { workspace = true, features = ["process"] }

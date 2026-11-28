@@ -5,6 +5,7 @@
 //! Collecting changes nothing on the system, so it does not wait for a
 //! running plan. Copy and upload always take the plain text.
 
+mod failure;
 mod report;
 mod rows;
 #[cfg(test)]
@@ -135,6 +136,20 @@ fn running(ui: &mut Ui, text: &str, detail: &str) {
     });
 }
 
+fn collecting_step(ctx: &egui::Context, collector: Collector, step: i32) -> String {
+    let part = collector_name(ctx, collector);
+    i18n::text_with(
+        ctx,
+        "diagnostics-collecting-step",
+        &[
+            ("name", Arg::from(&part)),
+            ("step", Arg::from(step)),
+            ("count", Arg::from(Collector::ALL.len())),
+        ],
+    )
+    .into_owned()
+}
+
 /// Nothing before the first collection: the rows above say what to do.
 fn status(ui: &mut Ui, context: &PageContext<'_>) {
     let ctx = ui.ctx().clone();
@@ -151,20 +166,7 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
         State::Running => {
             let text = page.part.map_or_else(
                 || named("diagnostics-collecting"),
-                |collector| {
-                    let part = collector_name(&ctx, collector);
-                    let (step, count) = (page.step, Collector::ALL.len());
-                    i18n::text_with(
-                        &ctx,
-                        "diagnostics-collecting-step",
-                        &[
-                            ("name", Arg::from(&part)),
-                            ("step", Arg::from(step)),
-                            ("count", Arg::from(count)),
-                        ],
-                    )
-                    .into_owned()
-                },
+                |collector| collecting_step(&ctx, collector, page.step),
             );
 
             running(
@@ -190,16 +192,24 @@ fn status(ui: &mut Ui, context: &PageContext<'_>) {
             banner(ui, Tone::Warning, &text, &[]);
         }
         State::Failed => {
+            let reason = page
+                .problem
+                .as_ref()
+                .map_or_else(String::new, |failure| failure::text(&ctx, failure));
+
             let text = i18n::text_with(
                 &ctx,
                 "diagnostics-failed",
                 &[
                     ("name", Arg::from(&selection)),
-                    ("reason", Arg::from(&page.problem)),
+                    ("reason", Arg::from(&reason)),
                 ],
             );
 
             banner(ui, Tone::Error, &text, &[]);
+        }
+        State::Stopped => {
+            banner(ui, Tone::Error, &named("diagnostics-stopped"), &[]);
         }
     }
 }

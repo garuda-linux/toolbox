@@ -5,7 +5,7 @@
 //! garuda-toolbox-helper and never opened as root. A read-only entry shows
 //! its text only.
 
-mod diff;
+pub mod diff;
 pub mod session;
 #[cfg(test)]
 mod tests;

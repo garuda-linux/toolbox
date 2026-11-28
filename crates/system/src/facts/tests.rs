@@ -1,6 +1,6 @@
 use std::sync::Arc;
-use std::time::{Duration, SystemTime};
 
+use jiff::Timestamp;
 use toolbox_plan::{PackageName, UnitName};
 use toolbox_state::kernels::LinuxPackages;
 use toolbox_state::packages::PackageGraph;
@@ -16,7 +16,7 @@ use crate::units::FailedUnitSource;
 /// [`BOOTED`].
 const OSRELEASE: &str = include_str!("../kernels/fixtures/image/osrelease");
 const STAT: &str = include_str!("../host/fixtures/proc-stat");
-const BOOTED: u64 = 1_794_155_377;
+const BOOTED: i64 = 1_794_155_377;
 /// `systemctl list-units --state=failed` in the VM.
 const FAILED: &str = include_str!("../units/fixtures/failed");
 
@@ -72,8 +72,8 @@ impl MachineSource for FakeMachine {
         Ok(OSRELEASE.trim().to_owned())
     }
 
-    fn booted(&self) -> Result<SystemTime, ProbeError> {
-        Ok(SystemTime::UNIX_EPOCH + Duration::from_secs(BOOTED))
+    fn booted(&self) -> Result<Timestamp, ProbeError> {
+        Ok(Timestamp::from_second(BOOTED).unwrap())
     }
 
     fn disk(&self) -> Result<DiskSpace, ProbeError> {
@@ -164,7 +164,7 @@ fn the_machine_reads_kernel_and_boot_time_below_its_root() {
     assert_eq!(machine.kernel().as_deref(), Ok("7.3.1-1-garuda"));
     assert_eq!(
         machine.booted(),
-        Ok(SystemTime::UNIX_EPOCH + Duration::from_secs(BOOTED))
+        Ok(Timestamp::from_second(BOOTED).unwrap())
     );
 }
 

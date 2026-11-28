@@ -22,7 +22,7 @@ pub use self::service::{UnitLookup, service, service_onto};
 
 /// What a read of pacman's databases that failed is called on the command
 /// line, with `not available:` in front as [`crate::out::unavailable`] adds it.
-pub const DATABASES_UNREAD: &str = "pacman's databases could not be read";
+pub(crate) const DATABASES_UNREAD: &str = "pacman's databases could not be read";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Refused {
@@ -51,7 +51,7 @@ pub enum KernelChange {
 
 impl Refused {
     /// The change needs pacman's databases, which could not be read.
-    pub fn databases_unread() -> Self {
+    pub(crate) fn databases_unread() -> Self {
         Self::Unavailable(format!("not available: {DATABASES_UNREAD}"))
     }
 
@@ -78,7 +78,7 @@ impl Refused {
     }
 
     #[must_use = "returns the new value, the old one stays as it was"]
-    pub fn hinted<'a>(self, wanted: &str, known: impl IntoIterator<Item = &'a str>) -> Self {
+    pub(crate) fn hinted<'a>(self, wanted: &str, known: impl IntoIterator<Item = &'a str>) -> Self {
         let Some(hint) = toolbox_cli::suggest::did_you_mean(wanted, known) else {
             return self;
         };
@@ -125,7 +125,7 @@ pub fn toggle(
 /// # Errors
 ///
 /// [`Refused`] for an unknown id or a click the page would refuse.
-pub fn toggle_onto(
+pub(crate) fn toggle_onto(
     catalogs: &[&ToggleCatalog],
     id: &str,
     want: Toggle,
@@ -176,7 +176,7 @@ pub fn app(apps: &Apps, id: &str, want: Toggle, snapshot: &Snapshot) -> Result<P
 /// # Errors
 ///
 /// [`Refused::Unknown`] for an id the catalog lacks.
-pub fn app_onto(
+pub(crate) fn app_onto(
     apps: &Apps,
     id: &str,
     want: Toggle,
@@ -218,7 +218,7 @@ pub fn kernel(
 /// # Errors
 ///
 /// As [`kernel`].
-pub fn kernel_onto(
+pub(crate) fn kernel_onto(
     kernels: &[Kernel],
     name: &PackageName,
     change: KernelChange,
@@ -284,7 +284,7 @@ pub fn task(id: &str, upgrader: Upgrader) -> Result<(Plan, Option<String>), Refu
 /// # Errors
 ///
 /// [`Refused::Rule`] with the line `why` gives for what `edit` refused.
-pub fn page_edit<E, W>(
+pub(crate) fn page_edit<E, W>(
     changes: &mut ChangeSet,
     snapshot: &Snapshot,
     why: impl FnOnce(E) -> W,

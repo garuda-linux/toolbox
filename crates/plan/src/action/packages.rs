@@ -66,6 +66,9 @@ pub(super) fn remote(action: RemoteAction) -> Command {
 pub(super) fn upgrade(upgrader: Upgrader) -> Command {
     match upgrader {
         Upgrader::GarudaUpdate => garuda_update().arg("--skip-mirrorlist"),
+        Upgrader::GarudaUpdateUnattended => {
+            garuda_update().args(["--skip-mirrorlist", "--noconfirm"])
+        }
         Upgrader::Pacman => pacman(["-Syu", "--noconfirm"]),
     }
 }

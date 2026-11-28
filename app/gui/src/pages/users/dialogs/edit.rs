@@ -8,12 +8,12 @@
 
 use egui::{Context, Ui};
 use toolbox_core::features::users::Refusal;
-use toolbox_core::features::users::account::{AccountEdit, check_account};
+use toolbox_core::features::users::account::{Changes, Fields, check_account};
 use toolbox_core::features::users::home::home_movable;
-use toolbox_core::features::users::input::{self, InputProblem};
+use toolbox_core::features::users::input::InputProblem;
 use toolbox_core::features::users::rows::UserRow;
 use toolbox_gui_kit::widgets::{ButtonKind, check_row};
-use toolbox_plan::{FullName, HomeChange, HomeDirectory, InvalidFullName, ShellPath, UserName};
+use toolbox_plan::UserName;
 
 use super::shell::{ShellDefault, shell_choice};
 use super::{Next, dialog_why, field, note, title};
@@ -30,27 +30,6 @@ pub struct Edit {
     current_home: String,
     start: Fields,
     fields: Fields,
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-struct Fields {
-    full_name: String,
-    shell: String,
-    home: String,
-    move_files: bool,
-}
-
-/// The typed values, each `None` while unchanged.
-struct Changes {
-    full_name: Option<Result<FullName, InvalidFullName>>,
-    shell: Option<ShellPath>,
-    home: Option<Result<HomeDirectory, InputProblem>>,
-}
-
-impl Changes {
-    const fn any(&self) -> bool {
-        self.full_name.is_some() || self.shell.is_some() || self.home.is_some()
-    }
 }
 
 impl Edit {
@@ -74,8 +53,8 @@ impl Edit {
         let user = self.user.as_str();
         let title = i18n::text_with(ctx, "users-edit-title", &[("user", Arg::from(user))]);
         let confirm = i18n::text(ctx, "users-queue-changes");
-        let changes = self.changes();
-        let edit = self.account(&changes);
+        let changes = Changes::between(&self.start, &self.fields, &self.current_home);
+        let edit = changes.edit(self.fields.move_files);
         let refusal = edit
             .as_ref()
             .and_then(|typed| check_account(&self.user, typed, context.snapshot).err());
@@ -100,47 +79,6 @@ impl Edit {
         }
 
         next
-    }
-
-    fn changes(&self) -> Changes {
-        let (now, start) = (&self.fields, &self.start);
-
-        // The move flag alone changes only a queued move: the files of the
-        // folder the account has stay where they are.
-        let elsewhere = now.home != self.current_home;
-        let moved = elsewhere && now.move_files != start.move_files;
-        Changes {
-            full_name: (now.full_name != start.full_name)
-                .then(|| FullName::new(now.full_name.clone())),
-            shell: (now.shell != start.shell)
-                .then(|| ShellPath::new(&now.shell).ok())
-                .flatten(),
-            home: (now.home != start.home || moved).then(|| input::home(&now.home)),
-        }
-    }
-
-    /// The edit the fields make, `None` while a typed value is invalid.
-    fn account(&self, changes: &Changes) -> Option<AccountEdit> {
-        let full_name = match &changes.full_name {
-            Some(Ok(name)) => Some(name.clone()),
-            Some(Err(_)) => return None,
-            None => None,
-        };
-
-        let home = match &changes.home {
-            Some(Ok(home)) => Some(HomeChange {
-                home: home.clone(),
-                move_files: self.fields.move_files,
-            }),
-            Some(Err(_)) => return None,
-            None => None,
-        };
-
-        Some(AccountEdit {
-            full_name,
-            shell: changes.shell.clone(),
-            home,
-        })
     }
 
     fn body(&mut self, ui: &mut Ui, ctx: &Context, context: &PageContext<'_>, changes: &Changes) {

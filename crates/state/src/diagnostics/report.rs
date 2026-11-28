@@ -3,7 +3,7 @@
 
 use std::fmt::Write as _;
 
-use super::Collector;
+use super::{Collector, Failure};
 
 const ESCAPE: char = '\u{1b}';
 
@@ -41,7 +41,7 @@ impl Refusal {
         }
     }
 
-    const fn report_note(self) -> &'static str {
+    pub const fn report_note(self) -> &'static str {
         match self {
             Self::Dismissed => "Not collected: the password dialog was dismissed.",
             Self::Denied => "Not collected: root rights were not given.",
@@ -56,7 +56,7 @@ pub enum Attempt {
     Ran(Ran),
     Missing,
     Refused(Refusal),
-    Failed(String),
+    Failed(Failure),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -64,7 +64,7 @@ pub enum Outcome {
     Report(String),
     Unavailable,
     Refused(Refusal),
-    Failed(String),
+    Failed(Failure),
 }
 
 impl Ran {
@@ -87,10 +87,15 @@ impl Ran {
             |code| format!("Exit code: {code}"),
         )
     }
+
+    fn exit_failure(&self) -> Failure {
+        self.code.map_or(Failure::Signal, Failure::ExitCode)
+    }
 }
 
 pub fn outcome(attempts: &[Attempt]) -> Outcome {
     let mut merged: Option<Ran> = None;
+    let mut cause: Option<Failure> = None;
 
     for attempt in attempts {
         match (attempt, merged.as_mut()) {
@@ -107,16 +112,19 @@ pub fn outcome(attempts: &[Attempt]) -> Outcome {
             (Attempt::Refused(refusal), None) => return Outcome::Refused(*refusal),
             (Attempt::Failed(reason), None) => return Outcome::Failed(reason.clone()),
             // What ran before still counts. The rest shows as an error.
-            (Attempt::Missing, Some(sum)) => fail(sum, "The next program is not installed."),
-            (Attempt::Refused(refusal), Some(sum)) => fail(sum, refusal.report_note()),
-            (Attempt::Failed(reason), Some(sum)) => fail(sum, reason),
+            (Attempt::Missing, Some(sum)) => {
+                fail(sum, &mut cause, Failure::NotInstalled);
+            }
+            (Attempt::Refused(refusal), Some(sum)) => {
+                fail(sum, &mut cause, Failure::Refused(*refusal));
+            }
+            (Attempt::Failed(reason), Some(sum)) => fail(sum, &mut cause, reason.clone()),
         }
     }
 
-    merged.map_or_else(
-        || Outcome::Failed("No program ran.".to_owned()),
-        |ran| render(&ran),
-    )
+    merged.map_or(Outcome::Failed(Failure::NoProgramRan), |ran| {
+        render(&ran, cause)
+    })
 }
 
 pub fn full_report(parts: &[(Collector, Outcome)]) -> String {
@@ -163,13 +171,18 @@ pub fn since_last_pacman_run(log: &str) -> (&str, bool) {
         .map_or((log, false), |part| (part, true))
 }
 
-fn fail(ran: &mut Ran, reason: &str) {
+/// The first note is the cause the window shows when nothing was printed,
+/// the report keeps every note in its errors.
+fn fail(ran: &mut Ran, cause: &mut Option<Failure>, reason: Failure) {
     end_line(&mut ran.errors);
-    ran.errors.push_str(reason);
+    ran.errors.push_str(&reason.to_string());
     ran.code = ran.code.filter(|code| *code != 0_i32).or(Some(1_i32));
+    if cause.is_none() {
+        *cause = Some(reason);
+    }
 }
 
-fn render(ran: &Ran) -> Outcome {
+fn render(ran: &Ran, cause: Option<Failure>) -> Outcome {
     let errors = ran.errors.trim();
 
     if ran.succeeded() {
@@ -177,11 +190,15 @@ fn render(ran: &Ran) -> Outcome {
     }
 
     if ran.output.trim().is_empty() {
-        return Outcome::Failed(if errors.is_empty() {
-            ran.exit_note()
-        } else {
-            errors.to_owned()
+        let shown = cause.unwrap_or_else(|| {
+            if errors.is_empty() {
+                ran.exit_failure()
+            } else {
+                Failure::Stderr(errors.to_owned())
+            }
         });
+
+        return Outcome::Failed(shown);
     }
 
     let mut text = format!("{}\n\n", ran.output.trim_end());

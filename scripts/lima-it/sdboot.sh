@@ -56,15 +56,24 @@ t_sdboot_default() {
 }
 
 # objcopy with one file would rewrite the UKI in place, so it writes a copy.
+# Only the UKIs of installed kernels: the ESP is no part of the VM's
+# snapshot, so an earlier suite can leave the UKI of a kernel that is gone.
 t_sdboot_param() {
   tb boot param add nowatchdog --yes || return 1
   as_root "grep -qw nowatchdog $cmdline && ! grep -qw nowatchdog $cmdline.bak" || return 1
   # shellcheck disable=SC2016 # expands in the VM
-  as_root 'for uki in /efi/EFI/Linux/*.efi; do
-    case $uki in *-fallback.efi) continue ;; esac
-    objcopy --dump-section .cmdline=/tmp/uki-cmdline "$uki" /tmp/uki-copy || exit 1
-    grep -qw nowatchdog /tmp/uki-cmdline || exit 1
-  done'
+  as_root 'checked=0
+  for modules in /usr/lib/modules/*/vmlinuz; do
+    release=$(basename "$(dirname "$modules")")
+    # A UKI no boot has blessed yet carries its tries, as in `+3.efi`.
+    for uki in /efi/EFI/Linux/*-"$release".efi /efi/EFI/Linux/*-"$release"+*.efi; do
+      [ -e "$uki" ] || continue
+      objcopy --dump-section .cmdline=/tmp/uki-cmdline "$uki" /tmp/uki-copy || exit 1
+      grep -qw nowatchdog /tmp/uki-cmdline || exit 1
+      checked=$((checked + 1))
+    done
+  done
+  [ "$checked" -gt 0 ]'
 }
 
 t_sdboot_protected() { t_sdboot_refused "$cmdline" boot param remove rw; }

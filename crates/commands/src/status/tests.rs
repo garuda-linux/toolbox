@@ -1,6 +1,6 @@
 use std::path::PathBuf;
-use std::time::{Duration, SystemTime};
 
+use jiff::{SignedDuration, Timestamp};
 use toolbox_cli::Exit;
 use toolbox_cli::output::{Paint, Style};
 use toolbox_plan::PackageName;
@@ -9,7 +9,7 @@ use toolbox_system::{HealthIssue, HealthLevel, PendingUpdate, ProbeError, Status
 
 use super::{Part, brief, exit, needs_attention, text, view};
 
-const DAY: Duration = Duration::from_hours(24);
+const DAY: SignedDuration = SignedDuration::from_hours(24);
 
 fn update(name: &str) -> PendingUpdate {
     PendingUpdate {
@@ -19,7 +19,7 @@ fn update(name: &str) -> PendingUpdate {
     }
 }
 
-fn status(now: SystemTime) -> Status {
+fn status(now: Timestamp) -> Status {
     Status {
         updates: Ok(vec![update("firefox"), update("linux")]),
         aur_updates: Err(ProbeError::Unavailable),
@@ -35,7 +35,7 @@ fn status(now: SystemTime) -> Status {
 
 #[test]
 fn each_part_keeps_its_own_answer() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = view(&status(now), &Ok(true), now);
 
     assert!(matches!(&shown.updates, Part::Ok { value } if value.len() == 2));
@@ -49,7 +49,7 @@ fn each_part_keeps_its_own_answer() {
 
 #[test]
 fn the_text_names_what_needs_attention() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = text(
         &view(&status(now), &Ok(false), now),
         Paint::new(Style::Plain),
@@ -74,7 +74,7 @@ fn the_text_names_what_needs_attention() {
 
 #[test]
 fn the_json_tells_every_part_by_its_state() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let json = toolbox_cli::output::json(&view(&status(now), &Ok(false), now));
 
     assert!(json.contains("\"state\": \"unavailable\""), "{json}");
@@ -83,7 +83,7 @@ fn the_json_tells_every_part_by_its_state() {
     assert!(json.contains("\"/etc/pacman.conf.pacnew\""), "{json}");
 }
 
-fn broken(now: SystemTime) -> Status {
+fn broken(now: Timestamp) -> Status {
     let mut broken = status(now);
     broken.aur_updates = Err(ProbeError::fake(
         "paru -Qua exit status: 1: error: failed to initialize alpm",
@@ -95,7 +95,7 @@ fn broken(now: SystemTime) -> Status {
 /// says why in `cause`.
 #[test]
 fn a_failed_part_says_why_in_its_cause() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = toolbox_cli::output::with_schema(&view(&broken(now), &Ok(false), now));
     let aur = &shown["aur_updates"];
 
@@ -111,7 +111,7 @@ fn a_failed_part_says_why_in_its_cause() {
 
 #[test]
 fn status_is_a_titled_section_of_facts() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = text(
         &view(&status(now), &Ok(false), now),
         Paint::new(Style::Plain),
@@ -128,7 +128,7 @@ fn status_is_a_titled_section_of_facts() {
 
 #[test]
 fn facts_that_could_not_be_read_come_after_the_readable_ones() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = text(
         &view(&status(now), &Ok(false), now),
         Paint::new(Style::Plain),
@@ -142,7 +142,7 @@ fn facts_that_could_not_be_read_come_after_the_readable_ones() {
 
 #[test]
 fn each_health_finding_has_a_line_of_its_own() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = status(now);
     found.health = Ok(vec![
         HealthIssue {
@@ -173,7 +173,7 @@ fn each_health_finding_has_a_line_of_its_own() {
 
 #[test]
 fn a_part_that_failed_says_so_in_short_and_hides_the_programs_words() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = text(
         &view(&broken(now), &Ok(false), now),
         Paint::new(Style::Plain),
@@ -190,7 +190,7 @@ fn a_part_that_failed_says_so_in_short_and_hides_the_programs_words() {
 
 #[test]
 fn verbose_shows_the_programs_own_words() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = text(
         &view(&broken(now), &Ok(false), now),
         Paint::new(Style::Plain),
@@ -203,7 +203,7 @@ fn verbose_shows_the_programs_own_words() {
 
 #[test]
 fn several_failures_share_one_hint() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = broken(now);
     found.updates = Err(ProbeError::fake(
         "checkupdates ==> ERROR: Cannot find the fakeroot binary",
@@ -223,7 +223,7 @@ fn several_failures_share_one_hint() {
     assert!(!shown.contains("fakeroot"), "{shown}");
 }
 
-fn calm(now: SystemTime) -> Status {
+fn calm(now: Timestamp) -> Status {
     Status {
         updates: Ok(Vec::new()),
         aur_updates: Ok(Vec::new()),
@@ -243,7 +243,7 @@ fn finding(level: HealthLevel) -> HealthIssue {
 
 #[test]
 fn the_brief_line_names_each_thing_to_do() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = view(&status(now), &Ok(true), now);
 
     assert_eq!(
@@ -255,12 +255,12 @@ fn the_brief_line_names_each_thing_to_do() {
 
 #[test]
 fn an_update_more_than_two_weeks_ago_needs_attention() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
-    found.last_update = Ok(Some(now - DAY * 14));
+    found.last_update = Ok(Some(now - DAY * 14_i32));
     assert_eq!(brief(&view(&found, &Ok(false), now)), "all good");
 
-    found.last_update = Ok(Some(now - DAY * 15));
+    found.last_update = Ok(Some(now - DAY * 15_i32));
     let shown = view(&found, &Ok(false), now);
 
     assert_eq!(brief(&shown), "last update 15 days ago");
@@ -269,9 +269,9 @@ fn an_update_more_than_two_weeks_ago_needs_attention() {
 
 #[test]
 fn the_window_and_the_command_line_agree_on_attention() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut stale = calm(now);
-    stale.last_update = Ok(Some(now - DAY * 14 - Duration::from_secs(1)));
+    stale.last_update = Ok(Some(now - DAY * 14_i32 - SignedDuration::from_secs(1)));
     let mut never = calm(now);
     never.last_update = Ok(None);
 
@@ -291,7 +291,7 @@ fn the_window_and_the_command_line_agree_on_attention() {
 
 #[test]
 fn nothing_to_do_is_all_good() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = view(&calm(now), &Ok(false), now);
 
     assert_eq!(brief(&shown), "all good");
@@ -300,7 +300,7 @@ fn nothing_to_do_is_all_good() {
 
 #[test]
 fn the_brief_line_counts_one_and_many() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
     found.updates = Ok(vec![update("linux")]);
     found.aur_updates = Ok(vec![update("paru"), update("yay")]);
@@ -320,7 +320,7 @@ fn the_brief_line_counts_one_and_many() {
 
 #[test]
 fn info_findings_need_no_attention() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
     found.health = Ok(vec![finding(HealthLevel::Info)]);
     let shown = view(&found, &Ok(false), now);
@@ -331,7 +331,7 @@ fn info_findings_need_no_attention() {
 
 #[test]
 fn parts_that_could_not_be_read_are_left_out() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
     found.updates = Err(ProbeError::fake("no network"));
     found.aur_updates = Err(ProbeError::Unavailable);
@@ -343,7 +343,7 @@ fn parts_that_could_not_be_read_are_left_out() {
 
 #[test]
 fn a_pending_restart_alone_needs_attention() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let shown = view(&calm(now), &Ok(true), now);
 
     assert_eq!(brief(&shown), "restart needed");
@@ -352,7 +352,7 @@ fn a_pending_restart_alone_needs_attention() {
 
 #[test]
 fn a_part_that_failed_ends_with_failure() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
     found.updates = Err(ProbeError::fake("no network"));
     let shown = view(&found, &Ok(false), now);
@@ -362,7 +362,7 @@ fn a_part_that_failed_ends_with_failure() {
 
 #[test]
 fn a_part_not_available_is_no_failure() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
     found.aur_updates = Err(ProbeError::Unavailable);
     let shown = view(&found, &Err(ProbeError::Unavailable), now);
@@ -372,7 +372,7 @@ fn a_part_not_available_is_no_failure() {
 
 #[test]
 fn attention_wins_over_a_part_that_failed() {
-    let now = SystemTime::UNIX_EPOCH + DAY * 100;
+    let now = Timestamp::UNIX_EPOCH + DAY * 100_i32;
     let mut found = calm(now);
     found.aur_updates = Err(ProbeError::fake("no network"));
     let shown = view(&found, &Ok(true), now);

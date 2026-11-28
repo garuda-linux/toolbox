@@ -15,9 +15,12 @@ testing = ["toolbox-state/testing"]
 
 [dependencies]
 alpm.workspace = true
+ashpd.workspace = true
+futures-lite = { workspace = true, features = ["alloc"] }
 tracing.workspace = true
 parking_lot.workspace = true
 rustix = { workspace = true, features = ["fs", "process", "thread"] }
+jiff.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
@@ -26,10 +29,9 @@ toolbox-catalog.workspace = true
 toolbox-plan.workspace = true
 toolbox-text.workspace = true
 toolbox-state.workspace = true
-toolbox-calendar.workspace = true
 toolbox-pty.workspace = true
 zbus.workspace = true
-tokio = { workspace = true, features = ["rt", "sync", "macros", "time"] }
+tokio = { workspace = true, features = ["rt", "sync", "macros", "time", "process"] }
 tempfile.workspace = true
 
 [dev-dependencies]

@@ -1,12 +1,12 @@
-use std::time::{Duration, UNIX_EPOCH};
+use jiff::Timestamp;
 
 use super::{Style, format_record, timestamp};
 
 #[test]
 fn timestamps_are_utc_iso() {
-    let time = UNIX_EPOCH + Duration::from_millis(1_791_106_229_123);
+    let time = Timestamp::from_millisecond(1_791_106_229_123).unwrap();
     assert_eq!(timestamp(time), "2026-10-04T09:30:29.123Z");
-    assert_eq!(timestamp(UNIX_EPOCH), "1970-01-01T00:00:00.000Z");
+    assert_eq!(timestamp(Timestamp::UNIX_EPOCH), "1970-01-01T00:00:00.000Z");
 }
 
 #[test]
@@ -18,31 +18,49 @@ fn timestamps_get_leap_days_and_century_years_right() {
         (946_684_799, "1999-12-31T23:59:59.000Z"),
     ] {
         assert_eq!(
-            timestamp(UNIX_EPOCH + Duration::from_secs(seconds)),
+            timestamp(Timestamp::from_second(seconds).unwrap()),
             expected
         );
     }
 }
 
 #[test]
+fn a_time_before_the_epoch_counts_as_the_epoch() {
+    let before = Timestamp::from_second(-5).unwrap();
+    assert_eq!(timestamp(before), "1970-01-01T00:00:00.000Z");
+}
+
+#[test]
 fn terminal_lines_are_coloured_by_severity() {
-    let line = format_record(UNIX_EPOCH, log::Level::Error, "hub", "boom", Style::Color);
+    let line = format_record(
+        Timestamp::UNIX_EPOCH,
+        log::Level::Error,
+        "hub",
+        "boom",
+        Style::Color,
+    );
 
     assert_eq!(
         line,
         "\x1b[2m1970-01-01T00:00:00.000Z\x1b[0m \x1b[1;31mERROR\x1b[0m \x1b[36mhub\x1b[0m: boom\n"
     );
     assert!(
-        format_record(UNIX_EPOCH, log::Level::Info, "x", "y", Style::Plain)
-            .chars()
-            .all(|ch| ch != '\x1b')
+        format_record(
+            Timestamp::UNIX_EPOCH,
+            log::Level::Info,
+            "x",
+            "y",
+            Style::Plain
+        )
+        .chars()
+        .all(|ch| ch != '\x1b')
     );
 }
 
 #[test]
 fn multi_line_messages_are_indented() {
     let line = format_record(
-        UNIX_EPOCH,
+        Timestamp::UNIX_EPOCH,
         log::Level::Warn,
         "nix",
         "failed\nerror: x\n",
@@ -58,7 +76,7 @@ fn multi_line_messages_are_indented() {
 #[test]
 fn messages_keep_no_control_characters() {
     let line = format_record(
-        UNIX_EPOCH,
+        Timestamp::UNIX_EPOCH,
         log::Level::Info,
         "apply",
         "step said \u{1b}[2Kdone\u{7}\u{202e}\u{200b}",
@@ -74,7 +92,7 @@ fn messages_keep_no_control_characters() {
 #[test]
 fn a_carriage_return_cannot_overwrite_the_start_of_a_line() {
     let line = format_record(
-        UNIX_EPOCH,
+        Timestamp::UNIX_EPOCH,
         log::Level::Info,
         "apply",
         "fake start\rreal\r\nnext",

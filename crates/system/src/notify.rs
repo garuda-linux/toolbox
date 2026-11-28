@@ -5,10 +5,12 @@
 mod tests;
 
 use std::collections::BTreeMap;
+use std::fmt::Debug;
 
-use zbus::Variant;
+use tokio::runtime::Handle;
+use zbus::{Connection, Variant};
 
-use crate::bus::Method;
+use crate::bus::{CallError, Method, call, classify};
 
 pub const NOTIFY: Method = Method {
     destination: "org.freedesktop.Notifications",
@@ -43,6 +45,34 @@ pub struct Notification {
     pub body: String,
 }
 
+/// Shows notifications. Tests record them instead.
+pub trait Notifier: Debug + Send + Sync {
+    fn show(&self, notification: Notification);
+}
+
+/// Sends each notification to the session's daemon on `runtime`.
+#[derive(Debug)]
+pub struct DesktopNotifier {
+    runtime: Handle,
+}
+
+impl DesktopNotifier {
+    pub const fn new(runtime: Handle) -> Self {
+        Self { runtime }
+    }
+}
+
+impl Notifier for DesktopNotifier {
+    fn show(&self, notification: Notification) {
+        drop(self.runtime.spawn(async move {
+            // Without a notification daemon the bubble is only logged.
+            if let Err(error) = send(&notification).await {
+                tracing::info!("no desktop notification: {error}");
+            }
+        }));
+    }
+}
+
 pub fn notify_body(notification: &Notification) -> NotifyBody<'_> {
     (
         APP_NAME,
@@ -54,4 +84,15 @@ pub fn notify_body(notification: &Notification) -> NotifyBody<'_> {
         BTreeMap::new(),
         EXPIRE_DEFAULT,
     )
+}
+
+async fn send(notification: &Notification) -> Result<(), CallError> {
+    let connection = Connection::session()
+        .await
+        .map_err(|error| classify(&error))?;
+
+    // The daemon answers with the id of the new notification.
+    call::<_, u32>(&connection, &NOTIFY, &notify_body(notification))
+        .await
+        .map(drop)
 }

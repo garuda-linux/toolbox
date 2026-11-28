@@ -41,6 +41,32 @@ diagnostics-no-agent = { $name } was not collected: no password dialog could app
 diagnostics-helper-missing = { $name } was not collected: the helper of Garuda Toolbox is not installed. Reinstall Garuda Toolbox.
 # $reason is the program's own words.
 diagnostics-failed = { $name } failed: { $reason }
+# The reasons of a failed collection. The words of a program stay as it printed them.
+diagnostics-failed-no-program = No program ran.
+diagnostics-failed-exit-code = Exit code: { $code }
+diagnostics-failed-signal = Ended by a signal.
+diagnostics-failed-start = { $program } could not be started: { $error }
+diagnostics-failed-timed-out = { $program } took longer than { $seconds } seconds
+diagnostics-failed-too-large = { $program } printed too much
+diagnostics-failed-read = { $path }: { $error }
+diagnostics-failed-helper-missing = the helper of Garuda Toolbox or pkexec is not installed
+diagnostics-failed-helper-start = cannot start the helper: { $error }
+diagnostics-failed-helper-timed-out = the helper gave no answer in time
+diagnostics-failed-helper-too-long = the helper's answer is too long
+diagnostics-failed-helper-pkexec = pkexec cannot run: { $words }
+diagnostics-failed-helper-ended = the helper ended with { $ending }: { $words }
+diagnostics-failed-ending-code = exit code { $code }
+diagnostics-failed-ending-signal = a signal
+diagnostics-failed-helper-unreadable = the helper's answer is unreadable
+diagnostics-failed-helper-stopped = the read stopped before the helper answered
+diagnostics-failed-answer = The answer of the helper of Garuda Toolbox was not understood: { $fault }
+diagnostics-failed-answer-too-long = line of { $length } bytes exceeds the limit of { $limit }
+diagnostics-failed-not-installed = The next program is not installed.
+diagnostics-failed-dismissed = Not collected: the password dialog was dismissed.
+diagnostics-failed-denied = Not collected: root rights were not given.
+diagnostics-failed-no-agent = Not collected: no password dialog could appear.
+diagnostics-failed-helper-not-installed = Not collected: the helper is not installed.
+diagnostics-stopped = { $name } stopped before it answered.
 diagnostics-report-label = Diagnostics report
 
 # The report's header line. $time is when it came in, as 14:05.

@@ -5,7 +5,8 @@ use toolbox_plan::{KernelModule, PlannedAction};
 use crate::domains::{ModuleBlacklist, OwnBlacklist};
 use crate::features::network::{
     BlacklistEntry, Category, DriverFilter, DriverRow, DriverState, ModuleFacts, Refusal,
-    driver_rows, loaded_modules, network_modules, plan_load, plan_unload, set_blacklisted, visible,
+    driver_rows, loaded_modules, network_modules, plan_load, plan_unload, queue_blacklist,
+    set_blacklisted, visible,
 };
 use crate::test_support::commands;
 use crate::{ChangeSet, Snapshot, Toggle};
@@ -328,6 +329,34 @@ fn a_blacklist_of_another_file_is_not_changed_here() {
         Err(Refusal::OtherFile)
     );
     assert!(changes.is_empty());
+}
+
+#[test]
+fn a_blacklist_click_waits_for_the_module_facts() {
+    let mut changes = ChangeSet::default();
+
+    assert_eq!(
+        queue_blacklist(
+            &module("mt76-usb"),
+            Toggle::On,
+            &mut changes,
+            &Snapshot::default()
+        ),
+        Err(Refusal::Unavailable)
+    );
+    assert!(changes.is_empty());
+
+    let mut snapshot = Snapshot::default();
+    snapshot.insert(facts(Vec::new()));
+
+    assert_eq!(
+        queue_blacklist(&module("mt76-usb"), Toggle::On, &mut changes, &snapshot),
+        Ok(())
+    );
+    assert_eq!(
+        changes.wish::<ModuleBlacklist>(&module("mt76_usb")),
+        Some(&Toggle::On)
+    );
 }
 
 #[test]

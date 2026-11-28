@@ -235,6 +235,10 @@ echo "Installing into $name"
 setup "limactl copy" limactl copy "$package" "$name:/tmp/"
 setup "pacman" as_root "pacman -Syu --noconfirm --needed dkms v4l2loopback-dkms networkmanager \
   && pacman -U --noconfirm /tmp/${package##*/}"
+# The repositories offer the Electron garuda-toolbox under the same name,
+# which an update of the VM would install over the package under test.
+setup "keeping the package under test" as_root \
+  "sed -i 's/^#\\?IgnorePkg .*/IgnorePkg = garuda-toolbox/' /etc/pacman.conf && grep -q '^IgnorePkg = garuda-toolbox' /etc/pacman.conf"
 
 # Over SSH no polkit agent runs, so pkexec would ask on the terminal for a
 # password the Lima user does not have.

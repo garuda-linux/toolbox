@@ -6,7 +6,7 @@
 mod tests;
 
 use toolbox_core::features::network::{
-    HOTSPOT_PACKAGE, ModuleFacts, PCIUTILS_PACKAGE, Refusal, set_blacklisted, toggle_install,
+    HOTSPOT_PACKAGE, PCIUTILS_PACKAGE, Refusal, queue_blacklist, toggle_install,
 };
 use toolbox_core::features::packages::queue::toggle;
 use toolbox_core::{ChangeSet, Snapshot};
@@ -93,13 +93,8 @@ impl Network {
         snapshot: &Snapshot,
     ) -> Handled {
         let subject = module.as_str().to_owned();
-        let Some(facts) = snapshot.part::<ModuleFacts>() else {
-            self.refusal = Some(Refused::new(Refusal::Unavailable, subject));
-            return Handled::taken();
-        };
-
         queue_or_refuse(&mut self.refusal, subject, changes, |changes| {
-            set_blacklisted(module, on, facts, changes, snapshot)
+            queue_blacklist(module, on, changes, snapshot)
         })
     }
 }

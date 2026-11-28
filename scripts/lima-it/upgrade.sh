@@ -20,7 +20,8 @@ suite_upgrade() {
 t_update() {
   tb update --yes || return 1
   local left
-  left=$(vm pacman -Qu || true)
+  # The package under test is held back, see the setup.
+  left=$(vm pacman -Qu | grep -v '\[ignored\]$' || true)
   echo "left: $left"
   [ -z "$left" ]
 }

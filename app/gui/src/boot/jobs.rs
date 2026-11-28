@@ -9,6 +9,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::runtime::Handle;
 use toolbox_system::pkexec::HelperError;
 use toolbox_system::{BootMenuSource, MenuRead};
+pub use toolbox_system::{Chosen, FileChooser};
 
 use crate::lane::{Asked, Lane};
 
@@ -18,16 +19,14 @@ pub enum FileKind {
     Theme,
 }
 
-/// What the desktop's file dialog gave back.
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub enum Chosen {
-    /// The chosen file's path.
-    File(String),
-    /// The user closed the dialog.
-    Cancelled,
-    /// No dialog could open, as on a desktop without a file chooser
-    /// portal, or it gave back no local file.
-    Failed,
+impl FileKind {
+    /// The patterns of the files the dialog offers for this kind.
+    pub const fn globs(self) -> &'static [&'static str] {
+        match self {
+            Self::Background => &["*.png", "*.jpg", "*.jpeg", "*.tga"],
+            Self::Theme => &["*.txt"],
+        }
+    }
 }
 
 /// What a file dialog answered, with the kind of file it was asked for.
@@ -42,12 +41,6 @@ pub enum Answer {
 pub struct Picked {
     pub kind: FileKind,
     pub path: String,
-}
-
-/// Asks the desktop for one file. Blocks until the user answers.
-pub trait FileChooser: Send + Sync {
-    /// `title` names the dialog, `filter` the kind of file it lists.
-    fn choose(&self, kind: FileKind, title: &str, filter: &str) -> Chosen;
 }
 
 pub struct BootSetup {
@@ -112,7 +105,7 @@ impl Jobs {
         let chooser = Arc::clone(&self.setup.chooser);
         self.picked.blocking(
             "file",
-            move || chooser.choose(kind, &title, &filter),
+            move || chooser.choose(&title, &filter, kind.globs()),
             move |chosen| match chosen {
                 Ok(Chosen::File(path)) => Answer::Chose(Picked { kind, path }),
                 Ok(Chosen::Cancelled) => Answer::Cancelled,

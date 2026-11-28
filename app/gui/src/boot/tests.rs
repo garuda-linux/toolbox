@@ -6,9 +6,10 @@ use toolbox_core::Snapshot;
 use toolbox_core::domains::CurrentGrub;
 use toolbox_plan::{GrubMenu, GrubPlatform, GrubState};
 use toolbox_services::boot_menu::Menu;
-use toolbox_system::{BootMenuSource, MenuRead};
+use toolbox_system::testing::file_chooser::FixedChooser;
+use toolbox_system::{BootMenuSource, Chosen, FileChooser, MenuRead};
 
-use super::{Boot, BootSetup, Chosen, FileChooser, FileKind, Picked};
+use super::{Boot, BootSetup, FileKind, Picked};
 use crate::page::PageId;
 use crate::page_service::PageService;
 use crate::testing::captures::GRUB_CFG;
@@ -18,9 +19,6 @@ use crate::testing::until;
 #[derive(Default)]
 struct Source(AtomicUsize);
 
-/// Picks the same file every time.
-struct Chooser;
-
 /// Counts its dialogs. Each stays open until `open` is cleared, then the
 /// user cancels it.
 #[derive(Default)]
@@ -29,9 +27,6 @@ struct Held {
     open: AtomicBool,
 }
 
-/// Gives the same answer every time, as a desktop without a portal does.
-struct Broken(Chosen);
-
 impl BootMenuSource for Source {
     fn menu(&self, _cancel: &Arc<AtomicBool>) -> MenuRead {
         self.0.fetch_add(1, Ordering::SeqCst);
@@ -39,14 +34,8 @@ impl BootMenuSource for Source {
     }
 }
 
-impl FileChooser for Chooser {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
-        Chosen::File("/usr/share/grub/themes/garuda/theme.txt".to_owned())
-    }
-}
-
 impl FileChooser for Held {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
+    fn choose(&self, _title: &str, _filter: &str, _globs: &[&str]) -> Chosen {
         self.asked.fetch_add(1, Ordering::SeqCst);
         until("the dialog was never closed", || {
             !self.open.load(Ordering::SeqCst)
@@ -55,18 +44,14 @@ impl FileChooser for Held {
     }
 }
 
-impl FileChooser for Broken {
-    fn choose(&self, _kind: FileKind, _title: &str, _filter: &str) -> Chosen {
-        self.0.clone()
-    }
-}
-
 fn boot(runtime: &Runtime, source: &Arc<Source>) -> Boot {
     Boot::new(
         Some(BootSetup {
             runtime: runtime.handle().clone(),
             menu: Arc::<Source>::clone(source),
-            chooser: Arc::new(Chooser),
+            chooser: Arc::new(FixedChooser(Chosen::File(
+                "/usr/share/grub/themes/garuda/theme.txt".to_owned(),
+            ))),
         }),
         egui::Context::default(),
     )
@@ -182,7 +167,7 @@ fn answered(chosen: Chosen) -> bool {
         Some(BootSetup {
             runtime: runtime.handle().clone(),
             menu: Arc::new(Source::default()),
-            chooser: Arc::new(Broken(chosen)),
+            chooser: Arc::new(FixedChooser(chosen)),
         }),
         egui::Context::default(),
     );

@@ -5,12 +5,23 @@
 mod tests;
 
 use super::Tool;
+use super::page::RATE_MIRRORS_PROGRAM;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Next {
     Tool(Tool),
     /// The ranking of the Chaotic-AUR mirrors, which needed rate-mirrors.
     RankMirrors,
+}
+
+impl Next {
+    /// The program the disk check looks for before the step starts.
+    pub const fn program(self) -> &'static str {
+        match self {
+            Self::Tool(tool) => tool.found_by(),
+            Self::RankMirrors => RATE_MIRRORS_PROGRAM,
+        }
+    }
 }
 
 /// The install a tool waits for. Another plan's end must not open it, so

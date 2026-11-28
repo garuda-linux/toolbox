@@ -7,6 +7,7 @@ use egui::{
     Align2, Context, FontId, Id, Label, Painter, Rect, ScrollArea, Sense, Stroke, TextStyle, Ui,
     WidgetInfo, pos2, vec2,
 };
+use toolbox_core::features::configs::diff::{Covered, Kind, Row};
 use toolbox_core::features::configs::session::{Changes, EditedFile, Session};
 use toolbox_gui_kit::fonts::{self, SMALL, Weight};
 use toolbox_gui_kit::theme::show_scroll_rows;
@@ -17,7 +18,6 @@ use toolbox_gui_kit::widgets::{
 };
 use toolbox_gui_kit::{UiExt as _, icons};
 
-use self::lines::{Covered, Kind, Row};
 use super::texts;
 use crate::command::ConfigsCommand;
 use crate::i18n;

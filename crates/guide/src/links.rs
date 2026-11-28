@@ -39,7 +39,7 @@ fn found(guide: &Guide, page: &Page, link: &Link) -> bool {
 }
 
 /// Every block of `page`, its children included, in reading order.
-pub fn all_blocks(page: &Page) -> Vec<&Block> {
+pub(crate) fn all_blocks(page: &Page) -> Vec<&Block> {
     fn walk<'page>(blocks: &'page [Block], found: &mut Vec<&'page Block>) {
         for block in blocks {
             found.push(block);

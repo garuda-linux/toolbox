@@ -244,7 +244,7 @@ fn an_accepted_route_plans_the_review_first_and_then_the_octopi_builds() {
 }
 
 #[test]
-fn a_refused_route_plans_the_old_paru_path_and_reads_no_order() {
+fn a_refused_route_plans_the_paru_path_and_reads_no_order() {
     let orders = octopi_orders();
 
     let plan = split_plan(refused_route(), &octopi_copy(&[]), &orders).unwrap();

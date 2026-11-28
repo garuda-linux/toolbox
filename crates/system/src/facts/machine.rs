@@ -3,9 +3,10 @@
 
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::time::SystemTime;
 
-use crate::error::{MissingFact, ProbeError, from_io};
+use jiff::Timestamp;
+
+use crate::error::{MissingFact, ProbeError, Subject, from_io};
 use crate::files;
 use crate::host::boot_time;
 use crate::kernels::OS_RELEASE;
@@ -36,7 +37,7 @@ pub trait MachineSource: Send + Sync {
     ///
     /// [`ProbeError::Unavailable`] without `/proc`, a failed [`ProbeError`]
     /// when `/proc/stat` names no boot time.
-    fn booted(&self) -> Result<SystemTime, ProbeError>;
+    fn booted(&self) -> Result<Timestamp, ProbeError>;
 
     /// The space of the file system that holds `/`.
     ///
@@ -85,7 +86,7 @@ impl MachineSource for SystemMachine {
         Ok(release.to_owned())
     }
 
-    fn booted(&self) -> Result<SystemTime, ProbeError> {
+    fn booted(&self) -> Result<Timestamp, ProbeError> {
         let stat = files::read(&self.root.join("proc/stat"))?;
 
         boot_time(&stat)
@@ -93,7 +94,7 @@ impl MachineSource for SystemMachine {
 
     fn disk(&self) -> Result<DiskSpace, ProbeError> {
         let stat = rustix::fs::statvfs(&self.root).map_err(|error| ProbeError::Syscall {
-            what: self.root.display().to_string(),
+            what: Subject::Data(self.root.display().to_string()),
             error,
         })?;
 

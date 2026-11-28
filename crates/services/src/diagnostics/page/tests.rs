@@ -1,5 +1,5 @@
 use toolbox_privatebin::Paste;
-use toolbox_state::diagnostics::{Collector, Outcome, Refusal, Selection, UploadFailure};
+use toolbox_state::diagnostics::{Collector, Failure, Outcome, Refusal, Selection, UploadFailure};
 
 use super::super::service::DiagnosticsNote;
 use super::{Changed, Page, State};
@@ -40,7 +40,7 @@ fn a_report_keeps_when_it_came_in_until_the_next_start() {
     let mut page = with_report();
     assert_eq!(page.collected, None, "a page reads no clock itself");
 
-    page.collected = Some(1_792_327_265_u64);
+    page.collected = Some(jiff::Timestamp::from_second(1_792_327_265).unwrap());
 
     page.apply(DiagnosticsNote::Started(Selection::All));
     assert_eq!(page.collected, None);
@@ -72,7 +72,7 @@ fn a_report_is_ready_for_the_clipboard() {
     assert_eq!(page.state.as_str(), "report");
     assert_eq!(page.selection, Some(DMESG));
     assert_eq!(page.report, "kernel log\n");
-    assert_eq!(page.problem, "");
+    assert_eq!(page.problem, None);
 }
 
 #[test]
@@ -87,19 +87,19 @@ fn an_empty_report_is_still_a_report() {
 #[test]
 fn the_other_outcomes_are_states_without_text() {
     for (outcome, state, problem) in [
-        (Outcome::Unavailable, "unavailable", ""),
-        (Outcome::Refused(Refusal::Dismissed), "dismissed", ""),
-        (Outcome::Refused(Refusal::Denied), "denied", ""),
-        (Outcome::Refused(Refusal::NoAgent), "no-agent", ""),
+        (Outcome::Unavailable, "unavailable", None),
+        (Outcome::Refused(Refusal::Dismissed), "dismissed", None),
+        (Outcome::Refused(Refusal::Denied), "denied", None),
+        (Outcome::Refused(Refusal::NoAgent), "no-agent", None),
         (
             Outcome::Refused(Refusal::HelperMissing),
             "helper-missing",
-            "",
+            None,
         ),
         (
-            Outcome::Failed("dmesg: Operation not permitted".to_owned()),
+            Outcome::Failed(Failure::Stderr("dmesg: Operation not permitted".to_owned())),
             "failed",
-            "dmesg: Operation not permitted",
+            Some(Failure::Stderr("dmesg: Operation not permitted".to_owned())),
         ),
     ] {
         let mut page = with_report();
@@ -112,6 +112,21 @@ fn the_other_outcomes_are_states_without_text() {
         assert_eq!(page.problem, problem);
         assert_eq!(page.report, "", "{state} kept the old report");
     }
+}
+
+/// The window words a stopped collection by its id, so it has no text of
+/// its own.
+#[test]
+fn a_stopped_collection_is_a_state_without_text() {
+    let mut page = with_report();
+
+    assert_eq!(
+        page.apply(DiagnosticsNote::Stopped(Selection::All)),
+        Changed::Report { ready: false }
+    );
+    assert_eq!(page.state.as_str(), "stopped");
+    assert_eq!(page.problem, None);
+    assert_eq!(page.report, "");
 }
 
 #[test]

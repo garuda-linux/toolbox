@@ -7,7 +7,7 @@
 
 mod card;
 mod code;
-pub mod darkly;
+pub(crate) mod darkly;
 mod frost;
 mod glass;
 pub mod letters;
@@ -303,7 +303,7 @@ pub fn current(ctx: &Context) -> Tokens {
 
 /// `from` moved toward `to` by `amount` (0 to 1), in gamma space as
 /// designers mix.
-pub fn mix(from: Color32, to: Color32, amount: f32) -> Color32 {
+pub(crate) fn mix(from: Color32, to: Color32, amount: f32) -> Color32 {
     from.lerp_to_gamma(to, amount)
 }
 

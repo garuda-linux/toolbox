@@ -69,8 +69,7 @@ pub use locale::{
 };
 pub use merge::{
     CopyKind, InvalidMergeCopy, MergeChoice, MergeCopy, MergeResolve, PACKAGE_FILES, PACMAN_LOCAL,
-    Resolution, SNAPPER_ROOT_CONFIG, SNAPSHOT_DESCRIPTION, UnfitChoice, backup_files, lists_backup,
-    snapshot as merge_snapshot,
+    Resolution, SNAPPER_ROOT_CONFIG, UnfitChoice, lists_backup, snapshot as merge_snapshot,
 };
 pub use mirrorlist::{InvalidMirrorlist, Mirrorlist, SAMPLE_MIRRORS};
 pub use name::{

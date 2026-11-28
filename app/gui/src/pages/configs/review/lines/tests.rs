@@ -1,6 +1,6 @@
 use toolbox_core::features::configs::Diff;
 
-use super::{Covered, Kind, Row, Rows};
+use super::Rows;
 
 /// `/etc/default/grub` of the Garuda Lima image.
 const GRUB: &str = toolbox_plan::testing::grub::LIMA_DEFAULT_GRUB;
@@ -9,65 +9,9 @@ fn rows(edited: &str) -> Rows {
     Rows::parse(&Diff::new(GRUB, edited).plain())
 }
 
-fn find(rows: &Rows, kind: Kind) -> &Row {
-    rows.lines.iter().find(|row| row.kind == kind).unwrap()
-}
-
-fn line_after_added(rows: &Rows) -> &Row {
-    rows.lines
-        .iter()
-        .skip_while(|row| row.kind != Kind::Added)
-        .nth(1)
-        .unwrap()
-}
-
 /// The capture with its timeout of 5 seconds set to 2.
 fn shorter_timeout() -> String {
     GRUB.replace("GRUB_TIMEOUT=5\n", "GRUB_TIMEOUT=2\n")
-}
-
-#[test]
-fn a_changed_line_has_its_number_in_both_files() {
-    let rows = rows(&shorter_timeout());
-
-    assert_eq!(
-        rows.lines.first().map(|row| row.kind),
-        Some(Kind::Hunk(Covered { first: 1, last: 7 }))
-    );
-
-    let removed = find(&rows, Kind::Removed);
-    assert_eq!((removed.old, removed.new), (Some(4), None));
-    assert_eq!(removed.text(), "GRUB_TIMEOUT=5");
-    assert_eq!(removed.line, "-GRUB_TIMEOUT=5");
-
-    let added = find(&rows, Kind::Added);
-    assert_eq!((added.old, added.new), (None, Some(4)));
-    assert_eq!(added.text(), "GRUB_TIMEOUT=2");
-
-    let after = line_after_added(&rows);
-
-    assert_eq!(
-        (after.kind, after.old, after.new),
-        (Kind::Same, Some(5), Some(5))
-    );
-}
-
-/// The capture with a line added after its timeout.
-#[test]
-fn an_added_line_moves_the_numbers_of_the_edited_file_on() {
-    let edited = GRUB.replace(
-        "GRUB_TIMEOUT=5\n",
-        "GRUB_TIMEOUT=5\nGRUB_RECORDFAIL_TIMEOUT=5\n",
-    );
-
-    let rows = rows(&edited);
-
-    let after = line_after_added(&rows);
-
-    assert_eq!(
-        (after.kind, after.old, after.new),
-        (Kind::Same, Some(5), Some(6))
-    );
 }
 
 /// The capture with two tabs and a comment after its timeout, longer than
@@ -101,17 +45,6 @@ fn the_gutter_is_as_wide_as_the_highest_number() {
     let edited = GRUB.replace(last, &format!("{last} "));
 
     assert_eq!(rows(&edited).digits, 2);
-}
-
-/// The capture without its last line break: diff's note is a row without
-/// numbers.
-#[test]
-fn the_missing_line_break_is_a_note_without_numbers() {
-    let edited = GRUB.strip_suffix('\n').unwrap();
-    let rows = rows(edited);
-
-    let note = rows.lines.last().unwrap();
-    assert_eq!((note.kind, note.old, note.new), (Kind::Note, None, None));
 }
 
 #[test]

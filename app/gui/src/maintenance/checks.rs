@@ -29,10 +29,10 @@ impl Maintenance {
 
         // The disk is asked off the frame. Without jobs it is asked here.
         if let Some(jobs) = &self.jobs {
-            jobs.check(program_of(next), exists);
+            jobs.check(next.program(), exists);
             self.checking = Some(Checking { next, launcher });
         } else {
-            let found = exists(Path::new(program_of(next)));
+            let found = exists(Path::new(next.program()));
             self.decide(next, found, launcher.as_deref());
         }
     }
@@ -58,13 +58,5 @@ impl Maintenance {
             Next::RankMirrors if found => self.rank(),
             Next::RankMirrors => self.absent(PageTool::ChaoticMirrors, RATE_MIRRORS_PROGRAM),
         }
-    }
-}
-
-/// The program a finished install's check looks for.
-const fn program_of(next: Next) -> &'static str {
-    match next {
-        Next::Tool(tool) => tool.found_by(),
-        Next::RankMirrors => RATE_MIRRORS_PROGRAM,
     }
 }

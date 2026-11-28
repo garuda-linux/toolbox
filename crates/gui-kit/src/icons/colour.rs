@@ -17,7 +17,7 @@ macro_rules! colour {
     };
 }
 
-pub const APPLICATIONS_ALL: Icon = colour!("applications-all");
+pub(crate) const APPLICATIONS_ALL: Icon = colour!("applications-all");
 pub const APPLICATIONS_DEVELOPMENT: Icon = colour!("applications-development");
 pub const APPLICATIONS_GAMES: Icon = colour!("applications-games");
 pub const APPLICATIONS_GRAPHICS: Icon = colour!("applications-graphics");
@@ -32,7 +32,7 @@ pub const CAMERA_VIDEO: Icon = colour!("camera-video");
 pub const COMPUTER: Icon = colour!("computer");
 pub const DESKTOP: Icon = colour!("desktop");
 pub const DIALOG_ERROR: Icon = colour!("dialog-error");
-pub const DIALOG_INFORMATION: Icon = colour!("dialog-information");
+pub(crate) const DIALOG_INFORMATION: Icon = colour!("dialog-information");
 pub const DIALOG_POSITIVE: Icon = colour!("dialog-positive");
 pub const DIALOG_WARNING: Icon = colour!("dialog-warning");
 pub const DRIVE_HARDDISK: Icon = colour!("drive-harddisk");
@@ -46,15 +46,16 @@ pub const INTERNET_MAIL: Icon = colour!("internet-mail");
 pub const INTERNET_WEB_BROWSER: Icon = colour!("internet-web-browser");
 pub const NETWORK_SERVER: Icon = colour!("network-server");
 pub const NETWORK_WIRED: Icon = colour!("network-wired");
-pub const NETWORK_WIRELESS: Icon = colour!("network-wireless");
+pub(crate) const NETWORK_WIRELESS: Icon = colour!("network-wireless");
 pub const PACKAGE_X_GENERIC: Icon = colour!("package-x-generic");
 pub const PLASMADISCOVER: Icon = colour!("plasmadiscover");
 pub const PREFERENCES_DESKTOP_GAMING: Icon = colour!("preferences-desktop-gaming");
 pub const PREFERENCES_DESKTOP_LOCALE: Icon = colour!("preferences-desktop-locale");
 pub const PREFERENCES_DESKTOP_PERIPHERALS: Icon = colour!("preferences-desktop-peripherals");
-pub const PREFERENCES_DESKTOP_THEME_GLOBAL: Icon = colour!("preferences-desktop-theme-global");
+pub(crate) const PREFERENCES_DESKTOP_THEME_GLOBAL: Icon =
+    colour!("preferences-desktop-theme-global");
 pub const PREFERENCES_OTHER: Icon = colour!("preferences-other");
-pub const PREFERENCES_DESKTOP_SOUND: Icon = colour!("preferences-desktop-sound");
+pub(crate) const PREFERENCES_DESKTOP_SOUND: Icon = colour!("preferences-desktop-sound");
 pub const PREFERENCES_SYSTEM: Icon = colour!("preferences-system");
 pub const PREFERENCES_SYSTEM_BLUETOOTH: Icon = colour!("preferences-system-bluetooth");
 pub const PREFERENCES_SYSTEM_LINUX: Icon = colour!("preferences-system-linux");
@@ -62,7 +63,7 @@ pub const PREFERENCES_SYSTEM_NETWORK: Icon = colour!("preferences-system-network
 pub const PREFERENCES_SYSTEM_SERVICES: Icon = colour!("preferences-system-services");
 pub const PREFERENCES_SYSTEM_STARTUP: Icon = colour!("preferences-system-startup");
 pub const PREFERENCES_SYSTEM_USERS: Icon = colour!("preferences-system-users");
-pub const PREFERENCES_VIRTUALIZATION_CONTAINER: Icon =
+pub(crate) const PREFERENCES_VIRTUALIZATION_CONTAINER: Icon =
     colour!("preferences-virtualization-container");
 pub const PRINTER: Icon = colour!("printer");
 pub const SECURITY_HIGH: Icon = colour!("security-high");
@@ -70,7 +71,7 @@ pub const SYSTEM_RUN: Icon = colour!("system-run");
 pub const SYSTEM_SOFTWARE_INSTALL: Icon = colour!("system-software-install");
 pub const SYSTEM_SOFTWARE_UPDATE: Icon = colour!("system-software-update");
 pub const TEXT_X_GENERIC: Icon = colour!("text-x-generic");
-pub const UTILITIES_SYSTEM_MONITOR: Icon = colour!("utilities-system-monitor");
+pub(crate) const UTILITIES_SYSTEM_MONITOR: Icon = colour!("utilities-system-monitor");
 pub const UTILITIES_TERMINAL: Icon = colour!("utilities-terminal");
 
 /// The colour icon a row draws for a symbolic glyph, the Breeze colour

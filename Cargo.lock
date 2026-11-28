@@ -5587,8 +5587,11 @@ dependencies = [
  "serde",
  "thiserror 2.0.21",
  "tokio",
+ "tracing",
  "wayland-client",
+ "wayland-protocols",
  "wayland-protocols-plasma",
+ "x11rb",
  "zbus 6.3.0",
 ]
 
@@ -5609,23 +5612,6 @@ dependencies = [
  "toolbox-text",
  "tracing",
 ]
-
-[[package]]
-name = "toolbox-backdrop"
-version = "6.3.0"
-dependencies = [
- "raw-window-handle",
- "thiserror 2.0.21",
- "tracing",
- "wayland-client",
- "wayland-protocols",
- "wayland-protocols-plasma",
- "x11rb",
-]
-
-[[package]]
-name = "toolbox-calendar"
-version = "6.3.0"
 
 [[package]]
 name = "toolbox-catalog"
@@ -5705,6 +5691,7 @@ name = "toolbox-core"
 version = "6.3.0"
 dependencies = [
  "criterion",
+ "jiff",
  "proptest",
  "serde",
  "serde_json",
@@ -5746,7 +5733,6 @@ dependencies = [
 name = "toolbox-gui"
 version = "6.3.0"
 dependencies = [
- "ashpd",
  "crossbeam-channel",
  "dify",
  "eframe",
@@ -5772,8 +5758,6 @@ dependencies = [
  "tokio",
  "toolbox-appmenu",
  "toolbox-aur",
- "toolbox-backdrop",
- "toolbox-calendar",
  "toolbox-catalog",
  "toolbox-cli",
  "toolbox-commands",
@@ -5882,11 +5866,11 @@ dependencies = [
 name = "toolbox-log"
 version = "6.3.0"
 dependencies = [
+ "jiff",
  "log",
  "parking_lot",
  "rustix 1.1.6",
  "tempfile",
- "toolbox-calendar",
  "toolbox-text",
  "tracing",
  "tracing-log",
@@ -5958,6 +5942,7 @@ dependencies = [
  "crossbeam-channel",
  "fluent-templates",
  "futures-lite",
+ "jiff",
  "parking_lot",
  "rustix 1.1.6",
  "serde",
@@ -5999,6 +5984,9 @@ name = "toolbox-system"
 version = "6.3.0"
 dependencies = [
  "alpm",
+ "ashpd",
+ "futures-lite",
+ "jiff",
  "parking_lot",
  "rustix 1.1.6",
  "serde",
@@ -6006,7 +5994,6 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.21",
  "tokio",
- "toolbox-calendar",
  "toolbox-catalog",
  "toolbox-exec",
  "toolbox-fs",

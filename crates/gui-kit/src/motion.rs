@@ -23,15 +23,15 @@ pub const SHEET_EXIT: f32 = 0.14;
 /// A note fading in and dropping into place.
 pub const TOAST_ENTER: f32 = 0.16;
 /// A note fading out.
-pub const TOAST_EXIT: f32 = 0.15;
+pub(crate) const TOAST_EXIT: f32 = 0.15;
 /// How far a note drops while it appears, in points.
-pub const TOAST_DROP: f32 = 8.0;
+pub(crate) const TOAST_DROP: f32 = 8.0;
 /// The notes below one that left moving up.
-pub const RESTACK: f32 = 0.15;
+pub(crate) const RESTACK: f32 = 0.15;
 /// A page's content taking the place of its skeleton.
-pub const CONTENT_FADE: f32 = theme::ANIMATION_TIME;
+pub(crate) const CONTENT_FADE: f32 = theme::ANIMATION_TIME;
 /// A pill button's hover fill.
-pub const HOVER_FADE: f32 = 0.08;
+pub(crate) const HOVER_FADE: f32 = 0.08;
 /// The Console sheet both ways.
 pub const SHEET: Timing = Timing::new(SHEET_ENTER, SHEET_EXIT);
 /// The Changes popover rising from the pill.
@@ -45,20 +45,20 @@ pub const DIM_FADE: f32 = 0.15;
 const KEYBOARD_HOLD: f64 = 1.0;
 
 /// Another page or tab fading in and rising into place.
-pub const PAGE_ENTER: f32 = 0.15;
+pub(crate) const PAGE_ENTER: f32 = 0.15;
 /// How far another page or tab rises while it appears, in points.
-pub const PAGE_RISE: f32 = 8.0;
+pub(crate) const PAGE_RISE: f32 = 8.0;
 
-pub const CORNER_BUTTON: Timing = Timing::both(theme::ANIMATION_TIME);
+pub(crate) const CORNER_BUTTON: Timing = Timing::both(theme::ANIMATION_TIME);
 
-pub const CHEVRON_TURN: f32 = theme::ANIMATION_TIME;
+pub(crate) const CHEVRON_TURN: f32 = theme::ANIMATION_TIME;
 
-pub const SHIMMER_PERIOD: f32 = 1.4;
+pub(crate) const SHIMMER_PERIOD: f32 = 1.4;
 /// In points.
-pub const SHIMMER_BAND: f32 = 160.0;
+pub(crate) const SHIMMER_BAND: f32 = 160.0;
 /// About thirty frames a second are enough for a soft band, the
 /// display's rate would only cost power.
-pub const SHIMMER_FRAME: Duration = Duration::from_millis(33);
+pub(crate) const SHIMMER_FRAME: Duration = Duration::from_millis(33);
 
 /// How long it takes to show and to hide something.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -116,7 +116,7 @@ pub fn slide(ctx: &Context, id: Id, shown: bool, timing: Timing) -> f32 {
 
 /// [`presence`] for something new, such as a note just raised: the first
 /// call for an id starts it hidden, so it appears.
-pub fn fresh_presence(ctx: &Context, id: Id, shown: bool, timing: Timing) -> f32 {
+pub(crate) fn fresh_presence(ctx: &Context, id: Id, shown: bool, timing: Timing) -> f32 {
     let seen = ctx.data_mut(|data| {
         std::mem::replace(data.get_temp_mut_or_default::<bool>(seen_id(id)), true)
     });
@@ -136,13 +136,13 @@ pub fn settle(ctx: &Context, id: Id, value: bool) {
 
 /// Marks that a key changed what lies inside the ui of `id`, such as a
 /// row whose switch Space flipped. [`keyboard_marked`] finds it.
-pub fn mark_keyboard(ctx: &Context, id: Id) {
+pub(crate) fn mark_keyboard(ctx: &Context, id: Id) {
     let now = ctx.input(|input| input.time);
     memory::write(ctx, id, |row| row.keyboard = Some(now));
 }
 
 /// A key changed what lies inside `ui` a moment ago, so it jumps.
-pub fn keyboard_marked(ui: &egui::Ui) -> bool {
+pub(crate) fn keyboard_marked(ui: &egui::Ui) -> bool {
     let now = ui.input(|input| input.time);
     ui.stack().iter().any(|node| {
         memory::get(ui, node.scope_id)

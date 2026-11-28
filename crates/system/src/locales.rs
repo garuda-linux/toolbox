@@ -10,8 +10,8 @@ use std::collections::BTreeSet;
 use std::fs::File;
 use std::io::Read as _;
 use std::path::{Path, PathBuf};
-use std::time::SystemTime;
 
+use jiff::Timestamp;
 use parking_lot::Mutex;
 use toolbox_plan::{LOCALE_CONF, LOCALE_GEN, LocaleEntry, system_lang};
 use toolbox_state::locales::{
@@ -70,7 +70,7 @@ pub struct EtcLocales {
 /// When glibc's list and its folder of sources last changed. Both belong
 /// to the glibc package, so only its update changes the names, and that
 /// can happen while the app runs. Generating a locale touches neither.
-type Read = [Option<SystemTime>; 2];
+type Read = [Option<Timestamp>; 2];
 
 impl EtcLocales {
     #[must_use = "the adapter does nothing until asked"]
@@ -88,9 +88,11 @@ impl EtcLocales {
 
     fn sources_changed(&self) -> Read {
         [SUPPORTED, SOURCES].map(|path| {
-            std::fs::metadata(self.root.join(path))
+            let time = std::fs::metadata(self.root.join(path))
                 .and_then(|metadata| metadata.modified())
-                .ok()
+                .ok()?;
+
+            Timestamp::try_from(time).ok()
         })
     }
 

@@ -17,9 +17,9 @@ mod updates;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::thread;
-use std::time::SystemTime;
 
 pub use health::{GarudaHealth, HealthIssue, HealthLevel, HealthSource};
+use jiff::Timestamp;
 #[cfg(any(test, feature = "selftest"))]
 pub use pacdiff::FoundCopies;
 pub use pacdiff::{MergeSource, Pacdiff, merge_copies};
@@ -56,7 +56,7 @@ pub struct Status {
     /// `.pacnew`, `.pacsave` and `.pacorig` files.
     pub merges: Result<Vec<PathBuf>, ProbeError>,
     /// The last completed transaction, `None` when the log has none.
-    pub last_update: Result<Option<SystemTime>, ProbeError>,
+    pub last_update: Result<Option<Timestamp>, ProbeError>,
     /// garuda-health's issues. Unavailable on the live ISO.
     pub health: Result<Vec<HealthIssue>, ProbeError>,
 }

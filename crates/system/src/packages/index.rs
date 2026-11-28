@@ -12,7 +12,7 @@ use toolbox_state::packages::{
 use toolbox_text::OutsideText;
 
 use super::{Libalpm, description, failed, open, open_local, size};
-use crate::error::ProbeError;
+use crate::error::{ProbeError, Subject};
 
 pub trait PackageIndexSource: Send + Sync {
     /// Every package the sync databases offer and every installed one,
@@ -120,9 +120,9 @@ impl PackageIndexSource for Libalpm {
             (None, Some(Origin::Repository(repo))) => {
                 let db = handle
                     .register_syncdb(repo.as_str(), SigLevel::NONE)
-                    .map_err(failed(repo))?;
+                    .map_err(failed(Subject::Data(repo.clone())))?;
 
-                db.pkg(name).map_err(failed(repo))?
+                db.pkg(name).map_err(failed(Subject::Data(repo.clone())))?
             }
             (None, _) => return Ok(None),
         };

@@ -12,9 +12,10 @@ mod tests;
 mod tools;
 
 pub use drivers::{
-    BlacklistEntry, Category, DriverFilter, DriverRow, DriverState, ModuleFacts, NetworkModule,
-    Refusal, SwitchRefusal, driver_rows, loaded_modules, network_modules, plan_load, plan_switch,
-    plan_unload, recheck_blacklist, set_blacklisted, visible,
+    BlacklistAction, BlacklistEntry, Category, DriverDetail, DriverFilter, DriverRow, DriverState,
+    ModuleFacts, NetworkModule, Refusal, SwitchRefusal, driver_rows, loaded_modules,
+    network_modules, plan_load, plan_switch, plan_unload, queue_blacklist, recheck_blacklist,
+    set_blacklisted, visible,
 };
 pub use status::{
     Connectivity, DefaultRoute, NetworkUnit, Radio, RadioAccess, RadioKind, RadioSummary,

@@ -8,31 +8,17 @@
 #[cfg(test)]
 mod tests;
 
+use std::sync::Arc;
 use std::time::Duration;
 
-use futures_lite::StreamExt as _;
 use tokio::runtime::Handle;
 use tokio::time::Instant;
 use toolbox_plan::UnitScope;
-use toolbox_system::systemd::{MANAGER_INTERFACE, MANAGER_PATH, SUBSCRIBE, SYSTEMD_DESTINATION};
-use toolbox_system::{CallError, call, classify, forget_shared, shared};
-use zbus::{Connection, MatchRule, MessageStream};
+use toolbox_system::CallError;
+use toolbox_system::systemd::UnitSignals;
 
 use super::UnitRequests;
 use crate::spawn::spawn_logged;
-
-/// The manager's signals that change what the lists show.
-///
-/// A unit loaded or gone, a job's end (a start, stop or restart), changed
-/// unit files and a reload. Property changes of single units, which
-/// transient scopes and timers send all the time, list nothing.
-pub const RELISTING: [&str; 5] = [
-    "UnitNew",
-    "UnitRemoved",
-    "JobRemoved",
-    "UnitFilesChanged",
-    "Reloading",
-];
 
 /// Live updates retry this long between attempts, doubling each time.
 const FIRST_RETRY: Duration = Duration::from_secs(1);
@@ -75,12 +61,16 @@ impl Backoff {
 
 /// Starts a watcher for each bus, which waits for the first page that
 /// shows units. They run as long as the app.
-pub fn spawn(runtime: &Handle, requests: &UnitRequests) {
+pub fn spawn(runtime: &Handle, requests: &UnitRequests, signals: &Arc<dyn UnitSignals>) {
     for scope in [UnitScope::System, UnitScope::User] {
         let requests = requests.clone();
+        let signals = Arc::clone(signals);
         spawn_logged(runtime, "unit watch", async move {
             requests.opened().await;
-            watch_with(scope, &requests, || live(scope, requests.clone())).await;
+            watch_with(scope, &requests, || {
+                live(scope, requests.clone(), Arc::clone(&signals))
+            })
+            .await;
         });
     }
 }
@@ -117,61 +107,14 @@ where
     }
 }
 
-/// One live stream on the connection the lists share: subscribes and
-/// reports signals until the bus drops. A fresh stream lists again, so a
-/// reconnect never shows stale units. Its end drops the connection, so
-/// the next one connects again.
-async fn live(scope: UnitScope, requests: UnitRequests) -> Result<(), CallError> {
-    let ended = follow(scope, &requests).await;
-    forget_shared(scope);
-    ended
-}
-
-async fn follow(scope: UnitScope, requests: &UnitRequests) -> Result<(), CallError> {
-    let connection = shared(scope).await?;
-
-    // systemd only sends its manager signals to subscribed clients.
-    call::<_, ()>(&connection, &SUBSCRIBE, &()).await?;
-
-    let [
-        unit_new,
-        unit_removed,
-        job_removed,
-        files_changed,
-        reloading,
-    ] = RELISTING;
-
-    let mut signals = manager_signal(&connection, unit_new)
-        .await?
-        .or(manager_signal(&connection, unit_removed).await?)
-        .or(manager_signal(&connection, job_removed).await?)
-        .or(manager_signal(&connection, files_changed).await?)
-        .or(manager_signal(&connection, reloading).await?);
-
-    requests.refresh(scope);
-    while signals.next().await.is_some() {
-        requests.refresh(scope);
-    }
-
-    Ok(())
-}
-
-/// The manager's signal `member`, matched by the bus, so other signals
-/// never wake the app.
-async fn manager_signal(
-    connection: &Connection,
-    member: &'static str,
-) -> Result<MessageStream, CallError> {
-    let rule = MatchRule::builder()
-        .msg_type(zbus::message::Type::Signal)
-        .sender(SYSTEMD_DESTINATION)
-        .path(MANAGER_PATH)
-        .interface(MANAGER_INTERFACE)
-        .member(member)
-        .build()
-        .map_err(|error| classify(&error))?;
-
-    MessageStream::for_match_rule(rule, connection, None)
+/// One live stream from the signals port: each signal asks for a fresh
+/// list, so a reconnect never shows stale units.
+async fn live(
+    scope: UnitScope,
+    requests: UnitRequests,
+    signals: Arc<dyn UnitSignals>,
+) -> Result<(), CallError> {
+    signals
+        .follow(scope, Box::new(move || requests.refresh(scope)))
         .await
-        .map_err(|error| classify(&error))
 }

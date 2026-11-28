@@ -1,7 +1,7 @@
 //! On systemd-boot the parameters live in `/etc/kernel/cmdline`, and the
 //! Plymouth theme shares the rebuild of the UKIs with them.
 
-use toolbox_plan::sdboot::{LoaderEntry, LoaderSetting, SdBootMenu};
+use toolbox_plan::sdboot::{LoaderEntry, LoaderKey, LoaderSetting, LoaderSettings, SdBootMenu};
 use toolbox_plan::{KernelParameters, LoaderDefault, PackageName};
 use toolbox_state::kernels::KernelReleases;
 
@@ -45,6 +45,31 @@ pub fn kernel_default(
     let release = snapshot.part::<KernelReleases>()?.0.get(kernel)?;
 
     menu.kernel_entry(release).map(LoaderEntry::default_pattern)
+}
+
+/// The loader settings as the page shows them: the file's, each one a
+/// queued change overrides.
+pub fn wanted_loader(file: &LoaderSettings, changes: &ChangeSet) -> LoaderSettings {
+    let mut settings = file.clone();
+
+    for key in [
+        LoaderKey::Timeout,
+        LoaderKey::Default,
+        LoaderKey::Editor,
+        LoaderKey::AutoEntries,
+        LoaderKey::AutoFirmware,
+    ] {
+        match LoaderSettingsDomain::queued(changes, key) {
+            Some(LoaderSetting::Timeout(timeout)) => settings.timeout = timeout,
+            Some(LoaderSetting::Default(default)) => settings.default = default,
+            Some(LoaderSetting::Editor(on)) => settings.editor = on,
+            Some(LoaderSetting::AutoEntries(on)) => settings.auto_entries = on,
+            Some(LoaderSetting::AutoFirmware(on)) => settings.auto_firmware = on,
+            None => {}
+        }
+    }
+
+    settings
 }
 
 /// Queues a setting of systemd-boot's `loader.conf`, for the window and

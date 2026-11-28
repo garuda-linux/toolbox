@@ -1,12 +1,15 @@
 //! What an edit changed, line by line: the text the user sees before the
 //! helper writes a config file back.
 
+mod rows;
 #[cfg(test)]
 mod tests;
 
 use std::fmt::Write as _;
 
 use toolbox_text::OutsideText;
+
+pub use self::rows::{Covered, Kind, Row, parse_rows};
 
 /// Unchanged lines shown around a change, as `diff -u` does.
 const CONTEXT: usize = 3;

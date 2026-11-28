@@ -6,8 +6,9 @@ mod tests;
 
 use std::time::Instant;
 
+use jiff::Timestamp;
 use toolbox_pty::strip_ansi;
-use toolbox_state::diagnostics::{Collector, Outcome, Redacted, Refusal, Selection};
+use toolbox_state::diagnostics::{Collector, Failure, Outcome, Redacted, Refusal, Selection};
 
 use super::service::DiagnosticsNote;
 use crate::share::{ShareNote, Upload};
@@ -21,6 +22,7 @@ pub enum State {
     Unavailable,
     Refused(Refusal),
     Failed,
+    Stopped,
 }
 
 /// What a note changed, so the app redraws only that: the report can be
@@ -47,11 +49,12 @@ pub struct Page {
     /// The plain report as it may leave the machine: what the upload
     /// question shows and the upload sends. `None` until it is ready.
     pub shareable: Option<Redacted>,
-    pub problem: String,
+    /// Why the collection failed, `None` unless the state is `Failed`.
+    pub problem: Option<Failure>,
     pub share: Upload,
-    /// When the shown report came in, in seconds since the epoch. The
-    /// owner of the clock stamps it, so a page stays plain state.
-    pub collected: Option<u64>,
+    /// When the shown report came in. The owner of the clock stamps it, so
+    /// a page stays plain state.
+    pub collected: Option<Timestamp>,
 }
 
 impl State {
@@ -63,6 +66,7 @@ impl State {
             Self::Unavailable => "unavailable",
             Self::Refused(refusal) => refusal.code(),
             Self::Failed => "failed",
+            Self::Stopped => "stopped",
         }
     }
 }
@@ -89,6 +93,12 @@ impl Page {
                 self.clear_result();
                 self.finish(outcome)
             }
+            DiagnosticsNote::Stopped(selection) => {
+                self.selection = Some(selection);
+                self.clear_result();
+                self.state = State::Stopped;
+                Changed::Report { ready: false }
+            }
             DiagnosticsNote::Shareable(redacted) => {
                 self.shareable = Some(redacted);
                 Changed::Status
@@ -111,7 +121,7 @@ impl Page {
         self.share.clear();
     }
 
-    pub fn start_upload(&mut self) {
+    pub(crate) fn start_upload(&mut self) {
         self.share.start();
     }
 
@@ -148,7 +158,7 @@ impl Page {
             }
             Outcome::Failed(reason) => {
                 self.state = State::Failed;
-                self.problem = reason;
+                self.problem = Some(reason);
                 Changed::Report { ready: false }
             }
         }
@@ -158,7 +168,7 @@ impl Page {
         self.report.clear();
         self.raw.clear();
         self.shareable = None;
-        self.problem.clear();
+        self.problem = None;
         self.collected = None;
         self.part = None;
         self.step = 0_i32;

@@ -72,7 +72,10 @@ fn a_collected_report_is_stamped_with_the_clock_and_a_missing_one_is_not() {
     settle(&mut diagnostics, |shown| {
         shown.page().state == State::Report
     });
-    assert_eq!(diagnostics.page().collected, u64::try_from(COLLECTED).ok());
+    assert_eq!(
+        diagnostics.page().collected,
+        jiff::Timestamp::from_second(COLLECTED).ok()
+    );
 
     diagnostics.collect(Selection::One(Collector::Journal));
     settle(&mut diagnostics, |shown| {

@@ -48,6 +48,7 @@ fn a_review_stays_in_the_printed_plan_under_yes() {
         Paint::new(Style::Plain),
         &plan,
         confirm,
+        true,
         &mut Out::new(&mut out, Settings::default()),
     );
 

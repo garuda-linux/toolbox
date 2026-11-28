@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::time::{Duration, SystemTime};
 
+use jiff::Timestamp;
 use toolbox_plan::{PackageName, UserName};
 
 use super::{
@@ -17,7 +17,7 @@ struct FakeAur(Result<Vec<PendingUpdate>, ProbeError>);
 
 struct FakeMerges(Result<Vec<PathBuf>, ProbeError>);
 
-struct FakeLog(Result<Option<SystemTime>, ProbeError>);
+struct FakeLog(Result<Option<Timestamp>, ProbeError>);
 
 /// Remembers being asked, so a skipped probe shows.
 struct FakeHealth {
@@ -48,7 +48,7 @@ impl MergeSource for FakeMerges {
 }
 
 impl UpdateLogSource for FakeLog {
-    fn last_update(&self) -> Result<Option<SystemTime>, ProbeError> {
+    fn last_update(&self) -> Result<Option<Timestamp>, ProbeError> {
         self.0.clone()
     }
 }
@@ -88,8 +88,8 @@ impl UpdateSource for PanickingUpdates {
     }
 }
 
-fn at(seconds: u64) -> SystemTime {
-    SystemTime::UNIX_EPOCH + Duration::from_secs(seconds)
+fn at(seconds: i64) -> Timestamp {
+    Timestamp::from_second(seconds).unwrap()
 }
 
 fn update(name: &str) -> PendingUpdate {

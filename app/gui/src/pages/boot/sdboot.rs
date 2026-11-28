@@ -3,7 +3,7 @@ mod menu;
 mod tests;
 
 use egui::Ui;
-use toolbox_core::features::boot::kernel_default;
+use toolbox_core::features::boot::{kernel_default, wanted_loader};
 use toolbox_gui_kit::UiExt as _;
 use toolbox_gui_kit::widgets::{Tone, card};
 use toolbox_plan::LoaderDefault;
@@ -93,7 +93,7 @@ pub fn proposal(ui: &mut Ui, context: &PageContext<'_>) {
         return;
     };
 
-    let wanted = menu::wanted(&sdboot.settings, context).default;
+    let wanted = wanted_loader(&sdboot.settings, context.changes).default;
     let default = kernel_default(sdboot, kernel, context.snapshot);
     let state = match &default {
         None => Proposal::SdBootEmpty,

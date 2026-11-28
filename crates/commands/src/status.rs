@@ -7,8 +7,8 @@ mod tests;
 mod watch;
 
 use std::fmt::Write as _;
-use std::time::SystemTime;
 
+use jiff::Timestamp;
 use serde::{Serialize, Serializer};
 use toolbox_cli::Exit;
 use toolbox_cli::output::Paint;
@@ -77,13 +77,13 @@ enum Shown {
 impl StatusView {
     /// The view with the facts read besides the update check.
     #[must_use = "returns the new value, the old one stays as it was"]
-    pub fn with_facts(mut self, facts: &Facts, now: SystemTime) -> Self {
+    pub fn with_facts(mut self, facts: &Facts, now: Timestamp) -> Self {
         self.facts = Some(facts_view(facts, now));
         self
     }
 }
 
-pub fn view(status: &Status, restart: &Result<bool, ProbeError>, now: SystemTime) -> StatusView {
+pub fn view(status: &Status, restart: &Result<bool, ProbeError>, now: Timestamp) -> StatusView {
     StatusView {
         updates: part(&status.updates, |updates| packages(updates)),
         aur_updates: part(&status.aur_updates, |updates| packages(updates)),
@@ -151,7 +151,7 @@ pub fn brief(view: &StatusView) -> String {
 }
 
 /// Whether `status` exits with [`toolbox_cli::Exit::Attention`].
-pub fn needs_attention(view: &StatusView) -> bool {
+pub(crate) fn needs_attention(view: &StatusView) -> bool {
     !attention(view).is_empty()
 }
 

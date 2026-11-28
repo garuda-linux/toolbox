@@ -39,7 +39,7 @@ pub fn lightness(colour: Color32) -> f32 {
 
 /// `colour` at `lightness`, its hue and alpha kept. Its chroma too, as
 /// far as sRGB holds it at that lightness.
-pub fn with_lightness(colour: Color32, lightness: f32) -> Color32 {
+pub(crate) fn with_lightness(colour: Color32, lightness: f32) -> Color32 {
     let [_, green_red, blue_yellow] = to_oklab(colour);
     let fitted = fit([lightness.clamp(0.0, 1.0), green_red, blue_yellow]);
     to_srgb(oklab_to_linear(fitted)).gamma_multiply(f32::from(colour.a()) / 255.0)
@@ -48,7 +48,7 @@ pub fn with_lightness(colour: Color32, lightness: f32) -> Color32 {
 /// The opaque colour at OKLCH `lightness`, `chroma` and `hue` in degrees.
 /// Where it leaves sRGB, its chroma is reduced until it fits, so its hue
 /// and lightness stay.
-pub fn from_oklch(lightness: f32, chroma: f32, hue: f32) -> Color32 {
+pub(crate) fn from_oklch(lightness: f32, chroma: f32, hue: f32) -> Color32 {
     let (sin, cos) = hue.to_radians().sin_cos();
     let fitted = fit([lightness.clamp(0.0, 1.0), chroma * cos, chroma * sin]);
     to_srgb(oklab_to_linear(fitted))

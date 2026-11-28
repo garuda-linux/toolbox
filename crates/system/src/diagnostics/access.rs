@@ -8,7 +8,7 @@ use std::fs::File;
 use std::io::{self, Read as _};
 use std::path::Path;
 
-use toolbox_state::diagnostics::{Access, Attempt, Ran, since_last_pacman_run};
+use toolbox_state::diagnostics::{Access, Attempt, Failure, Ran, since_last_pacman_run};
 
 use crate::status::pacman_log::{PACMAN_LOG, whole_lines};
 
@@ -53,7 +53,10 @@ pub fn pacman_log(root: &Path, limit: usize) -> Attempt {
             })
         }
         Err(error) if error.kind() == io::ErrorKind::NotFound => Attempt::Missing,
-        Err(error) => Attempt::Failed(format!("{}: {error}", path.display())),
+        Err(error) => Attempt::Failed(Failure::Read {
+            path: path.display().to_string(),
+            error: error.to_string(),
+        }),
     }
 }
 

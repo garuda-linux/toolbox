@@ -10,13 +10,14 @@ mod stderr;
 mod tests;
 
 use std::fmt::Debug;
+use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::process::Stdio;
+use std::sync::Arc;
 
-use tokio::process::{Child, Command};
 use tokio::runtime::Handle;
 use toolbox_config::Paths;
 use toolbox_gui_kit::toasts::ToastKind;
+use toolbox_system::{ProgramRunner, RunError, SystemRunner};
 
 use self::stderr::StderrFile;
 use crate::command::{AppCommand, CommandSender};
@@ -44,6 +45,7 @@ pub struct SystemLauncher {
     /// Where each program's stderr goes. `None` without a log folder, the
     /// programs' stderr is dropped then.
     log_dir: Option<PathBuf>,
+    runner: Arc<dyn ProgramRunner>,
 }
 
 /// Logs the start instead, for the dry run and its self-test.
@@ -56,12 +58,24 @@ impl SystemLauncher {
         Self::logging_to(runtime, commands, ctx, log_dir)
     }
 
-    /// Removes what programs of an earlier start left in `log_dir`.
     pub fn logging_to(
         runtime: Handle,
         commands: CommandSender,
         ctx: egui::Context,
         log_dir: Option<PathBuf>,
+    ) -> Self {
+        Self::with_runner(runtime, commands, ctx, log_dir, Arc::new(SystemRunner))
+    }
+
+    /// Starts the programs through `runner`, which the self-test and the
+    /// tests replace. Removes what programs of an earlier start left in
+    /// `log_dir`.
+    pub fn with_runner(
+        runtime: Handle,
+        commands: CommandSender,
+        ctx: egui::Context,
+        log_dir: Option<PathBuf>,
+        runner: Arc<dyn ProgramRunner>,
     ) -> Self {
         if let Some(dir) = log_dir.clone() {
             drop(runtime.spawn_blocking(move || stderr::sweep(&dir)));
@@ -72,6 +86,7 @@ impl SystemLauncher {
             commands,
             ctx,
             log_dir,
+            runner,
         }
     }
 }
@@ -83,6 +98,7 @@ struct Start {
     log_dir: Option<PathBuf>,
     commands: CommandSender,
     ctx: egui::Context,
+    runner: Arc<dyn ProgramRunner>,
 }
 
 impl Launcher for SystemLauncher {
@@ -93,6 +109,7 @@ impl Launcher for SystemLauncher {
             log_dir: self.log_dir.clone(),
             commands: self.commands.clone(),
             ctx: self.ctx.clone(),
+            runner: Arc::clone(&self.runner),
         };
 
         spawn_logged(&self.runtime, "program start", start.run());
@@ -108,17 +125,9 @@ impl Start {
             .map_or_else(|| name.clone(), |file| file.to_string_lossy().into_owned());
 
         let (output, stderr) = self.stderr_file(&short).await;
-        let spawned = Command::new(&self.program)
-            .args(&self.args)
-            .stdin(Stdio::null())
-            .stdout(Stdio::null())
-            .stderr(stderr)
-            .process_group(0)
-            .spawn();
-
-        let mut child = match spawned {
-            Ok(child) => child,
-            Err(error) => {
+        let status = match self.runner.run(&self.program, &self.args, stderr).await {
+            Ok(status) => status,
+            Err(RunError::NotStarted(error)) => {
                 tracing::error!("cannot start {name}: {error}");
                 if let Some(output) = output {
                     drop(tokio::task::spawn_blocking(move || output.remove()));
@@ -131,11 +140,10 @@ impl Start {
                 );
                 return;
             }
-        };
-
-        tracing::info!("started {name}");
-        let Some(status) = ended(&mut child, &name).await else {
-            return;
+            Err(RunError::Lost(error)) => {
+                tracing::warn!("lost track of {name}: {error}");
+                return;
+            }
         };
 
         let last = match output {
@@ -157,24 +165,24 @@ impl Start {
         self.toast("toast-tool-failed", &[("name", Arg::from(&short))]);
     }
 
-    /// The file `short`'s stderr goes to, and its handle for the child. The
+    /// The file `short`'s stderr goes to, and its handle for the program. The
     /// file is made on a blocking thread.
-    async fn stderr_file(&self, short: &str) -> (Option<StderrFile>, Stdio) {
+    async fn stderr_file(&self, short: &str) -> (Option<StderrFile>, Option<File>) {
         let Some(dir) = self.log_dir.clone() else {
-            return (None, Stdio::null());
+            return (None, None);
         };
 
         let name = short.to_owned();
         let created = tokio::task::spawn_blocking(move || StderrFile::create(&dir, &name)).await;
         match created {
-            Ok(Ok((file, handle))) => (Some(file), Stdio::from(handle)),
+            Ok(Ok((file, handle))) => (Some(file), Some(handle)),
             Ok(Err(error)) => {
                 tracing::warn!("{short} starts without a file for its stderr: {error}");
-                (None, Stdio::null())
+                (None, None)
             }
             Err(error) => {
                 tracing::warn!("{short} starts without a file for its stderr: {error}");
-                (None, Stdio::null())
+                (None, None)
             }
         }
     }
@@ -193,12 +201,4 @@ impl Launcher for DryRunLauncher {
     fn start(&self, program: &Path, _args: &[&str]) {
         tracing::info!("dry run: {} would start now", program.display());
     }
-}
-
-async fn ended(child: &mut Child, name: &str) -> Option<std::process::ExitStatus> {
-    child
-        .wait()
-        .await
-        .inspect_err(|error| tracing::warn!("lost track of {name}: {error}"))
-        .ok()
 }

@@ -42,6 +42,57 @@ pub struct DriverRow {
     pub queued: Option<Toggle>,
 }
 
+/// The ⋯ menu's item for the app's blacklist file: its text id and the
+/// wish a click queues.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct BlacklistAction {
+    pub text_id: &'static str,
+    pub wish: Toggle,
+}
+
+/// The line under a driver's name.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum DriverDetail<'row> {
+    Queued(Toggle),
+    OtherFiles(&'row [OutsideText]),
+}
+
+impl DriverRow {
+    /// `None` for a driver only another file blacklists: the app shows that
+    /// file and leaves it alone.
+    pub fn blacklist_action(&self) -> Option<BlacklistAction> {
+        if !self.own && !self.other_files.is_empty() {
+            return None;
+        }
+
+        let text_id = match self.queued {
+            Some(_) => "network-driver-unqueue",
+            None if self.own => "network-driver-allow",
+            None => "network-driver-blacklist",
+        };
+
+        let wanted = self.queued.map_or(self.own, Toggle::is_on);
+
+        Some(BlacklistAction {
+            text_id,
+            wish: Toggle::from_on(!wanted),
+        })
+    }
+
+    /// The queued change wins over the other files that blacklist it.
+    pub const fn detail(&self) -> Option<DriverDetail<'_>> {
+        if let Some(toggle) = self.queued {
+            return Some(DriverDetail::Queued(toggle));
+        }
+
+        if self.other_files.is_empty() {
+            None
+        } else {
+            Some(DriverDetail::OtherFiles(self.other_files.as_slice()))
+        }
+    }
+}
+
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct DriverFilter {
     pub search: String,
@@ -179,6 +230,23 @@ pub fn set_blacklisted(
 
     changes.want::<ModuleBlacklist>(module.clone(), wish, snapshot);
     Ok(())
+}
+
+/// [`set_blacklisted`] on the module facts the snapshot holds.
+///
+/// # Errors
+///
+/// [`Refusal::Unavailable`] until the Network page read the modprobe files,
+/// else as [`set_blacklisted`].
+pub fn queue_blacklist(
+    module: &KernelModule,
+    wish: Toggle,
+    changes: &mut ChangeSet,
+    snapshot: &Snapshot,
+) -> Result<(), Refusal> {
+    let facts = snapshot.part::<ModuleFacts>().ok_or(Refusal::Unavailable)?;
+
+    set_blacklisted(module, wish, facts, changes, snapshot)
 }
 
 /// Drops every queued blacklist change the page would refuse: a module

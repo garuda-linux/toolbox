@@ -212,13 +212,16 @@ pub fn catalog_dir_from_env() -> PathBuf {
 
 /// The folder with the catalogs, as [`catalog_dir_in`] finds it for this
 /// build.
-pub fn catalog_dir(lookup: impl Fn(&str) -> Option<OsString>) -> PathBuf {
+pub(crate) fn catalog_dir(lookup: impl Fn(&str) -> Option<OsString>) -> PathBuf {
     catalog_dir_in(lookup, DEVELOPMENT)
 }
 
 /// The installed copy in a release. A development build takes the
 /// variable when set and the source tree otherwise.
-pub fn catalog_dir_in(lookup: impl Fn(&str) -> Option<OsString>, development: bool) -> PathBuf {
+pub(crate) fn catalog_dir_in(
+    lookup: impl Fn(&str) -> Option<OsString>,
+    development: bool,
+) -> PathBuf {
     if !development {
         return PathBuf::from(toolbox_catalog::INSTALLED_DIR);
     }

@@ -1,5 +1,8 @@
 use std::path::Path;
+use std::sync::Arc;
 use std::time::{Duration, Instant};
+
+use toolbox_system::testing::launch::FixedRunner;
 
 use super::{Launcher as _, SystemLauncher};
 use crate::command::{AppCommand, Command, CommandBus};
@@ -15,6 +18,38 @@ fn launcher(runtime: &tokio::runtime::Runtime, log_dir: &Path) -> (SystemLaunche
     );
 
     (launcher, bus)
+}
+
+/// A launcher whose programs are the fake's answers, so no program runs.
+fn fake_launcher(
+    runtime: &tokio::runtime::Runtime,
+    answer: FixedRunner,
+) -> (SystemLauncher, CommandBus) {
+    let bus = CommandBus::new();
+    let launcher = SystemLauncher::with_runner(
+        runtime.handle().clone(),
+        bus.sender.clone(),
+        egui::Context::default(),
+        None,
+        Arc::new(answer),
+    );
+
+    (launcher, bus)
+}
+
+/// A tool that exits with an error raises the toast, without a program.
+#[test]
+fn a_fake_tool_that_exits_with_an_error_raises_a_toast_with_its_name() {
+    let runtime = tokio::runtime::Runtime::new().unwrap();
+    let (launcher, bus) = fake_launcher(&runtime, FixedRunner::Exit(2));
+
+    launcher.start(Path::new("/usr/bin/garuda-tool"), &["--check"]);
+
+    let text = next_toast(&bus);
+    assert!(
+        text.contains("garuda-tool") && text.contains("ended with an error"),
+        "{text}"
+    );
 }
 
 /// The files of programs that still write or wrote, below `log_dir`.
