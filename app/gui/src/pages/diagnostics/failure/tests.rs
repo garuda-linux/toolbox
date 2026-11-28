@@ -93,3 +93,16 @@ fn a_failure_without_a_program_reads_in_english() {
 
     assert_eq!(text(&ctx, &Failure::NoProgramRan), "No program ran.");
 }
+
+/// What a collector printed on standard error is outside text.
+#[test]
+fn hidden_characters_of_a_programs_words_stay_out_of_the_failure_text() {
+    let ctx = egui::Context::default();
+    let failure = Failure::Stderr("inxi: \u{1b}[2Jbroken\u{202e}".to_owned());
+
+    let shown = text(&ctx, &failure);
+
+    assert!(!shown.contains('\u{1b}'), "{shown:?}");
+    assert!(!shown.contains('\u{202e}'), "{shown:?}");
+    assert!(shown.contains("broken"));
+}

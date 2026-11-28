@@ -3,6 +3,7 @@
 
 mod failures;
 mod fakes;
+mod stops;
 
 use std::path::Path;
 use std::time::Duration;

@@ -4,6 +4,7 @@
 //! Nothing is built or installed here, and a build refuses any folder that
 //! differs from its reviewed commit.
 
+mod fetch;
 mod git;
 #[cfg(test)]
 mod tests;
@@ -21,7 +22,8 @@ use toolbox_plan::protocol::Outcome;
 use toolbox_plan::{AUR_CLONE, PackageName, StepId, TargetList};
 use toolbox_text::OutsideText;
 
-use self::git::{EMPTY_TREE, Git, GitError, REVIEWED};
+use self::fetch::fetch;
+use self::git::{EMPTY_TREE, FETCHED, Git, GitError, REVIEWED};
 use super::route::{RouteProblem, route_from_home};
 use crate::apply::EventSink;
 use crate::capture::{CaptureError, Captured, Policy};
@@ -73,6 +75,10 @@ enum ReviewError {
     MissingRepository { base: String },
     #[error("{base}: git has no commit to show")]
     MissingCommit { base: String },
+    #[error(
+        "{base}: its files on disk are not the files git holds, or one of them is a link, so they cannot be reviewed"
+    )]
+    Altered { base: String },
     #[error("{base}: {source}")]
     Git { base: String, source: GitError },
     #[error(
@@ -194,7 +200,7 @@ pub(super) fn unchanged_since_review(
         return Err(Unreviewed::Changed);
     }
 
-    match git.tracked_unchanged() {
+    match git.files_are(&head) {
         Ok(true) => Ok(()),
         Ok(false) => Err(Unreviewed::Changed),
         Err(error) => Err(Unreviewed::Check(error)),
@@ -238,11 +244,20 @@ fn part(
     };
 
     let head = runs
-        .commit("HEAD")
+        .commit(FETCHED)
         .map_err(named)?
         .ok_or_else(|| ReviewError::MissingCommit {
             base: base.as_str().to_owned(),
         })?;
+
+    // paru only fetches into a clone that exists, so the files are moved to
+    // the fetched commit here. What is then on disk must be what git shows.
+    runs.reset_to(&head).map_err(named)?;
+    if !runs.files_are(&head).map_err(named)? {
+        return Err(ReviewError::Altered {
+            base: base.as_str().to_owned(),
+        });
+    }
 
     let reviewed = runs.commit(REVIEWED).map_err(named)?;
 
@@ -346,55 +361,4 @@ fn question(bases: &TargetList<PackageName>) -> String {
 /// Only `y` or `Y` on its own line says yes.
 fn confirmed(line: Option<&str>) -> bool {
     matches!(line, Some("y" | "Y"))
-}
-
-/// `paru -G` of every base, captured. Its lines name AUR packages and
-/// versions, which is outside text, so they are cleaned before they show.
-fn fetch(
-    console: &mut dyn Console,
-    (paru, home): (&Path, &Path),
-    bases: &TargetList<PackageName>,
-    step: StepId,
-    sink: &mut dyn EventSink,
-) -> Result<(), Outcome> {
-    let mut command = Command::new(paru);
-    command
-        .current_dir(home.join(AUR_CLONE))
-        .args(["-G", "--"])
-        .args(bases.iter().map(PackageName::as_str));
-
-    let policy = Policy::tail(FETCH_CAP).capped().within(FETCH_DEADLINE);
-    let fetched = match console.watched(command, policy) {
-        Ok(fetched) => fetched,
-        Err(CaptureError::Cancelled) => return Err(Outcome::Cancelled),
-        Err(CaptureError::TooLarge) => {
-            return Err(failure(
-                step,
-                sink,
-                &format!("paru printed more than {FETCH_CAP} bytes, so the fetch is stopped"),
-            ));
-        }
-        Err(error) => return Err(failure(step, sink, &format!("paru: {error}"))),
-    };
-
-    output(
-        step,
-        sink,
-        &OutsideText::keep_lines(&fetched.output).into_string(),
-    );
-    output(
-        step,
-        sink,
-        &OutsideText::keep_lines(&fetched.errors).into_string(),
-    );
-
-    if fetched.code != Some(0_i32) {
-        return Err(failure(
-            step,
-            sink,
-            &format!("paru exited with {:?}", fetched.code),
-        ));
-    }
-
-    Ok(())
 }

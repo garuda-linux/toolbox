@@ -16,7 +16,7 @@ use crate::{PackageName, Password, RootAction, Step, StepId};
 
 /// Bumped whenever a message changes shape. App and helper ship together,
 /// so a mismatch means a broken install or a stale helper.
-pub const PROTOCOL_VERSION: u32 = 25;
+pub const PROTOCOL_VERSION: u32 = 26;
 
 /// The most text one [`Answer::Input`] carries. The sender splits a longer paste.
 pub(crate) const MAX_INPUT_BYTES: usize = 64 << 10;

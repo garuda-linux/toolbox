@@ -81,7 +81,7 @@ pub(super) fn click_apply(harness: &mut Harness<'static, App>) {
     harness.state_mut().run(&ctx, Command::Ui(UiCommand::Apply));
 }
 
-fn run_of(harness: &Harness<'static, App>, text: &str) -> Option<String> {
+pub(super) fn run_of(harness: &Harness<'static, App>, text: &str) -> Option<String> {
     match harness
         .state()
         .queue

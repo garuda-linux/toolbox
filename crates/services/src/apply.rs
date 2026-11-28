@@ -108,6 +108,9 @@ struct Run<'a> {
     /// The Console's size, sent to every segment as it starts, since a
     /// new program would otherwise start at the pty's default size.
     size: &'a mut Option<TerminalSize>,
+    /// A cancel or a finish came. The running step may still end well, but
+    /// no segment behind it starts.
+    stop_asked: bool,
 }
 
 impl Run<'_> {
@@ -123,8 +126,14 @@ impl Run<'_> {
                 *self.size = Some(size);
                 Some(Answer::Resize { size })
             }
-            ApplyCommand::Cancel => Some(Answer::Cancel),
-            ApplyCommand::Finish => Some(Answer::Finish),
+            ApplyCommand::Cancel => {
+                self.stop_asked = true;
+                Some(Answer::Cancel)
+            }
+            ApplyCommand::Finish => {
+                self.stop_asked = true;
+                Some(Answer::Finish)
+            }
             ApplyCommand::Run { id, plan: _ } => {
                 self.reporter.report(Report::Busy { plan: id });
                 None
@@ -169,6 +178,7 @@ async fn serve(
                     commands: &mut commands,
                     reporter: &reporter,
                     size: &mut size,
+                    stop_asked: false,
                 };
 
                 // Only the number of steps: a plan may hold whole config
@@ -211,13 +221,20 @@ async fn run_plan(id: PlanId, plan: Plan, run: &mut Run<'_>, launcher: &Arc<dyn 
     let mut session = None;
     let mut succeeded = true;
 
-    for segment in segments {
+    let mut rest = segments.into_iter().peekable();
+    while let Some(segment) = rest.next() {
         succeeded = match segment {
             Segment::Root(steps) => {
                 root::run(&steps, &request, &mut session, run, launcher.as_ref()).await
             }
             Segment::User(steps) => user::run(steps, run, launcher).await,
         };
+
+        // A step that ended well after a cancel or a finish is still the
+        // last one: the helper gets its cancel at the gate when it closes.
+        if run.stop_asked && rest.peek().is_some() {
+            succeeded = false;
+        }
 
         if !succeeded {
             tracing::info!("the plan stopped early");

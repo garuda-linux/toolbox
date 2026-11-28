@@ -5,6 +5,7 @@
 mod tests;
 
 use std::path::Path;
+use std::time::SystemTime;
 use std::{fs, io};
 
 use jiff::Timestamp;
@@ -27,10 +28,14 @@ pub fn read_optional(path: &Path) -> Result<Option<String>, ProbeError> {
 
 pub fn modified_optional(path: &Path) -> Result<Option<Timestamp>, ProbeError> {
     match fs::metadata(path).and_then(|metadata| metadata.modified()) {
-        Ok(time) => Timestamp::try_from(time)
-            .ok()
-            .map(Some)
-            .ok_or(ProbeError::Unavailable),
+        // A time no date can hold is still before or after every other one.
+        Ok(time) => Ok(Some(Timestamp::try_from(time).unwrap_or(
+            if time >= SystemTime::UNIX_EPOCH {
+                Timestamp::MAX
+            } else {
+                Timestamp::MIN
+            },
+        ))),
         Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(None),
         Err(error) => Err(from_io(path.display(), error)),
     }

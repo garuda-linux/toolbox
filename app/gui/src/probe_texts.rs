@@ -12,6 +12,7 @@ use std::time::Duration;
 use egui::Context;
 use toolbox_plan::{NameKind, Reason};
 use toolbox_system::{InvalidCause, MissingFact, ProbeError, Stop, Subject};
+use toolbox_text::OutsideText;
 
 use crate::i18n::{self, Arg};
 
@@ -70,7 +71,9 @@ pub fn failure(ctx: &Context, error: &ProbeError) -> Option<String> {
         ProbeError::Panicked => i18n::text(ctx, "probe-cause-panicked").into_owned(),
     };
 
-    Some(text)
+    // The parts are what the system printed. A Fluent argument is not
+    // cleaned, so the whole sentence is.
+    Some(OutsideText::keep_lines(&text).into_string())
 }
 
 fn fill(ctx: &Context, id: &str, args: &[(&'static str, Arg<'_>)]) -> String {

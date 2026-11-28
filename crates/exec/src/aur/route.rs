@@ -84,6 +84,12 @@ pub(super) fn route_from_home(home: &Path, uid: u32) -> Result<Route, RouteProbl
     walk(home, Path::new(""), home, uid)
 }
 
+/// The home `/etc/passwd` below `root` names for `uid`, `None` without an
+/// entry. The helper stages from this home, so the user side builds in it.
+pub fn home_below(root: &Path, uid: u32) -> Option<PathBuf> {
+    home_entry(root, uid).ok().map(|home| root.join(home))
+}
+
 /// The home `/etc/passwd` below `root` gives `uid`, relative to `root`.
 ///
 /// # Errors

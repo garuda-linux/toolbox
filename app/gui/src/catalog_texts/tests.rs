@@ -238,3 +238,19 @@ fn a_cycle_reads_back_to_its_first_entry() {
         "the requirements form a cycle: a -> b -> a"
     );
 }
+
+/// The parser quotes the broken line of the file, which is outside text.
+#[test]
+fn hidden_characters_of_a_broken_file_stay_out_of_the_problem_text() {
+    let ctx = egui::Context::default();
+    let failed = FileProblem::Syntax {
+        source_name: "gaming.toml".to_owned(),
+        error: "expected a value near \u{1b}[2J\u{202e}steam".to_owned(),
+    };
+
+    let shown = file(&ctx, &failed);
+
+    assert!(!shown.contains('\u{1b}'), "{shown:?}");
+    assert!(!shown.contains('\u{202e}'), "{shown:?}");
+    assert!(shown.contains("steam"));
+}

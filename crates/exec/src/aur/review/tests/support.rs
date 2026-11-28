@@ -26,8 +26,12 @@ const REVIEWED: &str = "refs/garuda-toolbox/reviewed";
 
 #[derive(Clone, Copy)]
 pub enum Fetch {
-    /// What `paru -G` leaves: the repository, its history and files.
+    /// What `paru -G` does: a clone the first time. After that only a fetch,
+    /// which leaves `HEAD` and the files where they were.
     Copy,
+    /// A clone whose own git config something local rewrote, such as an
+    /// earlier build: the source's config copied over it.
+    Tampered,
     /// Nothing at all: the base folder is missing.
     Nothing,
     /// A folder without the repository's files.
@@ -196,9 +200,17 @@ pub fn marker_program(dir: &Path, name: &str) -> (PathBuf, PathBuf) {
 }
 
 fn stand_in_paru(dir: &Path, log: &Path, sources: &Path, how: Fetch) -> PathBuf {
+    let git = git_program();
+    let fetched = format!(
+        "if [ -d \"$base\"/.git ]; then '{git}' -C \"$base\" fetch -q; else '{git}' clone -q '{}'/\"$base\" \"$base\"; fi",
+        sources.display(),
+        git = git.display()
+    );
+
     let step = match how {
-        Fetch::Copy => format!(
-            "mkdir -p \"$base\" && cp -Rf '{}'/\"$base\"/. \"$base\"/",
+        Fetch::Copy => fetched,
+        Fetch::Tampered => format!(
+            "{fetched} && cp '{}'/\"$base\"/.git/config \"$base\"/.git/config",
             sources.display()
         ),
         Fetch::Nothing => ":".to_owned(),
@@ -210,8 +222,7 @@ fn stand_in_paru(dir: &Path, log: &Path, sources: &Path, how: Fetch) -> PathBuf 
         Fetch::Link => format!("ln -s '{}'/\"$base\" \"$base\"", sources.display()),
         Fetch::Fail => "exit 1".to_owned(),
         Fetch::Noisy => format!(
-            "printf 'downloading: %s\\033[2J\\342\\200\\256 evil\\n' \"$base\" && mkdir -p \"$base\" && cp -R '{}'/\"$base\"/. \"$base\"/",
-            sources.display()
+            "printf 'downloading: %s\\033[2J\\342\\200\\256 evil\\n' \"$base\" && {fetched}"
         ),
         Fetch::Flood => "head -c 131072 /dev/zero | tr '\\0' a".to_owned(),
         Fetch::Sleep => "sleep 30".to_owned(),
@@ -219,7 +230,7 @@ fn stand_in_paru(dir: &Path, log: &Path, sources: &Path, how: Fetch) -> PathBuf 
 
     let program = dir.join("paru");
     let script = format!(
-        "#!/bin/sh\nprintf '%s\\n' \"$(pwd -P)\" \"$@\" >> '{}'\nshift 2\nfor base in \"$@\"; do\n{step}\ndone\n",
+        "#!/bin/sh\nexport GIT_CONFIG_GLOBAL=/dev/null\nprintf '%s\\n' \"$(pwd -P)\" \"$@\" >> '{}'\nshift 2\nfor base in \"$@\"; do\n{step}\ndone\n",
         log.display()
     );
 

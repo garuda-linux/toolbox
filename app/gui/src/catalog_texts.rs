@@ -9,11 +9,18 @@ mod nested;
 
 use egui::Context;
 use toolbox_catalog::{FileProblem, Problem};
+use toolbox_text::OutsideText;
 
 use crate::i18n::{self, Arg};
 
 /// The sentence of a file that failed to load, with its problem in it.
 pub fn file(ctx: &Context, failed: &FileProblem) -> String {
+    // A parser's message quotes the file, and a Fluent argument is not
+    // cleaned, so the whole sentence is.
+    OutsideText::keep_lines(&file_words(ctx, failed)).into_string()
+}
+
+fn file_words(ctx: &Context, failed: &FileProblem) -> String {
     match failed {
         FileProblem::Read { path, error } => {
             let path_text = path.display().to_string();

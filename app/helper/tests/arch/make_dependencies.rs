@@ -96,3 +96,31 @@ fn a_protected_make_dependency_is_refused_before_anything_runs() -> TestResult {
     assert!(installed("toolbox-test-on-protected"));
     Ok(())
 }
+
+/// A build installs its new packages without a reason, so they are explicit
+/// until the dependencies among them are marked.
+#[test]
+fn an_explicit_package_is_marked_as_a_dependency() -> TestResult {
+    if !in_test_image() {
+        return Ok(());
+    }
+
+    installing(&["-S", "--noconfirm", "toolbox-test-dep"])?;
+    let explicit = Command::new("pacman")
+        .args(["-Qeq", "toolbox-test-dep"])
+        .status()?;
+
+    assert!(explicit.success());
+
+    let outcomes = apply(vec![RootAction::MarkDependencies {
+        packages: packages(&["toolbox-test-dep"])?,
+    }])?;
+
+    let dependency = Command::new("pacman")
+        .args(["-Qdq", "toolbox-test-dep"])
+        .status()?;
+
+    assert_eq!(outcomes, [Outcome::Succeeded]);
+    assert!(dependency.success());
+    Ok(())
+}

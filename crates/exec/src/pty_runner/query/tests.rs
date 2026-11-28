@@ -30,6 +30,9 @@ const ORPHAN_AND_NOT_CODE: &str = include_str!("fixtures/lima/pacman-qdtq-orphan
 const NOT_INSTALLED_OUT: &str = include_str!("fixtures/lima/pacman-qdtq-not-installed.stdout");
 const NOT_INSTALLED_ERR: &str = include_str!("fixtures/lima/pacman-qdtq-not-installed.stderr");
 const NOT_INSTALLED_CODE: &str = include_str!("fixtures/lima/pacman-qdtq-not-installed.code");
+const WARNED_OUT: &str = include_str!("fixtures/garuda-vm/pacman-qdtq-config-warning.stdout");
+const WARNED_ERR: &str = include_str!("fixtures/garuda-vm/pacman-qdtq-config-warning.stderr");
+const WARNED_CODE: &str = include_str!("fixtures/garuda-vm/pacman-qdtq-config-warning.code");
 const ORPHAN_AND_NOT_INSTALLED_OUT: &str =
     include_str!("fixtures/lima/pacman-qdtq-orphan-and-not-installed.stdout");
 const ORPHAN_AND_NOT_INSTALLED_ERR: &str =
@@ -371,9 +374,22 @@ fn any_other_error_fails_the_orphan_query() {
     .unwrap_err();
 }
 
+/// pacman warns about its own config on standard error and still answers,
+/// as with an unknown directive in a pacman.conf of the Garuda VM.
 #[test]
-fn a_warning_with_code_zero_fails_the_orphan_query() {
-    orphans(&captured(ONE_ORPHAN_OUT, "warning: x\n", "0", &["cowsay"])).unwrap_err();
+fn a_warning_beside_the_answer_does_not_fail_the_orphan_query() {
+    assert_eq!(
+        orphans(&captured(WARNED_OUT, WARNED_ERR, WARNED_CODE, &["fuse2"])).unwrap(),
+        ["fuse2"]
+    );
+}
+
+/// Edit: the warning of the capture turned into an error line.
+#[test]
+fn an_error_line_with_code_zero_fails_the_orphan_query() {
+    let errors = WARNED_ERR.replace("warning:", "error:");
+
+    orphans(&captured(WARNED_OUT, &errors, WARNED_CODE, &["fuse2"])).unwrap_err();
 }
 
 #[test]

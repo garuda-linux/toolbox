@@ -145,9 +145,11 @@ impl Domain for HomeFolders {
     const CODES: &'static [SummaryCode] = &[SummaryCode::HomeFolder];
 
     fn is_satisfied(item: &UserName, wish: &HomeChange, state: &Accounts) -> bool {
+        // A home that is no valid path is shown cleaned, which is not where
+        // the folder is, so it never equals a wish.
         state
             .user(item)
-            .is_some_and(|user| user.home_text() == wish.home.as_str())
+            .is_some_and(|user| user.home.as_ref().ok() == Some(&wish.home))
     }
 
     fn plan(changes: &[(&UserName, &HomeChange)]) -> Vec<Staged> {

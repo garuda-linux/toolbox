@@ -10,7 +10,7 @@ use std::sync::mpsc::Receiver;
 
 use fluent_templates::LanguageIdentifier;
 use tokio::process::Command;
-use toolbox_exec::{Environment, EventSink, PtyRunner, apply};
+use toolbox_exec::{Environment, EventSink, PtyRunner, apply, home_below};
 use toolbox_plan::protocol::{Answer, Mode, ReadKind};
 use toolbox_plan::{ConfigFilePath, Step, UserAction};
 use toolbox_system::pkexec::{self, Refusal};
@@ -76,8 +76,18 @@ pub trait Launcher: Send + Sync {
         sink: &mut dyn EventSink,
     ) -> bool {
         let runner = PtyRunner::new(answers, Environment::Inherited);
-        let mut runner = match std::env::var_os("HOME").filter(|home| !home.is_empty()) {
-            Some(home) => runner.with_home(PathBuf::from(home)),
+
+        // The helper takes the home from `/etc/passwd`, so a build in another
+        // `HOME` would never be found by it.
+        let uid = rustix::process::getuid().as_raw();
+        let home = home_below(Path::new("/"), uid).or_else(|| {
+            std::env::var_os("HOME")
+                .filter(|home| !home.is_empty())
+                .map(PathBuf::from)
+        });
+
+        let mut runner = match home {
+            Some(home) => runner.with_home(home),
             None => runner,
         };
 

@@ -230,3 +230,21 @@ fn a_subject_phrase_reads_in_english() {
         Some("the running kernel: kaputt")
     );
 }
+
+/// What a command printed is outside text: an escape sequence or a
+/// direction mark in it would repaint or reorder the tooltip.
+#[test]
+fn hidden_characters_of_outside_text_stay_out_of_the_failure_text() {
+    let ctx = egui::Context::default();
+    let error = ProbeError::Command {
+        command_line: "pacman -Q".to_owned(),
+        status: ExitStatus::from_raw(256_i32),
+        stderr: "error: \u{1b}[2Jnothing\u{202e}".to_owned(),
+    };
+
+    let shown = failure(&ctx, &error).unwrap();
+
+    assert!(!shown.contains('\u{1b}'), "{shown:?}");
+    assert!(!shown.contains('\u{202e}'), "{shown:?}");
+    assert!(shown.contains("nothing"));
+}

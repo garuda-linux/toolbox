@@ -1,8 +1,8 @@
 //! The steps each root action runs, in the order the helper runs them.
 
 use super::packages::{
-    install, install_built, install_dependencies, refresh_keyring, remote, remove,
-    remove_make_dependencies, remove_orphans, upgrade,
+    install, install_built, install_dependencies, mark_dependencies, refresh_keyring, remote,
+    remove, remove_make_dependencies, remove_orphans, upgrade,
 };
 use super::{RootAction, accounts, boot, network, on_units, repair, run, settings};
 use crate::Mirrorlist;
@@ -23,6 +23,7 @@ impl RootAction {
                 packages,
                 reason,
             } => vec![install_built(built, packages, *reason)],
+            Self::MarkDependencies { packages } => vec![run(mark_dependencies(packages))],
             Self::UpgradeSystem { upgrader } => vec![run(upgrade(*upgrader))],
             Self::CleanPackageCache => vec![run(Command::new(Program::Paccache).arg("-ruk0"))],
             Self::RemoveOrphans => vec![remove_orphans()],

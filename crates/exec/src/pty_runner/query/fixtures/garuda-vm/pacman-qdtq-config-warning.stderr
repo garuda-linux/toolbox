@@ -1,0 +1,1 @@
+warning: config file /tmp/p.conf, line 10: directive 'NoSuchDirective' in section 'options' not recognised.

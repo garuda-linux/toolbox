@@ -63,14 +63,15 @@ enum QueryError {
 
 /// Exit 0 with the orphans, or exit 1 when none is one, where every error
 /// line says a name was not found and that name was asked. Exit 1 with
-/// orphans and no such error line is no answer.
+/// orphans and no such error line is no answer. At exit 0 pacman may still
+/// warn, such as about its own config, which does not change the answer.
 fn orphans_answered(code: Option<i32>, lines: &[String], errors: &str, asked: &[String]) -> bool {
     let not_found_of_asked = errors.lines().all(|line| {
         not_found(line).is_some_and(|name| asked.iter().any(|candidate| candidate == name))
     });
 
     match code {
-        Some(0_i32) => errors.is_empty(),
+        Some(0_i32) => errors.lines().all(|line| line.starts_with("warning: ")),
         Some(1_i32) => not_found_of_asked && (lines.is_empty() || !errors.is_empty()),
         _ => false,
     }

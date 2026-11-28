@@ -1,5 +1,5 @@
 use std::fs::{self, File};
-use std::os::unix::fs::symlink;
+use std::os::unix::fs::{PermissionsExt as _, symlink};
 use std::path::Path;
 
 use rustix::fs::FlockOperation;
@@ -148,4 +148,45 @@ fn the_store_is_held_while_pacman_runs_and_free_after() {
     .unwrap();
 
     try_lock(&store).unwrap();
+}
+
+/// Whoever can open the store can lock it, and a held lock keeps every
+/// install of every user out.
+#[test]
+fn the_store_is_closed_to_other_users() {
+    let (root, folder) = system();
+    passwd_with_caller(root.path());
+    fs::write(folder.join(OCTOPI), b"").unwrap();
+
+    install(
+        root.path(),
+        Caller::new(uid()),
+        octopi(InstallReason::Explicit),
+        |_command| Outcome::Succeeded,
+    )
+    .unwrap();
+
+    let mode = fs::metadata(root.path().join(AUR_STORE))
+        .unwrap()
+        .permissions()
+        .mode();
+
+    assert_eq!(mode & 0o777, 0o700);
+}
+
+/// Every file is checked before the first one is copied, so a refusal
+/// leaves nothing of root's behind.
+#[test]
+fn a_refused_second_file_leaves_no_copy_of_the_first() {
+    let (root, folder) = system();
+    let second = "alpm_octopi_utils-git-1-1-x86_64.pkg.tar.zst";
+    fs::write(folder.join(OCTOPI), b"").unwrap();
+    fs::write(folder.join(second), b"").unwrap();
+    fs::set_permissions(folder.join(second), fs::Permissions::from_mode(0o666)).unwrap();
+
+    assert!(matches!(
+        staged(root.path(), &["octopi-git", "alpm_octopi_utils-git"]),
+        Err(StageError::Shared(_))
+    ));
+    assert!(!root.path().join(AUR_STORE).join("1a2b").exists());
 }

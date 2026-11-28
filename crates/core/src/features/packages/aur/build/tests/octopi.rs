@@ -94,8 +94,10 @@ fn an_aur_make_dependency_is_installed_as_a_dependency_and_listed_for_removal() 
     );
 }
 
+/// pacman moves a file between the packages of one base, or accepts a
+/// version pinned between them, only inside one transaction.
 #[test]
-fn packages_of_one_pkgbase_with_two_reasons_are_built_once_and_installed_per_reason() {
+fn packages_of_one_pkgbase_with_two_reasons_are_installed_together_then_marked() {
     // The DEP build takes the TARGET's pkgbase, as the two names of a split
     // package share one.
     let mut order = octopi();
@@ -109,8 +111,11 @@ fn packages_of_one_pkgbase_with_two_reasons_are_built_once_and_installed_per_rea
             review(&["octopi-git"]),
             install_dependencies(dependencies(&order)),
             build_aur("octopi-git"),
-            install_built(&["alpm_octopi_utils-git"], InstallReason::Dependency),
-            install_built(&["octopi-git"], InstallReason::Explicit),
+            install_built(
+                &["alpm_octopi_utils-git", "octopi-git"],
+                InstallReason::Keep
+            ),
+            mark_dependencies(&["alpm_octopi_utils-git"]),
             remove_make_dependencies(make_names(&order)),
         ]
     );

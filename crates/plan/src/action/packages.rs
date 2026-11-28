@@ -35,6 +35,10 @@ pub(super) fn remove_orphans() -> Invocation {
     }
 }
 
+pub(super) fn mark_dependencies(packages: &TargetList<PackageName>) -> Command {
+    pacman(["-D", "--asdeps", "--"]).args(names(packages))
+}
+
 /// `-Qdtq`, not `-Qdttq`: a package that another one lists as optional stays.
 pub(super) fn remove_make_dependencies(packages: &TargetList<PackageName>) -> Invocation {
     Invocation::RunWithOrphansFrom {

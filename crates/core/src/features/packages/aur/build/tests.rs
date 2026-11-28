@@ -113,6 +113,12 @@ fn install_built(names: &[&str], reason: InstallReason) -> PlannedAction {
     })
 }
 
+fn mark_dependencies(names: &[&str]) -> PlannedAction {
+    root(RootAction::MarkDependencies {
+        packages: targets(names),
+    })
+}
+
 fn review(bases: &[&str]) -> PlannedAction {
     user(UserAction::ReviewAur {
         bases: targets(bases),

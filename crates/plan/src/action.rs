@@ -52,6 +52,11 @@ pub enum RootAction {
         packages: TargetList<PackageName>,
         reason: InstallReason,
     },
+    /// Sets the install reason of installed packages to dependency, for the
+    /// new dependencies a build installed together with its targets.
+    MarkDependencies {
+        packages: TargetList<PackageName>,
+    },
     UpgradeSystem {
         upgrader: Upgrader,
     },

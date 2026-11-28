@@ -10,6 +10,7 @@ use toolbox_services::aur_orders::{self, route_text_id};
 
 use crate::app::App;
 use crate::i18n::{self, Arg};
+use crate::packages::Landing;
 use crate::page_service::Owner;
 use crate::shell::{BuildNote, Hold};
 
@@ -45,7 +46,7 @@ impl App {
 
         let forced = packages.orders_forced();
         let waiting = packages.apply_revision();
-        let kept = waiting == Some(self.queue.revision());
+        let kept = waiting == Some(self.queue.revision()) && !matches!(landing, Landing::Failed);
 
         self.queue.edit(&snapshot, |changes, snapshot| {
             packages.land_orders(changes, snapshot, landing);

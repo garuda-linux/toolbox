@@ -1,5 +1,8 @@
+mod kinds;
+
 use std::collections::BTreeSet;
 
+use self::kinds::KINDS;
 use crate::sdboot::{LoaderChange, LoaderSetting, LoaderTimeout};
 use crate::{
     BootloaderId, BuildRun, ConfigFilePath, ConfigText, ConfigWrite, DiskDevice, DkmsBuild,
@@ -11,63 +14,6 @@ use crate::{
     RootAction, RootLayout, ShellPath, TargetList, UnitName, UnitOperation, Upgrader, UserName,
     VolumeDevice, WifiBackend,
 };
-
-/// Every kind [`kind`] names. Written by hand, so a variant missing here
-/// fails [`every_root_action_variant_has_a_sample`].
-const KINDS: [&str; 52] = [
-    "install-packages",
-    "remove-packages",
-    "install-dependencies",
-    "install-built",
-    "upgrade-system",
-    "clean-package-cache",
-    "remove-orphans",
-    "remove-make-dependencies",
-    "refresh-keyring",
-    "remove-database-lock",
-    "garuda-update-remote",
-    "garuda-health-fix",
-    "chroot-installation",
-    "install-mirrorlist",
-    "enable-units",
-    "disable-units",
-    "control-units",
-    "mask-units",
-    "unmask-units",
-    "add-to-group",
-    "remove-from-group",
-    "set-shell",
-    "set-dns",
-    "set-hblock",
-    "set-wifi-backend",
-    "set-garuda-update-flag",
-    "set-locale-enabled",
-    "generate-locales",
-    "set-system-locale",
-    "install-dkms-module",
-    "create-user",
-    "set-password",
-    "delete-user",
-    "set-user-locked",
-    "set-full-name",
-    "set-home-folder",
-    "create-group",
-    "delete-group",
-    "write-config-file",
-    "resolve-merge",
-    "snapshot-before-merges",
-    "load-module",
-    "unload-module",
-    "set-module-blacklisted",
-    "set-grub-settings",
-    "set-loader-settings",
-    "generate-grub-config",
-    "set-plymouth-theme",
-    "set-kernel-cmdline",
-    "select-plymouth-theme",
-    "rebuild-ukis",
-    "repair-boot",
-];
 
 /// The wire `kind` of every variant. It has no wildcard arm, so a new
 /// variant does not compile until it is named here, and then [`KINDS`] and
@@ -86,6 +32,7 @@ fn kind(action: &RootAction) -> &'static str {
             packages: _,
             reason: _,
         } => "install-built",
+        RootAction::MarkDependencies { packages: _ } => "mark-dependencies",
         RootAction::UpgradeSystem { upgrader: _ } => "upgrade-system",
         RootAction::CleanPackageCache => "clean-package-cache",
         RootAction::RemoveOrphans => "remove-orphans",
@@ -221,6 +168,9 @@ pub(super) fn every_root_action() -> Vec<RootAction> {
         },
         RootAction::UpgradeSystem {
             upgrader: Upgrader::GarudaUpdate,
+        },
+        RootAction::MarkDependencies {
+            packages: packages(),
         },
         RootAction::CleanPackageCache,
         RootAction::RemoveOrphans,

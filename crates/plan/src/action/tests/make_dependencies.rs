@@ -29,3 +29,17 @@ fn the_review_says_only_orphans_go_and_never_with_their_dependencies() {
         ]
     );
 }
+
+/// New packages of a build are explicit after `pacman -U` without a reason,
+/// so the dependencies among them are marked afterwards.
+#[test]
+fn marking_dependencies_names_each_package_after_the_separator() {
+    let action = RootAction::MarkDependencies {
+        packages: packages(&["alpm_octopi_utils-git"]),
+    };
+
+    assert_eq!(
+        shown(&action),
+        ["pacman -D --asdeps -- alpm_octopi_utils-git"]
+    );
+}

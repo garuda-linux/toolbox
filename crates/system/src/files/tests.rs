@@ -35,3 +35,19 @@ fn a_missing_file_fails_unless_it_is_optional() {
     assert_eq!(read(&path), Err(ProbeError::Unavailable));
     assert_eq!(read_optional(&path).unwrap(), None);
 }
+
+/// A stamp set far beyond what a date can hold, as `touch -d` or a broken
+/// filesystem leaves it, is still an answer: the latest moment there is.
+#[test]
+fn a_time_past_the_last_date_is_the_last_moment() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("stamp");
+    let file = std::fs::File::create(&path).unwrap();
+    let far = std::time::SystemTime::UNIX_EPOCH + std::time::Duration::from_secs(400_000_000_000);
+    file.set_modified(far).unwrap();
+
+    assert_eq!(
+        super::modified_optional(&path).unwrap(),
+        Some(jiff::Timestamp::MAX)
+    );
+}

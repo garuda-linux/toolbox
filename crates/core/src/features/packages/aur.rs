@@ -359,15 +359,37 @@ pub fn needing_orders(changes: &ChangeSet) -> Vec<PackageName> {
         .collect()
 }
 
-/// Drops a queued AUR build of a name the AUR's copy lacks, as one from
-/// the session bus or a saved file may hold. `None` until the snapshot
-/// holds the copy's names.
+/// Holds a queued AUR build from the session bus or a saved file to what a
+/// click checks. `None` until the snapshot holds the copy's names.
+///
+/// A name the AUR's copy lacks is dropped, and so is a split build that
+/// conflicts with an installed package. A build that waits for an order
+/// under a refused route becomes paru's.
 pub fn recheck(changes: &mut ChangeSet, snapshot: &Snapshot) -> Option<usize> {
     let names = snapshot.part::<AurNames>()?;
 
-    Some(drop_refused::<AurPackages>(
-        changes,
-        "AUR build",
-        |item, _, _| (!names.names.contains(item)).then_some("the AUR has no such package"),
-    ))
+    let dropped = drop_refused::<AurPackages>(changes, "AUR build", |item, wish, _| {
+        if !names.names.contains(item) {
+            return Some("the AUR has no such package");
+        }
+
+        let split = !matches!(wish, AurWish::Paru);
+        let conflicts = matches!(
+            build_wish(item, snapshot),
+            Err(refused) if refused.refusal == Refusal::Conflicts
+        );
+
+        (split && conflicts).then_some("it conflicts with an installed package")
+    });
+
+    if matches!(
+        snapshot.part::<AurRoute>(),
+        Some(AurRoute::Refused { kind: _, detail: _ })
+    ) {
+        for package in needing_orders(changes) {
+            changes.want::<AurPackages>(package, AurWish::Paru, snapshot);
+        }
+    }
+
+    Some(dropped)
 }

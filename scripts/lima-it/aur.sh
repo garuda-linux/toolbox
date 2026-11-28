@@ -123,6 +123,50 @@ t_make_dependency() {
   done
 }
 
+# Makes $aur_make outdated as an earlier split install would have left it:
+# the build of the AUR's commit before the newest is installed, and the
+# app's clone and its reviewed mark sit at that commit. Then the upgrade must
+# show the changes, build the new version and keep the install reason.
+# An older commit that no longer builds skips the check, since that is the
+# AUR's and not the toolbox's.
+# shellcheck disable=SC2016 # the body expands in the VM
+outdated_body='
+name=$1
+clone=$HOME/.cache/garuda-toolbox/aur-clone/$name
+rm -rf /tmp/old-aur
+git clone -q "https://aur.archlinux.org/$name.git" /tmp/old-aur || exit 3
+cd /tmp/old-aur || exit 3
+old=$(git log --format=%H -n 2 | tail -n 1)
+[ "$old" != "$(git rev-parse HEAD)" ] || exit 3
+git checkout -q "$old" || exit 3
+makepkg -s --noconfirm >/dev/null 2>&1 || exit 3
+sudo pacman -U --noconfirm --asexplicit ./*.pkg.tar.zst >/dev/null 2>&1 || exit 3
+git -C "$clone" reset -q --hard "$old" || exit 4
+git -C "$clone" update-ref refs/garuda-toolbox/reviewed "$old" || exit 4
+'
+
+t_upgrade() {
+  local before after out code=0 made=0
+  vm bash -c "$outdated_body" outdated "$aur_make" || made=$?
+  if [ "$made" = 3 ]; then
+    echo "skipped: the commit before the newest of $aur_make does not build"
+    return 0
+  fi
+  [ "$made" = 0 ] || return 1
+
+  before=$(vm pacman -Q "$aur_make") || return 1
+  out=$(answer_tb "y" "$review_question" maintenance run aur-upgrade --yes) || code=$?
+  echo "$out"
+  echo "exit: $code"
+  after=$(vm pacman -Q "$aur_make") || return 1
+  echo "before: $before, after: $after"
+
+  [ "$code" = 0 ] &&
+    grep -qF "$aur_make: changes since the last review" <<<"$out" &&
+    [ "$before" != "$after" ] &&
+    vm pacman -Qeq | grep -qx "$aur_make"
+}
+
 t_symlinked_cache() {
   local out code=0
   # shellcheck disable=SC2016 # expands in the VM
@@ -206,6 +250,7 @@ suite_aur() {
   check "y builds and installs it: foreign, no password asked, root store empty" t_install
   check "a second install builds nothing and keeps the install reason" t_reinstall
   check "a make dependency is installed for the build and removed after it" t_make_dependency
+  check "an outdated package is upgraded: the changes are shown, the reason is kept" t_upgrade
   check "a symlinked ~/.cache takes the old paru path, and says so" t_symlinked_cache
   check "a package that conflicts with an installed one is refused, naming it" t_conflict
   check "K8: whether sudo keeps the helper's stdin socket" t_sudo_socket

@@ -127,5 +127,5 @@ pub(super) fn is_taken(
     accounts
         .users
         .iter()
-        .any(|user| user.home_text() == home.as_str() && Some(&user.name) != owner)
+        .any(|user| user.home.as_ref().ok() == Some(home) && Some(&user.name) != owner)
 }

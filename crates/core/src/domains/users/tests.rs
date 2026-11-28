@@ -240,3 +240,26 @@ fn queued_account_changes_survive_a_restart() {
     assert_eq!(restored.views(), changes.views());
     assert_eq!(restored.len(), 7);
 }
+
+/// Edit: the home in `/etc/passwd` ends in U+200B. It is shown without the
+/// hidden character, and that shown text is not where the folder is.
+#[test]
+fn a_move_to_what_a_home_with_a_hidden_character_looks_like_is_not_done_yet() {
+    let mut ada = user("ada", 1000, 1000);
+    ada.home = Err(toolbox_text::plain("/home/ada\u{200b}"));
+    let accounts = Accounts {
+        users: vec![ada],
+        groups: Vec::new(),
+    };
+
+    let wish = HomeChange {
+        home: HomeDirectory::new("/home/ada").unwrap(),
+        move_files: true,
+    };
+
+    assert!(!<HomeFolders as crate::Domain>::is_satisfied(
+        &user_name("ada"),
+        &wish,
+        &accounts
+    ));
+}

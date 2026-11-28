@@ -241,3 +241,17 @@ fn every_problem_has_a_setup_that_produces_it() {
 
     assert_eq!(produced, KINDS.into_iter().collect());
 }
+
+/// The helper looks for the build in the home `/etc/passwd` names, so the
+/// user side builds there too, whatever `HOME` says.
+#[test]
+fn the_user_side_builds_in_the_home_passwd_names() {
+    let (root, _folder) = system();
+    passwd_with_caller(root.path());
+
+    assert_eq!(
+        crate::aur::route::home_below(root.path(), uid()),
+        Some(home(root.path()))
+    );
+    assert_eq!(crate::aur::route::home_below(root.path(), uid() + 7), None);
+}

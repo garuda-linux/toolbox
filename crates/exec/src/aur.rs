@@ -112,7 +112,12 @@ pub fn install(
     let uid = caller.ok_or(StageError::NoCaller)?.uid();
     let home = home_of(root, uid)?;
     let _held = hold_store(root)?;
-    let copies = stage(root, uid, &home, built.run, built.packages)?;
+    let copies = stage(root, uid, &home, built.run, built.packages).inspect_err(|_| {
+        // A copy that failed halfway leaves a part of it.
+        if let Err(error) = unstage(root, built.run) {
+            tracing::warn!("the copies of build run {} stay: {error}", built.run);
+        }
+    })?;
 
     let command = Command::new(Program::Pacman)
         .arg("-U")
@@ -132,8 +137,12 @@ pub fn install(
 /// The store, locked until the descriptor closes. Every stage empties the
 /// whole store, so a second helper would take the first one's copies away
 /// before pacman read them.
+///
+/// The store is root's alone: whoever can open a folder can lock it, and a
+/// lock held by any user would keep every install out.
 fn hold_store(root: &Path) -> Result<OwnedFd, StageError> {
     let store = secure::create_dirs(root, Path::new(AUR_STORE))?;
+    rustix::fs::fchmod(&store, Mode::RWXU)?;
 
     match rustix::fs::flock(&store, FlockOperation::NonBlockingLockExclusive) {
         Ok(()) => Ok(store),
@@ -167,10 +176,16 @@ pub fn stage(
 ) -> Result<Vec<PathBuf>, StageError> {
     let built = built_folder(root, uid, home, run)?;
     let files = secure::regular_files(&built)?;
+
+    // Every file is opened and checked before the first copy is made, so a
+    // refusal leaves nothing in root's store.
     let chosen = packages
         .iter()
-        .map(|package| only_file(&files, package))
-        .collect::<Result<Vec<&String>, StageError>>()?;
+        .map(|package| {
+            let name = only_file(&files, package)?;
+            Ok((name, checked(&built, name, uid)?))
+        })
+        .collect::<Result<Vec<(&String, OwnedFd)>, StageError>>()?;
 
     empty_store(root)?;
     let relative = Path::new(AUR_STORE).join(run.as_str());
@@ -178,8 +193,8 @@ pub fn stage(
 
     chosen
         .into_iter()
-        .map(|name| {
-            copy(&built, &store, name, uid)?;
+        .map(|(name, source)| {
+            copy(source, &store, name)?;
             Ok(Path::new("/").join(&relative).join(name))
         })
         .collect()
@@ -303,14 +318,19 @@ fn only_file<'files>(
     }
 }
 
-fn copy(built: &OwnedFd, store: &OwnedFd, name: &str, uid: u32) -> Result<(), StageError> {
+/// The package file `name`, opened once: the checks and the copy read the
+/// same file, whatever the name points at later.
+fn checked(built: &OwnedFd, name: &str, uid: u32) -> Result<OwnedFd, StageError> {
     let source = rustix::fs::openat(built, name, PACKAGE_READ, Mode::empty())?;
     if FileType::from_raw_mode(rustix::fs::fstat(&source)?.st_mode) != FileType::RegularFile {
         return Err(StageError::NotRegular(name.to_owned()));
     }
 
     owned_and_closed(&source, uid, name)?;
+    Ok(source)
+}
 
+fn copy(source: OwnedFd, store: &OwnedFd, name: &str) -> Result<(), StageError> {
     let target = rustix::fs::openat(store, name, CREATE_FLAGS, PACKAGE_MODE)?;
     rustix::fs::fchmod(&target, PACKAGE_MODE)?;
 

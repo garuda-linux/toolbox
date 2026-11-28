@@ -4,6 +4,7 @@
 use std::sync::Arc;
 
 use toolbox_core::domains::InstalledPackages;
+use toolbox_core::features::packages::aur::{give_order, needing_orders};
 use toolbox_core::{ChangeSet, Snapshot};
 use toolbox_plan::PackageName;
 use toolbox_services::aur_orders::{NoOrder, Orders, read_orders, run_counter};
@@ -87,7 +88,15 @@ impl Packages {
     pub fn land_orders(&mut self, changes: &mut ChangeSet, snapshot: &Snapshot, landing: Landing) {
         match landing {
             Landing::Read(orders) => self.orders.landed(changes, snapshot, orders),
-            Landing::Failed => self.orders.failed(),
+            Landing::Failed => {
+                self.orders.failed();
+
+                // An order of an earlier read never builds, so every queued
+                // build waits for the next read.
+                for package in needing_orders(changes) {
+                    give_order(changes, snapshot, &package, None);
+                }
+            }
         }
     }
 

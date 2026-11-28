@@ -107,28 +107,14 @@ impl Merged {
                 run: run.clone(),
             }));
 
-            for reason in [
-                InstallReason::Dependency,
-                InstallReason::Keep,
-                InstallReason::Explicit,
-            ] {
-                let of_reason = self
-                    .aur
-                    .iter()
-                    .filter(|(name, role)| {
-                        base_of(&self.pkgbases, name) == Some(base)
-                            && reason_of(name, *role, installed) == reason
-                    })
-                    .map(|(name, _)| name.clone());
+            let built: Vec<(PackageName, InstallReason)> = self
+                .aur
+                .iter()
+                .filter(|(name, _)| base_of(&self.pkgbases, name) == Some(base))
+                .map(|(name, role)| (name.clone(), reason_of(name, *role, installed)))
+                .collect();
 
-                if let Ok(packages) = TargetList::new(of_reason) {
-                    actions.push(PlannedAction::Root(RootAction::InstallBuilt {
-                        run: run.clone(),
-                        packages,
-                        reason,
-                    }));
-                }
-            }
+            actions.extend(installs(run, &built));
         }
 
         if let Ok(packages) = TargetList::new(self.make_only(installed)) {
@@ -260,6 +246,41 @@ fn names_with(lines: &[(PackageName, Role)], wanted: impl Fn(Role) -> bool) -> V
 
 /// A package that is installed keeps its reason. A queued target is
 /// explicit, any other package is a dependency.
+/// The install of one base's packages in one `pacman -U`, since pacman
+/// moves a file between them only inside one transaction.
+///
+/// One reason for all is set by the install. With several it sets none: an
+/// installed package keeps its own, and the new dependencies are marked.
+fn installs(run: &BuildRun, built: &[(PackageName, InstallReason)]) -> Vec<PlannedAction> {
+    let Ok(packages) = TargetList::new(built.iter().map(|(name, _)| name.clone())) else {
+        return Vec::new();
+    };
+
+    let shared = built
+        .first()
+        .map(|(_, reason)| *reason)
+        .filter(|first| built.iter().all(|(_, reason)| reason == first));
+
+    let mut actions = vec![PlannedAction::Root(RootAction::InstallBuilt {
+        run: run.clone(),
+        packages,
+        reason: shared.unwrap_or(InstallReason::Keep),
+    })];
+
+    let dependencies = built
+        .iter()
+        .filter(|(_, reason)| shared.is_none() && *reason == InstallReason::Dependency)
+        .map(|(name, _)| name.clone());
+
+    if let Ok(marked) = TargetList::new(dependencies) {
+        actions.push(PlannedAction::Root(RootAction::MarkDependencies {
+            packages: marked,
+        }));
+    }
+
+    actions
+}
+
 fn reason_of(name: &PackageName, role: Role, installed: &BTreeSet<PackageName>) -> InstallReason {
     if installed.contains(name) {
         return InstallReason::Keep;

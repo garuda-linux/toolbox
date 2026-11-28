@@ -192,10 +192,13 @@ The build is the `BuildAur` builtin, run by the app only
   no step of it calls sudo or pacman. These flags are unconfirmed against a
   real `makepkg` run.
 - The build refuses a clone that is not the reviewed one: its `HEAD` must
-  equal `refs/garuda-toolbox/reviewed` and no tracked file may differ from
-  `HEAD` (`unchanged_since_review`, `crates/exec/src/aur/review.rs`). Untracked
-  files, such as downloaded sources, do not count. Nothing starts otherwise,
-  and the step names the base.
+  equal `refs/garuda-toolbox/reviewed`, and every file of that commit must be
+  a plain file whose bytes on disk are the bytes git holds
+  (`unchanged_since_review`, `Git::files_are`, `crates/exec/src/aur/review.rs`).
+  The files are hashed as they are (`git hash-object --no-filters`). git's own
+  status is not asked, since it trusts the checkout. Untracked files, such as
+  downloaded sources, do not count. Nothing starts otherwise, and the step
+  names the base.
 
 ### Which path, and the sudo rule
 
@@ -205,8 +208,9 @@ The build is the `BuildAur` builtin, run by the app only
   part refuses the click as unread, so nothing is queued on a guess.
 - `update --aur` takes the split path for outdated packages
   (`upgrade::upgrade_path`), else `UpgradeAur`. The window's Home button does the
-  same (`upgrade::start`, the orders read by `Packages::read_upgrade`), and
-  Maintenance's `aur-upgrade` on the command line still plans `UpgradeAur`.
+  same (`upgrade::start`, the orders read by `Packages::read_upgrade`), and so
+  does Maintenance's `aur-upgrade` on the command line
+  (`aur_upgrade::of_system`). The review comes before the system upgrade.
 - A conflict with an installed package refuses the split path before the
   queue changes, and names the installed package. It reads the copy's
   `conflicts` by name, so `yay<2` is judged as `yay`, which can refuse a
@@ -249,7 +253,15 @@ plan: fetch all, show all, ask once.
 - Each base then needs a plain folder with a `PKGBUILD` and a `.git`
   folder, reached without a link. Otherwise the step fails and names the base,
   and nothing is asked.
-- The shown state is `HEAD`, resolved once to a commit id. Against the app's
+- On a clone that exists, `paru -G` only fetches: `HEAD` and the files stay
+  where they were. The review moves the clone to the fetched commit
+  (`refs/remotes/origin/HEAD`, `git reset --hard`) and then checks the files
+  as the build guard does. A link among them fails the step.
+- Every git run reads the attributes from the empty tree (`--attr-source`).
+  A `.gitattributes` of the repository can then not make a checkout write
+  other bytes than git holds and the review shows, through
+  `working-tree-encoding`, a filter or a line ending rule.
+- The shown state is the fetched commit, resolved once to a commit id. Against the app's
   own ref `refs/garuda-toolbox/reviewed` it shows the diff (`from` the ref,
   `to` `HEAD`). With no ref it shows every tracked file (the diff from git's
   empty tree). With `HEAD` equal to the ref it says "no change since the last
@@ -304,8 +316,6 @@ Limits, stated plainly:
 - Downloaded sources are not reviewed. The review covers the build files in
   git, not what makepkg downloads later. A `SKIP` checksum, or a download
   that changes after the review, is not covered.
-- A tracked symlink shows as its link text. The review does not follow it,
-  so the file it points to is not shown.
 - Files left in the clone by an earlier build are used by makepkg. The build
   guard ignores untracked files by design, so a leftover source or package is
   not reviewed.
@@ -364,7 +374,11 @@ Limits, stated plainly:
 - The helper holds an exclusive `flock` on the store
   `/var/cache/garuda-toolbox/aur` from before the stage until pacman
   ended. A second helper fails its step (`StageError::Busy`) and touches
-  nothing.
+  nothing. The store is 0700: whoever can open a folder can lock it, and a
+  lock held by any user would keep every install out.
+- Every package file is opened and checked before the first copy is made,
+  and the copy reads that same open file. A refusal leaves nothing in the
+  store.
 - Before each stage the helper empties the whole store, other runs'
   folders too. A store entry
   that is no folder, or a run folder that holds anything but regular
@@ -374,6 +388,17 @@ Limits, stated plainly:
   The run's folder is removed after pacman, whatever pacman did.
 - `InstallReason::Keep` passes no `--asdeps` or `--asexplicit`, so an
   upgrade keeps the reason pacman has.
+- The packages of one pkgbase are installed in one `pacman -U`, since pacman
+  moves a file between them, or takes a version pinned between them, only
+  inside one transaction. Where they have different reasons, the install
+  sets none and `RootAction::MarkDependencies` (`pacman -D --asdeps --`)
+  marks the new dependencies afterwards.
+- A cancel or a finish that comes while a step runs ends the plan after that
+  step, also when the step ends well (`Run::stop_asked`,
+  `crates/services/src/apply.rs`). The helper gets its cancel at the gate, so
+  no root step behind a build runs after "stopping after this step".
+- The user side builds in the home `/etc/passwd` names (`home_below`), not
+  in `HOME`, as the helper stages from there.
 - `InstallDependencies` runs `pacman -T` first and passes only the names
   it prints to `-S --asdeps`, so an installed package keeps its reason.
   Each line must be a `PackageName` it was asked about. Only this query

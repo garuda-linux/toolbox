@@ -7,11 +7,18 @@ mod tests;
 
 use egui::Context;
 use toolbox_core::features::diagnostics::{AnswerFault, Failure, HelperFault, Refusal};
+use toolbox_text::OutsideText;
 
 use crate::i18n::{self, Arg};
 
 /// What a failed collection says, in the window's language.
 pub(super) fn text(ctx: &Context, failure: &Failure) -> String {
+    // A program's words are outside text, and a Fluent argument is not
+    // cleaned, so the whole sentence is.
+    OutsideText::keep_lines(&words(ctx, failure)).into_string()
+}
+
+fn words(ctx: &Context, failure: &Failure) -> String {
     match failure {
         Failure::NoProgramRan => plain(ctx, "diagnostics-failed-no-program"),
         Failure::ExitCode(code) => fill(

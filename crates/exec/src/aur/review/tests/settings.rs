@@ -16,6 +16,7 @@ fn every_git_run_starts_with_the_hardening_flags() {
         argv,
         [
             "--no-pager",
+            "--attr-source=4b825dc642cb6eb9a060e54bf8d69288fbee4904",
             "-c",
             "core.hooksPath=/dev/null",
             "-c",

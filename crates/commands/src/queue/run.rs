@@ -1,6 +1,9 @@
 //! `queue apply`: the plan of the queue, carried out and settled, as the
 //! window's Apply does it.
 
+#[cfg(test)]
+mod tests;
+
 use toolbox_cli::Exit;
 use toolbox_cli::args::Confirm;
 use toolbox_core::planned;
@@ -69,8 +72,7 @@ pub(super) fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out
     let exit = ended.exit;
     let succeeded = succeeded_actions(&planned, &ended);
 
-    let ran = !confirm.dry_run && !matches!(exit, Exit::Declined | Exit::NeedsYes | Exit::Usage);
-    if ran
+    if settles(confirm.dry_run, &ended)
         && let Err(failed) = settle(
             store,
             &ready::after(snapshot(catalogs), &changes, &reads),
@@ -83,6 +85,16 @@ pub(super) fn apply_queue(confirm: Confirm, context: &Context<'_>, out: &mut Out
     }
 
     exit
+}
+
+/// Whether the run changed what the queue should hold. A plan that was
+/// declined before it started ran nothing. One declined at the review of an
+/// AUR build ran the steps before it.
+const fn settles(dry_run: bool, ended: &apply::Ended) -> bool {
+    let some_ended = !ended.succeeded.is_empty() || !ended.skipped.is_empty();
+    let never_started = matches!(ended.exit, Exit::Declined | Exit::NeedsYes | Exit::Usage);
+
+    !dry_run && (some_ended || !never_started)
 }
 
 /// The actions of the steps of `planned` that `ended` says succeeded.

@@ -15,6 +15,10 @@ use crate::capture::{CaptureError, Policy, capture};
 /// No paru ref is read, since paru keeps none.
 pub(super) const REVIEWED: &str = "refs/garuda-toolbox/reviewed";
 
+/// What `paru -G` last fetched. On a clone that exists paru only fetches,
+/// so `HEAD` and the files stay at the commit of the first clone.
+pub(super) const FETCHED: &str = "refs/remotes/origin/HEAD";
+
 /// git's empty tree, present in every SHA-1 repository. A first review
 /// diffs from it, so every tracked file shows in full.
 pub(super) const EMPTY_TREE: &str = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
@@ -27,9 +31,13 @@ const DEADLINE: Duration = Duration::from_secs(120);
 
 /// Before the subcommand. `hooksPath` stops the reference-transaction hook
 /// of `update-ref`, `fsmonitor` a program that reads the worktree, and
-/// `--no-pager` a pager that `core.pager` would name.
-const HARDENING: [&str; 5] = [
+/// `--no-pager` a pager that `core.pager` would name. `--attr-source` reads
+/// the attributes from the empty tree, so no `.gitattributes` of the
+/// repository makes a checkout write other bytes than git holds, through
+/// `working-tree-encoding`, a filter or a line ending rule.
+const HARDENING: [&str; 6] = [
     "--no-pager",
+    "--attr-source=4b825dc642cb6eb9a060e54bf8d69288fbee4904",
     "-c",
     "core.hooksPath=/dev/null",
     "-c",
@@ -127,26 +135,54 @@ impl<'a> Git<'a> {
         }
     }
 
-    /// Whether the tracked files equal `HEAD`. Untracked files do not count.
-    pub(super) fn tracked_unchanged(&self) -> Result<bool, GitError> {
+    /// Sets `HEAD` and every tracked file to commit `id`.
+    pub(super) fn reset_to(&self, id: &str) -> Result<(), GitError> {
         let policy = Policy::whole().within(DEADLINE);
-        let captured = self.run(
-            &[
-                "diff",
-                "--quiet",
-                "--no-ext-diff",
-                "--no-textconv",
-                "HEAD",
-                "--",
-            ],
-            &policy,
-        )?;
+        let captured = self.run(&["reset", "--hard", "--quiet", id, "--"], &policy)?;
 
         match captured.code {
-            Some(0) => Ok(true),
-            Some(1) => Ok(false),
+            Some(0) => Ok(()),
             code => Err(GitError::Exit(code)),
         }
+    }
+
+    /// Whether every file of commit `id` is a plain file whose bytes on disk
+    /// are the bytes git holds and the review shows. Untracked files do not
+    /// count.
+    ///
+    /// The files are hashed as they are. A comparison through git's own
+    /// status would trust the checkout, which can write other bytes than it
+    /// stores, as a `working-tree-encoding` attribute or a filter does.
+    pub(super) fn files_are(&self, id: &str) -> Result<bool, GitError> {
+        let policy = Policy::whole().within(DEADLINE);
+        let listed = self.run(&["ls-tree", "-r", "-z", "--full-tree", id, "--"], &policy)?;
+        if listed.code != Some(0_i32) {
+            return Err(GitError::Exit(listed.code));
+        }
+
+        let mut held = Vec::new();
+        let mut paths = Vec::new();
+        for entry in listed.output.split_terminator('\0') {
+            let Some((plain, path)) = entry
+                .split_once('\t')
+                .and_then(|(facts, path)| Some((plain_file(facts)?, path)))
+            else {
+                return Ok(false);
+            };
+
+            held.push(plain);
+            paths.push(path);
+        }
+
+        if paths.is_empty() {
+            return Ok(true);
+        }
+
+        let mut args = vec!["hash-object", "--no-filters", "--"];
+        args.extend(paths);
+        let hashed = self.run(&args, &policy)?;
+
+        Ok(hashed.code == Some(0) && hashed.output.lines().eq(held))
     }
 
     /// Points the app's ref at `id`.
@@ -177,6 +213,18 @@ impl<'a> Git<'a> {
             self.cancel,
         )
         .map_err(GitError::Run)
+    }
+}
+
+/// The blob id of a `ls-tree` entry `<mode> <type> <id>`, `None` unless it is
+/// a plain or an executable file. A link would be reviewed as a path and
+/// built as what it points at.
+fn plain_file(facts: &str) -> Option<&str> {
+    let mut words = facts.split(' ');
+
+    match (words.next()?, words.next()?, words.next()?) {
+        ("100644" | "100755", "blob", id) => Some(id),
+        _ => None,
     }
 }
 

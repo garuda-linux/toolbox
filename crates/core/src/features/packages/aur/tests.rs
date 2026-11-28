@@ -1,4 +1,5 @@
 mod catalog;
+mod restored;
 
 use std::collections::BTreeSet;
 
